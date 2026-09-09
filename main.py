@@ -2,9 +2,9 @@
 from __future__ import annotations
 
 """
-YouTube Otomasyonu V3 — "Pets Got Talent" Tam Otonom Pipeline
-=============================================================
-Her gün otomatik çalışır: yaratıcı senaryo üretir → video üretir →
+YouTube Otomasyonu V3 — "DeepMyster" Tam Otonom Pipeline
+========================================================
+Her gün otomatik çalışır: 12 kriterli mikro-hikâye senaryosu üretir → video üretir →
 YouTube Shorts olarak yükler.
 
 Telegram YOK — CronJob ile tetiklenir, insan müdahalesi gerektirmez.
@@ -14,7 +14,7 @@ Telegram YOK — CronJob ile tetiklenir, insan müdahalesi gerektirmez.
   python main.py --dry-run      → Gerçek üretim yapmadan test
   python main.py --check        → Sistem sağlık kontrolü
 
-Railway CronJob: `python main.py` — günde 1x tetiklenir.
+Railway CronJob: `python main.py` — iş günleri 16:30 TR (13:30 UTC) tetiklenir.
 """
 import os
 import sys
@@ -35,7 +35,7 @@ from infrastructure.video_downloader import download_video, cleanup_video
 from infrastructure.youtube_uploader import upload_to_youtube
 from infrastructure.notion_logger import NotionTracker
 
-log = get_logger("PetsGotTalent")
+log = get_logger("DeepMyster")
 
 
 # ────────────────────────────────────────
@@ -82,7 +82,7 @@ async def run_pipeline(dry_run: bool = False):
         settings.ENV = "development"
 
     mode = "DRY-RUN" if settings.IS_DRY_RUN else "PRODUCTION"
-    log.info(f"🚀 Pets Got Talent V3 başlatılıyor... (Mod: {mode})")
+    log.info(f"🚀 DeepMyster V3 başlatılıyor... (Mod: {mode})")
     log.info(f"   Model: {settings.DEFAULT_MODEL}")
     log.info(f"   YouTube Upload: {'Aktif' if settings.YOUTUBE_ENABLED else 'Devre Dışı'}")
     log.info(f"   Notion Log: {'Aktif' if settings.NOTION_ENABLED else 'Devre Dışı'}")
@@ -144,11 +144,11 @@ async def _execute_pipeline(used_combos: list[str]) -> dict:
 
         log.info(f"🎬 Senaryo: {prompt_data.get('scenario_summary', '')}")
         log.info(f"   {clip_count} klip, toplam {total_duration}s")
-        log.info(f"   Hayvan: {prompt_data.get('animal', '?')} | Yetenek: {prompt_data.get('talent', '?')}")
+        log.info(f"   Gemi/Araç: {prompt_data.get('animal', '?')} | Olay: {prompt_data.get('talent', '?')[:40]}...")
 
         # ── ADIM 2: Notion entry ──
         notion_config = {
-            "topic": prompt_data.get("scenario_summary", "Pets Got Talent video"),
+            "topic": prompt_data.get("scenario_summary", "DeepMyster maritime incident video"),
             "model": settings.DEFAULT_MODEL,
             "clip_count": clip_count,
             "orientation": settings.DEFAULT_ORIENTATION,
@@ -158,7 +158,7 @@ async def _execute_pipeline(used_combos: list[str]) -> dict:
         await asyncio.to_thread(tracker.create_entry, notion_config, trigger="auto")
         await asyncio.to_thread(tracker.update_with_prompts, prompt_data)
 
-        # ── ADIM 3: Video üret (Seedance 2.0) ──
+        # ── ADIM 3: Video üret (Seedance 2 Mini) ──
         log.info(f"🎬 Video üretimi başlıyor ({settings.DEFAULT_MODEL})...")
         await asyncio.to_thread(tracker.update_status, "Video Üretiliyor")
 
@@ -308,7 +308,7 @@ def health_check():
     # FFmpeg
     checks.append(("FFmpeg", settings.FFMPEG_AVAILABLE, "Opsiyonel — Replicate fallback mevcut"))
 
-    print("\n🏥 Sistem Sağlık Raporu — Pets Got Talent V3\n" + "=" * 50)
+    print("\n🏥 Sistem Sağlık Raporu — DeepMyster V3\n" + "=" * 50)
     all_ok = True
     for name, ok, detail in checks:
         icon = "✅" if ok else "❌"

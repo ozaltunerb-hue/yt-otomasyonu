@@ -4,42 +4,51 @@
 
 ---
 
-## 🚨 KRİTİK KURAL: Zorunlu İnsan / Mürettebat Varlığı & Rol Çeşitliliği
+## 🚨 KRİTİK KURALLAR & 12 KRİTERLİ MİKRO-HİKÂYE FORMATI
 
 **Tarih / Karar:** 2026-09-09 (Dolunay direktifi)
 
-### 1. Sıfır İnsansız Video Toleransı
-- **Her videoda mutlaka en az bir insan/mürettebat görünmelidir.**
-- İnsansız (sadece boş gemi/deniz) video üretimi **KESİNLİKLE YASAKTIR**.
-- İnsanlar yalnızca arka planda duran cansız figüranlar olmamalı; senaryoya uygun şekilde olayın, krizin, tehlikeli manevranın veya mücadelenin **aktif parçası** olmalıdır.
+### 1. 5 Aşamalı Komplikasyonlu Mikro-Olay Örgüsü (15–20 sn)
+Her video tek hamlede bitmeyen, içinde en az bir gerçek komplikasyon barındıran tam bir mikro-hikâye olmak zorundadır.
+İzleyici: **"Ne oluyor?" → "Şimdi ne olacak?" → "Sonunda ne oldu?"** akışını hissetmelidir:
 
-### 2. Doğal & Aktif Roller
-Senaryo ve kategoriye göre roller çeşitlendirilmelidir:
-- **Kaptan & Zabitler:** Köprüüstünde (wheelhouse/bridge) acil durum kontrolleri, dümen çarkı, itici (thruster) kolları, radar ekranları başında veya açık bridge wing'de arama ışığı/dürbün ile fırtınayı yönetirken.
-- **Güverte Personeli (Deckhands / Seamen):** Yüksek görünürlüklü (hi-vis) fırtına tulumları/can yelekleri içinde su basmış güvertede lashing zincirlerini sıkarken, kayan yükleri bağlarken, can salı veya seyyar drenaj pompası kurarken.
-- **Marina Personeli & Palamar:** Yüzer pontonlarda koşarak kontrolden çıkan yata usturmaça (fender) atarken, kakıçla tekneleri fırlatmadan ayırırken veya yakıt iskelesinde acil hat bağlarken.
-- **Liman Çalışanları & Halatçılar:** Rıhtımda aşırı gerilen palamar halatlarından kaçarken, kopan halat anında refleks verirken veya kılavuz botuyla dev gemiye yanaşırken.
-- **Yolcular:** Fırtınada veya sert yanaşmada korkuluklara (safety handrails) tutunup sarsıntıya direnirken, güverte zabitlerinin yönlendirmesiyle güvenli bölgeye geçerken.
-- **Kurtarma Ekipleri (Coast Guard / SAR):** Zodyak/RIB botu dalgalı sörfe indirirken, helikopter vinciyle güverteye inen dalgıçlar veya can simidi fırlatan kurtarma ekipleri.
-- **Gemi Mühendisleri (Engine Room):** Makine dairesinde titreşen borular ve kırmızı acil durum ışıkları altında jeneratör/şalter veya hidrolik dümen arızasına müdahale ederken.
+1. **HOOK (1–3 sn):** Olay doğrudan başlar. Boş manzara veya atmosfer çekimi kesinlikle yasaktır.
+2. **OLAY (3–7 sn):** Tehlikenin/sorunun ne olduğu netleşir, mürettebat aktif fiziksel müdahaleye başlar.
+3. **TIRMANIŞ & KOMPLİKASYON (7–12 sn):** **Tek hamlede çözülen olaylar REDDEDİLİR!** İlk müdahale başarısız olmalı, alet kaymalı, halat kopmalı veya ikinci bir risk ortaya çıkarak taktik değiştirmeye zorlamalıdır.
+4. **KRİTİK AN (12–15 sn):** Sonucu belirleyen son saniye kritik fiziksel manevra/hamle gerçekleşir.
+5. **SONUÇ / PAYOFF (Son 3–5 sn):** Olayın sonucu **GÖRSEL & FİZİKSEL OLARAK** gerçekleşir (rota saptırıldı, takoz tuttu, hasar oluştu ama büyük kaza önlendi).
 
-### 3. Şablon Tekrarını Önleme (Rol & Kamera Matrisi)
-Tekrar eden insan/kamera şablonlarından kaçınılır. Her videoda farklı bir insan rolü ve kamera açısı rotasyona girer:
-- Kamera Perspektifleri: `bridge wheelhouse cam`, `deck action cam`, `crew bodycam`, `quayside CCTV`, `marina pontoon cam`, `pilot boat cam`, `engine room cam`, `telephoto dock cam`.
+### 2. En Önemli Kural: "Ne Oldu & Fiziksel Olarak Ne Değişti?"
+Her senaryoda şu soru zorunlu olarak cevaplanır:
+**"Bu videoda tam olarak ne oldu ve videonun sonunda FİZİKSEL OLARAK ne değişti?"**
+
+### 3. Merak Kuralı & Spoiler Yasağı:
+- Başlık ve açıklama sonucu baştan ele veremez (Örn: "Saved by Crew" ❌, "Runaway Yacht Drifts in Storm" ✅).
+
+### 4. 12 Kriterli Otomatik Kalite Kontrolü (Zorunlu PASS):
+1. İlk 3 saniyede olağandışı bir olay var mı?
+2. İzleyici neyin yanlış gittiğini anlayabiliyor mu?
+3. Mürettebat aktif fiziksel müdahale yapıyor mu?
+4. Olay gerçekten tırmanıyor mu?
+5. İlk çözümün dışında yeni bir komplikasyon / başarısız ilk hamle var mı?
+6. Kritik bir an var mı?
+7. Sonuç görsel olarak gerçekleşiyor mu?
+8. Videonun sonunda fiziksel olarak neyin değiştiği açık mı?
+9. Shotlar tek bir olayın devamı mı?
+10. İzleyici sonucu önceden tahmin etmeden videonun sonuna kadar izlemek ister mi?
+11. Başlık sonucu gereksiz şekilde spoiler vermiyor mu?
+12. Video yalnızca "güzel görüntü" değil, başı-sonu olan gerçek bir mikro-olay mı?
+
+*Herhangi biri FAIL ise senaryo üretime gönderilmeden otomatik olarak yeniden yazılır.*
+
+### 5. Seedance 2 Mini Prompt Formülü:
+`[Başlayan Kriz Eylemi] + [Mürettebat Eylemi & Komplikasyon] + [Kritik Manevra] + [Fiziksel Sonuç] + [Fotogerçekçi Belgesel Etiketi]` (30–50 kelime).
 
 ---
 
-## 🏗️ 3 Katmanlı Senaryo & Prompt Mimarisi
-
-1. **Katman 1 (`creative_engine.py`):** 8 Denizcilik Kategorisi + Gemi + İnsanlı Olay + Kamera + Aktif Mürettebat Seed Havuzu.
-2. **Katman 2 (`prompt_generator.py` - `SCENARIO_WRITER_SYSTEM`):** GPT-4o ile 15 saniyelik tek plan gerçekçi belgesel sahnesi (insan aksiyonu zorunlu).
-3. **Katman 3 (`PROMPT_SIMPLIFIER_SYSTEM`):** Seedance 2.0 / Kling için 15-30 kelimelik basit, fotogerçekçi, insan aksiyonu içeren video prompt'u.
-
----
-
-## 🛠️ Hızlı Doğrulama Komutu
+## 🛠️ Hızlı Doğrulama Komutları
 
 ```bash
-# Proje dizininde test çalıştırması:
+# Dry-run testi:
 python main.py --dry-run
 ```

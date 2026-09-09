@@ -229,20 +229,14 @@ def _build_description(prompt_data: dict, is_shorts: bool) -> str:
     desc = prompt_data.get("youtube_description", "")
     tags = prompt_data.get("tags", [])
 
-    # Hashtag tek kelime olmalı — boşluklu tag ('Pets Got Talent') YouTube'da
-    # '#Pets' + düz metin olarak bozulur, etiketlenmez. Boşlukları kaldır.
+    # Hashtag tek kelime olmalı
     hashtags = " ".join(
         f"#{tag.replace(' ', '')}" for tag in tags[:5] if tag and tag.strip()
     )
 
     lines = [desc]
-
-    if is_shorts:
-        lines.append("\n🤖 AI-Generated Short | Powered by Antigravity")
-    else:
-        lines.append("\n🤖 AI-Generated Video | Powered by Antigravity")
-
-    lines.append(f"\n{hashtags}")
-    lines.append("#ai #aiart #aigeneratedvideo")
+    if hashtags:
+        lines.append(f"\n{hashtags}")
 
     return "\n".join(lines)
+
