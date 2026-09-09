@@ -1,0 +1,11 @@
+{
+  "ad": "Hayvan Yetenek Shorts Üreticisi (Pets Got Talent)",
+  "kategori": "İçerik & Topluluk",
+  "ozet": "Her gün absürt bir hayvan yetenek videosu üretip YouTube Shorts olarak otomatik yayınlar.",
+  "eleme": "İçerik seçmez, sıfırdan üretir. Bir havuzdan rastgele hayvan ve yetenek eşleştirir (toplam binlerce kombinasyon). Aynı eşleşme son 60 günde kullanıldıysa onu atlar, tekrar üretmez. Kalite barajı yok; bunun yerine güvenlik filtresi var: riskli senaryolar video servisine gitmeden yakalanır, reddedilirse üç kez farklı senaryo denenir.",
+  "model": "Senaryoyu OpenAI'nin güçlü modeli (GPT-4o), güvenlik temizliğini ucuz modeli (GPT-4o mini) yazar. Videoyu Seedance 2.0 üretir. GPT-4o ucuz değildir; asıl maliyet günde yaklaşık 2 ila 6 dolarlık video üretimidir.",
+  "sunum": "Bittiğinde videoyu doğrudan YouTube'a herkese açık Shorts olarak yükler. Tüm süreci Notion tablosuna kaydeder.",
+  "durum": "aktif",
+  "dahil_et": true,
+  "kaynak_notu": "README, main.py, config.py, creative_engine.py, prompt_generator.py, .env.example, nixpacks.toml, railway.json okundu. 2026-09-09'da Railway servisine cronSchedule: '30 13 * * *' bağlandı, durum 'aktif'."
+}
