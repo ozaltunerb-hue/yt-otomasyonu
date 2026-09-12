@@ -2,10 +2,10 @@
   "ad": "DeepMyster Denizcilik Shorts Üreticisi",
   "kategori": "İçerik & Topluluk",
   "ozet": "Her gün gerçekçi bir denizcilik/fırtına mikro-hikâye videosu üretip YouTube Shorts olarak otomatik yayınlar.",
-  "eleme": "12 kriterli mikro-hikâye sistemiyle komplikasyonlu ve somut fiziksel değişim içeren senaryolar üretir. Son 60 günde kullanılan kombinasyonları atlar. 12 kriterli kalite kontrol ve 3 katmanlı güvenlik filtresi uygular.",
-  "model": "Senaryoyu OpenAI (GPT-4o), güvenlik kontrolünü GPT-4o mini yazar. Videoyu Seedance 2 Mini (bytedance/seedance-2-fast) üretir.",
-  "sunum": "Bittiğinde videoyu doğrudan YouTube'a Shorts olarak yükler. Tüm süreci Notion tablosuna kaydeder.",
+  "eleme": "Sessiz-ekran görünürlük kontrolü (validate_silent_visibility) ve aksiyon/kalite kapısı (validate_high_action) ile komplikasyonlu, somut fiziksel değişim içeren ve sakin/statik olmayan senaryolar üretir. Son 60 günde kullanılan kombinasyonları atlar. 3 katmanlı güvenlik filtresi (regex + GPT preflight + retry rewrite) uygular.",
+  "model": "Senaryoyu OpenAI (GPT-4o), güvenlik kontrolünü GPT-4o mini yazar. Videoyu Seedance 2 Mini (bytedance/seedance-2-fast, 480p, 15s) üretir — Seedance Full, Veo 3.1 ve Wan 2.6 ile karşılaştırıldıktan sonra bilinçli seçildi.",
+  "sunum": "Video üretildiğinde YouTube'a private olarak yüklenir; kullanıcı elle inceleyip AI-etiketini işaretledikten sonra public yapar. Tüm süreç Notion tablosuna kaydedilir (kurulum 2026-09-12'de tamamlandı, aktif).",
   "durum": "aktif",
   "dahil_et": true,
-  "kaynak_notu": "DeepMyster 12 kriterli mikro-hikâye formatına güncellendi. Railway servisinde cronSchedule: '30 13 * * 1-5' (16:30 TR) aktif."
+  "kaynak_notu": "Railway cron şu an duraklatılmış durumda; duraklatma sebebi olan Notion tekrar-önleme kurulumu 2026-09-12'de tamamlandı, cron'un tekrar aktif edilmesi ayrı bir karar (bkz. _knowledge/deploy-registry.md)."
 }

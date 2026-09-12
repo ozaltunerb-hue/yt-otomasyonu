@@ -10,16 +10,21 @@
 
 ## 📋 Genel Bakış
 
-Bu sistem cron aktifken **sıfır insan müdahalesi** ile çalışır. Railway CronJob günde 1 kez tetikler ve şu akışı izler:
+> Güncel durumun tek doğru kaynağı `BASLANGIC.md`dir — burası sadece yapı/kurulum özetidir, ayrıntı ve gerekçe için `BASLANGIC.md`'ye bakın.
 
-1. **🧠 Creative Engine** — 8 Denizcilik Kategorisi + Gemi + İnsanlı Olay + Kamera + Aktif Mürettebat seed havuzu
-2. **🤖 GPT-4o** — Gerçekçi, fizik kurallarına uygun 15s tek plan belgesel senaryosu yazar (aktif insan aksiyonu zorunlu)
-3. **✂️ Prompt Simplifier** — Senaryoyu Seedance 2.0'a optimize 15-30 kelimelik prompt'a çevirir
-4. **🛡️ Safety Check** — İçerik güvenliği filtresi
-5. **🎬 Seedance 2.0 (Kie AI)** — Video üretir (15 saniye, portrait 9:16)
-6. **🎞️ Replicate Merge** — Çoklu klipleri birleştirir (gerekirse)
-7. **📺 YouTube Upload** — Shorts olarak yükler (public)
-8. **📋 Notion Log** — Tüm süreci kaydeder
+Bu sistem cron aktifken **sıfır insan müdahalesi** ile çalışır. Railway CronJob günde 1 kez tetikler ve şu akışı izler (cron şu an duraklatılmış, bkz. Railway CronJob bölümü):
+
+1. **🧠 Creative Engine** — 12 Denizcilik Alanı + 71 senaryoluk referans kütüphane (tam gemi çeşitliliği: kargo, tanker, kruvaziyer, feribot, Ro-Ro, römorkör, yat/marina)
+2. **🤖 GPT-4o** — Gerçekçi, fizik kurallarına uygun, yapılandırılabilir süreli (şu an 15s) tek plan belgesel senaryosu yazar; atanan kamera arketipine (`fixed_cctv`/`bystander_handheld`/`chase_pov`) göre yazılır
+3. **✅ Kalite Kapıları** — `validate_silent_visibility` (görünmezlik) + `validate_high_action` (sakin/statik sahne reddi) aynı retry döngüsünde
+4. **✂️ Prompt Simplifier** — Senaryoyu Seedance 2 Mini'ye optimize 25-45 kelimelik prompt'a çevirir
+5. **🔒 Stil Kilidi** — Seçilen kamera arketipine göre deterministik kamera/PPE/sivil-kıyafet/gerçekçilik son eki eklenir
+6. **🛡️ Safety Check** — İçerik güvenliği filtresi (regex + GPT preflight + retry rewrite)
+7. **🎬 Seedance 2 Mini (Kie AI)** — Video üretir (`bytedance/seedance-2-fast`, 480p, portrait 9:16)
+8. **📺 YouTube Upload** — Shorts olarak **private** yüklenir; kullanıcı manuel inceleyip AI-etiketini işaretledikten sonra elle public yapar
+9. **📋 Notion Log** — Tüm süreci ve tekrar-önleme combo key'ini kaydeder (2026-09-12'den beri aktif)
+
+`infrastructure/replicate_merger.py` (çoklu klip birleştirme) kodda mevcuttur ama şu an ULAŞILAMAZ durumda — pipeline her zaman tek sahne ürettiği için hiç çağrılmıyor; gelecekte çoklu klip desteği geri gelirse devreye girer.
 
 ## 🏗️ Mimari
 
@@ -29,7 +34,7 @@ YT_Otomasyonu/
 ├── config.py                        # Fail-fast yapılandırma
 ├── logger.py                        # Logging
 ├── core/
-│   ├── creative_engine.py           # Yaratıcı senaryo motoru (8 kategori + aktif mürettebat seedleri)
+│   ├── creative_engine.py           # Yaratıcı senaryo motoru (12 alan, 71 senaryo, 3 kamera arketipi)
 │   ├── prompt_generator.py          # 3 katmanlı prompt pipeline
 │   └── prompt_sanitizer.py          # İçerik güvenliği filtresi
 ├── infrastructure/
@@ -46,14 +51,17 @@ YT_Otomasyonu/
 
 | Parametre | Değer | Açıklama |
 |-----------|-------|----------|
-| **Model** | `seedance-2` | Sabit — sadece Seedance 2.0 |
+| **Model** | `bytedance/seedance-2-fast` | Seedance 2 Mini — Full Seedance, Veo 3.1 ve Wan 2.6 ile karşılaştırılıp bilinçli seçildi |
+| **Çözünürlük** | `480p` | Kredi tasarruflu — `.env`'deki `DEFAULT_RESOLUTION` |
 | **Format** | `portrait (9:16)` | Sabit — YouTube Shorts |
 | **Ses** | `Açık` | Sabit — ambient ses, dalga, motor, sirenler |
 | **Konuşma** | `Yok` | Sabit — global kitle, dil bariyeri yok |
-| **Klip sayısı** | `1` | Sabit — 15s tek kesintisiz dramatik plan |
-| **Süre/klip** | `15s` | Sabit |
-| **Upload** | `public` | Sabit |
-| **Kategori** | `19 (Travel & Events)` | Sabit |
+| **Klip sayısı** | `1` | Sabit — çoklu klip desteği kodda var ama şu an ulaşılamaz |
+| **Süre/klip** | `15s` | Dinamik — `.env`'deki `DEFAULT_DURATION`, hardcoded değil |
+| **Kamera Sistemi** | 3 arketip | `fixed_cctv` / `bystander_handheld` / `chase_pov`, ağırlıklı rastgele seçim |
+| **Sivil/Mürettebat** | Ayrık kurallar | Mürettebat = PPE; yolcu/misafir/sürücü = sivil kıyafet |
+| **Upload** | `private` | Manuel inceleme + AI-etiketi sonrası kullanıcı elle public yapar |
+| **Kategori** | `24 (Entertainment)` | `.env`'deki `YOUTUBE_CATEGORY_ID` |
 
 ## 🔑 Gerekli Ortam Değişkenleri
 
@@ -96,9 +104,9 @@ python main.py --check
 ## 🕐 Railway CronJob
 
 - **Komut:** `python main.py`
-- **Zamanlama:** ⏸️ Kaldırıldı (2026-06-06, maliyet kararı). Eski değer: `0 14 * * *` (her gün 14:00 UTC = 17:00 TR)
+- **Zamanlama:** ⏸️ Duraklatılmış. Duraklatma sebebi (Notion tekrar-önleme kurulumunun eksik olması) 2026-09-12 itibarıyla ortadan kalktı; cron'un tekrar aktif edilmesi ayrı, henüz alınmamış bir karar. Eski değer: `30 13 * * 1-5` (16:30 TR)
 - **Tip:** CronJob (çalışır, iş bitince kapanır)
-- **Yeniden başlatma:** cron schedule alanına eski değeri geri yazmak yeterli
+- **Güncel durum ve gerekçe:** bkz. `_knowledge/deploy-registry.md` (bu dosya infra durumunun kaynağıdır)
 
 ## 🛡️ Güvenlik Katmanları
 
@@ -109,9 +117,9 @@ python main.py --check
 
 ## 📊 Tekrar Önleme
 
-- Kullanılan `hayvan|yetenek` kombinasyonları Notion DB'de `Combo Key` alanında saklanır
+- **Durum: ✅ Aktif (2026-09-12)** — Notion veritabanı kuruldu, `NOTION_ENABLED=True`
+- Kullanılan `domain\|vessel\|incident` kombinasyonları Notion DB'de `Combo Key` alanında saklanır
 - Her çalışmada son 60 günün geçmişi sorgulanır
-- **2686 kombinasyon** — yıllar boyunca tekrarsız içerik garanti
 
 ## 📝 Notion DB Alanları
 
@@ -119,12 +127,12 @@ python main.py --check
 |------|-----|----------|
 | Video Adı | Title | YouTube başlığı |
 | Durum | Select | Pipeline durumu |
-| Model | Select | seedance-2 |
+| Model | Select | `bytedance/seedance-2-fast` |
 | Tetikleyici | Select | "auto" |
 | Konu | Rich Text | Senaryo özeti |
 | Prompt | Rich Text | İlk sahne promptu |
-| Combo Key | Rich Text | "animal\|talent" — tekrar önleme |
-| Klip Sayısı | Number | 1-3 |
+| Combo Key | Rich Text | "domain\|vessel\|incident" — tekrar önleme |
+| Klip Sayısı | Number | Şu an her zaman 1 |
 | Video URL | URL | CDN link |
 | YouTube URL | URL | Shorts link |
 | Tarih | Date | Üretim tarihi |
