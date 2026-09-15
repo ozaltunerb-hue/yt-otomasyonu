@@ -77,6 +77,10 @@ async def upload_to_youtube(video_path: str, prompt_data: dict, is_shorts: bool 
             "privacyStatus": settings.YOUTUBE_PRIVACY,
             "selfDeclaredMadeForKids": False,
             "embeddable": True,
+            # DeepMyster içeriği %100 Seedance ile üretilir — YouTube'un Ekim 2024'te
+            # eklediği resmi "Altered/Synthetic content" ifşa alanı, her video için
+            # koşulsuz True. https://developers.google.com/youtube/v3/revision_history
+            "containsSyntheticMedia": True,
         },
     }
 

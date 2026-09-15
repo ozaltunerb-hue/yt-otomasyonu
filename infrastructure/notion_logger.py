@@ -230,6 +230,57 @@ class NotionTracker:
             f"Notion get_used_combos {max_attempts} denemede de başarısız: {last_exc}"
         )
 
+    def get_recent_history(self, days: int = 30) -> list[str]:
+        """
+        Son N günün konu ve başlıklarını çeker (GPT'ye negatif yönlendirme olarak vermek için).
+        """
+        if not self.enabled or settings.IS_DRY_RUN:
+            return []
+
+        from datetime import timedelta
+
+        since = datetime.now(timezone.utc) - timedelta(days=days)
+        since_iso = since.isoformat()
+
+        payload = {
+            "filter": {
+                "and": [
+                    {
+                        "property": "Tarih",
+                        "date": {"on_or_after": since_iso}
+                    }
+                ]
+            },
+            "sorts": [{"property": "Tarih", "direction": "descending"}],
+            "page_size": 25,
+        }
+
+        try:
+            response = _notion_request(
+                "POST",
+                f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query",
+                json=payload,
+            )
+            history = []
+            for page in response.get("results", []):
+                props = page.get("properties", {})
+                # Konu
+                topic_rt = props.get("Konu", {}).get("rich_text", [])
+                if topic_rt:
+                    t = topic_rt[0].get("text", {}).get("content", "")
+                    if t and t not in history:
+                        history.append(t)
+                # Video Adı
+                title_rt = props.get("Video Adı", {}).get("title", [])
+                if title_rt:
+                    t = title_rt[0].get("text", {}).get("content", "")
+                    if t and t not in history:
+                        history.append(t)
+            return history[:20]
+        except Exception as e:
+            log.warning(f"⚠️ Notion get_recent_history hatası (ihmal edilebilir): {e}")
+            return []
+
     def update_with_safety_info(self, safety_data: dict):
         """
         İçerik güvenliği telemetrisi — pre-flight, retry ve fallback bilgilerini kaydeder.

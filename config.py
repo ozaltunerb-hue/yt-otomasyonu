@@ -43,10 +43,12 @@ class Config:
         )
 
         # ── Sabit Üretim Parametreleri (DeepMyster — Seedance 2 Mini) ──
+        # A/B test: DEFAULT_MODEL değeri "seedance-2-mini" (varsayılan), "seedance-2"
+        # veya "veo-3.1" olabilir — bkz. infrastructure/kie_client.py MODEL_CONFIG.
         self.DEFAULT_MODEL = os.environ.get("DEFAULT_MODEL", "bytedance/seedance-2-fast")  # Seedance 2 Mini
         self.DEFAULT_ORIENTATION = "portrait"    # Sabit — Shorts (9:16)
         self.DEFAULT_AUDIO = True               # Sabit — ses her zaman açık (deniz/dalga/fırtına sesleri)
-        self.DEFAULT_DURATION = 15              # Sabit — 15 saniye Shorts
+        self.DEFAULT_DURATION = int(os.environ.get("DEFAULT_DURATION", "12"))  # 12 varsayılan, env ile override edilebilir
         self.DEFAULT_RESOLUTION = os.environ.get("DEFAULT_RESOLUTION", "480p")  # Kredi tasarruflu 480p
 
         # ── YouTube Upload ──

@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 """
-Prompt Generator — "DeepMyster" 12 Kriterli Mikro-Hikâye & Seedance 2 Mini Pipeline.
+Prompt Generator — "DeepMyster" Doğukan Metodolojisi & Yaratıcı Serbestlik Pipeline.
 
-Creative Engine'den komplikasyonlu seed alır → GPT-4o ile 5 aşamalı mikro-olay senaryosu yazar →
-12 Kriterli Sıkı Otomatik Kalite Kontrolü (12 PASS Kontrolü + Self-Correction) →
-Seedance 2 Mini optimize eylem & sonuç prompt'una dönüştürür.
+Akış:
+  1. Creative Engine'den geniş denizcilik katalizörü alır (Kutup, Ağır Yük, Kurtarma, vb. + Negatif Geçmiş).
+  2. GPT-4o ile tam yaratıcı özgürlükle (config.DEFAULT_DURATION saniyelik) tek kesintisiz çekim fiziksel senaryo tasarlar.
+  3. Sessiz Ekran Görünürlük Kontrolü (görünmez sualtı/makine durumlarını filtreler).
+  4. GPT-4o ile Seedance 2 Mini'ye özel 25–45 kelimelik yüksek sinyalli prompt üretir (Doğukan Less is More).
+  5. YouTube metadata (merak odaklı, no-spoiler) ve cerrahi safety sanitizer uygular.
 """
 import re
 import json
@@ -15,10 +18,14 @@ import threading
 from openai import OpenAI
 from config import settings
 from core.creative_engine import (
-    generate_creative_seed,
-    SCENARIO_WRITER_SYSTEM,
-    PROMPT_SIMPLIFIER_SYSTEM,
+    get_creative_catalyst,
+    build_scenario_writer_system,
+    build_prompt_simplifier_system,
+    compute_duration_breakpoints,
+    choose_camera_archetype,
+    CAMERA_ARCHETYPES,
     YOUTUBE_METADATA_SYSTEM,
+    apply_style_lock,
 )
 
 log = logging.getLogger("PromptGenerator")
@@ -59,7 +66,7 @@ async def _call_gpt(system_prompt: str, user_message: str, temperature: float = 
                 {"role": "user", "content": user_message},
             ],
             temperature=temperature,
-            max_tokens=1800,
+            max_tokens=1000,
             response_format={"type": "json_object"},
         )
         raw = response.choices[0].message.content
@@ -72,349 +79,294 @@ async def _call_gpt(system_prompt: str, user_message: str, temperature: float = 
         raise
 
 
-def validate_scenario_13_criteria(scenario: dict, title: str = "") -> dict:
+def validate_silent_visibility(scenario: dict) -> tuple[bool, list[str]]:
     """
-    GPT-4o tarafından üretilen senaryoyu 13 zorunlu kalite kriteri (12+1) açısından denetler.
-    Her kriter için somut durum (PASS/FAIL) ve gerekçe/kanıt raporlar.
+    Sessiz Ekran Görünürlük Kontrolü (Hafif Mantıksal Sanity Check).
     
-    Returns:
-        dict: {
-            "all_passed": True/False,
-            "results": {
-                "1_strong_hook_0_3s": {"status": "PASS", "reason": "..."},
-                ...
-                "13_story_driven_camera": {"status": "PASS", "reason": "..."}
-            },
-            "failures": ["Kriter 3 başarısız: ...", ...]
-        }
+    Kontroller:
+      1. Görünmez sualtı olayları (underwater rudder, submerged shaft, sonar screen) var mı?
+      2. Senaryo özeti ve fiziksel hareket tanımlı mı?
     """
-    story_arc = scenario.get("story_arc", {}) if isinstance(scenario.get("story_arc"), dict) else {}
-    camera_plan = scenario.get("camera_plan", {}) if isinstance(scenario.get("camera_plan"), dict) else {}
-    scenes = scenario.get("scenes", [])
-    what_changed = scenario.get("what_happened_and_what_changed", "").strip()
-    self_check = scenario.get("quality_self_check_13", {}) or scenario.get("quality_self_check_12", {})
-    if not isinstance(self_check, dict):
-        self_check = {}
-
-    results = {}
     failures = []
+    desc = scenario.get("scene_description", "")
+    summary = scenario.get("scenario_summary", "")
+    full_text = f"{desc} {summary}".lower()
 
-    def _get_self_check_reason(key: str, default: str = "") -> str:
-        val = self_check.get(key)
-        if isinstance(val, dict):
-            return str(val.get("reason", default))
-        elif isinstance(val, str):
-            return val
-        return default
-
-    # Kriter 1: İlk 3 saniyede olağandışı bir olay var mı? (Hook 0-3s)
-    hook = (story_arc.get("hook_seconds_0_3") or story_arc.get("hook_seconds_1_3") or "").strip()
-    reason_1 = _get_self_check_reason("1_strong_hook_0_3s") or _get_self_check_reason("1_strong_hook_first_3s") or hook
-    if len(hook) >= 15 and not any(p in hook.lower() for p in ["calm sea", "peaceful", "establishing shot", "wide landscape", "ambient"]):
-        results["1_strong_hook_0_3s"] = {"status": "PASS", "reason": f"Olay ilk karede başlamış: {reason_1}"}
-    else:
-        results["1_strong_hook_0_3s"] = {"status": "FAIL", "reason": "İlk 3 saniyede olağandışı somut bir olay başlamıyor (Hook eksik veya durağan)"}
-        failures.append("1. İlk 3 saniyede olağandışı somut bir olay başlamıyor (establishing shot veya durağan görüntü yasak)")
-
-    # Kriter 2: İzleyici neyin yanlış gittiğini anlayabiliyor mu? (Problem 3-6s)
-    incident = (story_arc.get("incident_seconds_3_6") or story_arc.get("incident_seconds_3_7") or "").strip()
-    reason_2 = _get_self_check_reason("2_clear_problem_3_6s") or _get_self_check_reason("2_clear_problem_established") or incident
-    if len(incident) >= 15:
-        results["2_clear_problem_3_6s"] = {"status": "PASS", "reason": f"Tehlike mekanizması net: {reason_2}"}
-    else:
-        results["2_clear_problem_3_6s"] = {"status": "FAIL", "reason": "Olayın ve tehlikenin mekanizması net şekilde anlaşılmıyor"}
-        failures.append("2. Olayın/tehlikenin mekanizması net şekilde anlaşılmıyor")
-
-    # Kriter 3: Mürettebat / insan karakter aktif fiziksel müdahale yapıyor mu? (Pasif duruş kesinlikle FAIL)
-    desc_all = " ".join([s.get("description", "") for s in scenes]) + " " + incident + " " + hook
-    crew_actions = [
-        "scramble", "dive", "haul", "jam", "cut", "maneuver", "latch", "steer", "shove",
-        "pry", "brace", "drop", "pull", "rush", "hook", "crank", "tackle", "deploy",
-        "wrestle", "bleed", "twist", "spray", "sprint", "clamp", "sever", "heave"
+    # Görünmez / Sualtı / Sadece sesle anlaşılan yasaklı anahtar kelimeler
+    invisible_keywords = [
+        "underwater rudder", "submerged shaft", "engine room blackout",
+        "sonar screen", "radar glitch", "radio static", "alarm sound only"
     ]
-    has_crew_action = any(act in desc_all.lower() for act in crew_actions)
-    reason_3 = _get_self_check_reason("3_active_crew_physical_action")
-    if has_crew_action:
-        results["3_active_crew_physical_action"] = {"status": "PASS", "reason": f"Mürettebat aktif fiziksel müdahalede: {reason_3 or 'Somut beden gücü ve eylem mevcut'}"}
-    else:
-        results["3_active_crew_physical_action"] = {"status": "FAIL", "reason": "Mürettebat pasif veya fiziksel müdahale yok (yalnızca kadrajda görünmek kabul edilmez)"}
-        failures.append("3. Mürettebat aktif fiziksel müdahale yapmıyor (yalnızca kadrajda durmak kabul edilmez, aktif beden eylemi zorunludur)")
+    for kw in invisible_keywords:
+        if kw in full_text:
+            failures.append(f"Görünmez/Sualtı öğesi tespit edildi: '{kw}'")
 
-    # Kriter 4: Olay gerçekten tırmanıyor mu? (Tırmanış)
-    escalation = (story_arc.get("escalation_and_complication_seconds_6_9") or story_arc.get("escalation_and_complication_seconds_7_12") or "").strip()
-    reason_4 = _get_self_check_reason("4_genuine_escalation") or escalation
-    if len(escalation) >= 15:
-        results["4_genuine_escalation"] = {"status": "PASS", "reason": f"Gerilim ve risk fiziksel olarak artıyor: {reason_4}"}
-    else:
-        results["4_genuine_escalation"] = {"status": "FAIL", "reason": "Tırmanış aşaması yetersiz veya gerilim artmıyor"}
-        failures.append("4. Olay tırmanmıyor veya gerilim artmıyor")
+    if not summary and not desc:
+        failures.append("Senaryo açıklaması veya özeti boş")
 
-    # Kriter 5: İlk çözümün dışında yeni bir komplikasyon / başarısız ilk hamle var mı? (Komplikasyon 6-9s)
-    complication_words = [
-        "fails", "snaps", "slips", "pops", "jams", "parted", "short", "overload",
-        "lags", "binds", "misses", "unexpected", "secondary", "forced", "forcing",
-        "unable", "stalls", "cracks", "shears", "kinks", "tangles"
-    ]
-    has_complication = any(w in escalation.lower() or w in desc_all.lower() for w in complication_words)
-    reason_5 = _get_self_check_reason("5_unexpected_complication_6_9s") or _get_self_check_reason("5_unexpected_complication_present")
-    if has_complication:
-        results["5_unexpected_complication_6_9s"] = {"status": "PASS", "reason": f"İlk müdahale yetersiz kaldı, komplikasyon mevcut: {reason_5 or 'Başarısız hamle veya ikinci risk var'}"}
-    else:
-        results["5_unexpected_complication_6_9s"] = {"status": "FAIL", "reason": "Olay tek hamlede kolayca çözülüyor (komplikasyon yok)"}
-        failures.append("5. İlk çözüm dışında yeni bir komplikasyon / başarısız ilk hamle yok (basit tehlike -> hemen kurtuldu kalıbı reddedildi)")
+    is_valid = len(failures) == 0
+    return is_valid, failures
 
-    # Kriter 6: Kritik bir an var mı? (Kritik An 9-12s)
-    critical = (story_arc.get("critical_moment_seconds_9_12") or story_arc.get("critical_moment_seconds_12_15") or "").strip()
-    reason_6 = _get_self_check_reason("6_critical_moment_9_12s") or _get_self_check_reason("6_critical_decisive_moment") or critical
-    if len(critical) >= 15:
-        results["6_critical_moment_9_12s"] = {"status": "PASS", "reason": f"Sonucu belirleyen nihai fiziksel hareket mevcut: {reason_6}"}
-    else:
-        results["6_critical_moment_9_12s"] = {"status": "FAIL", "reason": "Kritik belirleyici an tanımlanmamış"}
-        failures.append("6. Kritik belirleyici an tanımlanmamış")
 
-    # Kriter 7: Sonuç görsel olarak gerçekleşiyor mu? (Görsel Sonuç 12-15s)
-    resolution = (story_arc.get("resolution_seconds_12_15") or story_arc.get("resolution_seconds_15_18") or "").strip()
-    reason_7 = _get_self_check_reason("7_visible_physical_resolution_12_15s") or _get_self_check_reason("7_visible_physical_resolution") or resolution
-    if len(resolution) >= 15 and not resolution.lower().startswith("and then"):
-        results["7_visible_physical_resolution_12_15s"] = {"status": "PASS", "reason": f"Sonuç ekranda görsel/fiziksel olarak gerçekleşiyor: {reason_7}"}
-    else:
-        results["7_visible_physical_resolution_12_15s"] = {"status": "FAIL", "reason": "Görsel/fiziksel sonuç yetersiz veya soyut"}
-        failures.append("7. Sonuç görsel ve fiziksel olarak gerçekleşmiyor (varsayımsal anlatım yasak)")
+# ── Aksiyon/Tehlike Yoğunluğu Kontrolü — kelime listeleri ──
+_HIGH_ACTION_KEYWORDS = [
+    "colli",       # collision, collide, colliding
+    "crash", "slam", "snap", "flood", "swing", "list", "capsiz",
+    "ruptur", "strain", "jam", "buckle", "shear", "sever", "detach",
+    "spark", "smoke", "drift", "surge", "topple", "tilt", "sink",
+    "grind", "wedge", "brace", "scramble", "out of control",
+]
 
-    # Kriter 8: Videonun sonunda fiziksel olarak neyin değiştiği açık mı? (Değişim)
-    reason_8 = _get_self_check_reason("8_clear_what_changed_physically") or what_changed
-    if len(what_changed) >= 20:
-        results["8_clear_what_changed_physically"] = {"status": "PASS", "reason": f"Fiziksel değişim somut: {reason_8}"}
-    else:
-        results["8_clear_what_changed_physically"] = {"status": "FAIL", "reason": "what_happened_and_what_changed yetersiz"}
-        failures.append("8. Videonun sonunda fiziksel olarak neyin değiştiği açık değil")
+_STATIC_KEYWORDS = [
+    "driving", "parking", "loading", "waiting", "standing by", "routine",
+    "calm", "normal operations", "peacefully", "smoothly", "uneventful",
+    "idle", "quietly", "nothing unusual", "business as usual",
+]
 
-    # Kriter 9: Shotlar tek bir olayın fiziksel devamı ve neden-sonuç zinciri mi? (Süreklilik)
-    reason_9 = _get_self_check_reason("9_strict_shot_continuity_and_causality") or _get_self_check_reason("9_strict_shot_continuity")
-    if len(scenes) >= 1 and all(len(s.get("description", "")) >= 20 for s in scenes):
-        results["9_strict_shot_continuity_and_causality"] = {"status": "PASS", "reason": f"Shotlar tek bir fiziksel olayın neden-sonuç devamı: {reason_9 or 'Tutarlı kronoloji'}"}
-    else:
-        results["9_strict_shot_continuity_and_causality"] = {"status": "FAIL", "reason": "Sahne sürekliliği veya neden-sonuç bağı eksik"}
-        failures.append("9. Shotlar tek bir olayın fiziksel devamı değil")
 
-    # Kriter 10: İzleyici sonucu önceden tahmin etmeden sonuna kadar izlemek ister mi? (Merak / Tension)
-    reason_10 = _get_self_check_reason("10_unpredictable_curiosity_maintained")
-    if has_complication and len(critical) >= 15:
-        results["10_unpredictable_curiosity_maintained"] = {"status": "PASS", "reason": f"Merak ve belirsizlik son ana kadar korundu: {reason_10 or 'Komplikasyon sonucu tahmin edilemez kılıyor'}"}
-    else:
-        results["10_unpredictable_curiosity_maintained"] = {"status": "FAIL", "reason": "Merak unsuru zayıf veya sonuç baştan tahmin edilebilir"}
-        failures.append("10. Sonuç çok tahmin edilebilir veya merak unsuru eksik")
+def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
+    """
+    Aksiyon/Tehlike Yoğunluğu Kontrolü (Sakin/Statik Sahne Reddi).
 
-    # Kriter 11: Başlık sonucu gereksiz şekilde spoiler vermiyor mu? (No-Spoiler Title)
-    title_to_check = title or scenario.get("scenario_title", "")
-    spoiler_words = ["saved by", "rescued by", "fixed by", "prevents collision", "miracle escape", "survives unharmed", "stops runaway"]
-    has_spoiler = any(sp in title_to_check.lower() for sp in spoiler_words)
-    reason_11 = _get_self_check_reason("11_no_spoiler_in_title")
-    if not has_spoiler and len(title_to_check) > 5:
-        results["11_no_spoiler_in_title"] = {"status": "PASS", "reason": f"Başlık tehlike odaklı ve spoiler içermiyor: {title_to_check} ({reason_11 or 'No spoiler'})"}
-    else:
-        results["11_no_spoiler_in_title"] = {"status": "FAIL", "reason": f"Başlıkta spoiler tespit edildi: {title_to_check}"}
-        failures.append("11. Başlık sonucu baştan ele veriyor (spoiler içeriyor)")
+    Kontroller:
+      1. En az bir aktif tehlike/aksiyon kelimesi (collision, snap, flood, list,
+         capsize, ...) var mı?
+      2. Yoksa, sakin/rutin dile işaret eden anahtar kelimeler (driving, loading,
+         waiting, routine, calm, ...) tespit edilip nedeni açıkça loglanır.
+    """
+    failures = []
+    movement = scenario.get("physical_movement", "")
+    consequence = scenario.get("visible_consequence", "")
+    summary = scenario.get("scenario_summary", "")
+    full_text = f"{movement} {consequence} {summary}".lower()
 
-    # Kriter 12: Video yalnızca güzel görüntülerden oluşmuyor, başı-sonu olan gerçek bir mikro-olay mı?
-    reason_12 = _get_self_check_reason("12_complete_micro_narrative")
-    if len(failures) == 0:
-        results["12_complete_micro_narrative"] = {"status": "PASS", "reason": f"Başı, tırmanışı, komplikasyonu ve somut sonucu olan tam mikro-hikaye: {reason_12 or 'Tam olay örgüsü'}"}
-    else:
-        results["12_complete_micro_narrative"] = {"status": "FAIL", "reason": "Eksik anlatı ögeleri var"}
-        failures.append("12. Başı ve sonu olan gerçek bir mikro-olay tamamlanmadı")
+    matched_action = [kw for kw in _HIGH_ACTION_KEYWORDS if kw in full_text]
+    matched_static = [kw for kw in _STATIC_KEYWORDS if kw in full_text]
 
-    # Kriter 13: Kamera açıları ve hareketleri fiziksel olayı en anlaşılır şekilde gösteriyor mu? (Story-Driven Camera)
-    has_camera_plan = len(camera_plan) >= 3 or any(
-        cam in desc_all.lower() for cam in ["cctv", "camera", "bodycam", "bridge", "lens", "view", "witness", "phone", "quayside", "telephoto"]
-    )
-    reason_13 = _get_self_check_reason("13_story_driven_camera")
-    if has_camera_plan:
-        results["13_story_driven_camera"] = {"status": "PASS", "reason": f"Kamera fiziksel aksiyonu en anlaşılır şekilde aktaracak kayıt kaynağından seçildi: {reason_13 or 'STORY -> ACTION -> CAMERA kuralı uygulandı'}"}
-    else:
-        results["13_story_driven_camera"] = {"status": "FAIL", "reason": "Kamera planı veya fiziksel kayıt kaynağı gerekçesi eksik"}
-        failures.append("13. Kamera açıları hikayedeki fiziksel olayı anlaşılır kılacak şekilde kurgulanmamış (Story-Driven Camera eksik)")
+    if not matched_action:
+        if matched_static:
+            failures.append(
+                f"Sakin/rutin dil tespit edildi, dengeleyecek aksiyon kelimesi yok: {matched_static}"
+            )
+        else:
+            failures.append(
+                "Aktif tehlike/aksiyon anahtar kelimesi bulunamadı — sahne çok sakin/statik olabilir"
+            )
 
-    all_passed = (len(failures) == 0)
-    return {
-        "all_passed": all_passed,
-        "results": results,
-        "failures": failures,
-    }
+    is_valid = len(failures) == 0
+    return is_valid, failures
 
 
 async def generate_prompts(config: dict) -> dict:
-    """Tam otonom 13 kriterli (12+1) ve 5-shot × 3s video prompt pipeline'ı."""
+    """
+    Doğukan metodolojisinde tam otonom ve yaratıcı serbestlikli prompt pipeline'ı.
+    """
     if settings.IS_DRY_RUN:
-        log.info("🧪 DRY-RUN: 13 kriterli DeepMyster mock promptları üretiliyor...")
+        log.info("🧪 DRY-RUN: Doğukan standardında DeepMyster mock promptları üretiliyor...")
         return _dry_run_output()
 
     used_combos = config.get("used_combos", [])
+    recent_topics = config.get("recent_topics", [])
+    combined_history = list(set(used_combos + recent_topics))
 
-    # ── ADIM 1: Yaratıcı Olay Seed'i Seç ──
-    seed = generate_creative_seed(used_combos)
-    log.info(f"🎲 Seed: [{seed['category_label']}] {seed['vessel']} × {seed['incident'][:50]}...")
+    # ── ADIM 1: Geniş Denizcilik Katalizörü Seç ──
+    catalyst = get_creative_catalyst(recent_history=combined_history)
+    log.info(f"🧭 Denizcilik Alanı: [{catalyst['domain_id']}] {catalyst['domain_title']}")
 
-    # ── ADIM 2: GPT Senaryo Yaz + 13 Kriter Kalite Kontrolü (Hard Quality Gate Loop) ──
-    log.info("🤖 GPT-4o'ya 5 shot × 3s (15s) komplikasyonlu mikro-olay senaryosu yazdırılıyor...")
-    scenario, validation_data = await _generate_scenario_with_13_validation(seed)
-    
-    if not validation_data.get("all_passed", False):
-        raise ValueError(f"CRITICAL QUALITY GATE FAILURE: Senaryo 13/13 kriteri sağlayamadı: {validation_data.get('failures')}")
+    # ── ADIM 1b: Kamera Arketipi Seç (Fixed CCTV / Bystander Handheld / Chase POV) ──
+    camera_archetype = choose_camera_archetype()
+    log.info(f"🎥 Kamera Arketipi Seçildi: [{camera_archetype}] {CAMERA_ARCHETYPES[camera_archetype]['title']}")
+
+    # ── ADIM 2: GPT-4o ile Yaratıcı Senaryo Tasarla ──
+    max_scenario_retries = 3
+    scenario = None
+
+    for attempt in range(max_scenario_retries):
+        raw_scenario = await _generate_scenario(catalyst, camera_archetype)
+        is_visible, visibility_failures = validate_silent_visibility(raw_scenario)
+        is_active, action_failures = validate_high_action(raw_scenario)
+        is_valid = is_visible and is_active
+        failures = visibility_failures + action_failures
+
+        if is_valid:
+            scenario = raw_scenario
+            log.info(f"✅ Senaryo Onaylandı: {scenario.get('scenario_summary', '')}")
+            break
+        else:
+            log.warning(
+                f"⚠️ Senaryo kontrolü ({attempt+1}/{max_scenario_retries}): {failures} "
+                f"| Reddedilen senaryo: {raw_scenario.get('scenario_summary', '')}"
+            )
+            # Farklı bir katalizör dene
+            catalyst = get_creative_catalyst(recent_history=combined_history)
+
+    if scenario is None:
+        scenario = raw_scenario  # Fallback
+
+    # ── ADIM 3: Seedance 2 Mini Doğukan Promptu (25–45 Kelime — DEFAULT_DURATION Standardı) ──
+    log.info(f"✂️ Sahne Doğukan standardına sadeleştiriliyor (25–45 kelime {settings.DEFAULT_DURATION}s)...")
+    simplified = await _simplify_prompt(scenario, catalyst)
+    raw_prompt_text = simplified.get("prompt", "").strip()
+    raw_word_count = len(raw_prompt_text.split())
+
+    # ── Sabit Stil Kilidi — GPT ne yazarsa yazsın değişmez şekilde eklenir ──
+    prompt_text = apply_style_lock(raw_prompt_text, camera_archetype)
+    word_count = len(prompt_text.split())
 
     log.info(
-        f"📋 Senaryo 13 KRİTERİN TAMAMINDAN GEÇTİ (13/13 PASS): {scenario.get('clip_count', 1)} klip, "
-        f"{scenario.get('total_duration', 15)}s | Olay: {scenario.get('scenario_title', 'Maritime Event')}"
+        f"   → GPT prompt [{raw_word_count} kelime, Doğukan hedefi 25-45] + stil kilidi "
+        f"→ Kie'ye giden nihai prompt [{word_count} kelime]: {prompt_text}"
     )
-    log.info(f"   🔍 Değişim / Payoff: {scenario.get('what_happened_and_what_changed', '')}")
 
-    # ── ADIM 3: Seedance 2 Mini İçin 5 Shot Eylem & Neden-Sonuç Prompt'u ──
-    scenes = scenario.get("scenes", [])
-    simplified_scenes = []
+    simplified_scenes = [{
+        "scene_number": 1,
+        "prompt": prompt_text,
+        "duration": settings.DEFAULT_DURATION,
+    }]
 
-    for scene in scenes:
-        log.info(f"✂️ Sahne {scene['scene_number']}/{len(scenes)} Seedance 2 Mini 5-shot formatına dönüştürülüyor...")
-        simplified = await _simplify_prompt(scene, seed, scenario)
-        simplified_scenes.append({
-            "scene_number": scene["scene_number"],
-            "prompt": simplified["prompt"],
-            "duration": scene.get("duration", 15),
-        })
-        word_count = len(simplified["prompt"].split())
-        log.info(f"   → Seedance 2 Mini Prompt ({word_count} kelime): {simplified['prompt']}")
-
-    # ── ADIM 4: YouTube Metadata (Merak ve Spoiler'sız Başlık) ──
+    # ── ADIM 4: YouTube Metadata (Merak Odaklı, No-Spoiler) ──
     log.info("📺 YouTube metadata üretiliyor...")
-    metadata = await _generate_metadata(scenario, seed)
+    metadata = await _generate_metadata(scenario, catalyst)
 
-    # ── ADIM 5: Safety Sanitizer ──
+    # ── ADIM 5: Cerrahi Safety Sanitizer ──
     from core.prompt_sanitizer import sanitize_prompt
-    for scene in simplified_scenes:
-        original = scene["prompt"]
-        sanitized, changes = sanitize_prompt(original)
-        if changes:
-            scene["prompt"] = sanitized
-            log.info(f"   🛡️ Sahne {scene['scene_number']} sanitize edildi: {len(changes)} değişiklik")
+    original_prompt = simplified_scenes[0]["prompt"]
+    sanitized, changes = sanitize_prompt(original_prompt)
+    if changes:
+        simplified_scenes[0]["prompt"] = sanitized
+        log.info(f"   🛡️ Prompt sanitize edildi: {len(changes)} değişiklik")
 
     # ── Sonuç Birleştir ──
+    clean_title = clean_youtube_title(metadata.get("youtube_title", "Massive Ocean Swell Hits Vessel Deck #Shorts"))
+    vessel = scenario.get("vessel_class", "Vessel")
+    incident = scenario.get("incident_type", "Incident")
+    combo_key = f"{catalyst['domain_id']}|{vessel.lower()}|{incident.lower()}"
+
     result = {
         "scenes": simplified_scenes,
-        "youtube_title": clean_youtube_title(metadata.get("youtube_title", "Massive Ocean Wave Strikes Vessel #Shorts")),
+        "youtube_title": clean_title,
         "youtube_description": metadata.get("youtube_description", ""),
-        "tags": metadata.get("tags", ["DeepMyster", "Shorts", "Maritime", "RoughSeas", "Ocean", "Crew"]),
+        "tags": metadata.get("tags", ["DeepMyster", "Shorts", "Maritime", "CCTV", "CargoShip", "Ferry", "RoughSeas"]),
         "scenario_summary": scenario.get("scenario_summary", ""),
-        "what_happened_and_what_changed": scenario.get("what_happened_and_what_changed", ""),
-        "story_arc": scenario.get("story_arc", {}),
-        "camera_plan": scenario.get("camera_plan", {}),
-        "validation_13_criteria": validation_data,
-        "combo_key": seed["combo_key"],
-        "total_duration": scenario.get("total_duration", sum(s["duration"] for s in simplified_scenes)),
-        "animal": seed["vessel"],
-        "talent": seed["incident"],
-        "category": seed["category"],
+        "combo_key": combo_key,
+        "total_duration": settings.DEFAULT_DURATION,
+        "animal": vessel,
+        "talent": incident,
+        "category": catalyst["domain_id"],
     }
 
-    log.info(f"✅ DeepMyster Pipeline tamamlandı: \"{result['youtube_title']}\"")
+    log.info(f"✅ DeepMyster Pipeline hazır: \"{result['youtube_title']}\" ({settings.DEFAULT_DURATION}s tek kesintisiz çekim)")
     return result
 
 
-async def _generate_scenario_with_13_validation(seed: dict, max_retries: int = 3) -> tuple[dict, dict]:
-    """GPT-4o ile senaryo üretir ve 13 kriterin tamamı (13/13) PASS olana kadar otomatik yeniden yazar (HARD GATE)."""
-    feedback = ""
-    last_validation = {}
+async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
+    """Katman 2: GPT-4o'ya yaratıcı yönetmenlik rolü vererek özgün denizcilik senaryosu ürettir."""
+    duration = settings.DEFAULT_DURATION
+    early, late = compute_duration_breakpoints(duration)
+    history_text = "\n".join(f"- {h}" for h in catalyst.get("recent_history", [])[-15:]) if catalyst.get("recent_history") else "None (First run)"
+    library_text = "\n".join(f"• {s}" for s in catalyst.get("existing_library_reference", [])) if catalyst.get("existing_library_reference") else ""
+    archetype = CAMERA_ARCHETYPES.get(camera_archetype, CAMERA_ARCHETYPES["fixed_cctv"])
 
-    for attempt in range(max_retries):
-        user_message = f"""Create a realistic, dramatic 5-shot × 3-second (Total 15s) maritime micro-story scenario for DeepMyster with AT LEAST ONE UNEXPECTED COMPLICATION:
+    # Domain'in "camera_styles" örnekleri hep sabit CCTV tonunda — atanan arketip
+    # CCTV değilse çelişki yaratmaması için bu satırı atlıyoruz.
+    camera_styles_line = (
+        f"RECOMMENDED CAMERA STYLES: {', '.join(catalyst['camera_styles'])}\n"
+        if camera_archetype == "fixed_cctv" else ""
+    )
 
-CATEGORY: {seed.get('category_label', 'Deniz Olayı')}
-VESSEL / SUBJECT: {seed.get('vessel', 'cargo ship')}
-CORE INCIDENT: {seed.get('incident', 'emergency event in rough sea')}
-SETTING / LOCATION: {seed['setting']}
-DYNAMICS: {seed['twist']}
-CAMERA PERSPECTIVE: {seed.get('camera_perspective', 'quayside CCTV / bridge cam / bodycam footage')}
-ACTIVE CREW ROLE: {seed.get('crew_context', 'Active deckhands and officers fighting the crisis')}
+    # chase_pov testte tek-tekne fırtına sahnesine düşüyordu — bu kural olmadan
+    # GPT "kovalama" kavramını göz ardı edip sadece kendi teknesini anlatıyordu.
+    chase_pov_directive = (
+        "\n8. MANDATORY FOR CHASE POV: Include TWO distinct vessels — the "
+        "observer vessel the camera films from, and a second, clearly separate "
+        "vessel actively in crisis that remains visible throughout the shot. "
+        "This is NOT a single-vessel storm scene. If a natural two-vessel setup "
+        "doesn't fit this domain, pick a different incident within the same "
+        "domain rather than defaulting to a single vessel."
+        if camera_archetype == "chase_pov" else ""
+    )
 
-MANDATORY 13 RULES & 5-SHOT STRUCTURE:
-1. SHOT 1 (0-3s) HOOK: In media res shocking start. No calm establishing shot!
-2. SHOT 2 (3-6s) INCIDENT & CREW ACTION: Problem mechanism clear, crew ACTIVELY and PHYSICALLY intervenes (no passive standing!).
-3. SHOT 3 (6-9s) ESCALATION & COMPLICATION: Initial fix fails, line snaps, tool slips, or secondary risk emerges! NO simple 1-step fixes!
-4. SHOT 4 (9-12s) CRITICAL MOMENT: Decisive high-stakes physical maneuver at danger peak.
-5. SHOT 5 (12-15s) VISUAL PAYOFF: Concrete physical change happens on screen.
-6. STORY CAUSALITY: Cause -> Action -> Consequence -> Complication -> Critical Action -> Result.
-7. STRICT CONTINUITY: Same ship, same crew, same weather, same location across all 15s.
-8. STORY-DRIVEN CAMERA: STORY -> ACTION -> CAMERA. Camera frames the essential physical info from a realistic recording source.
-9. ANSWER: 'What exactly happened and what physically changed by the end?'
-10. NO SPOILERS IN TITLE: Title must highlight danger, never reveal the resolution."""
+    user_message = f"""You are directing a new {duration}-second continuous raw documentary scene for DeepMyster.
 
-        if feedback:
-            user_message += f"\n\nPREVIOUS ATTEMPT FAILED QUALITY CONTROL (13 CRITERIA):\n{feedback}\nPlease fix these specific failures and regenerate a fully compliant 13/13 PASS micro-story."
+CAMERA PERSPECTIVE FOR THIS SCENE (MANDATORY): {archetype['gpt_guidance']}
 
-        scenario = await _call_gpt(SCENARIO_WRITER_SYSTEM, user_message, temperature=0.85)
+EXPLORATION DOMAIN: {catalyst['domain_title']}
+DOMAIN INSPIRATION & GUIDANCE: {catalyst['guidance']}
+EXAMPLE ELEMENTS FOR INSPIRATION: {', '.join(catalyst['example_elements'])}
+{camera_styles_line}
+DEEPMYSTER BRAND UNIVERSE & EXISTING REFERENCE SAMPLES (FOR INSPIRATION & TONE):
+{library_text}
 
-        # 13 Kriter Doğrulaması
-        validation = validate_scenario_13_criteria(scenario, scenario.get("scenario_title", ""))
-        last_validation = validation
+RECENT PRODUCTION HISTORY (DO NOT REPEAT THESE RECENT CONCEPTS):
+{history_text}
 
-        if validation["all_passed"]:
-            for scene in scenario.get("scenes", []):
-                dur = scene.get("duration", 15)
-                scene["duration"] = max(10, min(15, dur))
-            return scenario, validation
+CREATIVE DIRECTIVE:
+1. Use the brand library samples above to understand our tone, but DO NOT copy or mechanically re-skin them.
+2. Choose an authentic, realistic vessel — cruise/passenger ship, ferry, Ro-Ro carrier, general cargo ship, container ship, tanker, tugboat/rescue boat, yacht/marina craft, or another realistic sea vessel — and physical crisis within or inspired by the '{catalyst['domain_title']}' domain. Vary vessel type across generations rather than defaulting to the same type.
+3. The crisis must be completely visible and intuitive on a silent screen within 2-3 seconds.
+4. Structure the {duration}-second single continuous take: visible start (0-{early}s) -> physical escalation & contextual crew/mechanical response ({early}-{late}s) -> concrete physical state change at {duration}s.
+5. Keep human presence natural and context-appropriate (or pure raw industrial physics). No cartoonish shoehorned actions.
+6. The scene must show CONSTANT HIGH ACTION — something actively breaking, colliding, flooding, swinging, or in danger in real time. Never calm, static, or purely observational.
+7. Dress crew/staff in authentic high-visibility orange, red, or yellow PPE, wetsuits, or coveralls — never white hazmat/astronaut suits, even in arctic/polar settings (use red or orange polar immersion suits instead). Dress passengers, boat owners, guests, and vehicle drivers/occupants in ordinary civilian clothing appropriate to the setting (swimwear/resort wear for pool/deck scenes, casual clothing for car-deck scenes, yacht-casual for marina scenes) — never hi-vis PPE on civilians. Depict raw, natural weather and lighting — never glossy, CGI-clean, or movie-trailer polished.{chase_pov_directive}"""
 
-        feedback = "\n".join(f"- {f}" for f in validation["failures"])
-        log.warning(f"⚠️ Senaryo 13 kriter kontrolünden geçemedi (Deneme {attempt+1}/{max_retries}):\n{feedback}")
+    system_prompt = build_scenario_writer_system(duration)
+    result = await _call_gpt(system_prompt, user_message, temperature=0.85)
 
-    log.error("❌ Maksimum senaryo deneme sınırına ulaşıldı — 13/13 PASS sağlanamadı.")
-    return scenario, last_validation
-
-
-async def _simplify_prompt(scene: dict, seed: dict, scenario: dict) -> dict:
-    """Katman 3: Seedance 2 Mini için 5-shot eylem + neden-sonuç + ortam sesi prompt'u üret."""
-    story_arc = scenario.get("story_arc", {})
-    camera_plan = scenario.get("camera_plan", {})
-    user_message = f"""Convert this complete maritime micro-story with complication into a 5-shot Seedance 2 Mini prompt:
-
-VESSEL: {seed.get('vessel', 'cargo vessel')}
-INCIDENT / CRISIS: {seed.get('incident', 'maritime emergency')}
-CAMERA PERSPECTIVE: {seed.get('camera_perspective', 'raw documentary camera footage, natural lighting')}
-
-5-SHOT PROGRESSION:
-- Shot 1 (0-3s Hook): {story_arc.get('hook_seconds_0_3', '')} [Cam: {camera_plan.get('shot_1_camera', '')}]
-- Shot 2 (3-6s Crew Action): {story_arc.get('incident_seconds_3_6', '')} [Cam: {camera_plan.get('shot_2_camera', '')}]
-- Shot 3 (6-9s Complication): {story_arc.get('escalation_and_complication_seconds_6_9', '')} [Cam: {camera_plan.get('shot_3_camera', '')}]
-- Shot 4 (9-12s Critical Move): {story_arc.get('critical_moment_seconds_9_12', '')} [Cam: {camera_plan.get('shot_4_camera', '')}]
-- Shot 5 (12-15s Physical Payoff): {story_arc.get('resolution_seconds_12_15', '')} [Cam: {camera_plan.get('shot_5_camera', '')}]
-- Physical State Change: {scenario.get('what_happened_and_what_changed', '')}
-
-SCENE DESCRIPTION: {scene.get('description', '')}
-
-CRITICAL RULES FOR SEEDANCE 2 MINI:
-- Output 35-55 words in chronological 5-shot format or single continuous narrative.
-- Each shot must connect: CAMERA + SUBJECT + ACTION + CAUSE/CONTINUITY + DIEGETIC AUDIO.
-- Photorealistic raw documentary footage, natural lighting, ambient environmental sounds."""
-
-    result = await _call_gpt(PROMPT_SIMPLIFIER_SYSTEM, user_message, temperature=0.7)
-
-    if "prompt" not in result:
-        raise ValueError(f"Simplifier yanıtında 'prompt' eksik: {result}")
+    # Geriye dönük uyumluluk alanları
+    if "scene_description" not in result:
+        result["scene_description"] = (
+            f"From {result.get('observer_camera', 'fixed CCTV')}, {result.get('visible_start', '')} "
+            f"leads to {result.get('physical_movement', '')}, finally {result.get('visible_consequence', '')}."
+        )
 
     return result
 
 
-async def _generate_metadata(scenario: dict, seed: dict) -> dict:
+async def _simplify_prompt(scenario: dict, catalyst: dict) -> dict:
+    """Katman 3: Senaryoyu Seedance 2 Mini için 25–45 kelimelik yüksek sinyalli prompt'a çevir."""
+    duration = settings.DEFAULT_DURATION
+    early, late = compute_duration_breakpoints(duration)
+    user_message = f"""Convert this realistic maritime incident into an exact 25–45 word Seedance 2 Mini prompt following the Doğukan methodology:
+
+VESSEL CLASS: {scenario.get('vessel_class', 'Cargo Vessel')}
+INCIDENT: {scenario.get('incident_type', 'Physical Emergency')}
+SUMMARY: {scenario.get('scenario_summary', '')}
+VISIBLE START (0-{early}s): {scenario.get('visible_start', '')}
+PHYSICAL MOVEMENT ({early}-{late}s): {scenario.get('physical_movement', '')}
+FINAL OUTCOME ({duration}s): {scenario.get('visible_consequence', '')}
+OBSERVER CAMERA: {scenario.get('observer_camera', 'Fixed CCTV')}
+
+REQUIREMENTS:
+- Exactly 25 to 45 words.
+- Single unbroken {duration}-second continuous shot.
+- High visual signal density (vessel + crisis + concrete physical action/outcome).
+- Do NOT include any camera, lighting, or shot-type description — that is appended automatically afterward.
+- Preserve PPE colors and raw weather details from the scenario exactly — never white hazmat suits, never glossy/CGI-clean water or ice."""
+
+    system_prompt = build_prompt_simplifier_system(duration)
+    result = await _call_gpt(system_prompt, user_message, temperature=0.75)
+
+    if "prompt" not in result or not result["prompt"]:
+        fallback_prompt = (
+            f"On a rolling {scenario.get('vessel_class', 'vessel')} in rough seas, "
+            f"{scenario.get('physical_movement', 'cargo shifts under wave impact')}, "
+            f"finally {scenario.get('visible_consequence', 'settling against the deck barrier')}."
+        )
+        result = {"prompt": fallback_prompt, "word_count": len(fallback_prompt.split())}
+
+    return result
+
+
+async def _generate_metadata(scenario: dict, catalyst: dict) -> dict:
     """YouTube title, description, tags üret — merak odaklı ve no-spoiler."""
-    story_arc = scenario.get("story_arc", {})
-    user_message = f"""Create YouTube Shorts metadata for this maritime micro-story (NO SPOILERS IN TITLE):
+    user_message = f"""Create YouTube Shorts metadata for this maritime incident (NO SPOILERS IN TITLE):
 
-VESSEL: {seed.get('vessel', 'vessel')}
-CATEGORY: {seed.get('category_label', 'Maritime Incident')}
-INCIDENT: {seed.get('incident', 'incident')}
-STORY SUMMARY: {scenario.get('scenario_summary', '')}
-HOOK (0-3s): {story_arc.get('hook_seconds_0_3', '')}
-COMPLICATION (6-9s): {story_arc.get('escalation_and_complication_seconds_6_9', '')}
-CRITICAL MOMENT (9-12s): {story_arc.get('critical_moment_seconds_9_12', '')}
+VESSEL: {scenario.get('vessel_class', 'Vessel')}
+INCIDENT: {scenario.get('incident_type', 'Emergency')}
+SCENARIO SUMMARY: {scenario.get('scenario_summary', '')}
+DOMAIN: {catalyst.get('domain_title', 'Maritime Operations')}
 
-STRICT RULE: The title MUST highlight the crisis and danger, and NEVER reveal if or how it was resolved!"""
+STRICT RULE: The title MUST highlight the immediate physical crisis and danger, NEVER revealing the ending or resolution! Max 55 characters."""
 
     result = await _call_gpt(YOUTUBE_METADATA_SYSTEM, user_message, temperature=0.8)
 
@@ -422,7 +374,7 @@ STRICT RULE: The title MUST highlight the crisis and danger, and NEVER reveal if
     result["youtube_title"] = clean_youtube_title(raw_title)
 
     tags = result.get("tags", [])
-    mandatory_tags = ["DeepMyster", "Shorts", "Maritime", "RoughSeas", "Ocean", "Crew", "Rescue"]
+    mandatory_tags = ["DeepMyster", "Shorts", "Maritime", "CCTV", "Ocean", "RoughSeas"]
     for tag in mandatory_tags:
         if tag not in tags:
             tags.append(tag)
@@ -432,68 +384,22 @@ STRICT RULE: The title MUST highlight the crisis and danger, and NEVER reveal if
 
 
 def _dry_run_output() -> dict:
-    """DRY-RUN modunda 13 kriterin tamamını karşılayan 5 shot × 3s (15s) komplikasyonlu mock çıktısı."""
-    mock_scenario = {
-        "scenario_title": "⚠️ Rogue Wave Hits Ferry Deck Snapping Heavy Lashing",
-        "what_happened_and_what_changed": "A 40ft rogue swell snapped trailer lashings on a rolling vehicle deck; the primary emergency chain hook slipped under tension, but two deckhands dove across flooded plates to jam heavy steel chocks under front tires, locking the runaway truck 2 feet before hull collision.",
-        "story_arc": {
-            "hook_seconds_0_3": "A violent rolling swell snaps the primary trailer lashing chain with a sharp metallic crack on the wet ferry deck as the truck lurches sideways.",
-            "incident_seconds_3_6": "The freight truck slides toward the companionway while two deckhands in yellow suits sprint across flooded steel plates hauling an emergency chain.",
-            "escalation_and_complication_seconds_6_9": "The deckhand attempts to latch the backup hook, but the chain slips under the shifting weight, pivoting the trailer dangerously toward the outer hull.",
-            "critical_moment_seconds_9_12": "Both deckhands dive across the waterlogged deck and kick heavy steel chocks directly under the sliding front tires.",
-            "resolution_seconds_12_15": "The steel chocks bite firmly into deck plates with loud screeching friction, locking the freight truck abruptly two feet before hull impact."
-        },
-        "camera_plan": {
-            "shot_1_camera": "Vehicle deck CCTV surveillance camera framing sudden chain snap and truck shift at 0-3s",
-            "shot_2_camera": "Deckhand chest bodycam rushing forward showing physical crew intervention at 3-6s",
-            "shot_3_camera": "Wide companionway safety camera capturing hook slip and trailer pivoting at 6-9s",
-            "shot_4_camera": "Low-angle deck camera framing deckhands diving with steel chocks at 9-12s",
-            "shot_5_camera": "Quayside/hull perspective framing chocks locking tires inches from wall at 12-15s"
-        },
-        "quality_self_check_13": {
-            "1_strong_hook_0_3s": {"pass": True, "reason": "Olay ilk karede lashing zincirinin kopmasıyla in media res başlamış"},
-            "2_clear_problem_3_6s": {"pass": True, "reason": "Kayan tır ve su basan güverte tehlike mekanizmasını net kuruyor"},
-            "3_active_crew_physical_action": {"pass": True, "reason": "İki güverte personeli aktif beden gücüyle koşuyor, zincir taşıyor ve çock takoz çakıyor"},
-            "4_genuine_escalation": {"pass": True, "reason": "Tırın güverteye doğru kontrolsüz kayması gerilimi artırıyor"},
-            "5_unexpected_complication_6_9s": {"pass": True, "reason": "Yedek zincir kancası yük altında kayarak tırı bordaya doğru savuruyor"},
-            "6_critical_moment_9_12s": {"pass": True, "reason": "Personelin ıslak sac üzerinde dalarak ön teker altına çelik takoz sokması"},
-            "7_visible_physical_resolution_12_15s": {"pass": True, "reason": "Takozların sacı ısırıp tırı bordaya 2 fit kala kilitlemesi ekranda somut gerçekleşiyor"},
-            "8_clear_what_changed_physically": {"pass": True, "reason": "Serbest kayan tır kilitlendi ve borda delinmesi önlendi"},
-            "9_strict_shot_continuity_and_causality": {"pass": True, "reason": "5 shot aynı feribotta kesintisiz neden-sonuç zinciriyle birbirine bağlı"},
-            "10_unpredictable_curiosity_maintained": {"pass": True, "reason": "Kancanın kayması sonucu belirsiz kılıyor ve izleyiciyi son ana kadar tutuyor"},
-            "11_no_spoiler_in_title": {"pass": True, "reason": "Başlık yalnızca krize ve kopan zincire odaklanıyor, durdurulduğunu söylemiyor"},
-            "12_complete_micro_narrative": {"pass": True, "reason": "Başı, gelişimi, komplikasyonu ve somut payoff'u olan tam bir mikro-olay"},
-            "13_story_driven_camera": {"pass": True, "reason": "Kamera CCTV ve bodycam açılarıyla fiziksel aksiyonu en anlaşılır şekilde gösteriyor"}
-        },
-        "scenes": [
-            {
-                "scene_number": 1,
-                "description": "Continuous 15-second physical action: rolling swell snaps trailer chain, yellow-suited deckhands sprint with emergency gear, hook slips pivoting trailer toward hull, crew dives to kick steel chocks under tires, locking the truck 2 feet before hull collision.",
-                "duration": 15
-            }
-        ]
-    }
-    validation = validate_scenario_13_criteria(mock_scenario, mock_scenario["scenario_title"])
+    """DRY-RUN modunda 25-45 kelimelik 12s DeepMyster standardı mock çıktısı."""
     return {
         "scenes": [
             {
                 "scene_number": 1,
-                "prompt": "SHOT 1 (0-3s): Deck CCTV captures violent wave snapping ferry trailer lashing with metallic crack. SHOT 2 (3-6s): Yellow-suited deckhands sprint across flooded plates hauling emergency chain. SHOT 3 (6-9s): Hook slips under load as trailer pivots toward hull. SHOT 4 (9-12s): Deckhands dive and jam heavy steel chocks under front tires. SHOT 5 (12-15s): Chocks bite firmly, locking trailer two feet before hull impact. Photorealistic raw documentary footage, natural lighting, ambient storm audio.",
-                "duration": 15,
+                "prompt": "A towering green swell crashes over the bow of an arctic stern trawler, swamping the foredeck as a deckhand braces against the winch housing. Seawater violently rushes through freeing ports into the foam. Fixed forecastle CCTV camera, raw overcast daylight.",
+                "duration": settings.DEFAULT_DURATION,
             }
         ],
-        "youtube_title": "⚠️ Rogue Wave Hits Ferry Deck Snapping Heavy Lashing #Shorts",
-        "youtube_description": "Watch deckhands battle an escalating freight trailer crisis in heavy 40ft open seas as primary lashings fail on a rolling ferry. DeepMyster Official. #DeepMyster #Shorts #Maritime #RoughSeas",
-        "tags": ["DeepMyster", "Shorts", "Maritime", "RoughSeas", "CargoShip", "Storm", "Ocean", "Crew", "Rescue"],
-        "scenario_summary": "Deckhands battle shifting trailer after primary hook slips, kicking steel chocks to halt runaway truck before hull collision.",
-        "what_happened_and_what_changed": mock_scenario["what_happened_and_what_changed"],
-        "story_arc": mock_scenario["story_arc"],
-        "camera_plan": mock_scenario["camera_plan"],
-        "validation_13_criteria": validation,
-        "combo_key": "roro_accidents|large car and passenger ferry|Violent swell snaps primary trailer lashing",
-        "total_duration": 15,
-        "animal": "large car and passenger ferry",
-        "talent": "Violent swell snaps primary trailer lashing",
-        "category": "roro_accidents",
+        "youtube_title": "⚠️ Giant Green Swell Swamps Arctic Trawler Bow #Shorts",
+        "youtube_description": "Forecastle CCTV captures a towering arctic swell breaching the foredeck of a working stern trawler. #DeepMyster #Shorts #Maritime #CCTV #RoughSeas",
+        "tags": ["DeepMyster", "Shorts", "Maritime", "CCTV", "Trawler", "Arctic", "RoughSeas", "Ocean"],
+        "scenario_summary": "A massive arctic wave swamps the forward working deck of a stern trawler before draining rapidly through side freeing ports.",
+        "combo_key": "commercial_storm_fishing|arctic stern trawler|bow wave swamping",
+        "total_duration": settings.DEFAULT_DURATION,
+        "animal": "arctic stern trawler",
+        "talent": "bow wave swamping",
+        "category": "commercial_storm_fishing",
     }
-

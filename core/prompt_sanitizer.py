@@ -1,17 +1,18 @@
 from __future__ import annotations
 
 """
-Prompt Sanitizer — İçerik Güvenliği Katmanı (DeepMyster).
+Prompt Sanitizer — İçerik Güvenliği Katmanı (DeepMyster Doğukan Standardı).
 
-Kie AI (Seedance 2.0 / Seedance 2 Mini) modellerinin content safety filtresini
-tetikleyebilecek ifadeleri prompt gönderilmeden ÖNCE yumuşatır.
+Kie AI (Seedance 2 Mini) modellerinin content safety filtresini
+tetikleyebilecek gerçek riskli unsurları (kan, açık şiddet, uzuv zararı, çocuk tehlikesi)
+prompt gönderilmeden ÖNCE temizler veya yumuşatır; doğal denizcilik gerilimini
+(dalga çarpması, sürtünme, yük kayması) korur.
 
 3 Katmanlı Savunma:
-  1. Regex — Bilinen tehlikeli terimleri hızlıca yakalar (sync, <1ms)
-  2. GPT Pre-flight — Prompt'u GPT'ye "bu reddedilir mi?" diye sorar (async, ~2s)
-     → Reddedilecekse GPT aynı anda güvenli versiyonunu da yazar
-  3. GPT Retry Rewrite — Reddedildikten sonra rejection reason ile GPT'ye
-     "aynı denizcilik olayını güvenli şekilde yeniden yaz" komutu verir
+  1. Regex — Gerçek riskli terimleri güvenli denizcilik operasyon terimlerine çevirir (sync, <1ms)
+  2. GPT Pre-flight — Prompt'u GPT ile değerlendirir (async, ~2s)
+     → Riskli ise 25–45 kelimelik güvenli versiyonunu üretir
+  3. GPT Retry Rewrite — Model reddederse 25–45 kelimede güvenli yeniden yazma
 """
 import re
 import json
@@ -19,7 +20,7 @@ import logging
 
 log = logging.getLogger("PromptSanitizer")
 
-# ── Tehlikeli terim → güvenli alternatif eşlemeleri (Denizcilik Odaklı) ──
+# ── Gerçekten riskli terim → güvenli alternatif eşlemeleri ──
 REPLACEMENT_RULES = [
     # Suç / Hırsızlık
     (r"\bsteal(?:s|ing)?\b", "retrieve", "hırsızlık→alma"),
@@ -30,28 +31,26 @@ REPLACEMENT_RULES = [
     (r"\bcrime\b", "emergency", "suç→acil durum"),
     (r"\bcriminal\b", "troublemaker", "suçlu→sorun çıkaran"),
 
-    # Silah / Şiddet / Kan
+    # Silah / Gerçek İnsan Şiddeti / Kan
     (r"\bgun(?:s)?\b", "flare gun", "silah→işaret fişeği tabancası"),
     (r"\bweapon(?:s)?\b", "tool", "silah→alet"),
-    (r"\bknife\b", "rigging knife", "bıçak→halat bıçağı"),
+    (r"\bknife\b", "rigging tool", "bıçak→halat aleti"),
     (r"\bknives\b", "rigging tools", "bıçaklar→donanım aletleri"),
     (r"\bblood(?:y)?\b", "sea spray", "kan→deniz serpintisi"),
-    (r"\bviolence\b", "extreme storm tension", "şiddet→fırtına gerilimi"),
-    (r"\bviolent\b", "severe", "şiddetli→sert"),
-    (r"\bfight(?:s|ing)?\b", "battle", "kavga→mücadele"),
-    (r"\battack(?:s|ing|ed)?\b", "surge toward", "saldırı→üzerine kabarma"),
+    (r"\bphysical fight(?:s|ing)?\b", "struggle", "kavga→mücadele"),
+    (r"\bhuman attack(?:s|ing|ed)?\b", "confrontation", "saldırı→yüzleşme"),
     (r"\bkill(?:s|ing|ed)?\b", "sweep away", "öldürme→sürükleme"),
     (r"\bdrown(?:s|ed|ing)?\b", "struggle in water", "boğulma→suda mücadele"),
     (r"\bcorpse(?:s)?\b", "debris", "ceset→enkaz"),
-    (r"\bdead\b", "unresponsive", "ölü→tepkisiz"),
+    (r"\bdead body\b", "unresponsive crewman", "ölü beden→tepkisiz personel"),
 
-    # Fantastik / Yapay öğeler (DeepMyster gerçekçilik koruması)
+    # Yapay / Fantezi / CGI öğeler
     (r"\b(?:glowing|luminous|radiant)\b", "storm-lit", "parıltı→fırtına ışığı"),
     (r"\b(?:mystical|magical|magic|supernatural)\b", "dramatic", "mistik→dramatik"),
     (r"\b(?:artifact|runes|relic|totem)\b", "equipment", "eser/rün→ekipman"),
     (r"\b(?:sci-fi|futuristic|alien)\b", "industrial", "bilimkurgu→endüstriyel"),
     (r"\b(?:obsidian|crystal|fantasy)\b", "steel", "obsidyen/fantezi→çelik"),
-    (r"\b(?:anime|cgi|3d render|unreal engine)\b", "photorealistic", "animasyon/cgi→fotogerçekçi"),
+    (r"\b(?:anime|cgi|3d render|unreal engine|cinematic drone)\b", "raw footage", "yapay→ham görüntü"),
 ]
 
 # ── Yüksek riskli pattern'ler ──
@@ -61,42 +60,41 @@ HIGH_RISK_PATTERNS = [
 ]
 
 # ── GPT Pre-flight System Prompt ──
-_PREFLIGHT_SYSTEM = """You are a content safety evaluator for AI video generation models (Seedance 2.0 / Seedance 2 Mini).
+_PREFLIGHT_SYSTEM = """You are a content safety evaluator for AI video generation models (Seedance 2 Mini).
 
-Your job: Evaluate if a realistic maritime documentary video prompt would be REJECTED by an AI model's safety filter.
+Your job: Evaluate if a realistic maritime CCTV/documentary video prompt would be REJECTED by an AI model's safety filter.
 
 AI video models reject prompts containing:
 - Graphic human injury, gore, blood, or death
 - Real weapon violence, shooting, stabbing
-- Children in perilous life-threatening situations
+- Children in perilous situations
 - Explicit sexual content or nudity
-- Illegal drug trafficking
 
 CRITICAL MARITIME CONTEXT:
-- Authentic maritime emergencies (e.g. ship battling storm waves, deckhands securing shifting cargo, marina staff deploying fenders, emergency towing, crew extinguishing an engine room fire, rescue swimmers pulling seamen to safety) are SAFE and PERMISSIBLE as long as there is no blood, gore, or graphic death.
+- Authentic maritime weather and heavy machinery emergencies (e.g. ship rolling in storm, green swells swamping deck, straining towing lines, cargo shifting, crane boom swinging, tugboat fender compression) are 100% SAFE as long as there is no blood, gore, or graphic death.
 
 Respond in JSON:
 {
   "safe": true/false,
   "risk_score": 1-10 (1=completely safe, 10=definitely rejected),
   "risk_reasons": ["reason1"],
-  "rewritten_prompt": "only if safe=false: rewrite preserving the SAME maritime incident, kinetic action, human roles, and concrete resolution, but replacing unsafe words (blood, kill, gore) with realistic safe maritime operations terminology (spray, secure, rescue)."
+  "rewritten_prompt": "only if safe=false: rewrite preserving the SAME maritime concept in 25-45 words, removing graphic human injuries."
 }"""
 
 # ── GPT Retry Rewrite System Prompt ──
 _RETRY_REWRITE_SYSTEM = """You are a prompt repair specialist for AI video generation (Seedance 2 Mini).
 
-A realistic maritime documentary video prompt was REJECTED by the AI model's content safety filter.
-The model returned this rejection reason: "{rejection_reason}"
+A realistic maritime CCTV/documentary video prompt was REJECTED by the AI model's content safety filter.
+Rejection reason: "{rejection_reason}"
 
-Your job: Rewrite the prompt to tell the EXACT SAME realistic maritime micro-story (problem → crew action → concrete resolution) with ZERO content safety risks.
+Your job: Rewrite the prompt to capture the SAME realistic maritime incident with ZERO content safety risks.
 
 RULES:
-- Maintain 100% photorealistic documentary maritime realism.
-- Remove any graphic words (blood, death, kill, violent attack).
-- Keep active crew members, vessel maneuvers, storm elements, and concrete payoff/resolution.
-- Keep the prompt between 25-45 words.
-- End with 'Photorealistic raw documentary footage, natural lighting.'
+- Maintain 100% CCTV / raw surveillance documentary realism.
+- Remove any graphic words (blood, death, kill, violent human attack).
+- Keep the prompt SHORT and DIRECT (25–45 words).
+- Focus on the physical ship, weather, and mechanical/cargo movement from a stationary camera.
+- End with 'Raw surveillance footage, natural lighting.' or similar.
 - Output ONLY the rewritten prompt text, no JSON, no explanation."""
 
 
@@ -131,20 +129,18 @@ def create_softened_prompt(original_prompt: str) -> str:
     softened, _ = sanitize_prompt(original_prompt)
 
     aggressive_replacements = [
-        (r"\bviolent\b", "severe"),
         (r"\bpanic\b", "urgency"),
         (r"\bdesperate\b", "rapid"),
-        (r"\bchaos\b", "high winds"),
-        (r"\bcrash(?:es|ing)?\b", "impact"),
+        (r"\bchaos\b", "heavy gale"),
     ]
 
     for pattern, replacement in aggressive_replacements:
         softened = re.sub(pattern, replacement, softened, flags=re.IGNORECASE)
 
-    if "photorealistic" not in softened.lower():
-        softened += " Photorealistic raw documentary footage, natural lighting."
+    if "surveillance" not in softened.lower() and "cctv" not in softened.lower():
+        softened += " Raw CCTV footage, natural lighting."
 
-    log.info("🛡️ Agresif yumuşatma uygulandı (regex fallback)")
+    log.info("🛡️ Yumuşatma uygulandı (regex fallback)")
     return softened
 
 
@@ -164,10 +160,10 @@ async def gpt_preflight_check(prompt: str) -> tuple[str, bool, dict]:
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": _PREFLIGHT_SYSTEM},
-                {"role": "user", "content": f"Evaluate this video prompt:\n\n{prompt}"},
+                {"role": "user", "content": f"Evaluate this CCTV video prompt:\n\n{prompt}"},
             ],
             temperature=0.3,
-            max_tokens=500,
+            max_tokens=400,
             response_format={"type": "json_object"},
         )
 
@@ -227,10 +223,10 @@ async def gpt_rewrite_rejected_prompt(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": system},
-                {"role": "user", "content": f"Rewrite this rejected maritime prompt:\n\n{original_prompt}"},
+                {"role": "user", "content": f"Rewrite this rejected maritime CCTV prompt:\n\n{original_prompt}"},
             ],
             temperature=0.7,
-            max_tokens=300,
+            max_tokens=250,
         )
 
         rewritten = response.choices[0].message.content.strip()
@@ -249,8 +245,8 @@ async def gpt_rewrite_rejected_prompt(
             except json.JSONDecodeError:
                 pass
 
-        if "photorealistic" not in rewritten.lower():
-            rewritten += " Photorealistic raw documentary footage, natural lighting."
+        if "cctv" not in rewritten.lower() and "surveillance" not in rewritten.lower():
+            rewritten += " Raw surveillance footage, natural lighting."
 
         log.info(f"✏️ GPT Retry Rewrite başarılı: {rewritten[:100]}...")
         return rewritten

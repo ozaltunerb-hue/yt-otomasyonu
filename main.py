@@ -2,16 +2,17 @@
 from __future__ import annotations
 
 """
-YouTube Otomasyonu V3 — "DeepMyster" Tam Otonom Pipeline
-========================================================
-Her gün otomatik çalışır: 12 kriterli mikro-hikâye senaryosu üretir → video üretir →
-YouTube Shorts olarak yükler.
+YouTube Otomasyonu V3 — "DeepMyster" Yeni Referans Standardı Pipeline
+===================================================================
+Her gün otomatik çalışır: tek kesintisiz çekim fiziksel olay senaryosu üretir (süre config.DEFAULT_DURATION ile kontrol edilir) →
+Seedance 2 Mini ile video üretir → YouTube Shorts olarak yükler.
 
 Telegram YOK — CronJob ile tetiklenir, insan müdahalesi gerektirmez.
 
 Çalıştırma:
   python main.py                → Tam pipeline (CronJob bu komutu çalıştırır)
-  python main.py --dry-run      → Gerçek üretim yapmadan test
+  python main.py --dry-run      → Gerçek üretim yapmadan mock test
+  python main.py --no-upload    → Gerçek video üret ama YouTube'a yükleme (Lokal test)
   python main.py --check        → Sistem sağlık kontrolü
 
 Railway CronJob: `python main.py` — iş günleri 16:30 TR (13:30 UTC) tetiklenir.
@@ -22,6 +23,7 @@ import time
 import asyncio
 import logging
 import argparse
+import shutil
 
 # Proje kök dizinini Python path'ine ekle
 sys.path.insert(0, os.path.dirname(__file__))
@@ -45,12 +47,7 @@ log = get_logger("DeepMyster")
 def load_used_combos() -> list[str]:
     """
     Notion'dan son 60 günün kullanılan combo_key'lerini yükler.
-
-    FAIL-FAST: Notion 3 denemede yanıt vermezse exception bubble eder ve
-    pipeline durur. Sebebi: boş liste dönmek creative engine'in son
-    zamanlarda kullanılmış bir combo'yu yeniden seçmesine ve duplicate
-    YouTube upload'a yol açar. Bir günü atlamak, duplicate yüklemekten
-    daha az zararlıdır.
+    Fail-fast: Notion erişilemezse hata verir.
     """
     tracker = NotionTracker()
     combos = tracker.get_used_combos(days=60)
@@ -62,33 +59,35 @@ def load_used_combos() -> list[str]:
 # ⚙️ ANA PİPELINE
 # ────────────────────────────────────────
 
-async def run_pipeline(dry_run: bool = False):
+async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_path: str = ""):
     """
     Tam otonom video üretim pipeline'ı.
 
     Akış:
       1. Tekrar önleme → kullanılan senaryoları yükle
-      2. Creative Engine + GPT → senaryo + prompt üret
-      3. Seedance 2.0 → video üret (dinamik klip sayısı ve süre)
-      4. Replicate → birleştir (gerekirse)
-      5. YouTube → Shorts olarak yükle
-      6. Notion → log kaydet
-
-    Content filter retry: 3 farklı senaryo dener.
+      2. Creative Engine + GPT → tek çekim senaryo + prompt üret (DEFAULT_DURATION saniye)
+      3. Seedance 2 Mini → video üret (tek kesintisiz çekim, DEFAULT_DURATION saniye)
+      4. YouTube → Shorts olarak yükle (skip_upload=False ise)
+      5. Notion → log kaydet
     """
     if dry_run:
-        # GÜVENLİ: main.py her zaman ayrı CronJob process'i olarak çalışır
         settings.IS_DRY_RUN = True
         settings.ENV = "development"
 
+    upload_active = settings.YOUTUBE_ENABLED and not skip_upload
+
     mode = "DRY-RUN" if settings.IS_DRY_RUN else "PRODUCTION"
-    log.info(f"🚀 DeepMyster V3 başlatılıyor... (Mod: {mode})")
-    log.info(f"   Model: {settings.DEFAULT_MODEL}")
-    log.info(f"   YouTube Upload: {'Aktif' if settings.YOUTUBE_ENABLED else 'Devre Dışı'}")
+    log.info(f"🚀 DeepMyster V3 (Yeni Referans Standardı) başlatılıyor... (Mod: {mode})")
+    log.info(f"   Model: {settings.DEFAULT_MODEL} | Hedef Süre: {settings.DEFAULT_DURATION}s")
+    log.info(f"   YouTube Upload: {'Aktif' if upload_active else 'Devre Dışı (Skip Upload / Test)'}")
     log.info(f"   Notion Log: {'Aktif' if settings.NOTION_ENABLED else 'Devre Dışı'}")
 
-    # ── Tekrar önleme ──
+    # ── Tekrar önleme & Semantik Negatif Hafıza ──
     used_combos = load_used_combos()
+    tracker = NotionTracker()
+    recent_topics = tracker.get_recent_history(days=30)
+    if recent_topics:
+        log.info(f"🧠 Son 30 günden {len(recent_topics)} semantik konu negatif hafızaya eklendi")
 
     # ── Content filter retry — 3 farklı senaryo dene ──
     max_retries = 3
@@ -96,11 +95,15 @@ async def run_pipeline(dry_run: bool = False):
 
     for attempt in range(max_retries):
         try:
-            result = await _execute_pipeline(used_combos)
+            result = await _execute_pipeline(
+                used_combos,
+                recent_topics=recent_topics,
+                upload_active=upload_active,
+                output_path=output_path,
+            )
             return result
         except ContentFilterError as cfe:
             last_error = cfe
-            # Reddedilen combo'yu listeye ekle ki bu run içinde tekrar seçilmesin
             rejected_combo = getattr(cfe, "combo_key", "")
             if rejected_combo and rejected_combo not in used_combos:
                 used_combos.append(rejected_combo)
@@ -117,38 +120,43 @@ async def run_pipeline(dry_run: bool = False):
     return {"success": False, "error": "Tüm denemeler başarısız"}
 
 
-async def _execute_pipeline(used_combos: list[str]) -> dict:
+async def _execute_pipeline(
+    used_combos: list[str],
+    recent_topics: list[str] | None = None,
+    upload_active: bool = True,
+    output_path: str = "",
+) -> dict:
     """
     Pipeline'ın asıl implementasyonu.
-    ContentFilterError yukarı fırlatılır → retry mekanizması yakalar.
     """
     tracker = NotionTracker()
     kie = KieClient()
     video_paths = []
     start_time = time.time()
-    combo_key = ""  # ContentFilterError yakalandığında retry'a iletmek için
+    combo_key = ""
 
     pipeline_config = {
         "used_combos": used_combos,
+        "recent_topics": recent_topics or [],
     }
 
     try:
         # ── ADIM 1: Prompt üret (Creative Engine + GPT) ──
-        log.info("🧠 Yaratıcı motor çalışıyor...")
+        log.info(f"🧠 Yaratıcı motor çalışıyor (Tek {settings.DEFAULT_DURATION}s kesintisiz çekim standardı)...")
         prompt_data = await generate_prompts(pipeline_config)
 
         scenes = prompt_data.get("scenes", [])
         combo_key = prompt_data.get("combo_key", "")
         clip_count = len(scenes)
-        total_duration = prompt_data.get("total_duration", 0)
+        total_duration = prompt_data.get("total_duration", settings.DEFAULT_DURATION)
 
         log.info(f"🎬 Senaryo: {prompt_data.get('scenario_summary', '')}")
-        log.info(f"   {clip_count} klip, toplam {total_duration}s")
-        log.info(f"   Gemi/Araç: {prompt_data.get('animal', '?')} | Olay: {prompt_data.get('talent', '?')[:40]}...")
+        log.info(f"   {clip_count} sahne, {total_duration}s | Başlık: {prompt_data.get('youtube_title', '')}")
+        log.info(f"   Prompt: {scenes[0]['prompt'] if scenes else ''}")
 
         # ── ADIM 2: Notion entry ──
         notion_config = {
-            "topic": prompt_data.get("scenario_summary", "DeepMyster maritime incident video"),
+            "topic": prompt_data.get("scenario_summary", "DeepMyster maritime physical incident"),
             "model": settings.DEFAULT_MODEL,
             "clip_count": clip_count,
             "orientation": settings.DEFAULT_ORIENTATION,
@@ -159,30 +167,21 @@ async def _execute_pipeline(used_combos: list[str]) -> dict:
         await asyncio.to_thread(tracker.update_with_prompts, prompt_data)
 
         # ── ADIM 3: Video üret (Seedance 2 Mini) ──
-        log.info(f"🎬 Video üretimi başlıyor ({settings.DEFAULT_MODEL})...")
+        log.info(f"🎬 Video üretimi başlıyor ({settings.DEFAULT_MODEL}, {settings.DEFAULT_DURATION}s)...")
         await asyncio.to_thread(tracker.update_status, "Video Üretiliyor")
 
-        if clip_count == 1:
-            video_url = await kie.create_video(
-                model=settings.DEFAULT_MODEL,
-                prompt=scenes[0]["prompt"],
-                orientation=settings.DEFAULT_ORIENTATION,
-                duration=scenes[0].get("duration", settings.DEFAULT_DURATION),
-                audio=settings.DEFAULT_AUDIO,
-                resolution=settings.DEFAULT_RESOLUTION,
-            )
-            video_urls = [video_url]
-        else:
-            video_urls = await kie.create_videos_batch(
-                model=settings.DEFAULT_MODEL,
-                scenes=scenes,
-                orientation=settings.DEFAULT_ORIENTATION,
-                audio=settings.DEFAULT_AUDIO,
-                resolution=settings.DEFAULT_RESOLUTION,
-            )
+        video_url = await kie.create_video(
+            model=settings.DEFAULT_MODEL,
+            prompt=scenes[0]["prompt"],
+            orientation=settings.DEFAULT_ORIENTATION,
+            duration=scenes[0].get("duration", settings.DEFAULT_DURATION),
+            audio=settings.DEFAULT_AUDIO,
+            resolution=settings.DEFAULT_RESOLUTION,
+        )
+        video_urls = [video_url]
 
         await asyncio.to_thread(tracker.update_with_video, video_urls[0])
-        log.info(f"✅ {len(video_urls)} video hazır")
+        log.info(f"✅ {settings.DEFAULT_DURATION}s video hazır")
 
         # ── Güvenlik Telemetrisi ──
         try:
@@ -197,21 +196,21 @@ async def _execute_pipeline(used_combos: list[str]) -> dict:
         except Exception as e:
             log.debug(f"Güvenlik telemetrisi hatası (önemsiz): {e}")
 
-        # ── ADIM 4: Birleştir (gerekirse) ──
-        final_video_url = video_urls[0]
-        if len(video_urls) > 1:
-            log.info(f"🎞️ {len(video_urls)} video birleştiriliyor...")
-            await asyncio.to_thread(tracker.update_status, "Birleştiriliyor")
-            final_video_url = await merge_videos(video_urls, keep_audio=True)
-
-        # ── ADIM 5: Video indir ──
+        # ── ADIM 4: Video indir ──
         log.info("📥 Video indiriliyor...")
+        final_video_url = video_urls[0]
         video_path = await asyncio.to_thread(download_video, final_video_url)
         video_paths.append(video_path)
 
-        # ── ADIM 6: YouTube upload (Shorts) ──
+        saved_local_path = video_path
+        if output_path:
+            shutil.copy(video_path, output_path)
+            saved_local_path = output_path
+            log.info(f"💾 Video yerel hedefe kopyalandı: {output_path}")
+
+        # ── ADIM 5: YouTube upload (Shorts) ──
         youtube_url = ""
-        if settings.YOUTUBE_ENABLED:
+        if upload_active:
             log.info("📺 YouTube Shorts olarak yükleniyor...")
             await asyncio.to_thread(tracker.update_status, "Yükleniyor")
             youtube_url = await upload_to_youtube(
@@ -221,20 +220,21 @@ async def _execute_pipeline(used_combos: list[str]) -> dict:
                 await asyncio.to_thread(tracker.update_with_youtube, youtube_url)
                 log.info(f"✅ YouTube'a yüklendi: {youtube_url}")
 
-        # ── ADIM 7: Tamamlandı ──
+        # ── ADIM 6: Tamamlandı ──
         elapsed = time.time() - start_time
 
         if not youtube_url:
-            if settings.YOUTUBE_ENABLED:
+            if upload_active:
                 await asyncio.to_thread(tracker.update_status, "✅ Tamamlandı (Upload Başarısız)")
             else:
-                await asyncio.to_thread(tracker.update_status, "✅ Tamamlandı (YouTube Kapalı)")
+                await asyncio.to_thread(tracker.update_status, "✅ Tamamlandı (Test Modu / YouTube Atlandı)")
         else:
             await asyncio.to_thread(tracker.update_status, "✅ Tamamlandı")
 
         log.info(f"🎉 Pipeline tamamlandı! ({elapsed:.0f}s)")
-        log.info(f"   📺 {youtube_url or 'Upload kapalı'}")
-        log.info(f"   🎬 {prompt_data.get('youtube_title', 'N/A')}")
+        log.info(f"   📺 {youtube_url or 'Upload atlandı (Test modu)'}")
+        log.info(f"   🎬 Başlık: {prompt_data.get('youtube_title', 'N/A')}")
+        log.info(f"   💾 Yerel Dosya: {saved_local_path}")
 
         return {
             "success": True,
@@ -250,13 +250,12 @@ async def _execute_pipeline(used_combos: list[str]) -> dict:
             "tags": prompt_data.get("tags", []),
             "model": settings.DEFAULT_MODEL,
             "resolution": settings.DEFAULT_RESOLUTION,
-            "video_path": video_paths[0] if video_paths else "",
+            "video_path": saved_local_path,
             "video_cdn_url": final_video_url,
             "privacy": settings.YOUTUBE_PRIVACY,
         }
 
     except ContentFilterError as cfe:
-        # combo_key'i exception'a ekle → retry mekanizması dedup için kullansın
         if combo_key:
             cfe.combo_key = combo_key
         raise
@@ -269,8 +268,11 @@ async def _execute_pipeline(used_combos: list[str]) -> dict:
         return {"success": False, "error": error_msg}
 
     finally:
-        for vp in video_paths:
-            cleanup_video(vp)
+        # Eğer upload yapıldıysa veya output_path belirtilmişse temp dosyayı temizle
+        if upload_active or output_path:
+            for vp in video_paths:
+                if vp != output_path:
+                    cleanup_video(vp)
 
 
 # ────────────────────────────────────────
@@ -306,9 +308,9 @@ def health_check():
     checks.append(("Replicate", not settings.REPLICATE_API_TOKEN.startswith("test-"), ""))
 
     # FFmpeg
-    checks.append(("FFmpeg", settings.FFMPEG_AVAILABLE, "Opsiyonel — Replicate fallback mevcut"))
+    checks.append(("FFmpeg", settings.FFMPEG_AVAILABLE, "Opsiyonel"))
 
-    print("\n🏥 Sistem Sağlık Raporu — DeepMyster V3\n" + "=" * 50)
+    print("\n🏥 Sistem Sağlık Raporu — DeepMyster V3 (Yeni Referans Standardı)\n" + "=" * 60)
     all_ok = True
     for name, ok, detail in checks:
         icon = "✅" if ok else "❌"
@@ -317,7 +319,7 @@ def health_check():
         if not ok and name not in ("FFmpeg",):
             all_ok = False
 
-    print("=" * 50)
+    print("=" * 60)
     if all_ok:
         print("✅ Tüm kritik sistemler hazır!")
     else:
@@ -334,9 +336,11 @@ def health_check():
 def main():
     """CLI entry point — CronJob bu fonksiyonu çalıştırır."""
     parser = argparse.ArgumentParser(
-        description="Pets Got Talent V3 — Günlük Otonom Video Pipeline"
+        description="DeepMyster V3 — Yeni Referans Standardı Günlük Otonom Video Pipeline"
     )
     parser.add_argument("--dry-run", action="store_true", help="Gerçek üretim yapmadan test")
+    parser.add_argument("--no-upload", action="store_true", help="Gerçek video üret ama YouTube'a yükleme")
+    parser.add_argument("--output", type=str, default="", help="Üretilen videoyu kaydedecek dosya yolu")
     parser.add_argument("--check", action="store_true", help="Sistem sağlık kontrolü")
     args = parser.parse_args()
 
@@ -344,10 +348,10 @@ def main():
         health_check()
         return
 
-    result = asyncio.run(run_pipeline(dry_run=args.dry_run))
+    result = asyncio.run(run_pipeline(dry_run=args.dry_run, skip_upload=args.no_upload, output_path=args.output))
 
     if result and result.get("success"):
-        log.info("🎉 Günlük video başarıyla üretildi ve yüklendi!")
+        log.info("🎉 DeepMyster video pipeline başarıyla tamamlandı!")
         sys.exit(0)
     else:
         error = result.get("error", "Bilinmeyen hata") if result else "Pipeline sonuç döndürmedi"

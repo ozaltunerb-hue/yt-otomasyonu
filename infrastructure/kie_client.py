@@ -1,6 +1,6 @@
 """
-Kie Client — Seedance 2.0 + Veo 3.1 Unified API Client.
-İki modeli aynı interface ile yönetir,
+Kie Client — Seedance 2.0 + Veo 3.1 + Wan 2.6 Unified API Client.
+Farklı modelleri aynı interface ile yönetir,
 farklı endpoint ve payload yapılarını soyutlar.
 """
 import json
@@ -34,30 +34,67 @@ MODEL_CONFIG = {
         "create_url": "/jobs/createTask",
         "poll_url": "/jobs/recordInfo",
         "uses_input_wrapper": True,
+        "payload_style": "seedance",
     },
     "seedance-2-fast": {
         "model_id": "bytedance/seedance-2-fast",
         "create_url": "/jobs/createTask",
         "poll_url": "/jobs/recordInfo",
         "uses_input_wrapper": True,
+        "payload_style": "seedance",
     },
     "seedance-2": {
         "model_id": "bytedance/seedance-2",
         "create_url": "/jobs/createTask",
         "poll_url": "/jobs/recordInfo",
         "uses_input_wrapper": True,
+        "payload_style": "seedance",
     },
     "bytedance/seedance-2": {
         "model_id": "bytedance/seedance-2",
         "create_url": "/jobs/createTask",
         "poll_url": "/jobs/recordInfo",
         "uses_input_wrapper": True,
+        "payload_style": "seedance",
     },
     "veo3.1": {
         "model_id": "veo3_fast",
         "create_url": "/veo/generate",
         "poll_url": "/veo/record-info",
         "uses_input_wrapper": False,  # Flat JSON
+        "payload_style": "veo",
+    },
+
+    # ── A/B test alias'ları — DEFAULT_MODEL env var'ı bu isimlerle set edilebilir ──
+    "seedance-2-mini": {
+        "model_id": "bytedance/seedance-2-fast",
+        "create_url": "/jobs/createTask",
+        "poll_url": "/jobs/recordInfo",
+        "uses_input_wrapper": True,
+        "payload_style": "seedance",
+    },
+    "veo-3.1": {
+        "model_id": "veo3_fast",
+        "create_url": "/veo/generate",
+        "poll_url": "/veo/record-info",
+        "uses_input_wrapper": False,  # Flat JSON
+        "payload_style": "veo",
+    },
+
+    # ── Wan 2.6 (Alibaba, via Kie AI) — docs.kie.ai/market/wan/2-6-text-to-video ──
+    # Aynı createTask/recordInfo endpoint'lerini ve aynı state/resultJson.resultUrls
+    # polling şemasını kullanır (Seedance ile aynı) — SADECE request body alanları
+    # farklı: aspect_ratio / generate_audio / web_search YOK, duration STRING
+    # ("5"|"10"|"15"), resolution sadece "720p"|"1080p" (480p desteklenmiyor).
+    # Ses: API'de ayrı bir "audio" parametresi YOK — Wan 2.6 sesi modelin kendi
+    # üretim sürecinin doğal/otomatik bir parçası olarak veriyor (native audio),
+    # açıp kapatmak için gönderilecek bir alan dokümante edilmemiş.
+    "wan-2.6": {
+        "model_id": "wan/2-6-text-to-video",
+        "create_url": "/jobs/createTask",
+        "poll_url": "/jobs/recordInfo",
+        "uses_input_wrapper": True,
+        "payload_style": "wan",
     },
 }
 
@@ -228,8 +265,21 @@ class KieClient:
     ) -> str:
         """Model'e göre doğru endpoint ve payload ile task oluşturur."""
         url = f"{self._base_url}{cfg['create_url']}"
+        payload_style = cfg.get("payload_style", "seedance" if cfg["uses_input_wrapper"] else "veo")
 
-        if cfg["uses_input_wrapper"]:
+        if payload_style == "wan":
+            # ── Wan 2.6 (docs.kie.ai/market/wan/2-6-text-to-video): input wrapper,
+            # ama alan adları Seedance'tan farklı — aspect_ratio/generate_audio/
+            # web_search yok, duration STRING, resolution sadece 720p/1080p.
+            payload = {
+                "model": cfg["model_id"],
+                "input": {
+                    "prompt": prompt,
+                    "duration": str(duration),
+                    "resolution": resolution,
+                },
+            }
+        elif cfg["uses_input_wrapper"]:
             # ── Seedance 2.0: input wrapper ──
             payload = {
                 "model": cfg["model_id"],

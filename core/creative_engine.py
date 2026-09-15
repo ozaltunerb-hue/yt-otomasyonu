@@ -1,482 +1,544 @@
 from __future__ import annotations
 
 """
-Creative Engine — "DeepMyster" Yaratıcı Senaryo & Komplikasyonlu Olay Örgüsü Motoru.
+Creative Engine — "DeepMyster" Doğukan Metodolojisi & Yaratıcı Serbestlik Standardı.
 
-5 Aşamalı Mikro-Hikâye Sistemi (Komplikasyonlu):
-  1. HOOK (1–3 sn): Olay doğrudan başlar. Olağandışı başlangıç ("Ne oluyor?").
-  2. OLAY (3–7 sn): Tehlike/sorun netleşir, mürettebat fiziksel müdahale başlatır.
-  3. TIRMANIŞ / KOMPLİKASYON (7–12 sn): İlk müdahale yetersiz kalır veya yeni bir risk doğar ("Şimdi ne olacak?").
-  4. KRİTİK AN (12–15 sn): Sonucu belirleyen son saniye hamlesi veya kritik fiziksel manevra.
-  5. SONUÇ / PAYOFF (Son 3–5 sn): Görsel ve fiziksel somut netice (hasar, kurtarma, rota değişimi).
-
-Temel Kural:
-  "BU VİDEODA TAM OLARAK NE OLDU VE VİDEONUN SONUNDA NE DEĞİŞTİ?"
-  (Fiziksel durumdaki değişim net olarak gösterilmek zorundadır.)
+Temel İlkeler:
+  1. YARATICI KONTROLÜN TERSİNE ÇEVRİLMESİ (Inversion of Control):
+     Python kodu sabit cümle parçalarını dikte etmez. GPT-4o geniş denizcilik evreni içinde
+     özgürce olay, gemi mimarisi, fiziksel kriz ve kamera açısını belirler.
+  2. DEEPMYSTER INSPIRATION & EXISTING IDEAS LIBRARY (71 Temel Senaryo):
+     Mevcut 71 fikir deterministik bir seçim listesi DEĞİLDİR; GPT-4o'nun DeepMyster evrenini
+     anlaması, bilinen konuları tekrar etmemesi ve yeni denizcilik ufukları keşfetmesi için
+     sağlanan semantik referans kütüphanesidir.
+  3. DOĞUKAN METODOLOJİSİ (Less is More):
+     Seedance 2 Mini için 25–45 kelimelik yüksek görsel sinyal yoğunluklu, süssüz,
+     tek kesintisiz, yapılandırılabilir süreli (config.DEFAULT_DURATION) fotogerçekçi
+     CCTV/belgesel promptları.
+  4. SÖZDİZİMSEL ÇEŞİTLİLİK (Anti-Few-Shot Klonlama):
+     Farklı cümle yapıları, farklı bakış açıları ve organik insan rolleri.
 """
 import random
 import logging
+from typing import List, Dict, Any
 
 log = logging.getLogger("CreativeEngine")
 
-# ────────────────────────────────────────
-# 🌊 KATMAN 1: DEEPMYSTER KOMPLİKASYONLU OLAY SEED HAVUZLARI (8 KATEGORİ)
-# ────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# 📚 DEEPMYSTER EXISTING IDEAS & BRAND UNIVERSE (71 Referans Senaryo Kütüphanesi)
+# ─────────────────────────────────────────────────────────────────────────────
+# Bu kütüphane GPT-4o'ya "neler yaptığımızı ve marka tonumuzu" öğretir.
+# GPT bu fikirleri birebir kopyalamaz; buradan yola çıkarak yeni olaylar türetir.
 
-MARITIME_CATEGORIES = {
-    "roro_accidents": {
-        "label": "Ro-Ro ve Arabalı Gemi Kazaları & Olayları",
-        "vessels": [
-            "large car and passenger ferry",
-            "heavy Ro-Ro vehicle carrier",
-            "coastal vehicle freight ferry",
-            "high-speed passenger-car catamaran",
-            "island commuter car ferry",
-        ],
-        "incidents": [
-            "Violent swell snaps primary trailer lashing; deckhands attempt to hook emergency chain but the hook slips as the truck lurches toward companionway, forcing the crew to dive and jam heavy steel chocks under tires just before hull breach.",
-            "Storm surge lifts Ro-Ro ramp as a vehicle skids sideways; the primary tow cable snaps, but the dock marshal rapidly catches the secondary safety arresting strap and anchors it to deck bollard inches from the water.",
-            "Bow visor hydraulic lock blows during 35ft wave impact; primary emergency valve jams with water rushing in, forcing the chief officer to manually sledgehammer the secondary mechanical locking pin into place.",
-            "Shifting freight container pins cargo forklift; rolling swell tilts forklift toward open deck railing, but deck crew cuts the forklift safety cage with hydraulic shears and pulls driver clear before next wave hits.",
-            "Passenger vehicle slides across slick ramp in gale; marshal's throw line misses axle, forcing second crewman to drop a heavy rubber ramp wedge directly under moving front wheel.",
-            "Straining stern ramp cable snaps on vehicle ferry; secondary winch motor stalls under load, forcing deckhands to trigger manual gravitational emergency brake stops.",
-            "Cargo trailer lurch snaps safety chain and blocks scupper drain; water accumulates rapidly on vehicle deck until boatswain hacks drain grate clear with prybar, releasing trapped floodwater.",
-        ],
-        "settings": [
-            "on the rolling vehicle cargo deck of a ferry in heavy open seas with deckhands in high-visibility suits",
-            "at an exposed ferry terminal slip with dockworkers and crew managing storm surge",
-            "in a turbulent strait crossing with passengers and crew bracing against steep breaking chop",
-            "approaching a concrete Ro-Ro loading ramp amidst surging ocean swells with ramp marshals active",
+DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
+    "ro_ro_emergencies": {
+        "title": "Ro-Ro & Araç Feribot Acil Durumları",
+        "reference_scenarios": [
+            "Car ferry rolling violently in heavy swells as deck crew in yellow foul weather gear battle to lash shifting trucks on open vehicle deck.",
+            "Heavy Ro-Ro vehicle carrier surging at loading ramp while dock staff frantically guide disembarking cars through storm chop.",
+            "Deckhands scrambling across wet flooded vehicle deck to hook emergency heavy chains on sliding freight trailers in severe gale.",
+            "Ferry captain and navigation officers urgently correcting thrusters as open bow visor takes pounding oceanic waves.",
+            "Passengers gripping safety handrails as a rolling high-speed catamaran heels sharply and deck crew scramble to secure storm gates before the next wave hits.",
+            "Commercial Ro-Ro freight crew working together on pitching stern ramp to secure loose vehicle lashings in severe swell.",
+            "Island car ferry crew directing vehicles while surge waves wash across lower loading ramp during emergency departure.",
+            "On a large PCTC car carrier, a sudden roll sends rows of lashed vehicles straining against their chains, grinding hard against each other.",
+            "On a ferry's vehicle deck, a poorly secured car breaks loose in rough seas and slides into a neighboring vehicle, drivers scrambling out in a panic.",
+            "A car waiting at the ramp entrance is jolted hard as the vessel suddenly rolls, the driver braking hard in a panic to avoid rolling off the ramp.",
+            "On an open-deck island car ferry, sudden wash floods across the vehicle deck submerging tires as owners in casual clothing dash back to their cars.",
+            "A lashing chain snaps on the vehicle deck, freeing a car to slide across the wet deck as crew scramble clear of its path.",
         ],
     },
     "marina_incidents": {
-        "label": "Yat Marinaları ve Marina Acil Durumları",
-        "vessels": [
-            "luxury motor yacht",
-            "large private superyacht",
-            "high-performance powerboat",
-            "twin-engine luxury cabin cruiser",
-            "marina safety response boat",
-        ],
-        "incidents": [
-            "Sudden squall snaps yacht bow line; marina staff drops a standard fender but it pops under extreme hull pressure, forcing safety boat to ram in with an oversized heavy-duty pneumatic buffer right as fiberglass grazes concrete piling.",
-            "Stuck throttle propels yacht toward marina fuel dock; skipper cuts main ignition but boat coasts on inertia toward pumps, forcing dockmaster to trip emergency master fuel shutoff and kick a floating tire buffer between dock and bow.",
-            "Marina pontoon cleat tears loose in storm surge; crew throws mooring line to adjacent slip but rope snags on cleat horn, forcing second dockhand to leap onto tilting pontoon and tie off directly to steel pile guide.",
-            "Aft deck fire ignites near shore power cable; first powder extinguisher runs empty with flames spreading toward canvas cover, forcing response crew to drag seawater hose and blast foam directly onto battery box.",
-            "Drifting superyacht sideswipes marina berths in gale; safety boat's towline parts under tension, forcing skipper to execute full-throttle lateral shove against yacht flank, deflecting bow clear of docked boats.",
-            "Yacht anchor drags toward shallow breakwater rocks; bow thruster stalls from weed ingestion, forcing deckhand on bow to drop emergency secondary kedge anchor just before keel strikes reef.",
-            "Tidal surge wedges yacht swim platform under dock finger; pneumatic jack slips off wet timber, forcing dockhands to use heavy prybars and shift boat ballast to dislodge stern.",
-        ],
-        "settings": [
-            "at a crowded luxury yacht marina during sudden violent storm surge with dock staff active on pontoons",
-            "beside floating marina dock pontoons with marina crew managing rolling boats amidst steep harbor chop",
-            "near a marina fuel dock with emergency personnel bracing as turbulent surge pushes vessels",
-            "at a private marina basin exposed to incoming gale squalls with boat owners and staff securing lines",
+        "title": "Yat Marinaları & Marina Acil Durumları",
+        "reference_scenarios": [
+            "Marina dock staff frantically sprinting along floating pontoon to deploy heavy inflatable fenders as runaway yacht approaches luxury slips.",
+            "Yacht captain and deckhand on bow desperately throwing mooring lines to marina crew during sudden storm surge.",
+            "Marina staff using long boat hooks to fend off drifting luxury yacht slamming toward wooden pontoons in sudden harbor squall.",
+            "Private yacht with a jammed throttle careens out of control across the marina fairway as the skipper fights the wheel and dockworkers scatter clear.",
+            "Marina emergency response crew in safety gear rushing along pontoon with fire hoses toward smoking yacht aft deck.",
+            "Dockmaster and marina personnel securing straining cleat lines as violent storm surge lifts floating pontoons with tilting boats.",
+            "Marina safety boat crew maneuvering in close quarters to intercept drifting powerboat before it hits concrete breakwater.",
+            "A sailing yacht caught broadside in a passing vessel's wake near the marina entrance heels hard, nearly capsizing as the crew scramble to the high side.",
+            "A yard travel lift malfunctions with a hoisted yacht swinging dangerously in its slings as yard staff scatter clear of the suspended hull.",
+            "A dockside electrical fire flares and spreads rapidly toward neighboring boats as marina staff race to contain it with extinguishers and hoses.",
+            "A mooring line snaps during a dockside gathering, the boat lurching hard toward the pier as people aboard lose their footing and grab for the rail.",
+            "A jet ski launches airborne after hitting another vessel's wake at the marina entrance, the rider bracing hard for a rough landing.",
         ],
     },
     "passenger_terminals": {
-        "label": "Yolcu İskeleleri ve Feribot Terminalleri",
-        "vessels": [
-            "commuter passenger ferry",
-            "large passenger catamaran",
-            "double-ended passenger ferry",
-            "coastal excursion vessel",
-            "harbor passenger water taxi",
-        ],
-        "incidents": [
-            "Commuter ferry loses port thruster approaching pier; captain drops starboard anchor but chain jumps windlass gear, forcing emergency full reverse throttle on remaining engine to arrest momentum meters from quay wall.",
-            "Wave surge dislodges passenger gangway; dockhand grabs railing but handrail weld cracks under weight, forcing second crewman to lasso gangway bridge frame and heave it onto solid concrete dock.",
-            "Heavy mooring hawser snaps violently under surge; snapping tail whips toward dock crew who dive behind concrete bollard as recoiling cable smashes dock light stanchion.",
-            "Surge wave sweeps passenger catamaran toward terminal pilings; primary bumper fender tears off, forcing deck crew to drop backup inflatable foam cushions and tighten stern spring line.",
-            "Excursion boat engine stalls in strong crosscurrent; tow line thrown from pilot boat falls short into churning water, forcing pilot boat to pace alongside and make direct hull-to-hull push into slip.",
-            "Boarding gate latch fails as ferry lists; safety barrier swings open toward water, forcing deck officer to tackle passenger back to deck and latch backup heavy steel chain.",
-            "Ferry bow strikes wooden dolphin in gale; wooden fender shatters on impact, forcing terminal crew to trigger emergency pneumatic dock brakes to absorb secondary hull rebound.",
-        ],
-        "settings": [
-            "at an active passenger ferry terminal with dockworkers and deck crew managing turbulent wave chop",
-            "alongside a concrete passenger pier with passengers holding handrails and deckhands securing lines",
-            "at a crowded waterfront ferry landing with terminal staff managing pitching commuter vessels during severe gusts",
-            "at an island passenger dock with local crew assisting disembarkation amidst sudden breaking waves",
+        "title": "Yolcu İskeleleri & Feribot Terminalleri",
+        "reference_scenarios": [
+            "Ferry captain working thruster levers as commuter ferry slams hard against pier wooden fender dolphins in strong harbor surge.",
+            "A cruise liner's gangway buckles and tears loose under sudden vessel surge as deck crew scramble to pull passengers back before the walkway collapses into the water.",
+            "Terminal dockworkers jumping back as heavy mooring line snaps violently under high tension in gale winds.",
+            "Passenger ferry drifts out of control toward a crowded terminal pier as dockside crowds scramble clear and crew fire emergency horn blasts, the hull grazing the fender pilings at the last second.",
+            "A cruise liner narrowly misses a pier structure as the captain executes a last-second emergency turn, passengers on the open upper deck bracing against the railings.",
+            "Terminal dock staff rushing to secure double-cleated lines from pitching passenger vessel in breaking waves.",
+            "Cruise ship's towering hull surges against the terminal fendering as mooring winches strain and dock crew scramble clear of snapping lines in gusting crosswind.",
+            "A cruise ship's pool-deck glass wind-break screen cracks and shatters under a sudden storm gust, deck staff evacuating sunbathing passengers from the area.",
         ],
     },
     "harbor_collisions": {
-        "label": "Liman İçi Gemi Çarpışmaları ve Manevralar",
-        "vessels": [
-            "massive container ship",
-            "heavy ocean bulk carrier",
-            "large crude oil tanker",
-            "commercial harbor tugboat",
-            "industrial cargo freighter",
-        ],
-        "incidents": [
-            "Container ship suffers rudder lock in narrow harbor; lead tugboat attempts straight reverse pull but towline snaps with flying spray, forcing assist tug to ram ship port quarter and shove bow away from gantry crane.",
-            "Bulk carrier drifts toward anchored tanker in squall; port anchor drops but fails to hold on muddy bottom, forcing pilot to drop starboard anchor with full chain brake tension to halt drift thirty meters away.",
-            "Cargo freighter bow brushes pier wall in crosscurrents; bow thruster stalls under overload, forcing watch officer on bridge wing to drop anchor brake and swing vessel stern clear of container stacks.",
-            "Tugboat towline snags on giant bulbous bow; emergency quick-release hook jams under tension, forcing tug deckhand to sever synthetic line with rescue axe right before tug gets swamped.",
-            "Industrial freighter propulsion fails near bridge piers; harbor tug applies full lateral push but loses traction, forcing second tug to hook stern bridle and execute synchronized pivot.",
-            "Forward mooring wire parts on container ship; loose cable whips into forecastle winch, forcing boatswain to engage emergency manual dog clutch and brake drum before ship drifts into fairway.",
-            "Harbor pilot boat swamped by giant wake during boarding; pilot ladder bottom rung tears away, forcing deckhand to catch pilot safety harness and haul him onto pilot boat foredeck.",
-        ],
-        "settings": [
-            "inside a busy industrial seaport basin with harbor pilots and bridge teams actively maneuvering",
-            "alongside an active container terminal quay with dockworkers and deckhands managing gale surges",
-            "in a congested harbor turning basin with tugboat crews coordinating emergency vessel position",
-            "between industrial shipping berths with deck watchmen signaling maneuvering giant vessels",
+        "title": "Liman İçi Gemi Manevraları & Yakın Geçişler",
+        "reference_scenarios": [
+            "Bridge officers and harbor pilot tensely coordinating emergency reverse thrust on container ship near quayside crane.",
+            "Commercial tugboat crew managing straining hawser towline as drifting bulk carrier bow slides dangerously close in heavy gale.",
+            "Cruise liner listing hard against the terminal fendering as harbor pilots scramble to correct a sudden list during final approach, the towering hull scraping the pier.",
+            "Harbor pilot boat crew skillfully pacing alongside massive cargo vessel as harbor pilot boards via pilot ladder in rough water.",
+            "Container ship deck crew on forecastle preparing emergency anchor drop as ship drifts toward concrete berth sea wall.",
+            "Tugboat deckhands securing heavy towing bridle while flanking giant maneuvering freighter in turbulent propeller wash.",
+            "Quayside dockworkers and crane operators reacting from berth as approaching cargo freighter suffers rudder stall.",
+            "An open-air deck bar's tables and umbrellas are blown into chaos as sudden heavy weather hits, passengers in casual wear fleeing indoors past toppling furniture.",
         ],
     },
     "rough_seas_storms": {
-        "label": "Açık Deniz Fırtınaları ve Dev Dalgalar",
-        "vessels": [
-            "massive container ship",
-            "ocean bulk carrier",
-            "deep sea fishing trawler",
-            "heavy crude oil tanker",
-            "rugged offshore supply vessel",
-        ],
-        "incidents": [
-            "Massive 45-foot rogue wave smashes forward hatch cover; boatswain crawls on lifeline to latch dogs but secondary wave knocks tool loose, forcing him to secure dogs with backup steel ratchet strap.",
-            "Rolling bulk carrier suffers shifted container stack; primary turnbuckle snaps under strain, forcing deckhands in gale to loop heavy wire lashing around adjacent container frame to halt cascade.",
-            "Green water shatters forward wheelhouse safety window; electronic throttle console shorts out from saltwater, forcing captain to switch to auxiliary mechanical telegraph in aft bridge wing.",
-            "Trawler net snags propeller in cross-seas; crew cuts winch cable but trailing rope wraps shaft, forcing mechanic to lock shaft brake and drift on sea anchor to prevent engine stall.",
-            "Offshore supply vessel dynamic positioning fails in 40ft seas; manual twin-screw throttle lags, forcing bridge crew to deploy bow thruster surge and steer bow directly into crest.",
-            "Forecastle deck railing bends under wave impact trapping companionway door; deckhand uses emergency fire axe to wedge door open, allowing flooded deck water to drain through scuppers.",
-            "Freezing spray locks trawler wheelhouse wipers and freeing ports; deckhand with de-icing mallet slips on ice but catches safety rail, then knocks free freeing port ice to drain deck.",
-        ],
-        "settings": [
-            "in the storm-tossed open North Atlantic Ocean with bridge crew on high alert under dark skies",
-            "in deep oceanic waters with deckhands navigating flooded companionways amidst 40-foot gray-green swells",
-            "along a treacherous offshore shipping lane with watch officers monitoring radar and violent wave impacts",
-            "in the frigid sub-arctic ocean with trawler crew working on ice-sprayed deck amidst massive waves",
+        "title": "Açık Deniz Fırtınaları & Dev Dalgalar",
+        "reference_scenarios": [
+            "Bridge officers inside ship wheelhouse bracing as massive 45-foot wave crashes over cargo forecastle deck.",
+            "Deckhands in high-visibility foul weather gear holding safety lifelines across waterlogged deck of rolling bulk carrier.",
+            "Ship captain and helmsman gripping steering consoles as green seawater floods forward bridge windows in towering swell.",
+            "Deep sea fishing trawler crew in heavy oilskins battling freezing spray to haul deck gear in violent cross-seas.",
+            "Offshore supply vessel crew fighting the helm as dynamic positioning alarms blare through 40-foot hurricane swells and the vessel yaws hard off station.",
+            "Cargo ship deck crew inspecting lashing turnbuckles on shifted container stacks between relentless ocean waves.",
+            "Freighter bridge team watching in tension as bow plunges deep underwater before surging through dense sea foam.",
+            "A rogue wave sweeps across a cruise ship's open pool deck as sunbathing passengers in swimwear scramble for cover, pool water surging violently across the tiles.",
         ],
     },
-    "channel_navigation": {
-        "label": "Kanal ve Liman Giriş-Çıkış Tehlikeleri",
-        "vessels": [
-            "massive container ship",
-            "ocean cargo vessel",
-            "heavy oil tanker",
-            "commercial salvage tugboat",
-            "harbor pilot boat",
-        ],
-        "incidents": [
-            "Bank suction pulls container ship stern toward rocky bank; hard-over rudder counter-action fails to break suction, forcing pilot to order full emergency burst on bow thruster to pop stern into channel.",
-            "Dense fog blinds freighter approaching breakwater; lookout spots rocky groin at 50 meters and calls warning, but helm response is sluggish, forcing captain to dump full port rudder and drop port anchor to pivot away.",
-            "Cargo ship brushes submerged sandbank; ballast pump valve sticks during deballasting, forcing engineers to manually hand-crank emergency sea chest valve to lighten ship draft.",
-            "Salvage tug fights tidal eddy at harbor entrance; tow bridle bridle shackle bends under lateral load, forcing crew to quickly hook backup towing strap before barge swings toward rocks.",
-            "Oil tanker experiences steering lag at channel bend; primary steering pump alarms sound, forcing helmsman to activate emergency auxiliary steering gear to complete channel turn.",
-            "Cross-tide sweeps freighter toward navigation buoy; thruster burst stalls initially from aeration, forcing captain to gun main engine ahead and blow propeller wash past buoy.",
-            "Harbor inlet breakers threaten to broach inbound ship; stern takes heavy quartering wave lifting rudder, forcing captain to apply sudden reverse throttle to restore water bite.",
-        ],
-        "settings": [
-            "in a narrow industrial shipping canal with bridge officers and pilot tensely steering past concrete sea walls",
-            "at a treacherous rocky harbor inlet with deck watchmen monitoring violent breaking cross-swells",
-            "navigating a narrow dredged harbor channel with tugboat crews and helmsmen maintaining course",
-            "entering an exposed seaport breakwater channel with bridge crew navigating gale warnings",
+    "navigation_hazards": {
+        "title": "Kanal, Boğaz & Sığ Su Seyir Tehlikeleri",
+        "reference_scenarios": [
+            "Container vessel helmsman fighting sudden bank suction effect as ship stern swings dangerously close to canal embankment.",
+            "River cargo barge crew bracing as crosscurrent forces pushing barge against concrete bridge support pillar.",
+            "Harbor pilot and captain tensely reversing engines as dense fog suddenly reveals unlit breakwater buoy ahead.",
+            "Bulk carrier navigating narrow rocky fjord inlet while watch officer signals emergency helm order against strong eddy current.",
+            "Commercial tugboat flanking disabled freighter as crosswinds push vessel toward shallow sandbank.",
+            "Ferry captain executing emergency bow thruster maneuver as outgoing tidal rip threatens to turn vessel broadside.",
+            "Cargo vessel lookout crew on forecastle calling warnings as ship brushes shallow sandbank in turbulent crosscurrents.",
+            "A passenger walking an upper deck stumbles hard into the railing as the cruise ship suddenly rolls, crew rushing over to help them back to their feet.",
         ],
     },
     "emergency_rescue": {
-        "label": "Mürettebat Acil Müdahale ve Kurtarma Operasyonları",
-        "vessels": [
-            "rugged coast guard rescue cutter",
-            "deck crew on pitching cargo ship",
-            "commercial salvage tugboat",
-            "offshore supply vessel with rescue craft",
-            "deep sea trawler crew in survival gear",
-        ],
-        "incidents": [
-            "Deckhand swept against safety netting by breaking wave; rescue swimmer reaches him but swimmer's tether snags on deck cleat, forcing boatswain to cut snag with knife so swimmer can haul seaman to superstructure.",
-            "Listing fishing boat takes on water; transfer hose from rescue cutter kinks and stops pump suction, forcing cutter crew to throw secondary submersible electric pump to stabilize vessel list.",
-            "Helicopter hoist cable snags on pitching mast during evacuation; winch cable tensions dangerously, forcing deck officer to cut guide line with rigging shears, freeing cable for safe hoist lift.",
-            "Seaman trapped in flooded companionway; hydraulic spreader slips on greased door frame, forcing damage control team to wedge timber baulks and pry hatch open on second attempt.",
-            "Distressed sailboat drifts toward breaking reef; first thrown line misses deck in howling wind, forcing salvage tug to maneuver into wave trough and launch rocket-propelled line to secure tow.",
-            "Emergency life raft painter line tangles on sinking trawler rigging; boatswain cuts snagged painter with knife just as raft begins getting dragged underwater, allowing raft to surface.",
-            "Injured crewman stretcher slides on waterlogged deck; forward tie-down snaps, forcing two teammates to throw their bodies across stretcher to pin it until bridge turns ship into wind.",
-        ],
-        "settings": [
-            "on the spray-drenched forecastle deck with crew battling towering oceanic waves in survival gear",
-            "near an exposed coastal reef with coast guard rescue crew operating in turbulent breaking surf",
-            "on the pitching aft deck of a rescue vessel with team members executing operations in dark storm conditions",
-            "along the flooded main deck of a listing cargo vessel with seamen coordinating emergency evacuation",
+        "title": "Acil Müdahale & Kurtarma Operasyonları",
+        "reference_scenarios": [
+            "Deck crew in bright orange foul weather gear rushing across flooded deck to deploy portable emergency bilge pumps.",
+            "Coast guard rescue boat crew launching rigid inflatable craft into violent breaking surf to reach vessel in distress.",
+            "Ship officers on open bridge wing scanning dark storm waves with high-power searchlights to guide rescue swimmers.",
+            "Deckhands working together against howling gale to retrieve damaged heavy towing gear and secure deck safety lines.",
+            "Rescue swimmer descending from helicopter hoist cable onto pitching vessel deck as deck crew signals guidance.",
+            "Cruise liner passengers scrambling down a swaying gangway into a pitching tender boat as crew battle to hold it steady against the hull in rough swell.",
+            "Salvage tugboat deck crew throwing emergency rescue lines and life rings to seamen on waterlogged deck.",
+            "Wind and swell send deck loungers and tables sliding and tumbling across a cruise ship's open sun deck as passengers in resort wear grab for the railings.",
         ],
     },
     "machinery_failures": {
-        "label": "Makine, Dümen ve Sistem Arızaları",
-        "vessels": [
-            "ship captain and bridge officers in wheelhouse",
-            "marine engineers in ship engine room",
-            "heavy bulk carrier crew with jammed rudder",
-            "ocean cargo freighter deck officers in blackout",
-            "tugboat and vessel emergency response team",
-        ],
-        "incidents": [
-            "Engine room main cooling pipe bursts spraying steam; isolation valve handwheel shears off, forcing chief engineer to grab heavy pipe wrench and manually twist valve stem shut before boiler overheat.",
-            "Ship suffers blackout near rocky shoreline; emergency generator auto-start fails due to air lock, forcing electrician to manually bleed diesel injector and crank generator in darkness.",
-            "Hydraulic steering cylinder blows under heavy rudder load; bridge manual helm spins freely with vessel drifting toward shoals, forcing crew to rush aft steering flat and engage emergency hand pump.",
-            "Bow thruster stalls while docking in high crosswinds; boatswain drops port anchor but brake band slips, forcing crew to apply auxiliary friction clamp to arrest chain run.",
-            "Engine room turbocharger catches fire; primary CO2 pull cable snaps, forcing engineer to race to local release cabinet and manually pull secondary gas cylinder pins.",
-            "Fuel leak sprays hot exhaust manifold; automatic deluge valve fails to trip, forcing mechanic to trigger manual foam canister directly onto fire source.",
-            "Steering gear jams 25 degrees starboard in shipping lane; emergency tiller linkage binds, forcing bridge to use differential twin-screw propeller thrust to steer vessel straight.",
-        ],
-        "settings": [
-            "inside the ship bridge wheelhouse with captain and officers managing alarms and stormy seas outside",
-            "inside the ship engine control station with engineers responding to flashing red warning indicators",
-            "on the forward anchor deck with deckhands securing emergency anchor windlass near rocky coast",
-            "in a congested harbor fairway with bridge team sounding emergency whistle as propulsion stalls",
+        "title": "Makine, Dümen & Sistem Arızaları",
+        "reference_scenarios": [
+            "Ship captain and helmsman fighting manual emergency steering wheel in wheelhouse as vessel drifts toward rocky breakwater.",
+            "Marine engineers in boiler suits rushing through vibrating engine room to isolate blown hydraulic steering pipe.",
+            "Electrical engineer resetting main switchboard breakers under emergency red backup lighting during violent storm blackout.",
+            "Bridge officers and lookouts on a cruise liner reacting to sudden bow thruster failure as crosswinds push the towering hull toward the terminal pier during docking.",
+            "Deckhands and boatswain dropping emergency anchor on forecastle deck as cargo ship suffers complete propulsion loss.",
+            "Chief engineer and mechanics working frantically on jammed steering gear actuator as storm waves batter the hull.",
+            "Bridge crew scrambling as the backup radar flickers out and the emergency generator strains to take load while the ship rolls hard in heavy seas.",
         ],
     },
 }
 
-CAMERA_PERSPECTIVES = [
-    "raw handheld documentary camera footage capturing crew action and vessel motion",
-    "ship bridge wheelhouse camera looking past captain and controls out to violent forward deck",
-    "rugged bodycam worn by deck crew member battling waves and securing deck gear",
-    "quayside CCTV surveillance camera recording dockworkers and incoming vessel drama",
-    "forecastle deck action camera drenched in flying sea spray showing deckhands in hi-vis gear",
-    "harbor watchtower telephoto lens documentary footage capturing crew maneuvering vessel",
-    "pilot boat tracking camera moving alongside vessel showing crew on deck",
-    "marina pontoon camera recording marina staff sprinting with fenders as yacht approaches",
-    "engine room surveillance camera capturing marine engineers rushing to emergency consoles",
-    "dramatic low-angle quayside camera capturing dockworkers managing heavy lines near giant hull",
-]
 
-CREW_CONTEXTS = [
-    "Deckhands in bright high-visibility foul weather gear actively battle sea spray to secure equipment and chains",
-    "Ship captain and bridge officers in the wheelhouse tensely maneuver throttles and emergency steering controls",
-    "Marina dock staff on pontoons frantically sprint to deploy heavy inflatable fenders for runaway yacht",
-    "Port dockworkers and line handlers on the quay manage high-tension mooring ropes during dangerous maneuver",
-    "Passengers and crew grip safety rails on rolling deck, reacting with urgency to severe pitch and roll",
-    "Emergency rescue crew or coast guard swimmers in survival suits actively execute critical crisis response",
-    "Marine engineers in boiler suits frantically repair machinery under flashing emergency warning lights",
-    "Harbor pilot and tugboat crew execute critical coordinated maneuvers in turbulent churning water",
-    "Lookout watch officers on bridge wing scan stormy swells with searchlights and binoculars",
-]
+# ─────────────────────────────────────────────────────────────────────────────
+# 🌊 10 GENİŞ DENİZCİLİK İLHAM ALANI (Genişletilmiş Operasyonel Ufuk)
+# ─────────────────────────────────────────────────────────────────────────────
 
-DYNAMICS_TEMPLATES = [
-    "deck crew braces hard against safety handrails as a massive wave crashes over the forecastle bow",
-    "captain works emergency controls as the vessel rolls sharply into a deep wave trough",
-    "marina staff deploy fenders just in time as foamy surge water pushes the vessel sideways",
-    "deckhands scramble across spray-washed steel plates to secure loose cargo before the next swell hits",
-    "dockworkers on the pier jump back as high-tension mooring line snaps with flying sea spray",
-    "passengers grip railings tightly while crew guides them during sudden violent vessel yaw",
-    "engineers fight heavy vibrations as backup emergency power kicks in amidst severe hull roll",
-    "rescue crew pulls equipment aboard rigid inflatable boat amidst towering whitecaps",
-    "bridge officers brace against console as green water floods over the forward windows",
-]
+MARITIME_INSPIRATION_DOMAINS = {
+    "arctic_ice_navigation": {
+        "title": "Kutup & Buzul Seyri (Ice Navigation & Cold Weather)",
+        "guidance": "Polar pack ice navigation, hull ice grinding, frozen spray accumulation, bow de-icing, sub-zero blizzard deck operations, icebreaker escort friction.",
+        "example_elements": ["polar research vessel", "heavy icebreaker", "arctic LNG carrier", "ice floe impact", "freezing deck spray", "pneumatic de-icing boots"],
+        "camera_styles": ["fixed bridge wing cold-weather camera", "stationary forecastle ice-watch camera", "low-angle hull observation CCTV"],
+    },
+    "heavy_lift_and_project_cargo": {
+        "title": "Ağır Yük & Proje Yükü Elleçleme (Heavy Lift & Deck Cargo)",
+        "guidance": "Oversized industrial cargo shifting in swells, deck gantry cranes, timber deck cargo stanchion stress, turbine blade transport, modular hull transport barge.",
+        "example_elements": ["heavy-lift crane ship", "ocean cargo deck barge", "coastal lumber freighter", "lashing turnbuckle strain", "heavy equipment deck cradle"],
+        "camera_styles": ["fixed catwalk cargo CCTV", "stationary crane boom monitoring camera", "upper bridge deck surveillance camera"],
+    },
+    "salvage_and_heavy_towing": {
+        "title": "Derin Deniz Kurtarma & Ağır Çekme (Salvage & Ocean Towing)",
+        "guidance": "Emergency ocean towing bridles, salvage tug winch tension, pusher tug linked barge dynamics in river rapids, disabled vessel escort in gale seas.",
+        "example_elements": ["salvage tugboat", "river pusher tug", "emergency towing bridle", "hydraulic towing pin", "tension winch drum friction"],
+        "camera_styles": ["fixed aft work-deck CCTV", "stationary towing winch surveillance camera", "rugged quarterdeck action camera"],
+    },
+    "offshore_supply_and_dp": {
+        "title": "Açık Deniz İkmal & Dinamik Konumlandırma (Offshore Supply & Rig Ops)",
+        "guidance": "Platform supply vessels (PSV) holding station in heavy seas, cargo crane transfer swing, high-pressure hose connection surge, anchor handling tug deck ops.",
+        "example_elements": ["platform supply vessel (PSV)", "anchor handling tug (AHTS)", "deck cargo rail", "dry bulk loading hose", "heavy shark-jaw line stopper"],
+        "camera_styles": ["fixed aft deck floodlight camera", "stationary superstructure surveillance CCTV", "bridge aft control console camera"],
+    },
+    "ro_ro_and_ferry_operations": {
+        "title": "Ro-Ro, Feribot & Yolcu Gemisi Dinamikleri (Ferry, Ro-Ro & Passenger Vessel Logistics)",
+        "guidance": "Vehicle deck kinetic weight shifts in cross swells, loading ramp hydraulic hinge pressure, bow visor spray seals, high-speed catamaran roll recovery, lashed vehicle rows straining and grinding on car carriers (PCTC), unsecured cars breaking loose and sliding on ferry vehicle decks, ramp-entrance vehicle jolts, wash flooding the open vehicle deck.",
+        "example_elements": ["island vehicle ferry", "high-speed passenger catamaran", "open-deck freight ferry", "PCTC car carrier", "lashed vehicle rows", "vehicle lashing chain", "hydraulic ramp hinge", "deck drainage scuppers"],
+        "camera_styles": ["fixed car deck security CCTV", "stationary ramp coaming surveillance camera", "overhead mezzanine deck camera"],
+    },
+    "bulk_and_tanker_logistics": {
+        "title": "Dökme Yük & Tanker Dinamikleri (Bulk, Liquid & Gas Transport)",
+        "guidance": "Ore carrier liquefaction shifts, crude oil tanker surge at single point mooring buoy, deck manifold emergency shutdown, ballast tank venting wash.",
+        "example_elements": ["capesize bulk ore carrier", "crude oil supertanker", "chemical parcel tanker", "deck manifold piping", "ballast vent head surge"],
+        "camera_styles": ["fixed catwalk pipe-rack CCTV", "stationary forward mooring deck camera", "bridge wing look-down surveillance"],
+    },
+    "container_and_gantry_operations": {
+        "title": "Konteyner Taşımacılığı & Terminal Elleçleme (Container Stacks & Port Gantry)",
+        "guidance": "Parametric rolling in beam seas, upper container tier twistlock shear, harbor gantry crane loading in sudden wind shear, cell guide alignment friction.",
+        "example_elements": ["ultra-large container vessel (ULCV)", "feeder container ship", "quayside container gantry", "twistlock corner casting", "lashing bridge frame"],
+        "camera_styles": ["fixed lashing bridge security camera", "stationary quay gantry CCTV", "forward bay observation camera"],
+    },
+    "commercial_storm_fishing": {
+        "title": "Açık Deniz Ticari Balıkçılık (Rough Sea Commercial Fishing)",
+        "guidance": "Stern trawler hauling cod nets in heavy following seas, crab boat pot launch line snag on icy decks, factory ship fish processing conveyor surge.",
+        "example_elements": ["North Sea stern trawler", "Bering Sea crab vessel", "pelagic longliner", "trawl winch warp wire", "aft ramp floodgate"],
+        "camera_styles": ["fixed trawl deck CCTV", "stationary gallows surveillance camera", "protective wheelhouse window camera"],
+    },
+    "harbor_pilotage_and_berthing": {
+        "title": "Liman Kılavuzluğu & Dar Kanal Manevraları (Pilotage & Harbor Tug Ops)",
+        "guidance": "Pilot boat coming alongside rolling ship in swell, harbor tug bow fender compression against quay, bow thruster turbulence near shallow canal banks.",
+        "example_elements": ["harbor pilot boat", "maneuver escort tugboat", "narrow canal freighter", "Yokohama pneumatic dock fender", "quayside concrete bollard"],
+        "camera_styles": ["fixed quay security camera", "stationary pilot boarding station CCTV", "tugboat wheelhouse mast camera"],
+    },
+    "shipyard_and_drydock_engineering": {
+        "title": "Tersane, Kuru Havuz & Kızak Dinamikleri (Drydock & Launch Mechanics)",
+        "guidance": "Floating drydock flooding/un-docking stability, slipway gravitational launch friction, hull keel block settling, giant propeller shaft rig placement.",
+        "example_elements": ["floating drydock", "shipyard slipway", "caisson dock gate", "timber keel block", "high-tonnage gantry crane sling"],
+        "camera_styles": ["fixed drydock wing-wall CCTV", "stationary dock basin security camera", "crane gantry overview camera"],
+    },
+    "marina_and_yacht_operations": {
+        "title": "Marina & Yat Operasyonları (Marina & Yacht Incidents)",
+        "guidance": "Yacht or powerboat losing control near marina pontoons, runaway vessel drifting toward moored boats or dock structures, marina staff emergency response, storm surge lifting floating docks, fuel dock emergencies, travel lift hoisting failures, dockside fires, boat wake collisions, jet ski/small boat wake incidents near the marina entrance.",
+        "example_elements": ["luxury motor yacht", "sailing yacht", "runaway powerboat", "floating pontoon dock", "marina fuel dock", "mooring cleat under strain", "boat travel lift", "jet ski", "marina fire hose station"],
+        "camera_styles": ["fixed marina pontoon CCTV", "stationary fuel dock security camera", "dockside harbor camera"],
+    },
+    "cruise_ship_operations": {
+        "title": "Yolcu Gemisi & Kruvaziyer Operasyonları (Cruise & Large Passenger Ship Ops)",
+        "guidance": "Cruise liner terminal berthing and bow thruster docking dynamics, gangway connection stress under swell, tender boat launch/recovery in rough water, hull list correction, near-miss pier approaches. Also covers onboard pool-deck and sun-deck incidents: rogue waves sweeping the pool deck, wind-blown deck furniture, sudden rolls throwing passengers off balance, deck bar chaos in sudden weather.",
+        "example_elements": ["ocean cruise liner", "mega cruise ship", "cruise ship tender boat", "passenger gangway", "bow thruster docking system", "terminal mooring bollard", "open-air pool deck", "sun deck loungers", "glass wind-break screen"],
+        "camera_styles": ["fixed terminal berth CCTV", "stationary gangway connection camera", "quayside cruise terminal security camera", "onboard pool-deck security camera", "sun-deck overhead security camera"],
+    },
+}
 
 
-def generate_creative_seed(used_combos: list[str] | None = None) -> dict:
-    """Benzersiz bir DeepMyster 5 aşamalı ve komplikasyonlu deniz olayı seed'i üretir."""
-    if used_combos is None:
-        used_combos = []
+def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
+    """
+    Geniş denizcilik ilham alanlarından birini seçer, 56 senaryoluk DeepMyster
+    fikir kütüphanesini ve son 30 günün canlı geçmişini birleştirerek
+    GPT-4o için zengin yaratıcı katalizör bağlamı üretir.
+    """
+    if recent_history is None:
+        recent_history = []
 
-    categories_keys = list(MARITIME_CATEGORIES.keys())
-    random.shuffle(categories_keys)
+    domain_keys = list(MARITIME_INSPIRATION_DOMAINS.keys())
+    random.shuffle(domain_keys)
 
-    all_combos = []
-    for cat_key in categories_keys:
-        cat_data = MARITIME_CATEGORIES[cat_key]
-        for incident in cat_data["incidents"]:
-            for vessel in cat_data["vessels"]:
-                combo_key = f"{cat_key}|{vessel}|{incident}"
-                if combo_key not in used_combos:
-                    all_combos.append({
-                        "vessel": vessel,
-                        "incident": incident,
-                        "animal": vessel,          # Geriye dönük uyumluluk
-                        "talent": incident,        # Geriye dönük uyumluluk
-                        "category": cat_key,
-                        "category_label": cat_data["label"],
-                        "combo_key": combo_key,
-                        "settings_pool": cat_data.get("settings", []),
-                    })
+    chosen_key = domain_keys[0]
+    for key in domain_keys:
+        if not any(key in h.lower() for h in recent_history):
+            chosen_key = key
+            break
 
-    if not all_combos:
-        log.warning("⚠️ Tüm DeepMyster kombinasyonları kullanılmış — geçmiş sıfırlanıyor")
-        for cat_key in categories_keys:
-            cat_data = MARITIME_CATEGORIES[cat_key]
-            for incident in cat_data["incidents"]:
-                for vessel in cat_data["vessels"]:
-                    all_combos.append({
-                        "vessel": vessel,
-                        "incident": incident,
-                        "animal": vessel,
-                        "talent": incident,
-                        "category": cat_key,
-                        "category_label": cat_data["label"],
-                        "combo_key": f"{cat_key}|{vessel}|{incident}",
-                        "settings_pool": cat_data.get("settings", []),
-                    })
+    domain = MARITIME_INSPIRATION_DOMAINS[chosen_key]
 
-    chosen = random.choice(all_combos)
+    # Mevcut fikir kütüphanesinden örnekleri derle (GPT'ye ton/örnek olarak iletmek için)
+    library_samples = []
+    for cat_key, cat_data in DEEPMYSTER_EXISTING_IDEAS_LIBRARY.items():
+        sample = random.choice(cat_data["reference_scenarios"])
+        library_samples.append(f"[{cat_data['title']}]: {sample}")
 
-    if chosen.get("settings_pool"):
-        chosen["setting"] = random.choice(chosen["settings_pool"])
-    else:
-        chosen["setting"] = "in rough open sea passage with deck crew battling relentless waves lashing across the hull"
+    catalyst = {
+        "domain_id": chosen_key,
+        "domain_title": domain["title"],
+        "guidance": domain["guidance"],
+        "example_elements": domain["example_elements"],
+        "camera_styles": domain["camera_styles"],
+        "existing_library_reference": library_samples,
+        "recent_history": recent_history[-20:],  # Son 20 konuyu canlı negatif liste olarak ver
+    }
 
-    chosen["twist"] = random.choice(DYNAMICS_TEMPLATES)
-    chosen["camera_perspective"] = random.choice(CAMERA_PERSPECTIVES)
-    chosen["crew_context"] = random.choice(CREW_CONTEXTS)
+    log.info(f"🎲 Yaratıcı Denizcilik Katalizörü Seçildi: [{chosen_key}] {domain['title']}")
+    return catalyst
 
-    log.info(
-        f"🎲 DeepMyster Seed: [{chosen['category_label']}] "
-        f"{chosen['vessel']} × {chosen['incident'][:40]}... "
-        f"| Cam: {chosen['camera_perspective'][:30]}... "
-        f"| Crew: {chosen['crew_context'][:30]}..."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 🤖 KATMAN 2: GPT SENARYO YÖNETMENİ — System Prompt
+# ─────────────────────────────────────────────────────────────────────────────
+
+SCENARIO_WRITER_SYSTEM_TEMPLATE = """You are the master director and physical maritime incident specialist for "DeepMyster" — capturing authentic, high-tension, real-world nautical incidents as if filmed by real observers: a fixed security/CCTV camera, a bystander's handheld phone, or a chase-POV camera from a nearby vessel.
+
+## CORE DIRECTIVE:
+You have FULL CREATIVE AUTONOMY to invent a unique, realistic <<DURATION>>-second physical maritime incident.
+The footage MUST be 100% understandable on a SILENT SCREEN within the first 2-3 seconds.
+
+## CAMERA PERSPECTIVE (ASSIGNED PER SCENE):
+The user prompt assigns ONE of three realistic camera perspectives for this scene: a fixed-mount security/CCTV camera, bystander/passenger handheld phone footage, or a chase/pursuit POV from a nearby vessel. Write the "observer_camera" field and the scene itself to match the assigned perspective exactly. NEVER use fisheye/GoPro-style distortion or drone/aerial-only framing unless the assigned perspective is specifically an elevated dockside or marina tower camera.
+For onboard deck, pool, or vehicle-deck scenes, the fixed camera may be mounted ON the ship looking at its own deck/interior spaces — visible deck architecture, railings, or vehicle-deck structure establishes the ship without needing an exterior hull/bow shot.
+
+## VESSEL VARIETY (ROTATE ACROSS TYPES):
+Draw the vessel from the FULL range of realistic sea vessels — cruise/passenger ships, ferries, Ro-Ro vehicle carriers, general cargo ships, container ships, tankers, tugboats/rescue boats, yachts/powerboats in marina settings, and other realistic commercial or recreational vessels. Rotate across these types across generations — do NOT let any single vessel type dominate repeatedly.
+
+## INCIDENT VARIETY (NON-EXHAUSTIVE — INVENT FREELY WITHIN THIS RANGE):
+Incidents may include, but are not limited to: a yacht or powerboat losing control near a marina, a passenger ship or ferry closing dangerously on people waiting at a dock, mechanical failures, cargo shifts, collisions, mooring line failures, storm damage, and other genuine maritime physical crises. Always maritime/vessel-based — never an unrelated non-maritime setting.
+
+## EXISTING IDEAS LIBRARY & BRAND UNIVERSE (INSPIRATION & ANTI-REPETITION):
+You are provided with samples from DeepMyster's 71-topic reference library.
+- THESE SAMPLES DEFINE OUR BRAND'S HIGH-TENSION REALISTIC MARITIME REALITY.
+- DO NOT copy or mechanically rehash these exact scenarios by merely swapping ship names or minor nouns.
+- INSTEAD: Use them as an inspiration springboard to understand our universe, identify unchartered maritime operations (ice operations, drydock mechanics, heavy cargo crane dynamics, high-sea pilotage, etc.), and EXTRAPOLATE completely novel, authentic physical incidents that expand the channel's horizons.
+
+## RECENT PRODUCTION HISTORY (STRICT DO NOT REPEAT):
+Review the recent topics list provided in the user prompt. DO NOT repeat the exact same vessel type, incident mechanism, or setting from recent productions.
+
+## STORY & PHYSICAL REALITY STANDARDS:
+1. PURE PHYSICAL DRAMA: Grounded in real maritime physics, hydrodynamics, friction, weight shifts, weather, or mechanical loads.
+2. NO INVISIBLE/INTERNAL ISSUES: No underwater rudders, no internal computer glitch, no unseen engine failures. The crisis MUST be visible in front of the camera.
+3. CONTEXTUAL HUMAN ROLES: Include natural maritime personnel appropriate for the scene (e.g. helmsman at bridge console, deckhand securing rigging, winch operator, dockworkers taking cover, or crane operator). Do NOT shoehorn cartoonish actions; keep movements authentic.
+4. SINGLE CONTINUOUS <<DURATION>>-SECOND TAKE: No drone acrobatics, no multi-angle movie cuts. One unbroken realistic industrial or eyewitness camera view. The scenario must describe ONE single peak moment — the worst instant of the incident — not a sequence of events spread across time. visible_start is what the camera sees at second 0; visible_consequence is what naturally follows in that same continuous shot, never a later scene or separate outcome that would need a time jump or cut to show.
+5. CONCRETE PHYSICAL OUTCOME: The <<DURATION>>th second must show a visible change of state (e.g. line locks under stopper, water drains through scuppers, mass settles against barrier, fender halts vessel momentum).
+6. CONSTANT HIGH ACTION (NON-NEGOTIABLE): Every scenario must depict something ACTIVELY breaking, colliding, flooding, swinging, or in danger, unfolding in real time. NEVER a calm, static, or purely observational moment — motion must read as fluid, fast, and genuinely dangerous, matching real bystander-filmed maritime incident footage, not a staged or slow-moving shot.
+7. AUTHENTIC CLOTHING & RAW WEATHER (NON-NEGOTIABLE): Crew, staff, and marina personnel must wear authentic maritime PPE — high-visibility orange, red, or yellow foul-weather gear, wetsuits, or work coveralls. NEVER stark white hazmat or astronaut-style suits, including in arctic/polar scenes (use realistic red or orange polar immersion suits instead). Passengers, boat owners, guests, and vehicle drivers/occupants are NOT crew — dress them in ordinary civilian clothing appropriate to the setting: swimwear, casual/resort wear, or sun hats for pool/deck scenes; regular casual clothing for car-deck scenes; yacht-casual or resort wear for marina scenes. NEVER put civilians in hi-vis PPE. Weather and lighting must read as raw and natural — real overcast, fog, or rain grain, never glossy, overly clean, or cinematically polished; avoid mirror-smooth CGI-looking water or movie-trailer lighting.
+
+## OUTPUT FORMAT (STRICT JSON):
+{
+  "vessel_class": "Specific real-world vessel class (e.g. Arctic Stern Trawler, 140m Ro-Pax Ferry, Heavy Tugboat, Ocean Cruise Liner, Luxury Motor Yacht)",
+  "incident_type": "Short 3-5 word label of the physical crisis",
+  "scenario_summary": "One clear, punchy sentence explaining the crisis, physical dynamics, and resolution",
+  "visible_start": "Exactly what the camera sees at second 0 — the incident already at its peak moment, not a calm lead-in (vessel motion, sea condition, initial tension)",
+  "physical_movement": "The core kinetic/mechanical movement and human response (<<EARLY>>-<<LATE>>s)",
+  "visible_consequence": "What naturally follows in that SAME continuous shot by <<DURATION>>s — the direct physical result of visible_start/physical_movement, NOT a later scene, new camera angle, or separate outcome that would require a time jump or cut to show",
+  "observer_camera": "Specific realistic camera perspective matching the assigned archetype for this scene (e.g. fixed forecastle CCTV, bystander's handheld phone from the railing, chase POV from a coast guard boat)",
+  "silent_screen_understandable": true
+}"""
+
+
+def compute_duration_breakpoints(duration: int) -> tuple[int, int]:
+    """Sahneyi 3 aşamaya böler: başlangıç / eskalasyon / sonuç.
+    12s için 0-3 / 3-9 / 12 üretir — orijinal sabit değerlerle birebir eşleşir."""
+    early = max(2, round(duration * 0.25))
+    late = max(early + 1, min(duration - 1, round(duration * 0.75)))
+    return early, late
+
+
+def build_scenario_writer_system(duration: int) -> str:
+    """SCENARIO_WRITER_SYSTEM'i config.DEFAULT_DURATION'a göre üretir."""
+    early, late = compute_duration_breakpoints(duration)
+    return (
+        SCENARIO_WRITER_SYSTEM_TEMPLATE
+        .replace("<<DURATION>>", str(duration))
+        .replace("<<EARLY>>", str(early))
+        .replace("<<LATE>>", str(late))
     )
 
-    return chosen
 
+# ─────────────────────────────────────────────────────────────────────────────
+# ✂️ KATMAN 3: PROMPT SİMPLİFİYER (SEEDANCE 2 MINI: 25–45 KELİME)
+# ─────────────────────────────────────────────────────────────────────────────
 
-# ────────────────────────────────────────
-# 🤖 KATMAN 2: GPT SENARYO ÜRETİCİ — 13 KRİTERLİ & KOMPLİKASYONLU 5-SHOT MİKRO-HİKÂYE
-# ────────────────────────────────────────
+PROMPT_SIMPLIFIER_SYSTEM_TEMPLATE = """You are a Seedance 2 Mini prompt engineer for DeepMyster documentary maritime videos.
+Your ONE job: Convert the maritime scenario into a HIGH-SIGNAL, PHOTOREALISTIC prompt of EXACTLY 25 TO 45 WORDS following the <<DURATION>>-second single-take standard.
 
-SCENARIO_WRITER_SYSTEM = """You are the lead maritime scenario writer and director for "DeepMyster" — a realistic documentary YouTube Shorts channel dedicated to authentic maritime incidents, ship emergencies, oceanic storms, critical maneuvering, and active crew survival/operations.
+## DOĞUKAN METODOLOJİSİ ("Less is More"):
+- Seedance 2 Mini needs clear, high-signal, descriptive visual language without cinematic fluff or robotic checklists.
+- Single continuous <<DURATION>>-second take from the assigned realistic camera perspective (fixed CCTV, bystander handheld, or chase POV).
+- Raw, authentic lighting (overcast daylight, storm lighting, industrial port lights).
 
-YOUR MISSION: Create a captivating, physically realistic 15-second MINI-NARRATIVE (Micro-Story) structured into EXACTLY 5 CONTINUOUS SHOTS × 3 SECONDS (Total 15s) with a rigorous cause-and-effect progression, active human participation, and AT LEAST ONE REAL COMPLICATION.
+## DIVERSE STRUCTURAL STYLES (Use varied sentence structures — DO NOT copy the same grammar):
 
-The viewer MUST experience this progression:
-"What is happening?" (0-3s Hook) → "What will happen next?" (3-9s Incident & Escalation with Complication) → "What physically changed in the end?" (9-15s Critical Move & Concrete Visual Payoff).
+✅ Style 1 (Event & Kinetic Action):
+"A towering green swell crashes over the bow of an arctic stern trawler, swamping the foredeck as a deckhand braces against the winch housing. Seawater violently rushes through freeing ports into the foam." (33 words)
 
-## 1. MANDATORY 5-SHOT × 3-SECOND FLOW (EXACTLY 15 SECONDS):
-- SHOT 1 / 0–3s — HOOK: Incident is ALREADY in progress from frame 1 in media res. No calm sea, no establishing landscape shot, no passive atmosphere. An unusual concrete physical event MUST be immediately visible.
-- SHOT 2 / 3–6s — INCIDENT & CREW ACTION: The danger/mechanism becomes clear. Crew/personnel ACTIVELY & PHYSICALLY intervene (diving, hauling, jamming, steering, latching). Incident continues.
-- SHOT 3 / 6–9s — ESCALATION & UNEXPECTED COMPLICATION: STRICT RULE: REJECT SIMPLE 1-STEP FIXES! The initial intervention fails, a tool slips, a line snaps, danger changes direction, or a secondary risk emerges, forcing an urgent tactical shift.
-- SHOT 4 / 9–12s — CRITICAL MOMENT: Decisive physical move, high-stakes maneuver, or emergency decision that determines the outcome. Peak of danger. Camera clearly frames the critical physical action.
-- SHOT 5 / 12–15s — RESOLUTION / PAYOFF: Concrete physical outcome MUST happen VISUALLY on screen (e.g. vessel trajectory deflected, runaway equipment locked, impact absorbed by buffer, flood drained). Hypothetical/invisible "they were saved" is STRICTLY FORBIDDEN.
+✅ Style 2 (Perspective & Heavy Mass Shift):
+"High-angle bridge wing CCTV captures a bulk carrier rolling sharply in cross-seas, causing the heavy hatch cover crane to roll along its deck rails until slamming firmly against emergency rubber end-stops." (31 words)
 
-## 2. STORY CAUSALITY (NEDEN-SONUÇ ZİNCİRİ):
-Every shot MUST be the physical consequence of the previous shot:
-CAUSE → ACTION → CONSEQUENCE → COMPLICATION → CRITICAL ACTION → RESULT.
-Internal Check: "What happened in the previous shot, and why is this shot its direct physical consequence?" If unclear, FAIL.
+✅ Style 3 (Mechanical Tension & Friction):
+"During high-wind docking maneuvers, an industrial towing winch drum slips under sudden surge load, sending sparks and white smoke from the brake band before locking tight against the stopper." (29 words)
 
-## 3. OBJECT / CHARACTER / ENVIRONMENT CONTINUITY:
-Strict continuity throughout the 15s:
-- Same vessel, same crew members, same clothes/gear, same equipment, same location, same weather/sea conditions, same timeline.
-- No teleportation, no duplicated objects, no suddenly appearing gear, no disappearing people.
+✅ Style 4 (Atmospheric & Cargo Shift):
+"An island freight catamaran lists in heavy harbor chop, shifting a palletized cargo crate across the slick vehicle deck until wedged securely against the steel ramp coaming." (27 words)
 
-## 4. STORY-DRIVEN CAMERA SYSTEM (STORY → ACTION → CAMERA):
-- NEVER select cameras just to look "cinematic". The camera is chosen solely to show the critical physical action in the clearest way.
-- Internal Question: "What is the single most important physical information the viewer needs to see in this shot?"
-- Match physical recording sources (phone camera, witness camera, ship-mounted bridge cam, quayside CCTV, deckhand bodycam, harbor security cam, pilot boat tracking cam). A CCTV camera cannot fly like a drone; a phone camera cannot be in impossible mid-air.
-- STRICTLY FORBIDDEN: Random aerials, random orbits, random close-ups, random camera switches that hide physical action or add no story information.
-
-## 5. ACTIVE HUMAN / CREW PARTICIPATION RULE:
-- Crew / personnel MUST be active physical participants of the crisis (hauling lines, fighting helm, deploying buffers, using tools). Passive background standing is FORBIDDEN.
-
-## 6. WHAT HAPPENED & WHAT CHANGED RULE:
-- Answer explicitly: "What exactly happened in this video and what physically changed by the end?" (e.g. "Cargo trailer lashing snapped on rolling ferry deck; initial hook slipped, but deckhands dove to jam steel chocks under tires, locking the truck 2 feet before hull collision.")
-
-## 7. NO-SPOILER TITLE RULE:
-- Title MUST focus solely on the CRISIS and DANGER (max 50 chars). NEVER reveal the resolution (e.g. use "⚠️ Runaway Freight Truck Slides on Ferry Deck" instead of "Crew Stops Truck").
+## STRICT RULES:
+1. LENGTH: EXACTLY 25 TO 45 WORDS.
+2. NO TIMESTAMPS / NO HEADERS: No 'Shot 1', '(0-<<DURATION>>s)', 'Scene 1'.
+3. NO CAMERA/LIGHTING TAGS: Do NOT end the prompt with a camera or lighting description (e.g. no 'Fixed CCTV camera, raw overcast footage.'). Camera and lighting are appended automatically afterward — focus entirely on the physical scene, action, and outcome.
+4. PRESERVE REALISM DETAILS: Keep authentic PPE colors for crew (orange/red/yellow gear, wetsuits, coveralls — never white hazmat suits) and ordinary civilian clothing for passengers/guests/drivers (never hi-vis PPE on civilians), and raw natural weather exactly as described in the scenario. Do not sanitize, glamorize, or make water/ice/lighting look glossy or CGI-clean.
 
 ## OUTPUT FORMAT (STRICT JSON):
 {
-  "scenario_title": "Crisis-focused title without spoiling resolution (max 50 chars)",
-  "what_happened_and_what_changed": "Concrete physical explanation of what happened, the complication, and what physically changed on screen",
-  "story_arc": {
-    "hook_seconds_0_3": "Shot 1 (0-3s): In media res shocking start of the crisis with visible physical event",
-    "incident_seconds_3_6": "Shot 2 (3-6s): Clear mechanism of danger and active physical crew intervention",
-    "escalation_and_complication_seconds_6_9": "Shot 3 (6-9s): Complication, failed first attempt, or secondary risk escalating tension",
-    "critical_moment_seconds_9_12": "Shot 4 (9-12s): Decisive high-stakes physical maneuver/action at peak of danger",
-    "resolution_seconds_12_15": "Shot 5 (12-15s): Visible physical change/outcome on screen"
-  },
-  "camera_plan": {
-    "shot_1_camera": "Recording source (e.g. CCTV / Bodycam / Bridge cam) + framing rationale for 0-3s",
-    "shot_2_camera": "Recording source + framing rationale showing crew action for 3-6s",
-    "shot_3_camera": "Recording source + framing rationale showing complication for 6-9s",
-    "shot_4_camera": "Recording source + framing rationale showing critical move for 9-12s",
-    "shot_5_camera": "Recording source + framing rationale showing visible payoff for 12-15s"
-  },
-  "scenes": [
-    {
-      "scene_number": 1,
-      "description": "Continuous 15-second physical action covering all 5 shots (Hook -> Incident -> Complication -> Critical Action -> Physical Payoff) with strict continuity",
-      "duration": 15
-    }
-  ],
-  "quality_self_check_13": {
-    "1_strong_hook_0_3s": {"pass": true, "reason": "Specific reason why hook starts in media res without establishing shot"},
-    "2_clear_problem_3_6s": {"pass": true, "reason": "Specific reason why the danger mechanism is clear"},
-    "3_active_crew_physical_action": {"pass": true, "reason": "Specific reason showing active physical crew intervention (not passive)"},
-    "4_genuine_escalation": {"pass": true, "reason": "Specific reason how tension escalates"},
-    "5_unexpected_complication_6_9s": {"pass": true, "reason": "Specific complication or failed first attempt described"},
-    "6_critical_moment_9_12s": {"pass": true, "reason": "Specific decisive physical maneuver described"},
-    "7_visible_physical_resolution_12_15s": {"pass": true, "reason": "Specific visual physical outcome described"},
-    "8_clear_what_changed_physically": {"pass": true, "reason": "Specific physical state change before vs after"},
-    "9_strict_shot_continuity_and_causality": {"pass": true, "reason": "Specific explanation of cause-and-effect continuity"},
-    "10_unpredictable_curiosity_maintained": {"pass": true, "reason": "Specific reason why viewer remains in suspense until payoff"},
-    "11_no_spoiler_in_title": {"pass": true, "reason": "Specific confirmation that title has no resolution spoiler"},
-    "12_complete_micro_narrative": {"pass": true, "reason": "Specific confirmation of complete micro-story structure"},
-    "13_story_driven_camera": {"pass": true, "reason": "Specific explanation of how camera choice serves physical story information"}
-  },
-  "scenario_summary": "One punchy sentence summarizing crisis, complication, and payoff",
-  "total_duration": 15,
-  "clip_count": 1
+  "prompt": "The exact 25-45 word prompt",
+  "word_count": 33
 }"""
 
 
-# ────────────────────────────────────────
-# ✂️ KATMAN 3: SEEDANCE 2 MINI PROMPT SPECIALIST (5 SHOT × 3S STANDARD)
-# ────────────────────────────────────────
-
-PROMPT_SIMPLIFIER_SYSTEM = """You are a Seedance 2 Mini (bytedance/seedance-2-fast) prompt engineer for "DeepMyster".
-Your ONE job: convert a 5-stage maritime micro-story into a HIGHLY DYNAMIC, KINETIC, 5-SHOT CONTINUOUS ACTION prompt for Seedance 2 Mini.
-
-## CRITICAL SEEDANCE 2 MINI 5-SHOT FORMAT:
-1. STRUCTURE (5 SHOTS × 3 SECONDS = 15 SECONDS):
-   Each shot MUST clearly express: CAMERA + SUBJECT + ACTION + CAUSE/CONTINUITY + IMMEDIATE CONSEQUENCE + DIEGETIC AUDIO.
-2. DURATION: Exactly 15 seconds continuous progression.
-3. WORD COUNT: 35-55 WORDS in a single tight, cohesive prompt narrative covering the 5 shots chronologically.
-4. FORBIDDEN WORDS: steal, theft, crime, arrest, gun, weapon, violence, blood, kill, drugs, glowing, magical, mystical, sci-fi, fantasy, anime, cgi, 3d render.
-5. PHOTOREALISM: End with 'Photorealistic raw documentary footage, natural lighting, diegetic environmental audio' or 'Rugged bodycam footage, natural physics, ambient sounds'.
-
-## PROMPT STRUCTURE FORMULA:
-"SHOT 1 (0-3s): [Camera source + in-media-res incident + audio]. SHOT 2 (3-6s): [Crew physical action + audio]. SHOT 3 (6-9s): [Complication / failed attempt + audio]. SHOT 4 (9-12s): [Decisive critical maneuver + audio]. SHOT 5 (12-15s): [Visible physical payoff / locked outcome + audio]. Photorealistic raw documentary footage, natural lighting."
-OR a tightly integrated chronological single-flow prompt incorporating all 5 shot stages seamlessly.
-
-## EXAMPLES:
-✅ "SHOT 1 (0-3s): Handheld bridge camera frames cargo trailer snapping lashings on rolling ferry deck with loud metallic snap. SHOT 2 (3-6s): Deckhands scramble across flooded steel plates with emergency chain. SHOT 3 (6-9s): Hook slips under load as trailer pivots toward companionway. SHOT 4 (9-12s): Deckhands dive and jam heavy steel chocks under front tires. SHOT 5 (12-15s): Chocks bite firmly into deck, locking trailer two feet before hull impact. Photorealistic raw documentary footage, natural lighting, ambient storm audio."
-✅ "SHOT 1 (0-3s): Quayside CCTV captures sudden squall snapping yacht bow line in churning harbor. SHOT 2 (3-6s): Marina staff sprint and deploy inflatable fender against piling. SHOT 3 (6-9s): Fender pops under massive hull surge as boat drifts toward fuel dock. SHOT 4 (9-12s): Safety boat accelerates full-throttle and makes lateral push against yacht flank. SHOT 5 (12-15s): Thrust deflects yacht bow five meters clear into open slip. Photorealistic documentary camera footage, natural lighting."
-
-## OUTPUT FORMAT (STRICT JSON):
-{
-  "prompt": "The complete chronological 5-shot prompt (35-55 words) detailing Shot 1 through Shot 5 with camera, action, complication, and visual payoff",
-  "word_count": 48,
-  "complication_included": "Brief description of the complication in Shot 3",
-  "physical_outcome_included": "Brief description of the visual physical outcome in Shot 5"
-}"""
+def build_prompt_simplifier_system(duration: int) -> str:
+    """PROMPT_SIMPLIFIER_SYSTEM'i config.DEFAULT_DURATION'a göre üretir."""
+    return PROMPT_SIMPLIFIER_SYSTEM_TEMPLATE.replace("<<DURATION>>", str(duration))
 
 
-# ────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# 🎥 KAMERA ARKETİPLERİ — Impact Seacam referans analizi (Fixed CCTV + Handheld + Chase POV)
+# ─────────────────────────────────────────────────────────────────────────────
+# Python HER üretimde bu 3 arketipten birini seçer (ağırlıklı rastgele — CCTV en
+# sık/varsayılan). Seçim hem GPT'ye (senaryo aşaması) hem de deterministik stil
+# kilidine aktarılır — ikisi arasında çelişki olmaması için TEK kaynak.
+
+_LENS_GUARDRAILS = (
+    "normal-to-moderate-wide lens, no fisheye/action-cam distortion, "
+    "no drone/aerial framing"
+)
+
+_STATIC_POSITION_GUARDRAIL = (
+    "the camera's position and distance from the subject must stay exactly "
+    "constant for the entire shot — no zooming in, no drifting closer, no "
+    "changing vantage point"
+)
+
+_SINGLE_MOMENT_GUARDRAIL = (
+    "Single unbroken moment only: the camera captures ONE continuous instant "
+    "of the incident unfolding, no time skips, no scene cuts, no camera "
+    "repositioning mid-shot. The action must flow as one seamless real-time "
+    "sequence from first to last frame."
+)
+
+_REALISM_GUARDRAILS = (
+    "Crew/staff wear high-visibility orange, red, or yellow foul-weather gear or "
+    "work coveralls, never white hazmat suits (even in polar scenes, use "
+    "red/orange immersion suits). Passengers, boat owners, guests, and vehicle "
+    "occupants wear ordinary civilian clothing appropriate to the setting "
+    "(swimwear, resort or casual wear, sun hats for pool/deck scenes; regular "
+    "casual clothing for car-deck scenes) — never hi-vis PPE on civilians. Raw "
+    "natural overcast/fog/rain lighting, not glossy or CGI-clean water or ice."
+)
+
+CAMERA_ARCHETYPES = {
+    "fixed_cctv": {
+        "title": "Sabit Güvenlik/CCTV Kamerası",
+        "weight": 2,
+        "gpt_guidance": (
+            "Fixed-mount security/CCTV camera — dockside, marina, pool deck, ship "
+            "superstructure, or ONBOARD deck/interior mounted (looking at the "
+            "ship's own pool deck, sun deck, or vehicle deck rather than the ship "
+            "from outside). Completely static, unmoving frame, no observer present "
+            "in the scene."
+        ),
+        "style_lock": (
+            f"Static fixed-mount security CCTV camera, {_LENS_GUARDRAILS}. Slight "
+            "natural motion blur, no cinematic framing, no artistic close-ups, no "
+            "camera movement. When filming the vessel from outside/alongside, "
+            "frame must keep the hull, bow, or superstructure visible to establish "
+            "ship type — no tight shot confined only to deck machinery. For "
+            "onboard deck, pool, or vehicle-deck scenes filmed from a camera "
+            "mounted ON the ship (looking at its own interior spaces, not the ship "
+            "from outside), visible deck architecture, railings, superstructure, "
+            "or vehicle-deck structure satisfies this instead — e.g. a pool-deck "
+            "camera showing loungers, railings, and open sky is sufficient; do not "
+            f"force an exterior hull/bow shot into an onboard scene. {_SINGLE_MOMENT_GUARDRAIL} {_REALISM_GUARDRAILS}"
+        ),
+    },
+    "bystander_handheld": {
+        "title": "Yolcu/İzleyici Elde Telefon Görüntüsü",
+        "weight": 1,
+        "gpt_guidance": (
+            "Bystander or passenger handheld phone footage — filmed by a real "
+            "onlooker from a ship's railing, an adjacent vessel, or a dock, watching "
+            "the incident unfold nearby. If a railing, window, or other foreground "
+            "boundary element is visible at the start, it must remain visible and "
+            "in the same position for the entire shot — the person filming does "
+            "not move, lean past it, or climb over it."
+        ),
+        "style_lock": (
+            f"Bystander handheld phone footage, {_LENS_GUARDRAILS}. Natural minor "
+            "handheld shake means only small in-place tremor and wobble of the "
+            f"hands — {_STATIC_POSITION_GUARDRAIL}. The framing established in "
+            "the very first moment of the shot — same subject distance, same "
+            "field of view — must be held completely unchanged for the full "
+            "duration: NO progressive zoom, NO push-in, NO gradual creep closer, "
+            "even a slow one. If the shot is filmed through, over, or behind a "
+            "railing, window, porthole, or other foreground boundary element, "
+            "that element MUST stay visible in frame for the entire shot — the "
+            "camera must never appear to pass through it, climb over it, or move "
+            "beyond it. Filmed from a ship's railing, nearby vessel, or dock, "
+            "occasionally showing a hint of a railing, hand, or phone edge at "
+            "the frame border. The vessel in crisis must be fully and clearly "
+            f"visible in frame at all times, not just a cropped detail. {_SINGLE_MOMENT_GUARDRAIL} {_REALISM_GUARDRAILS}"
+        ),
+    },
+    "chase_pov": {
+        "title": "Takip/Kovalama POV (Yakındaki Tekneden)",
+        "weight": 1,
+        "gpt_guidance": (
+            "Chase or pursuit point-of-view filmed from the deck or bow of a "
+            "nearby observer vessel — e.g. a coast guard boat, escort boat, or "
+            "following ship. TWO distinct vessels are mandatory: the observer "
+            "vessel the camera is mounted on (its bow/rail may appear in the "
+            "foreground), and a second, clearly separate vessel actively in "
+            "crisis that stays visible throughout the shot. This is NOT a "
+            "single-vessel storm scene — if a two-vessel setup does not fit "
+            "naturally, choose a different incident within the same domain "
+            "instead of defaulting to one vessel alone."
+        ),
+        "style_lock": (
+            "Chase POV filmed from the deck or bow of a nearby pursuing vessel, "
+            f"close to the action, {_LENS_GUARDRAILS}. Natural handheld boat "
+            f"motion means only small in-place tremor and wobble from sea swell — "
+            f"{_STATIC_POSITION_GUARDRAIL}. No cinematic framing, no artistic "
+            "close-ups. Two distinct vessels must be visible throughout: the "
+            "observer's own vessel and a clearly separate second vessel "
+            f"actively in crisis, fully visible, not just a cropped detail. {_SINGLE_MOMENT_GUARDRAIL} {_REALISM_GUARDRAILS}"
+        ),
+    },
+}
+
+# Geriye dönük uyumluluk — bazı test scriptleri tek bir STYLE_LOCK_SUFFIX bekliyor.
+# Varsayılan (en sık seçilen) arketipin son ekini temsil eder.
+STYLE_LOCK_SUFFIX = CAMERA_ARCHETYPES["fixed_cctv"]["style_lock"]
+
+
+def choose_camera_archetype() -> str:
+    """3 kamera arketipinden birini ağırlıklı rastgele seçer (CCTV varsayılan/en sık)."""
+    keys = list(CAMERA_ARCHETYPES.keys())
+    weights = [CAMERA_ARCHETYPES[k]["weight"] for k in keys]
+    return random.choices(keys, weights=weights, k=1)[0]
+
+
+def apply_style_lock(prompt_text: str, camera_archetype: str = "fixed_cctv") -> str:
+    """GPT'nin ürettiği prompt'a — içeriğinden bağımsız — seçilen kamera arketipinin
+    sabit stil bloğunu ekler."""
+    prompt_text = (prompt_text or "").strip().rstrip(".")
+    archetype = CAMERA_ARCHETYPES.get(camera_archetype, CAMERA_ARCHETYPES["fixed_cctv"])
+    return f"{prompt_text}. {archetype['style_lock']}"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # 📺 YOUTUBE METADATA — Merak & No-Spoiler
-# ────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 
-YOUTUBE_METADATA_SYSTEM = """You create YouTube Shorts metadata for "DeepMyster" — realistic documentary channel focusing on intense nautical incidents and ship emergencies.
+YOUTUBE_METADATA_SYSTEM = """You generate YouTube Shorts metadata for "DeepMyster" — an authentic documentary channel featuring real maritime physical incidents.
 
 CRITICAL TITLE RULES:
-- The title MUST focus on the CRISIS and DANGER, NOT the resolution/outcome (NO SPOILERS!).
-- NEVER write "Saved by...", "Fixed by...", or give away the ending in the title.
-- NEVER start the title with "DeepMyster:", "DeepMyster -", "[DeepMyster]", or any channel prefix.
-- Title: MAX 55 characters. Compelling, authentic, with 1-2 relevant emoji (🌊, 🚢, 🛥️, ⚓, ⛈️, 🛟, ⚠️).
-- Everything in ENGLISH.
+- Highlight the CRISIS and DANGER, NEVER reveal the outcome (NO SPOILERS).
+- NEVER use channel prefixes like "DeepMyster:", "[DeepMyster]", or "DeepMyster -".
+- MAX 55 characters. Punchy, authentic, with 1-2 relevant emojis (🌊, 🚢, ⚠️, ⚓, 🛳️, 🛟).
+- English only.
 
 DESCRIPTION RULES:
-- 2-3 realistic sentences describing the dramatic crisis, the escalating danger, and the intense crew struggle + #DeepMyster #Shorts #Maritime #RoughSeas. English only.
+- 2 realistic sentences describing the physical tension and visible emergency + #DeepMyster #Shorts #Maritime #CCTV #RoughSeas.
 - Tags: 8-12 relevant tags.
 
-GOOD TITLE EXAMPLES (TENSION / NO SPOILER):
-✅ "⚠️ Runaway Superyacht Drifts Out of Control in Storm #Shorts"
-✅ "🌊 40ft Rogue Wave Hits Ferry Deck Shifting Heavy Cargo #Shorts"
-✅ "🚢 Container Ship Suffers Steering Lock Near Harbor Crane #Shorts"
-✅ "🛟 Deckhand Caught on Flooded Foredeck as Towline Parts #Shorts"
-✅ "⚓ Commuter Ferry Loses Engine Control Approaching Pier #Shorts"
+GOOD TITLE EXAMPLES:
+✅ "⚠️ Heavy Sea Swell Slams Open Ro-Ro Ramp #Shorts"
+✅ "🌊 120mm Towing Bridle Strains in High Gale #Shorts"
+✅ "🚢 Arctic Trawler Takes Massive Green Wave Over Bow #Shorts"
+✅ "⚓ Tugboat Bow Fender Crushed in Tight Canal Berth #Shorts"
+✅ "🌊 Gantry Crane Swaying Violently on Container Deck #Shorts"
 
 OUTPUT FORMAT (STRICT JSON):
 {
-  "youtube_title": "Tense crisis-focused title without spoilers (max 55 chars, NO channel name prefix)",
-  "youtube_description": "2-3 authentic sentences detailing the crisis and intense struggle",
-  "tags": ["DeepMyster", "Shorts", "Maritime", "RoughSeas", "CargoShip", "Storm", "Ocean", "Crew", "Rescue"]
+  "youtube_title": "Crisis title without spoilers (max 55 chars, NO channel prefix)",
+  "youtube_description": "2 authentic sentences describing the visible physical event + hashtags",
+  "tags": ["DeepMyster", "Shorts", "Maritime", "CCTV", "Ocean", "RoughSeas"]
 }"""
-
