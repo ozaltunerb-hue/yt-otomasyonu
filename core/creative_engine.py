@@ -234,11 +234,11 @@ def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
     fikir kütüphanesini ve son 30 günün canlı geçmişini birleştirerek
     GPT-4o için zengin yaratıcı katalizör bağlamı üretir.
 
-    Seçim her zaman 12 domain arasında eşit ağırlıklı, gerçek rastgele bir
-    shuffle'dır (Notion erişilemez/boşsa da bu davranış değişmez — recent_history
-    boş olduğunda saf rastgele seçime otomatik düşer). Ek olarak: art arda aynı
-    domain'in seçilmesini engellemek için basit bir süreç-içi (in-memory)
-    "son kullanılan domain" kontrolü uygulanır.
+    Domain seçimi Notion geçmişinden tamamen bağımsızdır: 12 domain arasında
+    eşit ağırlıklı basit rastgele seçim yapılır (random.choice), sadece bir
+    önceki seçilen domain (süreç-içi/in-memory hafıza — Railway her cron
+    çalıştırmasında yeni process başlattığı için her günlük üretimde sıfırlanır,
+    bu kabul edilebilir) hariç tutulur.
     """
     global _last_used_domain
 
@@ -246,27 +246,10 @@ def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
         recent_history = []
 
     domain_keys = list(MARITIME_INSPIRATION_DOMAINS.keys())
-    random.shuffle(domain_keys)
-
-    # Saf rastgele taban seçim: son kullanılandan farklı olan ilk shuffle sonucu.
-    chosen_key = domain_keys[0]
-    if _last_used_domain is not None and len(domain_keys) > 1:
-        for key in domain_keys:
-            if key != _last_used_domain:
-                chosen_key = key
-                break
-
-    # Notion geçmişinde YOK olan VE art arda tekrar olmayan bir domain tercih et.
-    # (Notion kapalı/boşsa recent_history=[] olur ve bu döngü sadece
-    # "son kullanılandan farklı" şartını uygular — saf rastgeleliğe düşer.)
-    for key in domain_keys:
-        if key == _last_used_domain:
-            continue
-        if not any(key in h.lower() for h in recent_history):
-            chosen_key = key
-            break
-
+    candidates = [k for k in domain_keys if k != _last_used_domain] or domain_keys
+    chosen_key = random.choice(candidates)
     _last_used_domain = chosen_key
+
     domain = MARITIME_INSPIRATION_DOMAINS[chosen_key]
 
     # Mevcut fikir kütüphanesinden örnekleri derle (GPT'ye ton/örnek olarak iletmek için)
@@ -321,8 +304,8 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
 ## STORY & PHYSICAL REALITY STANDARDS:
 1. PURE PHYSICAL DRAMA: Grounded in real maritime physics, hydrodynamics, friction, weight shifts, weather, or mechanical loads.
 2. NO INVISIBLE/INTERNAL ISSUES: No underwater rudders, no internal computer glitch, no unseen engine failures. The crisis MUST be visible in front of the camera.
-3. CONTEXTUAL HUMAN ROLES & CONSISTENT CAST (NON-NEGOTIABLE): Include natural maritime personnel appropriate for the scene (e.g. helmsman at bridge console, deckhand securing rigging, winch operator, dockworkers taking cover, or crane operator). State the exact crew/people count ONCE as a specific number (e.g. "two deckhands," "a lone helmsman," "three crew members") — this exact same number of people must remain identical across visible_start, physical_movement, and visible_consequence. Never introduce a new person who wasn't present at second 0, and never have someone present at the start vanish without an in-shot reason. Seedance renders the prompt literally — an inconsistent headcount produces ghost crew members appearing or disappearing mid-shot. Do NOT shoehorn cartoonish actions; keep movements authentic.
-4. SINGLE CONTINUOUS <<DURATION>>-SECOND TAKE, ALREADY IN PROGRESS: No drone acrobatics, no multi-angle movie cuts. One unbroken realistic industrial or eyewitness camera view. The scenario must describe ONE single peak moment — the worst instant of the incident — not a sequence of events spread across time. The shot opens IN MEDIAS RES: the danger is already happening at second 0, not building toward it — the collision already impacting, the wave already crashing over the deck, the load already falling — never a lead-in like "a ship approaches" or "crew notices a problem." visible_start is what a shocked bystander would see in the first 2 seconds after turning their camera on mid-crisis; visible_consequence is what naturally follows in that same continuous shot, never a later scene or separate outcome that would need a time jump or cut to show.
+3. CONTEXTUAL HUMAN ROLES & CONSISTENT CAST (NON-NEGOTIABLE): Include natural maritime personnel appropriate for the scene (e.g. helmsman at bridge console, deckhand securing rigging, winch operator, dockworkers taking cover, or crane operator). State the exact crew/people count ONCE as a specific number (e.g. "two deckhands," "a lone helmsman," "three crew members") — this exact same number of people must remain identical across visible_start, physical_movement, and visible_consequence. Never introduce a new person who wasn't present at second 0, and never have someone present at the start vanish without an in-shot reason. Seedance renders the prompt literally — an inconsistent headcount produces ghost crew members appearing or disappearing mid-shot. Do NOT shoehorn cartoonish actions; keep movements authentic. State exact crew count as a specific number once in visible_start. This exact number must appear in physical_movement and visible_consequence unchanged. Never use vague terms like "crew members" without a number.
+4. SINGLE CONTINUOUS <<DURATION>>-SECOND TAKE, ALREADY IN PROGRESS: No drone acrobatics, no multi-angle movie cuts. One unbroken realistic industrial or eyewitness camera view. The scenario must describe ONE single peak moment — the worst instant of the incident — not a sequence of events spread across time. visible_start MUST describe the single worst moment already in progress — use active present tense verbs showing the disaster already happening (e.g. "A container tears free from its lashings and slams into the rail" not "crew notices a container shifting"). The viewer must understand the danger within the first 2 seconds. visible_consequence is what naturally follows in that same continuous shot, never a later scene or separate outcome that would need a time jump or cut to show.
 5. CONCRETE PHYSICAL OUTCOME: The <<DURATION>>th second must show a visible change of state (e.g. line locks under stopper, water drains through scuppers, mass settles against barrier, fender halts vessel momentum).
 6. CONSTANT HIGH ACTION (NON-NEGOTIABLE): Every scenario must depict something ACTIVELY breaking, colliding, flooding, swinging, or in danger, unfolding in real time. NEVER a calm, static, or purely observational moment — motion must read as fluid, fast, and genuinely dangerous, matching real bystander-filmed maritime incident footage, not a staged or slow-moving shot.
 7. AUTHENTIC CLOTHING & RAW WEATHER (NON-NEGOTIABLE): Crew, staff, and marina personnel must wear authentic maritime PPE — high-visibility orange, red, or yellow foul-weather gear, wetsuits, or work coveralls. NEVER stark white hazmat or astronaut-style suits, including in arctic/polar scenes (use realistic red or orange polar immersion suits instead). Passengers, boat owners, guests, and vehicle drivers/occupants are NOT crew — dress them in ordinary civilian clothing appropriate to the setting: swimwear, casual/resort wear, or sun hats for pool/deck scenes; regular casual clothing for car-deck scenes; yacht-casual or resort wear for marina scenes. NEVER put civilians in hi-vis PPE. Weather and lighting must read as raw and natural — real overcast, fog, or rain grain, never glossy, overly clean, or cinematically polished; avoid mirror-smooth CGI-looking water or movie-trailer lighting.
@@ -332,7 +315,7 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
   "vessel_class": "Specific real-world vessel class (e.g. Arctic Stern Trawler, 140m Ro-Pax Ferry, Heavy Tugboat, Ocean Cruise Liner, Luxury Motor Yacht)",
   "incident_type": "Short 3-5 word label of the physical crisis",
   "scenario_summary": "One clear, punchy sentence explaining the crisis, physical dynamics, and resolution",
-  "visible_start": "What a shocked bystander sees in the FIRST 2 SECONDS — the danger already happening, not building toward it: the collision already impacting, the wave already crashing over the deck, the container already falling. NEVER a lead-in like 'a ship approaches' or 'crew notices a problem.' State the exact crew count here once (e.g. 'two deckhands').",
+  "visible_start": "visible_start MUST describe the single worst moment already in progress — use active present tense verbs showing the disaster already happening (e.g. 'A container tears free from its lashings and slams into the rail' not 'crew notices a container shifting'). The viewer must understand the danger within the first 2 seconds. State the exact crew count here once as a specific number (e.g. 'two deckhands') — never a vague term like 'crew members' without a number.",
   "physical_movement": "The core kinetic/mechanical movement and human response (<<EARLY>>-<<LATE>>s)",
   "visible_consequence": "What naturally follows in that SAME continuous shot by <<DURATION>>s — the direct physical result of visible_start/physical_movement, NOT a later scene, new camera angle, or separate outcome that would require a time jump or cut to show",
   "observer_camera": "Specific realistic camera perspective matching the assigned archetype for this scene (e.g. fixed forecastle CCTV, bystander's handheld phone from the railing, chase POV from a coast guard boat)",
