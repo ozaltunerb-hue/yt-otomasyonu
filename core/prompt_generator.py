@@ -209,7 +209,17 @@ async def generate_prompts(config: dict) -> dict:
     raw_prompt_text = simplified.get("prompt", "").strip()
     raw_word_count = len(raw_prompt_text.split())
 
-    # ── Sabit Stil Kilidi — GPT ne yazarsa yazsın değişmez şekilde eklenir ──
+    # ── Cerrahi Safety Sanitizer — SADECE GPT'nin özgür metnine uygulanır ──
+    # Stil kilidi (STYLE_LOCK_SUFFIX) bizim elle yazdığımız, önceden denetlenmiş
+    # sabit metindir; sanitizer'dan SONRA eklenir ki regex kuralları (örn. "cgi"
+    # kelimesi) kilidin kendi dilini ("CGI-clean" gibi) yanlışlıkla bozmasın.
+    from core.prompt_sanitizer import sanitize_prompt
+    sanitized_raw, changes = sanitize_prompt(raw_prompt_text)
+    if changes:
+        raw_prompt_text = sanitized_raw
+        log.info(f"   🛡️ Prompt sanitize edildi: {len(changes)} değişiklik")
+
+    # ── Sabit Stil Kilidi — GPT ne yazarsa yazsın değişmez şekilde, sanitizer'dan SONRA eklenir ──
     prompt_text = apply_style_lock(raw_prompt_text, camera_archetype)
     word_count = len(prompt_text.split())
 
@@ -227,14 +237,6 @@ async def generate_prompts(config: dict) -> dict:
     # ── ADIM 4: YouTube Metadata (Merak Odaklı, No-Spoiler) ──
     log.info("📺 YouTube metadata üretiliyor...")
     metadata = await _generate_metadata(scenario, catalyst)
-
-    # ── ADIM 5: Cerrahi Safety Sanitizer ──
-    from core.prompt_sanitizer import sanitize_prompt
-    original_prompt = simplified_scenes[0]["prompt"]
-    sanitized, changes = sanitize_prompt(original_prompt)
-    if changes:
-        simplified_scenes[0]["prompt"] = sanitized
-        log.info(f"   🛡️ Prompt sanitize edildi: {len(changes)} değişiklik")
 
     # ── Sonuç Birleştir ──
     clean_title = clean_youtube_title(metadata.get("youtube_title", "Massive Ocean Swell Hits Vessel Deck #Shorts"))

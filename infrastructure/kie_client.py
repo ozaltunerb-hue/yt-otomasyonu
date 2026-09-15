@@ -5,11 +5,11 @@ farklı endpoint ve payload yapılarını soyutlar.
 """
 import json
 import asyncio
-import logging
 import httpx
 from config import settings
+from logger import get_logger
 
-log = logging.getLogger("KieClient")
+log = get_logger("KieClient")
 
 # ── İçerik filtresi hata sabitleri ──
 _CONTENT_FILTER_KEYWORDS = (
@@ -179,6 +179,9 @@ class KieClient:
 
         for content_attempt in range(max_content_retries + 1):
             try:
+                # ── Doğrulama: Seedance'a giden nihai prompt (stil kilidi dahil, sanitizer sonrası) ──
+                log.info(f"📤 Kie'ye gönderilen nihai prompt (ilk 200 karakter): {current_prompt[:200]}")
+
                 # ── Task oluştur ──
                 task_id = await self._create_task(cfg, current_prompt, aspect_ratio, duration, audio, resolution)
                 log.info(f"📋 Task oluşturuldu ({cfg['model_id']}): {task_id}")
