@@ -213,12 +213,17 @@ async def _execute_pipeline(
         if upload_active:
             log.info("📺 YouTube Shorts olarak yükleniyor...")
             await asyncio.to_thread(tracker.update_status, "Yükleniyor")
-            youtube_url = await upload_to_youtube(
-                video_path, prompt_data, is_shorts=True
-            )
-            if youtube_url:
-                await asyncio.to_thread(tracker.update_with_youtube, youtube_url)
-                log.info(f"✅ YouTube'a yüklendi: {youtube_url}")
+            try:
+                youtube_url = await upload_to_youtube(
+                    video_path, prompt_data, is_shorts=True
+                )
+                if youtube_url:
+                    await asyncio.to_thread(tracker.update_with_youtube, youtube_url)
+                    log.info(f"✅ YouTube'a yüklendi: {youtube_url}")
+            except Exception as ue:
+                log.error(f"❌ YouTube upload adımı başarısız oldu: {ue}", exc_info=True)
+                # Video üretimi başarılı oldu, sadece YouTube yüklemesi başarısız.
+                # Pipeline çökmez; Adım 6'ya devam ederek Notion'da '✅ Tamamlandı (Upload Başarısız)' kaydı açılır.
 
         # ── ADIM 6: Tamamlandı ──
         elapsed = time.time() - start_time

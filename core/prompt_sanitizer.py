@@ -148,10 +148,6 @@ async def gpt_preflight_check(prompt: str) -> tuple[str, bool, dict]:
     """GPT Pre-flight Safety Check — Kie AI'a göndermeden ÖNCE prompt'u değerlendirir."""
     from config import settings
 
-    if settings.IS_DRY_RUN:
-        log.info("🧪 DRY-RUN: GPT pre-flight atlanıyor")
-        return prompt, False, {"risk_score": 0, "risk_reasons": [], "dry_run": True}
-
     try:
         import openai
         client = openai.AsyncOpenAI(api_key=settings.OPENAI_API_KEY)

@@ -227,48 +227,140 @@ MARITIME_INSPIRATION_DOMAINS = {
 
 _last_used_domain: str | None = None  # Süreç-içi hafıza — art arda aynı domain seçilmesini engeller
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 🎲 ZORUNLU KOMBİNASYON HAVUZLARI (Varyasyon Garantisi & Görsel Dünya)
+# ─────────────────────────────────────────────────────────────────────────────
+
+DOMAIN_ATTRIBUTES = {
+    "arctic_ice_navigation": {
+        "ships": ["Polar Research Vessel", "Heavy Icebreaker", "Arctic LNG Carrier"],
+        "environments": ["Frozen pack ice", "Sub-zero blizzard", "Icy coastal strait"],
+        "events": ["Ice floe collision", "Freezing deck spray accumulation", "Hull ice grinding"]
+    },
+    "heavy_lift_and_project_cargo": {
+        "ships": ["Heavy-lift Crane Ship", "Ocean Cargo Deck Barge", "Coastal Freighter"],
+        "environments": ["Deep ocean swell", "Industrial port berth", "Coastal transit route"],
+        "events": ["Oversized cargo shifting", "Timber deck stanchion stress", "Deck crane boom swing"]
+    },
+    "salvage_and_heavy_towing": {
+        "ships": ["Salvage Tugboat", "River Pusher Tug", "Deep-sea Tug"],
+        "environments": ["Gale force open sea", "River rapids", "Shallow coastal water"],
+        "events": ["Emergency towing bridle snap", "Tension winch drum friction", "Pushed barge collision"]
+    },
+    "offshore_supply_and_dp": {
+        "ships": ["Platform Supply Vessel (PSV)", "Anchor Handling Tug (AHTS)"],
+        "environments": ["Offshore oil rig zone", "Heavy North Sea swells", "Supply staging area"],
+        "events": ["Cargo crane transfer swing", "High-pressure hose connection surge", "Station-holding failure"]
+    },
+    "ro_ro_and_ferry_operations": {
+        "ships": ["Passenger Car Ferry", "High-speed Catamaran", "PCTC Car Carrier"],
+        "environments": ["Ferry terminal ramp", "Open vehicle deck", "Island crossing route"],
+        "events": ["Lashed vehicles breaking loose", "Loading ramp hydraulic hinge failure", "Water flooding open vehicle deck"]
+    },
+    "bulk_and_tanker_logistics": {
+        "ships": ["Capesize Bulk Carrier", "Crude Oil Supertanker", "Chemical Parcel Tanker"],
+        "environments": ["Single point mooring buoy", "Open ocean transit", "Deepwater loading terminal"],
+        "events": ["Ore cargo liquefaction shift", "Deck manifold emergency shutdown", "Ballast tank venting surge"]
+    },
+    "container_and_gantry_operations": {
+        "ships": ["Ultra-large Container Vessel (ULCV)", "Feeder Container Ship"],
+        "environments": ["Quayside container terminal", "Beam seas in open ocean", "Narrow harbor channel"],
+        "events": ["Upper container tier twistlock shear", "Harbor gantry crane sudden wind shear load", "Parametric rolling container shift"]
+    },
+    "commercial_storm_fishing": {
+        "ships": ["North Sea Stern Trawler", "Bering Sea Crab Vessel", "Pelagic Longliner"],
+        "environments": ["Heavy following seas", "Freezing storm waves", "Rough fishing grounds"],
+        "events": ["Hauling net snag", "Crab pot launch line snag", "Factory deck equipment washed overboard"]
+    },
+    "harbor_pilotage_and_berthing": {
+        "ships": ["Harbor Pilot Boat", "Escort Tugboat", "Narrow Canal Freighter"],
+        "environments": ["Port entrance", "Narrow canal banks", "Quayside berth"],
+        "events": ["Pilot boarding ladder snap", "Bow fender compression against quay", "Bank suction near collision"]
+    },
+    "shipyard_and_drydock_engineering": {
+        "ships": ["Floating Drydock", "Shipyard Caisson Gate", "Vessel on Slipway"],
+        "environments": ["Shipyard basin", "Drydock interior", "Construction slipway"],
+        "events": ["Drydock flooding instability", "Slipway gravitational launch friction", "Keel block settling failure"]
+    },
+    "marina_and_yacht_operations": {
+        "ships": ["Luxury Motor Yacht", "Sailing Yacht", "Runaway Powerboat", "Jet Ski"],
+        "environments": ["Floating pontoon dock", "Marina fairway", "Marina fuel dock", "Yacht club entrance"],
+        "events": ["Mooring cleat under strain snapping", "Jammed throttle runaway", "Storm surge lifting floating docks", "Wake collision"]
+    },
+    "cruise_ship_operations": {
+        "ships": ["Ocean Cruise Liner", "Mega Cruise Ship", "Cruise Tender Boat"],
+        "environments": ["Cruise terminal berth", "Open-air pool deck", "Sun deck"],
+        "events": ["Gangway connection stress", "Rogue wave sweeping pool deck", "Bow thruster docking failure", "Wind-blown deck furniture"]
+    }
+}
+
 
 def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
     """
-    Geniş denizcilik ilham alanlarından birini seçer, 56 senaryoluk DeepMyster
-    fikir kütüphanesini ve son 30 günün canlı geçmişini birleştirerek
-    GPT-4o için zengin yaratıcı katalizör bağlamı üretir.
-
-    Domain seçimi Notion geçmişinden tamamen bağımsızdır: 12 domain arasında
-    eşit ağırlıklı basit rastgele seçim yapılır (random.choice), sadece bir
-    önceki seçilen domain (süreç-içi/in-memory hafıza — Railway her cron
-    çalıştırmasında yeni process başlattığı için her günlük üretimde sıfırlanır,
-    bu kabul edilebilir) hariç tutulur.
+    Geniş denizcilik ilham alanlarından birini seçer ve GPT-4o için bağlam üretir.
+    Geçmişteki son 7 seçime bakarak Visual World ve Gemi Tipi tekrarlarını engeller,
+    olası kilitlenmeleri Fallback mekanizmasıyla çözer.
     """
-    global _last_used_domain
-
     if recent_history is None:
         recent_history = []
+        
+    recent_domains = []
+    recent_ships = []
+    
+    # recent_history içinde combo_key'ler bulunabilir: "domain|ship|event|env|camera"
+    for item in recent_history[-7:]:
+        parts = item.split('|')
+        if len(parts) >= 2:
+            recent_domains.append(parts[0].lower().strip())
+            recent_ships.append(parts[1].lower().strip())
+            
+    all_domains = list(MARITIME_INSPIRATION_DOMAINS.keys())
+    available_domains = [d for d in all_domains if d.lower() not in recent_domains]
+    
+    if available_domains:
+        chosen_domain_key = random.choice(available_domains)
+    else:
+        # Fallback: En yakın geçmişteki 2 tanesini çıkarıp kalandan seç (kilitlenmeyi önler)
+        fallback_domains = [d for d in all_domains if d.lower() not in recent_domains[-2:]]
+        chosen_domain_key = random.choice(fallback_domains) if fallback_domains else random.choice(all_domains)
 
-    domain_keys = list(MARITIME_INSPIRATION_DOMAINS.keys())
-    candidates = [k for k in domain_keys if k != _last_used_domain] or domain_keys
-    chosen_key = random.choice(candidates)
-    _last_used_domain = chosen_key
+    domain_data = MARITIME_INSPIRATION_DOMAINS[chosen_domain_key]
+    attrs = DOMAIN_ATTRIBUTES.get(chosen_domain_key)
+    
+    # Gemi seçimi ve tekrar kontrolü
+    all_ships = attrs["ships"]
+    available_ships = [s for s in all_ships if s.lower() not in recent_ships]
+    
+    if available_ships:
+        chosen_ship = random.choice(available_ships)
+    else:
+        # Fallback: Gemi havuzu çok darsa kilitlenmemesi için son 2 videodakileri hariç tut
+        fallback_ships = [s for s in all_ships if s.lower() not in recent_ships[-2:]]
+        chosen_ship = random.choice(fallback_ships) if fallback_ships else random.choice(all_ships)
+        
+    chosen_event = random.choice(attrs["events"])
+    chosen_env = random.choice(attrs["environments"])
 
-    domain = MARITIME_INSPIRATION_DOMAINS[chosen_key]
-
-    # Mevcut fikir kütüphanesinden örnekleri derle (GPT'ye ton/örnek olarak iletmek için)
+    # Mevcut fikir kütüphanesinden örnekleri derle
     library_samples = []
     for cat_key, cat_data in DEEPMYSTER_EXISTING_IDEAS_LIBRARY.items():
         sample = random.choice(cat_data["reference_scenarios"])
         library_samples.append(f"[{cat_data['title']}]: {sample}")
 
     catalyst = {
-        "domain_id": chosen_key,
-        "domain_title": domain["title"],
-        "guidance": domain["guidance"],
-        "example_elements": domain["example_elements"],
-        "camera_styles": domain["camera_styles"],
+        "domain_id": chosen_domain_key,
+        "domain_title": domain_data["title"],
+        "guidance": domain_data["guidance"],
+        "example_elements": domain_data["example_elements"],
+        "camera_styles": domain_data["camera_styles"],
         "existing_library_reference": library_samples,
-        "recent_history": recent_history[-20:],  # Son 20 konuyu canlı negatif liste olarak ver
+        "recent_history": recent_history[-20:],
+        "forced_ship": chosen_ship,
+        "forced_event": chosen_event,
+        "forced_environment": chosen_env,
     }
 
-    log.info(f"🎲 Yaratıcı Denizcilik Katalizörü Seçildi: [{chosen_key}] {domain['title']}")
+    log.info(f"🎲 Görsel Dünya Seçildi: [{chosen_domain_key}] {domain_data['title']}")
     return catalyst
 
 

@@ -169,12 +169,18 @@ async def generate_prompts(config: dict) -> dict:
     recent_topics = config.get("recent_topics", [])
     combined_history = list(set(used_combos + recent_topics))
 
-    # ── ADIM 1: Geniş Denizcilik Katalizörü Seç ──
-    catalyst = get_creative_catalyst(recent_history=combined_history)
-    log.info(f"🧭 Denizcilik Alanı: [{catalyst['domain_id']}] {catalyst['domain_title']}")
+    # ── ADIM 1: Kombinasyon Seçimi ve Tekrar Kontrolü ──
+    max_dedup_attempts = 50
+    combo_key = ""
+    for _ in range(max_dedup_attempts):
+        catalyst = get_creative_catalyst(recent_history=combined_history)
+        camera_archetype = choose_camera_archetype()
+        combo_key = f"{catalyst['domain_id']}|{catalyst['forced_ship'].lower()}|{catalyst['forced_event'].lower()}|{catalyst['forced_environment'].lower()}|{camera_archetype}"
+        if combo_key not in used_combos:
+            break
 
-    # ── ADIM 1b: Kamera Arketipi Seç (Fixed CCTV / Bystander Handheld / Chase POV) ──
-    camera_archetype = choose_camera_archetype()
+    log.info(f"🧭 Denizcilik Alanı: [{catalyst['domain_id']}] {catalyst['domain_title']}")
+    log.info(f"⚓ Seçilen Gemi: {catalyst['forced_ship']} | 🌊 Olay: {catalyst['forced_event']} | 🌍 Ortam: {catalyst['forced_environment']}")
     log.info(f"🎥 Kamera Arketipi Seçildi: [{camera_archetype}] {CAMERA_ARCHETYPES[camera_archetype]['title']}")
 
     # ── ADIM 2: GPT-4o ile Yaratıcı Senaryo Tasarla ──
@@ -240,9 +246,9 @@ async def generate_prompts(config: dict) -> dict:
 
     # ── Sonuç Birleştir ──
     clean_title = clean_youtube_title(metadata.get("youtube_title", "Massive Ocean Swell Hits Vessel Deck #Shorts"))
-    vessel = scenario.get("vessel_class", "Vessel")
-    incident = scenario.get("incident_type", "Incident")
-    combo_key = f"{catalyst['domain_id']}|{vessel.lower()}|{incident.lower()}"
+    vessel = scenario.get("vessel_class", catalyst['forced_ship'])
+    incident = scenario.get("incident_type", catalyst['forced_event'])
+    # combo_key zaten yukarıda belirlenmişti
 
     result = {
         "scenes": simplified_scenes,
@@ -289,6 +295,12 @@ async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
     )
 
     user_message = f"""You are directing a new {duration}-second continuous raw documentary scene for DeepMyster.
+
+MANDATORY ASSIGNMENT: You MUST base your scenario exactly on this combination:
+- Vessel Type: {catalyst['forced_ship']}
+- Event/Incident: {catalyst['forced_event']}
+- Environment: {catalyst['forced_environment']}
+Do not deviate from these core elements.
 
 CAMERA PERSPECTIVE FOR THIS SCENE (MANDATORY): {archetype['gpt_guidance']}
 
