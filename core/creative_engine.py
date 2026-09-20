@@ -150,59 +150,24 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
 # ─────────────────────────────────────────────────────────────────────────────
 
 MARITIME_INSPIRATION_DOMAINS = {
-    "arctic_ice_navigation": {
-        "title": "Kutup & Buzul Seyri (Ice Navigation & Cold Weather)",
-        "guidance": "Polar pack ice navigation, hull ice grinding, frozen spray accumulation, bow de-icing, sub-zero blizzard deck operations, icebreaker escort friction.",
-        "example_elements": ["polar research vessel", "heavy icebreaker", "arctic LNG carrier", "ice floe impact", "freezing deck spray", "pneumatic de-icing boots"],
-        "camera_styles": ["fixed bridge wing cold-weather camera", "stationary forecastle ice-watch camera", "low-angle hull observation CCTV"],
-    },
-    "heavy_lift_and_project_cargo": {
-        "title": "Ağır Yük & Proje Yükü Elleçleme (Heavy Lift & Deck Cargo)",
-        "guidance": "Oversized industrial cargo shifting in swells, deck gantry cranes, timber deck cargo stanchion stress, turbine blade transport, modular hull transport barge.",
-        "example_elements": ["heavy-lift crane ship", "ocean cargo deck barge", "coastal lumber freighter", "lashing turnbuckle strain", "heavy equipment deck cradle"],
-        "camera_styles": ["fixed catwalk cargo CCTV", "stationary crane boom monitoring camera", "upper bridge deck surveillance camera"],
-    },
     "salvage_and_heavy_towing": {
         "title": "Derin Deniz Kurtarma & Ağır Çekme (Salvage & Ocean Towing)",
         "guidance": "Emergency ocean towing bridles, salvage tug winch tension, pusher tug linked barge dynamics in river rapids, disabled vessel escort in gale seas.",
         "example_elements": ["salvage tugboat", "river pusher tug", "emergency towing bridle", "hydraulic towing pin", "tension winch drum friction"],
         "camera_styles": ["fixed aft work-deck CCTV", "stationary towing winch surveillance camera", "rugged quarterdeck action camera"],
     },
-    "offshore_supply_and_dp": {
-        "title": "Açık Deniz İkmal & Dinamik Konumlandırma (Offshore Supply & Rig Ops)",
-        "guidance": "Platform supply vessels (PSV) holding station in heavy seas, cargo crane transfer swing, high-pressure hose connection surge, anchor handling tug deck ops.",
-        "example_elements": ["platform supply vessel (PSV)", "anchor handling tug (AHTS)", "deck cargo rail", "dry bulk loading hose", "heavy shark-jaw line stopper"],
-        "camera_styles": ["fixed aft deck floodlight camera", "stationary superstructure surveillance CCTV", "bridge aft control console camera"],
-    },
-    "ro_ro_and_ferry_operations": {
-        "title": "Ro-Ro, Feribot & Yolcu Gemisi Dinamikleri (Ferry, Ro-Ro & Passenger Vessel Logistics)",
-        "guidance": "Vehicle deck kinetic weight shifts in cross swells, loading ramp hydraulic hinge pressure, bow visor spray seals, high-speed catamaran roll recovery, lashed vehicle rows straining and grinding on car carriers (PCTC), unsecured cars breaking loose and sliding on ferry vehicle decks, ramp-entrance vehicle jolts, wash flooding the open vehicle deck.",
-        "example_elements": ["island vehicle ferry", "high-speed passenger catamaran", "open-deck freight ferry", "PCTC car carrier", "lashed vehicle rows", "vehicle lashing chain", "hydraulic ramp hinge", "deck drainage scuppers"],
+    "ferry_operations": {
+        "title": "Feribot & Yolcu Dinamikleri (Ferry & Passenger Vessel Logistics)",
+        "guidance": "Vehicle deck kinetic weight shifts in cross swells, loading ramp hydraulic hinge pressure, bow visor spray seals, high-speed catamaran roll recovery, unsecured cars breaking loose and sliding on ferry vehicle decks, ramp-entrance vehicle jolts, wash flooding the open vehicle deck.",
+        "example_elements": ["island vehicle ferry", "high-speed passenger catamaran", "open-deck freight ferry", "hydraulic ramp hinge", "deck drainage scuppers"],
         "camera_styles": ["fixed car deck security CCTV", "stationary ramp coaming surveillance camera", "overhead mezzanine deck camera"],
     },
-    "bulk_and_tanker_logistics": {
-        "title": "Dökme Yük & Tanker Dinamikleri (Bulk, Liquid & Gas Transport)",
-        "guidance": "Ore carrier liquefaction shifts, crude oil tanker surge at single point mooring buoy, deck manifold emergency shutdown, ballast tank venting wash.",
-        "example_elements": ["capesize bulk ore carrier", "crude oil supertanker", "chemical parcel tanker", "deck manifold piping", "ballast vent head surge"],
-        "camera_styles": ["fixed catwalk pipe-rack CCTV", "stationary forward mooring deck camera", "bridge wing look-down surveillance"],
-    },
-    "container_and_gantry_operations": {
-        "title": "Konteyner Taşımacılığı & Terminal Elleçleme (Container Stacks & Port Gantry)",
-        "guidance": "Parametric rolling in beam seas, upper container tier twistlock shear, harbor gantry crane loading in sudden wind shear, cell guide alignment friction.",
-        "example_elements": ["ultra-large container vessel (ULCV)", "feeder container ship", "quayside container gantry", "twistlock corner casting", "lashing bridge frame"],
-        "camera_styles": ["fixed lashing bridge security camera", "stationary quay gantry CCTV", "forward bay observation camera"],
-    },
+
     "commercial_storm_fishing": {
         "title": "Açık Deniz Ticari Balıkçılık (Rough Sea Commercial Fishing)",
         "guidance": "Stern trawler hauling cod nets in heavy following seas, crab boat pot launch line snag on icy decks, factory ship fish processing conveyor surge.",
         "example_elements": ["North Sea stern trawler", "Bering Sea crab vessel", "pelagic longliner", "trawl winch warp wire", "aft ramp floodgate"],
         "camera_styles": ["fixed trawl deck CCTV", "stationary gallows surveillance camera", "protective wheelhouse window camera"],
-    },
-    "harbor_pilotage_and_berthing": {
-        "title": "Liman Kılavuzluğu & Dar Kanal Manevraları (Pilotage & Harbor Tug Ops)",
-        "guidance": "Pilot boat coming alongside rolling ship in swell, harbor tug bow fender compression against quay, bow thruster turbulence near shallow canal banks.",
-        "example_elements": ["harbor pilot boat", "maneuver escort tugboat", "narrow canal freighter", "Yokohama pneumatic dock fender", "quayside concrete bollard"],
-        "camera_styles": ["fixed quay security camera", "stationary pilot boarding station CCTV", "tugboat wheelhouse mast camera"],
     },
     "shipyard_and_drydock_engineering": {
         "title": "Tersane, Kuru Havuz & Kızak Dinamikleri (Drydock & Launch Mechanics)",
@@ -222,6 +187,12 @@ MARITIME_INSPIRATION_DOMAINS = {
         "example_elements": ["ocean cruise liner", "mega cruise ship", "cruise ship tender boat", "passenger gangway", "bow thruster docking system", "terminal mooring bollard", "open-air pool deck", "sun deck loungers", "glass wind-break screen"],
         "camera_styles": ["fixed terminal berth CCTV", "stationary gangway connection camera", "quayside cruise terminal security camera", "onboard pool-deck security camera", "sun-deck overhead security camera"],
     },
+    "coastal_tornado_landfall": {
+        "title": "Coastal Tornado / Denizden Karaya Hortum",
+        "guidance": "A powerful tornado forms offshore and makes landfall. The PRIMARY FOCUS is the tornado, extreme weather, and civilian evacuation on the coast (marinas, coastal towns, or New York-style major cities). Small civilian boats, yachts, or marina vessels may be visible reacting to the weather in the background. ABSOLUTELY NO heavy commercial ships, no container ships, no tankers, and no tugboats.",
+        "example_elements": ["offshore waterspout", "waterfront debris", "dark storm clouds", "evacuating civilians", "battered coastal architecture"],
+        "camera_styles": ["fixed coastal/marina CCTV", "bystander phone from coastal road", "chase POV from safe inland structure"],
+    },
 }
 
 
@@ -232,53 +203,24 @@ _last_used_domain: str | None = None  # Süreç-içi hafıza — art arda aynı 
 # ─────────────────────────────────────────────────────────────────────────────
 
 DOMAIN_ATTRIBUTES = {
-    "arctic_ice_navigation": {
-        "ships": ["Polar Research Vessel", "Heavy Icebreaker", "Arctic LNG Carrier"],
-        "environments": ["Frozen pack ice", "Sub-zero blizzard", "Icy coastal strait"],
-        "events": ["Ice floe collision", "Freezing deck spray accumulation", "Hull ice grinding"]
-    },
-    "heavy_lift_and_project_cargo": {
-        "ships": ["Heavy-lift Crane Ship", "Ocean Cargo Deck Barge", "Coastal Freighter"],
-        "environments": ["Deep ocean swell", "Industrial port berth", "Coastal transit route"],
-        "events": ["Oversized cargo shifting", "Timber deck stanchion stress", "Deck crane boom swing"]
-    },
     "salvage_and_heavy_towing": {
-        "ships": ["Salvage Tugboat", "River Pusher Tug", "Deep-sea Tug"],
+        "ships": ["Offshore Recovery Vessel", "Heavy Rescue Ship"],
         "environments": ["Gale force open sea", "River rapids", "Shallow coastal water"],
         "events": ["Emergency towing bridle snap", "Tension winch drum friction", "Pushed barge collision"]
     },
-    "offshore_supply_and_dp": {
-        "ships": ["Platform Supply Vessel (PSV)", "Anchor Handling Tug (AHTS)"],
-        "environments": ["Offshore oil rig zone", "Heavy North Sea swells", "Supply staging area"],
-        "events": ["Cargo crane transfer swing", "High-pressure hose connection surge", "Station-holding failure"]
-    },
-    "ro_ro_and_ferry_operations": {
-        "ships": ["Passenger Car Ferry", "High-speed Catamaran", "PCTC Car Carrier"],
+    "ferry_operations": {
+        "ships": ["Passenger Car Ferry", "High-speed Catamaran"],
         "environments": ["Ferry terminal ramp", "Open vehicle deck", "Island crossing route"],
-        "events": ["Lashed vehicles breaking loose", "Loading ramp hydraulic hinge failure", "Water flooding open vehicle deck"]
+        "events": ["Secured vehicles breaking loose", "Loading ramp hydraulic hinge failure", "Water flooding open vehicle deck"]
     },
-    "bulk_and_tanker_logistics": {
-        "ships": ["Capesize Bulk Carrier", "Crude Oil Supertanker", "Chemical Parcel Tanker"],
-        "environments": ["Single point mooring buoy", "Open ocean transit", "Deepwater loading terminal"],
-        "events": ["Ore cargo liquefaction shift", "Deck manifold emergency shutdown", "Ballast tank venting surge"]
-    },
-    "container_and_gantry_operations": {
-        "ships": ["Ultra-large Container Vessel (ULCV)", "Feeder Container Ship"],
-        "environments": ["Quayside container terminal", "Beam seas in open ocean", "Narrow harbor channel"],
-        "events": ["Upper container tier twistlock shear", "Harbor gantry crane sudden wind shear load", "Parametric rolling container shift"]
-    },
+
     "commercial_storm_fishing": {
-        "ships": ["North Sea Stern Trawler", "Bering Sea Crab Vessel", "Pelagic Longliner"],
+        "ships": ["North Sea Stern Trawler"],
         "environments": ["Heavy following seas", "Freezing storm waves", "Rough fishing grounds"],
         "events": ["Hauling net snag", "Crab pot launch line snag", "Factory deck equipment washed overboard"]
     },
-    "harbor_pilotage_and_berthing": {
-        "ships": ["Harbor Pilot Boat", "Escort Tugboat", "Narrow Canal Freighter"],
-        "environments": ["Port entrance", "Narrow canal banks", "Quayside berth"],
-        "events": ["Pilot boarding ladder snap", "Bow fender compression against quay", "Bank suction near collision"]
-    },
     "shipyard_and_drydock_engineering": {
-        "ships": ["Floating Drydock", "Shipyard Caisson Gate", "Vessel on Slipway"],
+        "ships": ["Vessel on Slipway"],
         "environments": ["Shipyard basin", "Drydock interior", "Construction slipway"],
         "events": ["Drydock flooding instability", "Slipway gravitational launch friction", "Keel block settling failure"]
     },
@@ -291,6 +233,34 @@ DOMAIN_ATTRIBUTES = {
         "ships": ["Ocean Cruise Liner", "Mega Cruise Ship", "Cruise Tender Boat"],
         "environments": ["Cruise terminal berth", "Open-air pool deck", "Sun deck"],
         "events": ["Gangway connection stress", "Rogue wave sweeping pool deck", "Bow thruster docking failure", "Wind-blown deck furniture"]
+    },
+    "coastal_tornado_landfall": {
+        "ships": [
+            "Luxury Motor Yacht",
+            "Sailing Yacht",
+            "Runaway Powerboat",
+            "Jet Ski"
+        ],
+        "environments": [
+            "Coastal Town",
+            "Marina",
+            "Beach Road",
+            "Harbor Area",
+            "Coastal Boats",
+            "Major Coastal City",
+            "Dense Urban Waterfront",
+            "New York-style Waterfront City"
+        ],
+        "events": [
+            "Tornado forming offshore",
+            "Tornado approaching coastline",
+            "Tornado making landfall",
+            "Coastal evacuation",
+            "Waterfront disruption",
+            "Strong wind and rain",
+            "Coastal debris movement",
+            "Boats and marina equipment reacting to severe weather"
+        ]
     }
 }
 
@@ -382,8 +352,7 @@ The user prompt assigns ONE of three exact camera positions for this scene. Writ
 NEVER describe a generic "wide shot," an unspecified establishing shot, or an ambiguous vantage point — commit to exactly one of the three positions above, stated concretely (e.g. "fixed camera bolted to the cruise ship's port-side superstructure," not "a camera shows the ship"). NEVER use fisheye/GoPro-style distortion or drone/aerial framing.
 
 ## VARIETY — ROTATE WORLDS (NON-NEGOTIABLE):
-Every scenario must come from a genuinely different world than recent productions. Rotate through these six settings:
-1. Commercial cargo ships (container, bulk, tanker, general cargo)
+Every scenario must come from a genuinely different world than recent productions. Rotate through these varied settings:
 2. Cruise ships with civilian passengers aboard
 3. Harbor/port scenes with civilians present (dockside crowds, terminal visitors)
 4. Marinas with yachts and pleasure craft
@@ -402,7 +371,7 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
 
 ## STORY & PHYSICAL REALITY STANDARDS:
 1. PURE PHYSICAL DRAMA: Grounded in real maritime physics, hydrodynamics, friction, weight shifts, weather, or mechanical loads. No invisible/internal issues — no underwater rudders, no internal computer glitches, no unseen engine failures. The crisis MUST be visible in front of the camera.
-2. CAST — CREW OR CIVILIANS, MAXIMUM 2, EXACT COUNT (NON-NEGOTIABLE): Every scene has AT MOST 2 named people on screen. Use crew (e.g. a deckhand, a helmsman) OR civilians instead of crew (passengers, dock workers, boat owners, bystanders) — civilians-only scenes are just as valid as crew scenes. State the exact count ONCE as a specific number in visible_start (e.g. "one deckhand," "two passengers" — NEVER "crew members," "some passengers," or any headcount without a number), and keep that exact same number of people identical across visible_start, physical_movement, and visible_consequence. Never introduce a new person who wasn't present at second 0, and never have someone present at the start vanish without an in-shot reason — Seedance renders the prompt literally, and an inconsistent headcount produces ghost people appearing or disappearing mid-shot. Clothing is role-specific: crew/staff wear high-visibility orange PPE, foul-weather gear, or work coveralls ONLY (never white hazmat suits, even in polar scenes — use red/orange immersion suits instead); civilians wear ordinary normal clothing appropriate to the setting (casual wear, resort wear, swimwear for pool/deck scenes) and are NEVER dressed in hi-vis PPE. Do NOT shoehorn cartoonish actions; keep movements authentic.
+2. CAST — CREW OR CIVILIANS, MAXIMUM 2, EXACT COUNT (NON-NEGOTIABLE): Every scene has AT MOST 2 named people on screen. Use crew (e.g. a deckhand, a helmsman) OR civilians instead of crew (passengers, dock workers, boat owners, bystanders) — civilians-only scenes are just as valid as crew scenes. State the exact count ONCE as a specific number in visible_start (e.g. "one deckhand," "two passengers" — NEVER "crew members," "some passengers," or any headcount without a number), and keep that exact same number of people identical across visible_start, physical_movement, and visible_consequence. Never introduce a new person who wasn't present at second 0, and never have someone present at the start vanish without an in-shot reason — Seedance renders the prompt literally, and an inconsistent headcount produces ghost people appearing or disappearing mid-shot. Clothing is role-specific and context-aware: yacht/marina staff wear smart nautical casual; cruise/ferry staff wear standard uniforms; fishing crew wear heavy waterproof gear; tug/salvage/heavy-work deckhands wear high-visibility PPE; arctic crew wear thermal immersion suits. Civilians wear ordinary normal clothing appropriate to the setting (casual wear, resort wear, swimwear for pool/deck scenes) and are NEVER dressed in hi-vis PPE. NEVER use white hazmat suits. Do NOT shoehorn cartoonish actions; keep movements authentic.
 3. THREE-BEAT STRUCTURE, ALL WITHIN <<DURATION>> SECONDS, ONE CONTINUOUS SHOT (NON-NEGOTIABLE): Every scenario is exactly three beats, no time skips between them, no drone acrobatics, no multi-angle movie cuts, no scene cuts, no camera repositioning mid-shot:
    - BEAT 1 — INSTANT ESTABLISHING FLASH (well under 1 second): A near-instantaneous visual anchor — just enough to place the viewer in the setting and show who is present. This is a flash-frame, NOT a scene, NOT a pause, NOT time for anything routine to be noticed happening — it must not read as a calm moment.
    - BEAT 2 — SUDDEN WRONG TURN: Something goes suddenly, physically wrong with no warning signs and no slow escalation — the break/failure/collision itself happens fast, and MUST be visible and understandable within the first 2 seconds of the shot overall.
@@ -444,40 +413,25 @@ def build_scenario_writer_system(duration: int) -> str:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ✂️ KATMAN 3: PROMPT SİMPLİFİYER (SEEDANCE 2 MINI: 25–45 KELİME)
+# ✂️ KATMAN 3: PROMPT SİMPLİFİYER (SEEDANCE 2 MINI)
 # ─────────────────────────────────────────────────────────────────────────────
 
 PROMPT_SIMPLIFIER_SYSTEM_TEMPLATE = """You are a Seedance 2 Mini prompt engineer for DeepMyster documentary maritime videos.
-Your ONE job: Convert the maritime scenario into a HIGH-SIGNAL, PHOTOREALISTIC prompt of EXACTLY 25 TO 45 WORDS following the <<DURATION>>-second single-take standard.
+Your ONE job: Convert the maritime scenario into a HIGH-SIGNAL, PHOTOREALISTIC prompt following the <<DURATION>>-second single-take standard.
 
 ## DOĞUKAN METODOLOJİSİ ("Less is More"):
 - Seedance 2 Mini needs clear, high-signal, descriptive visual language without cinematic fluff or robotic checklists.
 - Single continuous <<DURATION>>-second take from the assigned realistic camera perspective (fixed CCTV, bystander handheld, or chase POV).
 - Raw, authentic lighting (overcast daylight, storm lighting, industrial port lights).
 
-## DIVERSE STRUCTURAL STYLES (Use varied sentence structures — DO NOT copy the same grammar):
-
-✅ Style 1 (Event & Kinetic Action):
-"A towering green swell crashes over the bow of an arctic stern trawler, swamping the foredeck as a deckhand braces against the winch housing. Seawater violently rushes through freeing ports into the foam." (33 words)
-
-✅ Style 2 (Perspective & Heavy Mass Shift):
-"High-angle bridge wing CCTV captures a bulk carrier rolling sharply in cross-seas, causing the heavy hatch cover crane to roll along its deck rails until slamming firmly against emergency rubber end-stops." (31 words)
-
-✅ Style 3 (Mechanical Tension & Friction):
-"During high-wind docking maneuvers, an industrial towing winch drum slips under sudden surge load, sending sparks and white smoke from the brake band before locking tight against the stopper." (29 words)
-
-✅ Style 4 (Atmospheric & Cargo Shift):
-"An island freight catamaran lists in heavy harbor chop, shifting a palletized cargo crate across the slick vehicle deck until wedged securely against the steel ramp coaming." (27 words)
-
 ## STRICT RULES:
-1. LENGTH: EXACTLY 25 TO 45 WORDS.
-2. NO TIMESTAMPS / NO HEADERS: No 'Shot 1', '(0-<<DURATION>>s)', 'Scene 1'.
-3. NO CAMERA/LIGHTING TAGS: Do NOT end the prompt with a camera or lighting description (e.g. no 'Fixed CCTV camera, raw overcast footage.'). Camera and lighting are appended automatically afterward — focus entirely on the physical scene, action, and outcome.
-4. PRESERVE REALISM DETAILS: Keep authentic PPE colors for crew (orange/red/yellow gear, wetsuits, coveralls — never white hazmat suits) and ordinary civilian clothing for passengers/guests/drivers (never hi-vis PPE on civilians), and raw natural weather exactly as described in the scenario. Do not sanitize, glamorize, or make water/ice/lighting look glossy or CGI-clean.
+1. NO TIMESTAMPS / NO HEADERS: No 'Shot 1', '(0-<<DURATION>>s)', 'Scene 1'.
+2. NO CAMERA/LIGHTING TAGS: Do NOT end the prompt with a camera or lighting description (e.g. no 'Fixed CCTV camera, raw overcast footage.'). Camera and lighting are appended automatically afterward — focus entirely on the physical scene, action, and outcome.
+3. PRESERVE REALISM DETAILS: Keep authentic PPE colors for crew (orange/red/yellow gear, wetsuits, coveralls — never white hazmat suits) and ordinary civilian clothing for passengers/guests/drivers (never hi-vis PPE on civilians), and raw natural weather exactly as described in the scenario. Do not sanitize, glamorize, or make water/ice/lighting look glossy or CGI-clean.
 
 ## OUTPUT FORMAT (STRICT JSON):
 {
-  "prompt": "The exact 25-45 word prompt",
+  "prompt": "The exact generated prompt",
   "word_count": 33
 }"""
 
@@ -513,12 +467,13 @@ _SINGLE_MOMENT_GUARDRAIL = (
 )
 
 _REALISM_GUARDRAILS = (
-    "Crew/staff wear high-visibility orange, red, or yellow foul-weather gear or "
-    "work coveralls, never white hazmat suits (even in polar scenes, use "
-    "red/orange immersion suits). Passengers, boat owners, guests, and vehicle "
-    "occupants wear ordinary civilian clothing appropriate to the setting "
-    "(swimwear, resort or casual wear, sun hats for pool/deck scenes; regular "
-    "casual clothing for car-deck scenes) — never hi-vis PPE on civilians. Raw "
+    "Crew and staff clothing must perfectly match the vessel and environment: "
+    "yacht/marina crew wear smart nautical casual; cruise/ferry staff wear proper uniforms; "
+    "fishing crew wear heavy waterproof gear; tug/salvage/heavy-work deckhands wear high-visibility PPE; "
+    "arctic crew wear thermal immersion suits. "
+    "Passengers, guests, and bystanders wear ordinary civilian clothing appropriate to the setting "
+    "(swimwear, resort or casual wear, sun hats for pool/deck scenes; regular casual clothing for car-deck scenes) — "
+    "never hi-vis PPE on civilians. NEVER use white hazmat suits. Raw "
     "natural overcast/fog/rain lighting, not glossy or artificially perfect water or ice."
 )
 

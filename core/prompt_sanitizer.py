@@ -70,15 +70,15 @@ AI video models reject prompts containing:
 - Children in perilous situations
 - Explicit sexual content or nudity
 
-CRITICAL MARITIME CONTEXT:
-- Authentic maritime weather and heavy machinery emergencies (e.g. ship rolling in storm, green swells swamping deck, straining towing lines, cargo shifting, crane boom swinging, tugboat fender compression) are 100% SAFE as long as there is no blood, gore, or graphic death.
+CRITICAL MARITIME CONTEXT (SEPARATE CREATIVITY FROM SAFETY):
+- Authentic maritime weather and heavy machinery emergencies (e.g. ship rolling in storm, green swells swamping deck, straining towing lines, cargo shifting, crane boom swinging, tugboat fender compression, tornadoes, people evacuating) are 100% SAFE. Do not sterilize dramatic physical action unless it explicitly depicts graphic injuries, blood, or gore.
 
 Respond in JSON:
 {
   "safe": true/false,
   "risk_score": 1-10 (1=completely safe, 10=definitely rejected),
   "risk_reasons": ["reason1"],
-  "rewritten_prompt": "only if safe=false: rewrite preserving the SAME maritime concept in 25-45 words, removing graphic human injuries."
+  "rewritten_prompt": "only if safe=false: output the EXACT original prompt with ONLY the minimum local edits necessary to remove the safety risk. DO NOT rewrite the entire prompt. Preserve all camera instructions, environments, events, audio, and visual details perfectly."
 }"""
 
 # ── GPT Retry Rewrite System Prompt ──
@@ -92,10 +92,9 @@ Your job: Rewrite the prompt to capture the SAME realistic maritime incident wit
 RULES:
 - Maintain 100% CCTV / raw surveillance documentary realism.
 - Remove any graphic words (blood, death, kill, violent human attack).
-- Keep the prompt SHORT and DIRECT (25–45 words).
-- Focus on the physical ship, weather, and mechanical/cargo movement from a stationary camera.
-- End with 'Raw surveillance footage, natural lighting.' or similar.
-- Output ONLY the rewritten prompt text, no JSON, no explanation."""
+- Apply the minimum local edits necessary to fix the rejection reason.
+- DO NOT rewrite the entire prompt. Preserve all original camera instructions, environments, events, audio, and visual details perfectly.
+- Output ONLY the fixed prompt text, no JSON, no explanation."""
 
 
 def sanitize_prompt(prompt: str) -> tuple[str, list[str]]:
