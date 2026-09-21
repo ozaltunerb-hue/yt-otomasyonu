@@ -167,27 +167,29 @@ async def generate_prompts(config: dict) -> dict:
 
     used_combos = config.get("used_combos", [])
     recent_topics = config.get("recent_topics", [])
-    combined_history = list(set(used_combos + recent_topics))
+    combined_history = list(dict.fromkeys(used_combos + recent_topics))
 
-    # ── ADIM 1: Kombinasyon Seçimi ve Tekrar Kontrolü ──
-    max_dedup_attempts = 50
-    combo_key = ""
-    for _ in range(max_dedup_attempts):
-        catalyst = get_creative_catalyst(recent_history=combined_history)
-        camera_archetype = choose_camera_archetype()
-        combo_key = f"{catalyst['domain_id']}|{catalyst['forced_ship'].lower()}|{catalyst['forced_event'].lower()}|{catalyst['forced_environment'].lower()}|{camera_archetype}"
-        if combo_key not in used_combos:
-            break
-
-    log.info(f"🧭 Denizcilik Alanı: [{catalyst['domain_id']}] {catalyst['domain_title']}")
-    log.info(f"⚓ Seçilen Gemi: {catalyst['forced_ship']} | 🌊 Olay: {catalyst['forced_event']} | 🌍 Ortam: {catalyst['forced_environment']}")
-    log.info(f"🎥 Kamera Arketipi Seçildi: [{camera_archetype}] {CAMERA_ARCHETYPES[camera_archetype]['title']}")
-
-    # ── ADIM 2: GPT-4o ile Yaratıcı Senaryo Tasarla ──
+    # ── ADIM 1 & 2: Kombinasyon Seçimi ve GPT-4o Senaryo Üretimi ──
     max_scenario_retries = 3
+    max_dedup_attempts = 50
     scenario = None
+    catalyst = None
+    camera_archetype = None
+    combo_key = ""
 
     for attempt in range(max_scenario_retries):
+        # Geçerli bir catalyst bul (used_combos'ta olmayan)
+        for _ in range(max_dedup_attempts):
+            catalyst = get_creative_catalyst(recent_history=combined_history)
+            camera_archetype = choose_camera_archetype()
+            combo_key = f"{catalyst['domain_id']}|{catalyst['forced_ship'].lower()}|{catalyst['forced_event'].lower()}|{catalyst['forced_environment'].lower()}|{camera_archetype}"
+            if combo_key not in used_combos:
+                break
+                
+        log.info(f"🧭 Denizcilik Alanı ({attempt+1}/{max_scenario_retries}): [{catalyst['domain_id']}] {catalyst['domain_title']}")
+        log.info(f"⚓ Seçilen Gemi: {catalyst['forced_ship']} | 🌊 Olay: {catalyst['forced_event']} | 🌍 Ortam: {catalyst['forced_environment']}")
+        log.info(f"🎥 Kamera Arketipi: [{camera_archetype}]")
+
         raw_scenario = await _generate_scenario(catalyst, camera_archetype)
         is_visible, visibility_failures = validate_silent_visibility(raw_scenario)
         is_active, action_failures = validate_high_action(raw_scenario)
@@ -200,11 +202,16 @@ async def generate_prompts(config: dict) -> dict:
             break
         else:
             log.warning(
-                f"⚠️ Senaryo kontrolü ({attempt+1}/{max_scenario_retries}): {failures} "
+                f"⚠️ Senaryo kontrolü başarısız: {failures} "
                 f"| Reddedilen senaryo: {raw_scenario.get('scenario_summary', '')}"
             )
-            # Farklı bir katalizör dene
-            catalyst = get_creative_catalyst(recent_history=combined_history)
+            # Eğer başarısızsa, döngü başa dönecek ve YENİ bir catalyst seçecek.
+            # Ancak yeni seçilen catalyst'in daha önce seçilmemiş olmasını sağlamak için 
+            # başarısız combo_key'i geçici olarak used_combos'a ekleyebiliriz veya 
+            # get_creative_catalyst'in history rotasyonuna güvenebiliriz. Biz rotasyona güveniyoruz 
+            # ama aynı zamanda bu başarısız komboyu tekrar denemesin diye history'ye ekliyoruz:
+            combined_history.append(combo_key)
+            used_combos.append(combo_key)
 
     if scenario is None:
         scenario = raw_scenario  # Fallback
@@ -226,7 +233,7 @@ async def generate_prompts(config: dict) -> dict:
         log.info(f"   🛡️ Prompt sanitize edildi: {len(changes)} değişiklik")
 
     # ── Sabit Stil Kilidi — GPT ne yazarsa yazsın değişmez şekilde, sanitizer'dan SONRA eklenir ──
-    prompt_text = apply_style_lock(raw_prompt_text, camera_archetype)
+    prompt_text = apply_style_lock(raw_prompt_text, camera_archetype, catalyst)
     word_count = len(prompt_text.split())
 
     log.info(

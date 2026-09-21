@@ -150,12 +150,6 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
 # ─────────────────────────────────────────────────────────────────────────────
 
 MARITIME_INSPIRATION_DOMAINS = {
-    "salvage_and_heavy_towing": {
-        "title": "Derin Deniz Kurtarma & Ağır Çekme (Salvage & Ocean Towing)",
-        "guidance": "Emergency ocean towing bridles, salvage tug winch tension, pusher tug linked barge dynamics in river rapids, disabled vessel escort in gale seas.",
-        "example_elements": ["salvage tugboat", "river pusher tug", "emergency towing bridle", "hydraulic towing pin", "tension winch drum friction"],
-        "camera_styles": ["fixed aft work-deck CCTV", "stationary towing winch surveillance camera", "rugged quarterdeck action camera"],
-    },
     "ferry_operations": {
         "title": "Feribot & Yolcu Dinamikleri (Ferry & Passenger Vessel Logistics)",
         "guidance": "Vehicle deck kinetic weight shifts in cross swells, loading ramp hydraulic hinge pressure, bow visor spray seals, high-speed catamaran roll recovery, unsecured cars breaking loose and sliding on ferry vehicle decks, ramp-entrance vehicle jolts, wash flooding the open vehicle deck.",
@@ -163,12 +157,6 @@ MARITIME_INSPIRATION_DOMAINS = {
         "camera_styles": ["fixed car deck security CCTV", "stationary ramp coaming surveillance camera", "overhead mezzanine deck camera"],
     },
 
-    "commercial_storm_fishing": {
-        "title": "Açık Deniz Ticari Balıkçılık (Rough Sea Commercial Fishing)",
-        "guidance": "Stern trawler hauling cod nets in heavy following seas, crab boat pot launch line snag on icy decks, factory ship fish processing conveyor surge.",
-        "example_elements": ["North Sea stern trawler", "Bering Sea crab vessel", "pelagic longliner", "trawl winch warp wire", "aft ramp floodgate"],
-        "camera_styles": ["fixed trawl deck CCTV", "stationary gallows surveillance camera", "protective wheelhouse window camera"],
-    },
     "shipyard_and_drydock_engineering": {
         "title": "Tersane, Kuru Havuz & Kızak Dinamikleri (Drydock & Launch Mechanics)",
         "guidance": "Floating drydock flooding/un-docking stability, slipway gravitational launch friction, hull keel block settling, giant propeller shaft rig placement.",
@@ -189,10 +177,22 @@ MARITIME_INSPIRATION_DOMAINS = {
     },
     "coastal_tornado_landfall": {
         "title": "Coastal Tornado / Denizden Karaya Hortum",
-        "guidance": "A powerful tornado forms offshore and makes landfall. The PRIMARY FOCUS is the tornado, extreme weather, and civilian evacuation on the coast (marinas, coastal towns, or New York-style major cities). Small civilian boats, yachts, or marina vessels may be visible reacting to the weather in the background. ABSOLUTELY NO heavy commercial ships, no container ships, no tankers, and no tugboats.",
+        "guidance": "A powerful tornado forms offshore and makes landfall. The PRIMARY FOCUS is the tornado, extreme weather, and civilian evacuation on the coast or in cities. Small civilian boats, yachts, or marina vessels may be visible if a marina environment is explicitly chosen. In city or beach environments, marinas/harbors should NOT be forced. ABSOLUTELY NO heavy commercial ships, no container ships, no tankers, and no tugboats.",
         "example_elements": ["offshore waterspout", "waterfront debris", "dark storm clouds", "evacuating civilians", "battered coastal architecture"],
         "camera_styles": ["fixed coastal/marina CCTV", "bystander phone from coastal road", "chase POV from safe inland structure"],
     },
+    "urban_city_disasters": {
+        "title": "Şehir Merkezi Doğal Afetleri (Urban City Disasters)",
+        "guidance": "Severe natural disasters striking deep inside urban city centers, downtown districts, or commercial streets. The setting MUST be an explicit city center (skyscrapers, asphalt roads, city squares, high-rise buildings, urban traffic). DO NOT force a harbor, marina, port, or dock into the scene unless it's a coastal edge. NO ships or vessels are required; focus on the urban destruction, weather anomaly, or flooding.",
+        "example_elements": ["flooded city street", "swaying skyscraper", "flying urban debris", "evacuating pedestrians", "submerged cars"],
+        "camera_styles": ["fixed traffic intersection CCTV", "bystander phone from an apartment window", "building security camera"],
+    },
+    "open_beach_coastal_events": {
+        "title": "Plaj ve Açık Sahil Olayları (Open Beach & Coastal Events)",
+        "guidance": "Extreme weather, tornadoes, or massive waves hitting an open sandy beach, beachfront promenade, or coastal resort. The setting MUST be a natural beach or public coastal shoreline. DO NOT force a marina, harbor, cargo terminal, or port into the scene. NO ships are required; focus on the crashing waves, sweeping winds, and beachfront chaos.",
+        "example_elements": ["sweeping storm surge", "beachfront promenade", "abandoned beach chairs", "crashing waves", "coastal road"],
+        "camera_styles": ["fixed beach resort CCTV", "bystander phone from beachfront balcony", "boardwalk security camera"],
+    }
 }
 
 
@@ -203,22 +203,12 @@ _last_used_domain: str | None = None  # Süreç-içi hafıza — art arda aynı 
 # ─────────────────────────────────────────────────────────────────────────────
 
 DOMAIN_ATTRIBUTES = {
-    "salvage_and_heavy_towing": {
-        "ships": ["Offshore Recovery Vessel", "Heavy Rescue Ship"],
-        "environments": ["Gale force open sea", "River rapids", "Shallow coastal water"],
-        "events": ["Emergency towing bridle snap", "Tension winch drum friction", "Pushed barge collision"]
-    },
     "ferry_operations": {
         "ships": ["Passenger Car Ferry", "High-speed Catamaran"],
         "environments": ["Ferry terminal ramp", "Open vehicle deck", "Island crossing route"],
         "events": ["Secured vehicles breaking loose", "Loading ramp hydraulic hinge failure", "Water flooding open vehicle deck"]
     },
 
-    "commercial_storm_fishing": {
-        "ships": ["North Sea Stern Trawler"],
-        "environments": ["Heavy following seas", "Freezing storm waves", "Rough fishing grounds"],
-        "events": ["Hauling net snag", "Crab pot launch line snag", "Factory deck equipment washed overboard"]
-    },
     "shipyard_and_drydock_engineering": {
         "ships": ["Vessel on Slipway"],
         "environments": ["Shipyard basin", "Drydock interior", "Construction slipway"],
@@ -242,14 +232,18 @@ DOMAIN_ATTRIBUTES = {
             "Jet Ski"
         ],
         "environments": [
-            "Coastal Town",
+            "Downtown city center",
+            "Dense urban downtown",
+            "High-rise coastal city",
+            "Residential coastal district",
+            "Commercial city streets",
+            "Open sandy beach",
+            "Wide public beach",
+            "Beachfront promenade",
+            "Coastal resort beach",
+            "Empty sandy shoreline",
             "Marina",
-            "Beach Road",
-            "Harbor Area",
-            "Coastal Boats",
-            "Major Coastal City",
-            "Dense Urban Waterfront",
-            "New York-style Waterfront City"
+            "Harbor Area"
         ],
         "events": [
             "Tornado forming offshore",
@@ -259,7 +253,48 @@ DOMAIN_ATTRIBUTES = {
             "Waterfront disruption",
             "Strong wind and rain",
             "Coastal debris movement",
-            "Boats and marina equipment reacting to severe weather"
+            "Marina equipment reacting to severe weather"
+        ]
+    },
+    "urban_city_disasters": {
+        "ships": [],
+        "environments": [
+            "Downtown city center",
+            "Dense urban downtown",
+            "High-rise city district",
+            "Commercial city streets",
+            "Residential city district",
+            "Suburban coastal city"
+        ],
+        "events": [
+            "Severe storm hitting downtown",
+            "Flash flooding in city streets",
+            "Extreme wind disrupting downtown streets",
+            "Falling outdoor objects caused by severe weather",
+            "Sudden coastal storm reaching the urban district",
+            "Major weather event disrupting city traffic",
+            "Heavy rain overwhelming city streets"
+        ]
+    },
+    "open_beach_coastal_events": {
+        "ships": [],
+        "environments": [
+            "Open sandy beach",
+            "Wide public beach",
+            "Beachfront promenade",
+            "Coastal resort beach",
+            "Empty sandy shoreline",
+            "Beach parking area",
+            "Open coastal road beside beach"
+        ],
+        "events": [
+            "Tornado approaching an open beach",
+            "Sudden extreme storm hitting the beach",
+            "Powerful coastal wind sweeping across the shoreline",
+            "Large waves reaching the beach",
+            "Severe storm disrupting a beachfront area",
+            "Beach evacuation during extreme weather",
+            "Coastal flooding reaching the beachfront"
         ]
     }
 }
@@ -268,48 +303,79 @@ DOMAIN_ATTRIBUTES = {
 def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
     """
     Geniş denizcilik ilham alanlarından birini seçer ve GPT-4o için bağlam üretir.
-    Geçmişteki son 7 seçime bakarak Visual World ve Gemi Tipi tekrarlarını engeller,
-    olası kilitlenmeleri Fallback mekanizmasıyla çözer.
+    Geçmişteki seçimlere bakarak Visual World (Domain), Gemi Tipi, Event ve Environment tekrarlarını
+    strict rotasyonla engeller (LRU).
     """
     if recent_history is None:
         recent_history = []
         
     recent_domains = []
     recent_ships = []
+    recent_events = []
+    recent_envs = []
     
     # recent_history içinde combo_key'ler bulunabilir: "domain|ship|event|env|camera"
-    for item in recent_history[-7:]:
+    for item in recent_history:
         parts = item.split('|')
-        if len(parts) >= 2:
+        if len(parts) >= 4:
             recent_domains.append(parts[0].lower().strip())
             recent_ships.append(parts[1].lower().strip())
+            recent_events.append(parts[2].lower().strip())
+            recent_envs.append(parts[3].lower().strip())
             
     all_domains = list(MARITIME_INSPIRATION_DOMAINS.keys())
-    available_domains = [d for d in all_domains if d.lower() not in recent_domains]
+    
+    # Visual World (Domain) için Katı Rotasyon (İlk 7'de 7 farklı):
+    # En fazla N-1 önceki kullanımları hariç tutarız. 
+    # Örneğin 7 domain varsa, son 6 domain'i dışlarsak geriye tam olarak kullanılmamış 1 tane kalır.
+    exclude_count = max(1, len(all_domains) - 1)
+    recently_used_domains = recent_domains[-exclude_count:] if recent_domains else []
+    available_domains = [d for d in all_domains if d.lower() not in recently_used_domains]
     
     if available_domains:
         chosen_domain_key = random.choice(available_domains)
     else:
-        # Fallback: En yakın geçmişteki 2 tanesini çıkarıp kalandan seç (kilitlenmeyi önler)
-        fallback_domains = [d for d in all_domains if d.lower() not in recent_domains[-2:]]
+        # Fallback (asla buraya düşmemeli ama güvenlik için):
+        # Eğer bir şekilde havuz daralırsa en eski kullanılanı seçmeye çalış.
+        fallback_domains = [d for d in all_domains if d.lower() not in recent_domains[-1:]]
         chosen_domain_key = random.choice(fallback_domains) if fallback_domains else random.choice(all_domains)
 
     domain_data = MARITIME_INSPIRATION_DOMAINS[chosen_domain_key]
     attrs = DOMAIN_ATTRIBUTES.get(chosen_domain_key)
     
-    # Gemi seçimi ve tekrar kontrolü
-    all_ships = attrs["ships"]
-    available_ships = [s for s in all_ships if s.lower() not in recent_ships]
-    
-    if available_ships:
-        chosen_ship = random.choice(available_ships)
-    else:
-        # Fallback: Gemi havuzu çok darsa kilitlenmemesi için son 2 videodakileri hariç tut
-        fallback_ships = [s for s in all_ships if s.lower() not in recent_ships[-2:]]
-        chosen_ship = random.choice(fallback_ships) if fallback_ships else random.choice(all_ships)
+    # Yardımcı LRU Seçici Fonksiyon
+    def _choose_lru(options: list[str], history: list[str]) -> str | None:
+        if not options:
+            return None
+            
+        # Önce hiç kullanılmamış olanları bul
+        unused = [o for o in options if o.lower() not in history]
+        if unused:
+            return random.choice(unused)
         
-    chosen_event = random.choice(attrs["events"])
-    chosen_env = random.choice(attrs["environments"])
+        # Hepsi kullanıldıysa, en az yakın zamanda kullanılanı (en eski) bul
+        history_lower = [h.lower() for h in history]
+        options_lower = [o.lower() for o in options]
+        
+        last_seen = {}
+        for opt in options_lower:
+            try:
+                rev_idx = history_lower[::-1].index(opt)
+                last_seen[opt] = len(history_lower) - 1 - rev_idx
+            except ValueError:
+                last_seen[opt] = -1
+                
+        oldest_opt = min(last_seen, key=last_seen.get)
+        
+        for o in options:
+            if o.lower() == oldest_opt:
+                return o
+        return random.choice(options)
+
+    # Gemi, Olay ve Ortam Seçimi (Kendi içlerinde tekrarı minimize eder)
+    chosen_ship = _choose_lru(attrs.get("ships", []), recent_ships)
+    chosen_event = _choose_lru(attrs.get("events", []), recent_events)
+    chosen_env = _choose_lru(attrs.get("environments", []), recent_envs)
 
     # Mevcut fikir kütüphanesinden örnekleri derle
     library_samples = []
@@ -325,7 +391,7 @@ def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
         "camera_styles": domain_data["camera_styles"],
         "existing_library_reference": library_samples,
         "recent_history": recent_history[-20:],
-        "forced_ship": chosen_ship,
+        "forced_ship": chosen_ship or "None",
         "forced_event": chosen_event,
         "forced_environment": chosen_env,
     }
@@ -370,19 +436,19 @@ You are provided with samples from DeepMyster's 71-topic reference library.
 Review the recent topics list provided in the user prompt. DO NOT repeat the exact same vessel type, incident mechanism, setting, or world from recent productions.
 
 ## STORY & PHYSICAL REALITY STANDARDS:
-1. PURE PHYSICAL DRAMA: Grounded in real maritime physics, hydrodynamics, friction, weight shifts, weather, or mechanical loads. No invisible/internal issues — no underwater rudders, no internal computer glitches, no unseen engine failures. The crisis MUST be visible in front of the camera.
-2. CAST — CREW OR CIVILIANS, MAXIMUM 2, EXACT COUNT (NON-NEGOTIABLE): Every scene has AT MOST 2 named people on screen. Use crew (e.g. a deckhand, a helmsman) OR civilians instead of crew (passengers, dock workers, boat owners, bystanders) — civilians-only scenes are just as valid as crew scenes. State the exact count ONCE as a specific number in visible_start (e.g. "one deckhand," "two passengers" — NEVER "crew members," "some passengers," or any headcount without a number), and keep that exact same number of people identical across visible_start, physical_movement, and visible_consequence. Never introduce a new person who wasn't present at second 0, and never have someone present at the start vanish without an in-shot reason — Seedance renders the prompt literally, and an inconsistent headcount produces ghost people appearing or disappearing mid-shot. Clothing is role-specific and context-aware: yacht/marina staff wear smart nautical casual; cruise/ferry staff wear standard uniforms; fishing crew wear heavy waterproof gear; tug/salvage/heavy-work deckhands wear high-visibility PPE; arctic crew wear thermal immersion suits. Civilians wear ordinary normal clothing appropriate to the setting (casual wear, resort wear, swimwear for pool/deck scenes) and are NEVER dressed in hi-vis PPE. NEVER use white hazmat suits. Do NOT shoehorn cartoonish actions; keep movements authentic.
-3. THREE-BEAT STRUCTURE, ALL WITHIN <<DURATION>> SECONDS, ONE CONTINUOUS SHOT (NON-NEGOTIABLE): Every scenario is exactly three beats, no time skips between them, no drone acrobatics, no multi-angle movie cuts, no scene cuts, no camera repositioning mid-shot:
-   - BEAT 1 — INSTANT ESTABLISHING FLASH (well under 1 second): A near-instantaneous visual anchor — just enough to place the viewer in the setting and show who is present. This is a flash-frame, NOT a scene, NOT a pause, NOT time for anything routine to be noticed happening — it must not read as a calm moment.
-   - BEAT 2 — SUDDEN WRONG TURN: Something goes suddenly, physically wrong with no warning signs and no slow escalation — the break/failure/collision itself happens fast, and MUST be visible and understandable within the first 2 seconds of the shot overall.
-   - BEAT 3 — DANGEROUS CONSEQUENCE (through <<DURATION>>s): The immediate, visible physical danger that beat 2 causes, still actively unfolding on screen at <<DURATION>>s — not a resolved or safe outcome.
-4. MOMENTUM: Beat 1 is a flash, not a pause — the viewer must understand the danger is already happening within the first 2 seconds of the shot. From that point onward the scene must be ACTIVELY breaking, colliding, flooding, swinging, or in danger, unfolding in real time — fluid, fast, and genuinely dangerous, matching real bystander-filmed maritime incident footage, never a staged or slow-moving escalation.
-5. CONCRETE PHYSICAL OUTCOME: The <<DURATION>>th second must show the beat 3 danger still visibly in progress — not a resolved, safe, or calm ending.
-6. RAW WEATHER & LIGHTING (NON-NEGOTIABLE): Weather and lighting must read as raw and natural — real overcast, fog, or rain grain, never glossy, overly clean, or cinematically polished; avoid mirror-smooth CGI-looking water or movie-trailer lighting.
+1. PURE PHYSICAL DRAMA: Grounded in real physics, gravity, friction, weather, or mechanical loads. The crisis MUST be visible in front of the camera.
+2. CAST — CREW OR CIVILIANS, MAXIMUM 2, EXACT COUNT (NON-NEGOTIABLE): Every scene has AT MOST 2 named people on screen. State the exact count ONCE as a specific number in visible_start (e.g. "one deckhand," "two pedestrians"). Keep that exact count identical across visible_start, physical_movement, and visible_consequence.
+3. THREE-BEAT STRUCTURE, ALL WITHIN <<DURATION>> SECONDS, ONE CONTINUOUS SHOT:
+   - BEAT 1 — SETUP (well under 1 second): A near-instantaneous visual anchor.
+   - BEAT 2 — ACTION: The sudden physical wrong turn. MUST USE EXPLICIT KINETIC VERBS (e.g., crashes, snaps, rolls, flips, slams, sweeps, falls). DO NOT use static verbs like "is leaning", "nearing".
+   - BEAT 3 — CONSEQUENCE (through <<DURATION>>s): The immediate, visible physical danger, still actively unfolding at <<DURATION>>s.
+4. KINETIC MOMENTUM: The viewer must see a visible physical event unfolding dynamically.
+5. CONCRETE PHYSICAL OUTCOME: The <<DURATION>>th second must show the beat 3 danger still visibly in progress.
+6. NO FORCED MARITIME ASSETS: If the domain is Urban City Disasters or Open Beach Events, and `vessel_class` is "None", DO NOT create ships, fishing vessels, or docks. Keep it strictly urban or strictly beach. If `vessel_class` is provided, stick to that exact ship. NEVER spawn a fishing trawler or rescue ship.
 
 ## OUTPUT FORMAT (STRICT JSON):
 {
-  "vessel_class": "Specific real-world vessel class (e.g. Arctic Stern Trawler, 140m Ro-Pax Ferry, Heavy Tugboat, Ocean Cruise Liner, Luxury Motor Yacht)",
+  "vessel_class": "Specific real-world vessel class (or 'None' if the prompt specifies it's a gemisiz sahne/şehir/plaj)",
   "incident_type": "Short 3-5 word label of the physical crisis",
   "scenario_summary": "One clear, punchy sentence covering all three beats: the normal moment, what goes wrong, and the visible consequence",
   "visible_start": "BEAT 1: a near-instantaneous establishing flash (well under 1 second) showing the setting and people, immediately giving way to beat 2 — the danger must be understood within the first 2 seconds of the shot overall, not a calm moment. State the exact crew/civilian count here once as a specific number (e.g. 'two deckhands', 'one passenger') — never a vague term like 'crew members' with no number. Maximum 2 people.",
@@ -466,16 +532,36 @@ _SINGLE_MOMENT_GUARDRAIL = (
     "sequence from first to last frame."
 )
 
-_REALISM_GUARDRAILS = (
-    "Crew and staff clothing must perfectly match the vessel and environment: "
-    "yacht/marina crew wear smart nautical casual; cruise/ferry staff wear proper uniforms; "
-    "fishing crew wear heavy waterproof gear; tug/salvage/heavy-work deckhands wear high-visibility PPE; "
-    "arctic crew wear thermal immersion suits. "
-    "Passengers, guests, and bystanders wear ordinary civilian clothing appropriate to the setting "
-    "(swimwear, resort or casual wear, sun hats for pool/deck scenes; regular casual clothing for car-deck scenes) — "
-    "never hi-vis PPE on civilians. NEVER use white hazmat suits. Raw "
-    "natural overcast/fog/rain lighting, not glossy or artificially perfect water or ice."
-)
+def get_realism_guardrails(domain_id: str, vessel_class: str) -> str:
+    """Seçilen Visual World ve Ship Class'a göre spesifik gerçekçilik kuralları üretir."""
+    domain_id = (domain_id or "").lower()
+    vessel_class = (vessel_class or "").lower()
+    
+    rules = []
+    
+    if "marina" in domain_id or "yacht" in domain_id or "yacht" in vessel_class or "jet ski" in vessel_class:
+        rules.append("yacht/marina crew wear smart nautical casual;")
+    if "cruise" in domain_id or "ferry" in domain_id or "passenger" in vessel_class:
+        rules.append("cruise/ferry staff wear proper uniforms;")
+    if "fishing" in domain_id or "trawler" in vessel_class:
+        rules.append("fishing crew wear heavy waterproof gear;")
+    if "salvage" in domain_id or "tug" in vessel_class or "heavy" in vessel_class:
+        rules.append("tug/salvage/heavy-work deckhands wear high-visibility PPE;")
+    if "arctic" in domain_id or "arctic" in vessel_class or "ice" in domain_id:
+        rules.append("arctic crew wear thermal immersion suits.")
+        
+    clothing_prefix = "Crew and staff clothing must perfectly match the vessel and environment: " if rules else ""
+    specific_rules = " ".join(rules)
+    
+    common_rules = (
+        "Passengers, guests, and bystanders wear ordinary civilian clothing appropriate to the setting "
+        "(swimwear, resort or casual wear, sun hats for pool/deck scenes; regular casual clothing for car-deck scenes) — "
+        "never hi-vis PPE on civilians. NEVER use white hazmat suits. Raw "
+        "natural overcast/fog/rain lighting, not glossy or artificially perfect water or ice."
+    )
+    
+    return f"{clothing_prefix}{specific_rules} {common_rules}".strip()
+
 
 CAMERA_ARCHETYPES = {
     "fixed_cctv": {
@@ -499,7 +585,7 @@ CAMERA_ARCHETYPES = {
             "from outside), visible deck architecture, railings, superstructure, "
             "or vehicle-deck structure satisfies this instead — e.g. a pool-deck "
             "camera showing loungers, railings, and open sky is sufficient; do not "
-            f"force an exterior hull/bow shot into an onboard scene. {_SINGLE_MOMENT_GUARDRAIL} {_REALISM_GUARDRAILS}"
+            f"force an exterior hull/bow shot into an onboard scene. {_SINGLE_MOMENT_GUARDRAIL}"
         ),
     },
     "bystander_handheld": {
@@ -527,7 +613,7 @@ CAMERA_ARCHETYPES = {
             "beyond it. Filmed from a ship's railing, nearby vessel, or dock, "
             "occasionally showing a hint of a railing, hand, or phone edge at "
             "the frame border. The vessel in crisis must be fully and clearly "
-            f"visible in frame at all times, not just a cropped detail. {_SINGLE_MOMENT_GUARDRAIL} {_REALISM_GUARDRAILS}"
+            f"visible in frame at all times, not just a cropped detail. {_SINGLE_MOMENT_GUARDRAIL}"
         ),
     },
     "chase_pov": {
@@ -551,7 +637,7 @@ CAMERA_ARCHETYPES = {
             f"{_STATIC_POSITION_GUARDRAIL}. No cinematic framing, no artistic "
             "close-ups. Two distinct vessels must be visible throughout: the "
             "observer's own vessel and a clearly separate second vessel "
-            f"actively in crisis, fully visible, not just a cropped detail. {_SINGLE_MOMENT_GUARDRAIL} {_REALISM_GUARDRAILS}"
+            f"actively in crisis, fully visible, not just a cropped detail. {_SINGLE_MOMENT_GUARDRAIL}"
         ),
     },
 }
@@ -568,12 +654,22 @@ def choose_camera_archetype() -> str:
     return random.choices(keys, weights=weights, k=1)[0]
 
 
-def apply_style_lock(prompt_text: str, camera_archetype: str = "fixed_cctv") -> str:
+def apply_style_lock(prompt_text: str, camera_archetype: str = "fixed_cctv", catalyst: dict = None) -> str:
     """GPT'nin ürettiği prompt'a — içeriğinden bağımsız — seçilen kamera arketipinin
-    sabit stil bloğunu ekler."""
+    sabit stil bloğunu ekler. Catalyst verilirse dinamik gerçekçilik kuralları eklenir."""
     prompt_text = (prompt_text or "").strip().rstrip(".")
     archetype = CAMERA_ARCHETYPES.get(camera_archetype, CAMERA_ARCHETYPES["fixed_cctv"])
-    return f"{prompt_text}. {archetype['style_lock']}"
+    style_lock = archetype["style_lock"]
+    
+    if catalyst:
+        domain_id = catalyst.get("domain_id", "")
+        vessel = catalyst.get("forced_ship", "")
+        realism = get_realism_guardrails(domain_id, vessel)
+        return f"{prompt_text}. {style_lock} {realism}"
+    else:
+        # Geriye dönük uyumluluk
+        return f"{prompt_text}. {style_lock} {get_realism_guardrails('', '')}"
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
