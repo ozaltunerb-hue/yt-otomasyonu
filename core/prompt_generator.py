@@ -181,7 +181,7 @@ async def generate_prompts(config: dict) -> dict:
         # Geçerli bir catalyst bul (used_combos'ta olmayan)
         for _ in range(max_dedup_attempts):
             catalyst = get_creative_catalyst(recent_history=combined_history)
-            camera_archetype = choose_camera_archetype()
+            camera_archetype = choose_camera_archetype(catalyst["domain_id"])
             combo_key = f"{catalyst['domain_id']}|{catalyst['forced_ship'].lower()}|{catalyst['forced_event'].lower()}|{catalyst['forced_environment'].lower()}|{camera_archetype}"
             if combo_key not in used_combos:
                 break
@@ -278,8 +278,9 @@ async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
     """Katman 2: GPT-4o'ya yaratıcı yönetmenlik rolü vererek özgün denizcilik senaryosu ürettir."""
     duration = settings.DEFAULT_DURATION
     early, late = compute_duration_breakpoints(duration)
+    sys_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""))
     history_text = "\n".join(f"- {h}" for h in catalyst.get("recent_history", [])[-15:]) if catalyst.get("recent_history") else "None (First run)"
-    library_text = "\n".join(f"• {s}" for s in catalyst.get("existing_library_reference", [])) if catalyst.get("existing_library_reference") else ""
+    library_text = "\n".join(f"🔸 {s}" for s in catalyst.get("existing_library_reference", [])) if catalyst.get("existing_library_reference") else ""
     archetype = CAMERA_ARCHETYPES.get(camera_archetype, CAMERA_ARCHETYPES["fixed_cctv"])
 
     # Domain'in "camera_styles" örnekleri hep sabit CCTV tonunda — atanan arketip
@@ -330,7 +331,7 @@ CREATIVE DIRECTIVE:
 6. The scene must show CONSTANT HIGH ACTION — something actively breaking, colliding, flooding, swinging, or in danger in real time. Never calm, static, or purely observational.
 7. Dress crew/staff in authentic high-visibility orange, red, or yellow PPE, wetsuits, or coveralls — never white hazmat/astronaut suits, even in arctic/polar settings (use red or orange polar immersion suits instead). Dress passengers, boat owners, guests, and vehicle drivers/occupants in ordinary civilian clothing appropriate to the setting (swimwear/resort wear for pool/deck scenes, casual clothing for car-deck scenes, yacht-casual for marina scenes) — never hi-vis PPE on civilians. Depict raw, natural weather and lighting — never glossy, CGI-clean, or movie-trailer polished.{chase_pov_directive}"""
 
-    system_prompt = build_scenario_writer_system(duration)
+    system_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""))
     result = await _call_gpt(system_prompt, user_message, temperature=0.85)
 
     # Geriye dönük uyumluluk alanları
@@ -355,16 +356,17 @@ SUMMARY: {scenario.get('scenario_summary', '')}
 VISIBLE START (0-{early}s): {scenario.get('visible_start', '')}
 PHYSICAL MOVEMENT ({early}-{late}s): {scenario.get('physical_movement', '')}
 FINAL OUTCOME ({duration}s): {scenario.get('visible_consequence', '')}
-OBSERVER CAMERA: {scenario.get('observer_camera', 'Fixed CCTV')}
 
 REQUIREMENTS:
 - Exactly 25 to 45 words.
 - Single unbroken {duration}-second continuous shot.
-- High visual signal density (vessel + crisis + concrete physical action/outcome).
-- Do NOT include any camera, lighting, or shot-type description — that is appended automatically afterward.
+- STRICT CHRONOLOGICAL FLOW: Start -> STRONG VISIBLE PHYSICAL MOVEMENT -> Final Outcome.
+- STRONG VISIBLE ACTION: You MUST include at least one aggressive, highly visible physical action (e.g. swings, veers, slams, pitches, slides). Passive verbs (like 'approaches') are NOT enough.
+- STRICT INVENTORY: Do NOT add new elements, people, vessels, or objects not explicitly detailed above. 
+- Do NOT include any camera, POV, lighting, or shot-type description (e.g., no "From the escort boat", no "CCTV", no "lens").
 - Preserve PPE colors and raw weather details from the scenario exactly — never white hazmat suits, never glossy/CGI-clean water or ice."""
 
-    system_prompt = build_prompt_simplifier_system(duration)
+    system_prompt = build_prompt_simplifier_system(duration, catalyst.get("domain_id", ""))
     result = await _call_gpt(system_prompt, user_message, temperature=0.75)
 
     if "prompt" not in result or not result["prompt"]:

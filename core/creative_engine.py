@@ -437,7 +437,7 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
 
 ## STORY & PHYSICAL REALITY STANDARDS:
 1. PURE PHYSICAL DRAMA: Grounded in real physics, gravity, friction, weather, or mechanical loads. The crisis MUST be visible in front of the camera.
-2. CAST — CREW OR CIVILIANS, MAXIMUM 2, EXACT COUNT (NON-NEGOTIABLE): Every scene has AT MOST 2 named people on screen. State the exact count ONCE as a specific number in visible_start (e.g. "one deckhand," "two pedestrians"). Keep that exact count identical across visible_start, physical_movement, and visible_consequence.
+2. <<CAST_RULE>>
 3. THREE-BEAT STRUCTURE, ALL WITHIN <<DURATION>> SECONDS, ONE CONTINUOUS SHOT:
    - BEAT 1 — SETUP (well under 1 second): A near-instantaneous visual anchor.
    - BEAT 2 — ACTION: The sudden physical wrong turn. MUST USE EXPLICIT KINETIC VERBS (e.g., crashes, snaps, rolls, flips, slams, sweeps, falls). DO NOT use static verbs like "is leaning", "nearing".
@@ -451,10 +451,10 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
   "vessel_class": "Specific real-world vessel class (or 'None' if the prompt specifies it's a gemisiz sahne/şehir/plaj)",
   "incident_type": "Short 3-5 word label of the physical crisis",
   "scenario_summary": "One clear, punchy sentence covering all three beats: the normal moment, what goes wrong, and the visible consequence",
-  "visible_start": "BEAT 1: a near-instantaneous establishing flash (well under 1 second) showing the setting and people, immediately giving way to beat 2 — the danger must be understood within the first 2 seconds of the shot overall, not a calm moment. State the exact crew/civilian count here once as a specific number (e.g. 'two deckhands', 'one passenger') — never a vague term like 'crew members' with no number. Maximum 2 people.",
-  "physical_movement": "BEAT 2 (<<EARLY>>-<<LATE>>s): the sudden physical wrong turn — the break/failure/collision itself, happening fast, no warning. Same people, same exact count as visible_start.",
-  "visible_consequence": "BEAT 3 (<<LATE>>-<<DURATION>>s): the immediate dangerous consequence, still visibly unfolding at <<DURATION>>s, not resolved or safe. Same people, same exact count as visible_start.",
-  "observer_camera": "The exact assigned camera position, stated concretely (e.g. 'fixed camera bolted to the cruise ship's port-side superstructure', 'bystander's handheld phone from the pier', 'POV from the bow of a coast guard boat')",
+  "visible_start": "<<VISIBLE_START_DESC>>",
+  "physical_movement": "<<PHYSICAL_MOVEMENT_DESC>>",
+  "visible_consequence": "<<VISIBLE_CONSEQUENCE_DESC>>",
+  "observer_camera": "The exact assigned camera position, stated concretely (e.g. 'fixed camera bolted to the cruise ship's port-side superstructure', 'bystander's handheld phone from the pier', 'POV from the bow of the second vessel already established in this scene')",
   "silent_screen_understandable": true
 }"""
 
@@ -467,14 +467,30 @@ def compute_duration_breakpoints(duration: int) -> tuple[int, int]:
     return early, late
 
 
-def build_scenario_writer_system(duration: int) -> str:
+def build_scenario_writer_system(duration: int, domain_id: str = "") -> str:
     """SCENARIO_WRITER_SYSTEM'i config.DEFAULT_DURATION'a göre üretir."""
     early, late = compute_duration_breakpoints(duration)
+    
+    if domain_id in ENV_CENTRIC_DOMAINS:
+        cast_rule = "ENVIRONMENT-CENTRIC (CAST OPTIONAL): Focus the entire scene and camera strictly on the MASSIVE NATURAL EVENT (e.g. tornado, waterspout, giant wave, flood). Do NOT focus on specific fleeing humans. Humans/cars should only be background scale references. The natural event must be the primary visual anchor and must remain fully in frame. Do not let the event get pushed out of the camera's view."
+        vis_start = "BEAT 1: a near-instantaneous establishing flash (well under 1 second) showing the massive natural event (e.g. tornado, rogue wave, storm) already forming or visible. DO NOT start by describing people (e.g. 'Two pedestrians'). The natural event must be the primary visual anchor. Do NOT start with the consequence already happening."
+        phys_mov = "BEAT 2 (<<EARLY>>-<<LATE>>s): the sudden physical wrong turn — STRONG VISIBLE PHYSICAL ACTION of the natural event (e.g., sweeps, crashes, rips, floods, slams). The physical movement of the disaster must be explicit and extreme."
+        vis_cons = "BEAT 3 (<<LATE>>-<<DURATION>>s): the immediate dangerous consequence of the natural disaster, still visibly unfolding at <<DURATION>>s, not resolved or safe."
+    else:
+        cast_rule = "CAST — CREW OR CIVILIANS, MAXIMUM 2, EXACT COUNT (NON-NEGOTIABLE): Every scene has AT MOST 2 named people on screen. State the exact count ONCE as a specific number in visible_start (e.g. 'one deckhand,' 'two pedestrians'). Keep that exact count identical across visible_start, physical_movement, and visible_consequence."
+        vis_start = "BEAT 1: a near-instantaneous establishing flash (well under 1 second) showing the setting and people, immediately giving way to beat 2 — the danger must be understood within the first 2 seconds of the shot overall, not a calm moment. State the exact crew/civilian count here once as a specific number (e.g. 'two deckhands', 'one passenger') — never a vague term like 'crew members' with no number. Maximum 2 people. Do NOT start with the consequence already happening."
+        phys_mov = "BEAT 2 (<<EARLY>>-<<LATE>>s): the sudden physical wrong turn — STRONG VISIBLE PHYSICAL ACTION (e.g., swings, veers, slides, surges, rolls, pitches, slams). Do NOT use passive words like 'approaches' or 'is in danger'. The physical movement must be explicit and extreme. Same people, same exact count as visible_start."
+        vis_cons = "BEAT 3 (<<LATE>>-<<DURATION>>s): the immediate dangerous consequence, still visibly unfolding at <<DURATION>>s, not resolved or safe. Same people, same exact count as visible_start."
+
     return (
         SCENARIO_WRITER_SYSTEM_TEMPLATE
         .replace("<<DURATION>>", str(duration))
         .replace("<<EARLY>>", str(early))
         .replace("<<LATE>>", str(late))
+        .replace("<<CAST_RULE>>", cast_rule)
+        .replace("<<VISIBLE_START_DESC>>", vis_start)
+        .replace("<<PHYSICAL_MOVEMENT_DESC>>", phys_mov)
+        .replace("<<VISIBLE_CONSEQUENCE_DESC>>", vis_cons)
     )
 
 
@@ -494,6 +510,9 @@ Your ONE job: Convert the maritime scenario into a HIGH-SIGNAL, PHOTOREALISTIC p
 1. NO TIMESTAMPS / NO HEADERS: No 'Shot 1', '(0-<<DURATION>>s)', 'Scene 1'.
 2. NO CAMERA/LIGHTING TAGS: Do NOT end the prompt with a camera or lighting description (e.g. no 'Fixed CCTV camera, raw overcast footage.'). Camera and lighting are appended automatically afterward — focus entirely on the physical scene, action, and outcome.
 3. PRESERVE REALISM DETAILS: Keep authentic PPE colors for crew (orange/red/yellow gear, wetsuits, coveralls — never white hazmat suits) and ordinary civilian clothing for passengers/guests/drivers (never hi-vis PPE on civilians), and raw natural weather exactly as described in the scenario. Do not sanitize, glamorize, or make water/ice/lighting look glossy or CGI-clean.
+4. STRICT CHRONOLOGICAL FLOW: You MUST maintain the exact timeline: 1) Initial state, 2) STRONG VISIBLE PHYSICAL MOVEMENT (e.g. swings, veers, slams, pitches), 3) Final consequence. NEVER start the prompt with the vessel already damaged or the consequence already happening. Action must be active and visible, not passive (like 'is in danger').
+5. NO HALLUCINATION / STRICT INVENTORY: Do NOT add any new vessels, characters, objects, or dramatic elements (e.g. 'escort boat', 'officer', 'dust', 'debris') that are not explicitly present in the provided scenario. Preserve the exact Vessel Class and Environment. Focus ONLY on a single main action chain.
+6. PRESERVE PHENOMENA NAMES: DO NOT sanitize or dilute the specific names of massive environmental phenomena. If the scenario mentions a 'tornado', 'waterspout', 'tsunami', or 'rogue wave', YOU MUST USE THAT EXACT WORD in the prompt. Do not replace it with generic terms like 'fierce winds' or 'storm'. The natural disaster must remain the primary visual subject.
 
 ## OUTPUT FORMAT (STRICT JSON):
 {
@@ -502,9 +521,12 @@ Your ONE job: Convert the maritime scenario into a HIGH-SIGNAL, PHOTOREALISTIC p
 }"""
 
 
-def build_prompt_simplifier_system(duration: int) -> str:
+def build_prompt_simplifier_system(duration: int, domain_id: str = "") -> str:
     """PROMPT_SIMPLIFIER_SYSTEM'i config.DEFAULT_DURATION'a göre üretir."""
-    return PROMPT_SIMPLIFIER_SYSTEM_TEMPLATE.replace("<<DURATION>>", str(duration))
+    sys_prompt = PROMPT_SIMPLIFIER_SYSTEM_TEMPLATE.replace("<<DURATION>>", str(duration))
+    if domain_id in ENV_CENTRIC_DOMAINS:
+        sys_prompt += "\n\n7. STRICT ENVIRONMENT-CENTRIC FOCUS: DO NOT START THE PROMPT WITH HUMANS (e.g. 'Two pedestrians...'). Begin immediately with the massive natural disaster (e.g. 'A massive coastal tornado...', 'A giant rogue wave...'). If humans are present, they are secondary background elements. DO NOT DILUTE THE PHENOMENON (keep exact words like 'tornado', 'waterspout', 'tsunami', 'storm surge')."
+    return sys_prompt
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -561,6 +583,12 @@ def get_realism_guardrails(domain_id: str, vessel_class: str) -> str:
     )
     
     return f"{clothing_prefix}{specific_rules} {common_rules}".strip()
+
+
+# Bu domainlerde forced_ship=None olabilir (doğal afet/olay odaklı, gemi zorunlu değil).
+# chase_pov iki ayrı gemi zorunlu kıldığı için buralarda seçilmemeli — aksi halde GPT
+# ikinci gemiyi karşılamak için yoktan bir tekne icat ediyordu (2026-09-23 tespit edildi).
+ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open_beach_coastal_events"]
 
 
 CAMERA_ARCHETYPES = {
@@ -647,9 +675,16 @@ CAMERA_ARCHETYPES = {
 STYLE_LOCK_SUFFIX = CAMERA_ARCHETYPES["fixed_cctv"]["style_lock"]
 
 
-def choose_camera_archetype() -> str:
-    """3 kamera arketipinden birini ağırlıklı rastgele seçer (CCTV varsayılan/en sık)."""
+def choose_camera_archetype(domain_id: str = "") -> str:
+    """3 kamera arketipinden birini ağırlıklı rastgele seçer (CCTV varsayılan/en sık).
+
+    Environment-centric domainlerde (gemi yok, forced_ship=None) chase_pov elenir:
+    o arketip iki ayrı gemi zorunlu kılar, gemisiz domainde GPT bunu karşılamak
+    için yoktan bir tekne icat ediyordu (2026-09-23 tespit edildi).
+    """
     keys = list(CAMERA_ARCHETYPES.keys())
+    if domain_id in ENV_CENTRIC_DOMAINS:
+        keys = [k for k in keys if k != "chase_pov"]
     weights = [CAMERA_ARCHETYPES[k]["weight"] for k in keys]
     return random.choices(keys, weights=weights, k=1)[0]
 

@@ -48,8 +48,8 @@ class Config:
         self.DEFAULT_MODEL = os.environ.get("DEFAULT_MODEL", "bytedance/seedance-2-fast")  # Seedance 2 Mini
         self.DEFAULT_ORIENTATION = "portrait"    # Sabit — Shorts (9:16)
         self.DEFAULT_AUDIO = True               # Sabit — ses her zaman açık (deniz/dalga/fırtına sesleri)
-        self.DEFAULT_DURATION = int(os.environ.get("DEFAULT_DURATION", "12"))  # 12 varsayılan, env ile override edilebilir
-        self.DEFAULT_RESOLUTION = os.environ.get("DEFAULT_RESOLUTION", "480p")  # Kredi tasarruflu 480p
+        self.DEFAULT_DURATION = int(os.environ.get("DEFAULT_DURATION", "15"))  # 15 saniye (senaryoya göre sabit)
+        self.DEFAULT_RESOLUTION = "480p"  # Kredi tasarruflu — ASLA DEĞİŞTİRİLMEZ
 
         # ── YouTube Upload ──
         self.YOUTUBE_CLIENT_ID = os.environ.get("YOUTUBE_CLIENT_ID", "")

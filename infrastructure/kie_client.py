@@ -125,7 +125,7 @@ class KieClient:
         orientation: str = "portrait",
         duration: int = 10,
         audio: bool = True,
-        resolution: str = "720p",
+        resolution: str = "480p",
         progress_callback: callable = None,
     ) -> str:
         """
@@ -221,7 +221,7 @@ class KieClient:
         scenes: list[dict],
         orientation: str = "portrait",
         audio: bool = True,
-        resolution: str = "720p",
+        resolution: str = "480p",
         progress_callback: callable = None,
     ) -> list[str]:
         """
