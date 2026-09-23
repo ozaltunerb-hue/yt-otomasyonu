@@ -30,7 +30,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from config import settings
 from logger import get_logger
-from core.prompt_generator import generate_prompts
+from core.prompt_generator import generate_prompts, NoValidScenarioError
 from infrastructure.kie_client import KieClient, ContentFilterError
 from infrastructure.replicate_merger import merge_videos
 from infrastructure.video_downloader import download_video, cleanup_video
@@ -264,6 +264,27 @@ async def _execute_pipeline(
         if combo_key:
             cfe.combo_key = combo_key
         raise
+
+    except NoValidScenarioError as nvse:
+        elapsed = time.time() - start_time
+        timestamp = time.strftime("%Y-%m-%d %H:%M")
+        log.error(f"🚫 Kalite kapısından geçen senaryo yok ({elapsed:.1f}s): {nvse}")
+
+        if not tracker.page_id:
+            await asyncio.to_thread(
+                tracker.create_entry,
+                {
+                    "topic": f"Boş Cron — {timestamp} | 5 senaryo kalite kapısından geçemedi: {str(nvse)[:300]}",
+                    "model": settings.DEFAULT_MODEL,
+                    "clip_count": 0,
+                    "orientation": settings.DEFAULT_ORIENTATION,
+                    "audio": settings.DEFAULT_AUDIO,
+                    "combo_key": "",
+                },
+                "auto",
+            )
+        await asyncio.to_thread(tracker.update_with_error, str(nvse))
+        return {"success": False, "reason": "no_valid_scenario", "error": str(nvse)}
 
     except Exception as e:
         elapsed = time.time() - start_time

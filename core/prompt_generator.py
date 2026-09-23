@@ -123,6 +123,22 @@ _STATIC_KEYWORDS = [
     "idle", "quietly", "nothing unusual", "business as usual",
 ]
 
+# ── Beat 1'e özel: durgun kurulum kalıpları (2026-09-23 tespit edildi) ──
+_STATIC_START_PATTERNS = [
+    "one passenger standing", "one crew member standing",
+    "can be seen at", "can be seen near",
+    "watching as", "watches as",
+    "starts to gather", "start to gather",
+    "focuses on", "focused on",
+    "positioned near", "stands near",
+    "prepares to", "preparing to",
+    "quietly waits", "silently waits",
+    "a calm", "the calm",
+]
+# "Two yachts can be seen..." gibi genel "Two X can be seen" kalıbı (yukarıdaki
+# "can be seen at/near" ikilisinin kaçırdığı, "at/near" olmayan varyantlar için)
+_STATIC_START_REGEX = re.compile(r"\btwo\s+\w+[\w\s]{0,30}\bcan be seen\b", re.IGNORECASE)
+
 
 def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
     """
@@ -133,12 +149,14 @@ def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
          capsize, ...) var mı?
       2. Yoksa, sakin/rutin dile işaret eden anahtar kelimeler (driving, loading,
          waiting, routine, calm, ...) tespit edilip nedeni açıkça loglanır.
+      3. Beat 1 (visible_start) durgun bir kurulum kalıbıyla mı başlıyor?
     """
     failures = []
+    visible_start = scenario.get("visible_start", "")
     movement = scenario.get("physical_movement", "")
     consequence = scenario.get("visible_consequence", "")
     summary = scenario.get("scenario_summary", "")
-    full_text = f"{movement} {consequence} {summary}".lower()
+    full_text = f"{visible_start} {movement} {consequence} {summary}".lower()
 
     matched_action = [kw for kw in _HIGH_ACTION_KEYWORDS if kw in full_text]
     matched_static = [kw for kw in _STATIC_KEYWORDS if kw in full_text]
@@ -153,8 +171,58 @@ def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
                 "Aktif tehlike/aksiyon anahtar kelimesi bulunamadı — sahne çok sakin/statik olabilir"
             )
 
+    vstart_low = visible_start.lower()
+    matched_static_start = [p for p in _STATIC_START_PATTERNS if p in vstart_low]
+    if _STATIC_START_REGEX.search(vstart_low):
+        matched_static_start.append("<iki X görülebilir kalıbı>")
+    if matched_static_start:
+        failures.append(f"Beat 1 durgun kurulumla başlıyor: {matched_static_start}")
+
     is_valid = len(failures) == 0
     return is_valid, failures
+
+
+_STRONG_OPENING_VERBS = [
+    "crashes", "slams", "strikes", "surges", "swings", "snaps",
+    "lurches", "breaks", "tears", "bursts", "rips",
+]
+
+
+def score_scenario(scenario: dict) -> int:
+    """Kapıdan GEÇEN bir senaryonun aksiyon yoğunluğunu puanlar (LLM çağrısı yok, kod tabanlı).
+
+    Girdi: scenario dict (visible_start, physical_movement, visible_consequence,
+           scenario_summary alanlarını içeren GPT-4o çıktısı).
+    Çıktı: int (negatif olabilir, üst sınır yok). Yüksek skor = daha güçlü/anlık aksiyon.
+    """
+    movement = scenario.get("physical_movement", "")
+    consequence = scenario.get("visible_consequence", "")
+    summary = scenario.get("scenario_summary", "")
+    visible_start = scenario.get("visible_start", "")
+    full_text = f"{movement} {consequence} {summary}".lower()
+    vstart_low = visible_start.lower().strip()
+
+    score = 0
+    score += sum(1 for kw in _HIGH_ACTION_KEYWORDS if kw in full_text)
+
+    if "already" in vstart_low:
+        score += 3
+
+    first_words = [w.strip(",.;:") for w in vstart_low.split()[:6]]
+    if any(v in first_words for v in _STRONG_OPENING_VERBS):
+        score += 2
+
+    if "suddenly" in vstart_low:
+        score += 1
+
+    if any(p in vstart_low for p in _STATIC_START_PATTERNS) or _STATIC_START_REGEX.search(vstart_low):
+        score -= 5
+
+    return score
+
+
+class NoValidScenarioError(RuntimeError):
+    """5 senaryo denemesinin hiçbiri kalite kapısından geçemediğinde fırlatılır."""
 
 
 async def generate_prompts(config: dict) -> dict:
@@ -169,15 +237,13 @@ async def generate_prompts(config: dict) -> dict:
     recent_topics = config.get("recent_topics", [])
     combined_history = list(dict.fromkeys(used_combos + recent_topics))
 
-    # ── ADIM 1 & 2: Kombinasyon Seçimi ve GPT-4o Senaryo Üretimi ──
-    max_scenario_retries = 3
+    # ── ADIM 1 & 2: Kombinasyon Seçimi ve GPT-4o Senaryo Üretimi (5 deneme, skorla en iyisi) ──
+    max_scenario_attempts = 5
     max_dedup_attempts = 50
-    scenario = None
-    catalyst = None
-    camera_archetype = None
-    combo_key = ""
+    accepted = []   # kapıdan geçenler: {scenario, catalyst, camera_archetype, combo_key, score}
+    attempt_log = []  # HİÇBİRİ geçmezse hata mesajında kullanılacak
 
-    for attempt in range(max_scenario_retries):
+    for attempt in range(max_scenario_attempts):
         # Geçerli bir catalyst bul (used_combos'ta olmayan)
         for _ in range(max_dedup_attempts):
             catalyst = get_creative_catalyst(recent_history=combined_history)
@@ -185,8 +251,8 @@ async def generate_prompts(config: dict) -> dict:
             combo_key = f"{catalyst['domain_id']}|{catalyst['forced_ship'].lower()}|{catalyst['forced_event'].lower()}|{catalyst['forced_environment'].lower()}|{camera_archetype}"
             if combo_key not in used_combos:
                 break
-                
-        log.info(f"🧭 Denizcilik Alanı ({attempt+1}/{max_scenario_retries}): [{catalyst['domain_id']}] {catalyst['domain_title']}")
+
+        log.info(f"🧭 Denizcilik Alanı ({attempt+1}/{max_scenario_attempts}): [{catalyst['domain_id']}] {catalyst['domain_title']}")
         log.info(f"⚓ Seçilen Gemi: {catalyst['forced_ship']} | 🌊 Olay: {catalyst['forced_event']} | 🌍 Ortam: {catalyst['forced_environment']}")
         log.info(f"🎥 Kamera Arketipi: [{camera_archetype}]")
 
@@ -196,25 +262,38 @@ async def generate_prompts(config: dict) -> dict:
         is_valid = is_visible and is_active
         failures = visibility_failures + action_failures
 
+        combined_history.append(combo_key)
+        used_combos.append(combo_key)
+
         if is_valid:
-            scenario = raw_scenario
-            log.info(f"✅ Senaryo Onaylandı: {scenario.get('scenario_summary', '')}")
-            break
+            score = score_scenario(raw_scenario)
+            accepted.append({
+                "scenario": raw_scenario, "catalyst": catalyst,
+                "camera_archetype": camera_archetype, "combo_key": combo_key,
+                "score": score,
+            })
+            log.info(f"✅ Senaryo {attempt+1}/{max_scenario_attempts} kapıdan geçti (skor={score}): {raw_scenario.get('scenario_summary', '')}")
         else:
+            attempt_log.append({"attempt": attempt + 1, "combo_key": combo_key, "failures": failures})
             log.warning(
-                f"⚠️ Senaryo kontrolü başarısız: {failures} "
+                f"⚠️ Senaryo {attempt+1}/{max_scenario_attempts} reddedildi: {failures} "
                 f"| Reddedilen senaryo: {raw_scenario.get('scenario_summary', '')}"
             )
-            # Eğer başarısızsa, döngü başa dönecek ve YENİ bir catalyst seçecek.
-            # Ancak yeni seçilen catalyst'in daha önce seçilmemiş olmasını sağlamak için 
-            # başarısız combo_key'i geçici olarak used_combos'a ekleyebiliriz veya 
-            # get_creative_catalyst'in history rotasyonuna güvenebiliriz. Biz rotasyona güveniyoruz 
-            # ama aynı zamanda bu başarısız komboyu tekrar denemesin diye history'ye ekliyoruz:
-            combined_history.append(combo_key)
-            used_combos.append(combo_key)
 
-    if scenario is None:
-        scenario = raw_scenario  # Fallback
+    if not accepted:
+        raise NoValidScenarioError(
+            f"{max_scenario_attempts} senaryo denemesi kalite kapısından geçemedi. Bu tur video üretilmedi. "
+            f"Denemeler: {json.dumps(attempt_log, ensure_ascii=False)}"
+        )
+
+    best = max(accepted, key=lambda x: x["score"])
+    scenario, catalyst, camera_archetype, combo_key = (
+        best["scenario"], best["catalyst"], best["camera_archetype"], best["combo_key"]
+    )
+    log.info(
+        f"🏆 En iyi senaryo seçildi (skor={best['score']}, {len(accepted)}/{max_scenario_attempts} kapıdan geçti): "
+        f"{scenario.get('scenario_summary', '')}"
+    )
 
     # ── ADIM 3: Seedance 2 Mini Doğukan Promptu (25–45 Kelime — DEFAULT_DURATION Standardı) ──
     log.info(f"✂️ Sahne Doğukan standardına sadeleştiriliyor (25–45 kelime {settings.DEFAULT_DURATION}s)...")
