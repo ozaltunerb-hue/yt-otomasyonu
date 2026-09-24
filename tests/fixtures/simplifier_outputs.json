@@ -66,7 +66,9 @@
    "beat1_action_verb": "spins"
   },
   "prompt": "A tornado spins violently offshore, barreling toward the marina. It crashes across the water, snapping the yacht's moorings. The yacht lurches violently, its bow crashing into the dock, debris scattering across the deck.",
-  "expect": []
+  "expect": [
+   "H"
+  ]
  },
  {
   "tag": "faz1#3.2",
@@ -79,7 +81,9 @@
    "beat1_action_verb": "spins"
   },
   "prompt": "A tornado spins violently towards the marina, crashing across the water. The sailing yacht strains against its moorings, which snap. The vessel lurches uncontrollably, colliding with the dock as debris scatters across the deck.",
-  "expect": []
+  "expect": [
+   "H"
+  ]
  },
  {
   "tag": "faz1#4.1",
@@ -92,7 +96,9 @@
    "beat1_action_verb": "crashes"
   },
   "prompt": "A towering wave crashes onto the tranquil sandy beach, surging violently across the sand. Beach chairs and umbrellas are engulfed and swept inland. The shoreline remains submerged, with debris and sand still being swept away.",
-  "expect": []
+  "expect": [
+   "H"
+  ]
  },
  {
   "tag": "faz1#4.2",
@@ -105,7 +111,9 @@
    "beat1_action_verb": "crashes"
   },
   "prompt": "A towering wave crashes onto the tranquil sandy beach, propelling forward with violent force. Water surges, engulfing beach chairs and umbrellas, sweeping them inland. The shoreline remains submerged, debris and sand continually swept away in the rush.",
-  "expect": []
+  "expect": [
+   "H"
+  ]
  },
  {
   "tag": "faz1#5.1",
@@ -118,7 +126,9 @@
    "beat1_action_verb": "sweep"
   },
   "prompt": "Gale-force winds sweep through downtown, flinging debris across the pavement. Trash cans and traffic cones smash into shop windows, glass shards flying. Street signs bend and teeter, debris keeps blasting buildings, turning the street into chaos.",
-  "expect": []
+  "expect": [
+   "H"
+  ]
  },
  {
   "tag": "faz1#5.2",
@@ -131,7 +141,9 @@
    "beat1_action_verb": "sweep"
   },
   "prompt": "Gale-force winds sweep through the downtown street, flinging debris across the pavement. Trash cans and traffic cones smash into shop windows, scattering glass. Street signs teeter, debris continues blasting against buildings, maintaining the chaos.",
-  "expect": []
+  "expect": [
+   "H"
+  ]
  },
  {
   "tag": "faz1#6.1",
@@ -258,7 +270,9 @@
    "beat1_action_verb": "churns"
   },
   "prompt": "A tornado churns violently over the waterfront, dark clouds swirling. The fierce winds yank a jet ski off its mooring, tossing it into turbulent water, where it bobs uncontrollably as the tornado continues its destructive path.",
-  "expect": []
+  "expect": [
+   "H"
+  ]
  },
  {
   "tag": "faz1#10.2",
@@ -272,7 +286,8 @@
   },
   "prompt": "A tornado churns violently across the waterfront, dark clouds swirling. Fierce winds yank a stationary jet ski from its mooring, tossing it into the swirling water. The jet ski bobs uncontrollably as chaos ensues.",
   "expect": [
-   "A"
+   "A",
+   "H"
   ]
  }
 ]

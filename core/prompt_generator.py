@@ -33,6 +33,7 @@ from core.creative_engine import (
     SHIP_INCOMPATIBLE,
     DOMAIN_CAST_RANGES,
     ENV_CENTRIC_DOMAINS,
+    ENV_CENTRIC_MIN_PEOPLE,
     apply_style_lock,
     style_lock_suffix,
 )
@@ -380,7 +381,9 @@ _CAST_PERSON = (
     # TUR 10: "a jet ski with two riders" tanınmıyordu, kapı "hiç insan yok" diyordu
     r"riders?|drivers?|divers?|boaters?|skippers?|kayakers?|jet\s+skiers?|owners?|residents?|"
     r"shoppers?|commuters?|motorists?|cyclists?|rescuers?|firefighters?|paramedics?|pilots?|"
-    r"waiters?|bartenders?)"
+    r"waiters?|bartenders?|"
+    # TUR 16: env-centric arka plan insanları
+    r"watchers?|observers?|figures?|crowds?)"
 )
 _CAST_NUM = (
     r"(?:\d{1,3}|(?:twenty|thirty|forty|fifty)(?:[\s-](?:one|two|three|four|five|six|seven|eight|nine))?|"
@@ -423,11 +426,18 @@ def _cast_counts(text: str) -> list[tuple[int, bool, str]]:
 def validate_cast_size(scenario: dict, domain_id: str) -> tuple[bool, list[str]]:
     """Ekrandaki kişi sayısı DOMAIN_CAST_RANGES aralığında mı, beat'ler boyunca artmıyor mu?
 
-    Env-centric domainler atlanır. Beat 1 toplamı aralıkta olmalı (hedge'li sayıda üstte
+    Env-centric domainlerde sayı serbest, 3 beat'te en az 1 insan ifadesi şart (TUR 16). Beat 1 toplamı aralıkta olmalı (hedge'li sayıda üstte
     %20 / en az 1, altta 1 tolerans). Belirsiz ifade, sayısız kişi veya hiç insan yoksa red.
     Beat 2/3'te Beat 1'den FAZLA kişi red; eşit/az (geri atıf, alt küme) kabul.
     """
-    if domain_id in ENV_CENTRIC_DOMAINS or domain_id not in DOMAIN_CAST_RANGES:
+    if domain_id in ENV_CENTRIC_DOMAINS:
+        # Sayı serbest, ama en az 1 insan (arka plan ölçeği) şart (TUR 16)
+        people = [p for k in ("visible_start", "physical_movement", "visible_consequence")
+                  for p in _person_mentions(scenario.get(k, ""))]
+        if len(people) < ENV_CENTRIC_MIN_PEOPLE:
+            return False, [f"Cast: env-centric sahnede hiç insan yok (en az {ENV_CENTRIC_MIN_PEOPLE})"]
+        return True, []
+    if domain_id not in DOMAIN_CAST_RANGES:
         return True, []
     lo, hi = DOMAIN_CAST_RANGES[domain_id]
     beat1 = scenario.get("visible_start", "") or ""
@@ -571,6 +581,12 @@ def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = 
                 issues.append((f"Simplifier: kişi sayısı değişmiş ({stated_total} ≠ {total}, senaryo: {phrases})",
                                f"Keep the exact head count from the scenario: '{phrases}'; do not add people."))
 
+    # H — env-centric'te en az 1 insan (TUR 16): 8 gerçek env-centric çıktının 8'i insansızdı
+    if domain_id in ENV_CENTRIC_DOMAINS and len(_person_mentions(prompt)) < ENV_CENTRIC_MIN_PEOPLE:
+        issues.append(("Simplifier: insan yok (env-centric en az 1)",
+                       "Keep at least one human from the scenario in the prompt as background scale "
+                       "(e.g. rooftop watchers, sidewalk bystanders); never drop all people."))
+
     # G — ilk cümlede insan tepkisi yok (TUR 9)
     reaction = _REACTION_RE.search(first)
     if reaction:
@@ -598,6 +614,7 @@ def validate_simplified_prompt(prompt: str, scenario: dict, domain_id: str, ship
     C: yazıcının bildirdiği Beat 1 fiili ilk cümlede. E: gemi domainlerinde kişi sayısı korunur.
     F: gemi domainlerinde atanan geminin tipi adıyla geçer (ship verilirse).
     G: ilk cümlede duygusal insan tepkisi (startled, alarmed, shocked...) yok.
+    H: env-centric domainlerde en az 1 insan ifadesi var.
     """
     failures = [msg for msg, _ in _simplified_checks(prompt, scenario, domain_id, ship)]
     return not failures, failures

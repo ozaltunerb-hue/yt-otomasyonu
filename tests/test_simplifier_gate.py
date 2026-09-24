@@ -25,7 +25,7 @@ from core.prompt_generator import (
 
 FIXTURE = os.path.join(os.path.dirname(__file__), "fixtures", "simplifier_outputs.json")
 LETTER = {"Simplifier son cümle": "A", "Simplifier: kamera": "B", "Simplifier: Beat 1 fiili": "C",
-          "Simplifier: kişi sayısı": "E", "Simplifier: boş": "EMPTY"}
+          "Simplifier: kişi sayısı": "E", "Simplifier: insan yok": "H", "Simplifier: boş": "EMPTY"}
 
 
 def letters(failures):
@@ -47,7 +47,8 @@ class TestRealOutputs(unittest.TestCase):
     def test_faz1_twenty_outputs(self):
         rows = json.load(open(FIXTURE, encoding="utf-8"))
         self.assertEqual(len(rows), 20)
-        self.assertEqual(sum(1 for r in rows if r["expect"]), 7)
+        # TUR 16: 8 env-centric çıktının 8i insansız (H) -> 7 + 7 yeni red = 14
+        self.assertEqual(sum(1 for r in rows if r["expect"]), 14)
         for r in rows:
             with self.subTest(tag=r["tag"]):
                 ok, failures = validate_simplified_prompt(r["prompt"], r["scenario"], r["domain"])
@@ -97,8 +98,13 @@ class TestChecks(unittest.TestCase):
 
     def test_env_centric_skips_count(self):
         scen = {"visible_start": "A tornado tears across the beach.", "beat1_action_verb": "tears"}
-        p = "A tornado tears across the beach, flinging chairs. Debris keeps swirling inland."
+        p = "A tornado tears across the beach, flinging chairs past distant beachgoers. Debris keeps swirling inland."
         self.assertTrue(validate_simplified_prompt(p, scen, "open_beach_coastal_events")[0])
+
+    def test_env_centric_zero_humans_rejected(self):
+        scen = {"visible_start": "A tornado tears across the beach.", "beat1_action_verb": "tears"}
+        p = "A tornado tears across the beach, flinging chairs. Debris keeps swirling inland."
+        self.assertEqual(letters(validate_simplified_prompt(p, scen, "open_beach_coastal_events")[1]), ["H"])
 
     def test_empty_prompt(self):
         self.assertEqual(letters(validate_simplified_prompt("", SHIPYARD, self.D)[1]), ["EMPTY"])

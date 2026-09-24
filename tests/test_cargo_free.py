@@ -162,7 +162,8 @@ class TestCastRanges(unittest.TestCase):
         for d in ENV_CENTRIC_DOMAINS:
             with self.subTest(domain=d):
                 s = build_scenario_writer_system(15, d)
-                self.assertIn("ENVIRONMENT-CENTRIC (CAST OPTIONAL)", s)
+                self.assertIn("ENVIRONMENT-CENTRIC (HUMANS AS BACKGROUND, AT LEAST ONE)", s)
+                self.assertIn("Never a zero-human scene", s)
                 self.assertNotIn("CAST SIZE", s)
 
     def test_unknown_domain_raises(self):

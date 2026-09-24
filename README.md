@@ -7,6 +7,7 @@
 - İnsanlar olayın aktif parçasıdır (kaptan, zabit, güverte personeli, makine zabiti, marina/liman personeli, yolcu, kurtarma ekibi).
 - Yapılan iş/müdahale kriz durumuna doğrudan bağlıdır (acil manevra, halat bağlama, lashing sabitleme, tahliye, arıza tamiri, kurtarma).
 - Olay, gemi, lokasyon, rol ve kamera perspektifleri sürekli çeşitlendirilir.
+- **Uygulama (2026-09-24):** Gemi sahnelerinde mürettebat/yolcu, sayılı ve domain aralığında (`DOMAIN_CAST_RANGES`). Çevre odaklı sahnelerde (hortum, şehir, plaj) en az 1 izleyici/sivil, arka plan ölçeği olarak (çatıdaki seyirciler, kaldırımdaki yayalar); sayı serbest. İnsansız senaryo ve prompt kapılarda reddedilir.
 
 ## 📋 Genel Bakış
 

@@ -543,7 +543,7 @@ def build_scenario_writer_system(duration: int, domain_id: str = "") -> str:
     early, late = compute_duration_breakpoints(duration)
     
     if domain_id in ENV_CENTRIC_DOMAINS:
-        cast_rule = "ENVIRONMENT-CENTRIC (CAST OPTIONAL): Focus the entire scene and camera strictly on the MASSIVE NATURAL EVENT (e.g. tornado, waterspout, giant wave, flood). Do NOT focus on specific fleeing humans. Humans/cars should only be background scale references. The natural event must be the primary visual anchor and must remain fully in frame. Do not let the event get pushed out of the camera's view."
+        cast_rule = "ENVIRONMENT-CENTRIC (HUMANS AS BACKGROUND, AT LEAST ONE): Focus the entire scene and camera strictly on the MASSIVE NATURAL EVENT (e.g. tornado, waterspout, giant wave, flood). Do NOT focus on specific fleeing humans. Humans/cars are background scale references, but at least one human must be visible and explicitly named in the beats (e.g. rooftop watchers, sidewalk bystanders, distant figures on the promenade). Never a zero-human scene. The cliché of a hi-vis hero charging toward the danger is forbidden. The natural event must be the primary visual anchor and must remain fully in frame. Do not let the event get pushed out of the camera's view."
         vis_start = "A near-instantaneous establishing flash (well under 1 second) showing the massive natural event already in violent motion (e.g. a tornado tearing across the shoreline, a rogue wave crashing onto the beach). DO NOT start by describing people (e.g. 'Two pedestrians'). The natural event must be the primary visual anchor. Do NOT start with the consequence already happening."
         phys_mov = "The sudden physical wrong turn — STRONG VISIBLE PHYSICAL ACTION of the natural event (e.g., sweeps, crashes, rips, floods, slams). The physical movement of the disaster must be explicit and extreme."
         vis_cons = "The immediate dangerous consequence of the natural disaster, still visibly unfolding at <<DURATION>>s, not resolved or safe. Never end with the danger settling, stopping, calming, or being resolved, and never end on people just watching; end mid-action (e.g. 'still surging', 'continues to slide')."
@@ -626,7 +626,7 @@ def build_prompt_simplifier_system(duration: int, domain_id: str = "") -> str:
     """PROMPT_SIMPLIFIER_SYSTEM'i config.DEFAULT_DURATION'a göre üretir."""
     sys_prompt = PROMPT_SIMPLIFIER_SYSTEM_TEMPLATE.replace("<<DURATION>>", str(duration))
     if domain_id in ENV_CENTRIC_DOMAINS:
-        sys_prompt += "\n\n10. STRICT ENVIRONMENT-CENTRIC FOCUS: DO NOT START THE PROMPT WITH HUMANS (e.g. 'Two pedestrians...'). Begin immediately with the massive natural disaster (e.g. 'A massive coastal tornado...', 'A giant rogue wave...'). If humans are present, they are secondary background elements. DO NOT DILUTE THE PHENOMENON (keep exact words like 'tornado', 'waterspout', 'tsunami', 'storm surge')."
+        sys_prompt += "\n\n10. STRICT ENVIRONMENT-CENTRIC FOCUS: DO NOT START THE PROMPT WITH HUMANS (e.g. 'Two pedestrians...'). Begin immediately with the massive natural disaster (e.g. 'A massive coastal tornado...', 'A giant rogue wave...'). Humans are secondary background elements, but keep every person from the scenario (e.g. rooftop watchers, bystanders) in the prompt; never drop all humans. DO NOT DILUTE THE PHENOMENON (keep exact words like 'tornado', 'waterspout', 'tsunami', 'storm surge')."
     return sys_prompt
 
 
@@ -696,6 +696,9 @@ ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open
 # Gemi domainlerinde ekrandaki gerçekçi kişi aralığı (2026-09-24). "Max 2" sadece
 # kargo gemileri içindi; kargo domain'i artık yok. Env-centric domainler tabloya
 # girmez, kendi ENVIRONMENT-CENTRIC cast kuralını alır.
+# Env-centric domainlerde sayı zorunlu değil ama en az 1 insan (arka plan ölçeği) şart (TUR 16).
+ENV_CENTRIC_MIN_PEOPLE = 1
+
 DOMAIN_CAST_RANGES = {
     "ferry_operations": (2, 5),
     "shipyard_and_drydock_engineering": (2, 5),

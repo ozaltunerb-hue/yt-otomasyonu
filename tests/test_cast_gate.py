@@ -135,11 +135,33 @@ class TestFalsePositives(unittest.TestCase):
         self.assertTrue(ok, failures)
 
 
-class TestEnvCentricSkipped(unittest.TestCase):
-    def test_env_centric_domains(self):
+class TestEnvCentricAtLeastOne(unittest.TestCase):
+    """TUR 16: env-centric'te sayı serbest ama en az 1 insan şart (eskiden kontrol atlanıyordu)."""
+
+    def test_zero_humans_rejected(self):
         for d in ENV_CENTRIC_DOMAINS:
             with self.subTest(domain=d):
-                self.assertEqual(validate_cast_size(sc("A massive wave crashes onto the beach."), d), (True, []))
+                ok, failures = validate_cast_size(sc("A massive wave crashes onto the beach."), d)
+                self.assertFalse(ok)
+                self.assertIn("hiç insan yok", failures[0])
+
+    def test_background_humans_pass(self):
+        for d in ENV_CENTRIC_DOMAINS:
+            for start in ["A massive wave crashes onto the beach as rooftop watchers stare.",
+                          "A tornado tears down the street past sidewalk bystanders.",
+                          "A waterspout sweeps the marina, distant figures on the promenade."]:
+                with self.subTest(domain=d, start=start[:30]):
+                    self.assertEqual(validate_cast_size(sc(start), d), (True, []))
+
+    def test_human_in_later_beat_counts(self):
+        ok, _ = validate_cast_size(sc("A tsunami surges up the avenue.",
+                                      cons="Water keeps rising as pedestrians flee uphill."), "urban_city_disasters")
+        self.assertTrue(ok)
+
+    def test_no_upper_bound(self):
+        ok, _ = validate_cast_size(sc("A tornado crosses the beach as about fifty beachgoers scatter."),
+                                   "open_beach_coastal_events")
+        self.assertTrue(ok)
 
 
 class TestRotationOnlyValidCombos(unittest.TestCase):
