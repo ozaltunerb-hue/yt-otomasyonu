@@ -927,6 +927,24 @@ async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
         if camera_archetype == "fixed_cctv" else ""
     )
 
+    # Kıyafet kuralı domain'e göre (TUR 20): env-centric'e car-deck/pool-deck/boat owner metni gidiyordu
+    # (TUR 14'te stil kilidi düzeltilmişti, yazıcı mesajı kalmıştı).
+    if catalyst.get("domain_id") in ENV_CENTRIC_DOMAINS:
+        clothing_rule = (
+            "Dress bystanders, residents, pedestrians, and beachgoers in ordinary civilian clothing suited to the "
+            "setting and weather — never hi-vis PPE on civilians; emergency responders (firefighters, police, "
+            "lifeguards, paramedics) wear their standard service uniforms; never white hazmat/astronaut suits."
+        )
+        if (catalyst.get("forced_ship") or "None") != "None":
+            clothing_rule += " Marina and dock workers wear high-visibility orange or yellow PPE."
+    else:
+        clothing_rule = (
+            "Dress crew/staff in authentic high-visibility orange, red, or yellow PPE, wetsuits, or coveralls — never "
+            "white hazmat/astronaut suits. Dress passengers, boat owners, guests, and vehicle drivers/occupants in "
+            "ordinary civilian clothing appropriate to the setting (swimwear/resort wear for pool/deck scenes, casual "
+            "clothing for car-deck scenes, yacht-casual for marina scenes) — never hi-vis PPE on civilians."
+        )
+
     # Beat 1 fiil rotasyonu (TUR 17): "lurches" üst üste geliyordu ve Kie'de görsele dönmüyordu
     recent_verbs = [v for v in (catalyst.get("recent_verbs") or []) if v][:10]
     verbs_line = (
@@ -972,9 +990,9 @@ CREATIVE DIRECTIVE:
 2. Use EXACTLY the assigned Vessel Type above. DeepMyster's vessel universe is limited to: {', '.join(VESSEL_UNIVERSE)}. If the Vessel Type is 'None', show no vessel at all. The physical crisis must be within or inspired by the '{catalyst['domain_title']}' domain.
 3. The crisis must be completely visible and intuitive on a silent screen within 2-3 seconds.
 4. Structure the {duration}-second single continuous take: visible start (0-{early}s) -> physical escalation & contextual crew/mechanical response ({early}-{late}s) -> concrete physical state change at {duration}s.
-5. Keep human presence natural and context-appropriate (or pure raw industrial physics). No cartoonish shoehorned actions.
+5. Keep human presence natural and context-appropriate. No cartoonish shoehorned actions.
 6. The scene must show CONSTANT HIGH ACTION — something actively breaking, colliding, flooding, swinging, or in danger in real time. Never calm, static, or purely observational.
-7. Dress crew/staff in authentic high-visibility orange, red, or yellow PPE, wetsuits, or coveralls — never white hazmat/astronaut suits. Dress passengers, boat owners, guests, and vehicle drivers/occupants in ordinary civilian clothing appropriate to the setting (swimwear/resort wear for pool/deck scenes, casual clothing for car-deck scenes, yacht-casual for marina scenes) — never hi-vis PPE on civilians. Depict raw, natural weather and lighting — never glossy, CGI-clean, or cinematic, Hollywood-polished.{chase_pov_directive}"""
+7. {clothing_rule} Depict raw, natural weather and lighting — never glossy, CGI-clean, or cinematic, Hollywood-polished.{chase_pov_directive}"""
 
     system_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""))
     result = await _call_gpt(system_prompt, user_message, temperature=0.85)
