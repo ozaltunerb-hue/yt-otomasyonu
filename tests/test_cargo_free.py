@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from core.creative_engine import (
     DEEPMYSTER_EXISTING_IDEAS_LIBRARY,
+    DOMAIN_ATTRIBUTES,
     DOMAIN_CAST_RANGES,
     ENV_CENTRIC_DOMAINS,
     MARITIME_INSPIRATION_DOMAINS,
@@ -42,7 +43,9 @@ ALL_DOMAINS = list(MARITIME_INSPIRATION_DOMAINS)
 
 def _catalyst_for(domain_id: str) -> dict:
     """Diğer 6 domain'i geçmişe koyarak rotasyonu tek domain'e zorlar."""
-    history = [f"{d}|x|x|x|fixed_cctv" for d in ALL_DOMAINS if d != domain_id]
+    # Rotasyon sadece geçerli combo sayar (5 parça + evrendeki gemi veya none).
+    ship = lambda d: (DOMAIN_ATTRIBUTES[d]["ships"] or ["none"])[0].lower()
+    history = [f"{d}|{ship(d)}|x|x|fixed_cctv" for d in ALL_DOMAINS if d != domain_id]
     catalyst = get_creative_catalyst(recent_history=history)
     assert catalyst["domain_id"] == domain_id
     return catalyst

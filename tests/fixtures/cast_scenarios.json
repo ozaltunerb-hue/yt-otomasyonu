@@ -1,0 +1,98 @@
+[
+  {
+    "run": "n10",
+    "domain": "cruise_ship_operations",
+    "expect_ok": true,
+    "visible_start": "A group of about fifteen passengers is seen walking along a gangway linking a mega cruise ship to the dock, the gangway already straining and visibly tilting downwards under their combined weight.",
+    "physical_movement": "The gangway sags further, causing the passengers to lose their balance and grip the railings tightly as it bows and vibrates under stress.",
+    "visible_consequence": "The gangway continues to flex alarmingly, with passengers clinging to the railings, some dropping to their knees to stabilize themselves as the gangway teeters with no immediate signs of stabilization."
+  },
+  {
+    "run": "n10",
+    "domain": "ferry_operations",
+    "expect_ok": true,
+    "visible_start": "From the bow of the observer vessel, the high-speed catamaran is visibly lurching side-to-side, with about four crew members on its open vehicle deck pointing and waving frantically amid churning sea spray.",
+    "physical_movement": "Water surges across the open vehicle deck of the catamaran, causing at least two cars to slide uncontrollably towards one side as crew members scramble to brace against the shifting weight.",
+    "visible_consequence": "As the observer vessel maintains pace nearby, the catamaran continues to list heavily, with crew members still trying to stabilize the vehicles, while the water relentlessly sloshes across the deck, clearly threatening further instability."
+  },
+  {
+    "run": "n10",
+    "domain": "shipyard_and_drydock_engineering",
+    "expect_ok": true,
+    "visible_start": "Approximately five shipyard workers in high-visibility vests stand by as the vessel suddenly lurches forward on the slipway, the movement already creating an evident jerk.",
+    "physical_movement": "The vessel jolts violently, creating visible sparks as metal grates against the slipway, workers gesturing frantically and stepping back in alarm.",
+    "visible_consequence": "The vessel slides rapidly towards the water, its motion steadying but still visibly uncontrolled, with workers maintaining a cautious distance, watching intently."
+  },
+  {
+    "run": "n14",
+    "domain": "shipyard_and_drydock_engineering",
+    "expect_ok": true,
+    "visible_start": "A fixed camera shows four workers in orange coveralls, their attention is drawn urgently to the vessel as it begins to shift.",
+    "physical_movement": "The vessel abruptly tilts sideward as the keel blocks fail, causing the hull to slide forward on the slipway, while the workers rush to assess and react.",
+    "visible_consequence": "The vessel continues its uncontrolled slide down the slipway, with workers gesturing and moving quickly, still mid-action as the scene ends."
+  },
+  {
+    "run": "n14",
+    "domain": "marina_and_yacht_operations",
+    "expect_ok": true,
+    "visible_start": "From the bow of a nearby escort boat, three people in casual marina attire are seen on the deck of a luxury motor yacht as the dock suddenly rises with a storm surge.",
+    "physical_movement": "The dock lifts abruptly, causing the yacht to lurch forward uncontrollably, crashing its bow into the moored pontoon with a forceful impact while water surges around.",
+    "visible_consequence": "The yacht remains jammed against the damaged pontoon as the dock continues to rise, water swirling violently between the vessels, leaving the crew scrambling helplessly to stabilize."
+  },
+  {
+    "run": "n14",
+    "domain": "cruise_ship_operations",
+    "expect_ok": true,
+    "visible_start": "About ten passengers gather on the cruise tender's sun deck when a strong gust of wind suddenly knocks a row of deck chairs off balance.",
+    "physical_movement": "The chairs crash across the deck, sliding unpredictably towards the passengers, who react with surprise and quickly move to avoid them.",
+    "visible_consequence": "The chaotic scene continues as the chairs still slide erratically across the deck, with the passengers scrambling to keep out of their path."
+  },
+  {
+    "run": "n14b",
+    "domain": "shipyard_and_drydock_engineering",
+    "expect_ok": true,
+    "visible_start": "Three workers in high-visibility coveralls stand at the edge of a slipway, eyes wide as water gushes from underneath the vessel's hull.",
+    "physical_movement": "The vessel abruptly shifts forward, its keel sliding down the slipway as workers react frantically, one waving his arms for others to assist in slowing the slide.",
+    "visible_consequence": "The vessel continues its descent, tilting precariously with water still pouring beneath it, while workers rush alongside, trying to stabilize the situation before it fully launches."
+  },
+  {
+    "run": "n14b",
+    "domain": "cruise_ship_operations",
+    "expect_ok": true,
+    "visible_start": "About fifteen passengers on the pool deck suddenly react as a massive wave surges toward the cruise ship, clearly visible from the observer vessel nearby.",
+    "physical_movement": "The rogue wave crashes over the pool deck, sweeping deck loungers and passengers across the wet surface, while others cling to railings.",
+    "visible_consequence": "Passengers continue to scramble for safety as the water keeps rushing over the deck, with debris and sun loungers still sliding toward the edge."
+  },
+  {
+    "run": "n14b",
+    "domain": "marina_and_yacht_operations",
+    "expect_ok": true,
+    "visible_start": "Three people stand on the dock next to a luxury motor yacht, as the mooring line visibly strains and starts to vibrate intensely against the cleat.",
+    "physical_movement": "The line snaps, sending the broken end whipping towards the dock where the three people duck and cover their heads in sudden alarm.",
+    "visible_consequence": "The snapped line continues to whip violently, knocking into dockside equipment and tangling around a piling, with the three people still crouched, watching it wrap and swing."
+  },
+  {
+    "run": "n14c",
+    "domain": "shipyard_and_drydock_engineering",
+    "expect_ok": true,
+    "visible_start": "Water gushes unexpectedly into the drydock where a vessel is perched on slipway supports, with three dock workers in high-visibility gear nearby, alert and in rapid motion.",
+    "physical_movement": "The vessel begins to tilt dangerously as the floodwater destabilizes its position, the dock workers frantically gesturing and running towards emergency controls.",
+    "visible_consequence": "The vessel continues to shift, tilting further as the water level rises, with the dock workers urgently trying to secure it, still battling the inflow of water."
+  },
+  {
+    "run": "n14c",
+    "domain": "marina_and_yacht_operations",
+    "expect_ok": true,
+    "visible_start": "The image captures a runaway powerboat's mooring line under extreme tension, straining against a cleat, with three marina staff in bright orange vests rushing toward the scene.",
+    "physical_movement": "The cleat snaps violently, sending the powerboat lurching forward and drifting erratically toward the fuel dock, while the marina staff leap back to avoid the whip of the broken line.",
+    "visible_consequence": "The powerboat continues its uncontrolled drift, its bow now perilously closing in on the hull of a docked yacht, while the staff frantically signal for an emergency stop, still racing to regain control."
+  },
+  {
+    "run": "n14c",
+    "domain": "ferry_operations",
+    "expect_ok": false,
+    "visible_start": "Water gushes onto the open vehicle deck where four crew members in high-visibility coveralls and about a dozen passengers are quickly stepping away from their vehicles.",
+    "physical_movement": "Vehicles including cars and motorcycles slide violently towards the deck's side as crew members try to stabilize themselves, grabbing onto railings or each other.",
+    "visible_consequence": "A car continues to slide dangerously close to the edge of the deck, with crew and passengers still scrambling to get clear of the moving vehicles."
+  }
+]

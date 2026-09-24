@@ -317,10 +317,12 @@ def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
     recent_events = []
     recent_envs = []
     
-    # recent_history içinde combo_key'ler bulunabilir: "domain|ship|event|env|camera"
+    # recent_history içinde combo_key'ler bulunabilir: "domain|ship|event|env|camera".
+    # Sadece bugünkü evrene ait 5 parçalı combo'lar sayılır; '|' içeren Konu metinleri
+    # (örn. elle yazılmış TEST kaydı) rotasyon slotu işgal etmesin (2026-09-24).
     for item in recent_history:
         parts = item.split('|')
-        if len(parts) >= 4:
+        if is_current_universe_combo(item):
             recent_domains.append(parts[0].lower().strip())
             recent_ships.append(parts[1].lower().strip())
             recent_events.append(parts[2].lower().strip())

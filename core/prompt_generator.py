@@ -26,6 +26,8 @@ from core.creative_engine import (
     CAMERA_ARCHETYPES,
     YOUTUBE_METADATA_SYSTEM,
     VESSEL_UNIVERSE,
+    DOMAIN_CAST_RANGES,
+    ENV_CENTRIC_DOMAINS,
     apply_style_lock,
 )
 
@@ -328,6 +330,95 @@ def validate_beat3_ongoing_danger(scenario: dict) -> tuple[bool, list[str]]:
     return not failures, failures
 
 
+# ── Cast sayı kapısı (2026-09-24) ──
+# Yazıcıya DOMAIN_CAST_RANGES aralığı talimat olarak gidiyordu ama kontrol eden kapı yoktu
+# (N14c ferry: "four crew members and about a dozen passengers" = 16, aralık 2-5).
+# Sayı Beat 1'de bir kez söylenir; Beat 2/3 genelde "the workers" diye geri atıf yapar.
+_CAST_NUM_WORDS = {w: i for i, w in enumerate(
+    "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen "
+    "fifteen sixteen seventeen eighteen nineteen twenty".split())}
+_CAST_TENS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50}
+_CAST_PERSON = (
+    r"(?:people|persons?|deckhands?|crew\s+members?|crewmembers?|crewmen|crew|workers?|"
+    r"dockworkers?|dockhands?|staff(?:\s+members?)?|passengers?|guests?|tourists?|officers?|"
+    r"captains?|sailors?|technicians?|engineers?|riggers?|bystanders?|pedestrians?|beachgoers?|"
+    r"spectators?|onlookers?|attendants?|lifeguards?|men|women|man|woman|swimmers?|surfers?|"
+    r"stewards?|mechanics?|operators?|welders?|visitors?|holidaymakers?|sunbathers?|guards?|mariners?)"
+)
+_CAST_NUM = (
+    r"(?:\d{1,3}|(?:twenty|thirty|forty|fifty)(?:[\s-](?:one|two|three|four|five|six|seven|eight|nine))?|"
+    + "|".join(sorted(_CAST_NUM_WORDS, key=len, reverse=True))
+    + r"|a\s+dozen|half\s+a\s+dozen|a\s+couple\s+of|a\s+pair\s+of|a\s+single|a\s+lone|a\s+solitary)"
+)
+_CAST_HEDGE = r"(?:about|approximately|around|roughly|some|nearly|almost)"
+# Sayı ile kişi ismi arasında en fazla 2 niteleyici ("three dock workers"); bağlaç/edat varsa
+# eşleşmez, böylece "two cars slide as workers" 2 kişi sayılmaz.
+_CAST_MOD = r"(?:(?!(?:and|or|as|while|with|of|the|a|an|to|from|on|in|at|by|near|who|that|are|is)\b)[\w'-]+\s+){0,2}"
+_CAST_RE = re.compile(
+    rf"\b(?P<hedge>{_CAST_HEDGE}\s+)?(?P<num>{_CAST_NUM})\s+{_CAST_MOD}{_CAST_PERSON}\b(?!\s+of\b)", re.I)
+_CAST_SUBSET_RE = re.compile(rf"\b{_CAST_NUM}\s+of\s+(?:the|them|these|those)\b", re.I)
+_CAST_VAGUE_RE = re.compile(
+    rf"\b(?:several|a\s+few|a\s+handful\s+of|a\s+group\s+of|a\s+crowd\s+of|dozens\s+of|many|numerous|"
+    rf"multiple|various)\s+(?:[\w'-]+\s+){{0,2}}{_CAST_PERSON}\b", re.I)
+_CAST_ANY_PERSON_RE = re.compile(rf"\b{_CAST_PERSON}\b", re.I)
+
+
+def _cast_value(num: str) -> int:
+    s = re.sub(r"\s+", " ", num.lower())
+    if s.isdigit():
+        return int(s)
+    if s in _CAST_NUM_WORDS:
+        return _CAST_NUM_WORDS[s]
+    fixed = {"a dozen": 12, "half a dozen": 6, "a couple of": 2, "a pair of": 2,
+             "a single": 1, "a lone": 1, "a solitary": 1}
+    if s in fixed:
+        return fixed[s]
+    parts = re.split(r"[\s-]", s)
+    return _CAST_TENS[parts[0]] + (_CAST_NUM_WORDS[parts[1]] if len(parts) > 1 else 0)
+
+
+def _cast_counts(text: str) -> list[tuple[int, bool, str]]:
+    """(sayı, hedge'li mi, eşleşen ifade) listesi; 'one of the deckhands' gibi alt kümeler hariç."""
+    text = _CAST_SUBSET_RE.sub(" ", _BEAT_LABEL_RE.sub("", text or ""))
+    return [(_cast_value(m["num"]), bool(m["hedge"]), m.group(0)) for m in _CAST_RE.finditer(text)]
+
+
+def validate_cast_size(scenario: dict, domain_id: str) -> tuple[bool, list[str]]:
+    """Ekrandaki kişi sayısı DOMAIN_CAST_RANGES aralığında mı, beat'ler boyunca artmıyor mu?
+
+    Env-centric domainler atlanır. Beat 1 toplamı aralıkta olmalı (hedge'li sayıda üstte
+    %20 / en az 1, altta 1 tolerans). Belirsiz ifade, sayısız kişi veya hiç insan yoksa red.
+    Beat 2/3'te Beat 1'den FAZLA kişi red; eşit/az (geri atıf, alt küme) kabul.
+    """
+    if domain_id in ENV_CENTRIC_DOMAINS or domain_id not in DOMAIN_CAST_RANGES:
+        return True, []
+    lo, hi = DOMAIN_CAST_RANGES[domain_id]
+    beat1 = scenario.get("visible_start", "") or ""
+    beat1_counts = _cast_counts(beat1)
+    if not beat1_counts:
+        if _CAST_VAGUE_RE.search(beat1):
+            return False, [f"Cast: Beat 1'de belirsiz kişi ifadesi, sayı yok (aralık {lo}-{hi})"]
+        if _CAST_ANY_PERSON_RE.search(beat1):
+            return False, [f"Cast: Beat 1'de kişi var ama sayı yok (aralık {lo}-{hi})"]
+        return False, [f"Cast: Beat 1'de hiç insan yok (aralık {lo}-{hi})"]
+
+    total = sum(n for n, _, _ in beat1_counts)
+    hedged = any(h for _, h, _ in beat1_counts)
+    up_tol = max(1, round(hi * 0.2)) if hedged else 0
+    low_tol = 1 if hedged else 0
+    phrases = [p for _, _, p in beat1_counts]
+    failures = []
+    if total > hi + up_tol:
+        failures.append(f"Cast: {total} kişi, üst sınır {hi} aşıldı {phrases}")
+    if total < lo - low_tol:
+        failures.append(f"Cast: {total} kişi, alt sınır {lo} altında {phrases}")
+    for label, key in (("Beat 2", "physical_movement"), ("Beat 3", "visible_consequence")):
+        for n, _, phrase in _cast_counts(scenario.get(key, "")):
+            if n > total:
+                failures.append(f"Cast: {label}'de Beat 1'den fazla kişi ({phrase} > {total})")
+    return not failures, failures
+
+
 def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
     """
     Aksiyon/Tehlike Yoğunluğu Kontrolü (Sakin/Statik Sahne Reddi).
@@ -447,8 +538,9 @@ async def generate_prompts(config: dict) -> dict:
         is_visible, visibility_failures = validate_silent_visibility(raw_scenario)
         is_active, action_failures = validate_high_action(raw_scenario)
         is_ongoing, beat3_failures = validate_beat3_ongoing_danger(raw_scenario)
-        is_valid = is_visible and is_active and is_ongoing
-        failures = visibility_failures + action_failures + beat3_failures
+        is_cast_ok, cast_failures = validate_cast_size(raw_scenario, catalyst["domain_id"])
+        is_valid = is_visible and is_active and is_ongoing and is_cast_ok
+        failures = visibility_failures + action_failures + beat3_failures + cast_failures
 
         combined_history.append(combo_key)
         used_combos.append(combo_key)
