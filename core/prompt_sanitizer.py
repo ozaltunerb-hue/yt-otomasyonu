@@ -134,7 +134,15 @@ PREFLIGHT_MAX_RETRIES = 2  # toplam 1 + 2 = 3 deneme
 
 
 class PreflightError(RuntimeError):
-    """Pre-flight güvenlik kontrolü tüm denemelerde geçerli sonuç üretemedi; prompt Kie'ye gitmez."""
+    """Pre-flight güvenlik kontrolü tüm denemelerde geçerli sonuç üretemedi; prompt Kie'ye gitmez.
+
+    kind (TUR 13): "api" = her deneme API/ağ hatası (sistem sorunu, yeni senaryo işe yaramaz);
+    "content" = GPT cevap verdi ama geçersiz/riskli-rewrite'sız (senaryoya bağlı, yeni senaryo denenir).
+    """
+
+    def __init__(self, message: str, kind: str = "content"):
+        super().__init__(message)
+        self.kind = kind
 
 
 def _parse_preflight(raw: str) -> dict:
@@ -173,6 +181,7 @@ async def gpt_preflight_check(prompt: str) -> tuple[str, bool, dict]:
 
     user_msg = f"Evaluate this CCTV video prompt:\n\n{prompt}"
     errors = []
+    api_failures = 0
     result = None
     for attempt in range(1 + PREFLIGHT_MAX_RETRIES):
         content = user_msg
@@ -191,6 +200,12 @@ async def gpt_preflight_check(prompt: str) -> tuple[str, bool, dict]:
                 max_tokens=400,
                 response_format={"type": "json_object"},
             )
+        except Exception as e:
+            api_failures += 1
+            errors.append(f"API: {e}")
+            log.warning(f"⚠️ GPT Pre-flight API hatası (deneme {attempt + 1}/{1 + PREFLIGHT_MAX_RETRIES}): {e}")
+            continue
+        try:
             result = _parse_preflight(response.choices[0].message.content)
             break
         except Exception as e:
@@ -198,7 +213,9 @@ async def gpt_preflight_check(prompt: str) -> tuple[str, bool, dict]:
             log.warning(f"⚠️ GPT Pre-flight geçersiz (deneme {attempt + 1}/{1 + PREFLIGHT_MAX_RETRIES}): {e}")
 
     if result is None:
-        raise PreflightError(f"GPT Pre-flight {1 + PREFLIGHT_MAX_RETRIES} denemede geçerli sonuç vermedi: {errors}")
+        kind = "api" if api_failures == len(errors) else "content"
+        raise PreflightError(
+            f"GPT Pre-flight {1 + PREFLIGHT_MAX_RETRIES} denemede geçerli sonuç vermedi ({kind}): {errors}", kind)
 
     risk_score = result["risk_score"]
     risk_reasons = result.get("risk_reasons", [])

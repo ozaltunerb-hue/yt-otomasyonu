@@ -32,6 +32,7 @@ from config import settings
 from logger import get_logger
 from core.prompt_generator import generate_prompts, NoValidScenarioError
 from infrastructure.kie_client import KieClient, ContentFilterError
+from core.prompt_sanitizer import PreflightError
 from infrastructure.motion_profile import motion_profile, format_motion
 from infrastructure.replicate_merger import merge_videos
 from infrastructure.video_downloader import download_video, cleanup_video
@@ -90,9 +91,11 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     if recent_topics:
         log.info(f"🧠 Son 30 günden {len(recent_topics)} semantik konu negatif hafızaya eklendi")
 
-    # ── Content filter retry — 3 farklı senaryo dene ──
+    # ── Senaryoya bağlı ret retry'ı — 3 farklı senaryo dene ──
+    # Kie içerik filtresi reddi ve içerik kaynaklı preflight hatası aynı bütçeyi paylaşır (TUR 13).
+    # API kaynaklı preflight hatası sistem sorunudur: yeni senaryo denenmez, gün görünür düşer.
     max_retries = 3
-    last_error = None
+    last_error, reason = None, ""
 
     for attempt in range(max_retries):
         try:
@@ -103,22 +106,27 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 output_path=output_path,
             )
             return result
-        except ContentFilterError as cfe:
-            last_error = cfe
-            rejected_combo = getattr(cfe, "combo_key", "")
+        except (ContentFilterError, PreflightError) as err:
+            last_error = err
+            if isinstance(err, PreflightError):
+                reason = f"preflight_{err.kind}"
+                if err.kind == "api":
+                    log.error(f"❌ Preflight API hatası, yeni senaryo denenmiyor: {err}")
+                    return {"success": False, "reason": reason, "error": str(err)}
+            else:
+                reason = "content_filter"
+            rejected_combo = getattr(err, "combo_key", "")
             if rejected_combo and rejected_combo not in used_combos:
                 used_combos.append(rejected_combo)
                 log.info(f"🚫 Reddedilen combo dedup listesine eklendi: {rejected_combo}")
             if attempt < max_retries - 1:
                 log.warning(
-                    f"🛡️ İçerik filtresi reddetti (deneme {attempt + 1}/{max_retries}). "
+                    f"🛡️ Senaryo reddedildi ({reason}, deneme {attempt + 1}/{max_retries}). "
                     f"Farklı senaryo ile tekrar denenecek..."
                 )
-            else:
-                log.error(f"❌ {max_retries} farklı senaryo denendi, hepsi reddedildi.")
-                return {"success": False, "error": str(last_error)}
 
-    return {"success": False, "error": "Tüm denemeler başarısız"}
+    log.error(f"❌ {max_retries} farklı senaryo denendi, hepsi reddedildi.")
+    return {"success": False, "reason": reason, "error": str(last_error)}
 
 
 async def _execute_pipeline(
@@ -274,9 +282,13 @@ async def _execute_pipeline(
             "privacy": settings.YOUTUBE_PRIVACY,
         }
 
-    except ContentFilterError as cfe:
+    except (ContentFilterError, PreflightError) as err:
+        # Senaryoya bağlı ret: bu denemenin Notion kaydı hata olarak kapanır (eskiden
+        # "Video Üretiliyor"da takılı kalıyordu), run_pipeline yeni senaryo dener (TUR 13).
         if combo_key:
-            cfe.combo_key = combo_key
+            err.combo_key = combo_key
+        label = f"Preflight ({err.kind})" if isinstance(err, PreflightError) else "Kie içerik filtresi"
+        await asyncio.to_thread(tracker.update_with_error, f"{label}: {err}")
         raise
 
     except NoValidScenarioError as nvse:
