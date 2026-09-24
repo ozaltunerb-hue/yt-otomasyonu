@@ -102,7 +102,21 @@ python main.py --dry-run
 
 # Sistem sağlık kontrolü
 python main.py --check
+
+# Testler (pytest değil)
+python -m unittest discover -s tests
 ```
+
+### Test / doğrulama betikleri (`scripts/`)
+
+```bash
+python scripts/dry_run_full.py                     # 5 senaryo, tüm kapılar, GPT (~$0.15), Kie YOK
+python scripts/finalize_prompts.py scratch/dry_run_full_out.json 1,3   # seçilenleri Kie'ye hazır hikaye + stil ekine çevir
+python scripts/run_kie_batch.py scratch/final_prompts.json test_prod_x  # ⚠️ GERÇEK KIE HARCAMASI — sadece açık onayla
+python scripts/notion_test_page.py scratch/kie_batch_result.json "TEST — ..."  # Notion TEST sayfası (Combo Key'siz)
+python scripts/motion_profile.py video.mp4 --camera fixed_cctv          # hareket profili (ffmpeg)
+```
+`scratch/` git'e girmez; geçici çıktılar oraya yazılır.
 
 ## 🕐 Railway CronJob
 

@@ -134,6 +134,17 @@ class TestCargoFree(unittest.TestCase):
         self.assertIn(parts[0], MARITIME_INSPIRATION_DOMAINS)
         self.assertEqual(out["category"], parts[0])
 
+    def test_no_polar_in_writer(self):
+        """TUR 19: kutup domain'i yok; yazıcı kullanıcı mesajı kural 7'de 'arctic/polar' kalıntısı vardı."""
+        polar = r"(?i)arctic|polar|ice\s+floe|immersion\s+suit"
+        for d in ALL_DOMAINS:
+            with self.subTest(domain=d):
+                self.assertNotRegex(build_scenario_writer_system(15, d), polar)
+                mock = AsyncMock(return_value={})
+                with patch.object(pg, "_call_gpt", mock):
+                    asyncio.run(pg._generate_scenario(_catalyst_for(d), "fixed_cctv"))
+                self.assertNotRegex(mock.call_args.args[1], polar)
+
     def test_realism_guardrails_source(self):
         """Ölü dal çıktı üretmez, bu yüzden kaynak taranır (fishing/trawler, arctic/ice)."""
         import inspect

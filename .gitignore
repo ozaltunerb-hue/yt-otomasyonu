@@ -33,3 +33,11 @@ auto_config.json
 
 # dry-run çıktısı (scripts/dry_run_beat1.py)
 dry_run_beat1_out.json
+
+# Geçici çalışma alanı (dry-run çıktıları, test sonuçları) — kalıcı betikler scripts/ altında
+scratch/
+
+# Görsel çıktılar (test kareleri, contact sheet) — tekrar üretilebilir, repoda görsel asset yok
+*.jpg
+*.jpeg
+*.png
