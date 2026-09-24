@@ -32,6 +32,7 @@ from config import settings
 from logger import get_logger
 from core.prompt_generator import generate_prompts, NoValidScenarioError
 from infrastructure.kie_client import KieClient, ContentFilterError
+from infrastructure.motion_profile import motion_profile, format_motion
 from infrastructure.replicate_merger import merge_videos
 from infrastructure.video_downloader import download_video, cleanup_video
 from infrastructure.youtube_uploader import upload_to_youtube
@@ -201,6 +202,16 @@ async def _execute_pipeline(
         final_video_url = video_urls[0]
         video_path = await asyncio.to_thread(download_video, final_video_url)
         video_paths.append(video_path)
+
+        # ── Hareket profili (TUR 9): açılış durgunluğu istatistiği, Kie harcamadan ──
+        camera = combo_key.split("|")[-1] if combo_key else ""
+        try:
+            motion = await asyncio.to_thread(motion_profile, video_path)
+            motion_text = format_motion(motion, camera)
+        except Exception as me:
+            motion_text = f"ölçülemedi: {me}"
+            log.warning(f"⚠️ Hareket profili ölçülemedi: {me}")
+        await asyncio.to_thread(tracker.update_with_motion, motion_text)
 
         saved_local_path = video_path
         if output_path:

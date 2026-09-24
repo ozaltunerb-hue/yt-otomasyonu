@@ -133,6 +133,21 @@ class NotionTracker:
             extra["Video URL"] = {"url": video_url}
         self.update_status(STATUS_VIDEO_READY, extra)
 
+    def update_with_motion(self, motion_text: str):
+        """Hareket profilini (infrastructure/motion_profile) 'Hareket' alanına yazar; durum değişmez."""
+        if not self.enabled or not self.page_id:
+            log.info(f"📝 Hareket: {motion_text}")
+            return
+        if settings.IS_DRY_RUN:
+            log.info(f"🧪 DRY-RUN Notion hareket: {motion_text}")
+            return
+        extra = {"Hareket": {"rich_text": [{"text": {"content": motion_text[:2000]}}]}}
+        try:
+            _notion_request("PATCH", f"{NOTION_API_URL}/pages/{self.page_id}", json={"properties": extra})
+            log.info(f"📋 Notion hareket profili kaydedildi: {motion_text[:80]}")
+        except Exception as e:
+            log.warning(f"⚠️ Notion hareket profili hatası: {e}")
+
     def update_with_youtube(self, youtube_url: str):
         """YouTube URL'sini ekler ve tamamlandı olarak işaretler."""
         elapsed = time.time() - self._start_time

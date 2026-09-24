@@ -469,7 +469,7 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
 4. KINETIC MOMENTUM: The viewer must see a visible physical event unfolding dynamically.
 5. CONCRETE PHYSICAL OUTCOME: The <<DURATION>>th second must show the beat 3 danger still visibly in progress.
 6. NO FORCED MARITIME ASSETS: If the domain is Urban City Disasters or Open Beach Events, and `vessel_class` is "None", DO NOT create ships, boats, or docks. Keep it strictly urban or strictly beach. If `vessel_class` is provided, stick to that exact ship. NEVER spawn any additional vessel beyond the given vessel_class (no rescue boats, no escort boats). Always call the vessel by its assigned type (e.g. 'the sailing yacht', 'the passenger car ferry') in visible_start and every later beat; never refer to it only as 'the vessel', 'the ship' or 'the boat'.
-7. BEAT 1 MUST SHOW DANGER ALREADY IN MOTION (NON-NEGOTIABLE): visible_start must contain a physical action verb happening right now (e.g. crashes, slams, snaps, surges, swings, tilts). FORBIDDEN patterns in visible_start: 'is visible', 'visible from', the phrase 'as [X] approaches' (e.g. 'as the ferry approaches the pier'), 'scene opens', 'observing as', 'bustling', 'looming', 'signals for'. The grammatical subject of visible_start's first sentence must be the physical thing in danger or the people in the scene (e.g. 'A mooring line snaps…', 'Waves crash…'); camera position and framing belong only in observer_camera, never in visible_start. Instead, describe the crisis as it happens or immediately after it starts. Beat 1 is the TRIGGER starting (wave hits, line snaps, blocks give way); beat 3 is the RESULT. Starting with the trigger is required; starting with the result is still forbidden.
+7. BEAT 1 MUST SHOW DANGER ALREADY IN MOTION (NON-NEGOTIABLE): visible_start must contain a physical action verb happening right now (e.g. crashes, slams, snaps, surges, swings, tilts). FORBIDDEN patterns in visible_start: 'is visible', 'visible from', the phrase 'as [X] approaches' (e.g. 'as the ferry approaches the pier'), 'scene opens', 'observing as', 'bustling', 'looming', 'signals for'. The grammatical subject of visible_start's first sentence must be the physical thing in danger or the people in the scene (e.g. 'A mooring line snaps…', 'Waves crash…'); camera position and framing belong only in observer_camera, never in visible_start. Instead, describe the crisis as it happens or immediately after it starts. Beat 1 is the TRIGGER starting (wave hits, line snaps, blocks give way); beat 3 is the RESULT. Starting with the trigger is required; starting with the result is still forbidden. visible_start pairs the trigger action with a visible physical effect on another object (spray, snapping lines, sliding objects, splintering blocks); human emotional reactions (startled, alarmed, shocked, panicked) belong in physical_movement, never in visible_start. Give the moving object ONE direction relative to the camera (across the frame, away from the camera, or toward the camera) and keep that same direction in every beat.
 
 ## OUTPUT FORMAT (STRICT JSON):
 All field values are plain descriptive prose. Never start a value with a label or timestamp such as "BEAT 1:" or "(0-4s)".
@@ -567,6 +567,9 @@ Your ONE job: Convert the maritime scenario into a HIGH-SIGNAL, PHOTOREALISTIC p
    BAD: 'Three workers watch in shock as water gushes'
    BAD: 'Passengers react as a tornado spins offshore'
    BAD: 'The scene shows water gushing while workers stand by'
+   The first sentence pairs the opening action with what it physically does to another object (spray bursting, blocks splintering, cars sweeping sideways). Never put human emotional reactions (startled, alarmed, shocked, panicked) in the first sentence; people's reactions come later. Keep ONE movement direction for the moving object throughout the prompt.
+   GOOD: 'The sailing yacht lurches down the slipway, keel blocks splintering beneath the hull'
+   BAD: 'The sailing yacht lurches forward, startling three workers'
 
 ## OUTPUT FORMAT (STRICT JSON):
 {
@@ -773,6 +776,13 @@ def choose_camera_archetype(domain_id: str = "") -> str:
     return random.choices(keys, weights=weights, k=1)[0]
 
 
+# Seedance iki test videosunda da ilk 3-4 sn yavaş/durgun açıldı (2026-09-24 TUR 9); tüm arketiplere eklenir.
+_MOTION_START_GUARDRAIL = (
+    "Motion is already under way in the very first frame: the danger is visibly moving "
+    "from frame one, no calm or static opening."
+)
+
+
 def apply_style_lock(prompt_text: str, camera_archetype: str = "fixed_cctv", catalyst: dict = None) -> str:
     """GPT'nin ürettiği prompt'a — içeriğinden bağımsız — seçilen kamera arketipinin
     sabit stil bloğunu ekler. Catalyst verilirse dinamik gerçekçilik kuralları eklenir."""
@@ -784,6 +794,7 @@ def apply_style_lock(prompt_text: str, camera_archetype: str = "fixed_cctv", cat
     domain_id = (catalyst or {}).get("domain_id", "")
     if domain_id not in ENV_CENTRIC_DOMAINS and archetype.get("vessel_framing"):
         style_lock = f"{style_lock} {archetype['vessel_framing']}"
+    style_lock = f"{style_lock} {_MOTION_START_GUARDRAIL}"
 
     if catalyst:
         domain_id = catalyst.get("domain_id", "")

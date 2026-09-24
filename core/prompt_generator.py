@@ -485,6 +485,15 @@ def _verb_stem(word: str) -> str:
     return w
 
 
+# G (TUR 9): ilk cümlede duygusal insan tepkisi. Kie "startling three workers"ı 4 sn donuk duran
+# işçiler olarak çizdi; ilk cümle hareket + fiziksel etki taşımalı.
+_REACTION_RE = re.compile(
+    r"\b(?:startl(?:e|es|ed|ing)|alarm(?:ed|ing)|in alarm|shock(?:ed|ing)?|stun(?:s|ned|ning)|"
+    r"frighten(?:s|ed|ing)?|surpris(?:e|es|ed|ing)|panic(?:s|ked|king)?|terrified|horrified)\b",
+    re.IGNORECASE,
+)
+
+
 def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = "") -> list[tuple[str, str]]:
     """(log için Türkçe hata, simplifier retry'ına İngilizce düzeltme talimatı) listesi.
 
@@ -535,6 +544,13 @@ def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = 
                 issues.append((f"Simplifier: kişi sayısı değişmiş ({stated_total} ≠ {total}, senaryo: {phrases})",
                                f"Keep the exact head count from the scenario: '{phrases}'; do not add people."))
 
+    # G — ilk cümlede insan tepkisi yok (TUR 9)
+    reaction = _REACTION_RE.search(first)
+    if reaction:
+        issues.append((f"Simplifier: ilk cümlede insan tepkisi ('{reaction.group(0)}')",
+                       f"Remove '{reaction.group(0)}' from the first sentence; pair the opening action with a visible "
+                       "physical effect on an object instead, and move people's reactions to a later sentence."))
+
     # F — gemi adı (TUR 8): gemi domainlerinde atanan geminin tipi prompt'ta geçmeli;
     # "the vessel" tek başına Kie'ye kargo gemisi çizdiriyordu.
     if domain_id in DOMAIN_CAST_RANGES and ship and ship.lower() != "none":
@@ -554,6 +570,7 @@ def validate_simplified_prompt(prompt: str, scenario: dict, domain_id: str, ship
     A: son cümle Beat 3 kapısından geçer (izleyerek bitiş dahil). B: kamera öznesiyle açılmaz.
     C: yazıcının bildirdiği Beat 1 fiili ilk cümlede. E: gemi domainlerinde kişi sayısı korunur.
     F: gemi domainlerinde atanan geminin tipi adıyla geçer (ship verilirse).
+    G: ilk cümlede duygusal insan tepkisi (startled, alarmed, shocked...) yok.
     """
     failures = [msg for msg, _ in _simplified_checks(prompt, scenario, domain_id, ship)]
     return not failures, failures

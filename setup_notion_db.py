@@ -94,6 +94,7 @@ DATABASE_PROPERTIES = {
     "Süre (sn)": {"number": {"format": "number"}},
     "Hata": {"rich_text": {}},
     "Güvenlik": {"rich_text": {}},
+    "Hareket": {"rich_text": {}},
 }
 
 
