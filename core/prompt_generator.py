@@ -31,6 +31,7 @@ from core.creative_engine import (
     DOMAIN_CAST_RANGES,
     ENV_CENTRIC_DOMAINS,
     apply_style_lock,
+    style_lock_suffix,
 )
 
 log = logging.getLogger("PromptGenerator")
@@ -785,6 +786,9 @@ async def generate_prompts(config: dict) -> dict:
     simplified_scenes = [{
         "scene_number": 1,
         "prompt": prompt_text,
+        # TUR 12: Kie retry'ında GPT sadece hikayeyi yeniden yazar, stil eki değişmeden eklenir
+        "story": raw_prompt_text,
+        "style_suffix": style_lock_suffix(camera_archetype, catalyst),
         "duration": settings.DEFAULT_DURATION,
     }]
 

@@ -84,17 +84,20 @@ Respond in JSON:
 # ── GPT Retry Rewrite System Prompt ──
 _RETRY_REWRITE_SYSTEM = """You are a prompt repair specialist for AI video generation (Seedance 2 Mini).
 
-A realistic maritime CCTV/documentary video prompt was REJECTED by the AI model's content safety filter.
+A realistic documentary video prompt was REJECTED by the AI model's content safety filter.
 Rejection reason: "{rejection_reason}"
 
-Your job: Rewrite the prompt to capture the SAME realistic maritime incident with ZERO content safety risks.
+The text you receive is ONLY the scene description. Camera, lens, footage type, lighting and realism
+instructions are appended automatically afterward and must not appear in your output.
+
+Your job: Rewrite the scene to show the SAME physical incident with ZERO content safety risks.
 
 RULES:
-- Maintain 100% CCTV / raw surveillance documentary realism.
 - Remove any graphic words (blood, death, kill, violent human attack).
 - Apply the minimum local edits necessary to fix the rejection reason.
-- DO NOT rewrite the entire prompt. Preserve all original camera instructions, environments, events, audio, and visual details perfectly.
-- Output ONLY the fixed prompt text, no JSON, no explanation."""
+- Preserve the vessel type, environment, exact people count, events, and action verbs.
+- Do NOT add any camera, lens, footage-type (CCTV, surveillance, handheld, POV) or lighting description.
+- Output ONLY the fixed scene text, no JSON, no explanation."""
 
 
 def sanitize_prompt(prompt: str) -> tuple[str, list[str]]:
@@ -123,24 +126,8 @@ def sanitize_prompt(prompt: str) -> tuple[str, list[str]]:
     return sanitized, changes
 
 
-def create_softened_prompt(original_prompt: str) -> str:
-    """Content filter tarafından reddedilen bir prompt'un yumuşatılmış versiyonunu üretir."""
-    softened, _ = sanitize_prompt(original_prompt)
-
-    aggressive_replacements = [
-        (r"\bpanic\b", "urgency"),
-        (r"\bdesperate\b", "rapid"),
-        (r"\bchaos\b", "heavy gale"),
-    ]
-
-    for pattern, replacement in aggressive_replacements:
-        softened = re.sub(pattern, replacement, softened, flags=re.IGNORECASE)
-
-    if "surveillance" not in softened.lower() and "cctv" not in softened.lower():
-        softened += " Raw CCTV footage, natural lighting."
-
-    log.info("🛡️ Yumuşatma uygulandı (regex fallback)")
-    return softened
+class PromptRewriteError(RuntimeError):
+    """Kie reddinden sonra GPT rewrite geçerli metin üretemedi (TUR 12: sessiz regex fallback kaldırıldı)."""
 
 
 PREFLIGHT_MAX_RETRIES = 2  # toplam 1 + 2 = 3 deneme
@@ -240,51 +227,41 @@ async def gpt_rewrite_rejected_prompt(
     original_prompt: str,
     rejection_reason: str,
 ) -> str:
-    """GPT-Powered Retry Rewrite — Reddedilmiş prompt'u güvenli şekilde yeniden yazar."""
-    from config import settings
+    """GPT-Powered Retry Rewrite — Reddedilmiş sahne metnini güvenli şekilde yeniden yazar.
 
-    if settings.IS_DRY_RUN:
-        log.info("🧪 DRY-RUN: GPT rewrite atlanıyor, regex fallback kullanılıyor")
-        return create_softened_prompt(original_prompt)
+    Girdi sadece hikaye olmalı (stil eki kie_client'ta değişmeden geri eklenir). Kamera/footage
+    etiketi eklenmez. Başarısızlıkta PromptRewriteError: sessiz regex yumuşatma yok (TUR 12).
+    """
+    from config import settings
+    import openai
 
     try:
-        import openai
         client = openai.AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
-
-        system = _RETRY_REWRITE_SYSTEM.format(rejection_reason=rejection_reason)
-
         response = await client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": f"Rewrite this rejected maritime CCTV prompt:\n\n{original_prompt}"},
+                {"role": "system", "content": _RETRY_REWRITE_SYSTEM.format(rejection_reason=rejection_reason)},
+                {"role": "user", "content": f"Rewrite this rejected scene description:\n\n{original_prompt}"},
             ],
             temperature=0.7,
             max_tokens=250,
         )
-
-        rewritten = response.choices[0].message.content.strip()
-
-        if not rewritten or len(rewritten) < 20:
-            log.warning("⚠️ GPT rewrite çok kısa — regex fallback kullanılıyor")
-            return create_softened_prompt(original_prompt)
-
-        if rewritten.startswith("{") or rewritten.startswith('"'):
-            try:
-                parsed = json.loads(rewritten)
-                if isinstance(parsed, dict):
-                    rewritten = parsed.get("prompt", parsed.get("rewritten_prompt", rewritten))
-                elif isinstance(parsed, str):
-                    rewritten = parsed
-            except json.JSONDecodeError:
-                pass
-
-        if "cctv" not in rewritten.lower() and "surveillance" not in rewritten.lower():
-            rewritten += " Raw surveillance footage, natural lighting."
-
-        log.info(f"✏️ GPT Retry Rewrite başarılı: {rewritten[:100]}...")
-        return rewritten
-
+        rewritten = (response.choices[0].message.content or "").strip()
     except Exception as e:
-        log.warning(f"⚠️ GPT rewrite hatası — regex fallback: {e}")
-        return create_softened_prompt(original_prompt)
+        raise PromptRewriteError(f"GPT rewrite çağrısı başarısız: {e}") from e
+
+    if rewritten.startswith("{") or rewritten.startswith('"'):
+        try:
+            parsed = json.loads(rewritten)
+        except json.JSONDecodeError:
+            parsed = None
+        if isinstance(parsed, dict):
+            rewritten = str(parsed.get("prompt") or parsed.get("rewritten_prompt") or "").strip()
+        elif isinstance(parsed, str):
+            rewritten = parsed.strip()
+
+    if len(rewritten) < 20:
+        raise PromptRewriteError(f"GPT rewrite boş/çok kısa: {rewritten!r}")
+
+    log.info(f"✏️ GPT Retry Rewrite başarılı: {rewritten[:100]}...")
+    return rewritten

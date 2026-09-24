@@ -171,9 +171,12 @@ async def _execute_pipeline(
         log.info(f"🎬 Video üretimi başlıyor ({settings.DEFAULT_MODEL}, {settings.DEFAULT_DURATION}s)...")
         await asyncio.to_thread(tracker.update_status, "Video Üretiliyor")
 
+        # Hikaye + stil eki ayrı gider: preflight/retry sadece hikayeyi yeniden yazar (TUR 12)
+        has_split = "story" in scenes[0] and "style_suffix" in scenes[0]
         video_url = await kie.create_video(
             model=settings.DEFAULT_MODEL,
-            prompt=scenes[0]["prompt"],
+            prompt=scenes[0]["story"] if has_split else scenes[0]["prompt"],
+            style_suffix=scenes[0]["style_suffix"] if has_split else "",
             orientation=settings.DEFAULT_ORIENTATION,
             duration=scenes[0].get("duration", settings.DEFAULT_DURATION),
             audio=settings.DEFAULT_AUDIO,

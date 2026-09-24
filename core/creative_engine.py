@@ -843,6 +843,17 @@ _MOTION_START_GUARDRAIL = (
 )
 
 
+def join_story_and_style(story: str, style_suffix: str) -> str:
+    """Hikaye + sabit stil eki → Kie'ye giden nihai prompt."""
+    return f"{(story or '').strip().rstrip('.')}. {style_suffix}"
+
+
+def style_lock_suffix(camera_archetype: str = "fixed_cctv", catalyst: dict = None) -> str:
+    """Hikayeden bağımsız sabit stil eki (kamera + gerçekçilik). Kie retry'larında GPT sadece
+    hikayeyi yeniden yazar, bu ek değişmeden geri eklenir (2026-09-24 TUR 12)."""
+    return apply_style_lock("", camera_archetype, catalyst)[2:]
+
+
 def apply_style_lock(prompt_text: str, camera_archetype: str = "fixed_cctv", catalyst: dict = None) -> str:
     """GPT'nin ürettiği prompt'a — içeriğinden bağımsız — seçilen kamera arketipinin
     sabit stil bloğunu ekler. Catalyst verilirse dinamik gerçekçilik kuralları eklenir."""

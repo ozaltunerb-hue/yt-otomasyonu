@@ -127,6 +127,7 @@ class KieClient:
         audio: bool = True,
         resolution: str = "480p",
         progress_callback: callable = None,
+        style_suffix: str = "",
     ) -> str:
         """
         Tek bir video üretir — 4 katmanlı içerik güvenliği ile.
@@ -144,6 +145,9 @@ class KieClient:
             duration: Saniye (4-15 arası, Seedance)
             audio: Ses üretimi
             resolution: "480p" veya "720p" (sadece Seedance)
+            style_suffix: Verilirse prompt = sadece hikaye; preflight/rewrite hikayeye uygulanır ve
+                bu sabit stil eki (kamera + gerçekçilik) her denemede değişmeden eklenir (TUR 12).
+                Boşsa eski davranış: prompt tam metin olarak işlenir.
 
         Returns:
             str: Üretilen videonun CDN URL'si
@@ -163,7 +167,8 @@ class KieClient:
         # KATMAN 1: GPT Pre-flight Check (~2s)
         # ════════════════════════════════════════════
         from core.prompt_sanitizer import gpt_preflight_check
-        current_prompt, was_rewritten, preflight_meta = await gpt_preflight_check(prompt)
+        from core.creative_engine import join_story_and_style
+        current_story, was_rewritten, preflight_meta = await gpt_preflight_check(prompt)
 
         if was_rewritten:
             log.info(f"🛡️ GPT Pre-flight prompt'u yeniden yazdı (risk: {preflight_meta.get('risk_score', '?')}/10)")
@@ -178,6 +183,7 @@ class KieClient:
         last_rejection_reason = ""
 
         for content_attempt in range(max_content_retries + 1):
+            current_prompt = join_story_and_style(current_story, style_suffix) if style_suffix else current_story
             try:
                 # ── Doğrulama: Seedance'a giden nihai prompt (stil kilidi dahil, sanitizer sonrası) ──
                 log.info(f"📤 Kie'ye gönderilen nihai prompt (ilk 200 karakter): {current_prompt[:200]}")
@@ -203,12 +209,17 @@ class KieClient:
                         f"GPT ile yeniden yazılacak..."
                     )
                     # ── GPT-Powered Retry Rewrite ──
-                    from core.prompt_sanitizer import gpt_rewrite_rejected_prompt
-                    current_prompt = await gpt_rewrite_rejected_prompt(
-                        original_prompt=current_prompt,
-                        rejection_reason=last_rejection_reason,
-                    )
-                    log.info(f"   ✏️ GPT rewrite sonucu: {current_prompt[:100]}...")
+                    from core.prompt_sanitizer import gpt_rewrite_rejected_prompt, PromptRewriteError
+                    try:
+                        current_story = await gpt_rewrite_rejected_prompt(
+                            original_prompt=current_story,
+                            rejection_reason=last_rejection_reason,
+                        )
+                    except PromptRewriteError as rwe:
+                        # Sessiz yumuşatma yok: orijinal ret fırlar, main.py farklı senaryo dener
+                        log.error(f"❌ Rewrite başarısız, retry iptal: {rwe}")
+                        raise cfe from rwe
+                    log.info(f"   ✏️ GPT rewrite sonucu: {current_story[:100]}...")
                 else:
                     log.error(f"❌ İçerik filtresi {max_content_retries + 1} denemede de reddetti ({model}).")
 
