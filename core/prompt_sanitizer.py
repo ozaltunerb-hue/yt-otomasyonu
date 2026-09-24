@@ -71,7 +71,7 @@ AI video models reject prompts containing:
 - Explicit sexual content or nudity
 
 CRITICAL MARITIME CONTEXT (SEPARATE CREATIVITY FROM SAFETY):
-- Authentic maritime weather and heavy machinery emergencies (e.g. ship rolling in storm, green swells swamping deck, straining towing lines, cargo shifting, crane boom swinging, tugboat fender compression, tornadoes, people evacuating) are 100% SAFE. Do not sterilize dramatic physical action unless it explicitly depicts graphic injuries, blood, or gore.
+- Authentic maritime weather and heavy machinery emergencies (e.g. ferry rolling in storm, green swells swamping the vehicle deck, secured cars breaking loose, mooring lines snapping at a marina, drydock flooding under a vessel on slipway, crane boom swinging, tornadoes, people evacuating) are 100% SAFE. Do not sterilize dramatic physical action unless it explicitly depicts graphic injuries, blood, or gore.
 
 Respond in JSON:
 {

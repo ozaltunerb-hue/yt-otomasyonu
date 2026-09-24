@@ -596,7 +596,7 @@ CREATIVE DIRECTIVE:
 4. Structure the {duration}-second single continuous take: visible start (0-{early}s) -> physical escalation & contextual crew/mechanical response ({early}-{late}s) -> concrete physical state change at {duration}s.
 5. Keep human presence natural and context-appropriate (or pure raw industrial physics). No cartoonish shoehorned actions.
 6. The scene must show CONSTANT HIGH ACTION — something actively breaking, colliding, flooding, swinging, or in danger in real time. Never calm, static, or purely observational.
-7. Dress crew/staff in authentic high-visibility orange, red, or yellow PPE, wetsuits, or coveralls — never white hazmat/astronaut suits, even in arctic/polar settings (use red or orange polar immersion suits instead). Dress passengers, boat owners, guests, and vehicle drivers/occupants in ordinary civilian clothing appropriate to the setting (swimwear/resort wear for pool/deck scenes, casual clothing for car-deck scenes, yacht-casual for marina scenes) — never hi-vis PPE on civilians. Depict raw, natural weather and lighting — never glossy, CGI-clean, or movie-trailer polished.{chase_pov_directive}"""
+7. Dress crew/staff in authentic high-visibility orange, red, or yellow PPE, wetsuits, or coveralls — never white hazmat/astronaut suits, even in arctic/polar settings (use red or orange polar immersion suits instead). Dress passengers, boat owners, guests, and vehicle drivers/occupants in ordinary civilian clothing appropriate to the setting (swimwear/resort wear for pool/deck scenes, casual clothing for car-deck scenes, yacht-casual for marina scenes) — never hi-vis PPE on civilians. Depict raw, natural weather and lighting — never glossy, CGI-clean, or cinematic, Hollywood-polished.{chase_pov_directive}"""
 
     system_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""))
     result = await _call_gpt(system_prompt, user_message, temperature=0.85)
@@ -684,17 +684,17 @@ def _dry_run_output() -> dict:
         "scenes": [
             {
                 "scene_number": 1,
-                "prompt": "A towering green swell crashes over the bow of an arctic stern trawler, swamping the foredeck as a deckhand braces against the winch housing. Seawater violently rushes through freeing ports into the foam. Fixed forecastle CCTV camera, raw overcast daylight.",
+                "prompt": "A heavy wash surges over the stern ramp of a passenger car ferry, flooding the open vehicle deck as two deckhands in orange hi-vis coveralls grab the railing. Seawater keeps sweeping between the parked cars. Fixed car deck CCTV camera, raw overcast daylight.",
                 "duration": settings.DEFAULT_DURATION,
             }
         ],
-        "youtube_title": "⚠️ Giant Green Swell Swamps Arctic Trawler Bow #Shorts",
-        "youtube_description": "Forecastle CCTV captures a towering arctic swell breaching the foredeck of a working stern trawler. #DeepMyster #Shorts #Maritime #CCTV #RoughSeas",
-        "tags": ["DeepMyster", "Shorts", "Maritime", "CCTV", "Trawler", "Arctic", "RoughSeas", "Ocean"],
-        "scenario_summary": "A massive arctic wave swamps the forward working deck of a stern trawler before draining rapidly through side freeing ports.",
-        "combo_key": "commercial_storm_fishing|arctic stern trawler|bow wave swamping",
+        "youtube_title": "⚠️ Storm Wash Floods Ferry Car Deck #Shorts",
+        "youtube_description": "Car deck CCTV captures a storm wash flooding the open vehicle deck of a passenger car ferry. #DeepMyster #Shorts #Maritime #CCTV #RoughSeas",
+        "tags": ["DeepMyster", "Shorts", "Maritime", "CCTV", "Ferry", "CarDeck", "RoughSeas", "Ocean"],
+        "scenario_summary": "A storm wash floods the open vehicle deck of a passenger car ferry and keeps sweeping between the parked cars.",
+        "combo_key": "ferry_operations|passenger car ferry|water flooding open vehicle deck|open vehicle deck|fixed_cctv",
         "total_duration": settings.DEFAULT_DURATION,
-        "animal": "arctic stern trawler",
-        "talent": "bow wave swamping",
-        "category": "commercial_storm_fishing",
+        "animal": "Passenger Car Ferry",
+        "talent": "Water flooding open vehicle deck",
+        "category": "ferry_operations",
     }

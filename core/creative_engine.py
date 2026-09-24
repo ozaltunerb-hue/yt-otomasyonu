@@ -34,9 +34,9 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
     "ro_ro_emergencies": {
         "title": "Ro-Ro & Araç Feribot Acil Durumları",
         "reference_scenarios": [
-            "Car ferry rolling violently in heavy swells as deck crew in yellow foul weather gear battle to lash shifting trucks on open vehicle deck.",
+            "Car ferry rolling violently in heavy swells as deck crew in yellow foul weather gear battle to lash shifting cars on open vehicle deck.",
             "A passenger car ferry surges at the loading ramp in storm chop as dock staff frantically wave disembarking cars off the heaving ramp.",
-            "Deckhands scrambling across wet flooded vehicle deck to hook emergency heavy chains on sliding freight trailers in severe gale.",
+            "Deckhands scrambling across wet flooded vehicle deck to hook emergency heavy chains on sliding cars in severe gale.",
             "Ferry captain and navigation officers urgently correcting thrusters as open bow visor takes pounding oceanic waves.",
             "Passengers gripping safety handrails as a rolling high-speed catamaran heels sharply and deck crew scramble to secure storm gates before the next wave hits.",
             "Ferry deckhands on a pitching stern ramp fight to re-secure vehicle lashings as a swell lifts the ramp off the quay.",
@@ -153,7 +153,7 @@ MARITIME_INSPIRATION_DOMAINS = {
     "ferry_operations": {
         "title": "Feribot & Yolcu Dinamikleri (Ferry & Passenger Vessel Logistics)",
         "guidance": "Vehicle deck kinetic weight shifts in cross swells, loading ramp hydraulic hinge pressure, bow visor spray seals, high-speed catamaran roll recovery, unsecured cars breaking loose and sliding on ferry vehicle decks, ramp-entrance vehicle jolts, wash flooding the open vehicle deck.",
-        "example_elements": ["island vehicle ferry", "high-speed passenger catamaran", "open-deck freight ferry", "hydraulic ramp hinge", "deck drainage scuppers"],
+        "example_elements": ["island vehicle ferry", "high-speed passenger catamaran", "open-deck vehicle ferry", "hydraulic ramp hinge", "deck drainage scuppers"],
         "camera_styles": ["fixed car deck security CCTV", "stationary ramp coaming surveillance camera", "overhead mezzanine deck camera"],
     },
 
@@ -447,7 +447,7 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
    - BEAT 3 — CONSEQUENCE (<<LATE>>-<<DURATION>>s): The immediate, visible physical danger, still actively unfolding at <<DURATION>>s.
 4. KINETIC MOMENTUM: The viewer must see a visible physical event unfolding dynamically.
 5. CONCRETE PHYSICAL OUTCOME: The <<DURATION>>th second must show the beat 3 danger still visibly in progress.
-6. NO FORCED MARITIME ASSETS: If the domain is Urban City Disasters or Open Beach Events, and `vessel_class` is "None", DO NOT create ships, fishing vessels, or docks. Keep it strictly urban or strictly beach. If `vessel_class` is provided, stick to that exact ship. NEVER spawn a fishing trawler or rescue ship.
+6. NO FORCED MARITIME ASSETS: If the domain is Urban City Disasters or Open Beach Events, and `vessel_class` is "None", DO NOT create ships, boats, or docks. Keep it strictly urban or strictly beach. If `vessel_class` is provided, stick to that exact ship. NEVER spawn any additional vessel beyond the given vessel_class (no rescue boats, no escort boats).
 7. BEAT 1 MUST SHOW DANGER ALREADY IN MOTION (NON-NEGOTIABLE): visible_start must contain a physical action verb happening right now (e.g. crashes, slams, snaps, surges, swings, tilts). FORBIDDEN patterns in visible_start: 'is visible', 'visible from', the phrase 'as [X] approaches' (e.g. 'as the ferry approaches the pier'), 'scene opens', 'observing as', 'bustling', 'looming', 'signals for'. Instead, describe the crisis as it happens or immediately after it starts. Beat 1 is the TRIGGER starting (wave hits, line snaps, blocks give way); beat 3 is the RESULT. Starting with the trigger is required; starting with the result is still forbidden.
 
 ## OUTPUT FORMAT (STRICT JSON):
@@ -603,19 +603,12 @@ def get_realism_guardrails(domain_id: str, vessel_class: str) -> str:
         "car-deck scenes) — never hi-vis PPE on civilians."
     )
 
-    # Ortam kaynaklı ek koruma (rolü değiştirmez, sadece malzemeyi belirler)
-    env_rules = []
-    if "fishing" in domain_id or "trawler" in vessel_class:
-        env_rules.append("Fishing deckhands' PPE is heavy waterproof oilskins.")
-    if "arctic" in domain_id or "arctic" in vessel_class or "ice" in domain_id:
-        env_rules.append("In arctic conditions crew wear red or orange thermal immersion suits.")
-
     common_rules = (
         "NEVER use white hazmat suits. Raw natural overcast/fog/rain lighting, "
         "not glossy or artificially perfect water or ice."
     )
 
-    return " ".join([role_rules, *env_rules, common_rules])
+    return " ".join([role_rules, common_rules])
 
 
 # Bu domainlerde forced_ship=None olabilir (doğal afet/olay odaklı, gemi zorunlu değil).
