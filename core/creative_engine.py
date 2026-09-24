@@ -309,6 +309,22 @@ SHIP_INCOMPATIBLE = {
     },
 }
 
+# Gemisi opsiyonel domainler (TUR 11): gemi sadece bu ortamlarda atanır, diğer ortamlarda
+# (şehir/plaj) gemi None olur ve gemi gerektiren olaylar havuzdan çıkar. Önce ortam seçilir.
+VESSEL_ENVIRONMENTS = {
+    "coastal_tornado_landfall": {
+        "environments": {"Marina", "Harbor Area"},
+        "vessel_only_events": {"Marina equipment reacting to severe weather"},
+    },
+}
+
+# Import anında kontrol: yazım hatası filtreyi sessizce boşa düşürmesin.
+for _d, _v in VESSEL_ENVIRONMENTS.items():
+    _bad = (_v["environments"] - set(DOMAIN_ATTRIBUTES[_d]["environments"])) | (
+        _v["vessel_only_events"] - set(DOMAIN_ATTRIBUTES[_d]["events"]))
+    if _bad or not DOMAIN_ATTRIBUTES[_d]["ships"]:
+        raise RuntimeError(f"VESSEL_ENVIRONMENTS[{_d}] havuzla uyuşmuyor: {sorted(_bad)}")
+
 # GPT'ye gösterilen gemi evreni: domain havuzlarından otomatik türer, elle liste tutulmaz.
 VESSEL_UNIVERSE = sorted({s for a in DOMAIN_ATTRIBUTES.values() for s in a["ships"]})
 
@@ -407,14 +423,26 @@ def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
         return random.choice(options)
 
     # Gemi, Olay ve Ortam Seçimi (Kendi içlerinde tekrarı minimize eder)
-    chosen_ship = _choose_lru(attrs.get("ships", []), recent_ships)
-    banned = SHIP_INCOMPATIBLE.get(chosen_ship or "", {})
-    events = [e for e in attrs.get("events", []) if e not in banned.get("events", set())]
-    envs = [e for e in attrs.get("environments", []) if e not in banned.get("environments", set())]
-    if attrs.get("events") and not events or attrs.get("environments") and not envs:
-        raise RuntimeError(f"SHIP_INCOMPATIBLE '{chosen_ship}' için {chosen_domain_key} havuzunda seçenek bırakmadı")
-    chosen_event = _choose_lru(events, recent_events)
-    chosen_env = _choose_lru(envs, recent_envs)
+    vessel_envs = VESSEL_ENVIRONMENTS.get(chosen_domain_key)
+    if vessel_envs:
+        # Gemisi opsiyonel domain (TUR 11): önce ortam; şehir/plaj ortamında gemi yok
+        chosen_env = _choose_lru(attrs.get("environments", []), recent_envs)
+        if chosen_env in vessel_envs["environments"]:
+            chosen_ship = _choose_lru(attrs.get("ships", []), recent_ships)
+            events = attrs.get("events", [])
+        else:
+            chosen_ship = None
+            events = [e for e in attrs.get("events", []) if e not in vessel_envs["vessel_only_events"]]
+        chosen_event = _choose_lru(events, recent_events)
+    else:
+        chosen_ship = _choose_lru(attrs.get("ships", []), recent_ships)
+        banned = SHIP_INCOMPATIBLE.get(chosen_ship or "", {})
+        events = [e for e in attrs.get("events", []) if e not in banned.get("events", set())]
+        envs = [e for e in attrs.get("environments", []) if e not in banned.get("environments", set())]
+        if attrs.get("events") and not events or attrs.get("environments") and not envs:
+            raise RuntimeError(f"SHIP_INCOMPATIBLE '{chosen_ship}' için {chosen_domain_key} havuzunda seçenek bırakmadı")
+        chosen_event = _choose_lru(events, recent_events)
+        chosen_env = _choose_lru(envs, recent_envs)
 
     # Mevcut fikir kütüphanesinden örnekleri derle
     library_samples = []
@@ -483,7 +511,7 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
    - BEAT 3 — CONSEQUENCE (<<LATE>>-<<DURATION>>s): The immediate, visible physical danger, still actively unfolding at <<DURATION>>s.
 4. KINETIC MOMENTUM: The viewer must see a visible physical event unfolding dynamically.
 5. CONCRETE PHYSICAL OUTCOME: The <<DURATION>>th second must show the beat 3 danger still visibly in progress.
-6. NO FORCED MARITIME ASSETS: If the domain is Urban City Disasters or Open Beach Events, and `vessel_class` is "None", DO NOT create ships, boats, or docks. Keep it strictly urban or strictly beach. If `vessel_class` is provided, stick to that exact ship. NEVER spawn any additional vessel beyond the given vessel_class (no rescue boats, no escort boats). Always call the vessel by its assigned type (e.g. 'the sailing yacht', 'the passenger car ferry') in visible_start and every later beat; never refer to it only as 'the vessel', 'the ship' or 'the boat'.
+6. NO FORCED MARITIME ASSETS: If `vessel_class` is "None" (in ANY domain, including Coastal Tornado in a city or beach setting), DO NOT create ships, boats, or docks. Keep it strictly urban or strictly beach. If `vessel_class` is provided, stick to that exact ship. NEVER spawn any additional vessel beyond the given vessel_class (no rescue boats, no escort boats). Always call the vessel by its assigned type (e.g. 'the sailing yacht', 'the passenger car ferry') in visible_start and every later beat; never refer to it only as 'the vessel', 'the ship' or 'the boat'.
 7. BEAT 1 MUST SHOW DANGER ALREADY IN MOTION (NON-NEGOTIABLE): visible_start must contain a physical action verb happening right now (e.g. crashes, slams, snaps, surges, swings, tilts). FORBIDDEN patterns in visible_start: 'is visible', 'visible from', the phrase 'as [X] approaches' (e.g. 'as the ferry approaches the pier'), 'scene opens', 'observing as', 'bustling', 'looming', 'signals for'. The grammatical subject of visible_start's first sentence must be the physical thing in danger or the people in the scene (e.g. 'A mooring line snaps…', 'Waves crash…'); camera position and framing belong only in observer_camera, never in visible_start. Instead, describe the crisis as it happens or immediately after it starts. Beat 1 is the TRIGGER starting (wave hits, line snaps, blocks give way); beat 3 is the RESULT. Starting with the trigger is required; starting with the result is still forbidden. visible_start pairs the trigger action with a visible physical effect on another object (spray, snapping lines, sliding objects, splintering blocks); human emotional reactions (startled, alarmed, shocked, panicked) belong in physical_movement, never in visible_start. Give the moving object ONE direction relative to the camera (across the frame, away from the camera, or toward the camera) and keep that same direction in every beat.
 
 ## OUTPUT FORMAT (STRICT JSON):
