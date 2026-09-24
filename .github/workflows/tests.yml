@@ -1,0 +1,27 @@
+# Birim testleri (API çağrısı yok). Railway "Wait for CI" ile bağlı: main'e push'ta bu iş
+# başarısız olursa Railway deploy etmez (TUR 22). Gerçek anahtar/secret gerekmez.
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: ffmpeg (hareket profili testi)
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: pip install -r requirements.txt
+      - name: unittest
+        env:
+          KIE_API_KEY: ci-dummy
+          OPENAI_API_KEY: sk-ci-dummy
+        run: python -m unittest discover -s tests
