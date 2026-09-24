@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 DeepMyster — Seedance 2 Mini Gerçek Video Üretim Testi (YouTube Upload Yok).
+⚠️ GERÇEK KIE HARCAMASI YAPAR — sadece açık onayla. (TUR 21: tests/ dışına taşındı, pytest toplamasın.)
 
 Akış:
   1. Creative Engine + GPT ile CCTV prompt'u üret (süre config.DEFAULT_DURATION).
@@ -14,8 +15,6 @@ import time
 import shutil
 import asyncio
 
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from config import settings
@@ -112,4 +111,6 @@ async def run_real_video_test(output_filename: str = None):
 
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
     asyncio.run(run_real_video_test())

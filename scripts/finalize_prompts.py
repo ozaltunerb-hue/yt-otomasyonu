@@ -11,7 +11,7 @@ from core.prompt_sanitizer import sanitize_prompt
 
 
 async def main(src: str, picks: list[int], out_path: str):
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stdout.reconfigure(encoding="utf-8")
     rows = json.load(open(src, encoding="utf-8"))["rows"]
     res = []
     for n in picks:
@@ -26,7 +26,8 @@ async def main(src: str, picks: list[int], out_path: str):
         suffix = style_lock_suffix(r["camera"], cat)
         res.append({"n": n, "domain": r["domain"], "camera": r["camera"], "ship": r["ship"], "attempts": attempts,
                     "story": story, "style_suffix": suffix, "sanitize_changes": changes,
-                    "final_prompt": join_story_and_style(story, suffix)})
+                    "final_prompt": join_story_and_style(story, suffix),
+                    "gate_context": {"scenario": r["scenario"], "domain_id": r["domain"], "ship": r["ship"] or ""}})
         print(f"#{n} {r['domain']} | {r['camera']} | denemeler={[a['failures'] for a in attempts]}\nHİKAYE: {story}\n")
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
     json.dump(res, open(out_path, "w", encoding="utf-8"), ensure_ascii=False, indent=2, default=str)

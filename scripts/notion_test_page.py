@@ -65,7 +65,7 @@ def build_payload(res: dict, title: str, intro: str = "") -> dict:
 
 
 if __name__ == "__main__":
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stdout.reconfigure(encoding="utf-8")
     from infrastructure.notion_logger import _notion_request, NOTION_API_URL
     result = json.load(open(sys.argv[1], encoding="utf-8"))
     page = _notion_request("POST", f"{NOTION_API_URL}/pages",

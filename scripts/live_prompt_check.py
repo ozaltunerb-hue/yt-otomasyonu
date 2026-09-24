@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 DeepMyster — Gerçek GPT Prompt Üretim ve Doğukan Standardı Doğrulama Testi.
+Gerçek GPT çağrısı yapar (TUR 21: tests/ dışına taşındı, pytest toplamasın).
+Not: kelime sayısı kontrolü TUR 12 öncesi mantıkla sabit CCTV kilidi uzunluğunu varsayar.
 """
 import os
 import sys
 import asyncio
 
 # UTF-8 stdout encoding
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -57,4 +57,6 @@ async def test_live_prompt_generation():
 
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
     asyncio.run(test_live_prompt_generation())

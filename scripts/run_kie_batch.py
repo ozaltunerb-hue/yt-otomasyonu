@@ -26,10 +26,11 @@ def ffprobe(path):
 
 
 async def main(src: str, prefix: str, out_path: str):
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stdout.reconfigure(encoding="utf-8")
     settings.IS_DRY_RUN = False
     from infrastructure.kie_client import KieClient
     from infrastructure.motion_profile import format_motion, motion_profile
+    from core.prompt_generator import make_story_validator
     prompts = json.load(open(src, encoding="utf-8"))
     res = {"credit_before": credit(), "model": settings.DEFAULT_MODEL, "videos": []}
     print(f"KREDİ ÖNCE: {res['credit_before']}", flush=True)
@@ -48,6 +49,7 @@ async def main(src: str, prefix: str, out_path: str):
             url = await client.create_video(model=settings.DEFAULT_MODEL,
                                             prompt=p["story"] if has_split else p["final_prompt"],
                                             style_suffix=p["style_suffix"] if has_split else "",
+                                            story_validator=make_story_validator(p.get("gate_context")) if has_split else None,
                                             orientation=settings.DEFAULT_ORIENTATION, duration=settings.DEFAULT_DURATION,
                                             audio=settings.DEFAULT_AUDIO, resolution=settings.DEFAULT_RESOLUTION)
             v.update(url=url, preflight=getattr(client, "_last_preflight_meta", {}) or {},

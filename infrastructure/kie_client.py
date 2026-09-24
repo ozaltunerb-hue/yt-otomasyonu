@@ -24,6 +24,10 @@ _CONTENT_FILTER_KEYWORDS = (
 )
 
 
+# Güvenlik rewrite'ı başına en fazla aday sayısı (kalite kapısı geri bildirimiyle, TUR 21)
+REWRITE_GATE_ATTEMPTS = 2
+
+
 class ContentFilterError(Exception):
     """Kie AI içerik güvenliği filtresi tarafından reddedildi."""
     pass
@@ -128,6 +132,7 @@ class KieClient:
         resolution: str = "480p",
         progress_callback: callable = None,
         style_suffix: str = "",
+        story_validator: callable = None,
     ) -> str:
         """
         Tek bir video üretir — içerik güvenliği katmanlarıyla.
@@ -148,6 +153,10 @@ class KieClient:
             style_suffix: Verilirse prompt = sadece hikaye; preflight/rewrite hikayeye uygulanır ve
                 bu sabit stil eki (kamera + gerçekçilik) her denemede değişmeden eklenir (TUR 12).
                 Boşsa eski davranış: prompt tam metin olarak işlenir.
+            story_validator: Verilirse (prompt_generator.make_story_validator) preflight veya Kie retry
+                rewrite'ından dönen hikaye aynı simplifier kapılarından geçer (C hariç); kalırsa geri
+                bildirimle bir kez daha yazılır, yine kalırsa preflight'ta PreflightError(content),
+                Kie retry'ında ContentFilterError (TUR 21). None ise kapı yok (eski davranış).
 
         Returns:
             str: Üretilen videonun CDN URL'si
@@ -172,6 +181,14 @@ class KieClient:
 
         if was_rewritten:
             log.info(f"🛡️ GPT Pre-flight prompt'u yeniden yazdı (risk: {preflight_meta.get('risk_score', '?')}/10)")
+            if story_validator:
+                from core.prompt_sanitizer import PreflightError, PromptRewriteError
+                reason = f"preflight risk {preflight_meta.get('risk_score', '?')}/10: {preflight_meta.get('risk_reasons', [])}"
+                try:
+                    current_story = await self._rewrite_with_gates(prompt, reason, story_validator,
+                                                                   first_candidate=current_story)
+                except PromptRewriteError as rwe:
+                    raise PreflightError(f"Preflight rewrite kalite kapılarından geçmedi: {rwe}", "content") from rwe
 
         # Güvenlik telemetrisi kayıt
         self._last_preflight_meta = preflight_meta
@@ -209,12 +226,10 @@ class KieClient:
                         f"GPT ile yeniden yazılacak..."
                     )
                     # ── GPT-Powered Retry Rewrite ──
-                    from core.prompt_sanitizer import gpt_rewrite_rejected_prompt, PromptRewriteError
+                    from core.prompt_sanitizer import PromptRewriteError
                     try:
-                        current_story = await gpt_rewrite_rejected_prompt(
-                            original_prompt=current_story,
-                            rejection_reason=last_rejection_reason,
-                        )
+                        current_story = await self._rewrite_with_gates(current_story, last_rejection_reason,
+                                                                       story_validator)
                     except PromptRewriteError as rwe:
                         # Sessiz yumuşatma yok: orijinal ret fırlar, main.py farklı senaryo dener
                         log.error(f"❌ Rewrite başarısız, retry iptal: {rwe}")
@@ -225,6 +240,26 @@ class KieClient:
 
                     # Başarısız olursa ContentFilterError fırlat → main.py yeni DeepMyster konusu seçer
                     raise cfe
+
+    async def _rewrite_with_gates(self, story: str, reason: str, validator=None,
+                                  first_candidate: str | None = None) -> str:
+        """Güvenlik rewrite'ı + kalite kapıları (TUR 21). En fazla REWRITE_GATE_ATTEMPTS aday; kapıdan kalan
+        adayın sebepleri bir sonraki rewrite'a geri bildirim olarak gider. Hiçbiri geçmezse PromptRewriteError.
+        first_candidate: zaten üretilmiş ilk aday (preflight'ın kendi rewrite'ı) — ilk deneme sayılır."""
+        from core.prompt_sanitizer import gpt_rewrite_rejected_prompt, PromptRewriteError
+        candidate, feedback, failures = first_candidate, None, []
+        for attempt in range(REWRITE_GATE_ATTEMPTS):
+            if candidate is None:
+                candidate = await gpt_rewrite_rejected_prompt(
+                    original_prompt=story, rejection_reason=reason, feedback=feedback)
+            issues = validator(candidate) if validator else []
+            if not issues:
+                return candidate
+            failures = [m for m, _ in issues]
+            log.warning(f"⚠️ Rewrite kalite kapısından geçmedi (deneme {attempt + 1}/{REWRITE_GATE_ATTEMPTS}): {failures}")
+            feedback = [h for _, h in issues]
+            candidate = None
+        raise PromptRewriteError(f"Rewrite {REWRITE_GATE_ATTEMPTS} denemede kalite kapılarından geçmedi: {failures}")
 
     async def create_videos_batch(
         self,

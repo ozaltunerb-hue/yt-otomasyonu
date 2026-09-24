@@ -12,7 +12,7 @@ from core.prompt_generator import (_generate_scenario, simplify_with_gate, NoVal
 
 
 async def main(out_path: str):
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stdout.reconfigure(encoding="utf-8")
     assert not settings.IS_DRY_RUN
     used, hist, rows, verbs = [], [], [], []
     for i in range(5):

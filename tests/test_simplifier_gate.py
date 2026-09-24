@@ -24,9 +24,8 @@ from core.prompt_generator import (
 )
 
 FIXTURE = os.path.join(os.path.dirname(__file__), "fixtures", "simplifier_outputs.json")
-LETTER = {"Simplifier son cümle": "A", "Simplifier: kamera": "B", "Simplifier: Beat 1 fiili": "C",
-          "Simplifier: kişi sayısı": "E", "Simplifier: insan yok": "H", "Simplifier: ilk cümlede durağan": "I",
-          "Simplifier: insanlara yeni zarar": "J", "Simplifier: boş": "EMPTY"}
+# Harf -> mesaj öneki tek kaynaktan (TUR 21, prompt_generator.SIMPLIFIER_GATES)
+LETTER = {**{prefix: letter for letter, prefix in pg.SIMPLIFIER_GATES.items()}, "Simplifier: boş": "EMPTY"}
 
 
 def letters(failures):

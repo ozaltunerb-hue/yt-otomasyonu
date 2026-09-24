@@ -681,8 +681,10 @@ def get_realism_guardrails(domain_id: str, vessel_class: str) -> str:
             role_rules += " Marina and dock workers wear high-visibility orange or yellow PPE."
 
     common_rules = (
-        "NEVER use white hazmat suits. Raw natural overcast/fog/rain lighting, "
-        "not glossy or artificially perfect water or ice."
+        # Işık senaryonun havasına uyar (TUR 21): sabit "overcast/fog/rain" havuz/plaj güneşiyle çelişiyordu
+        "NEVER use white hazmat suits. Raw natural lighting that matches the scenario's weather "
+        "(storm, overcast, fog, or harsh daylight) — never glossy, CGI-clean, or cinematic; "
+        "water and ice never artificially perfect."
     )
 
     return " ".join([role_rules, common_rules])

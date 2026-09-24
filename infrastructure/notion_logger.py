@@ -43,7 +43,7 @@ class NotionTracker:
         self.enabled = settings.NOTION_ENABLED
         self._start_time = time.time()
 
-    def create_entry(self, config: dict, trigger: str = "telegram") -> str:
+    def create_entry(self, config: dict, trigger: str = "auto") -> str:
         """
         Yeni Notion entry oluşturur (pipeline başlangıcı).
 

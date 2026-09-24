@@ -9,8 +9,11 @@ Akış:
   2. GPT-4o ile (config.DEFAULT_DURATION saniyelik) tek kesintisiz çekim 3 beat'lik senaryo yazar (5 aday).
   3. Senaryo kapıları: görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike, cast aralığı,
      özet-beat tutarlılığı, gemi-ortam uyumu. Geçenler skorlanır.
-  4. Simplifier 25–45 kelimelik hikayeye indirir; çıktı kapısı (A Beat 3, B kamera öznesi, C Beat 1 fiili,
-     E kişi sayısı, F gemi adı, G ilk cümlede tepki) + retry. Sessiz fallback yok.
+  4. Simplifier 25–45 kelimelik hikayeye indirir; çıktı kapısı (SIMPLIFIER_GATES: A Beat 3 devamı/zayıf son,
+     B kamera öznesi, C Beat 1 fiili, E kişi sayısı, F gemi adı, G ilk cümlede tepki, H env-centric'te en az
+     1 insan, I ilk cümlede durağan insan, J insanlara yeni zarar fiili) + geri bildirimli retry.
+     Yazıcıya Beat 1 fiil rotasyonu ipucu (Notion "Beat1 Fiil" + koşu içi). Sessiz fallback yok.
+     Preflight/Kie rewrite'ından dönen hikaye de aynı kapılardan geçer (C hariç, make_story_validator).
   5. Regex sanitizer, stil eki (kamera + gerçekçilik) ve YouTube metadata (merak odaklı, no-spoiler).
 """
 import re
@@ -676,9 +679,47 @@ def validate_simplified_prompt(prompt: str, scenario: dict, domain_id: str, ship
     F: gemi domainlerinde atanan geminin tipi adıyla geçer (ship verilirse).
     G: ilk cümlede duygusal insan tepkisi (startled, alarmed, shocked...) yok.
     H: env-centric domainlerde en az 1 insan ifadesi var.
+    I: ilk cümlede durağan insan (stand/watch/look...) yok. J: insanlara senaryoda olmayan zarar fiili yok.
     """
     failures = [msg for msg, _ in _simplified_checks(prompt, scenario, domain_id, ship)]
     return not failures, failures
+
+
+# Simplifier çıktı kapıları: harf → hata mesajı öneki. Testler ve README kapı tablosu bu kayda
+# bağlıdır (tests/test_docs_sync.py); yeni kapı eklenince buraya ve README'ye eklenir.
+SIMPLIFIER_GATES = {
+    "A": "Simplifier son cümle",
+    "B": "Simplifier: kamera",
+    "C": "Simplifier: Beat 1 fiili",
+    "E": "Simplifier: kişi sayısı",
+    "F": "Simplifier: gemi adı",
+    "G": "Simplifier: ilk cümlede insan tepkisi",
+    "H": "Simplifier: insan yok",
+    "I": "Simplifier: ilk cümlede durağan",
+    "J": "Simplifier: insanlara yeni zarar",
+}
+
+# Güvenlik rewrite'ı riskli kelime Beat 1 fiilinin kendisiyse onu değiştirmek zorunda; C bu yüzden
+# rewrite sonrası uygulanmaz (TUR 21). Diğer kapıların hepsi uygulanır.
+_REWRITE_SKIPPED_GATES = (SIMPLIFIER_GATES["C"],)
+
+
+def make_story_validator(gate_context: dict | None):
+    """Preflight/Kie rewrite'ından dönen hikaye için kapı fonksiyonu (TUR 21).
+
+    gate_context: {"scenario", "domain_id", "ship"} (prompt_data["gate_context"]). Yoksa None.
+    Dönen fonksiyon: hikaye -> [(Türkçe hata, İngilizce düzeltme talimatı), ...]; boş liste = geçti.
+    """
+    if not gate_context:
+        return None
+    scenario = gate_context.get("scenario") or {}
+    domain_id = gate_context.get("domain_id", "")
+    ship = gate_context.get("ship") or ""
+
+    def validator(story: str) -> list[tuple[str, str]]:
+        return [(m, h) for m, h in _simplified_checks(story, scenario, domain_id, ship)
+                if not m.startswith(_REWRITE_SKIPPED_GATES)]
+    return validator
 
 
 def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
@@ -901,6 +942,9 @@ async def generate_prompts(config: dict) -> dict:
         "talent": incident,
         "category": catalyst["domain_id"],
         "beat1_action_verb": scenario.get("beat1_action_verb", ""),
+        # Rewrite sonrası aynı kapılar için bağlam (TUR 21, make_story_validator)
+        "gate_context": {"scenario": scenario, "domain_id": catalyst["domain_id"],
+                         "ship": catalyst.get("forced_ship") or ""},
     }
 
     log.info(f"✅ DeepMyster Pipeline hazır: \"{result['youtube_title']}\" ({settings.DEFAULT_DURATION}s tek kesintisiz çekim)")

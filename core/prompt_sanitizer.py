@@ -244,6 +244,7 @@ async def gpt_preflight_check(prompt: str) -> tuple[str, bool, dict]:
 async def gpt_rewrite_rejected_prompt(
     original_prompt: str,
     rejection_reason: str,
+    feedback: list[str] | None = None,
 ) -> str:
     """GPT-Powered Retry Rewrite — Reddedilmiş sahne metnini güvenli şekilde yeniden yazar.
 
@@ -259,7 +260,9 @@ async def gpt_rewrite_rejected_prompt(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": _RETRY_REWRITE_SYSTEM.format(rejection_reason=rejection_reason)},
-                {"role": "user", "content": f"Rewrite this rejected scene description:\n\n{original_prompt}"},
+                {"role": "user", "content": f"Rewrite this rejected scene description:\n\n{original_prompt}" + (
+                    "\n\nYOUR PREVIOUS REWRITE BROKE THESE QUALITY RULES. Fix them while staying safe:\n"
+                    + "\n".join(f"- {f}" for f in feedback) if feedback else "")},
             ],
             temperature=0.7,
             max_tokens=250,

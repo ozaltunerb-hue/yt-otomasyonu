@@ -9,7 +9,8 @@ from unittest.mock import patch
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, ROOT)
-SCRIPTS = ["dry_run_full", "finalize_prompts", "run_kie_batch", "notion_test_page", "motion_profile", "dry_run_beat1"]
+SCRIPTS = ["dry_run_full", "finalize_prompts", "run_kie_batch", "notion_test_page", "motion_profile", "dry_run_beat1",
+           "real_generation_check", "live_prompt_check", "batch_diversity_check"]   # son 3: TUR 21 tests/ dışına
 
 
 class TestScriptsImport(unittest.TestCase):

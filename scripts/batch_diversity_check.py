@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
 DeepMyster — 5 Farklı Senaryo İle Doğukan Standardı Çeşitlilik ve Kalite Stres Testi.
+Gerçek GPT çağrısı yapar (TUR 21: tests/ dışına taşındı, pytest toplamasın).
+Not: kelime sayısı kontrolü TUR 12 öncesi mantıkla sabit CCTV kilidi uzunluğunu varsayar.
 """
 import os
 import sys
 import asyncio
 
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from core.prompt_generator import generate_prompts
@@ -51,4 +51,6 @@ async def run_batch_test(count: int = 5):
 
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
     asyncio.run(run_batch_test(5))

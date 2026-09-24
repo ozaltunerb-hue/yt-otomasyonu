@@ -18,7 +18,7 @@ Bu sistem cron aktifken **sıfır insan müdahalesi** ile çalışır. Railway C
 1. **🧠 Creative Engine** — 7 ilham alanı: 4 gemi domaini (feribot, tersane, marina/yat, kruvaziyer) + 3 çevre odaklı (kıyı hortumu, şehir afeti, plaj). 9 gemilik evren (feribot, katamaran, yat, powerboat, jet ski, kruvaziyer, tender); kargo/tanker/römorkör/balıkçı YOK (2026-09-24). Uyumsuz gemi-ortam kombinasyonları seçilmez. 71 senaryoluk referans kütüphane (8 kategori).
 2. **🤖 GPT-4o** — Gerçekçi, fizik kurallarına uygun, yapılandırılabilir süreli (şu an 15s) tek plan 3 beat'lik senaryo yazar (5 aday); atanan kamera arketipine (`fixed_cctv`/`bystander_handheld`/`chase_pov`) göre yazılır
 3. **✅ Senaryo Kapıları** — görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike, cast aralığı, özet-beat tutarlılığı, gemi-ortam uyumu. Geçen adaylar skorlanır.
-4. **✂️ Prompt Simplifier + Çıktı Kapısı** — Senaryoyu 25-45 kelimelik hikayeye çevirir; Beat 3 devamı, kamera öznesi, Beat 1 fiili, kişi sayısı, gemi adı ve ilk cümlede insan tepkisi kontrol edilir, kalırsa geri bildirimle yeniden dener
+4. **✂️ Prompt Simplifier + Çıktı Kapısı** — Senaryoyu 25-45 kelimelik hikayeye çevirir; aşağıdaki A-J kapıları kontrol edilir, kalırsa geri bildirimle yeniden dener. Yazıcıya son kullanılan Beat 1 fiilleri "farklı fiil seç" ipucu olarak gider (Notion "Beat1 Fiil")
 5. **🔒 Stil Kilidi** — Kamera arketipine ve domain'e göre deterministik kamera/çekim yeri/kıyafet/gerçekçilik eki hikayenin arkasına eklenir
 6. **🛡️ Safety Check** — Regex + GPT preflight + Kie reddinde retry rewrite; hepsi sadece hikayeye uygulanır, stil eki korunur. Sessiz fallback yok.
 7. **🎬 Seedance 2 Mini (Kie AI)** — Video üretir (`bytedance/seedance-2-fast`, 480p, portrait 9:16)
@@ -125,11 +125,30 @@ python scripts/motion_profile.py video.mp4 --camera fixed_cctv          # hareke
 - **Tip:** CronJob (çalışır, iş bitince kapanır)
 - **Güncel durum ve gerekçe:** bkz. `_knowledge/deploy-registry.md` (bu dosya infra durumunun kaynağıdır)
 
+## ✅ Kalite Kapıları
+
+**Senaryo kapıları** (5 adayın her birine): görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike (çözülmüş/sakinleşmiş, "halt", zayıf büyüklük "ripples/gently/slightly/bobbing" kara listede; insan jestleri "gesturing/inspecting" devam işareti sayılmaz), cast (gemi domainlerinde `DOMAIN_CAST_RANGES` aralığı; çevre odaklıda en az 1 insan), özet-beat tutarlılığı, gemi-ortam uyumu.
+
+**Simplifier çıktı kapıları** (`SIMPLIFIER_GATES`, Kie'ye giden hikayeye):
+
+| Kapı | Ne kontrol eder |
+|------|-----------------|
+| A | Son cümle Beat 3 kapısından geçer: tehlike sürüyor, zayıf/durmuş son yok |
+| B | İlk cümlenin öznesi kamera/görüntü değil |
+| C | Yazıcının bildirdiği Beat 1 fiili ilk cümlede (zaman sıkışması yok) |
+| E | Gemi domainlerinde senaryodaki kişi sayısı korunur |
+| F | Gemi domainlerinde atanan gemi tipiyle anılır ("the vessel" değil) |
+| G | İlk cümlede duygusal insan tepkisi yok (startled, alarmed, shocked...) |
+| H | Çevre odaklı domainlerde en az 1 insan (çatı seyircisi, yaya...) |
+| I | İlk cümlede durağan insan yok (stand, watch, look, wait...) |
+| J | İnsanlara senaryoda olmayan zarar fiili eklenmez (sweep, hurl, knock...) |
+
 ## 🛡️ Güvenlik Katmanları
 
 1. **Prompt Sanitizer** — Tehlikeli kelimeleri otomatik değiştirir (regex)
 2. **GPT Pre-flight Check** — Hikayeyi Kie'ye göndermeden değerlendirir; geçersiz cevapta 3 deneme, sonra `PreflightError` (api / content)
 3. **Content Filter Retry** — Kie reddederse hikayeyi GPT ile yeniden yazar (2x); stil eki değişmez; rewrite başarısızsa sessiz yumuşatma yok, ret fırlar
+3b. **Rewrite sonrası kalite kapıları** — Preflight veya Kie retry rewrite'ından dönen hikaye aynı simplifier kapılarından geçer (C hariç; güvenlik rewrite'ı Beat 1 fiilini değiştirmek zorunda kalabilir). Kalırsa geri bildirimle 1 kez daha yazılır, yine kalırsa yeni senaryo denenir
 4. **Senaryo Retry** — Kie reddi veya içerik kaynaklı preflight hatasında farklı senaryo seçer (ortak 3 deneme); API kaynaklı preflight hatasında durur
 
 ## 📊 Tekrar Önleme
@@ -158,3 +177,4 @@ python scripts/motion_profile.py video.mp4 --camera fixed_cctv          # hareke
 | Hata | Rich Text | Varsa hata mesajı |
 | Güvenlik | Rich Text | Safety telemetrisi |
 | Hareket | Rich Text | Hareket profili: ilk 3 sn / sonrası oranı, tepe saniye, saniyelik profil (2026-09-24) |
+| Beat1 Fiil | Rich Text | Senaryonun Beat 1 fiili; son 10 kayıt yazıcıya "farklı fiil seç" ipucu olur (2026-09-24) |

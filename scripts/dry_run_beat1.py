@@ -2,7 +2,6 @@
 # 5 senaryo üretir (GPT-4o, ~$0.15), kapılardan geçirir, kazananı simplifier + stil kilidinden geçirir.
 # Kullanım: python scripts/dry_run_beat1.py [cikti.json]
 import asyncio, json, sys, os, io
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from config import settings
@@ -58,4 +57,5 @@ async def main(out_path):
     print(f"DONE -> {out_path}")
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding="utf-8")
     asyncio.run(main(sys.argv[1] if len(sys.argv) > 1 else "dry_run_beat1_out.json"))

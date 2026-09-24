@@ -30,7 +30,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from config import settings
 from logger import get_logger
-from core.prompt_generator import generate_prompts, NoValidScenarioError
+from core.prompt_generator import generate_prompts, NoValidScenarioError, make_story_validator
 from infrastructure.kie_client import KieClient, ContentFilterError
 from core.prompt_sanitizer import PreflightError
 from infrastructure.motion_profile import motion_profile, format_motion
@@ -189,6 +189,8 @@ async def _execute_pipeline(
             model=settings.DEFAULT_MODEL,
             prompt=scenes[0]["story"] if has_split else scenes[0]["prompt"],
             style_suffix=scenes[0]["style_suffix"] if has_split else "",
+            # Rewrite sonrası aynı kalite kapıları (TUR 21)
+            story_validator=make_story_validator(prompt_data.get("gate_context")) if has_split else None,
             orientation=settings.DEFAULT_ORIENTATION,
             duration=scenes[0].get("duration", settings.DEFAULT_DURATION),
             audio=settings.DEFAULT_AUDIO,
