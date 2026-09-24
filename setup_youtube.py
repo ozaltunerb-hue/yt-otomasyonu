@@ -128,59 +128,6 @@ def _sync_token_everywhere(creds):
             print(f"⚠️ Railway otomatik güncelleme yapılamadı ({re}). Lütfen Railway env'ine manuel ekleyin.")
 
 
-def upload_pending_video_if_any(youtube):
-    """Bugün üretilmiş ancak yüklenememiş video varsa YouTube'a yükle."""
-    pending_file = os.path.join(PROJECT_DIR, "deepmyster_2026-09-18_ice_floe.mp4")
-    if not os.path.exists(pending_file):
-        return
-
-    print("\n" + "=" * 60)
-    print("🎬 BEKLEYEN VİDEO BULUNDU!")
-    print(f"   Dosya: {pending_file}")
-    print("   Başlık: 🛳️ Ice Floe Slams Arctic Carrier Bow in Rough Seas")
-    print("=" * 60)
-    try:
-        from googleapiclient.http import MediaFileUpload
-        print("🚀 Video YouTube'a yükleniyor...")
-        body = {
-            "snippet": {
-                "title": "🛳️ Ice Floe Slams Arctic Carrier Bow in Rough Seas #Shorts",
-                "description": "An Arctic LNG carrier bow violently strikes a massive ice floe in rough freezing seas. #Shorts #Maritime #Arctic #RoughSeas",
-                "tags": ["DeepMyster", "Shorts", "Maritime", "RoughSeas", "Arctic"],
-                "categoryId": "24",
-            },
-            "status": {
-                "privacyStatus": "private",
-                "selfDeclaredMadeForKids": False,
-                "embeddable": True,
-                "containsSyntheticMedia": True,
-            },
-        }
-        media = MediaFileUpload(
-            pending_file,
-            chunksize=1024 * 1024,
-            resumable=True,
-            mimetype="video/mp4",
-        )
-        request = youtube.videos().insert(
-            part=",".join(body.keys()),
-            body=body,
-            media_body=media,
-        )
-        response = None
-        while response is None:
-            status, response = request.next_chunk()
-            if status:
-                print(f"   Upload ilerlemesi: {int(status.progress() * 100)}%")
-
-        video_id = response.get("id", "")
-        print(f"\n🎉 VİDEO BAŞARIYLA YÜKLENDİ!")
-        print(f"   🔗 Shorts URL: https://youtube.com/shorts/{video_id}")
-        print(f"   🔒 Gizlilik: private (YOUTUBE_PRIVACY ayarına uygun)")
-    except Exception as e:
-        print(f"❌ Video yüklenirken hata oluştu: {e}")
-
-
 # ── YouTube API Scopes ──
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
@@ -424,8 +371,9 @@ def main():
             print(f"\n   Token: {TOKEN_PATH}")
             print(f"   ⚠️ Bu token ile video yükleme yapılabilir!")
 
-            # Bekleyen video yükleme kontrolü
-            upload_pending_video_if_any(youtube)
+            # Eskiden burada deepmyster_2026-09-18_ice_floe.mp4 dosyası varsa otomatik yükleniyordu.
+            # Video 2026-09-19'da yayınlandı ve dosya yedek olarak saklanıyor; her çalıştırmada
+            # kopya yüklenirdi. Kaldırıldı (2026-09-25). Haftalık yenileme: refresh_youtube_token.bat.
 
         else:
             print("\n⚠️ Bu Google hesabında YouTube kanalı bulunamadı.")

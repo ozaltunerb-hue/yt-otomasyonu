@@ -126,6 +126,7 @@ python scripts/motion_profile.py video.mp4 --camera fixed_cctv          # hareke
 - **Zamanlama:** ✅ AKTİF — `railway.json` cronSchedule `30 13 * * 1,5` (Pazartesi + Cuma 16:30 TR). 2026-09-12'de açıldı (commit `1f7a389`); son doğrulanan otomatik koşu 2026-09-21. Kod düzeltme turları sürerken cron'un devam edip etmeyeceği kararı açık (2026-09-24). Cron'u aktif tutmak otomatik Kie harcaması demektir.
 - **Tip:** CronJob (çalışır, iş bitince kapanır)
 - **Deploy (2026-09-25):** `main`'e push → GitHub Actions `tests` (unittest) → geçerse Railway otomatik deploy eder ("Wait for CI"; test kırılırsa deploy atlanır). Öncesinde otomatik deploy YOKTU, Railway 23 Eylül'deki eski commit'te kalmıştı.
+- **YouTube token (HAFTALIK, her Cuma 16:30'dan önce):** Google uygulaması "Testing" modunda olduğu için refresh token onaydan 7 gün sonra ölür; refresh çağrısı yeni refresh token vermez. `refresh_youtube_token.bat`'a çift tıkla → tarayıcıda DeepMyster hesabıyla "İzin ver" → betik kanalı doğrular, Railway'e yazar (Railway yeniden deploy eder), geri okuyup test eder, lokal `.env`'i günceller. Kalıcı çözüm: Google Cloud'da uygulamayı "In production" + doğrulama (ayrı iş).
 - **Build:** Railway `railpack` kullanır, `nixpacks.toml` okunmaz. Sistem paketleri `railpack.json` → `deploy.aptPackages` (ffmpeg, hareket profili için).
 - **Güncel durum ve gerekçe:** bkz. `_knowledge/deploy-registry.md` (bu dosya infra durumunun kaynağıdır)
 
