@@ -12,17 +12,18 @@
 
 > Güncel durumun tek doğru kaynağı `BASLANGIC.md`dir — burası sadece yapı/kurulum özetidir, ayrıntı ve gerekçe için `BASLANGIC.md`'ye bakın.
 
-Bu sistem cron aktifken **sıfır insan müdahalesi** ile çalışır. Railway CronJob günde 1 kez tetikler ve şu akışı izler (cron şu an duraklatılmış, bkz. Railway CronJob bölümü):
+Bu sistem cron aktifken **sıfır insan müdahalesi** ile çalışır. Railway CronJob Pazartesi ve Cuma 16:30 TR'de tetikler ve şu akışı izler (cron durumu için bkz. Railway CronJob bölümü):
 
-1. **🧠 Creative Engine** — 12 Denizcilik Alanı + 71 senaryoluk referans kütüphane (tam gemi çeşitliliği: kargo, tanker, kruvaziyer, feribot, Ro-Ro, römorkör, yat/marina)
-2. **🤖 GPT-4o** — Gerçekçi, fizik kurallarına uygun, yapılandırılabilir süreli (şu an 15s) tek plan belgesel senaryosu yazar; atanan kamera arketipine (`fixed_cctv`/`bystander_handheld`/`chase_pov`) göre yazılır
-3. **✅ Kalite Kapıları** — `validate_silent_visibility` (görünmezlik) + `validate_high_action` (sakin/statik sahne reddi) aynı retry döngüsünde
-4. **✂️ Prompt Simplifier** — Senaryoyu Seedance 2 Mini'ye optimize 25-45 kelimelik prompt'a çevirir
-5. **🔒 Stil Kilidi** — Seçilen kamera arketipine göre deterministik kamera/PPE/sivil-kıyafet/gerçekçilik son eki eklenir
-6. **🛡️ Safety Check** — İçerik güvenliği filtresi (regex + GPT preflight + retry rewrite)
+1. **🧠 Creative Engine** — 7 ilham alanı: 4 gemi domaini (feribot, tersane, marina/yat, kruvaziyer) + 3 çevre odaklı (kıyı hortumu, şehir afeti, plaj). 9 gemilik evren (feribot, katamaran, yat, powerboat, jet ski, kruvaziyer, tender); kargo/tanker/römorkör/balıkçı YOK (2026-09-24). Uyumsuz gemi-ortam kombinasyonları seçilmez. 71 senaryoluk referans kütüphane (8 kategori).
+2. **🤖 GPT-4o** — Gerçekçi, fizik kurallarına uygun, yapılandırılabilir süreli (şu an 15s) tek plan 3 beat'lik senaryo yazar (5 aday); atanan kamera arketipine (`fixed_cctv`/`bystander_handheld`/`chase_pov`) göre yazılır
+3. **✅ Senaryo Kapıları** — görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike, cast aralığı, özet-beat tutarlılığı, gemi-ortam uyumu. Geçen adaylar skorlanır.
+4. **✂️ Prompt Simplifier + Çıktı Kapısı** — Senaryoyu 25-45 kelimelik hikayeye çevirir; Beat 3 devamı, kamera öznesi, Beat 1 fiili, kişi sayısı, gemi adı ve ilk cümlede insan tepkisi kontrol edilir, kalırsa geri bildirimle yeniden dener
+5. **🔒 Stil Kilidi** — Kamera arketipine ve domain'e göre deterministik kamera/çekim yeri/kıyafet/gerçekçilik eki hikayenin arkasına eklenir
+6. **🛡️ Safety Check** — Regex + GPT preflight + Kie reddinde retry rewrite; hepsi sadece hikayeye uygulanır, stil eki korunur. Sessiz fallback yok.
 7. **🎬 Seedance 2 Mini (Kie AI)** — Video üretir (`bytedance/seedance-2-fast`, 480p, portrait 9:16)
-8. **📺 YouTube Upload** — Shorts olarak **private** yüklenir; kullanıcı manuel inceleyip AI-etiketini işaretledikten sonra elle public yapar
-9. **📋 Notion Log** — Tüm süreci ve tekrar-önleme combo key'ini kaydeder (2026-09-12'den beri aktif)
+8. **📈 Hareket Profili** — İndirilen videonun saniye saniye hareket ölçümü (ffmpeg) Notion "Hareket" alanına yazılır
+9. **📺 YouTube Upload** — Shorts olarak **private** yüklenir (`YOUTUBE_PRIVACY` varsayılanı); kullanıcı manuel inceleyip AI-etiketini işaretledikten sonra elle public yapar
+10. **📋 Notion Log** — Tüm süreci ve tekrar-önleme combo key'ini kaydeder (2026-09-12'den beri aktif); reddedilen denemeler "❌ Hata" olarak kapanır
 
 `infrastructure/replicate_merger.py` (çoklu klip birleştirme) kodda mevcuttur ama şu an ULAŞILAMAZ durumda — pipeline her zaman tek sahne ürettiği için hiç çağrılmıyor; gelecekte çoklu klip desteği geri gelirse devreye girer.
 
@@ -34,11 +35,12 @@ YT_Otomasyonu/
 ├── config.py                        # Fail-fast yapılandırma
 ├── logger.py                        # Logging
 ├── core/
-│   ├── creative_engine.py           # Yaratıcı senaryo motoru (12 alan, 71 senaryo, 3 kamera arketipi)
-│   ├── prompt_generator.py          # 3 katmanlı prompt pipeline
-│   └── prompt_sanitizer.py          # İçerik güvenliği filtresi
+│   ├── creative_engine.py           # Yaratıcı senaryo motoru (7 alan, 71 senaryo, 3 kamera arketipi, stil kilidi)
+│   ├── prompt_generator.py          # Senaryo + kapılar + simplifier pipeline
+│   └── prompt_sanitizer.py          # İçerik güvenliği (regex + preflight + rewrite)
 ├── infrastructure/
 │   ├── kie_client.py                # Seedance 2.0 API (video üretim)
+│   ├── motion_profile.py            # Hareket profili ölçümü (ffmpeg)
 │   ├── replicate_merger.py          # Video birleştirme
 │   ├── video_downloader.py          # Video indirme + cleanup
 │   ├── youtube_uploader.py          # OAuth2 YouTube upload
@@ -59,7 +61,7 @@ YT_Otomasyonu/
 | **Klip sayısı** | `1` | Sabit — çoklu klip desteği kodda var ama şu an ulaşılamaz |
 | **Süre/klip** | `15s` | Dinamik — `.env`'deki `DEFAULT_DURATION`, hardcoded değil |
 | **Kamera Sistemi** | 3 arketip | `fixed_cctv` / `bystander_handheld` / `chase_pov`, ağırlıklı rastgele seçim |
-| **Sivil/Mürettebat** | Ayrık kurallar | Mürettebat = PPE; yolcu/misafir/sürücü = sivil kıyafet |
+| **Sivil/Mürettebat** | Ayrık kurallar | Gemi domainleri: mürettebat = PPE, yolcu/misafir/sürücü = sivil kıyafet. Çevre odaklı domainler: sivil kıyafet + acil durum personeli üniforması |
 | **Upload** | `private` | Manuel inceleme + AI-etiketi sonrası kullanıcı elle public yapar |
 | **Kategori** | `24 (Entertainment)` | `.env`'deki `YOUTUBE_CATEGORY_ID` |
 
@@ -104,22 +106,23 @@ python main.py --check
 ## 🕐 Railway CronJob
 
 - **Komut:** `python main.py`
-- **Zamanlama:** ⏸️ Duraklatılmış. Duraklatma sebebi (Notion tekrar-önleme kurulumunun eksik olması) 2026-09-12 itibarıyla ortadan kalktı; cron'un tekrar aktif edilmesi ayrı, henüz alınmamış bir karar. Eski değer: `30 13 * * 1-5` (16:30 TR)
+- **Zamanlama:** ✅ AKTİF — `railway.json` cronSchedule `30 13 * * 1,5` (Pazartesi + Cuma 16:30 TR). 2026-09-12'de açıldı (commit `1f7a389`); son doğrulanan otomatik koşu 2026-09-21. Kod düzeltme turları sürerken cron'un devam edip etmeyeceği kararı açık (2026-09-24). Cron'u aktif tutmak otomatik Kie harcaması demektir.
 - **Tip:** CronJob (çalışır, iş bitince kapanır)
 - **Güncel durum ve gerekçe:** bkz. `_knowledge/deploy-registry.md` (bu dosya infra durumunun kaynağıdır)
 
 ## 🛡️ Güvenlik Katmanları
 
-1. **GPT Pre-flight Check** — Riskli prompt'u Kie AI'a göndermeden yakalar
-2. **Content Filter Retry** — Reddedilen prompt'u GPT ile yeniden yazar (2x)
-3. **Senaryo Retry** — Tüm prompt denemeleri başarısız olursa farklı senaryo seçer (3x)
-4. **Prompt Sanitizer** — Tehlikeli kelimeleri otomatik değiştirir
+1. **Prompt Sanitizer** — Tehlikeli kelimeleri otomatik değiştirir (regex)
+2. **GPT Pre-flight Check** — Hikayeyi Kie'ye göndermeden değerlendirir; geçersiz cevapta 3 deneme, sonra `PreflightError` (api / content)
+3. **Content Filter Retry** — Kie reddederse hikayeyi GPT ile yeniden yazar (2x); stil eki değişmez; rewrite başarısızsa sessiz yumuşatma yok, ret fırlar
+4. **Senaryo Retry** — Kie reddi veya içerik kaynaklı preflight hatasında farklı senaryo seçer (ortak 3 deneme); API kaynaklı preflight hatasında durur
 
 ## 📊 Tekrar Önleme
 
 - **Durum: ✅ Aktif (2026-09-12)** — Notion veritabanı kuruldu, `NOTION_ENABLED=True`
-- Kullanılan `domain\|vessel\|incident` kombinasyonları Notion DB'de `Combo Key` alanında saklanır
-- Her çalışmada son 60 günün geçmişi sorgulanır
+- Kullanılan `domain\|vessel\|event\|environment\|camera` kombinasyonları Notion DB'de `Combo Key` alanında saklanır
+- Her çalışmada son 60 günün tamamlanmış kayıtları (used combos) ve son 30 günün hata olmayan kayıtları (negatif hafıza) sorgulanır
+- Sadece bugünkü evrene ait combo'lar sayılır (eski kargo/tug/trawler dönemi kayıtları ve Combo Key'siz TEST kayıtları hariç)
 
 ## 📝 Notion DB Alanları
 
@@ -128,10 +131,10 @@ python main.py --check
 | Video Adı | Title | YouTube başlığı |
 | Durum | Select | Pipeline durumu |
 | Model | Select | `bytedance/seedance-2-fast` |
-| Tetikleyici | Select | "auto" |
+| Tetikleyici | Select | "auto" (cron) veya "manual" |
 | Konu | Rich Text | Senaryo özeti |
 | Prompt | Rich Text | İlk sahne promptu |
-| Combo Key | Rich Text | "domain\|vessel\|incident" — tekrar önleme |
+| Combo Key | Rich Text | "domain\|vessel\|event\|environment\|camera" — tekrar önleme |
 | Klip Sayısı | Number | Şu an her zaman 1 |
 | Video URL | URL | CDN link |
 | YouTube URL | URL | Shorts link |
@@ -139,3 +142,4 @@ python main.py --check
 | Süre (sn) | Number | Pipeline süresi |
 | Hata | Rich Text | Varsa hata mesajı |
 | Güvenlik | Rich Text | Safety telemetrisi |
+| Hareket | Rich Text | Hareket profili: ilk 3 sn / sonrası oranı, tepe saniye, saniyelik profil (2026-09-24) |

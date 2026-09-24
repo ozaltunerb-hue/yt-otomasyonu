@@ -49,7 +49,7 @@ class NotionTracker:
 
         Args:
             config: Üretim config'i (topic, model, clip_count, vb.)
-            trigger: "telegram" veya "manual"
+            trigger: "auto" (cron) veya "manual"
         """
         if not self.enabled:
             log.info("📝 Notion devre dışı — giriş oluşturulmadı")

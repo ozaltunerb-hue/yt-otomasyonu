@@ -4,18 +4,20 @@
 
 ---
 
-## 🔴 GÜNCEL DURUM (Son doğrulama: 2026-09-12)
+## 🔴 GÜNCEL DURUM (Son doğrulama: 2026-09-24)
 
 | Alan | Değer |
 |---|---|
 | **Süre** | 15 saniye — `config.DEFAULT_DURATION` üzerinden `.env`'deki `DEFAULT_DURATION` ile dinamik, hardcoded değil |
 | **Video Modeli** | `bytedance/seedance-2-fast` (Seedance 2 Mini), 480p — Seedance Full, Veo 3.1 ve Wan 2.6 ile karşılaştırıldıktan sonra bilinçli olarak seçildi |
-| **Gemi/Olay Çeşitliliği** | Tam kapsam: kargo gemileri, tankerler, kruvaziyer/yolcu gemileri, feribotlar, Ro-Ro/araç taşıyıcılar, römorkörler, yat/marina, kruvaziyer güverte/havuz sahneleri — kargo-only kısıtlama hiçbir zaman uygulanmadı (terk edilmiş bir taslaktı) |
+| **Gemi/Olay Çeşitliliği** | 7 domain: 4 gemi (`ferry_operations`, `shipyard_and_drydock_engineering`, `marina_and_yacht_operations`, `cruise_ship_operations`) + 3 çevre odaklı (`coastal_tornado_landfall`, `urban_city_disasters`, `open_beach_coastal_events`). 9 gemilik evren `DOMAIN_ATTRIBUTES`'tan türer: Passenger Car Ferry, High-speed Catamaran, Luxury Motor Yacht, Sailing Yacht, Runaway Powerboat, Jet Ski, Ocean Cruise Liner, Mega Cruise Ship, Cruise Tender Boat. **Kargo, tanker, konteyner, römorkör, balıkçı teknesi YOK** (2026-09-24 kargo temizliği; testler bu kelimeleri yasaklar). Uyumsuz kombinasyonlar seçilmez (`SHIP_INCOMPATIBLE`, `VESSEL_ENVIRONMENTS`: tender'da havuz güvertesi yok, tornado'da gemi sadece marina/limanda) |
+| **Kalite Kapıları** | Senaryo: görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike, cast aralığı (`DOMAIN_CAST_RANGES`), özet-beat tutarlılığı, gemi-ortam uyumu. Simplifier çıktısı: A Beat 3, B kamera öznesi, C Beat 1 fiili, E kişi sayısı, F gemi adı, G ilk cümlede insan tepkisi (retry'lı). Preflight: geçersiz cevapta 3 deneme, `PreflightError`. Hiçbir kapıda sessiz fallback yok |
+| **Hareket Ölçümü** | Her üretim videosu için `infrastructure/motion_profile.py` (ffmpeg) Notion "Hareket" alanına ilk 3 sn / sonrası oranını yazar. Baz: iki test videosunda ≈0.5 |
 | **Kamera Sistemi** | 3 ağırlıklı arketip: `fixed_cctv` (varsayılan/en sık), `bystander_handheld`, `chase_pov` — kamera sabitliği ve gerçekçilik güvenceleriyle |
 | **Sivil/Mürettebat Kıyafeti** | Ayrım net: mürettebat/personel = turuncu/kırmızı/sarı PPE; yolcu/misafir/sürücü = sıradan sivil kıyafet (asla PPE değil) |
 | **Aksiyon/Kalite Kapısı** | `validate_high_action` aktif — sakin/statik senaryoları reddedip yeniden dener |
 | **YouTube Yükleme** | `YOUTUBE_PRIVACY=private` — videolar OTOMATİK PUBLIC OLMAZ; kullanıcı videoyu manuel inceleyip yapay zeka etiketini (AI-disclosure toggle) işaretledikten sonra elle public yapar |
-| **Cron / Otomasyon** | ⏸️ Hâlâ duraklatılmış durumda — ama duraklatma sebebi (Notion dedup kurulumunun eksik olması) 2026-09-12 itibarıyla ortadan kalktı. Cron'un tekrar aktif edilmesi ayrı, henüz alınmamış bir karar (bkz. `_knowledge/deploy-registry.md`) |
+| **Cron / Otomasyon** | ✅ AKTİF — `railway.json` cronSchedule `30 13 * * 1,5` (Pazartesi + Cuma 16:30 TR). 2026-09-12'de açıldı (commit `1f7a389`); son doğrulanan otomatik koşu 2026-09-21. Kod düzeltme turları sürerken cron'un devam edip etmeyeceği kararı açık (2026-09-24). Cron aktifken her tetikleme otomatik Kie harcamasıdır (bkz. `_knowledge/deploy-registry.md`) |
 | **Notion Dedup/Log** | ✅ AKTİF (2026-09-12) — `NOTION_ENABLED=True`, veritabanı kuruldu ve doğrulandı |
 
 ---
@@ -28,7 +30,7 @@
 Seedance 2 Mini'nin en yüksek fotogerçekçilik ve fiziksel tutarlılık sunduğu format **tek, kesintisiz, kamera kesmesi/kolajı içermeyen** plandır. Süre sabit değildir — `config.DEFAULT_DURATION` / `.env`'deki `DEFAULT_DURATION` ile kontrol edilir (şu an **15 saniye**):
 - Çoklu sahne geçişleri ve ara kesmeler KESİNLİKLE YOKTUR.
 - Dron akrobasisleri, yapay kamera dönüşleri (orbit) YOKTUR.
-- Gerçekçi bir endüstriyel gözetleme (CCTV) veya sabit belgesel gözlemci kamerası kullanılır.
+- Kamera, 3 arketipten biridir (`fixed_cctv`, `bystander_handheld`, `chase_pov`; bkz. bölüm 7).
 
 ---
 
@@ -36,7 +38,8 @@ Seedance 2 Mini'nin en yüksek fotogerçekçilik ve fiziksel tutarlılık sundu�
 Seedance 2 Mini karmaşık, 6 parçalı mekanik checklistleri değil; görsel sinyali yüksek, doğrudan ve net dili anlar:
 - **Uzunluk:** Kesinlikle **25–45 kelime** aralığında olmalıdır.
 - **İçerik Formülü (Esnek):**
-  `[Gemi/Lokasyon & Çevresel Kriz] + [Somut Fiziksel Eylem & Bağlamsal İnsan/Mekanizma Müdahalesi] + [Fiziksel Durum Değişimi/Sonuç] + [Sabit CCTV/Kamera & Doğal Işık Etiketi]`
+  `[Adıyla anılan gemi veya çevre olayı + aksiyon + fiziksel etki] + [Fiziksel Eylem & İnsan/Mekanizma Müdahalesi] + [Hâlâ süren Sonuç]`
+- **Kamera ve ışık 25-45 kelimenin içinde YOKTUR:** Simplifier kamera/ışık yazmaz; kamera, çekim yeri, kıyafet ve gerçekçilik kuralları stil kilidiyle (`style_lock_suffix`) arkadan eklenir. Kie retry'larında GPT sadece hikayeyi yeniden yazar, stil eki değişmez.
 - **Few-Shot Kuralı:** Asla tek tip cümle kalıbı taklit edilmez; eylem odaklı, perspektif odaklı, mekanik gerilim veya atmosfer odaklı çeşitli sözdizimleri kullanılır.
 
 ---
@@ -44,9 +47,9 @@ Seedance 2 Mini karmaşık, 6 parçalı mekanik checklistleri değil; görsel si
 ### 3. Tersine Çevrilmiş Kontrol (Inversion of Control) & Geniş Denizcilik Katalizörleri
 GPT bir "boşluk doldurucu" (Mad-Libs) değil; sahneyi tasarlayan **yaratıcı yönetmendir**:
 - Python kodu gemi, nesne, başlangıç ve bitiş cümlelerini tek tek seçip GPT'ye dikte ETMEZ.
-- Python **12 geniş denizcilik ilham alanından** (Kutup/Buzul, Ağır Yük, Kurtarma/Römorkör, Açık Deniz İkmal, Ro-Ro/Feribot, Dökme/Tanker, Konteyner, Ticari Balıkçılık, Kılavuzluk, Tersane, **Marina & Yat Operasyonları**, **Yolcu Gemisi & Kruvaziyer Operasyonları**) bir katalizör ve son işlenen konuların negatif listesini iletir. Son ikisi 2026-09-12'de eklendi.
-- GPT kendi özgün gemisini, kriz mekanizmasını ve koreografisini bu alan içinde tasarlar.
-- **Gemi çeşitliliği kargo ile SINIRLI DEĞİLDİR:** kargo/tanker/konteyner gemilerinin yanı sıra kruvaziyer, feribot, Ro-Ro/araç taşıyıcı, römorkör, yat/tekne ve marina sahneleri de tam kapsamlıdır. 71 senaryoluk referans kütüphanesi (8 kategoride) bu tam çeşitliliği yansıtacak şekilde güncellendi.
+- Python **7 ilham alanından** (Feribot, Tersane/Kuru Havuz, Marina & Yat, Kruvaziyer + çevre odaklı Kıyı Hortumu, Şehir Afeti, Plaj) bir katalizör (alan + atanan gemi/olay/ortam) ve son işlenen konuların negatif listesini iletir. 2026-09-24'te 12 alandan 7'ye inildi (kargo evreni kaldırıldı).
+- GPT senaryoyu atanan gemiyle (adıyla anarak, "the vessel" değil) ve bu alan içinde tasarlar.
+- **Gemi evreni 9 tiptir, kargo YOKTUR:** kargo/tanker/konteyner/römorkör/balıkçı teknesi yazıcıya hiç önerilmez ve testler bu kelimeleri yasaklar. 71 senaryoluk referans kütüphanesi (8 kategoride) bu evrene göre temizlendi.
 
 ---
 
@@ -54,6 +57,7 @@ GPT bir "boşluk doldurucu" (Mad-Libs) değil; sahneyi tasarlayan **yaratıcı y
 - Her videoda yapay bir şekilde takoza koşan sarı yelekli adam klişesi YASAKTIR.
 - İnsan varlığı sahnenin doğasına göre organik olmalıdır (dümen konsolundaki kaptan, vinç operatörü, rıhtım palamarcısı, korumaya çekilen personel veya sadece devasa gemi ölçeğini veren gözlemci).
 - **Sivil/Mürettebat kıyafet ayrımı (2026-09-12 eklendi):** Mürettebat/personel/marina çalışanları turuncu-kırmızı-sarı PPE, tulum veya dalgıç kıyafeti giyer. Yolcular, tekne sahipleri, misafirler ve araç sürücüleri/yolcuları MÜRETTEBAT DEĞİLDİR — sıradan sivil kıyafet giyerler (mayo/resort kıyafeti güverte-havuz sahnelerinde, günlük kıyafet araç güvertesi sahnelerinde). Sivillere asla PPE giydirilmez.
+- **Çevre odaklı domainler (2026-09-24):** Şehir/plaj/hortum prompt'larına gemi rolleri (ferry officer, car-deck) gitmez; sadece sivil kıyafet + acil durum personeli üniforması kuralı eklenir (gemi varsa marina/iskele işçisi PPE).
 
 ---
 

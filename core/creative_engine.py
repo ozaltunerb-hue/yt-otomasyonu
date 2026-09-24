@@ -14,7 +14,8 @@ Temel İlkeler:
   3. DOĞUKAN METODOLOJİSİ (Less is More):
      Seedance 2 Mini için 25–45 kelimelik yüksek görsel sinyal yoğunluklu, süssüz,
      tek kesintisiz, yapılandırılabilir süreli (config.DEFAULT_DURATION) fotogerçekçi
-     CCTV/belgesel promptları.
+     belgesel hikayesi. Kamera (fixed_cctv / bystander_handheld / chase_pov), ışık ve
+     kıyafet kuralları stil kilidiyle (style_lock_suffix) arkadan eklenir.
   4. SÖZDİZİMSEL ÇEŞİTLİLİK (Anti-Few-Shot Klonlama):
      Farklı cümle yapıları, farklı bakış açıları ve organik insan rolleri.
 """
@@ -146,7 +147,7 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 🌊 10 GENİŞ DENİZCİLİK İLHAM ALANI (Genişletilmiş Operasyonel Ufuk)
+# 🌊 7 İLHAM ALANI: 4 gemi domaini + 3 çevre odaklı (ENV_CENTRIC_DOMAINS), kargo yok (2026-09-24)
 # ─────────────────────────────────────────────────────────────────────────────
 
 MARITIME_INSPIRATION_DOMAINS = {

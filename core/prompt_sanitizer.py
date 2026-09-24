@@ -8,11 +8,12 @@ tetikleyebilecek gerçek riskli unsurları (kan, açık şiddet, uzuv zararı, �
 prompt gönderilmeden ÖNCE temizler veya yumuşatır; doğal denizcilik gerilimini
 (dalga çarpması, sürtünme, yük kayması) korur.
 
-3 Katmanlı Savunma:
-  1. Regex — Gerçek riskli terimleri güvenli denizcilik operasyon terimlerine çevirir (sync, <1ms)
-  2. GPT Pre-flight — Prompt'u GPT ile değerlendirir (async, ~2s)
-     → Riskli ise 25–45 kelimelik güvenli versiyonunu üretir
-  3. GPT Retry Rewrite — Model reddederse 25–45 kelimede güvenli yeniden yazma
+3 Katmanlı Savunma (hepsi sadece hikayeye uygulanır; stil eki kie_client'ta değişmeden eklenir):
+  1. Regex — Gerçek riskli terimleri güvenli terimlere çevirir (sync, <1ms)
+  2. GPT Pre-flight — Hikayeyi değerlendirir; riskliyse minimum düzeltmeyle yeniden yazar.
+     Geçersiz cevapta 3 deneme, sonra PreflightError (kind: api / content). Sessiz geçiş yok.
+  3. GPT Retry Rewrite — Kie reddederse hikayeyi yeniden yazar; başarısızsa PromptRewriteError
+     (regex yumuşatma fallback'i 2026-09-24'te kaldırıldı).
 """
 import re
 import json

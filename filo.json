@@ -1,11 +1,11 @@
 {
   "ad": "DeepMyster Denizcilik Shorts Üreticisi",
   "kategori": "İçerik & Topluluk",
-  "ozet": "Her gün gerçekçi bir denizcilik/fırtına mikro-hikâye videosu üretip YouTube Shorts olarak otomatik yayınlar.",
-  "eleme": "Sessiz-ekran görünürlük kontrolü (validate_silent_visibility) ve aksiyon/kalite kapısı (validate_high_action) ile komplikasyonlu, somut fiziksel değişim içeren ve sakin/statik olmayan senaryolar üretir. Son 60 günde kullanılan kombinasyonları atlar. 3 katmanlı güvenlik filtresi (regex + GPT preflight + retry rewrite) uygular.",
+  "ozet": "Pazartesi ve Cuma günleri gerçekçi bir denizcilik, kıyı veya şehir afeti mikro-hikâye videosu üretip YouTube Shorts olarak otomatik yükler.",
+  "eleme": "Senaryo kapıları (görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike, cast aralığı, özet-beat tutarlılığı, gemi-ortam uyumu) ve simplifier çıktı kapısı (Beat 1 fiili, kişi sayısı, gemi adı, ilk cümlede tepki vb.) ile somut, süren fiziksel tehlike içeren senaryolar üretir. Son 60 günde kullanılan kombinasyonları atlar. Güvenlik: regex + GPT preflight + Kie reddinde retry rewrite; sessiz fallback yok.",
   "model": "Senaryoyu OpenAI (GPT-4o), güvenlik kontrolünü GPT-4o mini yazar. Videoyu Seedance 2 Mini (bytedance/seedance-2-fast, 480p, 15s) üretir — Seedance Full, Veo 3.1 ve Wan 2.6 ile karşılaştırıldıktan sonra bilinçli seçildi.",
   "sunum": "Video üretildiğinde YouTube'a private olarak yüklenir; kullanıcı elle inceleyip AI-etiketini işaretledikten sonra public yapar. Tüm süreç Notion tablosuna kaydedilir (kurulum 2026-09-12'de tamamlandı, aktif).",
   "durum": "aktif",
   "dahil_et": true,
-  "kaynak_notu": "Railway cron şu an duraklatılmış durumda; duraklatma sebebi olan Notion tekrar-önleme kurulumu 2026-09-12'de tamamlandı, cron'un tekrar aktif edilmesi ayrı bir karar (bkz. _knowledge/deploy-registry.md)."
+  "kaynak_notu": "Railway cron AKTİF (30 13 * * 1,5, Pzt+Cuma 16:30 TR; 2026-09-12'de açıldı, son otomatik koşu 2026-09-21). Kod düzeltme turları sürerken devam kararı açık (2026-09-24). Bkz. _knowledge/deploy-registry.md."
 }

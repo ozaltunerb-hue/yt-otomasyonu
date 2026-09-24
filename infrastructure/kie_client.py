@@ -130,16 +130,16 @@ class KieClient:
         style_suffix: str = "",
     ) -> str:
         """
-        Tek bir video üretir — 4 katmanlı içerik güvenliği ile.
+        Tek bir video üretir — içerik güvenliği katmanlarıyla.
 
-        Savunma derinliği:
-          1. GPT Pre-flight Check (~2s) — riskli promptu Kie AI'a göndermeden yakalar
-          2. ContentFilterError → GPT Rewrite (~2s) — rejection reason ile akıllı yeniden yazma
-          3. 2. retry → farklı GPT rewrite (daha agresif)
-          4. Model Fallback — tüm retry'lar başarısızsa alternatif modeli dene
+        Akış:
+          1. GPT Pre-flight (~2s) — hikaye Kie'ye gitmeden değerlendirilir; başarısızsa PreflightError
+          2. Kie içerik filtresi reddederse (ContentFilterError) GPT hikayeyi yeniden yazar (en fazla 2 kez)
+          3. Hâlâ reddediliyorsa ya da rewrite başarısızsa ContentFilterError fırlar;
+             main.py farklı senaryoyla tekrar dener. Model fallback yok.
 
         Args:
-            model: "seedance-2" veya "veo3.1"
+            model: MODEL_CONFIG anahtarı (örn. "bytedance/seedance-2-fast", "veo3.1")
             prompt: Video prompt'u
             orientation: "portrait" veya "landscape"
             duration: Saniye (4-15 arası, Seedance)

@@ -1,6 +1,6 @@
 """
 YouTube Otomasyonu V3 — Fail-Fast Config
-"Pets Got Talent" Tam Otonom Pipeline.
+"DeepMyster" Tam Otonom Pipeline.
 Tüm gerekli env variable'ları boot time'da doğrular.
 Telegram kaldırıldı — CronJob ile çalışır.
 """

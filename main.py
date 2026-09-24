@@ -4,7 +4,7 @@ from __future__ import annotations
 """
 YouTube Otomasyonu V3 — "DeepMyster" Yeni Referans Standardı Pipeline
 ===================================================================
-Her gün otomatik çalışır: tek kesintisiz çekim fiziksel olay senaryosu üretir (süre config.DEFAULT_DURATION ile kontrol edilir) →
+Railway cron ile (Pazartesi + Cuma) çalışır: tek kesintisiz çekim fiziksel olay senaryosu üretir (süre config.DEFAULT_DURATION ile kontrol edilir) →
 Seedance 2 Mini ile video üretir → YouTube Shorts olarak yükler.
 
 Telegram YOK — CronJob ile tetiklenir, insan müdahalesi gerektirmez.
@@ -15,7 +15,7 @@ Telegram YOK — CronJob ile tetiklenir, insan müdahalesi gerektirmez.
   python main.py --no-upload    → Gerçek video üret ama YouTube'a yükleme (Lokal test)
   python main.py --check        → Sistem sağlık kontrolü
 
-Railway CronJob: `python main.py` — iş günleri 16:30 TR (13:30 UTC) tetiklenir.
+Railway CronJob: `python main.py` — Pazartesi ve Cuma 16:30 TR (13:30 UTC), railway.json cronSchedule `30 13 * * 1,5`.
 """
 import os
 import sys

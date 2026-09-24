@@ -4,11 +4,14 @@ from __future__ import annotations
 Prompt Generator — "DeepMyster" Doğukan Metodolojisi & Yaratıcı Serbestlik Pipeline.
 
 Akış:
-  1. Creative Engine'den geniş denizcilik katalizörü alır (Kutup, Ağır Yük, Kurtarma, vb. + Negatif Geçmiş).
-  2. GPT-4o ile tam yaratıcı özgürlükle (config.DEFAULT_DURATION saniyelik) tek kesintisiz çekim fiziksel senaryo tasarlar.
-  3. Sessiz Ekran Görünürlük Kontrolü (görünmez sualtı/makine durumlarını filtreler).
-  4. GPT-4o ile Seedance 2 Mini'ye özel 25–45 kelimelik yüksek sinyalli prompt üretir (Doğukan Less is More).
-  5. YouTube metadata (merak odaklı, no-spoiler) ve cerrahi safety sanitizer uygular.
+  1. Creative Engine'den katalizör alır: 7 domain (ferry, shipyard, marina, cruise + tornado, urban,
+     beach), gemi/olay/ortam (uyumsuz kombinasyonlar filtreli) + Notion negatif geçmiş.
+  2. GPT-4o ile (config.DEFAULT_DURATION saniyelik) tek kesintisiz çekim 3 beat'lik senaryo yazar (5 aday).
+  3. Senaryo kapıları: görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike, cast aralığı,
+     özet-beat tutarlılığı, gemi-ortam uyumu. Geçenler skorlanır.
+  4. Simplifier 25–45 kelimelik hikayeye indirir; çıktı kapısı (A Beat 3, B kamera öznesi, C Beat 1 fiili,
+     E kişi sayısı, F gemi adı, G ilk cümlede tepki) + retry. Sessiz fallback yok.
+  5. Regex sanitizer, stil eki (kamera + gerçekçilik) ve YouTube metadata (merak odaklı, no-spoiler).
 """
 import re
 import json
