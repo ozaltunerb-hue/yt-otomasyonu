@@ -167,6 +167,28 @@ _STATIC_START_REGEXES = [
     ("signals for/to", re.compile(r"\bsignals?\s+(?:for|to)\b")),
 ]
 
+# Kamera/görüntü öznesiyle açılış (2026-09-24): "The image captures…", "A fixed camera shows…".
+# Bildirilen fiil ("straining") geçerli olsa bile özne kamera olunca Kie durgun/kurulum
+# tarzı açabilir. Sadece cümle BAŞI (BEAT etiketi atlanarak); ortadaki "…as the camera
+# captures" serbest. "From the bow of…, the catamaran lurches" gibi konum girişleri serbest:
+# orada özne hâlâ tekne.
+_CAMERA_NOUNS = (r"(?:image|scene|camera|cam|cctv|shot|footage|video|frame|feed|view|lens|"
+                 r"recording|clip|picture|surveillance)")
+_CAMERA_VERBS = (r"(?:captures?|captured|shows?|opens?|catches|catch|films?|records?|reveals?|depicts?|"
+                 r"displays?|pans?|focuses|frames?|zooms?|cuts?|begins?|starts?|looks|observes?|features?|"
+                 r"presents?|is\s+trained|is\s+fixed|is\s+(?:capturing|showing|filming|recording|focusing|panning))")
+_CAMERA_SUBJECT_RE = re.compile(
+    r"^\s*(?:beat\s*\d+\s*(?:\([^)]*\))?\s*[:\-—]\s*)?"
+    r"(?:"
+    rf"(?:(?:the|a|an|this)\s+)?(?:[\w-]+\s+){{0,3}}?{_CAMERA_NOUNS}s?"
+    r"(?:\s+(?:from|of|on)\s+(?:[\w'-]+\s+){0,5}?[\w'-]+)?"
+    rf"\s+{_CAMERA_VERBS}\b"
+    r"|(?:we|viewers?)\s+see\b|in\s+the\s+frame\b|on\s+(?:the\s+)?screen\b"
+    r")",
+    re.IGNORECASE,
+)
+_STATIC_START_REGEXES.append(("kamera öznesiyle açılış", _CAMERA_SUBJECT_RE))
+
 
 def _static_start_hits(vstart_low: str) -> list[str]:
     """Beat 1 blacklist: visible_start'ta eşleşen durgun kurulum kalıpları (küçük harf girdi)."""

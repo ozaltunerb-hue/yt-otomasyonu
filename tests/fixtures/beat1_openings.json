@@ -12,7 +12,7 @@
  [
   "beat1_out#3",
   "BEAT 1: The fixed security camera shows an overcast sky with waves crashing violently against the beach, already encroaching on the coastal road.",
-  true
+  false
  ],
  [
   "beat1_out#4",
@@ -102,7 +102,7 @@
  [
   "n14_out#1",
   "A fixed camera shows four workers in orange coveralls, their attention is drawn urgently to the vessel as it begins to shift.",
-  true
+  false
  ],
  [
   "n14_out#2",
@@ -132,7 +132,7 @@
  [
   "n14b_out#2",
   "The camera catches the instant a powerful gust of wind lifts beach umbrellas into the air, scattering sand and debris.",
-  true
+  false
  ],
  [
   "n14b_out#3",

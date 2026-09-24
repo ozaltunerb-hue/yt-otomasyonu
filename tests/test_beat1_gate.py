@@ -46,12 +46,14 @@ def _scenario(visible_start: str) -> dict:
 class TestBeat1Gate(unittest.TestCase):
 
     def test_dry_run_fixtures(self):
-        """Gerçek dry-run: #3 geçer, #1 #2 #4 #5 reddedilir."""
+        """Gerçek dry-run: #1 #2 #4 #5 aksiyon fiili yok diye reddedilir. #3'ün fiili var
+        (crashing); 2026-09-24'ten beri SADECE kamera öznesiyle açıldığı için reddedilir."""
         for n, vs in DRY_RUN_VISIBLE_STARTS.items():
             with self.subTest(senaryo=n):
                 ok, failures = validate_high_action(_scenario(vs))
                 if n == 3:
-                    self.assertTrue(ok, failures)
+                    self.assertFalse(ok)
+                    self.assertEqual(failures, ["Beat 1 durgun kurulumla başlıyor: ['kamera öznesiyle açılış']"])
                 else:
                     self.assertFalse(ok)
                     self.assertIn("Beat 1'de aksiyon fiili yok, tehlike başlamamış", failures)
@@ -177,10 +179,11 @@ class TestBeat1ExpandedStems(unittest.TestCase):
                 self.assertTrue(validate_high_action(_scenario(vs))[0])
 
     def test_previous_dry_run_unchanged(self):
-        """Genişletme önceki turun sonucunu değiştirmemeli: #3 geçer, diğerleri red."""
+        """Genişletme önceki turun sonucunu değiştirmemeli: #3'te aksiyon fiili bulunur, diğerlerinde
+        bulunmaz. (#3 artık kamera öznesi yüzünden reddediliyor; bkz. test_dry_run_fixtures.)"""
         for n, vs in DRY_RUN_VISIBLE_STARTS.items():
             with self.subTest(senaryo=n):
-                self.assertEqual(validate_high_action(_scenario(vs))[0], n == 3)
+                self.assertEqual(bool(_beat1_action_words(vs)), n == 3)
 
 
 class TestBeat1N14Stems(unittest.TestCase):
@@ -379,7 +382,8 @@ class TestBackupStemsN14c(unittest.TestCase):
 
 class TestBeat1OpeningsRegression(unittest.TestCase):
     """6 dry-run'dan 30 gerçek visible_start (tests/fixtures/beat1_openings.json).
-    Beklenen sonuçlar N14c anındaki kapı kararıdır; bildirilen fiil yok, yedek yol test edilir."""
+    Beklenen sonuçlar N14c anındaki kapı kararıdır; bildirilen fiil yok, yedek yol test edilir.
+    2026-09-24 kamera öznesi kuralıyla bilinçli olarak True→False: beat1_out#3, n14_out#1, n14b_out#2."""
 
     def test_30_openings(self):
         import json
@@ -389,6 +393,60 @@ class TestBeat1OpeningsRegression(unittest.TestCase):
         for tag, vs, expected in rows:
             with self.subTest(tag=tag):
                 self.assertEqual(validate_high_action(_scenario(vs))[0], expected)
+
+
+class TestBeat1CameraSubject(unittest.TestCase):
+    """Beat 1 kamera/görüntü öznesiyle açılamaz (2026-09-24)."""
+
+    REAL = [  # gerçek dry-run açılışları, hepsi eski kapıdan geçiyordu
+        "The image captures a runaway powerboat's mooring line under extreme tension, straining against a cleat, with three marina staff in bright orange vests rushing toward the scene.",  # N14c #3
+        "The camera catches the instant a powerful gust of wind lifts beach umbrellas into the air, scattering sand and debris.",  # N14b
+        "A fixed camera shows four workers in orange coveralls, their attention is drawn urgently to the vessel as it begins to shift.",  # N14
+        "BEAT 1: The fixed security camera shows an overcast sky with waves crashing violently against the beach, already encroaching on the coastal road.",  # beat1
+    ]
+
+    def assertCameraReject(self, vs, scenario=None):
+        ok, failures = validate_high_action(scenario or _scenario(vs))
+        self.assertFalse(ok)
+        self.assertTrue(any("kamera öznesiyle açılış" in f for f in failures), failures)
+
+    def test_real_openings_rejected(self):
+        for vs in self.REAL:
+            with self.subTest(vs=vs[:40]):
+                self.assertCameraReject(vs)
+
+    def test_declared_verb_does_not_bypass(self):
+        vs = self.REAL[0]
+        self.assertCameraReject(vs, {**_scenario(vs), "beat1_action_verb": "straining"})
+
+    def test_other_variants_rejected(self):
+        for vs in ("Footage from the pier camera shows a mooring line snapping.",
+                   "The CCTV feed is showing a wave slamming the ferry ramp.",
+                   "Security footage of the car deck captures cars sliding loose.",
+                   "The shot captures a hull slamming into the pier.",
+                   "The video opens on a wave crashing over the pool deck.",
+                   "The scene shows cars sliding across the flooded deck.",
+                   "We see a mooring line snap as the yacht lurches.",
+                   "In the frame, a wave crashes over the bow."):
+            with self.subTest(vs=vs):
+                self.assertCameraReject(vs)
+
+    def test_real_subjects_pass(self):
+        for vs in ("The wave crashes over the deck as two deckhands grab the rail.",
+                   "Waves crash onto the ramp as the camera captures the surge.",
+                   "From the bow of the observer vessel, the catamaran lurches violently in the swell.",
+                   "The frame of the gantry buckles and swings toward the dock.",
+                   "The view deck railing snaps as a wave slams the ship.",
+                   "Scenery flashes as the yacht slams into the pier."):
+            with self.subTest(vs=vs):
+                self.assertEqual(_static_start_hits(vs.lower()), [], vs)
+
+    def test_writer_rule7_subject_sentence(self):
+        from core.creative_engine import MARITIME_INSPIRATION_DOMAINS, build_scenario_writer_system
+        for d in MARITIME_INSPIRATION_DOMAINS:
+            with self.subTest(domain=d):
+                self.assertIn("camera position and framing belong only in observer_camera",
+                              build_scenario_writer_system(15, d))
 
 
 class TestBeat3Gate(unittest.TestCase):
