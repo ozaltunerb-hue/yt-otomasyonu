@@ -30,7 +30,7 @@ CLEAN = [
     "cruise_ship_operations|mega cruise ship|bow thruster docking failure|open-air pool deck|fixed_cctv",
     "ferry_operations|passenger car ferry|secured vehicles breaking loose|island crossing route|chase_pov",
     "marina_and_yacht_operations|runaway powerboat|wake collision|marina fairway|bystander_handheld",
-    "shipyard_and_drydock_engineering|vessel on slipway|drydock flooding instability|shipyard basin|fixed_cctv",
+    "shipyard_and_drydock_engineering|sailing yacht|drydock flooding instability|shipyard basin|fixed_cctv",
     "open_beach_coastal_events|none|storm surge|sandy shoreline|fixed_cctv",
     "coastal_tornado_landfall|sailing yacht|tornado landfall|harbor area|bystander_handheld",
 ]

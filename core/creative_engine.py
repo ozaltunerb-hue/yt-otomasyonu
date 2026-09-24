@@ -43,7 +43,7 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
             "Island car ferry crew directing vehicles while surge waves wash across lower loading ramp during emergency departure.",
             "On a passenger car ferry's lower vehicle deck, a sudden roll sends rows of lashed cars straining against their chains, grinding hard against each other.",
             "On a ferry's vehicle deck, a poorly secured car breaks loose in rough seas and slides into a neighboring vehicle, drivers scrambling out in a panic.",
-            "A car waiting at the ramp entrance is jolted hard as the vessel suddenly rolls, the driver braking hard in a panic to avoid rolling off the ramp.",
+            "A car waiting at the ramp entrance is jolted hard as the passenger car ferry suddenly rolls, the driver braking hard in a panic to avoid rolling off the ramp.",
             "On an open-deck island car ferry, sudden wash floods across the vehicle deck submerging tires as owners in casual clothing dash back to their cars.",
             "A lashing chain snaps on the vehicle deck, freeing a car to slide across the wet deck as crew scramble clear of its path.",
         ],
@@ -56,12 +56,12 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
             "Marina staff using long boat hooks to fend off drifting luxury yacht slamming toward wooden pontoons in sudden harbor squall.",
             "Private yacht with a jammed throttle careens out of control across the marina fairway as the skipper fights the wheel and dockworkers scatter clear.",
             "Marina emergency response crew in safety gear rushing along pontoon with fire hoses toward smoking yacht aft deck.",
-            "Dockmaster and marina personnel securing straining cleat lines as violent storm surge lifts floating pontoons with tilting boats.",
+            "Dockmaster and marina personnel securing straining cleat lines as violent storm surge lifts floating pontoons with tilting motor yachts.",
             "Marina staff on a floating pontoon race to fend off a drifting runaway powerboat before it slams into the concrete breakwater.",
             "A sailing yacht caught broadside in a passing vessel's wake near the marina entrance heels hard, nearly capsizing as the crew scramble to the high side.",
             "A yard travel lift malfunctions with a hoisted yacht swinging dangerously in its slings as yard staff scatter clear of the suspended hull.",
-            "A dockside electrical fire flares and spreads rapidly toward neighboring boats as marina staff race to contain it with extinguishers and hoses.",
-            "A mooring line snaps during a dockside gathering, the boat lurching hard toward the pier as people aboard lose their footing and grab for the rail.",
+            "A dockside electrical fire flares and spreads rapidly toward neighboring sailing yachts as marina staff race to contain it with extinguishers and hoses.",
+            "A mooring line snaps during a dockside gathering, the luxury motor yacht lurching hard toward the pier as people aboard lose their footing and grab for the rail.",
             "A jet ski launches airborne after hitting another vessel's wake at the marina entrance, the rider bracing hard for a rough landing.",
         ],
     },
@@ -73,7 +73,7 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
             "Terminal dockworkers jumping back as heavy mooring line snaps violently under high tension in gale winds.",
             "Passenger ferry drifts out of control toward a crowded terminal pier as dockside crowds scramble clear and crew fire emergency horn blasts, the hull grazing the fender pilings at the last second.",
             "A cruise liner narrowly misses a pier structure as the captain executes a last-second emergency turn, passengers on the open upper deck bracing against the railings.",
-            "Terminal dock staff rushing to secure double-cleated lines from pitching passenger vessel in breaking waves.",
+            "Terminal dock staff rushing to secure double-cleated lines from a pitching passenger car ferry in breaking waves.",
             "Cruise ship's towering hull surges against the terminal fendering as mooring winches strain and dock crew scramble clear of snapping lines in gusting crosswind.",
             "A cruise ship's pool-deck glass wind-break screen cracks and shatters under a sudden storm gust, deck staff evacuating sunbathing passengers from the area.",
         ],
@@ -96,7 +96,7 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
         "reference_scenarios": [
             "A massive green wave crashes over the bow of a passenger car ferry, spray bursting across the bridge windows as officers brace at the consoles.",
             "Deckhands in orange foul weather gear cling to lifelines on a rolling car ferry's open vehicle deck as seawater sweeps between lashed cars.",
-            "Ship captain and helmsman gripping steering consoles as green seawater floods forward bridge windows in towering swell.",
+            "A high-speed catamaran's captain and helmsman grip steering consoles as green seawater floods the forward bridge windows in towering swell.",
             "A sailing yacht heels violently in freezing cross-seas as its crew in heavy foul weather gear fight to reef the thrashing mainsail.",
             "A high-speed catamaran yaws hard off course in towering storm swells as the bridge crew fight the helm and passengers brace in their seats.",
             "A high-speed catamaran slams down hard off a storm swell, loose luggage tumbling across the passenger cabin floor.",
@@ -122,7 +122,7 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
         "reference_scenarios": [
             "Deck crew in bright orange foul weather gear rushing across flooded deck to deploy portable emergency bilge pumps.",
             "Cruise tender boat crew launch into violent breaking surf to reach a swamped jet ski rider, the tender pitching hard in the swell.",
-            "Ship officers on open bridge wing scanning dark storm waves with high-power searchlights to guide rescue swimmers.",
+            "Cruise liner officers on the open bridge wing scanning dark storm waves with high-power searchlights to guide rescue swimmers.",
             "Ferry deckhands battle a howling gale to re-rig torn safety lines across the open car deck as spray sweeps over the rail.",
             "A lifeboat swinging from a mega cruise ship's davits slams against the towering hull in heavy swell as crew fight the falls.",
             "Cruise liner passengers scrambling down a swaying gangway into a pitching tender boat as crew battle to hold it steady against the hull in rough swell.",
@@ -133,13 +133,13 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
     "machinery_failures": {
         "title": "Makine, Dümen & Sistem Arızaları",
         "reference_scenarios": [
-            "Ship captain and helmsman fighting manual emergency steering wheel in wheelhouse as vessel drifts toward rocky breakwater.",
+            "Ferry captain and helmsman fighting the manual emergency steering wheel as the passenger car ferry drifts toward a rocky breakwater.",
             "Marine engineers in boiler suits rushing through vibrating engine room to isolate blown hydraulic steering pipe.",
             "Electrical engineer resetting main switchboard breakers under emergency red backup lighting during violent storm blackout.",
             "Bridge officers and lookouts on a cruise liner reacting to sudden bow thruster failure as crosswinds push the towering hull toward the terminal pier during docking.",
-            "A restraining cable snaps early on a shipyard slipway, the vessel lurching down the ways as yard workers in hi-vis scatter clear.",
+            "A restraining cable snaps early on a shipyard slipway, the sailing yacht lurching down the ways as yard workers in hi-vis scatter clear.",
             "Chief engineer and mechanics working frantically on jammed steering gear actuator as storm waves batter the hull.",
-            "Bridge crew scrambling as the backup radar flickers out and the emergency generator strains to take load while the ship rolls hard in heavy seas.",
+            "Bridge crew scrambling as the backup radar flickers out and the emergency generator strains to take load while the cruise liner rolls hard in heavy seas.",
         ],
     },
 }
@@ -210,7 +210,7 @@ DOMAIN_ATTRIBUTES = {
     },
 
     "shipyard_and_drydock_engineering": {
-        "ships": ["Vessel on Slipway"],
+        "ships": ["Luxury Motor Yacht", "Sailing Yacht", "High-speed Catamaran", "Passenger Car Ferry"],
         "environments": ["Shipyard basin", "Drydock interior", "Construction slipway"],
         "events": ["Drydock flooding instability", "Slipway gravitational launch friction", "Keel block settling failure"]
     },
@@ -301,6 +301,25 @@ DOMAIN_ATTRIBUTES = {
 
 # GPT'ye gösterilen gemi evreni: domain havuzlarından otomatik türer, elle liste tutulmaz.
 VESSEL_UNIVERSE = sorted({s for a in DOMAIN_ATTRIBUTES.values() for s in a["ships"]})
+
+# Kie'ye giden prompt'ta atanan geminin adı geçmeli (2026-09-24, TUR 8): "the vessel"
+# yazılınca Seedance belirsizi kargo gemisi olarak çiziyordu. Gemi → kabul edilen ad kalıbı.
+SHIP_NAME_PATTERNS = {
+    "Passenger Car Ferry": r"\bferr(?:y|ies)\b",
+    "High-speed Catamaran": r"\bcatamarans?\b",
+    "Luxury Motor Yacht": r"\byachts?\b",
+    "Sailing Yacht": r"\b(?:yachts?|sailboats?)\b",
+    "Runaway Powerboat": r"\b(?:power|speed)boats?\b",
+    "Jet Ski": r"\bjet[- ]?skis?\b",
+    "Ocean Cruise Liner": r"\bcruise (?:ship|liner)s?\b|\bliners?\b",
+    "Mega Cruise Ship": r"\bcruise (?:ship|liner)s?\b|\bliners?\b",
+    "Cruise Tender Boat": r"\btenders?\b",
+}
+
+# Import anında kontrol: evrene eklenen gemi ad kalıbı olmadan sessizce kapıdan kaçmasın.
+_missing_names = set(VESSEL_UNIVERSE) - set(SHIP_NAME_PATTERNS)
+if _missing_names:
+    raise RuntimeError(f"SHIP_NAME_PATTERNS eksik: {sorted(_missing_names)}")
 
 
 def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
@@ -449,7 +468,7 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
    - BEAT 3 — CONSEQUENCE (<<LATE>>-<<DURATION>>s): The immediate, visible physical danger, still actively unfolding at <<DURATION>>s.
 4. KINETIC MOMENTUM: The viewer must see a visible physical event unfolding dynamically.
 5. CONCRETE PHYSICAL OUTCOME: The <<DURATION>>th second must show the beat 3 danger still visibly in progress.
-6. NO FORCED MARITIME ASSETS: If the domain is Urban City Disasters or Open Beach Events, and `vessel_class` is "None", DO NOT create ships, boats, or docks. Keep it strictly urban or strictly beach. If `vessel_class` is provided, stick to that exact ship. NEVER spawn any additional vessel beyond the given vessel_class (no rescue boats, no escort boats).
+6. NO FORCED MARITIME ASSETS: If the domain is Urban City Disasters or Open Beach Events, and `vessel_class` is "None", DO NOT create ships, boats, or docks. Keep it strictly urban or strictly beach. If `vessel_class` is provided, stick to that exact ship. NEVER spawn any additional vessel beyond the given vessel_class (no rescue boats, no escort boats). Always call the vessel by its assigned type (e.g. 'the sailing yacht', 'the passenger car ferry') in visible_start and every later beat; never refer to it only as 'the vessel', 'the ship' or 'the boat'.
 7. BEAT 1 MUST SHOW DANGER ALREADY IN MOTION (NON-NEGOTIABLE): visible_start must contain a physical action verb happening right now (e.g. crashes, slams, snaps, surges, swings, tilts). FORBIDDEN patterns in visible_start: 'is visible', 'visible from', the phrase 'as [X] approaches' (e.g. 'as the ferry approaches the pier'), 'scene opens', 'observing as', 'bustling', 'looming', 'signals for'. The grammatical subject of visible_start's first sentence must be the physical thing in danger or the people in the scene (e.g. 'A mooring line snaps…', 'Waves crash…'); camera position and framing belong only in observer_camera, never in visible_start. Instead, describe the crisis as it happens or immediately after it starts. Beat 1 is the TRIGGER starting (wave hits, line snaps, blocks give way); beat 3 is the RESULT. Starting with the trigger is required; starting with the result is still forbidden.
 
 ## OUTPUT FORMAT (STRICT JSON):
@@ -534,7 +553,7 @@ Your ONE job: Convert the maritime scenario into a HIGH-SIGNAL, PHOTOREALISTIC p
 2. NO CAMERA/LIGHTING TAGS: Do NOT end the prompt with a camera or lighting description (e.g. no 'Fixed CCTV camera, raw overcast footage.'). Camera and lighting are appended automatically afterward — focus entirely on the physical scene, action, and outcome.
 3. PRESERVE REALISM DETAILS: Keep authentic PPE colors for crew (orange/red/yellow gear, wetsuits, coveralls — never white hazmat suits) and ordinary civilian clothing for passengers/guests/drivers (never hi-vis PPE on civilians), and raw natural weather exactly as described in the scenario. Do not sanitize, glamorize, or make water/ice/lighting look glossy or CGI-clean.
 4. STRICT CHRONOLOGICAL FLOW: You MUST maintain the exact timeline: 1) Initial state, 2) STRONG VISIBLE PHYSICAL MOVEMENT (e.g. swings, veers, slams, pitches), 3) Final consequence. NEVER start the prompt with the vessel already damaged or the consequence already happening. Action must be active and visible, not passive (like 'is in danger').
-5. NO HALLUCINATION / STRICT INVENTORY: Do NOT add any new vessels, characters, objects, or dramatic elements (e.g. 'escort boat', 'officer', 'dust', 'debris') that are not explicitly present in the provided scenario. Preserve the exact Vessel Class and Environment. Focus ONLY on a single main action chain.
+5. NO HALLUCINATION / STRICT INVENTORY: Do NOT add any new vessels, characters, objects, or dramatic elements (e.g. 'escort boat', 'officer', 'dust', 'debris') that are not explicitly present in the provided scenario. Preserve the exact Vessel Class and Environment, and name the vessel by its type (e.g. 'the sailing yacht', 'the cruise liner') — never only 'the vessel', 'the ship' or 'the boat'; a prompt that does not name the vessel type is rejected. Focus ONLY on a single main action chain.
 6. PRESERVE PHENOMENA NAMES: DO NOT sanitize or dilute the specific names of massive environmental phenomena. If the scenario mentions a 'tornado', 'waterspout', 'tsunami', or 'rogue wave', YOU MUST USE THAT EXACT WORD in the prompt. Do not replace it with generic terms like 'fierce winds' or 'storm'. The natural disaster must remain the primary visual subject.
 7. NUMBER FIDELITY: If the scenario specifies a count ('Two deckhands', 'One bystander', 'Three crew'), preserve that EXACT count. If the scenario is vague (just 'crew' or 'passengers'), keep it vague — do NOT invent specific numbers. NEVER downgrade a specific count to a vague plural.
 8. BEAT 3 CONTINUATION FIDELITY: If the scenario's visible_consequence includes ongoing-danger markers ('still', 'continues', 'keeps', 'continuing'), the simplified prompt MUST preserve at least one of these markers or end with an ongoing action verb (e.g. 'surging', 'sweeps', 'keeps sliding'). NEVER simplify the final sentence to a static state.

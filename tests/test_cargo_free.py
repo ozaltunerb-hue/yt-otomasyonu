@@ -183,7 +183,7 @@ class TestVesselUniverse(unittest.TestCase):
     EXPECTED = [
         "Cruise Tender Boat", "High-speed Catamaran", "Jet Ski", "Luxury Motor Yacht",
         "Mega Cruise Ship", "Ocean Cruise Liner", "Passenger Car Ferry",
-        "Runaway Powerboat", "Sailing Yacht", "Vessel on Slipway",
+        "Runaway Powerboat", "Sailing Yacht",
     ]
 
     def test_expected_ships(self):

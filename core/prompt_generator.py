@@ -26,6 +26,7 @@ from core.creative_engine import (
     CAMERA_ARCHETYPES,
     YOUTUBE_METADATA_SYSTEM,
     VESSEL_UNIVERSE,
+    SHIP_NAME_PATTERNS,
     DOMAIN_CAST_RANGES,
     ENV_CENTRIC_DOMAINS,
     apply_style_lock,
@@ -484,8 +485,11 @@ def _verb_stem(word: str) -> str:
     return w
 
 
-def _simplified_checks(prompt: str, scenario: dict, domain_id: str) -> list[tuple[str, str]]:
-    """(log için Türkçe hata, simplifier retry'ına İngilizce düzeltme talimatı) listesi."""
+def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = "") -> list[tuple[str, str]]:
+    """(log için Türkçe hata, simplifier retry'ına İngilizce düzeltme talimatı) listesi.
+
+    ship: atanan gemi (catalyst['forced_ship']); verilmezse F kontrolü atlanır.
+    """
     sentences = re.split(r"(?<=[.!?])\s+", _BEAT_LABEL_RE.sub("", prompt or "").strip())
     first, last = sentences[0], sentences[-1]
     if not first:
@@ -530,16 +534,28 @@ def _simplified_checks(prompt: str, scenario: dict, domain_id: str) -> list[tupl
             elif stated_total != total or later_over:
                 issues.append((f"Simplifier: kişi sayısı değişmiş ({stated_total} ≠ {total}, senaryo: {phrases})",
                                f"Keep the exact head count from the scenario: '{phrases}'; do not add people."))
+
+    # F — gemi adı (TUR 8): gemi domainlerinde atanan geminin tipi prompt'ta geçmeli;
+    # "the vessel" tek başına Kie'ye kargo gemisi çizdiriyordu.
+    if domain_id in DOMAIN_CAST_RANGES and ship and ship.lower() != "none":
+        pattern = SHIP_NAME_PATTERNS.get(ship)
+        if pattern is None:
+            raise RuntimeError(f"SHIP_NAME_PATTERNS'ta '{ship}' yok — evren dışı gemi, config hatası.")
+        if not re.search(pattern, prompt, re.IGNORECASE):
+            issues.append((f"Simplifier: gemi adı yok (atanan: {ship})",
+                           f"Name the vessel by its type ('the {ship.lower()}'); never call it only "
+                           "'the vessel', 'the ship' or 'the boat'."))
     return issues
 
 
-def validate_simplified_prompt(prompt: str, scenario: dict, domain_id: str) -> tuple[bool, list[str]]:
+def validate_simplified_prompt(prompt: str, scenario: dict, domain_id: str, ship: str = "") -> tuple[bool, list[str]]:
     """Simplifier ham çıktısı (stil kilidi öncesi) Kie'ye gitmeye uygun mu?
 
     A: son cümle Beat 3 kapısından geçer (izleyerek bitiş dahil). B: kamera öznesiyle açılmaz.
     C: yazıcının bildirdiği Beat 1 fiili ilk cümlede. E: gemi domainlerinde kişi sayısı korunur.
+    F: gemi domainlerinde atanan geminin tipi adıyla geçer (ship verilirse).
     """
-    failures = [msg for msg, _ in _simplified_checks(prompt, scenario, domain_id)]
+    failures = [msg for msg, _ in _simplified_checks(prompt, scenario, domain_id, ship)]
     return not failures, failures
 
 
@@ -890,7 +906,8 @@ async def simplify_with_gate(candidates: list[dict]) -> tuple[dict, dict, list[d
         feedback = None
         for attempt in range(1 + SIMPLIFIER_MAX_RETRIES):
             simplified = await _simplify_prompt(scenario, catalyst, feedback)
-            issues = _simplified_checks(simplified.get("prompt", ""), scenario, catalyst.get("domain_id", ""))
+            issues = _simplified_checks(simplified.get("prompt", ""), scenario, catalyst.get("domain_id", ""),
+                                        catalyst.get("forced_ship") or "")
             attempts.append({
                 "summary": scenario.get("scenario_summary", ""), "attempt": attempt + 1,
                 "prompt": simplified.get("prompt", ""), "failures": [m for m, _ in issues],
