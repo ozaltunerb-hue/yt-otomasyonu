@@ -25,7 +25,8 @@ from core.prompt_generator import (
 
 FIXTURE = os.path.join(os.path.dirname(__file__), "fixtures", "simplifier_outputs.json")
 LETTER = {"Simplifier son cümle": "A", "Simplifier: kamera": "B", "Simplifier: Beat 1 fiili": "C",
-          "Simplifier: kişi sayısı": "E", "Simplifier: insan yok": "H", "Simplifier: boş": "EMPTY"}
+          "Simplifier: kişi sayısı": "E", "Simplifier: insan yok": "H", "Simplifier: ilk cümlede durağan": "I",
+          "Simplifier: insanlara yeni zarar": "J", "Simplifier: boş": "EMPTY"}
 
 
 def letters(failures):
@@ -48,7 +49,8 @@ class TestRealOutputs(unittest.TestCase):
         rows = json.load(open(FIXTURE, encoding="utf-8"))
         self.assertEqual(len(rows), 20)
         # TUR 16: 8 env-centric çıktının 8i insansız (H) -> 7 + 7 yeni red = 14
-        self.assertEqual(sum(1 for r in rows if r["expect"]), 14)
+        # TUR 17: 9.1/9.2 "four passengers stand" (I) -> 16; 8.2 "crew stand" (I) ve 10.1 "bobs" zayıf son (A) zaten reddedilmişti
+        self.assertEqual(sum(1 for r in rows if r["expect"]), 16)
         for r in rows:
             with self.subTest(tag=r["tag"]):
                 ok, failures = validate_simplified_prompt(r["prompt"], r["scenario"], r["domain"])

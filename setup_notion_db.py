@@ -95,6 +95,7 @@ DATABASE_PROPERTIES = {
     "Hata": {"rich_text": {}},
     "Güvenlik": {"rich_text": {}},
     "Hareket": {"rich_text": {}},
+    "Beat1 Fiil": {"rich_text": {}},
 }
 
 

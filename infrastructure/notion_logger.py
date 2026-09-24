@@ -124,6 +124,11 @@ class NotionTracker:
             first_prompt = scenes[0].get("prompt", "")[:2000]
             extra["Prompt"] = {"rich_text": [{"text": {"content": first_prompt}}]}
 
+        # Beat 1 fiil rotasyonu için (TUR 17)
+        verb = (prompt_data.get("beat1_action_verb") or "").strip()
+        if verb:
+            extra["Beat1 Fiil"] = {"rich_text": [{"text": {"content": verb[:100]}}]}
+
         self.update_status(STATUS_PROMPT_DONE, extra)
 
     def update_with_video(self, video_url: str):
@@ -311,6 +316,32 @@ class NotionTracker:
             return list(reversed(history[:20]))
         except Exception as e:
             log.warning(f"⚠️ Notion get_recent_history hatası (ihmal edilebilir): {e}")
+            return []
+
+    def get_recent_beat1_verbs(self, limit: int = 10) -> list[str]:
+        """Son `limit` hata-olmayan kaydın Beat 1 fiilleri (en yeni önce). Yazıcıya "farklı fiil seç"
+        ipucu olarak gider (TUR 17). Hata olursa boş liste: ipucu, kapı değil."""
+        if not self.enabled or settings.IS_DRY_RUN:
+            return []
+        payload = {
+            "filter": {"and": [
+                {"property": "Beat1 Fiil", "rich_text": {"is_not_empty": True}},
+                *[{"property": "Durum", "select": {"does_not_equal": s}} for s in RECENT_HISTORY_EXCLUDE_STATUSES],
+            ]},
+            "sorts": [{"property": "Tarih", "direction": "descending"}],
+            "page_size": limit,
+        }
+        try:
+            response = _notion_request("POST", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query", json=payload)
+            verbs = []
+            for page in response.get("results", []):
+                rt = page.get("properties", {}).get("Beat1 Fiil", {}).get("rich_text", [])
+                v = "".join(x.get("plain_text") or x.get("text", {}).get("content", "") for x in rt).strip().lower()
+                if v:
+                    verbs.append(v)
+            return verbs
+        except Exception as e:
+            log.warning(f"⚠️ Notion Beat1 fiil geçmişi okunamadı (ipucu atlanır): {e}")
             return []
 
     def update_with_safety_info(self, safety_data: dict):

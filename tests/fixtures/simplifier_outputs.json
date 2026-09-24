@@ -230,7 +230,8 @@
   "prompt": "The vessel slides down the slipway as four crew members in high-visibility coveralls stand nearby. Abruptly, the ship jerks to a halt, causing the crew to stagger and grasp railings, as the vessel teeters precariously.",
   "expect": [
    "A",
-   "C"
+   "C",
+   "I"
   ]
  },
  {
@@ -244,7 +245,9 @@
    "beat1_action_verb": "gushes"
   },
   "prompt": "Water gushes onto the open vehicle deck, where four passengers stand near cars. The surge pushes against tires, shifting cars slightly as passengers grab railings. Cars begin sliding toward the deck's edge, water still rising.",
-  "expect": []
+  "expect": [
+   "I"
+  ]
  },
  {
   "tag": "faz1#9.2",
@@ -257,7 +260,9 @@
    "beat1_action_verb": "gushes"
   },
   "prompt": "Water gushes onto the ferry's open vehicle deck, where four passengers in casual clothes stand. The surge shifts cars, pushing them toward the edge, while passengers cling to railings as the water level continues rising.",
-  "expect": []
+  "expect": [
+   "I"
+  ]
  },
  {
   "tag": "faz1#10.1",
@@ -271,6 +276,7 @@
   },
   "prompt": "A tornado churns violently over the waterfront, dark clouds swirling. The fierce winds yank a jet ski off its mooring, tossing it into turbulent water, where it bobs uncontrollably as the tornado continues its destructive path.",
   "expect": [
+   "A",
    "H"
   ]
  },

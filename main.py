@@ -88,6 +88,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     used_combos = load_used_combos()
     tracker = NotionTracker()
     recent_topics = tracker.get_recent_history(days=30)
+    recent_verbs = tracker.get_recent_beat1_verbs(limit=10)   # Beat 1 fiil rotasyonu (TUR 17)
     if recent_topics:
         log.info(f"🧠 Son 30 günden {len(recent_topics)} semantik konu negatif hafızaya eklendi")
 
@@ -102,6 +103,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
             result = await _execute_pipeline(
                 used_combos,
                 recent_topics=recent_topics,
+                recent_verbs=recent_verbs,
                 upload_active=upload_active,
                 output_path=output_path,
             )
@@ -132,6 +134,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
 async def _execute_pipeline(
     used_combos: list[str],
     recent_topics: list[str] | None = None,
+    recent_verbs: list[str] | None = None,
     upload_active: bool = True,
     output_path: str = "",
 ) -> dict:
@@ -147,6 +150,7 @@ async def _execute_pipeline(
     pipeline_config = {
         "used_combos": used_combos,
         "recent_topics": recent_topics or [],
+        "recent_verbs": recent_verbs or [],
     }
 
     try:

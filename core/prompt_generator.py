@@ -276,6 +276,8 @@ _BEAT3_BLACKLIST = [
     ("settle", re.compile(r"\bsettl(?:e|es|ed|ing)\b")),
     ("rest/halt/stop", re.compile(r"\b(?:comes?|came|coming|grinds?|ground|jerks?|screeches?)\s+to\s+(?:a\s+)?(?:rest|halt|stop|standstill)\b")),
     ("stop", re.compile(r"\bstop(?:s|ped|ping)\b")),
+    # K1 dry-run 2 #2: "then abruptly halts halfway" (TUR 17)
+    ("halt", re.compile(r"\bhalt(?:s|ed|ing)?\b")),
     ("calm", re.compile(r"\bcalm(?:s|ed|ing|ly)?\b")),
     ("anticipation", re.compile(r"\banticipation\b")),
     ("watch in/intently", re.compile(r"\bwatch(?:es|ing|ed)?\s+(?:in|intently)\b")),
@@ -284,6 +286,9 @@ _BEAT3_BLACKLIST = [
     ("under control", re.compile(r"\bunder\s+control\b")),
     ("recover", re.compile(r"\brecover(?:s|ed|ing)?\b")),
     ("cautious distance", re.compile(r"\bmaintain(?:s|ing)?\s+a\s+cautious\s+distance\b")),
+    # Zayıf büyüklük (TUR 17, K1 dry-run #3: "continues causing ripples that rock nearby boats")
+    ("zayıf büyüklük", re.compile(r"\bripples?\b|\brippling\b|\bgentl[ey]\b|\bslight(?:ly)?\b|\bmild(?:ly)?\b|"
+                                  r"\bbob(?:s|bing|bed)?\b|\bsoftly\b|\bminor\b")),
     # İzleyerek bitiş (2026-09-24, r9#5 "...tangling around a piling as they watch."):
     # "continues to thrash" işareti olsa da son kare izleyen insanlarda kalıyor.
     ("izleyerek bitiş", re.compile(
@@ -294,6 +299,8 @@ _BEAT3_BLACKLIST = [
 _BEAT3_STATIC_VERBS = {
     "standing", "waiting", "watching", "sitting", "looking", "staring", "observing",
     "idling", "resting", "remaining",
+    # İnsan jesti tehlike değil: "workers still gesturing anxiously" devam işareti sayılıyordu (TUR 17)
+    "gesturing", "inspecting", "pointing", "assessing", "signaling", "signalling",
     "stand", "wait", "watch", "sit", "look", "stare", "observe", "remain",
 }
 _STILL_RE = re.compile(r"\bstill\s+(?:\w+ly\s+)?(being\s+\w+|\w+ing)\b")   # "still water" eşleşmez
@@ -530,6 +537,43 @@ _REACTION_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Kişi ile fiil arasında en fazla 4 kelime; bağlaç varsa ayrı yan cümledir, eşleşmez (TUR 17).
+_CLAUSE_GAP = r"(?:(?!(?:as|while|and|when|but|then|before|after)\b)[\w'-]+\s+){0,4}?"
+
+# I (TUR 17): ilk cümlede durağan insan fiili. K1 dry-run #4 "three dockworkers ... stand near the yacht"
+# = Video 2'deki 4 sn donuk işçiler. Kişi ismi + fiil birlikte aranır ("standing water" eşleşmez).
+_STATIC_HUMAN_RE = re.compile(
+    rf"\b{_CAST_PERSON}\s+{_CLAUSE_GAP}(?:stand(?:s|ing)?|stood|watch(?:es|ing|ed)?|look(?:s|ing|ed)?|"
+    rf"star(?:e|es|ed|ing)|gaz(?:e|es|ed|ing)|paus(?:e|es|ed|ing)|hesitat(?:e|es|ed|ing)|"
+    rf"wait(?:s|ed|ing)?|observ(?:e|es|ed|ing))\b",
+    re.IGNORECASE,
+)
+
+# J (TUR 17): insanlara yeni zarar fiili. K1 dry-run #1: senaryo "setting three crew members into
+# action", simplifier "sweeping three crew members" yaptı. Aynı kök senaryoda bir kişiye uygulanmış olmalı.
+_HARM_VERB = (
+    r"sweep(?:s|ing)?|swept|hurl(?:s|ed|ing)?|throw(?:s|ing|n)?|threw|toss(?:es|ed|ing)?|"
+    r"knock(?:s|ed|ing)?|drag(?:s|ged|ging)?|wash(?:es|ed|ing)?|fling(?:s|ing)?|flung|"
+    r"slam(?:s|med|ming)?|crush(?:es|ed|ing)?|pin(?:s|ned|ning)?|trap(?:s|ped|ping)?|"
+    r"engulf(?:s|ed|ing)?|batter(?:s|ed|ing)?|toppl(?:e|es|ed|ing)"
+)
+# Kişi doğrudan nesne olmalı: arada edat varsa ("flinging chairs past beachgoers") zarar sandalyeye.
+_OBJECT_GAP = (r"(?:(?!(?:as|while|and|when|but|then|before|after|past|toward|towards|at|near|into|onto|"
+               r"over|around|beside|by|from|through|across|behind|in|on|to|of|with|along|under)\b)[\w'-]+\s+){0,4}?")
+_HARM_ON_PERSON_RE = re.compile(rf"\b(?P<verb>{_HARM_VERB})\s+{_OBJECT_GAP}{_CAST_PERSON}\b", re.IGNORECASE)
+_HARM_IRREGULAR = {"swept": "sweep", "threw": "throw", "thrown": "throw", "flung": "fling",
+                   "slammed": "slam", "slamming": "slam", "pinned": "pin", "pinning": "pin",
+                   "trapped": "trap", "trapping": "trap", "dragged": "drag", "dragging": "drag"}
+
+
+def _harm_stems(text: str) -> dict[str, str]:
+    """Metinde kişiye uygulanan zarar fiilleri: {kök: eşleşen ifade}."""
+    out = {}
+    for m in _HARM_ON_PERSON_RE.finditer(_PERSON_FALSE_FRIENDS_RE.sub(" ", text or "")):
+        w = m["verb"].lower()
+        out.setdefault(_HARM_IRREGULAR.get(w, _verb_stem(w)), m.group(0))
+    return out
+
 
 def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = "") -> list[tuple[str, str]]:
     """(log için Türkçe hata, simplifier retry'ına İngilizce düzeltme talimatı) listesi.
@@ -593,6 +637,23 @@ def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = 
         issues.append((f"Simplifier: ilk cümlede insan tepkisi ('{reaction.group(0)}')",
                        f"Remove '{reaction.group(0)}' from the first sentence; pair the opening action with a visible "
                        "physical effect on an object instead, and move people's reactions to a later sentence."))
+
+    # I — ilk cümlede durağan insan fiili yok (TUR 17)
+    static = _STATIC_HUMAN_RE.search(first)
+    if static:
+        issues.append((f"Simplifier: ilk cümlede durağan insan ('{static.group(0)}')",
+                       f"In the first sentence people must be moving (bracing, scrambling, lunging), never "
+                       f"'{static.group(0)}'; keep the same people and count, move any watching to a later sentence."))
+
+    # J — insanlara senaryoda olmayan zarar fiili yok (TUR 17)
+    scen_text = " ".join(scenario.get(k, "") or "" for k in
+                         ("scenario_summary", "visible_start", "physical_movement", "visible_consequence"))
+    scen_harms = _harm_stems(scen_text)
+    for stem, phrase in _harm_stems(prompt).items():
+        if stem not in scen_harms:
+            issues.append((f"Simplifier: insanlara yeni zarar fiili ('{phrase}')",
+                           f"Do not change what happens to people: '{phrase}' is not in the scenario. "
+                           "Keep the scenario's own verbs for people."))
 
     # F — gemi adı (TUR 8): gemi domainlerinde atanan geminin tipi prompt'ta geçmeli;
     # "the vessel" tek başına Kie'ye kargo gemisi çizdiriyordu.
@@ -715,6 +776,8 @@ async def generate_prompts(config: dict) -> dict:
     used_combos = config.get("used_combos", [])
     recent_topics = config.get("recent_topics", [])
     combined_history = list(dict.fromkeys(used_combos + recent_topics))
+    # Beat 1 fiil rotasyonu (TUR 17): Notion'daki son fiiller + bu koşudaki önceki adayların fiilleri
+    recent_verbs = list(config.get("recent_verbs") or [])
 
     # ── ADIM 1 & 2: Kombinasyon Seçimi ve GPT-4o Senaryo Üretimi (5 deneme, skorla en iyisi) ──
     max_scenario_attempts = 5
@@ -735,7 +798,11 @@ async def generate_prompts(config: dict) -> dict:
         log.info(f"⚓ Seçilen Gemi: {catalyst['forced_ship']} | 🌊 Olay: {catalyst['forced_event']} | 🌍 Ortam: {catalyst['forced_environment']}")
         log.info(f"🎥 Kamera Arketipi: [{camera_archetype}]")
 
+        catalyst["recent_verbs"] = list(dict.fromkeys(recent_verbs))
         raw_scenario = await _generate_scenario(catalyst, camera_archetype)
+        verb = (raw_scenario.get("beat1_action_verb") or "").strip().lower()
+        if verb:
+            recent_verbs.insert(0, verb)
         is_visible, visibility_failures = validate_silent_visibility(raw_scenario)
         is_active, action_failures = validate_high_action(raw_scenario)
         is_ongoing, beat3_failures = validate_beat3_ongoing_danger(raw_scenario)
@@ -833,6 +900,7 @@ async def generate_prompts(config: dict) -> dict:
         "animal": vessel,
         "talent": incident,
         "category": catalyst["domain_id"],
+        "beat1_action_verb": scenario.get("beat1_action_verb", ""),
     }
 
     log.info(f"✅ DeepMyster Pipeline hazır: \"{result['youtube_title']}\" ({settings.DEFAULT_DURATION}s tek kesintisiz çekim)")
@@ -857,6 +925,14 @@ async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
     camera_styles_line = (
         f"RECOMMENDED CAMERA STYLES: {', '.join(catalyst['camera_styles'])}\n"
         if camera_archetype == "fixed_cctv" else ""
+    )
+
+    # Beat 1 fiil rotasyonu (TUR 17): "lurches" üst üste geliyordu ve Kie'de görsele dönmüyordu
+    recent_verbs = [v for v in (catalyst.get("recent_verbs") or []) if v][:10]
+    verbs_line = (
+        f"RECENTLY USED OPENING VERBS (choose a different beat1_action_verb; prefer verbs with large, "
+        f"clearly visible displacement): {', '.join(recent_verbs)}\n"
+        if recent_verbs else ""
     )
 
     # chase_pov testte tek-tekne fırtına sahnesine düşüyordu — bu kural olmadan
@@ -890,7 +966,7 @@ DEEPMYSTER BRAND UNIVERSE & EXISTING REFERENCE SAMPLES (FOR INSPIRATION & TONE):
 
 RECENT PRODUCTION HISTORY (DO NOT REPEAT THESE RECENT CONCEPTS):
 {history_text}
-
+{verbs_line}
 CREATIVE DIRECTIVE:
 1. Use the brand library samples above to understand our tone, but DO NOT copy or mechanically re-skin them.
 2. Use EXACTLY the assigned Vessel Type above. DeepMyster's vessel universe is limited to: {', '.join(VESSEL_UNIVERSE)}. If the Vessel Type is 'None', show no vessel at all. The physical crisis must be within or inspired by the '{catalyst['domain_title']}' domain.
