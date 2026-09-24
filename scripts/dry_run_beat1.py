@@ -8,7 +8,7 @@ sys.path.insert(0, ROOT)
 from config import settings
 from core.creative_engine import get_creative_catalyst, choose_camera_archetype, apply_style_lock
 from core.prompt_generator import (_generate_scenario, simplify_with_gate, NoValidScenarioError, validate_silent_visibility,
-    validate_high_action, validate_beat3_ongoing_danger, validate_cast_size, score_scenario)
+    validate_high_action, validate_beat3_ongoing_danger, validate_cast_size, validate_scenario_consistency, score_scenario)
 from core.prompt_sanitizer import sanitize_prompt
 
 async def main(out_path):
@@ -25,12 +25,13 @@ async def main(out_path):
         a_ok, a_f = validate_high_action(sc)
         b_ok, b_f = validate_beat3_ongoing_danger(sc)
         c_ok, c_f = validate_cast_size(sc, cat["domain_id"])
+        s_ok, s_f = validate_scenario_consistency(sc)
         hist.append(key); used.append(key)
-        ok = v_ok and a_ok and b_ok and c_ok
+        ok = v_ok and a_ok and b_ok and c_ok and s_ok
         rows.append({"n": i+1, "domain": cat["domain_id"], "camera": cam, "ship": cat["forced_ship"],
-                     "event": cat["forced_event"], "accepted": ok, "failures": v_f + a_f + b_f + c_f,
+                     "event": cat["forced_event"], "accepted": ok, "failures": v_f + a_f + b_f + c_f + s_f,
                      "score": score_scenario(sc) if ok else None, "scenario": sc, "catalyst": cat})
-        print(f"--- #{i+1} {cat['domain_id']} | {cam} | ok={ok} score={rows[-1]['score']} fail={v_f+a_f+b_f+c_f}", flush=True)
+        print(f"--- #{i+1} {cat['domain_id']} | {cam} | ok={ok} score={rows[-1]['score']} fail={v_f+a_f+b_f+c_f+s_f}", flush=True)
     acc = [r for r in rows if r["accepted"]]
     out = {"rows": [{k: v for k, v in r.items() if k != "catalyst"} for r in rows]}
     if acc:

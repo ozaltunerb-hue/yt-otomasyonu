@@ -446,6 +446,33 @@ def validate_cast_size(scenario: dict, domain_id: str) -> tuple[bool, list[str]]
     return not failures, failures
 
 
+# ── Özet ↔ beat tutarlılığı (2026-09-24, TUR 6) ──
+# Faz 3: özet "beachgoers scramble for safety" diyor, 3 beat'te insan yok; simplifier özeti de
+# okuduğu için insanlar Kie prompt'una taşındı. Kişi ismi gibi görünen nesne ifadeleri hariç.
+_PERSON_FALSE_FRIENDS_RE = re.compile(
+    r"\bguard\s*rails?\b|\bguardrails?\b|\blifeguard\s+(?:tower|stand|station|hut|chair|post)s?\b|\bman-made\b|"
+    r"\bpassengers?\s+(?:car\s+)?(?:ferry|ferries|ship|ships|vessel|vessels|deck|decks|terminal|gangway|ramp|"
+    r"lounge|area|seats?|cabins?|liner)\b|"
+    r"\bcrew\s+(?:quarters|cabins?|deck|boat|tender|lift)\b",
+    re.IGNORECASE,
+)
+
+
+def _person_mentions(text: str) -> list[str]:
+    """Metindeki kişi isimleri; 'guard rail', 'Passenger Car Ferry' gibi nesne ifadeleri sayılmaz."""
+    return [m.group(0) for m in _CAST_ANY_PERSON_RE.finditer(_PERSON_FALSE_FRIENDS_RE.sub(" ", text or ""))]
+
+
+def validate_scenario_consistency(scenario: dict) -> tuple[bool, list[str]]:
+    """Özet, 3 beat'te olmayan insanları sahneye sokuyor mu? (simplifier özeti de okur)"""
+    summary_people = _person_mentions(scenario.get("scenario_summary", ""))
+    beat_people = [p for k in ("visible_start", "physical_movement", "visible_consequence")
+                   for p in _person_mentions(scenario.get(k, ""))]
+    if summary_people and not beat_people:
+        return False, [f"Özet beat'lerde olmayan insanlardan bahsediyor: {summary_people}"]
+    return True, []
+
+
 # ── Simplifier çıktı kapısı (2026-09-24, TUR 5) ──
 # Senaryo kapıları senaryoya bakıyordu; simplifier çıktısı Kie'ye kontrolsüz gidiyordu.
 # Faz 1 ölçümü (20 çıktı): Beat 3 %10, Beat 1 fiili düşmüş %15, kişi sayısı düşmüş %20.
@@ -636,8 +663,9 @@ async def generate_prompts(config: dict) -> dict:
         is_active, action_failures = validate_high_action(raw_scenario)
         is_ongoing, beat3_failures = validate_beat3_ongoing_danger(raw_scenario)
         is_cast_ok, cast_failures = validate_cast_size(raw_scenario, catalyst["domain_id"])
-        is_valid = is_visible and is_active and is_ongoing and is_cast_ok
-        failures = visibility_failures + action_failures + beat3_failures + cast_failures
+        is_consistent, consistency_failures = validate_scenario_consistency(raw_scenario)
+        is_valid = is_visible and is_active and is_ongoing and is_cast_ok and is_consistent
+        failures = visibility_failures + action_failures + beat3_failures + cast_failures + consistency_failures
 
         combined_history.append(combo_key)
         used_combos.append(combo_key)

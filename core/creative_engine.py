@@ -457,7 +457,7 @@ All field values are plain descriptive prose. Never start a value with a label o
 {
   "vessel_class": "Specific real-world vessel class (or 'None' if the prompt specifies it's a gemisiz sahne/şehir/plaj)",
   "incident_type": "Short 3-5 word label of the physical crisis",
-  "scenario_summary": "One clear, punchy sentence covering all three beats: the normal moment, what goes wrong, and the visible consequence",
+  "scenario_summary": "One clear, punchy sentence covering only what the three beats show: the opening action, what goes wrong, and the visible consequence. It must not introduce any person, vessel, or object that is not in visible_start, physical_movement, or visible_consequence",
   "visible_start": "<<VISIBLE_START_DESC>>",
   "beat1_action_verb": "The single main physical action verb of visible_start's first sentence, copied exactly as written there (e.g. 'gushes', 'spins', 'lifts'). It must be what the hazard does, not what people or the camera do.",
   "physical_movement": "<<PHYSICAL_MOVEMENT_DESC>>",
