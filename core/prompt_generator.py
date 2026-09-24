@@ -25,6 +25,7 @@ from core.creative_engine import (
     choose_camera_archetype,
     CAMERA_ARCHETYPES,
     YOUTUBE_METADATA_SYSTEM,
+    VESSEL_UNIVERSE,
     apply_style_lock,
 )
 
@@ -115,6 +116,16 @@ _HIGH_ACTION_KEYWORDS = [
     "ruptur", "strain", "jam", "buckle", "shear", "sever", "detach",
     "spark", "smoke", "drift", "surge", "topple", "tilt", "sink",
     "grind", "wedge", "brace", "scramble", "out of control",
+    # 2026-09-24: GPT'nin Beat 1'de gerçekte kullandığı fiiller (N3 dry-run).
+    # roll/fall/pitch bilinçli yok: "clouds rolling in", "rain falling", "pitch black".
+    "shake", "gush", "collapse", "hurl", "yank", "sweep", "whip", "plunge",
+    "veer", "lash", "pound", "batter", "heave", "shatter", "twist", "barrel",
+    "slide", "slip", "spray", "flip", "tumble",
+    # 2026-09-24 N14: tornado/rüzgâr açılışları ("spins", "knocks", "swirling")
+    "knock", "spin", "swirl", "shift", "rush", "sway", "jolt", "jerk",
+    # 2026-09-24 N14c: yedek liste için son ekleme. Ana yol artık GPT'nin
+    # bildirdiği beat1_action_verb; bu liste sonsuz genişletilmeyecek.
+    "lift", "scatter", "erupt",
 ]
 
 _STATIC_KEYWORDS = [
@@ -138,6 +149,183 @@ _STATIC_START_PATTERNS = [
 # "Two yachts can be seen..." gibi genel "Two X can be seen" kalıbı (yukarıdaki
 # "can be seen at/near" ikilisinin kaçırdığı, "at/near" olmayan varyantlar için)
 _STATIC_START_REGEX = re.compile(r"\btwo\s+\w+[\w\s]{0,30}\bcan be seen\b", re.IGNORECASE)
+
+# Kelime sınırlı kalıplar (2026-09-24 tespit edildi). Substring değil regex:
+# "is visible" düz aramada "is visibly buckling"i, "opens on" ise "hatch opens
+# onto"yu yanlışlıkla reddederdi.
+_STATIC_START_REGEXES = [
+    ("<iki X görülebilir kalıbı>", _STATIC_START_REGEX),
+    ("is visible", re.compile(r"\bis\s+visible\b")),
+    ("visible from", re.compile(r"\bvisible\s+from\b")),
+    ("as X approaches", re.compile(r"\bas\s+(?:it|the\s+(?:[\w-]+\s+){0,3}?[\w-]+)\s+(?:is\s+)?approach(?:es|ing)\b")),
+    ("scene opens", re.compile(r"\bscene\s+opens\b")),
+    ("observing as", re.compile(r"\bobserv(?:es|ing)\s+as\b")),
+    ("bustling", re.compile(r"\bbustling\b")),
+    ("looming", re.compile(r"\blooming\b")),
+    ("signals for/to", re.compile(r"\bsignals?\s+(?:for|to)\b")),
+]
+
+
+def _static_start_hits(vstart_low: str) -> list[str]:
+    """Beat 1 blacklist: visible_start'ta eşleşen durgun kurulum kalıpları (küçük harf girdi)."""
+    hits = [p for p in _STATIC_START_PATTERNS if p in vstart_low]
+    hits += [label for label, rx in _STATIC_START_REGEXES if rx.search(vstart_low)]
+    return hits
+
+
+_STRONG_OPENING_VERBS = [
+    "crashes", "slams", "strikes", "surges", "swings", "snaps",
+    "lurches", "breaks", "tears", "bursts", "rips",
+]
+
+# ── Beat 1 whitelist: ilk cümlede en az bir aksiyon fiili (2026-09-24) ──
+# Kök + serbest ek: "crash" → crash/crashes/crashing. Kelime başına sabitli (\b).
+# Sondaki "e" atılır ki buckle→buckling, scramble→scrambling da eşleşsin.
+_BEAT1_ACTION_STEMS = sorted(set(
+    re.sub(r"e$", "", s) for s in
+    _HIGH_ACTION_KEYWORDS
+    + [re.sub(r"(es|s)$", "", v) for v in _STRONG_OPENING_VERBS]  # crashes→crash, lurches→lurch
+))
+_BEAT1_ACTION_REGEX = re.compile(
+    r"\b(?:" + "|".join(r"\s+".join(map(re.escape, s.split())) for s in _BEAT1_ACTION_STEMS) + r")[\w-]*",
+    re.IGNORECASE,
+)
+# Kökü eşleşip anlamı durgun olan kelimeler
+_BEAT1_FALSE_FRIENDS = {
+    "several", "severe", "severely", "severity",   # sever
+    "listen", "listens", "listening", "listless",  # list
+    "sparkle", "sparkles", "sparkling",            # spark
+    "surgeon", "surgery",                          # surg(e)
+    "floodlight", "floodlights", "floodlit",       # flood
+    "ripple", "ripples", "rippling",               # rip
+    "smoky",                                       # smok(e)
+    "slip", "slipway", "slipways", "slippery",     # slip: "yacht in its slip" (marina rıhtımı)
+    "shaky",                                       # shak(e): "shaky footage"
+    "heavy", "heavier", "heaviest", "heavily", "heaven",  # heav(e)
+    "barrel",                                      # tekil isim: "an oil barrel"
+    "lashings",                                    # isim: araç bağlama zincirleri
+    "battery", "batteries",                        # batter
+    "flip-flop", "flip-flops", "flippers",         # flip
+    "spinnaker", "spinnakers", "spine", "spines", "spinal", "spindle", "spindles",  # spin
+    "shifty", "jerky", "knockout", "knockouts",    # shift, jerk, knock
+    "liftgate", "liftgates", "lifter", "lifters",  # lift
+    "scattered", "scatterbrained",                 # scatter: "scattered clouds"
+    # Bilinçli olarak YOK: "rush" ("rush hour"), "shift" ("night shift"), "lift"
+    # ("travel lift") ve "lifts" ("ski lifts") fiil olarak da kullanılıyor
+    # ("crew rush to...", "begins to shift", "a gust lifts"). Kabul edilmiş risk.
+    "bracelet", "snapshot", "breakwater", "breakfast",
+}
+# GPT'nin alan içine sızdırdığı "BEAT 2 (1-8s):" gibi etiketler
+_BEAT_LABEL_RE = re.compile(r"^\s*BEAT\s*\d+\s*(?:\([^)]*\))?\s*[:\-—]\s*", re.IGNORECASE)
+
+
+def _action_words(text: str, first_sentence_only: bool) -> list[str]:
+    """Metindeki aksiyon fiillerini döndürür (false friend'ler elenir, etiket temizlenir)."""
+    text = _BEAT_LABEL_RE.sub("", text or "").strip()
+    if first_sentence_only:
+        text = re.split(r"(?<=[.!?])\s+", text, maxsplit=1)[0]
+    words = [m.group(0).lower() for m in _BEAT1_ACTION_REGEX.finditer(text)]
+    return [w for w in words if w not in _BEAT1_FALSE_FRIENDS]
+
+
+def _beat1_action_words(visible_start: str) -> list[str]:
+    """visible_start'ın İLK cümlesindeki aksiyon fiillerini döndürür (boş liste = durgun)."""
+    return _action_words(visible_start, first_sentence_only=True)
+
+
+# ── Beat 3 kapısı: sonuç hâlâ tehlikeli ve sürüyor mu (2026-09-24) ──
+# Kalıp önündeki en fazla 3 kelimede olumsuzluk varsa eşleşme sayılmaz:
+# "shows no sign of stopping", "never settles", "far from calm" istediğimiz sonlar.
+_NEGATION_BEFORE_RE = re.compile(
+    r"\b(?:no|not|never|without|unable\s+to|fails?\s+to|cannot|can't|refuses?\s+to|far\s+from)\s+(?:\w+\s+){0,2}$"
+)
+# Kelime sınırlı: "to safety", "safety lines", "steadily rising" eşleşmez.
+_BEAT3_BLACKLIST = [
+    ("steady", re.compile(r"\bstead(?:y|ies|ied|ying)\b")),
+    ("settle", re.compile(r"\bsettl(?:e|es|ed|ing)\b")),
+    ("rest/halt/stop", re.compile(r"\b(?:comes?|came|coming|grinds?|ground|jerks?|screeches?)\s+to\s+(?:a\s+)?(?:rest|halt|stop|standstill)\b")),
+    ("stop", re.compile(r"\bstop(?:s|ped|ping)\b")),
+    ("calm", re.compile(r"\bcalm(?:s|ed|ing|ly)?\b")),
+    ("anticipation", re.compile(r"\banticipation\b")),
+    ("watch in/intently", re.compile(r"\bwatch(?:es|ing|ed)?\s+(?:in|intently)\b")),
+    ("safe", re.compile(r"\bsafe(?:ly)?\b|\bsafety\s+returns\b")),
+    ("resolve", re.compile(r"\bresolv(?:e|es|ed|ing)\b")),
+    ("under control", re.compile(r"\bunder\s+control\b")),
+    ("recover", re.compile(r"\brecover(?:s|ed|ing)?\b")),
+    ("cautious distance", re.compile(r"\bmaintain(?:s|ing)?\s+a\s+cautious\s+distance\b")),
+]
+# still/continues/keeps'ten sonra gelirse "devam eden aksiyon" sayılmayan fiiller
+_BEAT3_STATIC_VERBS = {
+    "standing", "waiting", "watching", "sitting", "looking", "staring", "observing",
+    "idling", "resting", "remaining",
+    "stand", "wait", "watch", "sit", "look", "stare", "observe", "remain",
+}
+_STILL_RE = re.compile(r"\bstill\s+(?:\w+ly\s+)?(being\s+\w+|\w+ing)\b")   # "still water" eşleşmez
+_CONTINUE_RE = re.compile(r"\bcontinu(?:e|es|ed|ing)\s+(?:to\s+)?(\w+)")
+_KEEP_RE = re.compile(r"\bkeeps?\s+(?:on\s+)?(\w+ing)\b")
+
+
+# ── Beat 1 ana yol: GPT'nin bildirdiği aksiyon fiili (2026-09-24 N14c) ──
+# Sabit kelime listesi her yeni fiilde genişletilmek zorundaydı. Yazıcı artık
+# "beat1_action_verb" alanında fiili bildirir; kod fiilin gerçekten ilk cümlede,
+# olumsuzlanmamış ve insan/kamera fiili olmadan geçtiğini doğrular.
+_BEAT1_NON_ACTION_VERBS = _BEAT3_STATIC_VERBS | {
+    "react", "reacts", "reacting", "see", "sees", "seeing", "gather", "gathers", "gathering",
+    "show", "shows", "showing", "catch", "catches", "capture", "captures", "film", "films",
+    "appear", "appears", "notice", "notices",
+}
+
+
+def _declared_beat1_verb_ok(scenario: dict) -> bool:
+    """GPT'nin bildirdiği beat1_action_verb gerçek bir tehlike fiili olarak ilk cümlede mi?"""
+    verb = (scenario.get("beat1_action_verb") or "").strip().lower()
+    # Kelime türünü kod bilemez; bilinen durgun isimler (spinnaker, heavy) fiil sayılmaz
+    if not verb or " " in verb or verb in _BEAT1_NON_ACTION_VERBS or verb in _BEAT1_FALSE_FRIENDS:
+        return False
+    first = re.split(
+        r"(?<=[.!?])\s+", _BEAT_LABEL_RE.sub("", scenario.get("visible_start", "") or "").strip(), maxsplit=1
+    )[0].lower()
+    m = re.search(rf"\b{re.escape(verb)}\b", first)   # fiil gerçekten ilk cümlede mi
+    return bool(m) and not _NEGATION_BEFORE_RE.search(first[:m.start()])
+
+
+def _beat3_blacklist_hits(text: str) -> list[str]:
+    """Olumsuzlanmamış 'çözülmüş/sakinleşmiş son' kalıpları."""
+    low = text.lower()
+    hits = []
+    for label, rx in _BEAT3_BLACKLIST:
+        if any(not _NEGATION_BEFORE_RE.search(low[:m.start()]) for m in rx.finditer(low)):
+            hits.append(label)
+    return hits
+
+
+def _beat3_ongoing_markers(text: str) -> list[str]:
+    """still/continues/keeps + hareketli fiil. Durgun fiiller (watching, standing) sayılmaz."""
+    low = _BEAT_LABEL_RE.sub("", text or "").lower()
+    markers = []
+    for rx in (_STILL_RE, _CONTINUE_RE, _KEEP_RE):
+        for m in rx.finditer(low):
+            if m.group(1).split()[-1] not in _BEAT3_STATIC_VERBS:
+                markers.append(m.group(0))
+    return markers
+
+
+def validate_beat3_ongoing_danger(scenario: dict) -> tuple[bool, list[str]]:
+    """Beat 3 (visible_consequence) tehlike sürerken mi bitiyor?
+
+    Red: çözülmüş/sakinleşmiş son kalıbı (blacklist) VEYA hiç devam eden aksiyon
+    işareti yok (still/continues/keeps + hareketli fiil ya da aksiyon fiili).
+    """
+    consequence = _BEAT_LABEL_RE.sub("", scenario.get("visible_consequence", "") or "").strip()
+    if not consequence:
+        return False, ["Beat 3 boş"]
+    failures = []
+    hits = _beat3_blacklist_hits(consequence)
+    if hits:
+        failures.append(f"Beat 3 tehlike çözülmüş/sakinleşmiş bitiyor: {hits}")
+    if not (_beat3_ongoing_markers(consequence) or _action_words(consequence, first_sentence_only=False)):
+        failures.append("Beat 3'te devam eden aksiyon yok (still/continues/keeps veya aksiyon fiili)")
+    return not failures, failures
 
 
 def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
@@ -171,21 +359,15 @@ def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
                 "Aktif tehlike/aksiyon anahtar kelimesi bulunamadı — sahne çok sakin/statik olabilir"
             )
 
-    vstart_low = visible_start.lower()
-    matched_static_start = [p for p in _STATIC_START_PATTERNS if p in vstart_low]
-    if _STATIC_START_REGEX.search(vstart_low):
-        matched_static_start.append("<iki X görülebilir kalıbı>")
+    if not (_declared_beat1_verb_ok(scenario) or _beat1_action_words(visible_start)):
+        failures.append("Beat 1'de aksiyon fiili yok, tehlike başlamamış")
+
+    matched_static_start = _static_start_hits(visible_start.lower())
     if matched_static_start:
         failures.append(f"Beat 1 durgun kurulumla başlıyor: {matched_static_start}")
 
     is_valid = len(failures) == 0
     return is_valid, failures
-
-
-_STRONG_OPENING_VERBS = [
-    "crashes", "slams", "strikes", "surges", "swings", "snaps",
-    "lurches", "breaks", "tears", "bursts", "rips",
-]
 
 
 def score_scenario(scenario: dict) -> int:
@@ -215,8 +397,13 @@ def score_scenario(scenario: dict) -> int:
     if "suddenly" in vstart_low:
         score += 1
 
-    if any(p in vstart_low for p in _STATIC_START_PATTERNS) or _STATIC_START_REGEX.search(vstart_low):
+    if _static_start_hits(vstart_low):
         score -= 5
+
+    # Beat 3 hâlâ sürüyor (still/continues/keeps + hareketli fiil). Aksiyon
+    # kelimeleri yukarıda full_text içinde zaten sayıldı, ayrıca puanlanmaz.
+    if _beat3_ongoing_markers(consequence):
+        score += 2
 
     return score
 
@@ -259,8 +446,9 @@ async def generate_prompts(config: dict) -> dict:
         raw_scenario = await _generate_scenario(catalyst, camera_archetype)
         is_visible, visibility_failures = validate_silent_visibility(raw_scenario)
         is_active, action_failures = validate_high_action(raw_scenario)
-        is_valid = is_visible and is_active
-        failures = visibility_failures + action_failures
+        is_ongoing, beat3_failures = validate_beat3_ongoing_danger(raw_scenario)
+        is_valid = is_visible and is_active and is_ongoing
+        failures = visibility_failures + action_failures + beat3_failures
 
         combined_history.append(combo_key)
         used_combos.append(combo_key)
@@ -340,7 +528,7 @@ async def generate_prompts(config: dict) -> dict:
         "scenes": simplified_scenes,
         "youtube_title": clean_title,
         "youtube_description": metadata.get("youtube_description", ""),
-        "tags": metadata.get("tags", ["DeepMyster", "Shorts", "Maritime", "CCTV", "CargoShip", "Ferry", "RoughSeas"]),
+        "tags": metadata.get("tags", ["DeepMyster", "Shorts", "Maritime", "CCTV", "CruiseShip", "Ferry", "RoughSeas"]),
         "scenario_summary": scenario.get("scenario_summary", ""),
         "combo_key": combo_key,
         "total_duration": settings.DEFAULT_DURATION,
@@ -403,7 +591,7 @@ RECENT PRODUCTION HISTORY (DO NOT REPEAT THESE RECENT CONCEPTS):
 
 CREATIVE DIRECTIVE:
 1. Use the brand library samples above to understand our tone, but DO NOT copy or mechanically re-skin them.
-2. Choose an authentic, realistic vessel — cruise/passenger ship, ferry, Ro-Ro carrier, general cargo ship, container ship, tanker, tugboat/rescue boat, yacht/marina craft, or another realistic sea vessel — and physical crisis within or inspired by the '{catalyst['domain_title']}' domain. Vary vessel type across generations rather than defaulting to the same type.
+2. Use EXACTLY the assigned Vessel Type above. DeepMyster's vessel universe is limited to: {', '.join(VESSEL_UNIVERSE)}. If the Vessel Type is 'None', show no vessel at all. The physical crisis must be within or inspired by the '{catalyst['domain_title']}' domain.
 3. The crisis must be completely visible and intuitive on a silent screen within 2-3 seconds.
 4. Structure the {duration}-second single continuous take: visible start (0-{early}s) -> physical escalation & contextual crew/mechanical response ({early}-{late}s) -> concrete physical state change at {duration}s.
 5. Keep human presence natural and context-appropriate (or pure raw industrial physics). No cartoonish shoehorned actions.
@@ -412,6 +600,11 @@ CREATIVE DIRECTIVE:
 
     system_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""))
     result = await _call_gpt(system_prompt, user_message, temperature=0.85)
+
+    # Savunma katmanı: GPT alan içine "BEAT 1:" gibi etiket sızdırırsa temizle
+    for field in ("visible_start", "physical_movement", "visible_consequence"):
+        if isinstance(result.get(field), str):
+            result[field] = _BEAT_LABEL_RE.sub("", result[field]).strip()
 
     # Geriye dönük uyumluluk alanları
     if "scene_description" not in result:
@@ -429,7 +622,7 @@ async def _simplify_prompt(scenario: dict, catalyst: dict) -> dict:
     early, late = compute_duration_breakpoints(duration)
     user_message = f"""Convert this realistic maritime incident into an exact 25–45 word Seedance 2 Mini prompt following the Doğukan methodology:
 
-VESSEL CLASS: {scenario.get('vessel_class', 'Cargo Vessel')}
+VESSEL CLASS: {scenario.get('vessel_class', 'Vessel')}
 INCIDENT: {scenario.get('incident_type', 'Physical Emergency')}
 SUMMARY: {scenario.get('scenario_summary', '')}
 VISIBLE START (0-{early}s): {scenario.get('visible_start', '')}
@@ -451,7 +644,7 @@ REQUIREMENTS:
     if "prompt" not in result or not result["prompt"]:
         fallback_prompt = (
             f"On a rolling {scenario.get('vessel_class', 'vessel')} in rough seas, "
-            f"{scenario.get('physical_movement', 'cargo shifts under wave impact')}, "
+            f"{scenario.get('physical_movement', 'the vessel lurches under wave impact')}, "
             f"finally {scenario.get('visible_consequence', 'settling against the deck barrier')}."
         )
         result = {"prompt": fallback_prompt, "word_count": len(fallback_prompt.split())}

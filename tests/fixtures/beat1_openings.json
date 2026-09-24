@@ -1,0 +1,152 @@
+[
+ [
+  "beat1_out#1",
+  "From the bow of a nearby observer vessel, one deckhand in high-visibility gear is visible on the catamaran's deck as it approaches the ferry terminal.",
+  false
+ ],
+ [
+  "beat1_out#2",
+  "One dockworker stands near the ship's stern, observing as the general cargo ship smoothly begins its descent down the slipway.",
+  false
+ ],
+ [
+  "beat1_out#3",
+  "BEAT 1: The fixed security camera shows an overcast sky with waves crashing violently against the beach, already encroaching on the coastal road.",
+  true
+ ],
+ [
+  "beat1_out#4",
+  "One deckhand on the tender boat, visible from the fixed sun-deck security camera, signals for docking as the boat approaches the cruise ship.",
+  false
+ ],
+ [
+  "beat1_out#5",
+  "The scene opens on a bustling city street with towering skyscrapers looming overhead, dark storm clouds quickly rolling in, casting a menacing shadow over the area.",
+  false
+ ],
+ [
+  "n3_out#1",
+  "Two dock workers in high-visibility gear are seen securing equipment near the ship's hull as water suddenly gushes under the keel blocks.",
+  true
+ ],
+ [
+  "n3_out#2",
+  "One deckhand dressed in high-visibility orange coveralls stands near the loading ramp as it suddenly begins to swing downward unexpectedly.",
+  false
+ ],
+ [
+  "n3_out#3",
+  "A powerful gust of wind violently shakes the high-rise scaffolding.",
+  true
+ ],
+ [
+  "n3_out#4",
+  "From the bow of a nearby observer boat, one passenger is visible lounging by the pool when a massive wave is already crashing over the tender boat's pool deck.",
+  false
+ ],
+ [
+  "n3_out#5",
+  "A swirling tornado crashes towards the marina, pulling and twisting objects in its wake.",
+  true
+ ],
+ [
+  "n4_out#1",
+  "One tugboat crew member on a nearby escort tugboat reacts as the cargo ship begins accelerating down the slipway unexpectedly fast.",
+  false
+ ],
+ [
+  "n4_out#2",
+  "One bystander on a nearby observer vessel reacts in panic as the luxury motor yacht suddenly surges forward, its throttle jammed open.",
+  true
+ ],
+ [
+  "n4_out#3",
+  "Two deckhands in bright orange coveralls are rushing across the ferry's vehicle deck as water surges in from one side.",
+  true
+ ],
+ [
+  "n4_out#4",
+  "Two crew members in high-visibility coveralls are stationed on the cruise liner's bow, looking tense as they brace for an anticipated maneuver.",
+  true
+ ],
+ [
+  "n4_out#5",
+  "A swirling tornado already tears through the sandy beach.",
+  true
+ ],
+ [
+  "n10_out#1",
+  "A group of about fifteen passengers is seen walking along a gangway linking a mega cruise ship to the dock, the gangway already straining and visibly tilting downwards under their combined weight.",
+  true
+ ],
+ [
+  "n10_out#2",
+  "From the bow of the observer vessel, the high-speed catamaran is visibly lurching side-to-side, with about four crew members on its open vehicle deck pointing and waving frantically amid churning sea spray.",
+  true
+ ],
+ [
+  "n10_out#3",
+  "Approximately five shipyard workers in high-visibility vests stand by as the vessel suddenly lurches forward on the slipway, the movement already creating an evident jerk.",
+  true
+ ],
+ [
+  "n10_out#4",
+  "A massive wave crashes forcefully onto the sandy beach, sending water spraying high into the air.",
+  true
+ ],
+ [
+  "n10_out#5",
+  "A sudden gust of wind sweeps across the street, rattling metal scaffolding high above.",
+  true
+ ],
+ [
+  "n14_out#1",
+  "A fixed camera shows four workers in orange coveralls, their attention is drawn urgently to the vessel as it begins to shift.",
+  true
+ ],
+ [
+  "n14_out#2",
+  "From the bow of a nearby escort boat, three people in casual marina attire are seen on the deck of a luxury motor yacht as the dock suddenly rises with a storm surge.",
+  true
+ ],
+ [
+  "n14_out#3",
+  "About ten passengers gather on the cruise tender's sun deck when a strong gust of wind suddenly knocks a row of deck chairs off balance.",
+  true
+ ],
+ [
+  "n14_out#4",
+  "A massive tornado spins ferociously just offshore, darkening the sky and swirling debris through the air.",
+  true
+ ],
+ [
+  "n14_out#5",
+  "A massive wave crests and crashes fiercely onto the sandy beach, sending water rushing toward the coastal road.",
+  true
+ ],
+ [
+  "n14b_out#1",
+  "Three workers in high-visibility coveralls stand at the edge of a slipway, eyes wide as water gushes from underneath the vessel's hull.",
+  true
+ ],
+ [
+  "n14b_out#2",
+  "The camera catches the instant a powerful gust of wind lifts beach umbrellas into the air, scattering sand and debris.",
+  true
+ ],
+ [
+  "n14b_out#3",
+  "A torrent of water surges down the street, propelled by the sudden coastal storm.",
+  true
+ ],
+ [
+  "n14b_out#4",
+  "About fifteen passengers on the pool deck suddenly react as a massive wave surges toward the cruise ship, clearly visible from the observer vessel nearby.",
+  false
+ ],
+ [
+  "n14b_out#5",
+  "Three people stand on the dock next to a luxury motor yacht, as the mooring line visibly strains and starts to vibrate intensely against the cleat.",
+  true
+ ]
+]

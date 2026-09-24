@@ -29,6 +29,7 @@ from core.prompt_generator import (
     _dry_run_output,
     validate_silent_visibility,
     validate_high_action,
+    validate_beat3_ongoing_danger,
 )
 from core.prompt_sanitizer import sanitize_prompt
 
@@ -133,12 +134,14 @@ class TestDeepMysterCreativeFreedom(unittest.TestCase):
 
         active_scenario = {
             "scenario_summary": "A mooring line snaps under heavy swell strain and whips violently across the quay.",
+            "visible_start": "A taut mooring line snaps at the bollard as one dockworker lurches back from the quay edge.",
             "physical_movement": "The line whips across the deck as dockworkers scramble clear of the recoiling cable.",
-            "visible_consequence": "The parted line finally goes slack, coiled dangerously near the bollard.",
+            "visible_consequence": "The parted line is still whipping across the quay, coiled dangerously near the bollard.",
         }
         is_valid, failures = validate_high_action(active_scenario)
         self.assertTrue(is_valid)
         self.assertEqual(len(failures), 0)
+        self.assertTrue(validate_beat3_ongoing_danger(active_scenario)[0])
 
 
 if __name__ == "__main__":

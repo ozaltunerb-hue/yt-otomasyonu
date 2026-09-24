@@ -30,3 +30,6 @@ auto_config.json
 
 # OS
 .DS_Store
+
+# dry-run çıktısı (scripts/dry_run_beat1.py)
+dry_run_beat1_out.json

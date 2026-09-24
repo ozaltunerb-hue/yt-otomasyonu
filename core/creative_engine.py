@@ -35,13 +35,13 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
         "title": "Ro-Ro & Araç Feribot Acil Durumları",
         "reference_scenarios": [
             "Car ferry rolling violently in heavy swells as deck crew in yellow foul weather gear battle to lash shifting trucks on open vehicle deck.",
-            "Heavy Ro-Ro vehicle carrier surging at loading ramp while dock staff frantically guide disembarking cars through storm chop.",
+            "A passenger car ferry surges at the loading ramp in storm chop as dock staff frantically wave disembarking cars off the heaving ramp.",
             "Deckhands scrambling across wet flooded vehicle deck to hook emergency heavy chains on sliding freight trailers in severe gale.",
             "Ferry captain and navigation officers urgently correcting thrusters as open bow visor takes pounding oceanic waves.",
             "Passengers gripping safety handrails as a rolling high-speed catamaran heels sharply and deck crew scramble to secure storm gates before the next wave hits.",
-            "Commercial Ro-Ro freight crew working together on pitching stern ramp to secure loose vehicle lashings in severe swell.",
+            "Ferry deckhands on a pitching stern ramp fight to re-secure vehicle lashings as a swell lifts the ramp off the quay.",
             "Island car ferry crew directing vehicles while surge waves wash across lower loading ramp during emergency departure.",
-            "On a large PCTC car carrier, a sudden roll sends rows of lashed vehicles straining against their chains, grinding hard against each other.",
+            "On a passenger car ferry's lower vehicle deck, a sudden roll sends rows of lashed cars straining against their chains, grinding hard against each other.",
             "On a ferry's vehicle deck, a poorly secured car breaks loose in rough seas and slides into a neighboring vehicle, drivers scrambling out in a panic.",
             "A car waiting at the ramp entrance is jolted hard as the vessel suddenly rolls, the driver braking hard in a panic to avoid rolling off the ramp.",
             "On an open-deck island car ferry, sudden wash floods across the vehicle deck submerging tires as owners in casual clothing dash back to their cars.",
@@ -57,7 +57,7 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
             "Private yacht with a jammed throttle careens out of control across the marina fairway as the skipper fights the wheel and dockworkers scatter clear.",
             "Marina emergency response crew in safety gear rushing along pontoon with fire hoses toward smoking yacht aft deck.",
             "Dockmaster and marina personnel securing straining cleat lines as violent storm surge lifts floating pontoons with tilting boats.",
-            "Marina safety boat crew maneuvering in close quarters to intercept drifting powerboat before it hits concrete breakwater.",
+            "Marina staff on a floating pontoon race to fend off a drifting runaway powerboat before it slams into the concrete breakwater.",
             "A sailing yacht caught broadside in a passing vessel's wake near the marina entrance heels hard, nearly capsizing as the crew scramble to the high side.",
             "A yard travel lift malfunctions with a hoisted yacht swinging dangerously in its slings as yard staff scatter clear of the suspended hull.",
             "A dockside electrical fire flares and spreads rapidly toward neighboring boats as marina staff race to contain it with extinguishers and hoses.",
@@ -81,39 +81,39 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
     "harbor_collisions": {
         "title": "Liman İçi Gemi Manevraları & Yakın Geçişler",
         "reference_scenarios": [
-            "Bridge officers and harbor pilot tensely coordinating emergency reverse thrust on container ship near quayside crane.",
-            "Commercial tugboat crew managing straining hawser towline as drifting bulk carrier bow slides dangerously close in heavy gale.",
+            "A high-speed catamaran misjudges its berthing turn and slams its bow into the terminal fendering as dockworkers scramble clear of a snapping mooring line.",
+            "A passenger car ferry's stern swings wide in a gusting crosswind and grinds along the concrete quay, sparks flying as dock staff wave waiting cars back.",
             "Cruise liner listing hard against the terminal fendering as harbor pilots scramble to correct a sudden list during final approach, the towering hull scraping the pier.",
-            "Harbor pilot boat crew skillfully pacing alongside massive cargo vessel as harbor pilot boards via pilot ladder in rough water.",
-            "Container ship deck crew on forecastle preparing emergency anchor drop as ship drifts toward concrete berth sea wall.",
-            "Tugboat deckhands securing heavy towing bridle while flanking giant maneuvering freighter in turbulent propeller wash.",
-            "Quayside dockworkers and crane operators reacting from berth as approaching cargo freighter suffers rudder stall.",
+            "A cruise tender boat surges against the liner's side platform in heavy swell, crew bracing as the boarding gangway lurches and jams.",
+            "A luxury motor yacht reversing into its berth loses throttle control and rams the neighboring sailing yacht, fenders bursting and rigging swinging.",
+            "A high-speed catamaran caught in a departing car ferry's wash in the narrow harbor entrance heels hard as passengers grab the rails.",
+            "Terminal dockworkers dive clear as a mega cruise ship's mooring line parts under load and whips across the quay.",
             "An open-air deck bar's tables and umbrellas are blown into chaos as sudden heavy weather hits, passengers in casual wear fleeing indoors past toppling furniture.",
         ],
     },
     "rough_seas_storms": {
         "title": "Açık Deniz Fırtınaları & Dev Dalgalar",
         "reference_scenarios": [
-            "Bridge officers inside ship wheelhouse bracing as massive 45-foot wave crashes over cargo forecastle deck.",
-            "Deckhands in high-visibility foul weather gear holding safety lifelines across waterlogged deck of rolling bulk carrier.",
+            "A massive green wave crashes over the bow of a passenger car ferry, spray bursting across the bridge windows as officers brace at the consoles.",
+            "Deckhands in orange foul weather gear cling to lifelines on a rolling car ferry's open vehicle deck as seawater sweeps between lashed cars.",
             "Ship captain and helmsman gripping steering consoles as green seawater floods forward bridge windows in towering swell.",
-            "Deep sea fishing trawler crew in heavy oilskins battling freezing spray to haul deck gear in violent cross-seas.",
-            "Offshore supply vessel crew fighting the helm as dynamic positioning alarms blare through 40-foot hurricane swells and the vessel yaws hard off station.",
-            "Cargo ship deck crew inspecting lashing turnbuckles on shifted container stacks between relentless ocean waves.",
-            "Freighter bridge team watching in tension as bow plunges deep underwater before surging through dense sea foam.",
+            "A sailing yacht heels violently in freezing cross-seas as its crew in heavy foul weather gear fight to reef the thrashing mainsail.",
+            "A high-speed catamaran yaws hard off course in towering storm swells as the bridge crew fight the helm and passengers brace in their seats.",
+            "A high-speed catamaran slams down hard off a storm swell, loose luggage tumbling across the passenger cabin floor.",
+            "An offshore waterspout sweeps into a coastal marina, tearing a sailing yacht from its mooring and spinning it into the pontoon.",
             "A rogue wave sweeps across a cruise ship's open pool deck as sunbathing passengers in swimwear scramble for cover, pool water surging violently across the tiles.",
         ],
     },
     "navigation_hazards": {
         "title": "Kanal, Boğaz & Sığ Su Seyir Tehlikeleri",
         "reference_scenarios": [
-            "Container vessel helmsman fighting sudden bank suction effect as ship stern swings dangerously close to canal embankment.",
-            "River cargo barge crew bracing as crosscurrent forces pushing barge against concrete bridge support pillar.",
+            "A cruise liner's stern swings dangerously close to a narrow canal embankment under sudden bank suction as officers fight the helm.",
+            "A sailing yacht's keel strikes a hidden sandbar at speed, the mast whipping forward as the crew are thrown against the cockpit.",
             "Harbor pilot and captain tensely reversing engines as dense fog suddenly reveals unlit breakwater buoy ahead.",
-            "Bulk carrier navigating narrow rocky fjord inlet while watch officer signals emergency helm order against strong eddy current.",
-            "Commercial tugboat flanking disabled freighter as crosswinds push vessel toward shallow sandbank.",
+            "A passenger car ferry in a narrow rocky inlet is swept sideways by a strong eddy current, its hull scraping along the rocks.",
+            "A runaway powerboat skims across shallow water and grounds hard on a sandbank, the hull slewing sideways in a burst of spray.",
             "Ferry captain executing emergency bow thruster maneuver as outgoing tidal rip threatens to turn vessel broadside.",
-            "Cargo vessel lookout crew on forecastle calling warnings as ship brushes shallow sandbank in turbulent crosscurrents.",
+            "A jet ski cuts across a ferry's bow in a busy channel, the ferry veering hard as passengers lurch against the rails.",
             "A passenger walking an upper deck stumbles hard into the railing as the cruise ship suddenly rolls, crew rushing over to help them back to their feet.",
         ],
     },
@@ -121,12 +121,12 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
         "title": "Acil Müdahale & Kurtarma Operasyonları",
         "reference_scenarios": [
             "Deck crew in bright orange foul weather gear rushing across flooded deck to deploy portable emergency bilge pumps.",
-            "Coast guard rescue boat crew launching rigid inflatable craft into violent breaking surf to reach vessel in distress.",
+            "Cruise tender boat crew launch into violent breaking surf to reach a swamped jet ski rider, the tender pitching hard in the swell.",
             "Ship officers on open bridge wing scanning dark storm waves with high-power searchlights to guide rescue swimmers.",
-            "Deckhands working together against howling gale to retrieve damaged heavy towing gear and secure deck safety lines.",
-            "Rescue swimmer descending from helicopter hoist cable onto pitching vessel deck as deck crew signals guidance.",
+            "Ferry deckhands battle a howling gale to re-rig torn safety lines across the open car deck as spray sweeps over the rail.",
+            "A lifeboat swinging from a mega cruise ship's davits slams against the towering hull in heavy swell as crew fight the falls.",
             "Cruise liner passengers scrambling down a swaying gangway into a pitching tender boat as crew battle to hold it steady against the hull in rough swell.",
-            "Salvage tugboat deck crew throwing emergency rescue lines and life rings to seamen on waterlogged deck.",
+            "Marina staff hurl life rings and rescue lines to a luxury motor yacht's crew as the yacht floods and lists at its berth.",
             "Wind and swell send deck loungers and tables sliding and tumbling across a cruise ship's open sun deck as passengers in resort wear grab for the railings.",
         ],
     },
@@ -137,7 +137,7 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
             "Marine engineers in boiler suits rushing through vibrating engine room to isolate blown hydraulic steering pipe.",
             "Electrical engineer resetting main switchboard breakers under emergency red backup lighting during violent storm blackout.",
             "Bridge officers and lookouts on a cruise liner reacting to sudden bow thruster failure as crosswinds push the towering hull toward the terminal pier during docking.",
-            "Deckhands and boatswain dropping emergency anchor on forecastle deck as cargo ship suffers complete propulsion loss.",
+            "A restraining cable snaps early on a shipyard slipway, the vessel lurching down the ways as yard workers in hi-vis scatter clear.",
             "Chief engineer and mechanics working frantically on jammed steering gear actuator as storm waves batter the hull.",
             "Bridge crew scrambling as the backup radar flickers out and the emergency generator strains to take load while the ship rolls hard in heavy seas.",
         ],
@@ -177,7 +177,7 @@ MARITIME_INSPIRATION_DOMAINS = {
     },
     "coastal_tornado_landfall": {
         "title": "Coastal Tornado / Denizden Karaya Hortum",
-        "guidance": "A powerful tornado forms offshore and makes landfall. The PRIMARY FOCUS is the tornado, extreme weather, and civilian evacuation on the coast or in cities. Small civilian boats, yachts, or marina vessels may be visible if a marina environment is explicitly chosen. In city or beach environments, marinas/harbors should NOT be forced. ABSOLUTELY NO heavy commercial ships, no container ships, no tankers, and no tugboats.",
+        "guidance": "A powerful tornado forms offshore and makes landfall. The PRIMARY FOCUS is the tornado, extreme weather, and civilian evacuation on the coast or in cities. Small civilian boats, yachts, or marina vessels may be visible if a marina environment is explicitly chosen. In city or beach environments, marinas/harbors should NOT be forced. ABSOLUTELY NO vessels other than the assigned small civilian craft.",
         "example_elements": ["offshore waterspout", "waterfront debris", "dark storm clouds", "evacuating civilians", "battered coastal architecture"],
         "camera_styles": ["fixed coastal/marina CCTV", "bystander phone from coastal road", "chase POV from safe inland structure"],
     },
@@ -189,7 +189,7 @@ MARITIME_INSPIRATION_DOMAINS = {
     },
     "open_beach_coastal_events": {
         "title": "Plaj ve Açık Sahil Olayları (Open Beach & Coastal Events)",
-        "guidance": "Extreme weather, tornadoes, or massive waves hitting an open sandy beach, beachfront promenade, or coastal resort. The setting MUST be a natural beach or public coastal shoreline. DO NOT force a marina, harbor, cargo terminal, or port into the scene. NO ships are required; focus on the crashing waves, sweeping winds, and beachfront chaos.",
+        "guidance": "Extreme weather, tornadoes, or massive waves hitting an open sandy beach, beachfront promenade, or coastal resort. The setting MUST be a natural beach or public coastal shoreline. DO NOT force a marina, harbor, ferry terminal, or port into the scene. NO ships are required; focus on the crashing waves, sweeping winds, and beachfront chaos.",
         "example_elements": ["sweeping storm surge", "beachfront promenade", "abandoned beach chairs", "crashing waves", "coastal road"],
         "camera_styles": ["fixed beach resort CCTV", "bystander phone from beachfront balcony", "boardwalk security camera"],
     }
@@ -298,6 +298,9 @@ DOMAIN_ATTRIBUTES = {
         ]
     }
 }
+
+# GPT'ye gösterilen gemi evreni: domain havuzlarından otomatik türer, elle liste tutulmaz.
+VESSEL_UNIVERSE = sorted({s for a in DOMAIN_ATTRIBUTES.values() for s in a["ships"]})
 
 
 def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
@@ -419,12 +422,12 @@ NEVER describe a generic "wide shot," an unspecified establishing shot, or an am
 
 ## VARIETY — ROTATE WORLDS (NON-NEGOTIABLE):
 Every scenario must come from a genuinely different world than recent productions. Rotate through these varied settings:
-2. Cruise ships with civilian passengers aboard
-3. Harbor/port scenes with civilians present (dockside crowds, terminal visitors)
-4. Marinas with yachts and pleasure craft
-5. Rescue operations (coast guard, tow/salvage response)
-6. Ferries carrying vehicles and passengers
-Never repeat the setting used in the RECENT PRODUCTION HISTORY list below, and never let two consecutive scenarios feel like the same world even if surface details (ship name, incident mechanism) differ — two different cargo-ship deck scenes back to back still count as a repeat.
+1. Cruise ships with civilian passengers aboard
+2. Ferries and high-speed catamarans carrying vehicles and passengers
+3. Marinas with yachts, powerboats, and jet skis
+4. Shipyard slipway launches
+5. Coastal tornadoes, open beaches, and urban storm disasters
+Never repeat the setting used in the RECENT PRODUCTION HISTORY list below, and never let two consecutive scenarios feel like the same world even if surface details (ship name, incident mechanism) differ — two different ferry vehicle-deck scenes back to back still count as a repeat.
 
 ## EXISTING IDEAS LIBRARY & BRAND UNIVERSE (INSPIRATION & ANTI-REPETITION):
 You are provided with samples from DeepMyster's 71-topic reference library.
@@ -439,19 +442,22 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
 1. PURE PHYSICAL DRAMA: Grounded in real physics, gravity, friction, weather, or mechanical loads. The crisis MUST be visible in front of the camera.
 2. <<CAST_RULE>>
 3. THREE-BEAT STRUCTURE, ALL WITHIN <<DURATION>> SECONDS, ONE CONTINUOUS SHOT:
-   - BEAT 1 — SETUP (well under 1 second): A near-instantaneous visual anchor.
-   - BEAT 2 — ACTION: The sudden physical wrong turn. MUST USE EXPLICIT KINETIC VERBS (e.g., crashes, snaps, rolls, flips, slams, sweeps, falls). DO NOT use static verbs like "is leaning", "nearing".
-   - BEAT 3 — CONSEQUENCE (through <<DURATION>>s): The immediate, visible physical danger, still actively unfolding at <<DURATION>>s.
+   - BEAT 1 — DANGER ALREADY MOVING (well under 1 second): A near-instantaneous visual anchor where the trigger is already happening.
+   - BEAT 2 — ACTION (<<EARLY>>-<<LATE>>s): The sudden physical wrong turn. MUST USE EXPLICIT KINETIC VERBS (e.g., crashes, snaps, rolls, flips, slams, sweeps, falls). DO NOT use static verbs like "is leaning", "nearing".
+   - BEAT 3 — CONSEQUENCE (<<LATE>>-<<DURATION>>s): The immediate, visible physical danger, still actively unfolding at <<DURATION>>s.
 4. KINETIC MOMENTUM: The viewer must see a visible physical event unfolding dynamically.
 5. CONCRETE PHYSICAL OUTCOME: The <<DURATION>>th second must show the beat 3 danger still visibly in progress.
 6. NO FORCED MARITIME ASSETS: If the domain is Urban City Disasters or Open Beach Events, and `vessel_class` is "None", DO NOT create ships, fishing vessels, or docks. Keep it strictly urban or strictly beach. If `vessel_class` is provided, stick to that exact ship. NEVER spawn a fishing trawler or rescue ship.
+7. BEAT 1 MUST SHOW DANGER ALREADY IN MOTION (NON-NEGOTIABLE): visible_start must contain a physical action verb happening right now (e.g. crashes, slams, snaps, surges, swings, tilts). FORBIDDEN patterns in visible_start: 'is visible', 'visible from', the phrase 'as [X] approaches' (e.g. 'as the ferry approaches the pier'), 'scene opens', 'observing as', 'bustling', 'looming', 'signals for'. Instead, describe the crisis as it happens or immediately after it starts. Beat 1 is the TRIGGER starting (wave hits, line snaps, blocks give way); beat 3 is the RESULT. Starting with the trigger is required; starting with the result is still forbidden.
 
 ## OUTPUT FORMAT (STRICT JSON):
+All field values are plain descriptive prose. Never start a value with a label or timestamp such as "BEAT 1:" or "(0-4s)".
 {
   "vessel_class": "Specific real-world vessel class (or 'None' if the prompt specifies it's a gemisiz sahne/şehir/plaj)",
   "incident_type": "Short 3-5 word label of the physical crisis",
   "scenario_summary": "One clear, punchy sentence covering all three beats: the normal moment, what goes wrong, and the visible consequence",
   "visible_start": "<<VISIBLE_START_DESC>>",
+  "beat1_action_verb": "The single main physical action verb of visible_start's first sentence, copied exactly as written there (e.g. 'gushes', 'spins', 'lifts'). It must be what the hazard does, not what people or the camera do.",
   "physical_movement": "<<PHYSICAL_MOVEMENT_DESC>>",
   "visible_consequence": "<<VISIBLE_CONSEQUENCE_DESC>>",
   "observer_camera": "The exact assigned camera position, stated concretely (e.g. 'fixed camera bolted to the cruise ship's port-side superstructure', 'bystander's handheld phone from the pier', 'POV from the bow of the second vessel already established in this scene')",
@@ -473,24 +479,39 @@ def build_scenario_writer_system(duration: int, domain_id: str = "") -> str:
     
     if domain_id in ENV_CENTRIC_DOMAINS:
         cast_rule = "ENVIRONMENT-CENTRIC (CAST OPTIONAL): Focus the entire scene and camera strictly on the MASSIVE NATURAL EVENT (e.g. tornado, waterspout, giant wave, flood). Do NOT focus on specific fleeing humans. Humans/cars should only be background scale references. The natural event must be the primary visual anchor and must remain fully in frame. Do not let the event get pushed out of the camera's view."
-        vis_start = "BEAT 1: a near-instantaneous establishing flash (well under 1 second) showing the massive natural event (e.g. tornado, rogue wave, storm) already forming or visible. DO NOT start by describing people (e.g. 'Two pedestrians'). The natural event must be the primary visual anchor. Do NOT start with the consequence already happening."
-        phys_mov = "BEAT 2 (<<EARLY>>-<<LATE>>s): the sudden physical wrong turn — STRONG VISIBLE PHYSICAL ACTION of the natural event (e.g., sweeps, crashes, rips, floods, slams). The physical movement of the disaster must be explicit and extreme."
-        vis_cons = "BEAT 3 (<<LATE>>-<<DURATION>>s): the immediate dangerous consequence of the natural disaster, still visibly unfolding at <<DURATION>>s, not resolved or safe."
+        vis_start = "A near-instantaneous establishing flash (well under 1 second) showing the massive natural event already in violent motion (e.g. a tornado tearing across the shoreline, a rogue wave crashing onto the beach). DO NOT start by describing people (e.g. 'Two pedestrians'). The natural event must be the primary visual anchor. Do NOT start with the consequence already happening."
+        phys_mov = "The sudden physical wrong turn — STRONG VISIBLE PHYSICAL ACTION of the natural event (e.g., sweeps, crashes, rips, floods, slams). The physical movement of the disaster must be explicit and extreme."
+        vis_cons = "The immediate dangerous consequence of the natural disaster, still visibly unfolding at <<DURATION>>s, not resolved or safe. Never end with the danger settling, stopping, calming, or being resolved, and never end on people just watching; end mid-action (e.g. 'still surging', 'continues to slide')."
+    elif domain_id in DOMAIN_CAST_RANGES:
+        lo, hi = DOMAIN_CAST_RANGES[domain_id]
+        cast_rule = (
+            f"CAST SIZE: Show approximately {lo}-{hi} people in the "
+            f"scene, matching realistic crew/passenger count for this "
+            f"environment. Do not exceed {hi}. All people count "
+            f"consistently across visible_start, physical_movement, "
+            f"and visible_consequence — same exact count in all "
+            f"three beats."
+        )
+        vis_start = "A near-instantaneous establishing flash (well under 1 second) showing the people with the danger already in motion, immediately giving way to beat 2 — the danger must be understood within the first 2 seconds of the shot overall, not a calm moment. State the head count once here as a specific number or a close estimate (e.g. 'three deckhands', 'about twenty passengers') — never a vague term like 'crew members' with no number — and keep that same count in all three beats. Do NOT start with the consequence already happening."
+        phys_mov = "The sudden physical wrong turn — STRONG VISIBLE PHYSICAL ACTION (e.g., swings, veers, slides, surges, rolls, pitches, slams). Do NOT use passive words like 'approaches' or 'is in danger'. The physical movement must be explicit and extreme. Same people, same exact count as visible_start."
+        vis_cons = "The immediate dangerous consequence, still visibly unfolding at <<DURATION>>s, not resolved or safe. Same people, same exact count as visible_start. Never end with the danger settling, stopping, calming, or being resolved, and never end on people just watching; end mid-action (e.g. 'still surging', 'continues to slide')."
     else:
-        cast_rule = "CAST — CREW OR CIVILIANS, MAXIMUM 2, EXACT COUNT (NON-NEGOTIABLE): Every scene has AT MOST 2 named people on screen. State the exact count ONCE as a specific number in visible_start (e.g. 'one deckhand,' 'two pedestrians'). Keep that exact count identical across visible_start, physical_movement, and visible_consequence."
-        vis_start = "BEAT 1: a near-instantaneous establishing flash (well under 1 second) showing the setting and people, immediately giving way to beat 2 — the danger must be understood within the first 2 seconds of the shot overall, not a calm moment. State the exact crew/civilian count here once as a specific number (e.g. 'two deckhands', 'one passenger') — never a vague term like 'crew members' with no number. Maximum 2 people. Do NOT start with the consequence already happening."
-        phys_mov = "BEAT 2 (<<EARLY>>-<<LATE>>s): the sudden physical wrong turn — STRONG VISIBLE PHYSICAL ACTION (e.g., swings, veers, slides, surges, rolls, pitches, slams). Do NOT use passive words like 'approaches' or 'is in danger'. The physical movement must be explicit and extreme. Same people, same exact count as visible_start."
-        vis_cons = "BEAT 3 (<<LATE>>-<<DURATION>>s): the immediate dangerous consequence, still visibly unfolding at <<DURATION>>s, not resolved or safe. Same people, same exact count as visible_start."
+        raise RuntimeError(
+            f"Unknown domain_id '{domain_id}' — DOMAIN_CAST_RANGES "
+            f"missing entry. Config bug, do not silently pass."
+        )
 
+    # Önce alan açıklamaları eklenir, sonra süreler: açıklamaların içindeki
+    # <<DURATION>> gibi placeholder'lar da çözülsün (aksi halde GPT'ye ham gidiyordu).
     return (
         SCENARIO_WRITER_SYSTEM_TEMPLATE
-        .replace("<<DURATION>>", str(duration))
-        .replace("<<EARLY>>", str(early))
-        .replace("<<LATE>>", str(late))
         .replace("<<CAST_RULE>>", cast_rule)
         .replace("<<VISIBLE_START_DESC>>", vis_start)
         .replace("<<PHYSICAL_MOVEMENT_DESC>>", phys_mov)
         .replace("<<VISIBLE_CONSEQUENCE_DESC>>", vis_cons)
+        .replace("<<DURATION>>", str(duration))
+        .replace("<<EARLY>>", str(early))
+        .replace("<<LATE>>", str(late))
     )
 
 
@@ -513,6 +534,18 @@ Your ONE job: Convert the maritime scenario into a HIGH-SIGNAL, PHOTOREALISTIC p
 4. STRICT CHRONOLOGICAL FLOW: You MUST maintain the exact timeline: 1) Initial state, 2) STRONG VISIBLE PHYSICAL MOVEMENT (e.g. swings, veers, slams, pitches), 3) Final consequence. NEVER start the prompt with the vessel already damaged or the consequence already happening. Action must be active and visible, not passive (like 'is in danger').
 5. NO HALLUCINATION / STRICT INVENTORY: Do NOT add any new vessels, characters, objects, or dramatic elements (e.g. 'escort boat', 'officer', 'dust', 'debris') that are not explicitly present in the provided scenario. Preserve the exact Vessel Class and Environment. Focus ONLY on a single main action chain.
 6. PRESERVE PHENOMENA NAMES: DO NOT sanitize or dilute the specific names of massive environmental phenomena. If the scenario mentions a 'tornado', 'waterspout', 'tsunami', or 'rogue wave', YOU MUST USE THAT EXACT WORD in the prompt. Do not replace it with generic terms like 'fierce winds' or 'storm'. The natural disaster must remain the primary visual subject.
+7. NUMBER FIDELITY: If the scenario specifies a count ('Two deckhands', 'One bystander', 'Three crew'), preserve that EXACT count. If the scenario is vague (just 'crew' or 'passengers'), keep it vague — do NOT invent specific numbers. NEVER downgrade a specific count to a vague plural.
+8. BEAT 3 CONTINUATION FIDELITY: If the scenario's visible_consequence includes ongoing-danger markers ('still', 'continues', 'keeps', 'continuing'), the simplified prompt MUST preserve at least one of these markers or end with an ongoing action verb (e.g. 'surging', 'sweeps', 'keeps sliding'). NEVER simplify the final sentence to a static state.
+   GOOD: 'Floodwaters continue to push inland, debris swirling in the current'
+   GOOD: 'Water is still surging across the deck, sweeping cars sideways'
+   BAD: 'Floodwaters cover the street' (static, action stopped)
+   BAD: 'Cars are damaged' (past tense, action resolved)
+9. BEAT 1 SUBJECT FIDELITY: The FIRST sentence of the prompt MUST keep the same grammatical subject as the scenario's visible_start. If the scenario says 'water gushes' or 'a tornado spins', the prompt starts with that subject-action pair — NOT with spectators watching it. The action verb of visible_start MUST be the active predicate of the first sentence, not a subordinate clause introduced by 'watch', 'see', 'observe', 'react'.
+   GOOD: 'Water gushes from beneath the vessel's hull as workers scramble clear'
+   GOOD: 'A tornado spins ferociously offshore, tearing debris skyward'
+   BAD: 'Three workers watch in shock as water gushes'
+   BAD: 'Passengers react as a tornado spins offshore'
+   BAD: 'The scene shows water gushing while workers stand by'
 
 ## OUTPUT FORMAT (STRICT JSON):
 {
@@ -525,7 +558,7 @@ def build_prompt_simplifier_system(duration: int, domain_id: str = "") -> str:
     """PROMPT_SIMPLIFIER_SYSTEM'i config.DEFAULT_DURATION'a göre üretir."""
     sys_prompt = PROMPT_SIMPLIFIER_SYSTEM_TEMPLATE.replace("<<DURATION>>", str(duration))
     if domain_id in ENV_CENTRIC_DOMAINS:
-        sys_prompt += "\n\n7. STRICT ENVIRONMENT-CENTRIC FOCUS: DO NOT START THE PROMPT WITH HUMANS (e.g. 'Two pedestrians...'). Begin immediately with the massive natural disaster (e.g. 'A massive coastal tornado...', 'A giant rogue wave...'). If humans are present, they are secondary background elements. DO NOT DILUTE THE PHENOMENON (keep exact words like 'tornado', 'waterspout', 'tsunami', 'storm surge')."
+        sys_prompt += "\n\n10. STRICT ENVIRONMENT-CENTRIC FOCUS: DO NOT START THE PROMPT WITH HUMANS (e.g. 'Two pedestrians...'). Begin immediately with the massive natural disaster (e.g. 'A massive coastal tornado...', 'A giant rogue wave...'). If humans are present, they are secondary background elements. DO NOT DILUTE THE PHENOMENON (keep exact words like 'tornado', 'waterspout', 'tsunami', 'storm surge')."
     return sys_prompt
 
 
@@ -559,36 +592,51 @@ def get_realism_guardrails(domain_id: str, vessel_class: str) -> str:
     domain_id = (domain_id or "").lower()
     vessel_class = (vessel_class or "").lower()
     
-    rules = []
-    
-    if "marina" in domain_id or "yacht" in domain_id or "yacht" in vessel_class or "jet ski" in vessel_class:
-        rules.append("yacht/marina crew wear smart nautical casual;")
-    if "cruise" in domain_id or "ferry" in domain_id or "passenger" in vessel_class:
-        rules.append("cruise/ferry staff wear proper uniforms;")
-    if "fishing" in domain_id or "trawler" in vessel_class:
-        rules.append("fishing crew wear heavy waterproof gear;")
-    if "salvage" in domain_id or "tug" in vessel_class or "heavy" in vessel_class:
-        rules.append("tug/salvage/heavy-work deckhands wear high-visibility PPE;")
-    if "arctic" in domain_id or "arctic" in vessel_class or "ice" in domain_id:
-        rules.append("arctic crew wear thermal immersion suits.")
-        
-    clothing_prefix = "Crew and staff clothing must perfectly match the vessel and environment: " if rules else ""
-    specific_rules = " ".join(rules)
-    
-    common_rules = (
-        "Passengers, guests, and bystanders wear ordinary civilian clothing appropriate to the setting "
-        "(swimwear, resort or casual wear, sun hats for pool/deck scenes; regular casual clothing for car-deck scenes) — "
-        "never hi-vis PPE on civilians. NEVER use white hazmat suits. Raw "
-        "natural overcast/fog/rain lighting, not glossy or artificially perfect water or ice."
+    # Kıyafet domain'e göre değil ROLE göre (2026-09-24): eski "cruise/ferry staff
+    # wear proper uniforms" kuralı senaryodaki turuncu tulumlu deckhand'lerle çelişiyordu.
+    role_rules = (
+        "Clothing follows each person's role: deckhands, dockworkers, and technicians wear "
+        "high-visibility orange or yellow PPE coveralls; officers and captains wear proper "
+        "uniforms (ferry officer uniform, white cruise officer uniform); passengers, guests, "
+        "and bystanders wear ordinary civilian clothing appropriate to the setting (swimwear, "
+        "resort or casual wear, sun hats for pool/deck scenes; regular casual clothing for "
+        "car-deck scenes) — never hi-vis PPE on civilians."
     )
-    
-    return f"{clothing_prefix}{specific_rules} {common_rules}".strip()
+
+    # Ortam kaynaklı ek koruma (rolü değiştirmez, sadece malzemeyi belirler)
+    env_rules = []
+    if "fishing" in domain_id or "trawler" in vessel_class:
+        env_rules.append("Fishing deckhands' PPE is heavy waterproof oilskins.")
+    if "arctic" in domain_id or "arctic" in vessel_class or "ice" in domain_id:
+        env_rules.append("In arctic conditions crew wear red or orange thermal immersion suits.")
+
+    common_rules = (
+        "NEVER use white hazmat suits. Raw natural overcast/fog/rain lighting, "
+        "not glossy or artificially perfect water or ice."
+    )
+
+    return " ".join([role_rules, *env_rules, common_rules])
 
 
 # Bu domainlerde forced_ship=None olabilir (doğal afet/olay odaklı, gemi zorunlu değil).
 # chase_pov iki ayrı gemi zorunlu kıldığı için buralarda seçilmemeli — aksi halde GPT
 # ikinci gemiyi karşılamak için yoktan bir tekne icat ediyordu (2026-09-23 tespit edildi).
 ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open_beach_coastal_events"]
+
+# Gemi domainlerinde ekrandaki gerçekçi kişi aralığı (2026-09-24). "Max 2" sadece
+# kargo gemileri içindi; kargo domain'i artık yok. Env-centric domainler tabloya
+# girmez, kendi ENVIRONMENT-CENTRIC cast kuralını alır.
+DOMAIN_CAST_RANGES = {
+    "ferry_operations": (2, 5),
+    "shipyard_and_drydock_engineering": (2, 5),
+    "marina_and_yacht_operations": (3, 6),
+    "cruise_ship_operations": (8, 25),
+}
+
+# Import anında kontrol: eksik domain üretim ortasında değil, başlangıçta patlasın.
+_missing_cast = set(MARITIME_INSPIRATION_DOMAINS) - set(DOMAIN_CAST_RANGES) - set(ENV_CENTRIC_DOMAINS)
+if _missing_cast:
+    raise RuntimeError(f"DOMAIN_CAST_RANGES eksik: {sorted(_missing_cast)}")
 
 
 CAMERA_ARCHETYPES = {
@@ -605,7 +653,11 @@ CAMERA_ARCHETYPES = {
         "style_lock": (
             f"Static fixed-mount security CCTV camera, {_LENS_GUARDRAILS}. Slight "
             "natural motion blur, no cinematic framing, no artistic close-ups, no "
-            "camera movement. When filming the vessel from outside/alongside, "
+            f"camera movement. {_SINGLE_MOMENT_GUARDRAIL}"
+        ),
+        # Gemiye özgü kadraj kuralı — ENV_CENTRIC domainlerde eklenmez (apply_style_lock)
+        "vessel_framing": (
+            "When filming the vessel from outside/alongside, "
             "frame must keep the hull, bow, or superstructure visible to establish "
             "ship type — no tight shot confined only to deck machinery. For "
             "onboard deck, pool, or vehicle-deck scenes filmed from a camera "
@@ -613,7 +665,7 @@ CAMERA_ARCHETYPES = {
             "from outside), visible deck architecture, railings, superstructure, "
             "or vehicle-deck structure satisfies this instead — e.g. a pool-deck "
             "camera showing loungers, railings, and open sky is sufficient; do not "
-            f"force an exterior hull/bow shot into an onboard scene. {_SINGLE_MOMENT_GUARDRAIL}"
+            "force an exterior hull/bow shot into an onboard scene."
         ),
     },
     "bystander_handheld": {
@@ -640,8 +692,12 @@ CAMERA_ARCHETYPES = {
             "camera must never appear to pass through it, climb over it, or move "
             "beyond it. Filmed from a ship's railing, nearby vessel, or dock, "
             "occasionally showing a hint of a railing, hand, or phone edge at "
-            "the frame border. The vessel in crisis must be fully and clearly "
-            f"visible in frame at all times, not just a cropped detail. {_SINGLE_MOMENT_GUARDRAIL}"
+            f"the frame border. {_SINGLE_MOMENT_GUARDRAIL}"
+        ),
+        # Gemiye özgü kadraj kuralı — ENV_CENTRIC domainlerde eklenmez (apply_style_lock)
+        "vessel_framing": (
+            "The vessel in crisis must be fully and clearly "
+            "visible in frame at all times, not just a cropped detail."
         ),
     },
     "chase_pov": {
@@ -649,8 +705,8 @@ CAMERA_ARCHETYPES = {
         "weight": 1,
         "gpt_guidance": (
             "Chase or pursuit point-of-view filmed from the deck or bow of a "
-            "nearby observer vessel — e.g. a coast guard boat, escort boat, or "
-            "following ship. TWO distinct vessels are mandatory: the observer "
+            "nearby observer vessel — e.g. an escort boat, a nearby yacht, or a "
+            "following ferry. TWO distinct vessels are mandatory: the observer "
             "vessel the camera is mounted on (its bow/rail may appear in the "
             "foreground), and a second, clearly separate vessel actively in "
             "crisis that stays visible throughout the shot. This is NOT a "
@@ -671,8 +727,10 @@ CAMERA_ARCHETYPES = {
 }
 
 # Geriye dönük uyumluluk — bazı test scriptleri tek bir STYLE_LOCK_SUFFIX bekliyor.
-# Varsayılan (en sık seçilen) arketipin son ekini temsil eder.
-STYLE_LOCK_SUFFIX = CAMERA_ARCHETYPES["fixed_cctv"]["style_lock"]
+# Varsayılan (en sık seçilen) arketipin son ekini temsil eder (gemili sahne hali).
+STYLE_LOCK_SUFFIX = (
+    f'{CAMERA_ARCHETYPES["fixed_cctv"]["style_lock"]} {CAMERA_ARCHETYPES["fixed_cctv"]["vessel_framing"]}'
+)
 
 
 def choose_camera_archetype(domain_id: str = "") -> str:
@@ -695,7 +753,12 @@ def apply_style_lock(prompt_text: str, camera_archetype: str = "fixed_cctv", cat
     prompt_text = (prompt_text or "").strip().rstrip(".")
     archetype = CAMERA_ARCHETYPES.get(camera_archetype, CAMERA_ARCHETYPES["fixed_cctv"])
     style_lock = archetype["style_lock"]
-    
+    # Gemi kadraj kuralı ENV_CENTRIC domainlerde eklenmez: hortum/dalga ana odak
+    # kalmalı (tekne olsa bile). catalyst yoksa eski davranış: kural eklenir.
+    domain_id = (catalyst or {}).get("domain_id", "")
+    if domain_id not in ENV_CENTRIC_DOMAINS and archetype.get("vessel_framing"):
+        style_lock = f"{style_lock} {archetype['vessel_framing']}"
+
     if catalyst:
         domain_id = catalyst.get("domain_id", "")
         vessel = catalyst.get("forced_ship", "")
@@ -724,11 +787,11 @@ DESCRIPTION RULES:
 - Tags: 8-12 relevant tags.
 
 GOOD TITLE EXAMPLES:
-✅ "⚠️ Heavy Sea Swell Slams Open Ro-Ro Ramp #Shorts"
-✅ "🌊 120mm Towing Bridle Strains in High Gale #Shorts"
-✅ "🚢 Arctic Trawler Takes Massive Green Wave Over Bow #Shorts"
-✅ "⚓ Tugboat Bow Fender Crushed in Tight Canal Berth #Shorts"
-✅ "🌊 Gantry Crane Swaying Violently on Container Deck #Shorts"
+✅ "⚠️ Heavy Sea Swell Slams Open Ferry Car Ramp #Shorts"
+✅ "🌊 Mooring Line Snaps as Cruise Ship Surges #Shorts"
+✅ "🚢 Car Ferry Takes Massive Green Wave Over Bow #Shorts"
+✅ "⚓ Runaway Yacht Crushes Marina Pontoon #Shorts"
+✅ "🌊 Cruise Tender Slams Against Liner in Swell #Shorts"
 
 OUTPUT FORMAT (STRICT JSON):
 {
