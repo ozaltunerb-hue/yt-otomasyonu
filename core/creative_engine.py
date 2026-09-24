@@ -632,6 +632,18 @@ if _missing_cast:
     raise RuntimeError(f"DOMAIN_CAST_RANGES eksik: {sorted(_missing_cast)}")
 
 
+def is_current_universe_combo(combo_key: str) -> bool:
+    """Combo Key bugünkü evrene mi ait: 5 parça, domain 7'de, gemi VESSEL_UNIVERSE'te veya 'none'.
+    Eski evren kayıtları (kargo, tug, trawler, LNG...) Notion tarihçesinden yazıcıya sızmasın diye (2026-09-24)."""
+    parts = [p.strip().lower() for p in (combo_key or "").split("|")]
+    if len(parts) != 5:
+        return False
+    domain, ship = parts[0], parts[1]
+    return domain in MARITIME_INSPIRATION_DOMAINS and (
+        ship == "none" or ship in {v.lower() for v in VESSEL_UNIVERSE}
+    )
+
+
 CAMERA_ARCHETYPES = {
     "fixed_cctv": {
         "title": "Sabit Güvenlik/CCTV Kamerası",

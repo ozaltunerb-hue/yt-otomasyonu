@@ -12,6 +12,7 @@ import logging
 import requests
 from datetime import datetime, timezone
 from config import settings
+from core.creative_engine import is_current_universe_combo
 
 log = logging.getLogger("NotionLogger")
 
@@ -27,6 +28,11 @@ STATUS_MERGING = "Birleştiriliyor"
 STATUS_UPLOADING = "Yükleniyor"
 STATUS_COMPLETED = "✅ Tamamlandı"
 STATUS_ERROR = "❌ Hata"
+
+# Tarihçe sorguları (2026-09-24). used_combos = "yayınlandı/elde video var" sayımı;
+# recent_history = "yazıldı" sayımı, sadece hata kayıtları hariç.
+USED_COMBO_STATUSES = [STATUS_COMPLETED, "✅ Tamamlandı (Upload Başarısız)"]
+RECENT_HISTORY_EXCLUDE_STATUSES = [STATUS_ERROR]
 
 
 class NotionTracker:
@@ -158,8 +164,11 @@ class NotionTracker:
         Args:
             days: Kaç gün geriye bakılacak
 
+        Sadece USED_COMBO_STATUSES durumundaki ve bugünkü evrene ait combo'lar sayılır.
+
         Returns:
-            list[str]: ["animal|talent", ...] formatında combo_key listesi
+            list[str]: "domain|ship|event|env|camera" combo_key listesi, kronolojik
+            (son eleman en yeni; tüketiciler [-N:] ile en yeniyi alır).
 
         Raises:
             RuntimeError: Notion API 3 denemede de yanıt vermediyse.
@@ -180,8 +189,10 @@ class NotionTracker:
                         "date": {"on_or_after": since_iso}
                     },
                     {
-                        "property": "Durum",
-                        "select": {"equals": STATUS_COMPLETED}
+                        "or": [
+                            {"property": "Durum", "select": {"equals": s}}
+                            for s in USED_COMBO_STATUSES
+                        ]
                     }
                 ]
             },
@@ -199,17 +210,14 @@ class NotionTracker:
                     json=payload,
                 )
 
-                combos = []
+                combos = []  # Notion en yeni önce döner
                 for page in response.get("results", []):
-                    props = page.get("properties", {})
-                    combo_rt = props.get("Combo Key", {}).get("rich_text", [])
-                    if combo_rt:
-                        combo_text = combo_rt[0].get("text", {}).get("content", "")
-                        if combo_text:
-                            combos.append(combo_text)
+                    combo_text = _page_combo_key(page)
+                    if is_current_universe_combo(combo_text):
+                        combos.append(combo_text)
 
                 log.info(f"📋 Notion'dan {len(combos)} kullanılmış combo yüklendi")
-                return combos
+                return list(reversed(combos))
 
             except Exception as e:
                 last_exc = e
@@ -233,6 +241,9 @@ class NotionTracker:
     def get_recent_history(self, days: int = 30) -> list[str]:
         """
         Son N günün konu ve başlıklarını çeker (GPT'ye negatif yönlendirme olarak vermek için).
+
+        Hata kayıtları ve bugünkü evrene ait olmayan combo'lar (eski kargo/tug/trawler dönemi)
+        alınmaz. Dönüş kronolojik: son eleman en yeni (yazıcı [-15:] ile en yeniyi alır).
         """
         if not self.enabled or settings.IS_DRY_RUN:
             return []
@@ -248,11 +259,15 @@ class NotionTracker:
                     {
                         "property": "Tarih",
                         "date": {"on_or_after": since_iso}
-                    }
+                    },
+                    *[
+                        {"property": "Durum", "select": {"does_not_equal": s}}
+                        for s in RECENT_HISTORY_EXCLUDE_STATUSES
+                    ],
                 ]
             },
             "sorts": [{"property": "Tarih", "direction": "descending"}],
-            "page_size": 25,
+            "page_size": 100,
         }
 
         try:
@@ -261,8 +276,10 @@ class NotionTracker:
                 f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query",
                 json=payload,
             )
-            history = []
+            history = []  # en yeni önce toplanır, sonda kronolojiğe çevrilir
             for page in response.get("results", []):
+                if not is_current_universe_combo(_page_combo_key(page)):
+                    continue
                 props = page.get("properties", {})
                 # Konu
                 topic_rt = props.get("Konu", {}).get("rich_text", [])
@@ -276,7 +293,7 @@ class NotionTracker:
                     t = title_rt[0].get("text", {}).get("content", "")
                     if t and t not in history:
                         history.append(t)
-            return history[:20]
+            return list(reversed(history[:20]))
         except Exception as e:
             log.warning(f"⚠️ Notion get_recent_history hatası (ihmal edilebilir): {e}")
             return []
@@ -333,6 +350,12 @@ class NotionTracker:
             log.info(f"📋 Notion güvenlik telemetrisi kaydedildi: {safety_text[:80]}")
         except Exception as e:
             log.warning(f"⚠️ Notion güvenlik telemetrisi hatası: {e}")
+
+
+def _page_combo_key(page: dict) -> str:
+    """Notion sayfasından Combo Key metnini çıkarır; yoksa boş string."""
+    combo_rt = page.get("properties", {}).get("Combo Key", {}).get("rich_text", [])
+    return combo_rt[0].get("text", {}).get("content", "") if combo_rt else ""
 
 
 def _notion_request(method: str, url: str, **kwargs) -> dict:
