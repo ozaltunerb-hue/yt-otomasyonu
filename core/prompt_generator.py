@@ -27,6 +27,7 @@ from core.creative_engine import (
     YOUTUBE_METADATA_SYSTEM,
     VESSEL_UNIVERSE,
     SHIP_NAME_PATTERNS,
+    SHIP_INCOMPATIBLE,
     DOMAIN_CAST_RANGES,
     ENV_CENTRIC_DOMAINS,
     apply_style_lock,
@@ -371,7 +372,11 @@ _CAST_PERSON = (
     r"dockworkers?|dockhands?|staff(?:\s+members?)?|passengers?|guests?|tourists?|officers?|"
     r"captains?|sailors?|technicians?|engineers?|riggers?|bystanders?|pedestrians?|beachgoers?|"
     r"spectators?|onlookers?|attendants?|lifeguards?|men|women|man|woman|swimmers?|surfers?|"
-    r"stewards?|mechanics?|operators?|welders?|visitors?|holidaymakers?|sunbathers?|guards?|mariners?)"
+    r"stewards?|mechanics?|operators?|welders?|visitors?|holidaymakers?|sunbathers?|guards?|mariners?|"
+    # TUR 10: "a jet ski with two riders" tanınmıyordu, kapı "hiç insan yok" diyordu
+    r"riders?|drivers?|divers?|boaters?|skippers?|kayakers?|jet\s+skiers?|owners?|residents?|"
+    r"shoppers?|commuters?|motorists?|cyclists?|rescuers?|firefighters?|paramedics?|pilots?|"
+    r"waiters?|bartenders?)"
 )
 _CAST_NUM = (
     r"(?:\d{1,3}|(?:twenty|thirty|forty|fifty)(?:[\s-](?:one|two|three|four|five|six|seven|eight|nine))?|"
@@ -428,7 +433,7 @@ def validate_cast_size(scenario: dict, domain_id: str) -> tuple[bool, list[str]]
             return False, [f"Cast: Beat 1'de belirsiz kişi ifadesi, sayı yok (aralık {lo}-{hi})"]
         if _CAST_ANY_PERSON_RE.search(beat1):
             return False, [f"Cast: Beat 1'de kişi var ama sayı yok (aralık {lo}-{hi})"]
-        return False, [f"Cast: Beat 1'de hiç insan yok (aralık {lo}-{hi})"]
+        return False, [f"Cast: Beat 1'de tanınan sayılı kişi ifadesi yok (aralık {lo}-{hi})"]
 
     total = sum(n for n, _, _ in beat1_counts)
     hedged = any(h for _, h, _ in beat1_counts)
@@ -445,6 +450,24 @@ def validate_cast_size(scenario: dict, domain_id: str) -> tuple[bool, list[str]]
             if n > total:
                 failures.append(f"Cast: {label}'de Beat 1'den fazla kişi ({phrase} > {total})")
     return not failures, failures
+
+
+# ── Gemi ↔ ortam uyumu (2026-09-24, TUR 10) ──
+def validate_ship_setting(scenario: dict, ship: str) -> tuple[bool, list[str]]:
+    """Senaryo, atanan gemide olmayan bir mekân kuruyor mu? (tender botta havuz güvertesi gibi)
+
+    Catalyst uyumsuz ortam/olayı zaten seçmez; bu kapı yazıcının domain rehberinden
+    kendiliğinden eklediği mekânları yakalar.
+    """
+    terms = SHIP_INCOMPATIBLE.get(ship or "", {}).get("scenario_terms")
+    if not terms:
+        return True, []
+    text = " ".join(scenario.get(k, "") or "" for k in
+                    ("scenario_summary", "visible_start", "physical_movement", "visible_consequence"))
+    hits = sorted({m.group(0).lower() for m in re.finditer(terms, text, re.IGNORECASE)})
+    if hits:
+        return False, [f"Gemi-ortam: '{ship}' ile uyumsuz mekân {hits}"]
+    return True, []
 
 
 # ── Özet ↔ beat tutarlılığı (2026-09-24, TUR 6) ──
@@ -697,8 +720,10 @@ async def generate_prompts(config: dict) -> dict:
         is_ongoing, beat3_failures = validate_beat3_ongoing_danger(raw_scenario)
         is_cast_ok, cast_failures = validate_cast_size(raw_scenario, catalyst["domain_id"])
         is_consistent, consistency_failures = validate_scenario_consistency(raw_scenario)
-        is_valid = is_visible and is_active and is_ongoing and is_cast_ok and is_consistent
-        failures = visibility_failures + action_failures + beat3_failures + cast_failures + consistency_failures
+        is_ship_ok, ship_failures = validate_ship_setting(raw_scenario, catalyst["forced_ship"])
+        is_valid = is_visible and is_active and is_ongoing and is_cast_ok and is_consistent and is_ship_ok
+        failures = (visibility_failures + action_failures + beat3_failures + cast_failures
+                    + consistency_failures + ship_failures)
 
         combined_history.append(combo_key)
         used_combos.append(combo_key)
@@ -798,6 +823,10 @@ async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
     history_text = "\n".join(f"- {h}" for h in catalyst.get("recent_history", [])[-15:]) if catalyst.get("recent_history") else "None (First run)"
     library_text = "\n".join(f"🔸 {s}" for s in catalyst.get("existing_library_reference", [])) if catalyst.get("existing_library_reference") else ""
     archetype = CAMERA_ARCHETYPES.get(camera_archetype, CAMERA_ARCHETYPES["fixed_cctv"])
+    # Env-centric'te gemi küpeştesinden çekim önerilmez (TUR 10)
+    guidance = archetype["gpt_guidance"]
+    if catalyst.get("domain_id") in ENV_CENTRIC_DOMAINS:
+        guidance = archetype.get("gpt_guidance_env", guidance)
 
     # Domain'in "camera_styles" örnekleri hep sabit CCTV tonunda — atanan arketip
     # CCTV değilse çelişki yaratmaması için bu satırı atlıyoruz.
@@ -826,7 +855,7 @@ MANDATORY ASSIGNMENT: You MUST base your scenario exactly on this combination:
 - Environment: {catalyst['forced_environment']}
 Do not deviate from these core elements.
 
-CAMERA PERSPECTIVE FOR THIS SCENE (MANDATORY): {archetype['gpt_guidance']}
+CAMERA PERSPECTIVE FOR THIS SCENE (MANDATORY): {guidance}
 
 EXPLORATION DOMAIN: {catalyst['domain_title']}
 DOMAIN INSPIRATION & GUIDANCE: {catalyst['guidance']}

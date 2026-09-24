@@ -94,7 +94,7 @@ class TestVagueAndMissing(unittest.TestCase):
     def test_no_people_rejected(self):
         ok, failures = validate_cast_size(sc("Cars slide violently across the flooded deck."), "ferry_operations")
         self.assertFalse(ok)
-        self.assertIn("hiç insan yok", failures[0])
+        self.assertIn("tanınan sayılı kişi ifadesi yok", failures[0])
 
 
 class TestAcrossBeats(unittest.TestCase):

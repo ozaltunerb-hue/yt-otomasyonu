@@ -299,6 +299,16 @@ DOMAIN_ATTRIBUTES = {
     }
 }
 
+# Gemiyle fiziksel olarak uyuşmayan ortam/olaylar (TUR 10): tender botta havuz/güneş güvertesi
+# ve şezlong yok (dry-run 2 #3: "cruise tender boat's pool deck" + 15 yolcu).
+SHIP_INCOMPATIBLE = {
+    "Cruise Tender Boat": {
+        "environments": {"Open-air pool deck", "Sun deck"},
+        "events": {"Rogue wave sweeping pool deck", "Wind-blown deck furniture"},
+        "scenario_terms": r"\bpool\s*deck|\bsun\s*deck|\bswimming\s+pool|\bloungers?\b|\bsun\s*beds?\b",
+    },
+}
+
 # GPT'ye gösterilen gemi evreni: domain havuzlarından otomatik türer, elle liste tutulmaz.
 VESSEL_UNIVERSE = sorted({s for a in DOMAIN_ATTRIBUTES.values() for s in a["ships"]})
 
@@ -398,8 +408,13 @@ def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
 
     # Gemi, Olay ve Ortam Seçimi (Kendi içlerinde tekrarı minimize eder)
     chosen_ship = _choose_lru(attrs.get("ships", []), recent_ships)
-    chosen_event = _choose_lru(attrs.get("events", []), recent_events)
-    chosen_env = _choose_lru(attrs.get("environments", []), recent_envs)
+    banned = SHIP_INCOMPATIBLE.get(chosen_ship or "", {})
+    events = [e for e in attrs.get("events", []) if e not in banned.get("events", set())]
+    envs = [e for e in attrs.get("environments", []) if e not in banned.get("environments", set())]
+    if attrs.get("events") and not events or attrs.get("environments") and not envs:
+        raise RuntimeError(f"SHIP_INCOMPATIBLE '{chosen_ship}' için {chosen_domain_key} havuzunda seçenek bırakmadı")
+    chosen_event = _choose_lru(events, recent_events)
+    chosen_env = _choose_lru(envs, recent_envs)
 
     # Mevcut fikir kütüphanesinden örnekleri derle
     library_samples = []
@@ -708,6 +723,15 @@ CAMERA_ARCHETYPES = {
             "in the same position for the entire shot — the person filming does "
             "not move, lean past it, or climb over it."
         ),
+        # Env-centric domainlerde (şehir/plaj/hortum) gemi küpeştesi yok (TUR 10)
+        "gpt_guidance_env": (
+            "Bystander handheld phone footage — filmed by a real onlooker on land "
+            "(balcony, window, rooftop, roadside, or waterfront), watching the "
+            "incident unfold nearby. If a railing, window, or other foreground "
+            "boundary element is visible at the start, it must remain visible and "
+            "in the same position for the entire shot — the person filming does "
+            "not move, lean past it, or climb over it."
+        ),
         "style_lock": (
             f"Bystander handheld phone footage, {_LENS_GUARDRAILS}. Natural minor "
             "handheld shake means only small in-place tremor and wobble of the "
@@ -719,9 +743,17 @@ CAMERA_ARCHETYPES = {
             "railing, window, porthole, or other foreground boundary element, "
             "that element MUST stay visible in frame for the entire shot — the "
             "camera must never appear to pass through it, climb over it, or move "
-            "beyond it. Filmed from a ship's railing, nearby vessel, or dock, "
-            "occasionally showing a hint of a railing, hand, or phone edge at "
-            f"the frame border. {_SINGLE_MOMENT_GUARDRAIL}"
+            f"beyond it. {_SINGLE_MOMENT_GUARDRAIL}"
+        ),
+        # Çekim yeri domain'e göre (apply_style_lock): env-centric'te gemi küpeştesi yok (TUR 10)
+        "vantage": (
+            "Filmed from a ship's railing, nearby vessel, or dock, occasionally "
+            "showing a hint of a railing, hand, or phone edge at the frame border."
+        ),
+        "vantage_env": (
+            "Filmed by an onlooker on land (balcony, window, rooftop, roadside, or "
+            "waterfront), occasionally showing a hint of a window frame, hand, or "
+            "phone edge at the frame border."
         ),
         # Gemiye özgü kadraj kuralı — ENV_CENTRIC domainlerde eklenmez (apply_style_lock)
         "vessel_framing": (
@@ -794,6 +826,9 @@ def apply_style_lock(prompt_text: str, camera_archetype: str = "fixed_cctv", cat
     domain_id = (catalyst or {}).get("domain_id", "")
     if domain_id not in ENV_CENTRIC_DOMAINS and archetype.get("vessel_framing"):
         style_lock = f"{style_lock} {archetype['vessel_framing']}"
+    vantage = archetype.get("vantage_env" if domain_id in ENV_CENTRIC_DOMAINS else "vantage")
+    if vantage:
+        style_lock = f"{style_lock} {vantage}"
     style_lock = f"{style_lock} {_MOTION_START_GUARDRAIL}"
 
     if catalyst:
