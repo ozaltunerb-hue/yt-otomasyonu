@@ -277,6 +277,11 @@ _BEAT3_BLACKLIST = [
     ("under control", re.compile(r"\bunder\s+control\b")),
     ("recover", re.compile(r"\brecover(?:s|ed|ing)?\b")),
     ("cautious distance", re.compile(r"\bmaintain(?:s|ing)?\s+a\s+cautious\s+distance\b")),
+    # İzleyerek bitiş (2026-09-24, r9#5 "...tangling around a piling as they watch."):
+    # "continues to thrash" işareti olsa da son kare izleyen insanlarda kalıyor.
+    ("izleyerek bitiş", re.compile(
+        r"\b(?:as|while)\s+(?:[\w'-]+\s+){0,3}(?:watch(?:es|ing)?|looks?\s+on|looking\s+on|"
+        r"star(?:e|es|ing)|observ(?:e|es|ing))\b\W*$")),
 ]
 # still/continues/keeps'ten sonra gelirse "devam eden aksiyon" sayılmayan fiiller
 _BEAT3_STATIC_VERBS = {
@@ -441,6 +446,76 @@ def validate_cast_size(scenario: dict, domain_id: str) -> tuple[bool, list[str]]
     return not failures, failures
 
 
+# ── Simplifier çıktı kapısı (2026-09-24, TUR 5) ──
+# Senaryo kapıları senaryoya bakıyordu; simplifier çıktısı Kie'ye kontrolsüz gidiyordu.
+# Faz 1 ölçümü (20 çıktı): Beat 3 %10, Beat 1 fiili düşmüş %15, kişi sayısı düşmüş %20.
+def _verb_stem(word: str) -> str:
+    w = word.lower()
+    for suf in ("ing", "es", "ed", "s", "e"):
+        if w.endswith(suf) and len(w) - len(suf) >= 3:
+            return w[: -len(suf)]
+    return w
+
+
+def _simplified_checks(prompt: str, scenario: dict, domain_id: str) -> list[tuple[str, str]]:
+    """(log için Türkçe hata, simplifier retry'ına İngilizce düzeltme talimatı) listesi."""
+    sentences = re.split(r"(?<=[.!?])\s+", _BEAT_LABEL_RE.sub("", prompt or "").strip())
+    first, last = sentences[0], sentences[-1]
+    if not first:
+        return [("Simplifier: boş prompt", "Return a non-empty prompt.")]
+    issues = []
+
+    # A — Beat 3 devamı: son cümle senaryo Beat 3 kapısından geçmeli
+    b3_ok, b3_fail = validate_beat3_ongoing_danger({"visible_consequence": last})
+    if not b3_ok:
+        issues.append((f"Simplifier son cümle: {b3_fail}",
+                       "End the final sentence mid-action with the danger still unfolding (keep 'still'/'continues'/"
+                       "'keeps' from the scenario); never end on the danger stopping or on people watching."))
+
+    # B — kamera öznesiyle açılış
+    if _CAMERA_SUBJECT_RE.search(first):
+        issues.append(("Simplifier: kamera öznesiyle açılış",
+                       "Start with the physical thing in danger as the subject; never make the camera, image, "
+                       "scene or footage the subject."))
+
+    # C — Beat 1 fiil sadakati: yazıcının bildirdiği fiil (kök eşleşmesi) ilk cümlede
+    verb = (scenario.get("beat1_action_verb") or "").strip()
+    if verb and " " not in verb:
+        stem = _verb_stem(verb)
+        if not any(_verb_stem(w) == stem for w in re.findall(r"[\w-]+", first)):
+            issues.append((f"Simplifier: Beat 1 fiili '{verb}' ilk cümlede yok (zaman sıkışması)",
+                           f"The first sentence must show the scenario's opening action with the verb '{verb}' "
+                           "(any tense); do not pull the later escalation into the first sentence."))
+
+    # E — sayı sadakati: gemi domainlerinde senaryodaki kişi sayısı aynen korunmalı
+    if domain_id in DOMAIN_CAST_RANGES:
+        scen_counts = _cast_counts(scenario.get("visible_start", ""))
+        total = sum(n for n, _, _ in scen_counts)
+        if total:
+            phrases = " and ".join(p for _, _, p in scen_counts)
+            per_sentence = [_cast_counts(s) for s in sentences]
+            stated = next((c for c in per_sentence if c), [])
+            stated_total = sum(n for n, _, _ in stated)
+            later_over = [p for c in per_sentence for n, _, p in c if n > total]
+            if not stated:
+                issues.append((f"Simplifier: kişi sayısı düşmüş (senaryo: {phrases})",
+                               f"Keep the exact head count from the scenario: '{phrases}'."))
+            elif stated_total != total or later_over:
+                issues.append((f"Simplifier: kişi sayısı değişmiş ({stated_total} ≠ {total}, senaryo: {phrases})",
+                               f"Keep the exact head count from the scenario: '{phrases}'; do not add people."))
+    return issues
+
+
+def validate_simplified_prompt(prompt: str, scenario: dict, domain_id: str) -> tuple[bool, list[str]]:
+    """Simplifier ham çıktısı (stil kilidi öncesi) Kie'ye gitmeye uygun mu?
+
+    A: son cümle Beat 3 kapısından geçer (izleyerek bitiş dahil). B: kamera öznesiyle açılmaz.
+    C: yazıcının bildirdiği Beat 1 fiili ilk cümlede. E: gemi domainlerinde kişi sayısı korunur.
+    """
+    failures = [msg for msg, _ in _simplified_checks(prompt, scenario, domain_id)]
+    return not failures, failures
+
+
 def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
     """
     Aksiyon/Tehlike Yoğunluğu Kontrolü (Sakin/Statik Sahne Reddi).
@@ -588,18 +663,17 @@ async def generate_prompts(config: dict) -> dict:
             f"Denemeler: {json.dumps(attempt_log, ensure_ascii=False)}"
         )
 
-    best = max(accepted, key=lambda x: x["score"])
+    # ── ADIM 3: Seedance 2 Mini Doğukan Promptu (25–45 Kelime — DEFAULT_DURATION Standardı) ──
+    # Skor sırasıyla sadeleştirilir; simplifier çıktı kapısından ilk geçen senaryo kullanılır.
+    log.info(f"✂️ Sahne Doğukan standardına sadeleştiriliyor (25–45 kelime {settings.DEFAULT_DURATION}s)...")
+    best, simplified, simplify_attempts = await simplify_with_gate(accepted)
     scenario, catalyst, camera_archetype, combo_key = (
         best["scenario"], best["catalyst"], best["camera_archetype"], best["combo_key"]
     )
     log.info(
-        f"🏆 En iyi senaryo seçildi (skor={best['score']}, {len(accepted)}/{max_scenario_attempts} kapıdan geçti): "
-        f"{scenario.get('scenario_summary', '')}"
+        f"🏆 Senaryo seçildi (skor={best['score']}, {len(accepted)}/{max_scenario_attempts} kapıdan geçti, "
+        f"{len(simplify_attempts)} simplifier denemesi): {scenario.get('scenario_summary', '')}"
     )
-
-    # ── ADIM 3: Seedance 2 Mini Doğukan Promptu (25–45 Kelime — DEFAULT_DURATION Standardı) ──
-    log.info(f"✂️ Sahne Doğukan standardına sadeleştiriliyor (25–45 kelime {settings.DEFAULT_DURATION}s)...")
-    simplified = await _simplify_prompt(scenario, catalyst)
     raw_prompt_text = simplified.get("prompt", "").strip()
     raw_word_count = len(raw_prompt_text.split())
 
@@ -730,8 +804,12 @@ CREATIVE DIRECTIVE:
     return result
 
 
-async def _simplify_prompt(scenario: dict, catalyst: dict) -> dict:
-    """Katman 3: Senaryoyu Seedance 2 Mini için 25–45 kelimelik yüksek sinyalli prompt'a çevir."""
+async def _simplify_prompt(scenario: dict, catalyst: dict, feedback: list[str] | None = None) -> dict:
+    """Katman 3: Senaryoyu Seedance 2 Mini için 25–45 kelimelik yüksek sinyalli prompt'a çevir.
+
+    feedback: önceki denemenin çıktı kapısında kaldığı noktalar (İngilizce düzeltme talimatları).
+    GPT boş dönerse {"prompt": ""} döner; yedek prompt yok, kapı bunu başarısız deneme sayar.
+    """
     duration = settings.DEFAULT_DURATION
     early, late = compute_duration_breakpoints(duration)
     user_message = f"""Convert this realistic maritime incident into an exact 25–45 word Seedance 2 Mini prompt following the Doğukan methodology:
@@ -752,18 +830,51 @@ REQUIREMENTS:
 - Do NOT include any camera, POV, lighting, or shot-type description (e.g., no "From the escort boat", no "CCTV", no "lens").
 - Preserve PPE colors and raw weather details from the scenario exactly — never white hazmat suits, never glossy/CGI-clean water or ice."""
 
+    if feedback:
+        user_message += "\n\nYOUR PREVIOUS ATTEMPT WAS REJECTED. Fix these points:\n" + "\n".join(
+            f"- {f}" for f in feedback
+        )
+
     system_prompt = build_prompt_simplifier_system(duration, catalyst.get("domain_id", ""))
     result = await _call_gpt(system_prompt, user_message, temperature=0.75)
 
-    if "prompt" not in result or not result["prompt"]:
-        fallback_prompt = (
-            f"On a rolling {scenario.get('vessel_class', 'vessel')} in rough seas, "
-            f"{scenario.get('physical_movement', 'the vessel lurches under wave impact')}, "
-            f"finally {scenario.get('visible_consequence', 'settling against the deck barrier')}."
-        )
-        result = {"prompt": fallback_prompt, "word_count": len(fallback_prompt.split())}
-
+    # Eski yedek prompt kaldırıldı (2026-09-24): env-centric'te "On a rolling None in rough
+    # seas" üretiyor, varsayılanı Beat 3 kara listesindeki "settling" idi.
+    if not result.get("prompt"):
+        result = {**result, "prompt": ""}
     return result
+
+
+SIMPLIFIER_MAX_RETRIES = 2
+
+
+async def simplify_with_gate(candidates: list[dict]) -> tuple[dict, dict, list[dict]]:
+    """Kabul edilmiş senaryoları skor sırasıyla sadeleştirir; çıktı kapısından ilk geçeni döndürür.
+
+    Her senaryo için 1 + SIMPLIFIER_MAX_RETRIES deneme (retry'da GPT'ye neden kaldığı söylenir),
+    sonra sıradaki senaryo. Hiçbiri geçmezse NoValidScenarioError (sessiz fallback yok).
+    candidates: {"scenario", "catalyst", "score", ...} sözlükleri.
+    Dönüş: (seçilen aday, simplifier sonucu, deneme kaydı).
+    """
+    attempts = []
+    for cand in sorted(candidates, key=lambda c: c["score"], reverse=True):
+        scenario, catalyst = cand["scenario"], cand["catalyst"]
+        feedback = None
+        for attempt in range(1 + SIMPLIFIER_MAX_RETRIES):
+            simplified = await _simplify_prompt(scenario, catalyst, feedback)
+            issues = _simplified_checks(simplified.get("prompt", ""), scenario, catalyst.get("domain_id", ""))
+            attempts.append({
+                "summary": scenario.get("scenario_summary", ""), "attempt": attempt + 1,
+                "prompt": simplified.get("prompt", ""), "failures": [m for m, _ in issues],
+            })
+            if not issues:
+                return cand, simplified, attempts
+            log.warning(f"⚠️ Simplifier çıktısı kapıdan geçmedi (deneme {attempt + 1}): {[m for m, _ in issues]}")
+            feedback = [hint for _, hint in issues]
+    raise NoValidScenarioError(
+        f"Hiçbir senaryonun simplifier çıktısı kapıdan geçmedi. "
+        f"Denemeler: {json.dumps(attempts, ensure_ascii=False)}"
+    )
 
 
 async def _generate_metadata(scenario: dict, catalyst: dict) -> dict:

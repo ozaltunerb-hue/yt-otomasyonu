@@ -101,12 +101,12 @@ class TestCargoFree(unittest.TestCase):
                         self.assertNoCargo(user_message, f"user/{d}/{cam}")
 
     def test_simplify_fallback_defaults(self):
-        """Senaryo alanları boşsa kullanılan varsayılanlar ve Kie'ye gidebilecek fallback prompt."""
+        """Senaryo alanları boşsa kullanılan varsayılanlar; yedek prompt 2026-09-24'te kaldırıldı (boş döner)."""
         mock = AsyncMock(return_value={})
         with patch.object(pg, "_call_gpt", mock):
             result = asyncio.run(pg._simplify_prompt({}, {"domain_id": "ferry_operations"}))
         self.assertNoCargo(mock.call_args.args[1], "simplifier user")
-        self.assertNoCargo(result["prompt"], "fallback prompt")
+        self.assertEqual(result["prompt"], "")
 
     def test_domain_definitions(self):
         """Domain guidance + example_elements, GPT user mesajına birebir gider."""

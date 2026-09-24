@@ -1,0 +1,278 @@
+[
+ {
+  "tag": "faz1#1.1",
+  "domain": "cruise_ship_operations",
+  "scenario": {
+   "scenario_summary": "A rogue wave crashes over the cruise liner's pool deck, sending deck furniture and guests into disarray as water surges across the area.",
+   "visible_start": "A rogue wave crashes over the pool deck, where about fifteen passengers sunbathe and relax, sending sun loungers and towels careening.",
+   "physical_movement": "The water surges powerfully across the pool deck, knocking over deck chairs and pushing passengers off their feet as they scramble to grab onto railings or each other.",
+   "visible_consequence": "Passengers still struggle to maintain their balance while drenched furniture and belongings slide with the retreating water, leaving the deck in chaos.",
+   "beat1_action_verb": "crashes"
+  },
+  "prompt": "A rogue wave crashes over the pool deck, tossing sun loungers and passengers into chaos. Water surges powerfully, sweeping deck chairs and passengers as they scramble for safety. Drenched furniture and belongings slide with the retreating water.",
+  "expect": [
+   "E"
+  ]
+ },
+ {
+  "tag": "faz1#1.2",
+  "domain": "cruise_ship_operations",
+  "scenario": {
+   "scenario_summary": "A rogue wave crashes over the cruise liner's pool deck, sending deck furniture and guests into disarray as water surges across the area.",
+   "visible_start": "A rogue wave crashes over the pool deck, where about fifteen passengers sunbathe and relax, sending sun loungers and towels careening.",
+   "physical_movement": "The water surges powerfully across the pool deck, knocking over deck chairs and pushing passengers off their feet as they scramble to grab onto railings or each other.",
+   "visible_consequence": "Passengers still struggle to maintain their balance while drenched furniture and belongings slide with the retreating water, leaving the deck in chaos.",
+   "beat1_action_verb": "crashes"
+  },
+  "prompt": "A rogue wave crashes over the cruise liner's pool deck, hurling sun loungers and towels as water surges across the deck. Passengers struggle to maintain balance, drenched furniture sliding with retreating water, leaving chaos behind.",
+  "expect": [
+   "E"
+  ]
+ },
+ {
+  "tag": "faz1#2.1",
+  "domain": "shipyard_and_drydock_engineering",
+  "scenario": {
+   "scenario_summary": "As water gushes into a drydock, a vessel on a slipway begins to slide uncontrollably, tilting dangerously as workers scramble to secure it.",
+   "visible_start": "Water gushes into the drydock as five workers in bright orange coveralls react on a nearby vessel, the vessel in crisis beginning to shift visibly on the slipway.",
+   "physical_movement": "The vessel on the slipway suddenly starts to slide down the incline, tilting as the workers shout and wave from the observer vessel, pointing towards the slipping vessel.",
+   "visible_consequence": "The sliding vessel on the slipway continues to tilt precariously, threatening to topple as water keeps surging into the drydock, while the workers on the observer vessel remain focused on the unfolding crisis.",
+   "beat1_action_verb": "gushes"
+  },
+  "prompt": "Water gushes into the drydock as a vessel on the slipway begins to slide, tilting dangerously. Five workers in orange coveralls shout and wave, pointing at the sliding vessel, as water continues surging around it.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#2.2",
+  "domain": "shipyard_and_drydock_engineering",
+  "scenario": {
+   "scenario_summary": "As water gushes into a drydock, a vessel on a slipway begins to slide uncontrollably, tilting dangerously as workers scramble to secure it.",
+   "visible_start": "Water gushes into the drydock as five workers in bright orange coveralls react on a nearby vessel, the vessel in crisis beginning to shift visibly on the slipway.",
+   "physical_movement": "The vessel on the slipway suddenly starts to slide down the incline, tilting as the workers shout and wave from the observer vessel, pointing towards the slipping vessel.",
+   "visible_consequence": "The sliding vessel on the slipway continues to tilt precariously, threatening to topple as water keeps surging into the drydock, while the workers on the observer vessel remain focused on the unfolding crisis.",
+   "beat1_action_verb": "gushes"
+  },
+  "prompt": "Water gushes into the drydock, causing the vessel on the slipway to slide and tilt, while five workers in orange coveralls frantically shout and point, the vessel continuing to tilt dangerously as water keeps surging around it.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#3.1",
+  "domain": "coastal_tornado_landfall",
+  "scenario": {
+   "scenario_summary": "A powerful tornado rips across the marina, causing chaos as a sailing yacht strains against its moorings, ultimately breaking free and colliding with the dock.",
+   "visible_start": "A tornado spins violently in the distance, hurtling towards the marina.",
+   "physical_movement": "The tornado crashes across the water, pulling the yacht's moorings taut and snapping them as the vessel lurches violently towards the dock.",
+   "visible_consequence": "The yacht continues to drift uncontrollably, its bow crashing into the dock, while debris and loose equipment scatter across the deck.",
+   "beat1_action_verb": "spins"
+  },
+  "prompt": "A tornado spins violently offshore, barreling toward the marina. It crashes across the water, snapping the yacht's moorings. The yacht lurches violently, its bow crashing into the dock, debris scattering across the deck.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#3.2",
+  "domain": "coastal_tornado_landfall",
+  "scenario": {
+   "scenario_summary": "A powerful tornado rips across the marina, causing chaos as a sailing yacht strains against its moorings, ultimately breaking free and colliding with the dock.",
+   "visible_start": "A tornado spins violently in the distance, hurtling towards the marina.",
+   "physical_movement": "The tornado crashes across the water, pulling the yacht's moorings taut and snapping them as the vessel lurches violently towards the dock.",
+   "visible_consequence": "The yacht continues to drift uncontrollably, its bow crashing into the dock, while debris and loose equipment scatter across the deck.",
+   "beat1_action_verb": "spins"
+  },
+  "prompt": "A tornado spins violently towards the marina, crashing across the water. The sailing yacht strains against its moorings, which snap. The vessel lurches uncontrollably, colliding with the dock as debris scatters across the deck.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#4.1",
+  "domain": "open_beach_coastal_events",
+  "scenario": {
+   "scenario_summary": "A calm beachfront suddenly experiences a massive wave crashing onto the sand, propelling debris and flooding the shoreline.",
+   "visible_start": "A towering wave crashes onto the tranquil sandy beach, water surging forward violently.",
+   "physical_movement": "The wave surges across the sand, engulfing beach chairs and umbrellas, sweeping them inland.",
+   "visible_consequence": "The shoreline remains submerged under a continuous rush of water, with debris and sand still being swept away.",
+   "beat1_action_verb": "crashes"
+  },
+  "prompt": "A towering wave crashes onto the tranquil sandy beach, surging violently across the sand. Beach chairs and umbrellas are engulfed and swept inland. The shoreline remains submerged, with debris and sand still being swept away.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#4.2",
+  "domain": "open_beach_coastal_events",
+  "scenario": {
+   "scenario_summary": "A calm beachfront suddenly experiences a massive wave crashing onto the sand, propelling debris and flooding the shoreline.",
+   "visible_start": "A towering wave crashes onto the tranquil sandy beach, water surging forward violently.",
+   "physical_movement": "The wave surges across the sand, engulfing beach chairs and umbrellas, sweeping them inland.",
+   "visible_consequence": "The shoreline remains submerged under a continuous rush of water, with debris and sand still being swept away.",
+   "beat1_action_verb": "crashes"
+  },
+  "prompt": "A towering wave crashes onto the tranquil sandy beach, propelling forward with violent force. Water surges, engulfing beach chairs and umbrellas, sweeping them inland. The shoreline remains submerged, debris and sand continually swept away in the rush.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#5.1",
+  "domain": "urban_city_disasters",
+  "scenario": {
+   "scenario_summary": "As a severe storm lashes a residential city district, powerful wind gusts hurl debris across the street, smashing windows and toppling street signs, leaving the area in chaos.",
+   "visible_start": "Gale-force winds sweep through the downtown street, flinging debris across the pavement.",
+   "physical_movement": "The winds violently hurl objects like trash cans and traffic cones, smashing them into shop windows and sending shards of glass flying.",
+   "visible_consequence": "Street signs bend and teeter precariously, while debris continues to blast against buildings, keeping the street a chaotic danger zone.",
+   "beat1_action_verb": "sweep"
+  },
+  "prompt": "Gale-force winds sweep through downtown, flinging debris across the pavement. Trash cans and traffic cones smash into shop windows, glass shards flying. Street signs bend and teeter, debris keeps blasting buildings, turning the street into chaos.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#5.2",
+  "domain": "urban_city_disasters",
+  "scenario": {
+   "scenario_summary": "As a severe storm lashes a residential city district, powerful wind gusts hurl debris across the street, smashing windows and toppling street signs, leaving the area in chaos.",
+   "visible_start": "Gale-force winds sweep through the downtown street, flinging debris across the pavement.",
+   "physical_movement": "The winds violently hurl objects like trash cans and traffic cones, smashing them into shop windows and sending shards of glass flying.",
+   "visible_consequence": "Street signs bend and teeter precariously, while debris continues to blast against buildings, keeping the street a chaotic danger zone.",
+   "beat1_action_verb": "sweep"
+  },
+  "prompt": "Gale-force winds sweep through the downtown street, flinging debris across the pavement. Trash cans and traffic cones smash into shop windows, scattering glass. Street signs teeter, debris continues blasting against buildings, maintaining the chaos.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#6.1",
+  "domain": "marina_and_yacht_operations",
+  "scenario": {
+   "scenario_summary": "As a storm surge lifts the floating docks at a marina fuel dock, a runaway powerboat crashes into the elevated dock structure, causing chaos among marina staff.",
+   "visible_start": "A storm surge lifts the floating docks with four marina staff in bright yellow jackets on the fuel dock scrambling as a runaway powerboat hurtles towards them.",
+   "physical_movement": "The powerboat crashes into the now-elevated dock structure, sending a shower of debris and water spray as marina staff duck and take cover.",
+   "visible_consequence": "The powerboat continues pushing against the dock, its engine revving and propelling large waves that sway the remaining floating structures.",
+   "beat1_action_verb": "lifts"
+  },
+  "prompt": "A storm surge lifts the floating docks as four marina staff in yellow jackets scramble. A runaway powerboat crashes into the elevated dock, sending debris and water spraying. The powerboat continues pushing, revving, and creating large waves.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#6.2",
+  "domain": "marina_and_yacht_operations",
+  "scenario": {
+   "scenario_summary": "As a storm surge lifts the floating docks at a marina fuel dock, a runaway powerboat crashes into the elevated dock structure, causing chaos among marina staff.",
+   "visible_start": "A storm surge lifts the floating docks with four marina staff in bright yellow jackets on the fuel dock scrambling as a runaway powerboat hurtles towards them.",
+   "physical_movement": "The powerboat crashes into the now-elevated dock structure, sending a shower of debris and water spray as marina staff duck and take cover.",
+   "visible_consequence": "The powerboat continues pushing against the dock, its engine revving and propelling large waves that sway the remaining floating structures.",
+   "beat1_action_verb": "lifts"
+  },
+  "prompt": "A storm surge lifts the floating docks, with marina staff in yellow jackets scrambling as a runaway powerboat crashes into the elevated structure, spraying debris and water. The powerboat keeps pushing, its engine revving and waves swaying the docks.",
+  "expect": [
+   "E"
+  ]
+ },
+ {
+  "tag": "faz1#7.1",
+  "domain": "cruise_ship_operations",
+  "scenario": {
+   "scenario_summary": "As the mega cruise ship attempts to dock, the bow thruster fails, causing the vessel to veer suddenly and passengers on the sun deck to stumble and grasp for support as loungers slide across the deck.",
+   "visible_start": "About fifteen passengers on the sun deck grasp onto railings and each other as the ship tilts unexpectedly, causing loungers to slide dangerously across the deck.",
+   "physical_movement": "The ship veers sharply to one side, sending sun loungers and unsecured items skidding across the deck while passengers struggle to maintain their balance amidst the chaos.",
+   "visible_consequence": "Passengers continue to hold onto the railing for support as loungers and other deck furniture keep sliding, adding to the chaotic scene while the ship remains uncorrected in its trajectory.",
+   "beat1_action_verb": "tilts"
+  },
+  "prompt": "About fifteen passengers on the sun deck grasp railings as the mega cruise ship tilts sharply, causing loungers to skid across the deck uncontrollably. Passengers continue clinging to support as furniture keeps sliding chaotically.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#7.2",
+  "domain": "cruise_ship_operations",
+  "scenario": {
+   "scenario_summary": "As the mega cruise ship attempts to dock, the bow thruster fails, causing the vessel to veer suddenly and passengers on the sun deck to stumble and grasp for support as loungers slide across the deck.",
+   "visible_start": "About fifteen passengers on the sun deck grasp onto railings and each other as the ship tilts unexpectedly, causing loungers to slide dangerously across the deck.",
+   "physical_movement": "The ship veers sharply to one side, sending sun loungers and unsecured items skidding across the deck while passengers struggle to maintain their balance amidst the chaos.",
+   "visible_consequence": "Passengers continue to hold onto the railing for support as loungers and other deck furniture keep sliding, adding to the chaotic scene while the ship remains uncorrected in its trajectory.",
+   "beat1_action_verb": "tilts"
+  },
+  "prompt": "Passengers on the sun deck grab railings as the mega cruise ship suddenly veers. Sun loungers slide wildly across the deck. Passengers cling tightly as the ship continues its uncorrected path, adding to the scene's chaos.",
+  "expect": [
+   "C",
+   "E"
+  ]
+ },
+ {
+  "tag": "faz1#8.1",
+  "domain": "shipyard_and_drydock_engineering",
+  "scenario": {
+   "scenario_summary": "A ship is released down a slipway, but friction causes a sudden halt, jerking the vessel violently and sending crew scrambling.",
+   "visible_start": "The vessel starts sliding down the slipway with four crew members in high-visibility coveralls nearby as it gushes rapidly against the guides.",
+   "physical_movement": "The vessel jerks to an abrupt halt, causing the four crew members to stagger and grab onto nearby railings to keep their balance.",
+   "visible_consequence": "The vessel remains precariously tilted on the slipway, with the crew still clutching railings, assessing the situation as the ship continues to teeter.",
+   "beat1_action_verb": "gushes"
+  },
+  "prompt": "The vessel slides down the slipway, four crew members in high-visibility coveralls nearby. Suddenly, the vessel jerks to a halt, causing the crew to stagger and grab railings. It remains tilted, crew still clutching railings as it teeters.",
+  "expect": [
+   "C"
+  ]
+ },
+ {
+  "tag": "faz1#8.2",
+  "domain": "shipyard_and_drydock_engineering",
+  "scenario": {
+   "scenario_summary": "A ship is released down a slipway, but friction causes a sudden halt, jerking the vessel violently and sending crew scrambling.",
+   "visible_start": "The vessel starts sliding down the slipway with four crew members in high-visibility coveralls nearby as it gushes rapidly against the guides.",
+   "physical_movement": "The vessel jerks to an abrupt halt, causing the four crew members to stagger and grab onto nearby railings to keep their balance.",
+   "visible_consequence": "The vessel remains precariously tilted on the slipway, with the crew still clutching railings, assessing the situation as the ship continues to teeter.",
+   "beat1_action_verb": "gushes"
+  },
+  "prompt": "The vessel slides down the slipway as four crew members in high-visibility coveralls stand nearby. Abruptly, the ship jerks to a halt, causing the crew to stagger and grasp railings, as the vessel teeters precariously.",
+  "expect": [
+   "A",
+   "C"
+  ]
+ },
+ {
+  "tag": "faz1#9.1",
+  "domain": "ferry_operations",
+  "scenario": {
+   "scenario_summary": "As the ferry crosses an island route, water surges onto the open vehicle deck, sweeping cars and soaking passengers.",
+   "visible_start": "Water gushes in from the sides of the open vehicle deck, where four passengers in casual clothes stand near parked cars.",
+   "physical_movement": "The water surges across the deck, pushing against the tires of the cars parked there and causing them to shift slightly, while passengers instinctively grab onto nearby railings.",
+   "visible_consequence": "The cars begin to slide toward the edge of the deck, with the water level rising and passengers clinging tightly to the railings, still in motion as the scene continues.",
+   "beat1_action_verb": "gushes"
+  },
+  "prompt": "Water gushes onto the open vehicle deck, where four passengers stand near cars. The surge pushes against tires, shifting cars slightly as passengers grab railings. Cars begin sliding toward the deck's edge, water still rising.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#9.2",
+  "domain": "ferry_operations",
+  "scenario": {
+   "scenario_summary": "As the ferry crosses an island route, water surges onto the open vehicle deck, sweeping cars and soaking passengers.",
+   "visible_start": "Water gushes in from the sides of the open vehicle deck, where four passengers in casual clothes stand near parked cars.",
+   "physical_movement": "The water surges across the deck, pushing against the tires of the cars parked there and causing them to shift slightly, while passengers instinctively grab onto nearby railings.",
+   "visible_consequence": "The cars begin to slide toward the edge of the deck, with the water level rising and passengers clinging tightly to the railings, still in motion as the scene continues.",
+   "beat1_action_verb": "gushes"
+  },
+  "prompt": "Water gushes onto the ferry's open vehicle deck, where four passengers in casual clothes stand. The surge shifts cars, pushing them toward the edge, while passengers cling to railings as the water level continues rising.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#10.1",
+  "domain": "coastal_tornado_landfall",
+  "scenario": {
+   "scenario_summary": "A tornado tears across a residential coastal district, lifting debris as a jet ski is swept off its dock and into the turbulent water.",
+   "visible_start": "A tornado churns violently across the waterfront, dark clouds swirling as it rapidly approaches the docked vessels.",
+   "physical_movement": "The tornado's fierce winds engulf a stationary jet ski, yanking it violently off its mooring and tossing it into the swirling water.",
+   "visible_consequence": "The jet ski remains caught in the turbulent waters, bobbing uncontrollably as the tornado continues to wreak havoc on the waterfront.",
+   "beat1_action_verb": "churns"
+  },
+  "prompt": "A tornado churns violently over the waterfront, dark clouds swirling. The fierce winds yank a jet ski off its mooring, tossing it into turbulent water, where it bobs uncontrollably as the tornado continues its destructive path.",
+  "expect": []
+ },
+ {
+  "tag": "faz1#10.2",
+  "domain": "coastal_tornado_landfall",
+  "scenario": {
+   "scenario_summary": "A tornado tears across a residential coastal district, lifting debris as a jet ski is swept off its dock and into the turbulent water.",
+   "visible_start": "A tornado churns violently across the waterfront, dark clouds swirling as it rapidly approaches the docked vessels.",
+   "physical_movement": "The tornado's fierce winds engulf a stationary jet ski, yanking it violently off its mooring and tossing it into the swirling water.",
+   "visible_consequence": "The jet ski remains caught in the turbulent waters, bobbing uncontrollably as the tornado continues to wreak havoc on the waterfront.",
+   "beat1_action_verb": "churns"
+  },
+  "prompt": "A tornado churns violently across the waterfront, dark clouds swirling. Fierce winds yank a stationary jet ski from its mooring, tossing it into the swirling water. The jet ski bobs uncontrollably as chaos ensues.",
+  "expect": [
+   "A"
+  ]
+ }
+]
