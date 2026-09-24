@@ -62,7 +62,7 @@ HIGH_RISK_PATTERNS = [
 # ── GPT Pre-flight System Prompt ──
 _PREFLIGHT_SYSTEM = """You are a content safety evaluator for AI video generation models (Seedance 2 Mini).
 
-Your job: Evaluate if a realistic maritime CCTV/documentary video prompt would be REJECTED by an AI model's safety filter.
+Your job: Evaluate if a realistic documentary incident scene description (maritime, coastal, or urban) would be REJECTED by an AI model's safety filter. You receive ONLY the scene description; camera and lighting instructions are added separately.
 
 AI video models reject prompts containing:
 - Graphic human injury, gore, blood, or death
@@ -70,15 +70,15 @@ AI video models reject prompts containing:
 - Children in perilous situations
 - Explicit sexual content or nudity
 
-CRITICAL MARITIME CONTEXT (SEPARATE CREATIVITY FROM SAFETY):
-- Authentic maritime weather and heavy machinery emergencies (e.g. ferry rolling in storm, green swells swamping the vehicle deck, secured cars breaking loose, mooring lines snapping at a marina, drydock flooding under a yacht on a slipway, crane boom swinging, tornadoes, people evacuating) are 100% SAFE. Do not sterilize dramatic physical action unless it explicitly depicts graphic injuries, blood, or gore.
+CRITICAL CONTEXT (SEPARATE CREATIVITY FROM SAFETY):
+- Authentic natural disasters, extreme weather, and heavy machinery emergencies are 100% SAFE, e.g. a ferry rolling in a storm, green swells swamping a vehicle deck, secured cars breaking loose, mooring lines snapping at a marina, drydock flooding under a yacht on a slipway, a tsunami flooding a city street and sweeping cars into storefronts, a tornado tearing across a beach, floodwater carrying vehicles, people evacuating. Do not sterilize dramatic physical action unless it explicitly depicts graphic injuries, blood, or gore.
 
 Respond in JSON:
 {
   "safe": true/false,
   "risk_score": 1-10 (1=completely safe, 10=definitely rejected),
   "risk_reasons": ["reason1"],
-  "rewritten_prompt": "only if safe=false: output the EXACT original prompt with ONLY the minimum local edits necessary to remove the safety risk. DO NOT rewrite the entire prompt. Preserve all camera instructions, environments, events, audio, and visual details perfectly."
+  "rewritten_prompt": "only if safe=false: output the EXACT original scene description with ONLY the minimum local edits necessary to remove the safety risk. DO NOT rewrite the entire text. Preserve the vessel type (if any), environment, exact people count, events, and action verbs. Do not add camera, footage-type, or lighting descriptions."
 }"""
 
 # ── GPT Retry Rewrite System Prompt ──
@@ -179,7 +179,7 @@ async def gpt_preflight_check(prompt: str) -> tuple[str, bool, dict]:
     import openai
     client = openai.AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
 
-    user_msg = f"Evaluate this CCTV video prompt:\n\n{prompt}"
+    user_msg = f"Evaluate this video scene description:\n\n{prompt}"
     errors = []
     api_failures = 0
     result = None

@@ -669,6 +669,15 @@ def get_realism_guardrails(domain_id: str, vessel_class: str) -> str:
         "resort or casual wear, sun hats for pool/deck scenes; regular casual clothing for "
         "car-deck scenes) — never hi-vis PPE on civilians."
     )
+    # Env-centric'te gemi rolleri (ferry officer, car-deck...) gürültü (TUR 14); sivil kuralı kalır.
+    if domain_id in ENV_CENTRIC_DOMAINS:
+        role_rules = (
+            "Clothing: bystanders, residents, pedestrians, and beachgoers wear ordinary civilian "
+            "clothing suited to the setting and weather — never hi-vis PPE on civilians. Emergency "
+            "responders (firefighters, police, lifeguards, paramedics) wear their standard service uniforms."
+        )
+        if vessel_class and vessel_class != "none":
+            role_rules += " Marina and dock workers wear high-visibility orange or yellow PPE."
 
     common_rules = (
         "NEVER use white hazmat suits. Raw natural overcast/fog/rain lighting, "
