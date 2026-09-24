@@ -143,58 +143,97 @@ def create_softened_prompt(original_prompt: str) -> str:
     return softened
 
 
-async def gpt_preflight_check(prompt: str) -> tuple[str, bool, dict]:
-    """GPT Pre-flight Safety Check — Kie AI'a göndermeden ÖNCE prompt'u değerlendirir."""
-    from config import settings
+PREFLIGHT_MAX_RETRIES = 2  # toplam 1 + 2 = 3 deneme
 
+
+class PreflightError(RuntimeError):
+    """Pre-flight güvenlik kontrolü tüm denemelerde geçerli sonuç üretemedi; prompt Kie'ye gitmez."""
+
+
+def _parse_preflight(raw: str) -> dict:
+    """GPT preflight cevabını doğrular. Eksik/bozuk alan = başarısız kontrol (ValueError).
+
+    Eskiden bozuk JSON ve eksik 'safe' alanı sessizce 'güvenli' sayılıyordu (2026-09-24 TUR 7).
+    """
     try:
-        import openai
-        client = openai.AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+        result = json.loads(raw or "")
+    except json.JSONDecodeError as e:
+        raise ValueError(f"bozuk JSON: {e}")
+    if not isinstance(result, dict):
+        raise ValueError("JSON nesne değil")
+    if not isinstance(result.get("safe"), bool):
+        raise ValueError("'safe' alanı eksik veya bool değil")
+    score = result.get("risk_score")
+    if isinstance(score, bool) or not isinstance(score, int) or not 1 <= score <= 10:
+        raise ValueError(f"'risk_score' 1-10 arası tamsayı değil: {score!r}")
+    if not result["safe"] and score > 4:
+        rewritten = result.get("rewritten_prompt")
+        if not isinstance(rewritten, str) or len(rewritten.strip()) <= 20:
+            raise ValueError("riskli (safe=false, skor>4) ama 'rewritten_prompt' yok/çok kısa")
+    return result
 
-        response = await client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": _PREFLIGHT_SYSTEM},
-                {"role": "user", "content": f"Evaluate this CCTV video prompt:\n\n{prompt}"},
-            ],
-            temperature=0.3,
-            max_tokens=400,
-            response_format={"type": "json_object"},
-        )
 
-        raw = response.choices[0].message.content
-        result = json.loads(raw)
+async def gpt_preflight_check(prompt: str) -> tuple[str, bool, dict]:
+    """GPT Pre-flight Safety Check — Kie AI'a göndermeden ÖNCE prompt'u değerlendirir.
 
-        risk_score = result.get("risk_score", 1)
-        is_safe = result.get("safe", True)
-        risk_reasons = result.get("risk_reasons", [])
+    API hatası, bozuk JSON veya eksik alan başarısız kontroldür: hata sebebi GPT'ye
+    söylenerek 1 + PREFLIGHT_MAX_RETRIES kez denenir, hiçbiri geçmezse PreflightError.
+    Sessiz geçiş yok.
+    """
+    from config import settings
+    import openai
+    client = openai.AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
 
-        metadata = {
-            "risk_score": risk_score,
-            "risk_reasons": risk_reasons,
-            "preflight_passed": is_safe,
-        }
-
-        if is_safe or risk_score <= 4:
-            log.info(f"✅ GPT Pre-flight: GÜVENLİ (skor: {risk_score}/10)")
-            return prompt, False, metadata
-
-        rewritten = result.get("rewritten_prompt", "")
-        if rewritten and len(rewritten) > 20:
-            log.warning(
-                f"🛡️ GPT Pre-flight: RİSKLİ (skor: {risk_score}/10) — "
-                f"Sebepler: {', '.join(risk_reasons)}"
+    user_msg = f"Evaluate this CCTV video prompt:\n\n{prompt}"
+    errors = []
+    result = None
+    for attempt in range(1 + PREFLIGHT_MAX_RETRIES):
+        content = user_msg
+        if errors:
+            content += (f"\n\nYour previous answer was invalid ({errors[-1]}). Respond with ONE complete JSON "
+                        f"object with all required fields: safe (bool), risk_score (int 1-10), risk_reasons, "
+                        f"and rewritten_prompt when safe=false.")
+        try:
+            response = await client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": _PREFLIGHT_SYSTEM},
+                    {"role": "user", "content": content},
+                ],
+                temperature=0.3,
+                max_tokens=400,
+                response_format={"type": "json_object"},
             )
-            log.info(f"   ✏️ GPT yeniden yazdı: {rewritten[:100]}...")
-            metadata["rewritten"] = True
-            return rewritten, True, metadata
+            result = _parse_preflight(response.choices[0].message.content)
+            break
+        except Exception as e:
+            errors.append(str(e))
+            log.warning(f"⚠️ GPT Pre-flight geçersiz (deneme {attempt + 1}/{1 + PREFLIGHT_MAX_RETRIES}): {e}")
 
-        log.warning(f"⚠️ GPT Pre-flight: riskli ama rewrite üretemedi (skor: {risk_score})")
+    if result is None:
+        raise PreflightError(f"GPT Pre-flight {1 + PREFLIGHT_MAX_RETRIES} denemede geçerli sonuç vermedi: {errors}")
+
+    risk_score = result["risk_score"]
+    risk_reasons = result.get("risk_reasons", [])
+    metadata = {
+        "risk_score": risk_score,
+        "risk_reasons": risk_reasons,
+        "preflight_passed": result["safe"],
+        "attempts": len(errors) + 1,
+    }
+
+    if result["safe"] or risk_score <= 4:
+        log.info(f"✅ GPT Pre-flight: GÜVENLİ (skor: {risk_score}/10)")
         return prompt, False, metadata
 
-    except Exception as e:
-        log.warning(f"⚠️ GPT Pre-flight hatası (atlanıyor): {e}")
-        return prompt, False, {"risk_score": -1, "error": str(e)}
+    rewritten = result["rewritten_prompt"]
+    log.warning(
+        f"🛡️ GPT Pre-flight: RİSKLİ (skor: {risk_score}/10) — "
+        f"Sebepler: {', '.join(map(str, risk_reasons))}"
+    )
+    log.info(f"   ✏️ GPT yeniden yazdı: {rewritten[:100]}...")
+    metadata["rewritten"] = True
+    return rewritten, True, metadata
 
 
 async def gpt_rewrite_rejected_prompt(
