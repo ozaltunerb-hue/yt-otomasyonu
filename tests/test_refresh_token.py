@@ -45,9 +45,10 @@ class TestMainFlow(unittest.TestCase):
         open(local, "w", encoding="utf-8").write('YOUTUBE_REFRESH_TOKEN="OLD"\n')
         with patch.object(rt, "read_env", return_value=self.ENV), patch.object(rt, "railway", side_effect=railway), \
              patch.object(rt, "access_token", return_value=("at", "")), patch.object(rt, "channel_title", return_value=title), \
-             patch.object(rt, "LOCAL_ENV", local), patch.object(rt, "MASTER_ENV", os.path.join(tmp, "none.env")), \
+             patch.object(rt, "LOCAL_ENV", local), patch.object(rt, "MASTER_ENV", os.path.join(tmp, "none.env")),              patch.object(rt, "REFRESH_LOG", os.path.join(tmp, "dash", "token_refresh.json")), \
              patch.dict(sys.modules, {"setup_youtube": fake_setup}):
             code = rt.main()
+        self.refresh_log = os.path.join(tmp, "dash", "token_refresh.json")
         return code, writes, open(local, encoding="utf-8").read()
 
     def test_success_writes_railway_and_env(self):
@@ -55,6 +56,10 @@ class TestMainFlow(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(writes, ["NEWTOKEN"])
         self.assertIn('YOUTUBE_REFRESH_TOKEN="NEWTOKEN"', local)
+        # Dashboard kaydı: tarih + kanal var, token değeri yok
+        log = open(self.refresh_log, encoding="utf-8").read()
+        self.assertIn('"channel": "DeepMyster"', log)
+        self.assertNotIn("NEWTOKEN", log)
 
     def test_wrong_channel_writes_nothing(self):
         code, writes, local = self.run_main(title="Başka Kanal")

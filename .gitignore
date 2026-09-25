@@ -41,3 +41,8 @@ scratch/
 *.jpg
 *.jpeg
 *.png
+
+# Dashboard canlı verisi (pipeline ve dashboard_sync.py üretir)
+status.json
+status.json.tmp
+dashboard_data/

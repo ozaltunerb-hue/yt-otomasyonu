@@ -120,6 +120,17 @@ python scripts/motion_profile.py video.mp4 --camera fixed_cctv          # hareke
 ```
 `scratch/` git'e girmez; geçici çıktılar oraya yazılır.
 
+## 📺 Yerel Panel (dashboard.html)
+
+`start_dashboard.bat` çift tıkla → http://127.0.0.1:8771/dashboard.html açılır (`scripts/dashboard_server.py`, sadece bu bilgisayar).
+Sunucu izin listesiyle çalışır: sadece `dashboard.html`, `status.json`, `dashboard_data/` ve `.mp4` dosyaları sunulur; `.env`, nokta ile başlayan her şey, `.py` dosyaları ve proje dışı yollar 403 döner. `/api/local.json` panel için mp4 listesi, scratch senaryoları ve cron zamanını üretir.
+Veri gömülü değil, dosyalardan okunur:
+
+- `status.json` — lokal `python main.py` her adımda yazar; panel 3 sn'de bir okur ("Şu an çalışan"). Railway cron'u buraya yazmaz.
+- `dashboard_data/notion_runs.json` — `scripts/dashboard_sync.py` Notion'dan çeker (sadece okur); bat açılışta ve 10 dk'da bir çalıştırır.
+- `dashboard_data/token_refresh.json` — `refresh_youtube_token.bat` başarılı olunca tarih + kanal yazar (token yazılmaz).
+- `/api/local.json` (sunucu üretir) — proje içindeki `.mp4` dosyaları, `scratch/kie_*_result.json` senaryoları, `railway.json` cron zamanı.
+
 ## 🕐 Railway CronJob
 
 - **Komut:** `python main.py`

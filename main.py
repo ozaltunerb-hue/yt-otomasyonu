@@ -38,6 +38,7 @@ from infrastructure.replicate_merger import merge_videos
 from infrastructure.video_downloader import download_video, cleanup_video
 from infrastructure.youtube_uploader import upload_to_youtube
 from infrastructure.notion_logger import NotionTracker
+from infrastructure.run_status import status
 
 log = get_logger("DeepMyster")
 
@@ -99,6 +100,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     last_error, reason = None, ""
 
     for attempt in range(max_retries):
+        status.start(mode if upload_active else f"{mode} (upload yok)", attempt + 1, max_retries)
         try:
             result = await _execute_pipeline(
                 used_combos,
@@ -155,6 +157,7 @@ async def _execute_pipeline(
 
     try:
         # ── ADIM 1: Prompt üret (Creative Engine + GPT) ──
+        status.step("senaryo")
         log.info(f"🧠 Yaratıcı motor çalışıyor (Tek {settings.DEFAULT_DURATION}s kesintisiz çekim standardı)...")
         prompt_data = await generate_prompts(pipeline_config)
 
@@ -166,6 +169,7 @@ async def _execute_pipeline(
         log.info(f"🎬 Senaryo: {prompt_data.get('scenario_summary', '')}")
         log.info(f"   {clip_count} sahne, {total_duration}s | Başlık: {prompt_data.get('youtube_title', '')}")
         log.info(f"   Prompt: {scenes[0]['prompt'] if scenes else ''}")
+        status.set_title(prompt_data.get("youtube_title", "") or prompt_data.get("scenario_summary", ""))
 
         # ── ADIM 2: Notion entry ──
         notion_config = {
@@ -182,6 +186,7 @@ async def _execute_pipeline(
         # ── ADIM 3: Video üret (Seedance 2 Mini) ──
         log.info(f"🎬 Video üretimi başlıyor ({settings.DEFAULT_MODEL}, {settings.DEFAULT_DURATION}s)...")
         await asyncio.to_thread(tracker.update_status, "Video Üretiliyor")
+        status.step("video")
 
         # Hikaye + stil eki ayrı gider: preflight/retry sadece hikayeyi yeniden yazar (TUR 12)
         has_split = "story" in scenes[0] and "style_suffix" in scenes[0]
@@ -216,6 +221,7 @@ async def _execute_pipeline(
 
         # ── ADIM 4: Video indir ──
         log.info("📥 Video indiriliyor...")
+        status.step("indirme")
         final_video_url = video_urls[0]
         video_path = await asyncio.to_thread(download_video, final_video_url)
         video_paths.append(video_path)
@@ -236,9 +242,14 @@ async def _execute_pipeline(
             saved_local_path = output_path
             log.info(f"💾 Video yerel hedefe kopyalandı: {output_path}")
 
+        status.skip("montaj", "Tek kesintisiz çekim, montaj yok")
+
         # ── ADIM 5: YouTube upload (Shorts) ──
         youtube_url = ""
+        if not upload_active:
+            status.skip("youtube", "Test modu, yükleme atlandı")
         if upload_active:
+            status.step("youtube")
             log.info("📺 YouTube Shorts olarak yükleniyor...")
             await asyncio.to_thread(tracker.update_status, "Yükleniyor")
             try:
@@ -250,8 +261,13 @@ async def _execute_pipeline(
                     log.info(f"✅ YouTube'a yüklendi: {youtube_url}")
             except Exception as ue:
                 log.error(f"❌ YouTube upload adımı başarısız oldu: {ue}", exc_info=True)
+                status.step_error("youtube", str(ue))
                 # Video üretimi başarılı oldu, sadece YouTube yüklemesi başarısız.
                 # Pipeline çökmez; Adım 6'ya devam ederek Notion'da '✅ Tamamlandı (Upload Başarısız)' kaydı açılır.
+
+        if upload_active and not youtube_url:
+            status.step_error("youtube", "YouTube URL dönmedi")
+        status.manual("instagram", "Manuel: videoyu @deepmyster Instagram hesabında elle paylaş")
 
         # ── ADIM 6: Tamamlandı ──
         elapsed = time.time() - start_time
@@ -264,6 +280,7 @@ async def _execute_pipeline(
         else:
             await asyncio.to_thread(tracker.update_status, "✅ Tamamlandı")
 
+        status.finish(youtube_url)
         log.info(f"🎉 Pipeline tamamlandı! ({elapsed:.0f}s)")
         log.info(f"   📺 {youtube_url or 'Upload atlandı (Test modu)'}")
         log.info(f"   🎬 Başlık: {prompt_data.get('youtube_title', 'N/A')}")
@@ -295,6 +312,7 @@ async def _execute_pipeline(
             err.combo_key = combo_key
         label = f"Preflight ({err.kind})" if isinstance(err, PreflightError) else "Kie içerik filtresi"
         await asyncio.to_thread(tracker.update_with_error, f"{label}: {err}")
+        status.fail(f"{label}: {err}")
         raise
 
     except NoValidScenarioError as nvse:
@@ -316,6 +334,7 @@ async def _execute_pipeline(
                 "auto",
             )
         await asyncio.to_thread(tracker.update_with_error, str(nvse))
+        status.fail(f"Kalite kapısından geçen senaryo yok: {nvse}")
         return {"success": False, "reason": "no_valid_scenario", "error": str(nvse)}
 
     except Exception as e:
@@ -323,6 +342,7 @@ async def _execute_pipeline(
         error_msg = str(e)
         log.error(f"❌ Pipeline HATASI ({elapsed:.1f}s): {error_msg}", exc_info=True)
         await asyncio.to_thread(tracker.update_with_error, error_msg)
+        status.fail(error_msg)
         return {"success": False, "error": error_msg}
 
     finally:
@@ -406,7 +426,15 @@ def main():
         health_check()
         return
 
-    result = asyncio.run(run_pipeline(dry_run=args.dry_run, skip_upload=args.no_upload, output_path=args.output))
+    # Canlı durum dosyası (dashboard.html okur). Sadece CLI'dan; testler run_pipeline'ı doğrudan çağırır.
+    status.enable(os.environ.get("STATUS_FILE") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "status.json"))
+    try:
+        result = asyncio.run(run_pipeline(dry_run=args.dry_run, skip_upload=args.no_upload, output_path=args.output))
+    except BaseException as e:   # Ctrl+C dahil: çalışan adım "çalışıyor"da takılı kalmasın
+        status.fail(f"Süreç durduruldu: {type(e).__name__}: {e}")
+        raise
+    if result and not result.get("success") and status.data.get("state") == "running":
+        status.fail(result.get("error") or result.get("reason") or "Bilinmeyen hata")
 
     if result and result.get("success"):
         log.info("🎉 DeepMyster video pipeline başarıyla tamamlandı!")

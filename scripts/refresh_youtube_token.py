@@ -7,8 +7,10 @@
 # DeepMyster mı doğrula -> Railway YOUTUBE_REFRESH_TOKEN upsert (Railway yeniden deploy eder) ->
 # Railway'den geri okuyup tekrar doğrula -> lokal .env + master.env güncelle.
 # Hiçbir token değeri ekrana yazılmaz. Başarı: çıkış kodu 0, hata: 1.
+import json
 import os
 import sys
+from datetime import datetime, timedelta, timezone
 
 import requests
 
@@ -16,6 +18,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_ROOT = os.path.abspath(os.path.join(ROOT, "..", ".."))
 LOCAL_ENV = os.path.join(ROOT, ".env")
 MASTER_ENV = os.path.join(REPO_ROOT, "_knowledge", "credentials", "master.env")
+# dashboard.html okur: sadece tarih + kanal adı, token değeri ASLA yazılmaz
+REFRESH_LOG = os.path.join(ROOT, "dashboard_data", "token_refresh.json")
 
 PROJECT_ID = "9c2fa508-f546-43f4-b3a8-766ec1054a04"
 SERVICE_ID = "0a7ef648-fefd-4c8c-8f32-75a00b04c04c"
@@ -51,6 +55,18 @@ def set_env_value(path: str, key: str, value: str) -> None:
         new.append(f'{key}="{value}"')
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(new) + "\n")
+
+
+def record_refresh(channel: str) -> None:
+    """Son başarılı yenilemenin zamanını dashboard için kaydeder. Hata olursa yenilemeyi bozmaz."""
+    now = datetime.now(timezone.utc)
+    try:
+        os.makedirs(os.path.dirname(REFRESH_LOG), exist_ok=True)
+        with open(REFRESH_LOG, "w", encoding="utf-8") as f:
+            json.dump({"refreshed_at": now.isoformat(timespec="seconds"), "channel": channel,
+                       "expires_estimate": (now + timedelta(days=7)).isoformat(timespec="seconds")}, f, ensure_ascii=False)
+    except OSError as e:
+        print(f"     (Dashboard kaydı yazılamadı: {e})")
 
 
 def access_token(client_id: str, client_secret: str, refresh_token: str) -> tuple[str | None, str]:
@@ -125,6 +141,7 @@ def main() -> int:
     for path in (LOCAL_ENV, MASTER_ENV):
         if os.path.exists(path):
             set_env_value(path, KEY, new)
+    record_refresh(title)
     print("\n✅ BAŞARILI — YouTube token yenilendi, 7 gün geçerli. Gelecek Cuma 16:30'dan önce tekrar çalıştır.")
     return 0
 

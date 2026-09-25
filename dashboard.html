@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeepMyster Paneli</title>
+<!--
+  Yerel yönetim paneli. start_dashboard.bat ile açılır (scripts/dashboard_server.py, port 8771).
+  Veri gömülü DEĞİL, her şey dosyalardan okunur:
+    status.json                       -> 3 sn'de bir (pipeline her adımda yazar)
+    dashboard_data/notion_runs.json   -> 30 sn'de bir (scripts/dashboard_sync.py Notion'dan çeker)
+    dashboard_data/token_refresh.json -> refresh_youtube_token.bat başarılı olunca yazılır
+    api/local.json                    -> sunucunun ürettiği özet: lokal .mp4 listesi,
+                                         scratch/kie_*_result.json senaryoları, railway.json cron zamanı
+-->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #111110;
+    --surface: #1a1a19;
+    --surface-2: #232321;
+    --border: #2f2f2c;
+    --text: #f4f4f1;
+    --text-2: #c3c2b7;
+    --muted: #8a897f;
+    --accent: #3987e5;
+    --good: #0ca30c;
+    --good-ink: #4cc94c;
+    --warning: #fab219;
+    --critical: #d03b3b;
+    --critical-ink: #ff7a7a;
+    --radius: 12px;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 24px; }
+  h1 { font-size: 22px; margin: 0; font-weight: 650; letter-spacing: -.01em; }
+  h2 { font-size: 13px; margin: 0 0 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-2); }
+  .meta { color: var(--muted); font-size: 12px; }
+  section { margin-bottom: 28px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .grid { display: grid; gap: 12px; }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .two { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .videos { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); }
+  .kpi .v { font-size: 28px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .kpi .l { color: var(--text-2); font-size: 12px; }
+
+  /* Durum rozetleri: renk + ikon + etiket birlikte, renk tek başına anlam taşımaz */
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px solid; white-space: nowrap; }
+  .b-up   { color: var(--good-ink); border-color: #1d5a1d; background: #0f2a0f; }
+  .b-made { color: #8ec2ff; border-color: #24466e; background: #121f30; }
+  .b-err  { color: var(--critical-ink); border-color: #6a2424; background: #2c1212; }
+  .b-run  { color: var(--warning); border-color: #6a5212; background: #2a220d; }
+  .b-off  { color: var(--muted); border-color: var(--border); background: transparent; }
+
+  /* Şu an çalışan */
+  .run-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .run-title { font-size: 16px; font-weight: 600; }
+  .bar { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; margin: 12px 0 6px; }
+  .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 4px; transition: width .6s ease; }
+  .bar.done > i { background: var(--good); }
+  .bar.err > i { background: var(--critical); }
+  .bar.run > i { background-image: linear-gradient(90deg, var(--accent) 0 40%, #6aa8f0 50%, var(--accent) 60% 100%); background-size: 200% 100%; animation: sheen 1.6s linear infinite; }
+  @keyframes sheen { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+  .steps { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 6px; }
+  .steps li { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 8px; background: var(--surface-2); }
+  .steps li.pending { opacity: .55; }
+  .steps .note { grid-column: 2 / 4; font-size: 12px; color: var(--muted); margin-top: -4px; }
+  .steps li.error .note { color: var(--critical-ink); }
+  .ico { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; }
+  .ico.done { background: var(--good); color: #fff; }
+  .ico.error { background: var(--critical); color: #fff; }
+  .ico.skipped { border: 1px dashed var(--muted); color: var(--muted); }
+  .ico.manual { border: 1px dashed var(--warning); color: var(--warning); }
+  .ico.pending { border: 1px solid var(--border); }
+  .ico.running { border: 3px solid #2a3d55; border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .steps .t { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .errbox { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: #2c1212; border: 1px solid #6a2424; color: var(--critical-ink); white-space: pre-wrap; word-break: break-word; font-size: 13px; }
+  .warnbox { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: #2a220d; border: 1px solid #6a5212; color: var(--warning); font-size: 13px; }
+  .empty { color: var(--muted); padding: 8px 0; }
+
+  /* Pipeline şeması */
+  #pipeline { overflow-x: auto; }
+  #pipeline svg { max-width: 100%; height: auto; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 12px; color: var(--text-2); }
+  .legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; background: var(--c); border: 1px solid var(--c); }
+
+  /* Listeler */
+  .rows { display: grid; gap: 6px; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+  .row:last-child { border-bottom: 0; }
+  .big { font-size: 20px; font-weight: 650; }
+
+  /* Filtreler */
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .chip { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+  /* Video kartları */
+  .vcard { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .thumb { aspect-ratio: 16/9; background: var(--surface-2); display: grid; place-items: center; color: var(--muted); font-size: 12px; overflow: hidden; }
+  .thumb.tall { aspect-ratio: 9/12; }
+  .thumb img, .thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .vbody { padding: 12px 14px 14px; display: grid; gap: 8px; }
+  .vtitle { font-weight: 600; line-height: 1.35; }
+  .vmeta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; color: var(--muted); font-size: 12px; }
+  .vtext { color: var(--text-2); font-size: 13px; }
+  .verr { color: var(--critical-ink); font-size: 12px; word-break: break-word; }
+  details summary { cursor: pointer; color: var(--muted); font-size: 12px; }
+  details p { margin: 6px 0 0; font-size: 12px; color: var(--text-2); white-space: pre-wrap; }
+  .links { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; }
+  code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  @media (prefers-reduced-motion: reduce) { .ico.running, .bar.run > i { animation: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>DeepMyster Paneli</h1>
+    <div class="meta" id="refreshed">Yükleniyor…</div>
+  </header>
+
+  <section>
+    <div class="grid kpis" id="kpis"></div>
+  </section>
+
+  <section>
+    <h2>Şu an çalışan</h2>
+    <div class="card" id="live"><div class="empty">status.json okunuyor…</div></div>
+  </section>
+
+  <section>
+    <h2>Pipeline</h2>
+    <div class="card">
+      <div id="pipeline"></div>
+      <div class="legend">
+        <span style="--c: var(--good)">Bitti</span>
+        <span style="--c: var(--accent)">Çalışıyor</span>
+        <span style="--c: var(--critical)">Hata</span>
+        <span style="--c: #3a3a36">Bekliyor</span>
+        <span style="--c: #fab219">Manuel (elle yapılır)</span>
+        <span style="--c: transparent; border-style: dashed">Pasif / atlandı</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid two">
+    <div>
+      <h2>Cron</h2>
+      <div class="card" id="cron"></div>
+    </div>
+    <div>
+      <h2>YouTube OAuth token</h2>
+      <div class="card" id="token"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Videolar (Notion kayıtları)</h2>
+    <div class="filters" id="filters"></div>
+    <div class="grid videos" id="videos"></div>
+    <div class="meta" id="syncinfo" style="margin-top:10px"></div>
+  </section>
+
+  <section>
+    <h2>Lokal video dosyaları</h2>
+    <div class="grid videos" id="local"></div>
+  </section>
+</div>
+
+<script>
+const TZ = "Europe/Istanbul";
+const STATE = { status: null, runs: [], sync: {}, token: null, cron: "", filter: "all", locals: [], diagramKey: "" };
+
+// ── yardımcılar ──
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = (iso, opts) => iso ? new Date(iso).toLocaleString("tr-TR", { timeZone: TZ, day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", ...opts }) : "—";
+function ago(iso) {
+  if (!iso) return "—";
+  const s = Math.round((Date.now() - new Date(iso)) / 1000);
+  if (s < 60) return `${s} sn önce`;
+  if (s < 3600) return `${Math.floor(s / 60)} dk önce`;
+  if (s < 86400) return `${Math.floor(s / 3600)} sa önce`;
+  return `${Math.floor(s / 86400)} gün önce`;
+}
+function dur(fromIso, toIso) {
+  if (!fromIso) return "";
+  const s = Math.max(0, Math.round(((toIso ? new Date(toIso) : Date.now()) - new Date(fromIso)) / 1000));
+  return s < 60 ? `${s} sn` : `${Math.floor(s / 60)} dk ${s % 60} sn`;
+}
+async function getJSON(path) {
+  const r = await fetch(path + (path.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+// ── Notion kaydını üç duruma indir: yüklendi / üretildi / hata (+ sürüyor) ──
+function classify(r) {
+  const st = r.status || "";
+  if (r.youtube_url) return { key: "up", label: "Yüklendi", icon: "✓", cls: "b-up" };
+  if (st.includes("Upload Başarısız")) return { key: "err", label: "Yükleme hatası", icon: "✕", cls: "b-err" };
+  if (st.includes("Hata")) return { key: "err", label: "Hata", icon: "✕", cls: "b-err" };
+  if (st.includes("Tamamlandı") || st === "Video Hazır") return { key: "made", label: "Üretildi", icon: "●", cls: "b-made" };
+  const stale = Date.now() - new Date(r.date) > 2 * 3600e3;
+  return stale ? { key: "err", label: `Takılı: ${st}`, icon: "!", cls: "b-err" }
+               : { key: "run", label: st || "Sürüyor", icon: "…", cls: "b-run" };
+}
+const ytId = u => (u.match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{11})/) || [])[1];
+
+// ── cron: "M H * * d,d" (UTC) ──
+function parseCron(expr) {
+  const [m, h, , , dow] = (expr || "").split(/\s+/);
+  if (!/^\d+$/.test(m) || !/^\d+$/.test(h)) return null;
+  const days = dow === "*" ? [0, 1, 2, 3, 4, 5, 6] : dow.split(",").map(Number);
+  return { m: +m, h: +h, days };
+}
+function nextCronRuns(c, n = 3) {
+  const out = [], d = new Date();
+  for (let i = 0; i < 21 && out.length < n; i++) {
+    const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + i, c.h, c.m));
+    if (c.days.includes(t.getUTCDay()) && t > d) out.push(t);
+  }
+  return out;
+}
+function isCronRun(r, c) {
+  if (!c || r.trigger !== "auto" || !r.date) return false;
+  const t = new Date(r.date);
+  if (!c.days.includes(t.getUTCDay())) return false;
+  const mins = t.getUTCHours() * 60 + t.getUTCMinutes() - (c.h * 60 + c.m);
+  return mins >= -5 && mins <= 45;   // Notion kaydı senaryo yazılınca açılır, cron'dan birkaç dk sonra
+}
+
+// ── render: KPI ──
+function renderKpis() {
+  const c = { up: 0, made: 0, err: 0, run: 0 };
+  STATE.runs.forEach(r => c[classify(r).key]++);
+  const tiles = [
+    ["Toplam kayıt", STATE.runs.length],
+    ["YouTube'da", c.up],
+    ["Üretildi, yüklenmedi", c.made],
+    ["Hata", c.err],
+    ["Lokal .mp4", STATE.locals.length],
+  ];
+  document.getElementById("kpis").innerHTML = tiles.map(([l, v]) =>
+    `<div class="card kpi"><div class="v">${v}</div><div class="l">${esc(l)}</div></div>`).join("");
+}
+
+// ── render: Şu an çalışan ──
+const ICON = { done: "✓", error: "✕", skipped: "–", manual: "✋", pending: "", running: "" };
+const STEP_WORD = { done: "bitti", error: "hata", skipped: "atlandı", manual: "manuel", pending: "bekliyor", running: "çalışıyor" };
+function renderLive() {
+  const el = document.getElementById("live");
+  const s = STATE.status;
+  if (!s) {
+    el.innerHTML = `<div class="empty">Henüz lokal çalışma yok. <code>python main.py</code> (veya <code>--no-upload</code>) çalışınca adımlar burada canlı görünür.<br>Not: Railway'deki cron kendi sunucusunda çalışır, buraya yazmaz; onun sonucu aşağıdaki Notion kayıtlarına düşer.</div>`;
+    return;
+  }
+  const running = s.state === "running";
+  const stale = running && Date.now() - new Date(s.updated_at) > 30 * 60e3;
+  const head = running ? `<span class="badge b-run">… Çalışıyor</span>`
+    : s.state === "done" ? `<span class="badge b-up">✓ Tamamlandı</span>` : `<span class="badge b-err">✕ Hata</span>`;
+  const barCls = s.state === "done" ? "done" : s.state === "error" ? "err" : "run";
+  const steps = (s.steps || []).map(st => {
+    const time = st.state === "running" ? dur(st.started_at) : st.started_at && st.finished_at ? dur(st.started_at, st.finished_at) : "";
+    return `<li class="${st.state}">
+      <span class="ico ${st.state}" role="img" aria-label="${STEP_WORD[st.state]}">${ICON[st.state]}</span>
+      <span>${esc(st.label)} <span class="meta">· ${STEP_WORD[st.state]}</span></span>
+      <span class="t">${time}</span>
+      ${st.note ? `<span class="note">${esc(st.note)}</span>` : ""}
+    </li>`;
+  }).join("");
+  el.innerHTML = `
+    <div class="run-head">
+      <div><div class="run-title">${esc(s.title || (running ? s.current_label : "Son lokal çalışma"))}</div>
+        <div class="meta">${esc(s.mode)} · deneme ${s.attempt}/${s.max_attempts} · başladı ${fmt(s.started_at)} · toplam ${dur(s.started_at, running ? null : s.finished_at)}</div></div>
+      ${head}
+    </div>
+    <div class="bar ${barCls}"><i style="width:${s.progress || 0}%"></i></div>
+    <div class="meta">%${s.progress || 0}${running && s.current_label ? " · şu an: " + esc(s.current_label) : ""} · son güncelleme ${ago(s.updated_at)}</div>
+    <ul class="steps">${steps}</ul>
+    ${s.error ? `<div class="errbox">${esc(s.error)}</div>` : ""}
+    ${s.youtube_url ? `<div style="margin-top:10px"><a href="${esc(s.youtube_url)}" target="_blank" rel="noopener">YouTube'da aç →</a></div>` : ""}
+    ${stale ? `<div class="warnbox">30 dakikadır güncelleme yok. Süreç kapanmış olabilir (pencere kapatıldı ya da bilgisayar uyudu).</div>` : ""}`;
+}
+
+// ── render: Mermaid pipeline (status.json'daki adım durumlarıyla boyanır) ──
+const NODES = [
+  ["senaryo", "1 · Senaryo<br/>GPT + kalite kapıları"],
+  ["video", "2 · Video üretimi<br/>Seedance 2 (Kie)"],
+  ["indirme", "3 · İndirme<br/>+ hareket profili"],
+  ["montaj", "4 · Montaj<br/>pasif: tek çekim"],
+  ["youtube", "5 · YouTube Shorts"],
+  ["instagram", "6 · Instagram @deepmyster<br/>manuel paylaşım"],
+];
+async function renderPipeline() {
+  const byId = Object.fromEntries((STATE.status?.steps || []).map(s => [s.id, s.state]));
+  const cls = id => byId[id] || (id === "montaj" ? "skipped" : id === "instagram" ? "manual" : "pending");
+  const key = NODES.map(([id]) => cls(id)).join(",");
+  if (key === STATE.diagramKey) return;   // durum değişmediyse tekrar çizme
+  STATE.diagramKey = key;
+  const def = [
+    "flowchart LR",
+    ...NODES.map(([id, label]) => `  ${id}["${label}"]:::${cls(id)}`),
+    "  senaryo --> video --> indirme --> montaj --> youtube",
+    "  youtube -. elle .-> instagram",
+    "  notion[(\"Notion log\")]:::store",
+    "  senaryo -.-> notion",
+    "  youtube -.-> notion",
+    "  classDef pending fill:#232321,stroke:#3a3a36,color:#c3c2b7",
+    "  classDef running fill:#152a44,stroke:#3987e5,stroke-width:3px,color:#ffffff",
+    "  classDef done fill:#0f2a0f,stroke:#0ca30c,stroke-width:2px,color:#ffffff",
+    "  classDef error fill:#2c1212,stroke:#d03b3b,stroke-width:3px,color:#ffffff",
+    "  classDef skipped fill:#1a1a19,stroke:#5a5a55,stroke-dasharray:5 4,color:#8a897f",
+    "  classDef manual fill:#2a220d,stroke:#fab219,stroke-dasharray:5 4,color:#fab219",
+    "  classDef store fill:#1a1a19,stroke:#5a5a55,color:#c3c2b7",
+  ].join("\n");
+  try {
+    if (!window.mermaid) throw new Error("mermaid.js yok");
+    const { svg } = await mermaid.render("pl" + Date.now(), def);
+    document.getElementById("pipeline").innerHTML = svg;
+  } catch (e) {
+    document.getElementById("pipeline").innerHTML = `<div class="empty">Şema çizilemedi (Mermaid internetten yüklenemedi mi?): ${esc(e.message || e)}</div>`;
+  }
+}
+
+// ── render: Cron ──
+function renderCron() {
+  const el = document.getElementById("cron");
+  const c = parseCron(STATE.cron);
+  if (!c) { el.innerHTML = `<div class="empty">Cron zamanı okunamadı (railway.json / api/local.json).</div>`; return; }
+  const next = nextCronRuns(c);
+  const past = STATE.runs.filter(r => isCronRun(r, c)).slice(0, 6);
+  const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
+  const tr = new Date(Date.UTC(2026, 0, 5, c.h, c.m)).toLocaleTimeString("tr-TR", { timeZone: TZ, hour: "2-digit", minute: "2-digit" });
+  el.innerHTML = `
+    <div class="meta">Railway: <code>${esc(STATE.cron)}</code> (UTC) → ${c.days.map(d => dayNames[d]).join(" + ")} ${tr} TR saati</div>
+    <div style="margin:10px 0 4px">Sıradaki: <span class="big">${fmt(next[0]?.toISOString(), { weekday: "long" })}</span>
+      <span class="meta">(${next.slice(1).map(t => fmt(t.toISOString(), { weekday: "short" })).join(", ")})</span></div>
+    <h2 style="margin-top:14px">Son cron çalışmaları</h2>
+    <div class="rows">${past.length ? past.map(r => {
+      const k = classify(r);
+      return `<div class="row"><span>${fmt(r.date, { weekday: "short" })} <span class="meta">· ${esc((r.title || "").slice(0, 48))}</span></span>
+        <span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span></div>`;
+    }).join("") : `<div class="empty">Notion'da cron saatine denk gelen kayıt yok.</div>`}</div>
+    <div class="meta" style="margin-top:8px">Cron zamanına (±45 dk) denk gelen "auto" Notion kayıtları.</div>`;
+}
+
+// ── render: Token ──
+function renderToken() {
+  const el = document.getElementById("token");
+  const t = STATE.token;
+  const lastUp = STATE.runs.find(r => r.youtube_url);
+  const lastUpLine = lastUp ? `<div class="meta" style="margin-top:8px">Son başarılı YouTube yüklemesi: ${fmt(lastUp.date)} (${ago(lastUp.date)})</div>` : "";
+  const how = `<div class="meta" style="margin-top:8px">Yenilemek için proje klasöründe <code>refresh_youtube_token.bat</code> dosyasına çift tıkla.</div>`;
+  if (!t) {
+    el.innerHTML = `<span class="badge b-run">! Kayıt yok</span>
+      <p class="vtext">Son yenileme tarihi henüz kaydedilmemiş. Bir sonraki <code>refresh_youtube_token.bat</code> çalışmasından sonra burada görünür.</p>${lastUpLine}${how}`;
+    return;
+  }
+  const exp = new Date(t.expires_estimate);
+  const left = (exp - Date.now()) / 86400e3;
+  const c = parseCron(STATE.cron);
+  const nextCron = c ? nextCronRuns(c, 1)[0] : null;
+  const beforeCron = nextCron && exp < nextCron;
+  const badge = left <= 0 ? `<span class="badge b-err">✕ Süresi doldu</span>`
+    : beforeCron || left < 2 ? `<span class="badge b-run">! Yakında bitiyor</span>`
+    : `<span class="badge b-up">✓ Geçerli</span>`;
+  el.innerHTML = `${badge}
+    <div style="margin-top:10px">Son yenileme: <span class="big">${fmt(t.refreshed_at, { weekday: "short" })}</span> <span class="meta">(${ago(t.refreshed_at)})</span></div>
+    <div class="meta">Kanal: ${esc(t.channel)} · Tahmini bitiş: ${fmt(t.expires_estimate, { weekday: "short" })} (${left > 0 ? left.toFixed(1) + " gün kaldı" : "geçti"})</div>
+    ${beforeCron ? `<div class="warnbox">Token, sıradaki cron'dan (${fmt(nextCron.toISOString(), { weekday: "short" })}) önce bitiyor. Cron'dan önce yenile.</div>` : ""}
+    ${lastUpLine}${how}`;
+}
+
+// ── render: Notion video kartları ──
+const FILTERS = [["all", "Tümü"], ["up", "Yüklendi"], ["made", "Üretildi"], ["err", "Hata"], ["run", "Sürüyor"]];
+function renderFilters() {
+  document.getElementById("filters").innerHTML = FILTERS.map(([k, l]) => {
+    const n = k === "all" ? STATE.runs.length : STATE.runs.filter(r => classify(r).key === k).length;
+    return `<button class="chip" data-f="${k}" aria-pressed="${STATE.filter === k}">${l} · ${n}</button>`;
+  }).join("");
+}
+function renderVideos() {
+  renderFilters();
+  const list = STATE.runs.filter(r => STATE.filter === "all" || classify(r).key === STATE.filter);
+  document.getElementById("videos").innerHTML = list.length ? list.map(r => {
+    const k = classify(r), id = r.youtube_url && ytId(r.youtube_url);
+    const thumb = id ? `<img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy">` : `<span>${r.video_url ? "Önizleme yok (Kie linki geçici)" : "Video yok"}</span>`;
+    return `<article class="card vcard">
+      <div class="thumb">${thumb}</div>
+      <div class="vbody">
+        <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span><span>${fmt(r.date)}</span><span>· ${esc(r.trigger || "?")}</span></div>
+        <div class="vtitle">${esc(r.title || "(başlıksız)")}</div>
+        ${r.topic && r.topic !== r.title ? `<div class="vtext">${esc(r.topic.slice(0, 220))}</div>` : ""}
+        ${r.error ? `<div class="verr">${esc(r.error.slice(0, 300))}</div>` : ""}
+        ${r.prompt ? `<details><summary>Senaryo / prompt</summary><p>${esc(r.prompt)}</p></details>` : ""}
+        ${r.motion ? `<div class="meta">Hareket: ${esc(r.motion)}</div>` : ""}
+        <div class="links">
+          ${r.youtube_url ? `<a href="${esc(r.youtube_url)}" target="_blank" rel="noopener">YouTube</a>` : ""}
+          ${r.video_url ? `<a href="${esc(r.video_url)}" target="_blank" rel="noopener">Ham video</a>` : ""}
+          ${r.notion_url ? `<a href="${esc(r.notion_url)}" target="_blank" rel="noopener">Notion</a>` : ""}
+        </div>
+      </div></article>`;
+  }).join("") : `<div class="empty">Bu filtrede kayıt yok.</div>`;
+  const s = STATE.sync;
+  document.getElementById("syncinfo").innerHTML = s.synced_at
+    ? `Notion'dan son çekim: ${fmt(s.synced_at)} (${ago(s.synced_at)}).${s.sync_error ? ` <span style="color:var(--critical-ink)">Son deneme başarısız: ${esc(s.sync_error)}</span>` : ""}`
+    : `Notion verisi yok. <code>python scripts/dashboard_sync.py</code> çalıştır (start_dashboard.bat bunu otomatik yapar).`;
+}
+document.getElementById("filters").addEventListener("click", e => {
+  const f = e.target.closest("[data-f]")?.dataset.f;
+  if (f) { STATE.filter = f; renderVideos(); }
+});
+
+// ── render: lokal mp4 ──
+function renderLocal() {
+  const el = document.getElementById("local");
+  el.innerHTML = STATE.locals.length ? STATE.locals.map(v => `
+    <article class="card vcard">
+      <div class="thumb tall"><video src="${encodeURI(v.path)}#t=1" preload="metadata" controls muted playsinline></video></div>
+      <div class="vbody">
+        <div class="vmeta"><span class="badge b-made">● Üretildi · lokal</span><span>${v.modified ? fmt(v.modified) : ""}</span><span>${v.size ? (v.size / 1048576).toFixed(1) + " MB" : ""}</span></div>
+        <div class="vtitle" style="word-break:break-all">${esc(v.path)}</div>
+        ${v.info ? `<div class="meta">${esc(v.info.domain || "")} · ${esc(v.info.camera || "")}${v.info.seconds ? " · üretim " + v.info.seconds + " sn" : ""}</div>
+          <details><summary>Senaryo</summary><p>${esc(v.info.story || v.info.final_prompt || "")}</p></details>` : ""}
+      </div></article>`).join("") : `<div class="empty">Proje klasöründe .mp4 yok.</div>`;
+}
+
+// ── veri yükleyiciler ──
+async function loadStatus() {
+  try { STATE.status = await getJSON("status.json"); } catch { STATE.status = null; }
+  renderLive();
+  renderPipeline();
+}
+async function loadSlow() {
+  const [runs, token, local] = await Promise.allSettled([
+    getJSON("dashboard_data/notion_runs.json"), getJSON("dashboard_data/token_refresh.json"), getJSON("api/local.json")]);
+  if (runs.status === "fulfilled") { STATE.sync = runs.value; STATE.runs = runs.value.runs || []; }
+  STATE.token = token.status === "fulfilled" ? token.value : null;
+  STATE.cron = local.status === "fulfilled" ? local.value.cron || "" : "";
+  if (local.status === "fulfilled") setLocal(local.value.videos || []);
+  renderKpis(); renderCron(); renderToken(); renderVideos();
+  document.getElementById("refreshed").textContent = "Son yenileme: " + new Date().toLocaleTimeString("tr-TR") + " · canlı durum 3 sn, diğerleri 30 sn";
+}
+function setLocal(videos) {
+  const key = videos.map(v => v.path + v.modified).join("|");
+  if (key === STATE.localKey) return;   // dosya listesi değişmediyse videoları yeniden yükleme
+  STATE.localKey = key;
+  STATE.locals = videos.map(v => ({ ...v, modified: v.modified ? new Date(v.modified * 1000).toISOString() : "" }));
+  renderLocal();
+}
+
+if (window.mermaid) mermaid.initialize({ startOnLoad: false, theme: "dark", flowchart: { curve: "basis" }, themeVariables: { fontSize: "14px" } });
+loadStatus(); loadSlow();
+setInterval(loadStatus, 3000);
+setInterval(loadSlow, 30000);
+</script>
+</body>
+</html>
