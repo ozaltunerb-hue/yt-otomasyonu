@@ -110,6 +110,8 @@
   .vcard { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
   .thumb { aspect-ratio: 16/9; background: var(--surface-2); display: grid; place-items: center; color: var(--muted); font-size: 12px; overflow: hidden; }
   .thumb.tall { aspect-ratio: 9/12; }
+  .thumb.play { aspect-ratio: 9/12; background: #000; }
+  .thumb.play video { object-fit: contain; }
   .thumb img, .thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
   .vbody { padding: 12px 14px 14px; display: grid; gap: 8px; }
   .vtitle { font-weight: 600; line-height: 1.35; }
@@ -382,11 +384,19 @@ function renderFilters() {
 function renderVideos() {
   renderFilters();
   const list = STATE.runs.filter(r => STATE.filter === "all" || classify(r).key === STATE.filter);
+  const vkey = STATE.filter + "|" + JSON.stringify(list);
+  if (vkey !== STATE.videosKey) {
+  STATE.videosKey = vkey;
   document.getElementById("videos").innerHTML = list.length ? list.map(r => {
     const k = classify(r), id = r.youtube_url && ytId(r.youtube_url);
-    const thumb = id ? `<img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy">` : `<span>${r.video_url ? "Önizleme yok (Kie linki geçici)" : "Video yok"}</span>`;
+    const still = id ? `<img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy">` : `<span>${r.video_url ? "Önizleme yok (Kie linki geçici)" : "Video yok"}</span>`;
+    // Sayfa içi oynatma (2026-09-26): Kie ham linki varsa <video>. YouTube private videoları gömmeye izin vermez.
+    // Kie linki geçicidir; süresi dolunca onerror ile YouTube küçük resmine düşer.
+    const thumb = r.video_url
+      ? `<video src="${esc(r.video_url)}#t=1" preload="metadata" controls playsinline onerror="this.parentElement.classList.remove('play');this.outerHTML=this.dataset.fb" data-fb="${esc(still)}"></video>`
+      : still;
     return `<article class="card vcard">
-      <div class="thumb">${thumb}</div>
+      <div class="thumb${r.video_url ? " play" : ""}">${thumb}</div>
       <div class="vbody">
         <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span><span>${fmt(r.date)}</span><span>· tetik: ${esc(r.trigger || "?")}</span>${domainOf(r) ? `<span>· ${esc(domainOf(r))}</span>` : ""}</div>
         <div class="vtitle">${esc(r.title || "(başlıksız)")}</div>
@@ -401,6 +411,7 @@ function renderVideos() {
         </div>
       </div></article>`;
   }).join("") : `<div class="empty">Bu filtrede kayıt yok.</div>`;
+  }
   const s = STATE.sync;
   document.getElementById("syncinfo").innerHTML = s.synced_at
     ? `Notion'dan son çekim: ${fmt(s.synced_at)} (${ago(s.synced_at)}).${s.sync_error ? ` <span style="color:var(--critical-ink)">Son deneme başarısız: ${esc(s.sync_error)}</span>` : ""}`
