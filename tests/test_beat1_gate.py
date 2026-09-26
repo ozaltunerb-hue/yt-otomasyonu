@@ -262,16 +262,16 @@ class TestSimplifierBeat3Fidelity(unittest.TestCase):
         self.assertLess(s.index("7. NUMBER FIDELITY"), s.index(self.RULE))
 
     def test_rule_numbering(self):
-        """N14c sonrası: gemi domainleri 1-9, env-centric 1-10."""
+        """TUR 24 sonrası: gemi domainleri 1-12, env-centric 1-13."""
         import re
         from core.creative_engine import ENV_CENTRIC_DOMAINS, build_prompt_simplifier_system
         self.assertEqual(re.findall(r"(?m)^(\d+)\. ", build_prompt_simplifier_system(15, "ferry_operations")),
-                         [str(i) for i in range(1, 10)])
+                         [str(i) for i in range(1, 13)])
         for d in ENV_CENTRIC_DOMAINS:
             with self.subTest(domain=d):
                 s = build_prompt_simplifier_system(15, d)
-                self.assertEqual(re.findall(r"(?m)^(\d+)\. ", s), [str(i) for i in range(1, 11)])
-                self.assertIn("10. STRICT ENVIRONMENT-CENTRIC FOCUS", s)
+                self.assertEqual(re.findall(r"(?m)^(\d+)\. ", s), [str(i) for i in range(1, 14)])
+                self.assertIn("13. STRICT ENVIRONMENT-CENTRIC FOCUS", s)
 
 
 class TestSimplifierBeat1SubjectFidelity(unittest.TestCase):
@@ -291,7 +291,7 @@ class TestSimplifierBeat1SubjectFidelity(unittest.TestCase):
         from core.creative_engine import build_prompt_simplifier_system
         s = build_prompt_simplifier_system(15, "open_beach_coastal_events")
         self.assertLess(s.index("8. BEAT 3 CONTINUATION FIDELITY"), s.index(self.RULE))
-        self.assertLess(s.index(self.RULE), s.index("10. STRICT ENVIRONMENT-CENTRIC FOCUS"))
+        self.assertLess(s.index(self.RULE), s.index("13. STRICT ENVIRONMENT-CENTRIC FOCUS"))
 
 
 class TestDeclaredBeat1Verb(unittest.TestCase):
@@ -454,8 +454,8 @@ class TestBeat3Gate(unittest.TestCase):
 
     # N10 dry-run gerçek Beat 3 sonları: #3 "steadying" ile sakinleşiyordu
     N10_CONSEQUENCES = {
-        1: ("The gangway continues to flex alarmingly, with passengers clinging to the railings, some dropping to their knees to stabilize themselves as the gangway teeters with no immediate signs of stabilization.", True),
-        2: ("As the observer vessel maintains pace nearby, the catamaran continues to list heavily, with crew members still trying to stabilize the vehicles, while the water relentlessly sloshes across the deck, clearly threatening further instability.", True),
+        1: ("The gangway continues to flex alarmingly, with passengers clinging to the railings, some dropping to their knees to stabilize themselves as the gangway teeters with no immediate signs of stabilization.", False),  # TUR 24: "stabilize" yasak
+        2: ("As the observer vessel maintains pace nearby, the catamaran continues to list heavily, with crew members still trying to stabilize the vehicles, while the water relentlessly sloshes across the deck, clearly threatening further instability.", False),  # TUR 24: "trying to stabilize" = Tersane hatası
         3: ("The vessel slides rapidly towards the water, its motion steadying but still visibly uncontrolled, with workers maintaining a cautious distance, watching intently.", False),
         4: ("Water floods the promenade, swirling around the base of palm trees and scattering beach chairs, with the wave still advancing forcefully inland.", True),
         5: ("The fallen debris shatters on the street, with pedestrians quickly darting to safety amidst the chaos, as more debris threatens to fall.", True),
@@ -534,30 +534,46 @@ class TestBeat3Gate(unittest.TestCase):
 
 
 class TestStyleLockVesselFraming(unittest.TestCase):
-
-    CCTV_FRAMING = CAMERA_ARCHETYPES["fixed_cctv"]["vessel_framing"]
-    HANDHELD_FRAMING = CAMERA_ARCHETYPES["bystander_handheld"]["vessel_framing"]
+    """TUR 24: kadraj kuralı sahneye göre. Dışarıdan: geminin tamamı; gemi üstü: ikinci gemi yok."""
+    FULL = "stays fully in frame"
+    NO_SECOND = "no second ship on the horizon"
 
     def test_env_centric_with_yacht_has_no_framing(self):
-        cat = {"domain_id": "coastal_tornado_landfall", "forced_ship": "Sailing Yacht"}
-        self.assertNotIn(self.CCTV_FRAMING, apply_style_lock("X", "fixed_cctv", cat))
-        self.assertNotIn(self.HANDHELD_FRAMING, apply_style_lock("X", "bystander_handheld", cat))
+        cat = {"domain_id": "coastal_tornado_landfall", "forced_ship": "Sailing Yacht", "forced_environment": "Marina"}
+        for cam in CAMERA_ARCHETYPES:
+            with self.subTest(cam=cam):
+                self.assertNotIn(self.FULL, apply_style_lock("X", cam, cat))
 
     def test_env_centric_without_ship_has_no_framing(self):
         for d in ["open_beach_coastal_events", "urban_city_disasters"]:
             with self.subTest(domain=d):
                 out = apply_style_lock("X", "fixed_cctv", {"domain_id": d, "forced_ship": "None"})
-                self.assertNotIn("hull, bow", out)
+                self.assertNotIn(self.FULL, out)
+                self.assertNotIn(self.NO_SECOND, out)
 
-    def test_vessel_domain_has_framing(self):
-        cat = {"domain_id": "cruise_ship_operations", "forced_ship": "Mega Cruise Ship"}
-        self.assertIn(self.CCTV_FRAMING, apply_style_lock("X", "fixed_cctv", cat))
-        self.assertIn(self.HANDHELD_FRAMING, apply_style_lock("X", "bystander_handheld", cat))
+    def test_dockside_vessel_scene_has_full_framing(self):
+        cat = {"domain_id": "cruise_ship_operations", "forced_ship": "Mega Cruise Ship",
+               "forced_environment": "Cruise terminal berth"}
+        for cam in ("fixed_cctv", "bystander_handheld"):
+            with self.subTest(cam=cam):
+                out = apply_style_lock("X", cam, cat)
+                self.assertIn(f"the mega cruise ship {self.FULL}".lower(), out.lower())
+                self.assertNotIn(self.NO_SECOND, out)
+
+    def test_onboard_scene_no_second_ship(self):
+        """Kruvaziyer güvertesinde ufka ikinci gemi eklenmişti."""
+        for env in ("Sun deck", "Open-air pool deck"):
+            for cam in ("fixed_cctv", "bystander_handheld"):
+                with self.subTest(env=env, cam=cam):
+                    out = apply_style_lock("X", cam, {"domain_id": "cruise_ship_operations",
+                                                      "forced_ship": "Mega Cruise Ship", "forced_environment": env})
+                    self.assertIn("Filmed aboard the mega cruise ship; no second ship on the horizon.", out)
+                    self.assertNotIn(self.FULL, out)
 
     def test_none_catalyst_keeps_framing(self):
-        """Geriye uyumluluk: catalyst verilmezse kural eklenir."""
-        self.assertIn(self.CCTV_FRAMING, apply_style_lock("X", "fixed_cctv"))
-        self.assertIn(self.HANDHELD_FRAMING, apply_style_lock("X", "bystander_handheld", None))
+        """Geriye uyumluluk: catalyst verilmezse genel gemi kadrajı eklenir."""
+        self.assertIn(f"The vessel {self.FULL}", apply_style_lock("X", "fixed_cctv"))
+        self.assertIn(self.FULL, apply_style_lock("X", "bystander_handheld", None))
 
 
 if __name__ == "__main__":

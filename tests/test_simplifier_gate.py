@@ -32,6 +32,11 @@ def letters(failures):
     return sorted({v for f in failures for k, v in LETTER.items() if f.startswith(k)})
 
 
+def core_letters(failures):
+    """Tarihi 25-45 kelimelik çıktılar (TUR 24 öncesi) M uzunluk kapısına takılır; diğer kapıları test ederken M hariç."""
+    return [l for l in letters(failures) if l != "M"]
+
+
 SHIPYARD = {
     "scenario_summary": "Keel blocks give way under a vessel on the slipway.",
     "visible_start": "Keel blocks crack under the hull as three workers in orange coveralls leap back.",
@@ -40,7 +45,9 @@ SHIPYARD = {
     "beat1_action_verb": "crack",
 }
 GOOD = ("Keel blocks crack under the hull as three workers in orange coveralls leap back. "
-        "The vessel lurches sideways, scraping the rails. The hull keeps sliding toward the water.")
+        "The vessel lurches sideways off the launch cradle, scraping the slipway rails as timber splinters fly "
+        "across the yard. The hull keeps sliding down the inclined rails toward the water, the three workers "
+        "still scrambling clear of the swinging cables.")
 
 
 class TestRealOutputs(unittest.TestCase):
@@ -53,8 +60,7 @@ class TestRealOutputs(unittest.TestCase):
         for r in rows:
             with self.subTest(tag=r["tag"]):
                 ok, failures = validate_simplified_prompt(r["prompt"], r["scenario"], r["domain"])
-                self.assertEqual(letters(failures), sorted(r["expect"]), failures)
-                self.assertEqual(ok, not r["expect"])
+                self.assertEqual(core_letters(failures), sorted(r["expect"]), failures)
 
     def test_n14b_watch_ending(self):
         """Önceki oturum r9#5: 'continues to thrash' işareti var ama izleyerek bitiyor."""
@@ -63,7 +69,7 @@ class TestRealOutputs(unittest.TestCase):
                   "The line continues to thrash, tangling around a piling as they watch.")
         scen = {"visible_start": "Three people stand on the dock as the mooring line strains against the cleat."}
         ok, failures = validate_simplified_prompt(prompt, scen, "marina_and_yacht_operations")
-        self.assertEqual(letters(failures), ["A"])
+        self.assertEqual(core_letters(failures), ["A"])
 
 
 class TestChecks(unittest.TestCase):
@@ -79,7 +85,7 @@ class TestChecks(unittest.TestCase):
     def test_time_compression_rejected(self):
         p = ("The vessel lurches sideways off the blocks as three workers in orange coveralls leap back. "
              "The hull keeps sliding toward the water.")
-        self.assertEqual(letters(validate_simplified_prompt(p, SHIPYARD, self.D)[1]), ["C"])
+        self.assertEqual(core_letters(validate_simplified_prompt(p, SHIPYARD, self.D)[1]), ["C"])
 
     def test_camera_subject_rejected(self):
         p = "The camera captures keel blocks that crack as three workers in orange coveralls leap back. " + GOOD.split(". ", 1)[1]
@@ -100,12 +106,12 @@ class TestChecks(unittest.TestCase):
     def test_env_centric_skips_count(self):
         scen = {"visible_start": "A tornado tears across the beach.", "beat1_action_verb": "tears"}
         p = "A tornado tears across the beach, flinging chairs past distant beachgoers. Debris keeps swirling inland."
-        self.assertTrue(validate_simplified_prompt(p, scen, "open_beach_coastal_events")[0])
+        self.assertEqual(core_letters(validate_simplified_prompt(p, scen, "open_beach_coastal_events")[1]), [])
 
     def test_env_centric_zero_humans_rejected(self):
         scen = {"visible_start": "A tornado tears across the beach.", "beat1_action_verb": "tears"}
         p = "A tornado tears across the beach, flinging chairs. Debris keeps swirling inland."
-        self.assertEqual(letters(validate_simplified_prompt(p, scen, "open_beach_coastal_events")[1]), ["H"])
+        self.assertEqual(core_letters(validate_simplified_prompt(p, scen, "open_beach_coastal_events")[1]), ["H"])
 
     def test_empty_prompt(self):
         self.assertEqual(letters(validate_simplified_prompt("", SHIPYARD, self.D)[1]), ["EMPTY"])

@@ -33,10 +33,12 @@ D = "shipyard_and_drydock_engineering"
 SCEN = {"visible_start": "The sailing yacht lurches down the slipway as three workers leap back.",
         "beat1_action_verb": "lurches"}
 GOOD = ("The sailing yacht lurches down the slipway, keel blocks splintering beneath the hull. "
-        "Three workers in orange coveralls leap back. The yacht keeps sliding toward the water.")
+        "Three workers in orange coveralls leap back from the launch cradle as a snapped cable whips across "
+        "the inclined rails. The yacht keeps sliding faster toward the open water, spray already bursting "
+        "from the bow as timber fragments scatter behind it.")
 VIDEO2 = ("The sailing yacht lurches forward on the slipway, startling three workers in orange coveralls. "
           "It accelerates, hull scraping the supports. The yacht continues thundering down.")
-MOTION = "Motion is already under way in the very first frame"
+MOTION = "Already moving in the first frame, still moving in the last"
 
 
 def G(failures):

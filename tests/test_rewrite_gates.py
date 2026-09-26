@@ -131,8 +131,8 @@ class TestLighting(unittest.TestCase):
                 with self.subTest(domain=d, cam=cam):
                     out = apply_style_lock("x", cam, {"domain_id": d, "forced_ship": "None"})
                     self.assertNotIn("overcast/fog/rain lighting", out)
-                    self.assertIn("matches the scenario's weather", out)
-                    self.assertIn("never glossy, CGI-clean, or cinematic", out)
+                    self.assertIn("Raw natural light matching the weather", out)
+                    self.assertIn("never glossy or CGI", out)
 
 
 if __name__ == "__main__":

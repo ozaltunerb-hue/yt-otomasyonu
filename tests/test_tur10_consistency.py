@@ -24,7 +24,7 @@ from core.creative_engine import (
 from core.prompt_generator import validate_cast_size, validate_ship_setting
 
 CRUISE = "cruise_ship_operations"
-RAILING = "Filmed from a ship's railing"
+DOCKSIDE = "Filmed at eye level from the quay"  # TUR 24: gemi dışı sahne, domain'e göre çekim yeri
 ON_LAND = "Filmed by an onlooker on land"
 
 
@@ -82,8 +82,11 @@ class TestHandheldVantage(unittest.TestCase):
                 self.assertEqual(out.count(ON_LAND), 1)
         out = apply_style_lock("A ferry rolls", "bystander_handheld",
                                {"domain_id": "ferry_operations", "forced_ship": "Passenger Car Ferry"})
-        self.assertEqual(out.count(RAILING), 1)
+        self.assertEqual(out.count(DOCKSIDE), 1)
         self.assertNotIn(ON_LAND, out)
+        # TUR 24: el kamerasında el/telefon kadraja girmez (eski ek "hint of a hand or phone edge" diyordu)
+        self.assertIn("no phone, hands or fingers in frame", out)
+        self.assertNotIn("phone edge", out)
 
     def test_other_archetypes_unchanged(self):
         for cam in ("fixed_cctv", "chase_pov"):

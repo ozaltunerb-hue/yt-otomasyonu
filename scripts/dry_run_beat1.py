@@ -16,7 +16,7 @@ async def main(out_path):
     for i in range(5):
         for _ in range(50):
             cat = get_creative_catalyst(recent_history=hist)
-            cam = choose_camera_archetype(cat["domain_id"])
+            cam = choose_camera_archetype(cat["domain_id"], cat["forced_environment"])
             key = f"{cat['domain_id']}|{cat['forced_ship'].lower()}|{cat['forced_event'].lower()}|{cat['forced_environment'].lower()}|{cam}"
             if key not in used: break
         sc = await _generate_scenario(cat, cam)

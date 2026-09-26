@@ -6,9 +6,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from config import settings
 from core.creative_engine import get_creative_catalyst, choose_camera_archetype, ENV_CENTRIC_DOMAINS
-from core.prompt_generator import (_generate_scenario, simplify_with_gate, NoValidScenarioError, validate_silent_visibility,
-    validate_high_action, validate_beat3_ongoing_danger, validate_cast_size, validate_scenario_consistency,
-    validate_ship_setting, score_scenario, _person_mentions)
+from core.prompt_generator import (_generate_scenario, simplify_with_gate, NoValidScenarioError,
+    scenario_gate_results, score_scenario, _person_mentions)
 
 
 async def main(out_path: str):
@@ -18,7 +17,7 @@ async def main(out_path: str):
     for i in range(5):
         for _ in range(50):
             cat = get_creative_catalyst(recent_history=hist)
-            cam = choose_camera_archetype(cat["domain_id"])
+            cam = choose_camera_archetype(cat["domain_id"], cat["forced_environment"])
             key = f"{cat['domain_id']}|{cat['forced_ship'].lower()}|{cat['forced_event'].lower()}|{cat['forced_environment'].lower()}|{cam}"
             if key not in used:
                 break
@@ -26,11 +25,7 @@ async def main(out_path: str):
         sc = await _generate_scenario(cat, cam)
         if sc.get("beat1_action_verb"):
             verbs.insert(0, sc["beat1_action_verb"].lower())
-        checks = {
-            "visibility": validate_silent_visibility(sc), "high_action": validate_high_action(sc),
-            "beat3": validate_beat3_ongoing_danger(sc), "cast": validate_cast_size(sc, cat["domain_id"]),
-            "consistency": validate_scenario_consistency(sc), "ship_setting": validate_ship_setting(sc, cat["forced_ship"]),
-        }
+        checks = scenario_gate_results(sc, cat)   # üretimle aynı kapı listesi (TUR 24: tetik + fizik dahil)
         hist.append(key); used.append(key)
         ok = all(v[0] for v in checks.values())
         people = [p for k in ("visible_start", "physical_movement", "visible_consequence") for p in _person_mentions(sc.get(k, ""))]

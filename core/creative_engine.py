@@ -12,7 +12,7 @@ Temel İlkeler:
      anlaması, bilinen konuları tekrar etmemesi ve yeni denizcilik ufukları keşfetmesi için
      sağlanan semantik referans kütüphanesidir.
   3. DOĞUKAN METODOLOJİSİ (Less is More):
-     Seedance 2 Mini için 25–45 kelimelik yüksek görsel sinyal yoğunluklu, süssüz,
+     Seedance 2 Mini için 45–60 kelimelik (TUR 24; önce 25–45) yüksek görsel sinyal yoğunluklu, süssüz,
      tek kesintisiz, yapılandırılabilir süreli (config.DEFAULT_DURATION) fotogerçekçi
      belgesel hikayesi. Kamera (fixed_cctv / bystander_handheld / chase_pov), ışık ve
      kıyafet kuralları stil kilidiyle (style_lock_suffix) arkadan eklenir.
@@ -153,15 +153,15 @@ DEEPMYSTER_EXISTING_IDEAS_LIBRARY = {
 MARITIME_INSPIRATION_DOMAINS = {
     "ferry_operations": {
         "title": "Feribot & Yolcu Dinamikleri (Ferry & Passenger Vessel Logistics)",
-        "guidance": "Vehicle deck kinetic weight shifts in cross swells, loading ramp hydraulic hinge pressure, bow visor spray seals, high-speed catamaran roll recovery, unsecured cars breaking loose and sliding on ferry vehicle decks, ramp-entrance vehicle jolts, wash flooding the open vehicle deck.",
+        "guidance": "Waves breaking over the rail onto the vehicle deck, lashing chains snapping, parked driverless cars (engines and headlights off) skidding sideways on a rolling deck, a loading ramp hinge snapping and the ramp dropping. A high-speed catamaran is a twin-hull vessel with two parallel hulls.",
         "example_elements": ["island vehicle ferry", "high-speed passenger catamaran", "open-deck vehicle ferry", "hydraulic ramp hinge", "deck drainage scuppers"],
         "camera_styles": ["fixed car deck security CCTV", "stationary ramp coaming surveillance camera", "overhead mezzanine deck camera"],
     },
 
     "shipyard_and_drydock_engineering": {
         "title": "Tersane, Kuru Havuz & Kızak Dinamikleri (Drydock & Launch Mechanics)",
-        "guidance": "Floating drydock flooding/un-docking stability, slipway gravitational launch friction, hull keel block settling, giant propeller shaft rig placement.",
-        "example_elements": ["floating drydock", "shipyard slipway", "caisson dock gate", "timber keel block", "high-tonnage gantry crane sling"],
+        "guidance": "Slipway launches on inclined slipway rails with a launch cradle and timber blocks, the hull sliding toward open water; restraining cables snapping; keel blocks and timber shores collapsing under the hull; a drydock flood gate bursting; crane slings snapping. Every cause is a visible physical object failing on camera.",
+        "example_elements": ["inclined slipway rails", "launch cradle", "timber keel blocks", "drydock flood gate", "high-tonnage gantry crane sling"],
         "camera_styles": ["fixed drydock wing-wall CCTV", "stationary dock basin security camera", "crane gantry overview camera"],
     },
     "marina_and_yacht_operations": {
@@ -172,7 +172,7 @@ MARITIME_INSPIRATION_DOMAINS = {
     },
     "cruise_ship_operations": {
         "title": "Yolcu Gemisi & Kruvaziyer Operasyonları (Cruise & Large Passenger Ship Ops)",
-        "guidance": "Cruise liner terminal berthing and bow thruster docking dynamics, gangway connection stress under swell, tender boat launch/recovery in rough water, hull list correction, near-miss pier approaches. Also covers onboard pool-deck and sun-deck incidents: rogue waves sweeping the pool deck, wind-blown deck furniture, sudden rolls throwing passengers off balance, deck bar chaos in sudden weather.",
+        "guidance": "Cruise liner terminal berthing and bow thruster docking dynamics, gangway connection stress under swell, tender boat launch/recovery in rough water, hull list correction, near-miss pier approaches. Also covers onboard pool-deck and sun-deck incidents: rogue waves breaking over the rail onto the pool deck, a heavy roll tilting the deck and sending loungers sliding, sudden rolls throwing passengers off balance.",
         "example_elements": ["ocean cruise liner", "mega cruise ship", "cruise ship tender boat", "passenger gangway", "bow thruster docking system", "terminal mooring bollard", "open-air pool deck", "sun deck loungers", "glass wind-break screen"],
         "camera_styles": ["fixed terminal berth CCTV", "stationary gangway connection camera", "quayside cruise terminal security camera", "onboard pool-deck security camera", "sun-deck overhead security camera"],
     },
@@ -203,27 +203,35 @@ _last_used_domain: str | None = None  # Süreç-içi hafıza — art arda aynı 
 # 🎲 ZORUNLU KOMBİNASYON HAVUZLARI (Varyasyon Garantisi & Görsel Dünya)
 # ─────────────────────────────────────────────────────────────────────────────
 
+# Olay adları kamerada görünen somut tetiktir (TUR 24): "launch friction", "flooding instability",
+# "gangway stress", "wind-blown" gibi soyut/görünmez sebepler GPT'ye sebepsiz kriz yazdırıyordu.
 DOMAIN_ATTRIBUTES = {
     "ferry_operations": {
         "ships": ["Passenger Car Ferry", "High-speed Catamaran"],
         "environments": ["Ferry terminal ramp", "Open vehicle deck", "Island crossing route"],
-        "events": ["Secured vehicles breaking loose", "Loading ramp hydraulic hinge failure", "Water flooding open vehicle deck"]
+        "events": ["Lashing chain snaps and a parked car breaks loose", "Loading ramp hinge snaps and the ramp drops",
+                   "Green wave breaks over the rail onto the vehicle deck"]
     },
 
+    # Catamaran tersanede yok (TUR 24): Seedance tek gövdeli yat çiziyordu.
     "shipyard_and_drydock_engineering": {
-        "ships": ["Luxury Motor Yacht", "Sailing Yacht", "High-speed Catamaran", "Passenger Car Ferry"],
+        "ships": ["Luxury Motor Yacht", "Sailing Yacht", "Passenger Car Ferry"],
         "environments": ["Shipyard basin", "Drydock interior", "Construction slipway"],
-        "events": ["Drydock flooding instability", "Slipway gravitational launch friction", "Keel block settling failure"]
+        "events": ["Restraining cable snaps during slipway launch", "Keel blocks collapse under the launching hull",
+                   "Drydock flood gate bursts open", "Timber shores snap and the hull tips on its keel blocks",
+                   "Crane sling snaps while lowering the hull into the water"]
     },
     "marina_and_yacht_operations": {
         "ships": ["Luxury Motor Yacht", "Sailing Yacht", "Runaway Powerboat", "Jet Ski"],
         "environments": ["Floating pontoon dock", "Marina fairway", "Marina fuel dock", "Yacht club entrance"],
-        "events": ["Mooring cleat under strain snapping", "Jammed throttle runaway", "Storm surge lifting floating docks", "Wake collision"]
+        "events": ["Mooring line snaps in a storm gust", "Jammed throttle sends the boat careening",
+                   "Storm surge wave lifts and buckles the floating pontoon", "Passing boat's wake slams the boat sideways"]
     },
     "cruise_ship_operations": {
         "ships": ["Ocean Cruise Liner", "Mega Cruise Ship", "Cruise Tender Boat"],
         "environments": ["Cruise terminal berth", "Open-air pool deck", "Sun deck"],
-        "events": ["Gangway connection stress", "Rogue wave sweeping pool deck", "Bow thruster docking failure", "Wind-blown deck furniture"]
+        "events": ["Mooring line snaps and whips across the quay", "Gangway tears loose as the hull surges",
+                   "Rogue wave breaks over the rail onto the pool deck", "Heavy roll tilts the deck and sends loungers sliding"]
     },
     "coastal_tornado_landfall": {
         "ships": [
@@ -252,7 +260,7 @@ DOMAIN_ATTRIBUTES = {
             "Tornado making landfall",
             "Coastal evacuation",
             "Waterfront disruption",
-            "Strong wind and rain",
+            "Tornado rain bands and flying debris lash the waterfront",
             "Coastal debris movement",
             "Marina equipment reacting to severe weather"
         ]
@@ -270,7 +278,7 @@ DOMAIN_ATTRIBUTES = {
         "events": [
             "Severe storm hitting downtown",
             "Flash flooding in city streets",
-            "Extreme wind disrupting downtown streets",
+            "Storm gust tears signs and scaffolding loose downtown",
             "Falling outdoor objects caused by severe weather",
             "Sudden coastal storm reaching the urban district",
             "Major weather event disrupting city traffic",
@@ -291,7 +299,7 @@ DOMAIN_ATTRIBUTES = {
         "events": [
             "Tornado approaching an open beach",
             "Sudden extreme storm hitting the beach",
-            "Powerful coastal wind sweeping across the shoreline",
+            "Storm gust rips umbrellas and beach chairs into the air",
             "Large waves reaching the beach",
             "Severe storm disrupting a beachfront area",
             "Beach evacuation during extreme weather",
@@ -305,10 +313,66 @@ DOMAIN_ATTRIBUTES = {
 SHIP_INCOMPATIBLE = {
     "Cruise Tender Boat": {
         "environments": {"Open-air pool deck", "Sun deck"},
-        "events": {"Rogue wave sweeping pool deck", "Wind-blown deck furniture"},
+        "events": {"Rogue wave breaks over the rail onto the pool deck", "Heavy roll tilts the deck and sends loungers sliding"},
         "scenario_terms": r"\bpool\s*deck|\bsun\s*deck|\bswimming\s+pool|\bloungers?\b|\bsun\s*beds?\b",
     },
 }
+
+# Olay ↔ ortam uyumu (TUR 24): "slipway launch" + "Drydock interior" suyu olmayan düz beton,
+# "floating docks" + "Marina fairway" iskelesiz kanal üretiyordu. Tabloda olmayan domain serbest.
+EVENT_ENV_COMPAT = {
+    "ferry_operations": {
+        "Lashing chain snaps and a parked car breaks loose": {"Open vehicle deck", "Island crossing route"},
+        "Loading ramp hinge snaps and the ramp drops": {"Ferry terminal ramp"},
+        "Green wave breaks over the rail onto the vehicle deck": {"Open vehicle deck", "Island crossing route"},
+    },
+    "shipyard_and_drydock_engineering": {
+        "Restraining cable snaps during slipway launch": {"Construction slipway"},
+        "Keel blocks collapse under the launching hull": {"Construction slipway"},
+        "Drydock flood gate bursts open": {"Drydock interior"},
+        "Timber shores snap and the hull tips on its keel blocks": {"Drydock interior"},
+        "Crane sling snaps while lowering the hull into the water": {"Shipyard basin"},
+    },
+    "marina_and_yacht_operations": {
+        "Mooring line snaps in a storm gust": {"Floating pontoon dock", "Marina fuel dock"},
+        "Jammed throttle sends the boat careening": {"Floating pontoon dock", "Marina fairway", "Marina fuel dock",
+                                                     "Yacht club entrance"},
+        "Storm surge wave lifts and buckles the floating pontoon": {"Floating pontoon dock", "Marina fuel dock"},
+        "Passing boat's wake slams the boat sideways": {"Marina fairway", "Yacht club entrance", "Floating pontoon dock"},
+    },
+    "cruise_ship_operations": {
+        "Mooring line snaps and whips across the quay": {"Cruise terminal berth"},
+        "Gangway tears loose as the hull surges": {"Cruise terminal berth"},
+        "Rogue wave breaks over the rail onto the pool deck": {"Open-air pool deck"},
+        "Heavy roll tilts the deck and sends loungers sliding": {"Sun deck", "Open-air pool deck"},
+    },
+}
+
+# Import anında kontrol: her olay tabloda, her ortamın en az bir olayı var, yazım hatası yok.
+for _d, _m in EVENT_ENV_COMPAT.items():
+    _ev, _en = set(DOMAIN_ATTRIBUTES[_d]["events"]), set(DOMAIN_ATTRIBUTES[_d]["environments"])
+    _bad = (set(_m) ^ _ev) | {e for envs in _m.values() for e in envs - _en} | (_en - set().union(*_m.values()))
+    if _bad:
+        raise RuntimeError(f"EVENT_ENV_COMPAT[{_d}] havuzla uyuşmuyor: {sorted(_bad)}")
+
+# Gemi üstü ortamlar (TUR 24): stil eki burada "geminin kendi güvertesi, ufukta ikinci gemi yok"
+# der; dışarıdan "geminin tamamı görünsün" kuralı ikinci gemi çizdiriyordu.
+ONBOARD_ENVIRONMENTS = {"Open vehicle deck", "Island crossing route", "Open-air pool deck", "Sun deck"}
+VEHICLE_DECK_ENVIRONMENTS = {"Open vehicle deck", "Island crossing route"}
+
+# Seedance'ın bilmediği gövde tipleri için görünür tarif (TUR 24): prompt "catamaran" deyince tek gövde çiziyordu.
+# Gemi üstü çekimde gövdeler kadrajda olamaz; orada sadece gövde tipi söylenir (K1 dry-run: güverte
+# CCTV'si + "two parallel hulls visible" çelişiyordu).
+SHIP_VISUALS = {
+    "High-speed Catamaran": "twin-hull catamaran, two parallel hulls visible",
+}
+SHIP_VISUALS_ONBOARD = {
+    "High-speed Catamaran": "aboard a twin-hull catamaran",
+}
+
+# Olay×ortam LRU cezası (TUR 24): aynı domain'in son N üretiminde görülen olay+ortam ikilisi
+# (gemi/kamera farklı olsa bile) tekrar seçilmez; bugün "flooding + open vehicle deck" iki kez geldi.
+RECENT_PAIR_WINDOW = 5
 
 # Gemisi opsiyonel domainler (TUR 11): gemi sadece bu ortamlarda atanır, diğer ortamlarda
 # (şehir/plaj) gemi None olur ve gemi gerektiren olaylar havuzdan çıkar. Önce ortam seçilir.
@@ -428,6 +492,26 @@ def get_creative_catalyst(recent_history: list[str] | None = None, domain: str |
                 return o
         return random.choice(options)
 
+    def _last_seen(value: str, history: list[str]) -> int:
+        """history'de en son görüldüğü indeks; hiç görülmediyse -1 (LRU sırası)."""
+        low = value.lower()
+        return max((i for i, h in enumerate(history) if h == low), default=-1)
+
+    # Aynı domain'in son RECENT_PAIR_WINDOW üretimindeki olay+ortam ikilileri (TUR 24)
+    recent_pairs = {(e, v) for d, e, v in [t for t in zip(recent_domains, recent_events, recent_envs)
+                                           if t[0] == chosen_domain_key][-RECENT_PAIR_WINDOW:]}
+
+    def _choose_pair(events: list[str], envs: list[str]) -> tuple[str | None, str | None]:
+        """Uyumlu (olay, ortam) ikilisi: son ikililer hariç, önce en eski olay sonra en eski ortam."""
+        compat = EVENT_ENV_COMPAT.get(chosen_domain_key, {})
+        pairs = [(e, v) for e in events for v in envs if e not in compat or v in compat[e]]
+        if not pairs:
+            raise RuntimeError(f"{chosen_domain_key}: olay×ortam uyumu seçenek bırakmadı ({events} × {envs})")
+        fresh = [p for p in pairs if (p[0].lower(), p[1].lower()) not in recent_pairs] or pairs
+        keyed = [((_last_seen(e, recent_events), _last_seen(v, recent_envs)), (e, v)) for e, v in fresh]
+        best = min(k for k, _ in keyed)
+        return random.choice([p for k, p in keyed if k == best])
+
     # Gemi, Olay ve Ortam Seçimi (Kendi içlerinde tekrarı minimize eder)
     vessel_envs = VESSEL_ENVIRONMENTS.get(chosen_domain_key)
     if vessel_envs:
@@ -439,16 +523,25 @@ def get_creative_catalyst(recent_history: list[str] | None = None, domain: str |
         else:
             chosen_ship = None
             events = [e for e in attrs.get("events", []) if e not in vessel_envs["vessel_only_events"]]
-        chosen_event = _choose_lru(events, recent_events)
+        chosen_event, chosen_env = _choose_pair(events, [chosen_env])
     else:
-        chosen_ship = _choose_lru(attrs.get("ships", []), recent_ships)
+        # Taze olay+ortam ikilisi kalmayan gemi seçilmez (TUR 24: Cruise Tender'ın 2 olayı da yakın
+        # geçmişteyse ceza boşa düşüyordu); hiçbirinde kalmadıysa tüm gemiler aday.
+        def _has_fresh(ship: str) -> bool:
+            b = SHIP_INCOMPATIBLE.get(ship, {})
+            compat = EVENT_ENV_COMPAT.get(chosen_domain_key, {})
+            return any((e.lower(), v.lower()) not in recent_pairs
+                       for e in attrs["events"] if e not in b.get("events", set())
+                       for v in attrs["environments"] if v not in b.get("environments", set())
+                       and (e not in compat or v in compat[e]))
+        ships = attrs.get("ships", [])
+        chosen_ship = _choose_lru([s for s in ships if _has_fresh(s)] or ships, recent_ships)
         banned = SHIP_INCOMPATIBLE.get(chosen_ship or "", {})
         events = [e for e in attrs.get("events", []) if e not in banned.get("events", set())]
         envs = [e for e in attrs.get("environments", []) if e not in banned.get("environments", set())]
         if attrs.get("events") and not events or attrs.get("environments") and not envs:
             raise RuntimeError(f"SHIP_INCOMPATIBLE '{chosen_ship}' için {chosen_domain_key} havuzunda seçenek bırakmadı")
-        chosen_event = _choose_lru(events, recent_events)
-        chosen_env = _choose_lru(envs, recent_envs)
+        chosen_event, chosen_env = _choose_pair(events, envs)
 
     # Mevcut fikir kütüphanesinden örnekleri derle
     library_samples = []
@@ -519,6 +612,9 @@ Review the recent topics list provided in the user prompt. DO NOT repeat the exa
 5. CONCRETE PHYSICAL OUTCOME: The <<DURATION>>th second must show the beat 3 danger still visibly in progress.
 6. NO FORCED MARITIME ASSETS: If `vessel_class` is "None" (in ANY domain, including Coastal Tornado in a city or beach setting), DO NOT create ships, boats, or docks. Keep it strictly urban or strictly beach. If `vessel_class` is provided, stick to that exact ship. NEVER spawn any additional vessel beyond the given vessel_class (no rescue boats, no escort boats). Always call the vessel by its assigned type (e.g. 'the sailing yacht', 'the passenger car ferry') in visible_start and every later beat; never refer to it only as 'the vessel', 'the ship' or 'the boat'.
 7. BEAT 1 MUST SHOW DANGER ALREADY IN MOTION (NON-NEGOTIABLE): visible_start must contain a physical action verb happening right now (e.g. crashes, slams, snaps, surges, swings, tilts). FORBIDDEN patterns in visible_start: 'is visible', 'visible from', the phrase 'as [X] approaches' (e.g. 'as the ferry approaches the pier'), 'scene opens', 'observing as', 'bustling', 'looming', 'signals for'. The grammatical subject of visible_start's first sentence must be the physical thing in danger or the people in the scene (e.g. 'A mooring line snaps…', 'Waves crash…'); camera position and framing belong only in observer_camera, never in visible_start. Instead, describe the crisis as it happens or immediately after it starts. Beat 1 is the TRIGGER starting (wave hits, line snaps, blocks give way); beat 3 is the RESULT. Starting with the trigger is required; starting with the result is still forbidden. visible_start pairs the trigger action with a visible physical effect on another object (spray, snapping lines, sliding objects, splintering blocks); human emotional reactions (startled, alarmed, shocked, panicked) belong in physical_movement, never in visible_start. Any people in visible_start must already be moving (bracing, scrambling, lunging, grabbing) — never standing, watching, looking, or waiting. Give the moving object ONE direction relative to the camera (across the frame, away from the camera, or toward the camera) and keep that same direction in every beat.
+8. VISIBLE TRIGGER (NON-NEGOTIABLE): The crisis has ONE concrete physical cause that the camera sees (e.g. a wave crashes over the rail, a mooring line or cable snaps, keel blocks collapse, a hinge snaps, the ship heels hard, a wake slams into the hull). Name it in visible_trigger and show it in visible_start or physical_movement. Never an invisible or abstract cause (friction, pressure, stress, instability, 'unexpectedly', 'for no reason'), and never people panicking or running without that visible cause.
+9. REAL PHYSICS: People can never push, pull, hold back or stop a vessel, floating dock or pontoon by hand. Slipway launches happen on inclined slipway rails with a launch cradle and timber blocks, sliding toward open water, never across flat dry concrete. Cars on a ferry vehicle deck are parked and driverless with engines and headlights off; they skid or slide, never drive.
+10. BEAT 3 KEEPS MOVING: The last 5 seconds show the danger still physically moving (still sliding, still flooding, still swinging). Never write stabilize, steady, regain control, settle or calm in visible_consequence, and never end on people trying to stabilize things.
 
 ## OUTPUT FORMAT (STRICT JSON):
 All field values are plain descriptive prose. Never start a value with a label or timestamp such as "BEAT 1:" or "(0-4s)".
@@ -528,6 +624,7 @@ All field values are plain descriptive prose. Never start a value with a label o
   "scenario_summary": "One clear, punchy sentence covering only what the three beats show: the opening action, what goes wrong, and the visible consequence. It must not introduce any person, vessel, or object that is not in visible_start, physical_movement, or visible_consequence",
   "visible_start": "<<VISIBLE_START_DESC>>",
   "beat1_action_verb": "The single main physical action verb of visible_start's first sentence, copied exactly as written there (e.g. 'gushes', 'spins', 'lifts'). It must be what the hazard does, not what people or the camera do.",
+  "visible_trigger": "The single concrete physical trigger the camera sees (e.g. 'the mooring line snaps', 'a green wave crashes over the rail', 'keel blocks collapse'), using words that also appear in visible_start or physical_movement. Never friction, pressure, stress, instability or an unseen cause.",
   "physical_movement": "<<PHYSICAL_MOVEMENT_DESC>>",
   "visible_consequence": "<<VISIBLE_CONSEQUENCE_DESC>>",
   "observer_camera": "The exact assigned camera position, stated concretely (e.g. 'fixed camera bolted to the cruise ship's port-side superstructure', 'bystander's handheld phone from the pier', 'POV from the bow of the second vessel already established in this scene')",
@@ -619,11 +716,14 @@ Your ONE job: Convert the maritime scenario into a HIGH-SIGNAL, PHOTOREALISTIC p
    The first sentence pairs the opening action with what it physically does to another object (spray bursting, blocks splintering, cars sweeping sideways). Never put human emotional reactions (startled, alarmed, shocked, panicked) or static people (standing, watching, looking, waiting) in the first sentence; people's reactions come later. Never change what happens to people: keep the scenario's own verbs for them (do not turn 'sets the crew into action' into 'sweeps the crew'). Keep ONE movement direction for the moving object throughout the prompt.
    GOOD: 'The sailing yacht lurches down the slipway, keel blocks splintering beneath the hull'
    BAD: 'The sailing yacht lurches forward, startling three workers'
+10. VISIBLE TRIGGER: Keep the scenario's visible trigger (the wave, the snapping line, the collapsing blocks) as something the camera sees. Never write an invisible or abstract cause such as 'friction', 'pressure', 'instability', 'unexpectedly' or 'for no reason'.
+11. REAL PHYSICS: People never push, pull or hold a vessel, dock or pontoon by hand. Cars on a ferry deck are parked and driverless; they skid or slide, never drive, and their headlights are off.
+12. LENGTH AND ENDING: 45 to 60 words. Give the final outcome its own full sentence of at least 12 words in which the danger is still physically moving. Never end with stabilize, steady, regain control, settle or calm.
 
 ## OUTPUT FORMAT (STRICT JSON):
 {
   "prompt": "The exact generated prompt",
-  "word_count": 33
+  "word_count": 52
 }"""
 
 
@@ -631,7 +731,7 @@ def build_prompt_simplifier_system(duration: int, domain_id: str = "") -> str:
     """PROMPT_SIMPLIFIER_SYSTEM'i config.DEFAULT_DURATION'a göre üretir."""
     sys_prompt = PROMPT_SIMPLIFIER_SYSTEM_TEMPLATE.replace("<<DURATION>>", str(duration))
     if domain_id in ENV_CENTRIC_DOMAINS:
-        sys_prompt += "\n\n10. STRICT ENVIRONMENT-CENTRIC FOCUS: DO NOT START THE PROMPT WITH HUMANS (e.g. 'Two pedestrians...'). Begin immediately with the massive natural disaster (e.g. 'A massive coastal tornado...', 'A giant rogue wave...'). Humans are secondary background elements, but keep every person from the scenario (e.g. rooftop watchers, bystanders) in the prompt; never drop all humans. DO NOT DILUTE THE PHENOMENON (keep exact words like 'tornado', 'waterspout', 'tsunami', 'storm surge')."
+        sys_prompt += "\n\n13. STRICT ENVIRONMENT-CENTRIC FOCUS: DO NOT START THE PROMPT WITH HUMANS (e.g. 'Two pedestrians...'). Begin immediately with the massive natural disaster (e.g. 'A massive coastal tornado...', 'A giant rogue wave...'). Humans are secondary background elements, but keep every person from the scenario (e.g. rooftop watchers, bystanders) in the prompt; never drop all humans. DO NOT DILUTE THE PHENOMENON (keep exact words like 'tornado', 'waterspout', 'tsunami', 'storm surge')."
     return sys_prompt
 
 
@@ -642,57 +742,73 @@ def build_prompt_simplifier_system(duration: int, domain_id: str = "") -> str:
 # sık/varsayılan). Seçim hem GPT'ye (senaryo aşaması) hem de deterministik stil
 # kilidine aktarılır — ikisi arasında çelişki olmaması için TEK kaynak.
 
-_LENS_GUARDRAILS = (
-    "normal-to-moderate-wide lens, no fisheye/action-cam distortion, "
-    "no drone/aerial framing"
-)
+# Stil eki sahneye göre kısa modüllerden kurulur (TUR 24): eski ek 270-341 kelimeydi, hikaye
+# (36 kelime) prompt'un %10'u kalıyordu; handheld'de "hand/phone edge", gemi üstü sahnede
+# "vessel fully visible" ve tersaneye havuz/yolcu kıyafeti sızıyordu. Hedef ~80-100 kelime.
 
-_STATIC_POSITION_GUARDRAIL = (
-    "the camera's position and distance from the subject must stay exactly "
-    "constant for the entire shot — no zooming in, no drifting closer, no "
-    "changing vantage point"
-)
+# Kıyafet: sadece o domain/ortamın rolleri
+_CLOTHING = {
+    "ferry_operations": "Crew wear orange hi-vis PPE; drivers and passengers wear casual clothes.",
+    "shipyard_and_drydock_engineering": "Shipyard workers wear orange hi-vis PPE and hard hats.",
+    "marina_and_yacht_operations": "Marina staff wear orange hi-vis PPE; boat owners wear casual clothes.",
+}
+_CLOTHING_CRUISE_ONBOARD = "Passengers wear swimwear or resort wear; crew wear white cruise uniforms."
+_CLOTHING_CRUISE_BERTH = "Dock crew wear orange hi-vis PPE; passengers wear casual clothes."
+_CLOTHING_ENV = "Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms."
+_CLOTHING_ENV_DOCK = " Dock workers wear orange hi-vis PPE."
+_CLOTHING_LEGACY = "Crew wear orange hi-vis PPE; passengers and bystanders wear casual clothes, never hi-vis PPE on civilians."
 
-_SINGLE_MOMENT_GUARDRAIL = (
-    "Single unbroken moment only: the camera captures ONE continuous instant "
-    "of the incident unfolding, no time skips, no scene cuts, no camera "
-    "repositioning mid-shot. The action must flow as one seamless real-time "
-    "sequence from first to last frame."
-)
+_LIGHTING = "Raw natural light matching the weather, never glossy or CGI; no white hazmat suits."
 
-def get_realism_guardrails(domain_id: str, vessel_class: str) -> str:
-    """Seçilen Visual World ve Ship Class'a göre spesifik gerçekçilik kuralları üretir."""
+# El kamerası çekim yeri (gemi dışı sahne), domain'e göre
+_HANDHELD_SPOT = {
+    "ferry_operations": "the quay",
+    "shipyard_and_drydock_engineering": "the shipyard floor",
+    "marina_and_yacht_operations": "the pontoon",
+    "cruise_ship_operations": "the quay",
+}
+
+
+def _has_ship(vessel_class: str | None) -> bool:
+    return bool(vessel_class) and vessel_class.strip().lower() != "none"
+
+
+def scene_physics_rules(domain_id: str, vessel_class: str, environment: str) -> list[str]:
+    """Sahneye özgü fizik kuralları (TUR 24); stil ekine ve yazıcı mesajına aynen gider.
+
+    İşçiler yatı elle itiyordu, kızak suyu olmayan düz betondu, feribotta arabalar farları
+    yanık sürülüyordu, catamaran tek gövde çiziliyordu.
+    """
+    rules = []
+    ship = (vessel_class or "").strip()
+    if _has_ship(ship):
+        visual = (SHIP_VISUALS_ONBOARD if environment in ONBOARD_ENVIRONMENTS else SHIP_VISUALS).get(ship)
+        if visual:
+            rules.append(f"{visual[0].upper()}{visual[1:]}.")
+        # Gemi üstünde (havuz/güneş/araç güvertesi) itilecek gemi/iskele yok; kural gürültü olur
+        if environment not in ONBOARD_ENVIRONMENTS:
+            rules.append("Nobody pushes, pulls or holds a vessel or dock by hand.")
+    if domain_id == "shipyard_and_drydock_engineering":
+        rules.append({
+            "Construction slipway": "The hull rides a launch cradle on inclined slipway rails sloping down into open water.",
+            "Drydock interior": "The hull stands on timber keel blocks braced by side shores inside the drydock.",
+            "Shipyard basin": "A gantry crane holds the hull in slings above the open water of the basin.",
+        }.get(environment, "The hull sits on timber blocks and supports, never on bare flat concrete."))
+    if domain_id == "ferry_operations" and environment in VEHICLE_DECK_ENVIRONMENTS:
+        rules.append("Parked driverless cars, engines and headlights off, skid or slide; they never drive.")
+    return rules
+
+
+def get_realism_guardrails(domain_id: str, vessel_class: str, environment: str = "") -> str:
+    """Kıyafet (sadece ilgili roller) + ışık. domain_id boşsa geriye uyumlu genel metin."""
     domain_id = (domain_id or "").lower()
-    vessel_class = (vessel_class or "").lower()
-    
-    # Kıyafet domain'e göre değil ROLE göre (2026-09-24): eski "cruise/ferry staff
-    # wear proper uniforms" kuralı senaryodaki turuncu tulumlu deckhand'lerle çelişiyordu.
-    role_rules = (
-        "Clothing follows each person's role: deckhands, dockworkers, and technicians wear "
-        "high-visibility orange or yellow PPE coveralls; officers and captains wear proper "
-        "uniforms (ferry officer uniform, white cruise officer uniform); passengers, guests, "
-        "and bystanders wear ordinary civilian clothing appropriate to the setting (swimwear, "
-        "resort or casual wear, sun hats for pool/deck scenes; regular casual clothing for "
-        "car-deck scenes) — never hi-vis PPE on civilians."
-    )
-    # Env-centric'te gemi rolleri (ferry officer, car-deck...) gürültü (TUR 14); sivil kuralı kalır.
     if domain_id in ENV_CENTRIC_DOMAINS:
-        role_rules = (
-            "Clothing: bystanders, residents, pedestrians, and beachgoers wear ordinary civilian "
-            "clothing suited to the setting and weather — never hi-vis PPE on civilians. Emergency "
-            "responders (firefighters, police, lifeguards, paramedics) wear their standard service uniforms."
-        )
-        if vessel_class and vessel_class != "none":
-            role_rules += " Marina and dock workers wear high-visibility orange or yellow PPE."
-
-    common_rules = (
-        # Işık senaryonun havasına uyar (TUR 21): sabit "overcast/fog/rain" havuz/plaj güneşiyle çelişiyordu
-        "NEVER use white hazmat suits. Raw natural lighting that matches the scenario's weather "
-        "(storm, overcast, fog, or harsh daylight) — never glossy, CGI-clean, or cinematic; "
-        "water and ice never artificially perfect."
-    )
-
-    return " ".join([role_rules, common_rules])
+        clothing = _CLOTHING_ENV + (_CLOTHING_ENV_DOCK if _has_ship(vessel_class) else "")
+    elif domain_id == "cruise_ship_operations":
+        clothing = _CLOTHING_CRUISE_ONBOARD if environment in ONBOARD_ENVIRONMENTS else _CLOTHING_CRUISE_BERTH
+    else:
+        clothing = _CLOTHING.get(domain_id, _CLOTHING_LEGACY)
+    return f"{clothing} {_LIGHTING}"
 
 
 # Bu domainlerde forced_ship=None olabilir (doğal afet/olay odaklı, gemi zorunlu değil).
@@ -743,21 +859,8 @@ CAMERA_ARCHETYPES = {
             "in the scene."
         ),
         "style_lock": (
-            f"Static fixed-mount security CCTV camera, {_LENS_GUARDRAILS}. Slight "
-            "natural motion blur, no cinematic framing, no artistic close-ups, no "
-            f"camera movement. {_SINGLE_MOMENT_GUARDRAIL}"
-        ),
-        # Gemiye özgü kadraj kuralı — ENV_CENTRIC domainlerde eklenmez (apply_style_lock)
-        "vessel_framing": (
-            "When filming the vessel from outside/alongside, "
-            "frame must keep the hull, bow, or superstructure visible to establish "
-            "ship type — no tight shot confined only to deck machinery. For "
-            "onboard deck, pool, or vehicle-deck scenes filmed from a camera "
-            "mounted ON the ship (looking at its own interior spaces, not the ship "
-            "from outside), visible deck architecture, railings, superstructure, "
-            "or vehicle-deck structure satisfies this instead — e.g. a pool-deck "
-            "camera showing loungers, railings, and open sky is sufficient; do not "
-            "force an exterior hull/bow shot into an onboard scene."
+            "Static fixed-mount security CCTV camera, normal lens, no fisheye or drone view; "
+            "the frame never moves, zooms or cuts."
         ),
     },
     "bystander_handheld": {
@@ -781,32 +884,8 @@ CAMERA_ARCHETYPES = {
             "not move, lean past it, or climb over it."
         ),
         "style_lock": (
-            f"Bystander handheld phone footage, {_LENS_GUARDRAILS}. Natural minor "
-            "handheld shake means only small in-place tremor and wobble of the "
-            f"hands — {_STATIC_POSITION_GUARDRAIL}. The framing established in "
-            "the very first moment of the shot — same subject distance, same "
-            "field of view — must be held completely unchanged for the full "
-            "duration: NO progressive zoom, NO push-in, NO gradual creep closer, "
-            "even a slow one. If the shot is filmed through, over, or behind a "
-            "railing, window, porthole, or other foreground boundary element, "
-            "that element MUST stay visible in frame for the entire shot — the "
-            "camera must never appear to pass through it, climb over it, or move "
-            f"beyond it. {_SINGLE_MOMENT_GUARDRAIL}"
-        ),
-        # Çekim yeri domain'e göre (apply_style_lock): env-centric'te gemi küpeştesi yok (TUR 10)
-        "vantage": (
-            "Filmed from a ship's railing, nearby vessel, or dock, occasionally "
-            "showing a hint of a railing, hand, or phone edge at the frame border."
-        ),
-        "vantage_env": (
-            "Filmed by an onlooker on land (balcony, window, rooftop, roadside, or "
-            "waterfront), occasionally showing a hint of a window frame, hand, or "
-            "phone edge at the frame border."
-        ),
-        # Gemiye özgü kadraj kuralı — ENV_CENTRIC domainlerde eklenmez (apply_style_lock)
-        "vessel_framing": (
-            "The vessel in crisis must be fully and clearly "
-            "visible in frame at all times, not just a cropped detail."
+            "Bystander handheld phone footage, normal lens, no fisheye or drone view; slight tremor "
+            "only, fixed position and framing, no zoom or cuts; no phone, hands or fingers in frame."
         ),
     },
     "chase_pov": {
@@ -824,42 +903,31 @@ CAMERA_ARCHETYPES = {
             "instead of defaulting to one vessel alone."
         ),
         "style_lock": (
-            "Chase POV filmed from the deck or bow of a nearby pursuing vessel, "
-            f"close to the action, {_LENS_GUARDRAILS}. Natural handheld boat "
-            f"motion means only small in-place tremor and wobble from sea swell — "
-            f"{_STATIC_POSITION_GUARDRAIL}. No cinematic framing, no artistic "
-            "close-ups. Two distinct vessels must be visible throughout: the "
-            "observer's own vessel and a clearly separate second vessel "
-            f"actively in crisis, fully visible, not just a cropped detail. {_SINGLE_MOMENT_GUARDRAIL}"
+            "Chase POV from a nearby boat's deck, normal lens, no fisheye or drone view; slight swell "
+            "motion, same distance, no zoom or cuts; its rail and the separate vessel in crisis stay visible."
         ),
     },
 }
 
-# Geriye dönük uyumluluk — bazı test scriptleri tek bir STYLE_LOCK_SUFFIX bekliyor.
-# Varsayılan (en sık seçilen) arketipin son ekini temsil eder (gemili sahne hali).
-STYLE_LOCK_SUFFIX = (
-    f'{CAMERA_ARCHETYPES["fixed_cctv"]["style_lock"]} {CAMERA_ARCHETYPES["fixed_cctv"]["vessel_framing"]}'
-)
-
-
-def choose_camera_archetype(domain_id: str = "") -> str:
+def choose_camera_archetype(domain_id: str = "", environment: str = "") -> str:
     """3 kamera arketipinden birini ağırlıklı rastgele seçer (CCTV varsayılan/en sık).
 
     Environment-centric domainlerde (gemi yok, forced_ship=None) chase_pov elenir:
     o arketip iki ayrı gemi zorunlu kılar, gemisiz domainde GPT bunu karşılamak
     için yoktan bir tekne icat ediyordu (2026-09-23 tespit edildi).
+    Gemi üstü ortamlarda (havuz/güneş/araç güvertesi) da elenir (TUR 24): başka tekneden
+    çekimde güvertedeki olay görünmüyor, K1 dry-run'da havuz güvertesine chase_pov atanmıştı.
     """
     keys = list(CAMERA_ARCHETYPES.keys())
-    if domain_id in ENV_CENTRIC_DOMAINS:
+    if domain_id in ENV_CENTRIC_DOMAINS or environment in ONBOARD_ENVIRONMENTS:
         keys = [k for k in keys if k != "chase_pov"]
     weights = [CAMERA_ARCHETYPES[k]["weight"] for k in keys]
     return random.choices(keys, weights=weights, k=1)[0]
 
 
-# Seedance iki test videosunda da ilk 3-4 sn yavaş/durgun açıldı (2026-09-24 TUR 9); tüm arketiplere eklenir.
+# Seedance ilk 3-4 sn yavaş açıyordu (TUR 9); son 5-7 sn de donuk kalıyordu (TUR 24). Tüm arketiplere eklenir.
 _MOTION_START_GUARDRAIL = (
-    "Motion is already under way in the very first frame: the danger is visibly moving "
-    "from frame one, no calm or static opening."
+    "Already moving in the first frame, still moving in the last; no calm opening or ending."
 )
 
 
@@ -874,31 +942,42 @@ def style_lock_suffix(camera_archetype: str = "fixed_cctv", catalyst: dict = Non
     return apply_style_lock("", camera_archetype, catalyst)[2:]
 
 
+def _location_line(camera_archetype: str, domain_id: str, ship: str, environment: str) -> str:
+    """Çekim yeri + kadraj (TUR 24): gemi üstü sahnede ikinci gemi yok, dışarıdan geminin tamamı."""
+    if domain_id in ENV_CENTRIC_DOMAINS:
+        if camera_archetype == "bystander_handheld":
+            return "Filmed by an onlooker on land (balcony, window, rooftop or roadside)."
+        return ""
+    name = f"the {ship.lower()}" if _has_ship(ship) else "the vessel"
+    if environment in ONBOARD_ENVIRONMENTS and camera_archetype != "chase_pov":
+        return f"Filmed aboard {name}; no second ship on the horizon."
+    if camera_archetype == "bystander_handheld":
+        return f"Filmed at eye level from {_HANDHELD_SPOT.get(domain_id, 'the dock')}; {name} stays fully in frame."
+    if camera_archetype == "fixed_cctv":
+        return f"{name[0].upper()}{name[1:]} stays fully in frame."
+    return ""
+
+
 def apply_style_lock(prompt_text: str, camera_archetype: str = "fixed_cctv", catalyst: dict = None) -> str:
-    """GPT'nin ürettiği prompt'a — içeriğinden bağımsız — seçilen kamera arketipinin
-    sabit stil bloğunu ekler. Catalyst verilirse dinamik gerçekçilik kuralları eklenir."""
+    """GPT'nin ürettiği hikayeye seçilen kamera arketipinin ve sahnenin kısa stil ekini ekler.
+
+    Sıra: kamera, çekim yeri/kadraj, sahne fiziği, hareket, kıyafet + ışık. Catalyst yoksa
+    geriye uyumlu genel ek (gemili sahne varsayımı).
+    """
     prompt_text = (prompt_text or "").strip().rstrip(".")
     archetype = CAMERA_ARCHETYPES.get(camera_archetype, CAMERA_ARCHETYPES["fixed_cctv"])
-    style_lock = archetype["style_lock"]
-    # Gemi kadraj kuralı ENV_CENTRIC domainlerde eklenmez: hortum/dalga ana odak
-    # kalmalı (tekne olsa bile). catalyst yoksa eski davranış: kural eklenir.
-    domain_id = (catalyst or {}).get("domain_id", "")
-    if domain_id not in ENV_CENTRIC_DOMAINS and archetype.get("vessel_framing"):
-        style_lock = f"{style_lock} {archetype['vessel_framing']}"
-    vantage = archetype.get("vantage_env" if domain_id in ENV_CENTRIC_DOMAINS else "vantage")
-    if vantage:
-        style_lock = f"{style_lock} {vantage}"
-    style_lock = f"{style_lock} {_MOTION_START_GUARDRAIL}"
+    cat = catalyst or {}
+    domain_id = cat.get("domain_id", "")
+    ship = cat.get("forced_ship", "") or ""
+    env = cat.get("forced_environment", "") or ""
+    parts = [archetype["style_lock"], _location_line(camera_archetype, domain_id, ship, env),
+             *scene_physics_rules(domain_id, ship, env), _MOTION_START_GUARDRAIL,
+             get_realism_guardrails(domain_id, ship, env)]
+    return f"{prompt_text}. " + " ".join(p for p in parts if p)
 
-    if catalyst:
-        domain_id = catalyst.get("domain_id", "")
-        vessel = catalyst.get("forced_ship", "")
-        realism = get_realism_guardrails(domain_id, vessel)
-        return f"{prompt_text}. {style_lock} {realism}"
-    else:
-        # Geriye dönük uyumluluk
-        return f"{prompt_text}. {style_lock} {get_realism_guardrails('', '')}"
 
+# Geriye dönük uyumluluk: bazı betikler tek bir STYLE_LOCK_SUFFIX bekliyor (varsayılan arketip, genel sahne).
+STYLE_LOCK_SUFFIX = style_lock_suffix("fixed_cctv")
 
 
 # ─────────────────────────────────────────────────────────────────────────────

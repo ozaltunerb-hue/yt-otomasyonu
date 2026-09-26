@@ -34,7 +34,9 @@ SCEN = {
     "beat1_action_verb": "lurches",
 }
 GOOD = ("The sailing yacht lurches forward on the slipway as three workers in orange coveralls leap back. "
-        "It slides faster, hull scraping the supports. The yacht keeps sliding toward the water.")
+        "It slides faster down the inclined rails, the hull scraping the launch cradle as timber blocks "
+        "splinter. The yacht keeps sliding toward the open water, spray bursting from the bow while the "
+        "snapped restraining cable still whips across the slipway.")
 VAGUE = GOOD.replace("The sailing yacht lurches", "The vessel lurches").replace("The yacht keeps", "It keeps")
 
 FORBIDDEN_SHIP = re.compile(r"cargo|container|tanker|bulk|barge|trawler|fishing|\btug|\bfreight", re.I)
@@ -49,7 +51,9 @@ def F(failures):
 class TestShipyardShips(unittest.TestCase):
     def test_shipyard_uses_existing_types(self):
         ships = DOMAIN_ATTRIBUTES[D]["ships"]
-        self.assertEqual(ships, ["Luxury Motor Yacht", "Sailing Yacht", "High-speed Catamaran", "Passenger Car Ferry"])
+        # TUR 24: catamaran tersaneden çıktı (Seedance tek gövdeli yat çiziyordu), feribotta kalır
+        self.assertEqual(ships, ["Luxury Motor Yacht", "Sailing Yacht", "Passenger Car Ferry"])
+        self.assertIn("High-speed Catamaran", DOMAIN_ATTRIBUTES["ferry_operations"]["ships"])
         self.assertNotIn("Vessel on Slipway", VESSEL_UNIVERSE)
         for s in ships:
             self.assertIsNone(FORBIDDEN_SHIP.search(s), s)

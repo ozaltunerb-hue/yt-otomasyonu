@@ -15,11 +15,11 @@
 
 Üretim Telegram botundan tetiklenir (2026-09-26, cron kaldırıldı): `/uret` → 7 domain butonu → seçilen domain ile şu akış çalışır (bkz. Telegram Tetikleyici bölümü):
 
-1. **🧠 Creative Engine** — 7 ilham alanı: 4 gemi domaini (feribot, tersane, marina/yat, kruvaziyer) + 3 çevre odaklı (kıyı hortumu, şehir afeti, plaj). 9 gemilik evren (feribot, katamaran, yat, powerboat, jet ski, kruvaziyer, tender); kargo/tanker/römorkör/balıkçı YOK (2026-09-24). Uyumsuz gemi-ortam kombinasyonları seçilmez. 71 senaryoluk referans kütüphane (8 kategori).
+1. **🧠 Creative Engine** — 7 ilham alanı: 4 gemi domaini (feribot, tersane, marina/yat, kruvaziyer) + 3 çevre odaklı (kıyı hortumu, şehir afeti, plaj). 9 gemilik evren (feribot, katamaran, yat, powerboat, jet ski, kruvaziyer, tender); kargo/tanker/römorkör/balıkçı YOK (2026-09-24). Uyumsuz gemi-ortam ve olay-ortam kombinasyonları seçilmez (`SHIP_INCOMPATIBLE`, `EVENT_ENV_COMPAT`); olay adları kamerada görünen somut tetiktir; aynı domain'in son 5 üretimindeki olay+ortam ikilisi tekrar seçilmez (TUR 24). 71 senaryoluk referans kütüphane (8 kategori).
 2. **🤖 GPT-4o** — Gerçekçi, fizik kurallarına uygun, yapılandırılabilir süreli (şu an 15s) tek plan 3 beat'lik senaryo yazar (5 aday); atanan kamera arketipine (`fixed_cctv`/`bystander_handheld`/`chase_pov`) göre yazılır
-3. **✅ Senaryo Kapıları** — görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike, cast aralığı, özet-beat tutarlılığı, gemi-ortam uyumu. Geçen adaylar skorlanır.
-4. **✂️ Prompt Simplifier + Çıktı Kapısı** — Senaryoyu 25-45 kelimelik hikayeye çevirir; aşağıdaki A-J kapıları kontrol edilir, kalırsa geri bildirimle yeniden dener. Yazıcıya son kullanılan Beat 1 fiilleri "farklı fiil seç" ipucu olarak gider (Notion "Beat1 Fiil")
-5. **🔒 Stil Kilidi** — Kamera arketipine ve domain'e göre deterministik kamera/çekim yeri/kıyafet/gerçekçilik eki hikayenin arkasına eklenir
+3. **✅ Senaryo Kapıları** — görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike, cast aralığı, özet-beat tutarlılığı, gemi-ortam uyumu, görünür tetik, sahne fiziği. Geçen adaylar skorlanır.
+4. **✂️ Prompt Simplifier + Çıktı Kapısı** — Senaryoyu 45-60 kelimelik hikayeye çevirir (TUR 24, önce 25-45); aşağıdaki A-M kapıları kontrol edilir, kalırsa geri bildirimle yeniden dener. Yazıcıya son kullanılan Beat 1 fiilleri "farklı fiil seç" ipucu olarak gider (Notion "Beat1 Fiil")
+5. **🔒 Stil Kilidi** — Kamera arketipi + sahneye göre (domain, ortam, gemi) deterministik kısa ek (~63-111 kelime, TUR 24 öncesi 255-341): kamera, çekim yeri/kadraj (gemi üstünde "no second ship on the horizon", dışarıdan geminin tamamı), sahne fiziği (elle itme yok, kızak rayları + su, feribotta sürücüsüz park araç, catamaran çift gövde), hareket, sadece ilgili rollerin kıyafeti, ışık. El kamerasında "no phone, hands or fingers in frame"
 6. **🛡️ Safety Check** — Regex + GPT preflight + Kie reddinde retry rewrite; hepsi sadece hikayeye uygulanır, stil eki korunur. Sessiz fallback yok.
 7. **🎬 Seedance 2 Mini (Kie AI)** — Video üretir (`bytedance/seedance-2-fast`, 480p, portrait 9:16)
 8. **📈 Hareket Profili** — İndirilen videonun saniye saniye hareket ölçümü (ffmpeg) Notion "Hareket" alanına yazılır
@@ -149,7 +149,7 @@ Veri gömülü değil, dosyalardan okunur:
 
 ## ✅ Kalite Kapıları
 
-**Senaryo kapıları** (5 adayın her birine): görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike (çözülmüş/sakinleşmiş, "halt", zayıf büyüklük "ripples/gently/slightly/bobbing" kara listede; insan jestleri "gesturing/inspecting" devam işareti sayılmaz), cast (gemi domainlerinde `DOMAIN_CAST_RANGES` aralığı; çevre odaklıda en az 1 insan), özet-beat tutarlılığı, gemi-ortam uyumu.
+**Senaryo kapıları** (5 adayın her birine): görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike (çözülmüş/sakinleşmiş, "halt", zayıf büyüklük "ripples/gently/slightly/bobbing" kara listede; insan jestleri "gesturing/inspecting" devam işareti sayılmaz), cast (gemi domainlerinde `DOMAIN_CAST_RANGES` aralığı; çevre odaklıda en az 1 insan), özet-beat tutarlılığı, gemi-ortam uyumu, görünür tetik (`visible_trigger` alanı dolu, Beat 1-2'de geçiyor; friction/unexpected/instability gibi görünmez sebep yok), sahne fiziği (insan gemiyi/iskeleyi elle itmez, feribotta araç sürülmez, kızak sahnesi suya iner). Beat 3 kara listesinde ayrıca stabilize ve regain control var; son 12 kelimede hareket şart (TUR 24).
 
 **Simplifier çıktı kapıları** (`SIMPLIFIER_GATES`, Kie'ye giden hikayeye):
 
@@ -164,13 +164,16 @@ Veri gömülü değil, dosyalardan okunur:
 | H | Çevre odaklı domainlerde en az 1 insan (çatı seyircisi, yaya...) |
 | I | İlk cümlede durağan insan yok (stand, watch, look, wait...) |
 | J | İnsanlara senaryoda olmayan zarar fiili eklenmez (sweep, hurl, knock...) |
+| K | Görünmez/soyut sebep yok (friction, unexpected, instability, for no reason...) |
+| L | Fizik ihlali yok: insan gemiyi/iskeleyi elle itmez; feribotta araç sürülmez, far yanmaz |
+| M | Uzunluk 40-65 kelime (hedef 45-60); rewrite sonrası uygulanmaz |
 
 ## 🛡️ Güvenlik Katmanları
 
 1. **Prompt Sanitizer** — Tehlikeli kelimeleri otomatik değiştirir (regex)
 2. **GPT Pre-flight Check** — Hikayeyi Kie'ye göndermeden değerlendirir; geçersiz cevapta 3 deneme, sonra `PreflightError` (api / content)
 3. **Content Filter Retry** — Kie reddederse hikayeyi GPT ile yeniden yazar (2x); stil eki değişmez; rewrite başarısızsa sessiz yumuşatma yok, ret fırlar
-3b. **Rewrite sonrası kalite kapıları** — Preflight veya Kie retry rewrite'ından dönen hikaye aynı simplifier kapılarından geçer (C hariç; güvenlik rewrite'ı Beat 1 fiilini değiştirmek zorunda kalabilir). Kalırsa geri bildirimle 1 kez daha yazılır, yine kalırsa yeni senaryo denenir
+3b. **Rewrite sonrası kalite kapıları** — Preflight veya Kie retry rewrite'ından dönen hikaye aynı simplifier kapılarından geçer (C ve M hariç; güvenlik rewrite'ı Beat 1 fiilini değiştirmek veya kısaltmak zorunda kalabilir). Kalırsa geri bildirimle 1 kez daha yazılır, yine kalırsa yeni senaryo denenir
 4. **Senaryo Retry** — Kie reddi veya içerik kaynaklı preflight hatasında farklı senaryo seçer (ortak 3 deneme); API kaynaklı preflight hatasında durur
 
 ## 📊 Tekrar Önleme

@@ -9,7 +9,7 @@ Akış:
   2. GPT-4o ile (config.DEFAULT_DURATION saniyelik) tek kesintisiz çekim 3 beat'lik senaryo yazar (5 aday).
   3. Senaryo kapıları: görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike, cast aralığı,
      özet-beat tutarlılığı, gemi-ortam uyumu. Geçenler skorlanır.
-  4. Simplifier 25–45 kelimelik hikayeye indirir; çıktı kapısı (SIMPLIFIER_GATES: A Beat 3 devamı/zayıf son,
+  4. Simplifier 45–60 kelimelik hikayeye indirir (TUR 24; K görünmez sebep, L fizik, M uzunluk); çıktı kapısı (SIMPLIFIER_GATES: A Beat 3 devamı/zayıf son,
      B kamera öznesi, C Beat 1 fiili, E kişi sayısı, F gemi adı, G ilk cümlede tepki, H env-centric'te en az
      1 insan, I ilk cümlede durağan insan, J insanlara yeni zarar fiili) + geri bildirimli retry.
      Yazıcıya Beat 1 fiil rotasyonu ipucu (Notion "Beat1 Fiil" + koşu içi). Sessiz fallback yok.
@@ -39,6 +39,8 @@ from core.creative_engine import (
     ENV_CENTRIC_MIN_PEOPLE,
     apply_style_lock,
     style_lock_suffix,
+    scene_physics_rules,
+    SHIP_VISUALS,
 )
 
 log = logging.getLogger("PromptGenerator")
@@ -289,6 +291,9 @@ _BEAT3_BLACKLIST = [
     ("under control", re.compile(r"\bunder\s+control\b")),
     ("recover", re.compile(r"\brecover(?:s|ed|ing)?\b")),
     ("cautious distance", re.compile(r"\bmaintain(?:s|ing)?\s+a\s+cautious\s+distance\b")),
+    # TUR 24 Tersane: "workers struggle to stabilize the vessel" geçmişti ("destabilizing" eşleşmez)
+    ("stabilize", re.compile(r"\bstabili[sz](?:e|es|ed|ing|ation)\b")),
+    ("regain control", re.compile(r"\bregain(?:s|ed|ing)?\s+(?:\w+\s+)?control\b")),
     # Zayıf büyüklük (TUR 17, K1 dry-run #3: "continues causing ripples that rock nearby boats")
     ("zayıf büyüklük", re.compile(r"\bripples?\b|\brippling\b|\bgentl[ey]\b|\bslight(?:ly)?\b|\bmild(?:ly)?\b|"
                                   r"\bbob(?:s|bing|bed)?\b|\bsoftly\b|\bminor\b")),
@@ -371,7 +376,27 @@ def validate_beat3_ongoing_danger(scenario: dict) -> tuple[bool, list[str]]:
         failures.append(f"Beat 3 tehlike çözülmüş/sakinleşmiş bitiyor: {hits}")
     if not (_beat3_ongoing_markers(consequence) or _action_words(consequence, first_sentence_only=False)):
         failures.append("Beat 3'te devam eden aksiyon yok (still/continues/keeps veya aksiyon fiili)")
+    else:
+        # TUR 24: cümle ortasındaki bir aksiyon fiili yetiyordu ("tilting ... as workers struggle to
+        # stabilize"); hareket son kelimelerde de sürmeli.
+        last = re.split(r"(?<=[.!?])\s+", consequence.rstrip(".!? "))[-1]
+        tail = " ".join(last.split()[-_BEAT3_TAIL_WORDS:])
+        if not (_beat3_ongoing_markers(tail) or _action_words(tail, first_sentence_only=False)
+                or _TAIL_MOTION_RE.search(tail)):
+            failures.append(f"Beat 3 son {_BEAT3_TAIL_WORDS} kelimede hareket yok: '{tail}'")
     return not failures, failures
+
+
+_BEAT3_TAIL_WORDS = 12
+# Kuyrukta hareket sayılan ek fiiller (Beat 1 listesine bilinçli girmeyenler: "clouds rolling in" Beat 1'de
+# durgun açılıştı, sonda ise hareket). K1 dry-run: "...as it moves parallel to the waterline" reddediliyordu.
+_TAIL_MOTION_RE = re.compile(
+    r"\b(?:mov(?:e|es|ing)|advanc(?:e|es|ing)|roll(?:s|ing)?|fall(?:s|ing)?|pour(?:s|ing)?|rac(?:e|es|ing)|"
+    r"charg(?:e|es|ing)|spread(?:s|ing)?|ris(?:e|es|ing)|churn(?:s|ing)?|rock(?:s|ing)|careen(?:s|ing)?|"
+    r"skid(?:s|ding)?|fly(?:ing)?|flies|rotat(?:e|es|ing)|thrash(?:es|ing)?)\b", re.IGNORECASE)
+
+# Simplifier uzunluğu (TUR 24): hedef 45-60 kelime (önce 25-45); kapı iki yana 5 kelime tolerans tanır.
+SIMPLIFIER_MIN_WORDS, SIMPLIFIER_MAX_WORDS = 40, 65
 
 
 # ── Cast sayı kapısı (2026-09-24) ──
@@ -393,7 +418,9 @@ _CAST_PERSON = (
     r"shoppers?|commuters?|motorists?|cyclists?|rescuers?|firefighters?|paramedics?|pilots?|"
     r"waiters?|bartenders?|"
     # TUR 16: env-centric arka plan insanları
-    r"watchers?|observers?|figures?|crowds?)"
+    r"watchers?|observers?|figures?|crowds?|"
+    # TUR 24 K1 dry-run: "sending civilians scrambling" insan sayılmıyordu
+    r"civilians?|locals?|families|children|evacuees?)"
 )
 _CAST_NUM = (
     r"(?:\d{1,3}|(?:twenty|thirty|forty|fifty)(?:[\s-](?:one|two|three|four|five|six|seven|eight|nine))?|"
@@ -578,6 +605,80 @@ def _harm_stems(text: str) -> dict[str, str]:
     return out
 
 
+# ── Görünür tetik + fizik kapıları (TUR 24) ──
+# Tersane "unexpected friction", marina "workers push against the docks", feribot farları yanık
+# sürülen arabalar. Senaryo kapısı + simplifier çıktı kapısı (K, L) aynı regex'leri kullanır.
+_INVISIBLE_CAUSE_RE = re.compile(
+    r"\bfriction\b|\bunexpected(?:ly)?\b|\binstabilit(?:y|ies)\b|\bfor\s+no\s+(?:apparent\s+)?reason\b|"
+    r"\bmysterious(?:ly)?\b|\b(?:unseen|invisible)\s+(?:force|cause|pressure)s?\b|\bout\s+of\s+nowhere\b",
+    re.IGNORECASE,
+)
+_TRIGGER_EXTRA_RE = re.compile(r"\b(?:heel(?:s|ed|ing)?|gives?\s+way|gave\s+way|broke|tore|torn)\b", re.IGNORECASE)
+_TRIGGER_STOPWORDS = {"the", "a", "an", "and", "over", "onto", "into", "from", "with", "its", "their", "across",
+                      "under", "hard", "suddenly", "loose", "down"}
+_VESSEL_OBJECT = (r"(?:yachts?|boats?|hulls?|vessels?|ships?|catamarans?|ferr(?:y|ies)|liners?|powerboats?|"
+                  r"sailboats?|jet\s+skis?|tenders?|docks?|pontoons?)")
+_HAND_PUSH_RE = re.compile(
+    rf"\b{_CAST_PERSON}\s+{_CLAUSE_GAP}(?:push(?:es|ed|ing)?|shov(?:e|es|ed|ing)|pull(?:s|ed|ing)?|"
+    rf"hold(?:s|ing)?\s+back|held\s+back|heav(?:e|es|ed|ing))\s+(?:(?:against|on|at|back)\s+)?"
+    rf"(?:the\s+|a\s+|an\s+)?(?:[\w-]+\s+){{0,3}}?{_VESSEL_OBJECT}\b(?!'s)",
+    re.IGNORECASE,
+)
+_DRIVING_RE = re.compile(
+    r"\bdriv(?:e|es|ing|en)\b(?!\s+(?:rain|spray|wind|sleet|snow|seas?)\b)|\bdrove\b|"
+    r"\bheadlights?\s+(?:on|blazing|glaring|lit|shining|flashing)\b|\bhonk(?:s|ing)?\b",
+    re.IGNORECASE,
+)
+_SLIPWAY_WATER_RE = re.compile(r"\bwater\b|\bsea\b|\bharbou?r\b|\briver\b|\bbasin\b|\bsplash", re.IGNORECASE)
+
+
+def _physics_hits(text: str, domain_id: str) -> list[str]:
+    """Metindeki fizik ihlalleri: insan gemiyi/iskeleyi elle itiyor, feribotta araba sürülüyor."""
+    hits = [f"elle itme ('{m.group(0)}')" for m in _HAND_PUSH_RE.finditer(text or "")]
+    if domain_id == "ferry_operations":
+        hits += [f"araç sürülüyor ('{m.group(0)}')" for m in _DRIVING_RE.finditer(text or "")]
+    return hits
+
+
+def validate_visible_trigger(scenario: dict, domain_id: str = "") -> tuple[bool, list[str]]:
+    """Kamerada görünen somut bir tetik var mı, görünmez/soyut sebep yok mu? (TUR 24)
+
+    visible_trigger alanı dolu, aksiyon fiili içeriyor ve içerik kelimelerinden biri Beat 1-2'de geçiyor.
+    Özet ve beat'lerde friction/unexpected/instability gibi görünmez sebepler reddedilir.
+    """
+    failures = []
+    trigger = (scenario.get("visible_trigger") or "").strip()
+    text = " ".join(scenario.get(k, "") or "" for k in
+                    ("scenario_summary", "visible_start", "physical_movement", "visible_consequence"))
+    invisible = sorted({m.group(0).lower() for m in _INVISIBLE_CAUSE_RE.finditer(f"{trigger} {text}")})
+    if invisible:
+        failures.append(f"Tetik: görünmez/soyut sebep {invisible}")
+    if not trigger:
+        failures.append("Tetik: visible_trigger boş")
+        return False, failures
+    # Çevre odaklı domainlerde tetik doğa olayının kendisi ("a tornado forms offshore"); fiil şartı gemi domainlerinde
+    if (domain_id not in ENV_CENTRIC_DOMAINS
+            and not (_action_words(trigger, first_sentence_only=False) or _TRIGGER_EXTRA_RE.search(trigger))):
+        failures.append(f"Tetik: aksiyon fiili yok ('{trigger}')")
+    beats12 = " ".join(scenario.get(k, "") or "" for k in ("visible_start", "physical_movement")).lower()
+    words = [w for w in re.findall(r"[a-z-]+", trigger.lower()) if len(w) >= 4 and w not in _TRIGGER_STOPWORDS]
+    if words and not any(_verb_stem(w) in beats12 for w in words):
+        failures.append(f"Tetik Beat 1-2'de görünmüyor ('{trigger}')")
+    return not failures, failures
+
+
+def validate_scene_physics(scenario: dict, catalyst: dict) -> tuple[bool, list[str]]:
+    """Sahne fiziği (TUR 24): elle gemi itme yok, feribotta sürüş yok, kızak sahnesi suya iner."""
+    domain_id = catalyst.get("domain_id", "")
+    text = " ".join(scenario.get(k, "") or "" for k in
+                    ("scenario_summary", "visible_start", "physical_movement", "visible_consequence"))
+    failures = [f"Fizik: {h}" for h in _physics_hits(text, domain_id)]
+    if (domain_id == "shipyard_and_drydock_engineering"
+            and catalyst.get("forced_environment") == "Construction slipway" and not _SLIPWAY_WATER_RE.search(text)):
+        failures.append("Fizik: kızak sahnesinde suya iniş yok (water/sea/basin)")
+    return not failures, failures
+
+
 def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = "") -> list[tuple[str, str]]:
     """(log için Türkçe hata, simplifier retry'ına İngilizce düzeltme talimatı) listesi.
 
@@ -658,6 +759,27 @@ def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = 
                            f"Do not change what happens to people: '{phrase}' is not in the scenario. "
                            "Keep the scenario's own verbs for people."))
 
+    # K — görünmez/soyut sebep yok (TUR 24): Tersane "skews sideways from unexpected friction"
+    invisible = sorted({m.group(0).lower() for m in _INVISIBLE_CAUSE_RE.finditer(prompt or "")})
+    if invisible:
+        issues.append((f"Simplifier: görünmez sebep {invisible}",
+                       f"Remove {invisible}; name the visible physical trigger from the scenario instead "
+                       f"(e.g. '{scenario.get('visible_trigger') or 'the snapping line'}')."))
+
+    # L — fizik (TUR 24): insan gemiyi/iskeleyi elle itmez, feribotta araba sürülmez
+    physics = _physics_hits(prompt, domain_id)
+    if physics:
+        issues.append((f"Simplifier: fizik ihlali {physics}",
+                       "People never push, pull or hold a vessel or dock by hand; cars on a ferry deck are parked "
+                       "and driverless, headlights off, and only skid or slide. Rewrite those parts."))
+
+    # M — uzunluk (TUR 24): hedef 45-60, kapı toleranslı
+    n_words = len((prompt or "").split())
+    if not SIMPLIFIER_MIN_WORDS <= n_words <= SIMPLIFIER_MAX_WORDS:
+        issues.append((f"Simplifier: kelime sayısı {n_words} (hedef 45-60)",
+                       f"Your prompt has {n_words} words; write 45 to 60 words, keeping the final outcome as its "
+                       "own full sentence with the danger still moving."))
+
     # F — gemi adı (TUR 8): gemi domainlerinde atanan geminin tipi prompt'ta geçmeli;
     # "the vessel" tek başına Kie'ye kargo gemisi çizdiriyordu.
     if domain_id in DOMAIN_CAST_RANGES and ship and ship.lower() != "none":
@@ -680,6 +802,8 @@ def validate_simplified_prompt(prompt: str, scenario: dict, domain_id: str, ship
     G: ilk cümlede duygusal insan tepkisi (startled, alarmed, shocked...) yok.
     H: env-centric domainlerde en az 1 insan ifadesi var.
     I: ilk cümlede durağan insan (stand/watch/look...) yok. J: insanlara senaryoda olmayan zarar fiili yok.
+    K: görünmez/soyut sebep (friction, unexpected...) yok. L: elle gemi itme, feribotta araç sürme yok.
+    M: 40-65 kelime (hedef 45-60).
     """
     failures = [msg for msg, _ in _simplified_checks(prompt, scenario, domain_id, ship)]
     return not failures, failures
@@ -697,11 +821,15 @@ SIMPLIFIER_GATES = {
     "H": "Simplifier: insan yok",
     "I": "Simplifier: ilk cümlede durağan",
     "J": "Simplifier: insanlara yeni zarar",
+    "K": "Simplifier: görünmez sebep",
+    "L": "Simplifier: fizik ihlali",
+    "M": "Simplifier: kelime sayısı",
 }
 
 # Güvenlik rewrite'ı riskli kelime Beat 1 fiilinin kendisiyse onu değiştirmek zorunda; C bu yüzden
-# rewrite sonrası uygulanmaz (TUR 21). Diğer kapıların hepsi uygulanır.
-_REWRITE_SKIPPED_GATES = (SIMPLIFIER_GATES["C"],)
+# rewrite sonrası uygulanmaz (TUR 21). M de uygulanmaz (TUR 24): güvenlik rewrite'ı birkaç kelime
+# kısaltabilir, uzunluk yüzünden hazır bir videoyu düşürmeyiz. Diğer kapıların hepsi uygulanır.
+_REWRITE_SKIPPED_GATES = (SIMPLIFIER_GATES["C"], SIMPLIFIER_GATES["M"])
 
 
 def make_story_validator(gate_context: dict | None):
@@ -720,6 +848,20 @@ def make_story_validator(gate_context: dict | None):
         return [(m, h) for m, h in _simplified_checks(story, scenario, domain_id, ship)
                 if not m.startswith(_REWRITE_SKIPPED_GATES)]
     return validator
+
+
+def scenario_gate_results(scenario: dict, catalyst: dict) -> dict[str, tuple[bool, list[str]]]:
+    """Tüm senaryo kapıları tek yerde (üretim + dry-run aynı listeyi kullanır)."""
+    return {
+        "visibility": validate_silent_visibility(scenario),
+        "high_action": validate_high_action(scenario),
+        "beat3": validate_beat3_ongoing_danger(scenario),
+        "cast": validate_cast_size(scenario, catalyst["domain_id"]),
+        "consistency": validate_scenario_consistency(scenario),
+        "ship_setting": validate_ship_setting(scenario, catalyst["forced_ship"]),
+        "trigger": validate_visible_trigger(scenario, catalyst["domain_id"]),
+        "physics": validate_scene_physics(scenario, catalyst),
+    }
 
 
 def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
@@ -832,7 +974,7 @@ async def generate_prompts(config: dict) -> dict:
         # Geçerli bir catalyst bul (used_combos'ta olmayan)
         for _ in range(max_dedup_attempts):
             catalyst = get_creative_catalyst(recent_history=combined_history, domain=domain)
-            camera_archetype = choose_camera_archetype(catalyst["domain_id"])
+            camera_archetype = choose_camera_archetype(catalyst["domain_id"], catalyst["forced_environment"])
             combo_key = f"{catalyst['domain_id']}|{catalyst['forced_ship'].lower()}|{catalyst['forced_event'].lower()}|{catalyst['forced_environment'].lower()}|{camera_archetype}"
             if combo_key not in used_combos:
                 break
@@ -846,15 +988,9 @@ async def generate_prompts(config: dict) -> dict:
         verb = (raw_scenario.get("beat1_action_verb") or "").strip().lower()
         if verb:
             recent_verbs.insert(0, verb)
-        is_visible, visibility_failures = validate_silent_visibility(raw_scenario)
-        is_active, action_failures = validate_high_action(raw_scenario)
-        is_ongoing, beat3_failures = validate_beat3_ongoing_danger(raw_scenario)
-        is_cast_ok, cast_failures = validate_cast_size(raw_scenario, catalyst["domain_id"])
-        is_consistent, consistency_failures = validate_scenario_consistency(raw_scenario)
-        is_ship_ok, ship_failures = validate_ship_setting(raw_scenario, catalyst["forced_ship"])
-        is_valid = is_visible and is_active and is_ongoing and is_cast_ok and is_consistent and is_ship_ok
-        failures = (visibility_failures + action_failures + beat3_failures + cast_failures
-                    + consistency_failures + ship_failures)
+        gates = scenario_gate_results(raw_scenario, catalyst)
+        is_valid = all(ok for ok, _ in gates.values())
+        failures = [f for _, fs in gates.values() for f in fs]
 
         combined_history.append(combo_key)
         used_combos.append(combo_key)
@@ -880,9 +1016,9 @@ async def generate_prompts(config: dict) -> dict:
             f"Denemeler: {json.dumps(attempt_log, ensure_ascii=False)}"
         )
 
-    # ── ADIM 3: Seedance 2 Mini Doğukan Promptu (25–45 Kelime — DEFAULT_DURATION Standardı) ──
+    # ── ADIM 3: Seedance 2 Mini Doğukan Promptu (45–60 Kelime, TUR 24 — DEFAULT_DURATION Standardı) ──
     # Skor sırasıyla sadeleştirilir; simplifier çıktı kapısından ilk geçen senaryo kullanılır.
-    log.info(f"✂️ Sahne Doğukan standardına sadeleştiriliyor (25–45 kelime {settings.DEFAULT_DURATION}s)...")
+    log.info(f"✂️ Sahne Doğukan standardına sadeleştiriliyor (45–60 kelime {settings.DEFAULT_DURATION}s)...")
     best, simplified, simplify_attempts = await simplify_with_gate(accepted)
     scenario, catalyst, camera_archetype, combo_key = (
         best["scenario"], best["catalyst"], best["camera_archetype"], best["combo_key"]
@@ -909,7 +1045,7 @@ async def generate_prompts(config: dict) -> dict:
     word_count = len(prompt_text.split())
 
     log.info(
-        f"   → GPT prompt [{raw_word_count} kelime, Doğukan hedefi 25-45] + stil kilidi "
+        f"   → GPT prompt [{raw_word_count} kelime, Doğukan hedefi 45-60] + stil kilidi "
         f"→ Kie'ye giden nihai prompt [{word_count} kelime]: {prompt_text}"
     )
 
@@ -1011,14 +1147,20 @@ async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
         if camera_archetype == "chase_pov" else ""
     )
 
+    # Sahne fiziği + görünür gövde tarifi (TUR 24): stil ekindeki kuralların aynısı yazıcıya da gider
+    ship_visual = SHIP_VISUALS.get(catalyst.get("forced_ship") or "")
+    physics = scene_physics_rules(catalyst.get("domain_id", ""), catalyst.get("forced_ship") or "",
+                                  catalyst.get("forced_environment") or "")
+    physics_line = f"SCENE PHYSICS (MANDATORY): {' '.join(physics)}\n" if physics else ""
+
     user_message = f"""You are directing a new {duration}-second continuous raw documentary scene for DeepMyster.
 
 MANDATORY ASSIGNMENT: You MUST base your scenario exactly on this combination:
-- Vessel Type: {catalyst['forced_ship']}
+- Vessel Type: {catalyst['forced_ship']}{f' ({ship_visual})' if ship_visual else ''}
 - Event/Incident: {catalyst['forced_event']}
 - Environment: {catalyst['forced_environment']}
-Do not deviate from these core elements.
-
+Do not deviate from these core elements. The Event/Incident is the visible physical trigger: show it on camera.
+{physics_line}
 CAMERA PERSPECTIVE FOR THIS SCENE (MANDATORY): {guidance}
 
 EXPLORATION DOMAIN: {catalyst['domain_title']}
@@ -1059,30 +1201,32 @@ CREATIVE DIRECTIVE:
 
 
 async def _simplify_prompt(scenario: dict, catalyst: dict, feedback: list[str] | None = None) -> dict:
-    """Katman 3: Senaryoyu Seedance 2 Mini için 25–45 kelimelik yüksek sinyalli prompt'a çevir.
+    """Katman 3: Senaryoyu Seedance 2 Mini için 45–60 kelimelik yüksek sinyalli prompt'a çevir.
 
     feedback: önceki denemenin çıktı kapısında kaldığı noktalar (İngilizce düzeltme talimatları).
     GPT boş dönerse {"prompt": ""} döner; yedek prompt yok, kapı bunu başarısız deneme sayar.
     """
     duration = settings.DEFAULT_DURATION
     early, late = compute_duration_breakpoints(duration)
-    user_message = f"""Convert this realistic maritime incident into an exact 25–45 word Seedance 2 Mini prompt following the Doğukan methodology:
+    user_message = f"""Convert this realistic maritime incident into a 45–60 word Seedance 2 Mini prompt following the Doğukan methodology:
 
 VESSEL CLASS: {scenario.get('vessel_class', 'Vessel')}
 INCIDENT: {scenario.get('incident_type', 'Physical Emergency')}
 SUMMARY: {scenario.get('scenario_summary', '')}
 VISIBLE START (0-{early}s): {scenario.get('visible_start', '')}
+VISIBLE TRIGGER: {scenario.get('visible_trigger', '')}
 PHYSICAL MOVEMENT ({early}-{late}s): {scenario.get('physical_movement', '')}
 FINAL OUTCOME ({duration}s): {scenario.get('visible_consequence', '')}
 
 REQUIREMENTS:
-- Exactly 25 to 45 words.
+- 45 to 60 words. The final outcome gets its own full sentence (at least 12 words) with the danger still moving.
 - Single unbroken {duration}-second continuous shot.
 - STRICT CHRONOLOGICAL FLOW: Start -> STRONG VISIBLE PHYSICAL MOVEMENT -> Final Outcome.
 - STRONG VISIBLE ACTION: You MUST include at least one aggressive, highly visible physical action (e.g. swings, veers, slams, pitches, slides). Passive verbs (like 'approaches') are NOT enough.
 - STRICT INVENTORY: Do NOT add new elements, people, vessels, or objects not explicitly detailed above. 
 - Do NOT include any camera, POV, lighting, or shot-type description (e.g., no "From the escort boat", no "CCTV", no "lens").
-- Preserve PPE colors and raw weather details from the scenario exactly — never white hazmat suits, never glossy/CGI-clean water or ice."""
+- Preserve PPE colors and raw weather details from the scenario exactly — never white hazmat suits, never glossy/CGI-clean water or ice.
+- Keep the visible trigger on camera; never write friction, 'unexpectedly' or any unseen cause. People never push or hold a vessel or dock by hand."""
 
     if feedback:
         user_message += "\n\nYOUR PREVIOUS ATTEMPT WAS REJECTED. Fix these points:\n" + "\n".join(
@@ -1159,7 +1303,7 @@ STRICT RULE: The title MUST highlight the immediate physical crisis and danger, 
 
 
 def _dry_run_output() -> dict:
-    """DRY-RUN modunda 25-45 kelimelik 12s DeepMyster standardı mock çıktısı."""
+    """DRY-RUN modunda 45-60 kelimelik 12s DeepMyster standardı mock çıktısı."""
     return {
         "scenes": [
             {
