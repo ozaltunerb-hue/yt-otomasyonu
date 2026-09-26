@@ -22,6 +22,9 @@ from core.creative_engine import (
     MARITIME_INSPIRATION_DOMAINS,
     ONBOARD_ENVIRONMENTS,
     RECENT_PAIR_WINDOW,
+    REPEATABLE_EVENTS,
+    EVENT_SHIP_ONLY,
+    SIDE_LAUNCH_ENV,
     get_creative_catalyst,
     style_lock_suffix,
 )
@@ -54,6 +57,9 @@ def _all_suffixes():
         for env in a["environments"]:
             for ship in (a["ships"] or ["None"]):
                 for cam in CAMERA_ARCHETYPES:
+                    # TUR 27: side launch sadece feribot + CCTV/el kamerası ile seçilir
+                    if env == SIDE_LAUNCH_ENV and (ship != "Passenger Car Ferry" or cam == "chase_pov"):
+                        continue
                     cat = {"domain_id": d, "forced_ship": ship, "forced_environment": env}
                     yield d, env, ship, cam, style_lock_suffix(cam, cat)
 
@@ -285,7 +291,8 @@ class TestCatalyst(unittest.TestCase):
         """Aynı domain'in son 5 üretimindeki olay+ortam ikilisi, gemi/kamera farklı olsa da tekrar gelmez."""
         for d in (FERRY, CRUISE, SHIPYARD, MARINA):
             table = EVENT_ENV_COMPAT[d]
-            pairs = [(e, v) for e, envs in table.items() for v in sorted(envs)]
+            # Tekrarı serbest olaylar (TUR 27, side launch) cezadan muaf: beklentiden çıkarılır
+            pairs = [(e, v) for e, envs in table.items() for v in sorted(envs) if e not in REPEATABLE_EVENTS]
             recent = pairs[:min(RECENT_PAIR_WINDOW, len(pairs) - 1)]
             ship = DOMAIN_ATTRIBUTES[d]["ships"][0].lower()
             hist = [f"{d}|{ship}|{e.lower()}|{v.lower()}|fixed_cctv" for e, v in recent]
@@ -293,6 +300,8 @@ class TestCatalyst(unittest.TestCase):
                 c = get_creative_catalyst(recent_history=hist, domain=d)
                 with self.subTest(domain=d):
                     self.assertNotIn((c["forced_event"], c["forced_environment"]), recent)
+                    if c["forced_event"] in REPEATABLE_EVENTS:
+                        self.assertIn(c["forced_ship"], EVENT_SHIP_ONLY[c["forced_event"]])
 
     def test_today_ferry_repeat_avoided(self):
         hist = ["ferry_operations|passenger car ferry|green wave breaks over the rail onto the vehicle deck|"

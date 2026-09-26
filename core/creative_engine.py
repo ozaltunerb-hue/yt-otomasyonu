@@ -214,10 +214,12 @@ DOMAIN_ATTRIBUTES = {
     },
 
     # Catamaran tersanede yok (TUR 24): Seedance tek gövdeli yat çiziyordu.
+    # TUR 27: ana olay yandan suya indirme (side launch); EVENT_WEIGHTS ile çoğunlukla seçilir.
     "shipyard_and_drydock_engineering": {
         "ships": ["Luxury Motor Yacht", "Sailing Yacht", "Passenger Car Ferry"],
-        "environments": ["Shipyard basin", "Drydock interior", "Construction slipway"],
-        "events": ["Restraining cable snaps during slipway launch", "Keel blocks collapse under the launching hull",
+        "environments": ["Side-launch slipway at the basin edge", "Shipyard basin", "Drydock interior", "Construction slipway"],
+        "events": ["Side launch: the hull slides sideways off the slipway, crashes into the basin and heels violently, throwing a huge wave across the basin onto the opposite quay",
+                   "Restraining cable snaps during slipway launch", "Keel blocks collapse under the launching hull",
                    "Drydock flood gate bursts open", "Timber shores snap and the hull tips on its keel blocks",
                    "Crane sling snaps while lowering the hull into the water"]
     },
@@ -327,6 +329,7 @@ EVENT_ENV_COMPAT = {
         "Green wave breaks over the rail onto the vehicle deck": {"Open vehicle deck", "Island crossing route"},
     },
     "shipyard_and_drydock_engineering": {
+        "Side launch: the hull slides sideways off the slipway, crashes into the basin and heels violently, throwing a huge wave across the basin onto the opposite quay": {"Side-launch slipway at the basin edge"},
         "Restraining cable snaps during slipway launch": {"Construction slipway"},
         "Keel blocks collapse under the launching hull": {"Construction slipway"},
         "Drydock flood gate bursts open": {"Drydock interior"},
@@ -354,6 +357,43 @@ for _d, _m in EVENT_ENV_COMPAT.items():
     _bad = (set(_m) ^ _ev) | {e for envs in _m.values() for e in envs - _en} | (_en - set().union(*_m.values()))
     if _bad:
         raise RuntimeError(f"EVENT_ENV_COMPAT[{_d}] havuzla uyuşmuyor: {sorted(_bad)}")
+
+# ── Side launch (TUR 27) ──
+SIDE_LAUNCH_EVENT = "Side launch: the hull slides sideways off the slipway, crashes into the basin and heels violently, throwing a huge wave across the basin onto the opposite quay"
+SIDE_LAUNCH_ENV = "Side-launch slipway at the basin edge"
+
+# Olay → izinli gemiler: side launch sadece feribotla (yat değil)
+EVENT_SHIP_ONLY = {
+    SIDE_LAUNCH_EVENT: {"Passenger Car Ferry"},
+}
+
+# Domain içi olay ağırlığı (listede olmayan olay = 1). Side launch ~%71 (10 / 14).
+EVENT_WEIGHTS = {
+    "shipyard_and_drydock_engineering": {SIDE_LAUNCH_EVENT: 10},
+}
+
+# Tekrarı serbest olaylar: 60 günlük combo dedup'ı ve olay×ortam cezası uygulanmaz. Side launch'ta
+# tek gemi × tek ortam × 2 kamera = 2 combo var; dedup onu 2 videodan sonra 60 gün kilitlerdi.
+REPEATABLE_EVENTS = {SIDE_LAUNCH_EVENT}
+
+# Olaya özel beat planı: yazıcıya zorunlu olarak gider
+EVENT_BEAT_PLANS = {
+    SIDE_LAUNCH_EVENT: (
+        "BEAT 1: the timber blocks and holding ropes have already given way; the passenger car ferry is already "
+        "heeling and sliding sideways down the side-launch rails in the very first frame. "
+        "BEAT 2: the hull crashes broadside into the basin and throws up a wall of water. "
+        "BEAT 3: the ferry is still rolling hard from side to side while the huge wave races across the basin and "
+        "slams onto the opposite quay, and the spectators there turn and run back from it."
+    ),
+}
+
+for _e, _ships in EVENT_SHIP_ONLY.items():
+    _d = next(d for d, a in DOMAIN_ATTRIBUTES.items() if _e in a["events"])
+    if not _ships <= set(DOMAIN_ATTRIBUTES[_d]["ships"]):
+        raise RuntimeError(f"EVENT_SHIP_ONLY[{_e}] domain gemilerinde yok")
+for _d, _w in EVENT_WEIGHTS.items():
+    if set(_w) - set(DOMAIN_ATTRIBUTES[_d]["events"]):
+        raise RuntimeError(f"EVENT_WEIGHTS[{_d}] bilinmeyen olay")
 
 # Gemi üstü ortamlar (TUR 24): stil eki burada "geminin kendi güvertesi, ufukta ikinci gemi yok"
 # der; dışarıdan "geminin tamamı görünsün" kuralı ikinci gemi çizdiriyordu.
@@ -501,6 +541,8 @@ def get_creative_catalyst(recent_history: list[str] | None = None, domain: str |
     recent_pairs = {(e, v) for d, e, v in [t for t in zip(recent_domains, recent_events, recent_envs)
                                            if t[0] == chosen_domain_key][-RECENT_PAIR_WINDOW:]}
 
+    recent_pairs = {(e, v) for e, v in recent_pairs if e not in {x.lower() for x in REPEATABLE_EVENTS}}
+
     def _choose_pair(events: list[str], envs: list[str]) -> tuple[str | None, str | None]:
         """Uyumlu (olay, ortam) ikilisi: son ikililer hariç, önce en eski olay sonra en eski ortam."""
         compat = EVENT_ENV_COMPAT.get(chosen_domain_key, {})
@@ -524,6 +566,21 @@ def get_creative_catalyst(recent_history: list[str] | None = None, domain: str |
             chosen_ship = None
             events = [e for e in attrs.get("events", []) if e not in vessel_envs["vessel_only_events"]]
         chosen_event, chosen_env = _choose_pair(events, [chosen_env])
+    elif chosen_domain_key in EVENT_WEIGHTS:
+        # Ağırlıklı domain (TUR 27): önce olay (ağırlıkla), sonra ona izinli gemi ve ortam
+        compat = EVENT_ENV_COMPAT.get(chosen_domain_key, {})
+        weights = EVENT_WEIGHTS[chosen_domain_key]
+        events = [e for e in attrs["events"] if e in REPEATABLE_EVENTS
+                  or any((e.lower(), v.lower()) not in recent_pairs for v in compat.get(e, attrs["environments"]))]
+        events = events or attrs["events"]
+        chosen_event = random.choices(events, weights=[weights.get(e, 1) for e in events], k=1)[0]
+        ships = [s for s in attrs["ships"] if s in EVENT_SHIP_ONLY.get(chosen_event, attrs["ships"])
+                 and chosen_event not in SHIP_INCOMPATIBLE.get(s, {}).get("events", set())]
+        chosen_ship = _choose_lru(ships, recent_ships)
+        banned = SHIP_INCOMPATIBLE.get(chosen_ship or "", {}).get("environments", set())
+        envs = [v for v in attrs["environments"]
+                if v not in banned and (chosen_event not in compat or v in compat[chosen_event])]
+        _, chosen_env = _choose_pair([chosen_event], envs)
     else:
         # Taze olay+ortam ikilisi kalmayan gemi seçilmez (TUR 24: Cruise Tender'ın 2 olayı da yakın
         # geçmişteyse ceza boşa düşüyordu); hiçbirinde kalmadıysa tüm gemiler aday.
@@ -537,7 +594,8 @@ def get_creative_catalyst(recent_history: list[str] | None = None, domain: str |
         ships = attrs.get("ships", [])
         chosen_ship = _choose_lru([s for s in ships if _has_fresh(s)] or ships, recent_ships)
         banned = SHIP_INCOMPATIBLE.get(chosen_ship or "", {})
-        events = [e for e in attrs.get("events", []) if e not in banned.get("events", set())]
+        events = [e for e in attrs.get("events", []) if e not in banned.get("events", set())
+                  and chosen_ship in EVENT_SHIP_ONLY.get(e, {chosen_ship})]
         envs = [e for e in attrs.get("environments", []) if e not in banned.get("environments", set())]
         if attrs.get("events") and not events or attrs.get("environments") and not envs:
             raise RuntimeError(f"SHIP_INCOMPATIBLE '{chosen_ship}' için {chosen_domain_key} havuzunda seçenek bırakmadı")
@@ -640,7 +698,12 @@ def compute_duration_breakpoints(duration: int) -> tuple[int, int]:
     return early, late
 
 
-def build_scenario_writer_system(duration: int, domain_id: str = "") -> str:
+def cast_range(domain_id: str, event: str = "") -> tuple[int, int] | None:
+    """Kişi aralığı: önce olaya özel (EVENT_CAST_RANGES), yoksa domain'in. Env-centric için None."""
+    return EVENT_CAST_RANGES.get(event) or DOMAIN_CAST_RANGES.get(domain_id)
+
+
+def build_scenario_writer_system(duration: int, domain_id: str = "", event: str = "") -> str:
     """SCENARIO_WRITER_SYSTEM'i config.DEFAULT_DURATION'a göre üretir."""
     early, late = compute_duration_breakpoints(duration)
     
@@ -650,7 +713,7 @@ def build_scenario_writer_system(duration: int, domain_id: str = "") -> str:
         phys_mov = "The sudden physical wrong turn — STRONG VISIBLE PHYSICAL ACTION of the natural event (e.g., sweeps, crashes, rips, floods, slams). The physical movement of the disaster must be explicit and extreme."
         vis_cons = "The immediate dangerous consequence of the natural disaster, still visibly unfolding at <<DURATION>>s, not resolved or safe. Never end with the danger settling, stopping, calming, or being resolved, and never end on people just watching; end mid-action (e.g. 'still surging', 'continues to slide')."
     elif domain_id in DOMAIN_CAST_RANGES:
-        lo, hi = DOMAIN_CAST_RANGES[domain_id]
+        lo, hi = cast_range(domain_id, event)
         cast_rule = (
             f"CAST SIZE: Show approximately {lo}-{hi} people in the "
             f"scene, matching realistic crew/passenger count for this "
@@ -786,14 +849,18 @@ def scene_physics_rules(domain_id: str, vessel_class: str, environment: str) -> 
         if visual:
             rules.append(f"{visual[0].upper()}{visual[1:]}.")
         # Gemi üstünde (havuz/güneş/araç güvertesi) itilecek gemi/iskele yok; kural gürültü olur
-        if environment not in ONBOARD_ENVIRONMENTS:
+        # Side launch'ta gövdenin yanında kimse yok (TUR 27); ek 124 kelimeye çıkıyordu
+        if environment not in ONBOARD_ENVIRONMENTS and environment != SIDE_LAUNCH_ENV:
             rules.append("Nobody pushes, pulls or holds a vessel or dock by hand.")
     if domain_id == "shipyard_and_drydock_engineering":
         rules.append({
             "Construction slipway": "The hull rides a launch cradle on inclined slipway rails sloping down into open water.",
             "Drydock interior": "The hull stands on timber keel blocks braced by side shores inside the drydock.",
             "Shipyard basin": "A gantry crane holds the hull in slings above the open water of the basin.",
+            SIDE_LAUNCH_ENV: "The hull slides sideways off greased side-launch rails parallel to the basin edge.",
         }.get(environment, "The hull sits on timber blocks and supports, never on bare flat concrete."))
+    if environment == SIDE_LAUNCH_ENV:
+        rules.append("Spectators on the opposite quay run back as the wave hits.")
     if domain_id == "ferry_operations" and environment in VEHICLE_DECK_ENVIRONMENTS:
         rules.append("Parked driverless cars, engines and headlights off, skid or slide; they never drive.")
     return rules
@@ -806,6 +873,8 @@ def get_realism_guardrails(domain_id: str, vessel_class: str, environment: str =
         clothing = _CLOTHING_ENV + (_CLOTHING_ENV_DOCK if _has_ship(vessel_class) else "")
     elif domain_id == "cruise_ship_operations":
         clothing = _CLOTHING_CRUISE_ONBOARD if environment in ONBOARD_ENVIRONMENTS else _CLOTHING_CRUISE_BERTH
+    elif environment == SIDE_LAUNCH_ENV:
+        clothing = "Workers wear orange hi-vis PPE; spectators wear casual clothes."
     else:
         clothing = _CLOTHING.get(domain_id, _CLOTHING_LEGACY)
     return f"{clothing} {_LIGHTING}"
@@ -827,6 +896,12 @@ DOMAIN_CAST_RANGES = {
     "shipyard_and_drydock_engineering": (2, 5),
     "marina_and_yacht_operations": (3, 6),
     "cruise_ship_operations": (8, 25),
+}
+
+# Olaya özel kişi aralığı (TUR 27): suya indirme kalabalık çeker; K1 dry-run'da 5 adayın 3'ü
+# "about ten/a dozen/twenty spectators" ile tersane aralığını (2-5) aşıp elendi.
+EVENT_CAST_RANGES = {
+    SIDE_LAUNCH_EVENT: (5, 20),
 }
 
 # Import anında kontrol: eksik domain üretim ortasında değil, başlangıçta patlasın.
@@ -919,7 +994,8 @@ def choose_camera_archetype(domain_id: str = "", environment: str = "") -> str:
     çekimde güvertedeki olay görünmüyor, K1 dry-run'da havuz güvertesine chase_pov atanmıştı.
     """
     keys = list(CAMERA_ARCHETYPES.keys())
-    if domain_id in ENV_CENTRIC_DOMAINS or environment in ONBOARD_ENVIRONMENTS:
+    # Side launch (TUR 27): kamera karşı rıhtımda sabit CCTV veya el kamerası
+    if domain_id in ENV_CENTRIC_DOMAINS or environment in ONBOARD_ENVIRONMENTS or environment == SIDE_LAUNCH_ENV:
         keys = [k for k in keys if k != "chase_pov"]
     weights = [CAMERA_ARCHETYPES[k]["weight"] for k in keys]
     return random.choices(keys, weights=weights, k=1)[0]
@@ -929,6 +1005,11 @@ def choose_camera_archetype(domain_id: str = "", environment: str = "") -> str:
 _MOTION_START_GUARDRAIL = (
     "Already moving in the first frame, still moving in the last; no calm opening or ending."
 )
+
+
+# Side launch akıcılığı (TUR 27): yavaş başlangıç yok, tek hızlı hareket
+_SIDE_LAUNCH_MOTION = ("One continuous fast motion, no slow start; the hull is already sliding in the first frame, "
+                       "still rolling in the last.")
 
 
 def join_story_and_style(story: str, style_suffix: str) -> str:
@@ -949,6 +1030,8 @@ def _location_line(camera_archetype: str, domain_id: str, ship: str, environment
             return "Filmed by an onlooker on land (balcony, window, rooftop or roadside)."
         return ""
     name = f"the {ship.lower()}" if _has_ship(ship) else "the vessel"
+    if environment == SIDE_LAUNCH_ENV:
+        return f"Filmed from the opposite quay across the basin; {name} stays fully in frame."
     if environment in ONBOARD_ENVIRONMENTS and camera_archetype != "chase_pov":
         return f"Filmed aboard {name}; no second ship on the horizon."
     if camera_archetype == "bystander_handheld":
@@ -970,8 +1053,9 @@ def apply_style_lock(prompt_text: str, camera_archetype: str = "fixed_cctv", cat
     domain_id = cat.get("domain_id", "")
     ship = cat.get("forced_ship", "") or ""
     env = cat.get("forced_environment", "") or ""
+    motion = _SIDE_LAUNCH_MOTION if env == SIDE_LAUNCH_ENV else _MOTION_START_GUARDRAIL
     parts = [archetype["style_lock"], _location_line(camera_archetype, domain_id, ship, env),
-             *scene_physics_rules(domain_id, ship, env), _MOTION_START_GUARDRAIL,
+             *scene_physics_rules(domain_id, ship, env), motion,
              get_realism_guardrails(domain_id, ship, env)]
     return f"{prompt_text}. " + " ".join(p for p in parts if p)
 

@@ -37,10 +37,15 @@ from core.creative_engine import (
     DOMAIN_CAST_RANGES,
     ENV_CENTRIC_DOMAINS,
     ENV_CENTRIC_MIN_PEOPLE,
+    cast_range,
     apply_style_lock,
     style_lock_suffix,
     scene_physics_rules,
     SHIP_VISUALS,
+    EVENT_BEAT_PLANS,
+    REPEATABLE_EVENTS,
+    SIDE_LAUNCH_EVENT,
+    SIDE_LAUNCH_ENV,
 )
 
 log = logging.getLogger("PromptGenerator")
@@ -314,7 +319,8 @@ _BEAT3_STATIC_VERBS = {
     "stand", "wait", "watch", "sit", "look", "stare", "observe", "remain",
 }
 # "still water" eşleşmez. TUR 25: "still visibly in motion" / "still in motion" de devam işareti (Tersane #1)
-_STILL_RE = re.compile(r"\bstill\s+(?:\w+ly\s+)?(being\s+\w+|in\s+motion|\w+ing)\b")
+# TUR 27: araya tek sıfat girebilir ("still in heightened motion")
+_STILL_RE = re.compile(r"\bstill\s+(?:\w+ly\s+)?(being\s+\w+|in\s+(?:\w+\s+)?motion|\w+ing)\b")
 _CONTINUE_RE = re.compile(r"\bcontinu(?:e|es|ed|ing)\s+(?:to\s+)?(\w+)")
 _KEEP_RE = re.compile(r"\bkeeps?\s+(?:on\s+)?(\w+ing)\b")
 
@@ -377,7 +383,9 @@ def validate_beat3_ongoing_danger(scenario: dict) -> tuple[bool, list[str]]:
     hits = _beat3_blacklist_hits(consequence)
     if hits:
         failures.append(f"Beat 3 tehlike çözülmüş/sakinleşmiş bitiyor: {hits}")
-    if not (_beat3_ongoing_markers(consequence) or _action_words(consequence, first_sentence_only=False)):
+    # TUR 27: "forcing about five spectators to sprint back" / "the wave races" aksiyon sayılmıyordu
+    if not (_beat3_ongoing_markers(consequence) or _action_words(consequence, first_sentence_only=False)
+            or _TAIL_MOTION_RE.search(consequence)):
         failures.append("Beat 3'te devam eden aksiyon yok (still/continues/keeps veya aksiyon fiili)")
     else:
         # TUR 24: cümle ortasındaki bir aksiyon fiili yetiyordu ("tilting ... as workers struggle to
@@ -396,7 +404,10 @@ _BEAT3_TAIL_WORDS = 12
 _TAIL_MOTION_RE = re.compile(
     r"\b(?:mov(?:e|es|ing)|advanc(?:e|es|ing)|roll(?:s|ing)?|fall(?:s|ing)?|pour(?:s|ing)?|rac(?:e|es|ing)|"
     r"charg(?:e|es|ing)|spread(?:s|ing)?|ris(?:e|es|ing)|churn(?:s|ing)?|rock(?:s|ing)|careen(?:s|ing)?|"
-    r"skid(?:s|ding)?|fly(?:ing)?|flies|rotat(?:e|es|ing)|thrash(?:es|ing)?)\b", re.IGNORECASE)
+    r"skid(?:s|ding)?|fly(?:ing)?|flies|rotat(?:e|es|ing)|thrash(?:es|ing)?|"
+    # TUR 27: kaçışla biten son hareket sayılır ("the four workers run back from the edge")
+    r"run(?:s|ning)?|ran|flee(?:s|ing)?|fled|sprint(?:s|ing)?|dash(?:es|ing)?|retreat(?:s|ing)?|bolt(?:s|ing)?)\b",
+    re.IGNORECASE)
 
 # Simplifier uzunluğu (TUR 24): hedef 45-60 kelime (önce 25-45); kapı iki yana 5 kelime tolerans tanır.
 SIMPLIFIER_MIN_WORDS, SIMPLIFIER_MAX_WORDS = 40, 65
@@ -463,7 +474,7 @@ def _cast_counts(text: str) -> list[tuple[int, bool, str]]:
     return [(_cast_value(m["num"]), bool(m["hedge"]), m.group(0)) for m in _CAST_RE.finditer(text)]
 
 
-def validate_cast_size(scenario: dict, domain_id: str) -> tuple[bool, list[str]]:
+def validate_cast_size(scenario: dict, domain_id: str, event: str = "") -> tuple[bool, list[str]]:
     """Ekrandaki kişi sayısı DOMAIN_CAST_RANGES aralığında mı, beat'ler boyunca artmıyor mu?
 
     Env-centric domainlerde sayı serbest, 3 beat'te en az 1 insan ifadesi şart (TUR 16). Beat 1 toplamı aralıkta olmalı (hedge'li sayıda üstte
@@ -479,7 +490,7 @@ def validate_cast_size(scenario: dict, domain_id: str) -> tuple[bool, list[str]]
         return True, []
     if domain_id not in DOMAIN_CAST_RANGES:
         return True, []
-    lo, hi = DOMAIN_CAST_RANGES[domain_id]
+    lo, hi = cast_range(domain_id, event)   # olaya özel aralık varsa o (TUR 27)
     beat1 = scenario.get("visible_start", "") or ""
     beat1_counts = _cast_counts(beat1)
     if not beat1_counts:
@@ -635,6 +646,10 @@ _DRIVING_RE = re.compile(
     r"\bheadlights?\s+(?:on|blazing|glaring|lit|shining|flashing)\b|\bhonk(?:s|ing)?\b",
     re.IGNORECASE,
 )
+_SIDE_LAUNCH_FLEE_RE = re.compile(
+    r"\b(?:run(?:s|ning)?|ran|flee(?:s|ing)?|fled|scrambl(?:e|es|ing)|dash(?:es|ing)?|sprint(?:s|ing)?|"
+    r"retreat(?:s|ing)?|rac(?:e|es|ing)|bolt(?:s|ing)?|stagger(?:s|ing)?|div(?:e|es|ing)|leap(?:s|ing)?|"
+    r"jump(?:s|ing)?|back\s+away|backing\s+away)\b", re.IGNORECASE)
 _SLIPWAY_WATER_RE = re.compile(r"\bwater\b|\bsea\b|\bharbou?r\b|\briver\b|\bbasin\b|\bsplash", re.IGNORECASE)
 
 
@@ -680,8 +695,17 @@ def validate_scene_physics(scenario: dict, catalyst: dict) -> tuple[bool, list[s
                     ("scenario_summary", "visible_start", "physical_movement", "visible_consequence"))
     failures = [f"Fizik: {h}" for h in _physics_hits(text, domain_id)]
     if (domain_id == "shipyard_and_drydock_engineering"
-            and catalyst.get("forced_environment") == "Construction slipway" and not _SLIPWAY_WATER_RE.search(text)):
+            and catalyst.get("forced_environment") in ("Construction slipway", SIDE_LAUNCH_ENV)
+            and not _SLIPWAY_WATER_RE.search(text)):
         failures.append("Fizik: kızak sahnesinde suya iniş yok (water/sea/basin)")
+    if catalyst.get("forced_event") == SIDE_LAUNCH_EVENT:
+        # TUR 27: Beat 3'te dalga karşı rıhtıma vurur ve insanlar kaçar (izlemekle kalmaz)
+        b3 = scenario.get("visible_consequence", "") or ""
+        if not (re.search(r"\bwaves?\b|\bwall\s+of\s+water\b|\bsurge\b", b3, re.I)
+                and re.search(r"\b(?:quay|quayside|dock|pier|wharf)\b", b3, re.I)):
+            failures.append("Side launch: Beat 3'te karşı rıhtıma vuran dalga yok")
+        if not _SIDE_LAUNCH_FLEE_RE.search(b3):
+            failures.append("Side launch: Beat 3'te rıhtımdaki insanlar kaçmıyor")
     return not failures, failures
 
 
@@ -862,7 +886,7 @@ def scenario_gate_results(scenario: dict, catalyst: dict) -> dict[str, tuple[boo
         "visibility": validate_silent_visibility(scenario),
         "high_action": validate_high_action(scenario),
         "beat3": validate_beat3_ongoing_danger(scenario),
-        "cast": validate_cast_size(scenario, catalyst["domain_id"]),
+        "cast": validate_cast_size(scenario, catalyst["domain_id"], catalyst.get("forced_event", "")),
         "consistency": validate_scenario_consistency(scenario),
         "ship_setting": validate_ship_setting(scenario, catalyst["forced_ship"]),
         "trigger": validate_visible_trigger(scenario, catalyst["domain_id"]),
@@ -1003,7 +1027,8 @@ async def generate_prompts(config: dict) -> dict:
             catalyst = get_creative_catalyst(recent_history=combined_history, domain=domain)
             camera_archetype = choose_camera_archetype(catalyst["domain_id"], catalyst["forced_environment"])
             combo_key = f"{catalyst['domain_id']}|{catalyst['forced_ship'].lower()}|{catalyst['forced_event'].lower()}|{catalyst['forced_environment'].lower()}|{camera_archetype}"
-            if combo_key not in used_combos:
+            # Tekrarı serbest olay (TUR 27, side launch) 60 günlük dedup'a takılmaz
+            if combo_key not in used_combos or catalyst["forced_event"] in REPEATABLE_EVENTS:
                 break
 
         log.info(f"🧭 Denizcilik Alanı ({attempt+1}/{max_scenario_attempts}): [{catalyst['domain_id']}] {catalyst['domain_title']}")
@@ -1121,7 +1146,7 @@ async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
     """Katman 2: GPT-4o'ya yaratıcı yönetmenlik rolü vererek özgün denizcilik senaryosu ürettir."""
     duration = settings.DEFAULT_DURATION
     early, late = compute_duration_breakpoints(duration)
-    sys_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""))
+    sys_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""), catalyst.get("forced_event", ""))
     history_text = "\n".join(f"- {h}" for h in catalyst.get("recent_history", [])[-15:]) if catalyst.get("recent_history") else "None (First run)"
     library_text = "\n".join(f"🔸 {s}" for s in catalyst.get("existing_library_reference", [])) if catalyst.get("existing_library_reference") else ""
     archetype = CAMERA_ARCHETYPES.get(camera_archetype, CAMERA_ARCHETYPES["fixed_cctv"])
@@ -1180,6 +1205,9 @@ async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
     physics = scene_physics_rules(catalyst.get("domain_id", ""), catalyst.get("forced_ship") or "",
                                   catalyst.get("forced_environment") or "")
     physics_line = f"SCENE PHYSICS (MANDATORY): {' '.join(physics)}\n" if physics else ""
+    beat_plan = EVENT_BEAT_PLANS.get(catalyst.get("forced_event") or "")
+    if beat_plan:
+        physics_line += f"BEAT PLAN (MANDATORY): {beat_plan}\n"
 
     user_message = f"""You are directing a new {duration}-second continuous raw documentary scene for DeepMyster.
 
@@ -1210,7 +1238,7 @@ CREATIVE DIRECTIVE:
 6. The scene must show CONSTANT HIGH ACTION — something actively breaking, colliding, flooding, swinging, or in danger in real time. Never calm, static, or purely observational.
 7. {clothing_rule} Depict raw, natural weather and lighting — never glossy, CGI-clean, or cinematic, Hollywood-polished.{chase_pov_directive}"""
 
-    system_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""))
+    system_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""), catalyst.get("forced_event", ""))
     result = await _call_gpt(system_prompt, user_message, temperature=0.85)
 
     # Savunma katmanı: GPT alan içine "BEAT 1:" gibi etiket sızdırırsa temizle
