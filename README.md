@@ -167,6 +167,7 @@ Veri gömülü değil, dosyalardan okunur:
 | K | Görünmez/soyut sebep yok (friction, unexpected, instability, for no reason...) |
 | L | Fizik ihlali yok: insan gemiyi/iskeleyi elle itmez; feribotta araç sürülmez, far yanmaz |
 | M | Uzunluk 40-65 kelime (hedef 45-60); rewrite sonrası uygulanmaz |
+| N | Tersane side launch: "slipway", "bow-first", "stern-first" yok; ilk cümle yan düşüşü anlatır (sideways/broadside/long side) |
 
 ## 🛡️ Güvenlik Katmanları
 

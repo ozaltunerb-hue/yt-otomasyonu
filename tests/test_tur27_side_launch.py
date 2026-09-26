@@ -89,10 +89,14 @@ class TestPrompts(unittest.TestCase):
             with self.subTest(cam=cam):
                 s = style_lock_suffix(cam, CAT)
                 self.assertLessEqual(len(s.split()), 115)
-                self.assertIn("Filmed from the opposite quay across the basin", s)
-                self.assertIn("One continuous fast motion, no slow start; the hull is already sliding in the first frame", s)
-                self.assertIn("side-launch rails parallel to the basin edge", s)
-                self.assertIn("Spectators on the opposite quay run back as the wave hits.", s)
+                # TUR 28: aynı rıhtım, ~50 m, sabit büyüklük; yan düşüş; slipway yok
+                self.assertIn("Filmed from the same quay about 50 m away", s)
+                self.assertIn("same size and position throughout, no jump closer", s)
+                self.assertIn("One continuous fast motion, no slow start; already tipping in the first frame", s)
+                self.assertIn("Its entire long side faces the camera; never bow-first or stern-first.", s)
+                self.assertIn("People on the quay run back as the wave hits.", s)
+                self.assertNotIn("opposite quay", s)
+                self.assertNotIn("slipway", s.lower())
                 self.assertNotIn("Already moving in the first frame", s)   # genel hareket satırının yerine geçer
                 self.assertNotIn("by hand", s)
 
@@ -102,8 +106,10 @@ class TestPrompts(unittest.TestCase):
         with patch.object(pg, "_call_gpt", mock):
             asyncio.run(pg._generate_scenario({**base, **CAT}, "fixed_cctv"))
         user = mock.call_args.args[1]
-        self.assertIn("BEAT PLAN (MANDATORY): BEAT 1: the timber blocks and holding ropes have already given way", user)
-        self.assertIn("the spectators there turn and run back", user)
+        self.assertIn("The passenger car ferry, its entire long side facing the camera, tips sideways off the quay "
+                      "edge and drops broadside into the water.", user)
+        self.assertIn("heels 30-40 degrees", user)
+        self.assertIn("the people on the quay turn and run back", user)
 
 
 class TestGate(unittest.TestCase):

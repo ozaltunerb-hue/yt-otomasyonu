@@ -17,6 +17,7 @@ Akış:
   5. Regex sanitizer, stil eki (kamera + gerçekçilik) ve YouTube metadata (merak odaklı, no-spoiler).
 """
 import re
+import random
 import json
 import asyncio
 import logging
@@ -46,6 +47,8 @@ from core.creative_engine import (
     REPEATABLE_EVENTS,
     SIDE_LAUNCH_EVENT,
     SIDE_LAUNCH_ENV,
+    EVENT_GUIDANCE,
+    EVENT_WEIGHTS,
 )
 
 log = logging.getLogger("PromptGenerator")
@@ -630,7 +633,9 @@ _INVISIBLE_CAUSE_RE = re.compile(
 )
 # TUR 25: "The cruise liner experiences a heavy roll" reddediliyordu; roll kendi olay havuzumuzdaki tetik
 _TRIGGER_EXTRA_RE = re.compile(r"\b(?:heel(?:s|ed|ing)?|gives?\s+way|gave\s+way|broke|tore|torn|"
-                               r"roll(?:s|ed|ing)?|lurch(?:es|ed|ing)?)\b", re.IGNORECASE)
+                               r"roll(?:s|ed|ing)?|lurch(?:es|ed|ing)?|"
+                               # TUR 28: side launch zorunlu ilk cümlesi "tips sideways off the quay edge"
+                               r"tip(?:s|ped|ping)|drop(?:s|ped|ping)?)\b", re.IGNORECASE)
 _TRIGGER_STOPWORDS = {"the", "a", "an", "and", "over", "onto", "into", "from", "with", "its", "their", "across",
                       "under", "hard", "suddenly", "loose", "down"}
 _VESSEL_OBJECT = (r"(?:yachts?|boats?|hulls?|vessels?|ships?|catamarans?|ferr(?:y|ies)|liners?|powerboats?|"
@@ -650,6 +655,23 @@ _SIDE_LAUNCH_FLEE_RE = re.compile(
     r"\b(?:run(?:s|ning)?|ran|flee(?:s|ing)?|fled|scrambl(?:e|es|ing)|dash(?:es|ing)?|sprint(?:s|ing)?|"
     r"retreat(?:s|ing)?|rac(?:e|es|ing)|bolt(?:s|ing)?|stagger(?:s|ing)?|div(?:e|es|ing)|leap(?:s|ing)?|"
     r"jump(?:s|ing)?|back\s+away|backing\s+away)\b", re.IGNORECASE)
+# TUR 28: side launch'ta "slipway" ve burun/kıç kameraya dönük düşüş yasak; ilk cümle yan düşüşü anlatır
+_SIDE_LAUNCH_BANNED_RE = re.compile(r"\bslipways?\b|\b(?:bow|stern)[\s-]+first\b", re.IGNORECASE)
+_SIDE_FALL_RE = re.compile(r"\b(?:sideways|broadside|long\s+side)\b", re.IGNORECASE)
+
+
+def _side_launch_text_issues(first_part: str, full_text: str) -> list[str]:
+    """Side launch metin kuralları: yasak kelimeler yok, ilk cümle yan düşüş (sideways/broadside/long side)."""
+    issues = []
+    banned = sorted({m.group(0).lower() for m in _SIDE_LAUNCH_BANNED_RE.finditer(full_text or "")})
+    if banned:
+        issues.append(f"yasak ifade {banned}")
+    first = re.split(r"(?<=[.!?])\s+", _BEAT_LABEL_RE.sub("", first_part or "").strip(), maxsplit=1)[0]
+    if not _SIDE_FALL_RE.search(first):
+        issues.append("ilk cümle yan düşüşü anlatmıyor (sideways/broadside/long side yok)")
+    return issues
+
+
 _SLIPWAY_WATER_RE = re.compile(r"\bwater\b|\bsea\b|\bharbou?r\b|\briver\b|\bbasin\b|\bsplash", re.IGNORECASE)
 
 
@@ -703,13 +725,18 @@ def validate_scene_physics(scenario: dict, catalyst: dict) -> tuple[bool, list[s
         b3 = scenario.get("visible_consequence", "") or ""
         if not (re.search(r"\bwaves?\b|\bwall\s+of\s+water\b|\bsurge\b", b3, re.I)
                 and re.search(r"\b(?:quay|quayside|dock|pier|wharf)\b", b3, re.I)):
-            failures.append("Side launch: Beat 3'te karşı rıhtıma vuran dalga yok")
+            failures.append("Side launch: Beat 3'te rıhtıma vuran dalga yok")
         if not _SIDE_LAUNCH_FLEE_RE.search(b3):
             failures.append("Side launch: Beat 3'te rıhtımdaki insanlar kaçmıyor")
+        failures += [f"Side launch: {m}" for m in _side_launch_text_issues(
+            scenario.get("visible_start", ""), " ".join(scenario.get(k, "") or "" for k in
+                                                        ("scenario_summary", "visible_start", "physical_movement",
+                                                         "visible_consequence")))]
     return not failures, failures
 
 
-def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = "") -> list[tuple[str, str]]:
+def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = "",
+                       event: str = "") -> list[tuple[str, str]]:
     """(log için Türkçe hata, simplifier retry'ına İngilizce düzeltme talimatı) listesi.
 
     ship: atanan gemi (catalyst['forced_ship']); verilmezse F kontrolü atlanır.
@@ -803,6 +830,15 @@ def _simplified_checks(prompt: str, scenario: dict, domain_id: str, ship: str = 
                        "People never push, pull or hold a vessel or dock by hand; cars on a ferry deck are parked "
                        "and driverless, headlights off, and only skid or slide. Rewrite those parts."))
 
+    # N — side launch (TUR 28): "slipway"/bow-first/stern-first yok, ilk cümle yan düşüş
+    if event == SIDE_LAUNCH_EVENT:
+        sl = _side_launch_text_issues(prompt, prompt)
+        if sl:
+            issues.append((f"Simplifier: side launch {sl}",
+                           "Never write 'slipway' (say 'side-launch berth at the quay edge') and never 'bow-first' or "
+                           "'stern-first'. The first sentence must show the passenger car ferry, its entire long side "
+                           "facing the camera, tipping sideways off the quay edge and dropping broadside into the water."))
+
     # M — uzunluk (TUR 24): hedef 45-60, kapı toleranslı
     n_words = len((prompt or "").split())
     if not SIMPLIFIER_MIN_WORDS <= n_words <= SIMPLIFIER_MAX_WORDS:
@@ -854,6 +890,7 @@ SIMPLIFIER_GATES = {
     "K": "Simplifier: görünmez sebep",
     "L": "Simplifier: fizik ihlali",
     "M": "Simplifier: kelime sayısı",
+    "N": "Simplifier: side launch",
 }
 
 # Güvenlik rewrite'ı riskli kelime Beat 1 fiilinin kendisiyse onu değiştirmek zorunda; C bu yüzden
@@ -873,9 +910,10 @@ def make_story_validator(gate_context: dict | None):
     scenario = gate_context.get("scenario") or {}
     domain_id = gate_context.get("domain_id", "")
     ship = gate_context.get("ship") or ""
+    event = gate_context.get("event") or ""
 
     def validator(story: str) -> list[tuple[str, str]]:
-        return [(m, h) for m, h in _simplified_checks(story, scenario, domain_id, ship)
+        return [(m, h) for m, h in _simplified_checks(story, scenario, domain_id, ship, event)
                 if not m.startswith(_REWRITE_SKIPPED_GATES)]
     return validator
 
@@ -1072,7 +1110,7 @@ async def generate_prompts(config: dict) -> dict:
     # ── ADIM 3: Seedance 2 Mini Doğukan Promptu (45–60 Kelime, TUR 24 — DEFAULT_DURATION Standardı) ──
     # Skor sırasıyla sadeleştirilir; simplifier çıktı kapısından ilk geçen senaryo kullanılır.
     log.info(f"✂️ Sahne Doğukan standardına sadeleştiriliyor (45–60 kelime {settings.DEFAULT_DURATION}s)...")
-    best, simplified, simplify_attempts = await simplify_with_gate(accepted)
+    best, simplified, simplify_attempts = await simplify_with_gate(rank_candidates(accepted), presorted=True)
     scenario, catalyst, camera_archetype, combo_key = (
         best["scenario"], best["catalyst"], best["camera_archetype"], best["combo_key"]
     )
@@ -1135,7 +1173,7 @@ async def generate_prompts(config: dict) -> dict:
         "beat1_action_verb": scenario.get("beat1_action_verb", ""),
         # Rewrite sonrası aynı kapılar için bağlam (TUR 21, make_story_validator)
         "gate_context": {"scenario": scenario, "domain_id": catalyst["domain_id"],
-                         "ship": catalyst.get("forced_ship") or ""},
+                         "ship": catalyst.get("forced_ship") or "", "event": catalyst.get("forced_event") or ""},
     }
 
     log.info(f"✅ DeepMyster Pipeline hazır: \"{result['youtube_title']}\" ({settings.DEFAULT_DURATION}s tek kesintisiz çekim)")
@@ -1148,7 +1186,11 @@ async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
     early, late = compute_duration_breakpoints(duration)
     sys_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""), catalyst.get("forced_event", ""))
     history_text = "\n".join(f"- {h}" for h in catalyst.get("recent_history", [])[-15:]) if catalyst.get("recent_history") else "None (First run)"
-    library_text = "\n".join(f"🔸 {s}" for s in catalyst.get("existing_library_reference", [])) if catalyst.get("existing_library_reference") else ""
+    library = catalyst.get("existing_library_reference") or []
+    event_guidance = EVENT_GUIDANCE.get(catalyst.get("forced_event") or "")
+    if event_guidance:   # TUR 28: side launch'a "slipway" sızmasın
+        library = [s for s in library if "slipway" not in s.lower()]
+    library_text = "\n".join(f"🔸 {s}" for s in library)
     archetype = CAMERA_ARCHETYPES.get(camera_archetype, CAMERA_ARCHETYPES["fixed_cctv"])
     # Env-centric'te gemi küpeştesinden çekim önerilmez (TUR 10)
     guidance = archetype["gpt_guidance"]
@@ -1220,8 +1262,8 @@ Do not deviate from these core elements. The Event/Incident is the visible physi
 CAMERA PERSPECTIVE FOR THIS SCENE (MANDATORY): {guidance}
 
 EXPLORATION DOMAIN: {catalyst['domain_title']}
-DOMAIN INSPIRATION & GUIDANCE: {catalyst['guidance']}
-EXAMPLE ELEMENTS FOR INSPIRATION: {', '.join(catalyst['example_elements'])}
+DOMAIN INSPIRATION & GUIDANCE: {event_guidance[0] if event_guidance else catalyst['guidance']}
+EXAMPLE ELEMENTS FOR INSPIRATION: {', '.join(event_guidance[1] if event_guidance else catalyst['example_elements'])}
 {camera_styles_line}
 DEEPMYSTER BRAND UNIVERSE & EXISTING REFERENCE SAMPLES (FOR INSPIRATION & TONE):
 {library_text}
@@ -1302,7 +1344,27 @@ REQUIREMENTS:
 SIMPLIFIER_MAX_RETRIES = 2
 
 
-async def simplify_with_gate(candidates: list[dict]) -> tuple[dict, dict, list[dict]]:
+def rank_candidates(candidates: list[dict]) -> list[dict]:
+    """Simplifier sırası (TUR 28). Ağırlıklı domainde olay grupları EVENT_WEIGHTS'e göre ağırlıklı rastgele
+    sıralanır, grup içinde skor sırası. Skor tek başına belirleseydi side launch ('tips' güçlü açılış fiili
+    değil, skor 4-5) vinç adayına (skor 8) yeniliyordu. Ağırlıksız domainde sadece skor sırası."""
+    by_score = sorted(candidates, key=lambda c: c["score"], reverse=True)
+    domain = next((c["catalyst"].get("domain_id") for c in candidates), "")
+    weights = EVENT_WEIGHTS.get(domain)
+    if not weights:
+        return by_score
+    groups = {}
+    for c in by_score:
+        groups.setdefault(c["catalyst"].get("forced_event", ""), []).append(c)
+    order, remaining = [], list(groups)
+    while remaining:
+        ev = random.choices(remaining, weights=[weights.get(e, 1) for e in remaining], k=1)[0]
+        remaining.remove(ev)
+        order += groups[ev]
+    return order
+
+
+async def simplify_with_gate(candidates: list[dict], presorted: bool = False) -> tuple[dict, dict, list[dict]]:
     """Kabul edilmiş senaryoları skor sırasıyla sadeleştirir; çıktı kapısından ilk geçeni döndürür.
 
     Her senaryo için 1 + SIMPLIFIER_MAX_RETRIES deneme (retry'da GPT'ye neden kaldığı söylenir),
@@ -1311,13 +1373,13 @@ async def simplify_with_gate(candidates: list[dict]) -> tuple[dict, dict, list[d
     Dönüş: (seçilen aday, simplifier sonucu, deneme kaydı).
     """
     attempts = []
-    for cand in sorted(candidates, key=lambda c: c["score"], reverse=True):
+    for cand in (candidates if presorted else sorted(candidates, key=lambda c: c["score"], reverse=True)):
         scenario, catalyst = cand["scenario"], cand["catalyst"]
         feedback = None
         for attempt in range(1 + SIMPLIFIER_MAX_RETRIES):
             simplified = await _simplify_prompt(scenario, catalyst, feedback)
             issues = _simplified_checks(simplified.get("prompt", ""), scenario, catalyst.get("domain_id", ""),
-                                        catalyst.get("forced_ship") or "")
+                                        catalyst.get("forced_ship") or "", catalyst.get("forced_event") or "")
             attempts.append({
                 "summary": scenario.get("scenario_summary", ""), "attempt": attempt + 1,
                 "prompt": simplified.get("prompt", ""), "failures": [m for m, _ in issues],

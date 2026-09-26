@@ -217,8 +217,8 @@ DOMAIN_ATTRIBUTES = {
     # TUR 27: ana olay yandan suya indirme (side launch); EVENT_WEIGHTS ile çoğunlukla seçilir.
     "shipyard_and_drydock_engineering": {
         "ships": ["Luxury Motor Yacht", "Sailing Yacht", "Passenger Car Ferry"],
-        "environments": ["Side-launch slipway at the basin edge", "Shipyard basin", "Drydock interior", "Construction slipway"],
-        "events": ["Side launch: the hull slides sideways off the slipway, crashes into the basin and heels violently, throwing a huge wave across the basin onto the opposite quay",
+        "environments": ["Side-launch berth at the quay edge", "Shipyard basin", "Drydock interior", "Construction slipway"],
+        "events": ["Side launch: the hull tips sideways off the side-launch berth at the quay edge, drops broadside into the water, heels 30-40 degrees and throws a huge wave onto the quay",
                    "Restraining cable snaps during slipway launch", "Keel blocks collapse under the launching hull",
                    "Drydock flood gate bursts open", "Timber shores snap and the hull tips on its keel blocks",
                    "Crane sling snaps while lowering the hull into the water"]
@@ -329,7 +329,7 @@ EVENT_ENV_COMPAT = {
         "Green wave breaks over the rail onto the vehicle deck": {"Open vehicle deck", "Island crossing route"},
     },
     "shipyard_and_drydock_engineering": {
-        "Side launch: the hull slides sideways off the slipway, crashes into the basin and heels violently, throwing a huge wave across the basin onto the opposite quay": {"Side-launch slipway at the basin edge"},
+        "Side launch: the hull tips sideways off the side-launch berth at the quay edge, drops broadside into the water, heels 30-40 degrees and throws a huge wave onto the quay": {"Side-launch berth at the quay edge"},
         "Restraining cable snaps during slipway launch": {"Construction slipway"},
         "Keel blocks collapse under the launching hull": {"Construction slipway"},
         "Drydock flood gate bursts open": {"Drydock interior"},
@@ -359,8 +359,8 @@ for _d, _m in EVENT_ENV_COMPAT.items():
         raise RuntimeError(f"EVENT_ENV_COMPAT[{_d}] havuzla uyuşmuyor: {sorted(_bad)}")
 
 # ── Side launch (TUR 27) ──
-SIDE_LAUNCH_EVENT = "Side launch: the hull slides sideways off the slipway, crashes into the basin and heels violently, throwing a huge wave across the basin onto the opposite quay"
-SIDE_LAUNCH_ENV = "Side-launch slipway at the basin edge"
+SIDE_LAUNCH_EVENT = "Side launch: the hull tips sideways off the side-launch berth at the quay edge, drops broadside into the water, heels 30-40 degrees and throws a huge wave onto the quay"
+SIDE_LAUNCH_ENV = "Side-launch berth at the quay edge"
 
 # Olay → izinli gemiler: side launch sadece feribotla (yat değil)
 EVENT_SHIP_ONLY = {
@@ -376,14 +376,27 @@ EVENT_WEIGHTS = {
 # tek gemi × tek ortam × 2 kamera = 2 combo var; dedup onu 2 videodan sonra 60 gün kilitlerdi.
 REPEATABLE_EVENTS = {SIDE_LAUNCH_EVENT}
 
-# Olaya özel beat planı: yazıcıya zorunlu olarak gider
+# Olaya özel beat planı: yazıcıya zorunlu olarak gider. TUR 28: "slipway" yok, gemi yan düşer (burun/kıç
+# kameraya dönük değil), kamera aynı rıhtımda.
 EVENT_BEAT_PLANS = {
     SIDE_LAUNCH_EVENT: (
-        "BEAT 1: the timber blocks and holding ropes have already given way; the passenger car ferry is already "
-        "heeling and sliding sideways down the side-launch rails in the very first frame. "
-        "BEAT 2: the hull crashes broadside into the basin and throws up a wall of water. "
-        "BEAT 3: the ferry is still rolling hard from side to side while the huge wave races across the basin and "
-        "slams onto the opposite quay, and the spectators there turn and run back from it."
+        "BEAT 1 (visible_start's FIRST sentence must show exactly this): The passenger car ferry, its entire long "
+        "side facing the camera, tips sideways off the quay edge and drops broadside into the water. "
+        "BEAT 2: as the hull hits the water it heels 30-40 degrees and throws up a wall of water. "
+        "BEAT 3: the ferry keeps rolling hard from side to side, the huge wave slams onto the quay, and the people "
+        "on the quay turn and run back from it. "
+        "Never write 'slipway' (say 'side-launch berth at the quay edge'), and never show the ferry bow-first or "
+        "stern-first: its long side faces the camera the whole time."
+    ),
+}
+
+# Olaya özel yazıcı rehberi (TUR 28): domain rehberindeki "slipway" kelimeleri side launch'a sızmasın
+EVENT_GUIDANCE = {
+    SIDE_LAUNCH_EVENT: (
+        "Side launch of a passenger car ferry: the hull stands broadside on a side-launch berth at the quay edge, "
+        "tips sideways off it and drops broadside into the water, heeling 30-40 degrees and throwing a huge wave "
+        "onto the quay while people there run back.",
+        ["side-launch berth at the quay edge", "timber blocks", "holding ropes", "quay edge", "wall of water"],
     ),
 }
 
@@ -857,10 +870,10 @@ def scene_physics_rules(domain_id: str, vessel_class: str, environment: str) -> 
             "Construction slipway": "The hull rides a launch cradle on inclined slipway rails sloping down into open water.",
             "Drydock interior": "The hull stands on timber keel blocks braced by side shores inside the drydock.",
             "Shipyard basin": "A gantry crane holds the hull in slings above the open water of the basin.",
-            SIDE_LAUNCH_ENV: "The hull slides sideways off greased side-launch rails parallel to the basin edge.",
+            SIDE_LAUNCH_ENV: "Its entire long side faces the camera; never bow-first or stern-first.",
         }.get(environment, "The hull sits on timber blocks and supports, never on bare flat concrete."))
     if environment == SIDE_LAUNCH_ENV:
-        rules.append("Spectators on the opposite quay run back as the wave hits.")
+        rules.append("People on the quay run back as the wave hits.")
     if domain_id == "ferry_operations" and environment in VEHICLE_DECK_ENVIRONMENTS:
         rules.append("Parked driverless cars, engines and headlights off, skid or slide; they never drive.")
     return rules
@@ -994,7 +1007,7 @@ def choose_camera_archetype(domain_id: str = "", environment: str = "") -> str:
     çekimde güvertedeki olay görünmüyor, K1 dry-run'da havuz güvertesine chase_pov atanmıştı.
     """
     keys = list(CAMERA_ARCHETYPES.keys())
-    # Side launch (TUR 27): kamera karşı rıhtımda sabit CCTV veya el kamerası
+    # Side launch (TUR 27/28): kamera aynı rıhtımda, sabit CCTV veya el kamerası
     if domain_id in ENV_CENTRIC_DOMAINS or environment in ONBOARD_ENVIRONMENTS or environment == SIDE_LAUNCH_ENV:
         keys = [k for k in keys if k != "chase_pov"]
     weights = [CAMERA_ARCHETYPES[k]["weight"] for k in keys]
@@ -1008,7 +1021,7 @@ _MOTION_START_GUARDRAIL = (
 
 
 # Side launch akıcılığı (TUR 27): yavaş başlangıç yok, tek hızlı hareket
-_SIDE_LAUNCH_MOTION = ("One continuous fast motion, no slow start; the hull is already sliding in the first frame, "
+_SIDE_LAUNCH_MOTION = ("One continuous fast motion, no slow start; already tipping in the first frame, "
                        "still rolling in the last.")
 
 
@@ -1031,7 +1044,9 @@ def _location_line(camera_archetype: str, domain_id: str, ship: str, environment
         return ""
     name = f"the {ship.lower()}" if _has_ship(ship) else "the vessel"
     if environment == SIDE_LAUNCH_ENV:
-        return f"Filmed from the opposite quay across the basin; {name} stays fully in frame."
+        # TUR 28: aynı rıhtımda ~50 m yanda, geminin tüm boyu kadrajı doldurur, büyüklük/konum değişmez
+        return ("Filmed from the same quay about 50 m away; the ferry's whole length fills the frame, "
+                "same size and position throughout, no jump closer.")
     if environment in ONBOARD_ENVIRONMENTS and camera_archetype != "chase_pov":
         return f"Filmed aboard {name}; no second ship on the horizon."
     if camera_archetype == "bystander_handheld":
