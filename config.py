@@ -2,7 +2,7 @@
 YouTube Otomasyonu V3 — Fail-Fast Config
 "DeepMyster" Tam Otonom Pipeline.
 Tüm gerekli env variable'ları boot time'da doğrular.
-Telegram kaldırıldı — CronJob ile çalışır.
+Telegram botu (bot.py) ile tetiklenir; cron yok.
 """
 import os
 import sys

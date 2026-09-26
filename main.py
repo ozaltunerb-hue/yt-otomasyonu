@@ -4,18 +4,18 @@ from __future__ import annotations
 """
 YouTube Otomasyonu V3 — "DeepMyster" Yeni Referans Standardı Pipeline
 ===================================================================
-Railway cron ile (Pazartesi + Cuma) çalışır: tek kesintisiz çekim fiziksel olay senaryosu üretir (süre config.DEFAULT_DURATION ile kontrol edilir) →
+Telegram botundan tetiklenir: tek kesintisiz çekim fiziksel olay senaryosu üretir (süre config.DEFAULT_DURATION ile kontrol edilir) →
 Seedance 2 Mini ile video üretir → YouTube Shorts olarak yükler.
 
-Telegram YOK — CronJob ile tetiklenir, insan müdahalesi gerektirmez.
+Tetikleme: Telegram botu (bot.py, /uret → domain seç). Railway'de start komutu `python bot.py`;
+cron yok. Elle çalıştırma aşağıdaki CLI ile hâlâ mümkün.
 
 Çalıştırma:
-  python main.py                → Tam pipeline (CronJob bu komutu çalıştırır)
+  python main.py                → Tam pipeline (rastgele domain)
   python main.py --dry-run      → Gerçek üretim yapmadan mock test
   python main.py --no-upload    → Gerçek video üret ama YouTube'a yükleme (Lokal test)
   python main.py --check        → Sistem sağlık kontrolü
 
-Railway CronJob: `python main.py` — Pazartesi ve Cuma 16:30 TR (13:30 UTC), railway.json cronSchedule `30 13 * * 1,5`.
 """
 import os
 import sys
@@ -62,7 +62,8 @@ def load_used_combos() -> list[str]:
 # ⚙️ ANA PİPELINE
 # ────────────────────────────────────────
 
-async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_path: str = ""):
+async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_path: str = "",
+                       domain: str | None = None, trigger: str = "auto"):
     """
     Tam otonom video üretim pipeline'ı.
 
@@ -72,6 +73,8 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
       3. Seedance 2 Mini → video üret (tek kesintisiz çekim, DEFAULT_DURATION saniye)
       4. YouTube → Shorts olarak yükle (skip_upload=False ise)
       5. Notion → log kaydet
+
+    domain: verilirse senaryolar sadece bu domain'den üretilir (Telegram /uret). trigger: Notion 'Tetikleyici'.
     """
     if dry_run:
         settings.IS_DRY_RUN = True
@@ -108,6 +111,8 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 recent_verbs=recent_verbs,
                 upload_active=upload_active,
                 output_path=output_path,
+                domain=domain,
+                trigger=trigger,
             )
             return result
         except (ContentFilterError, PreflightError) as err:
@@ -139,6 +144,8 @@ async def _execute_pipeline(
     recent_verbs: list[str] | None = None,
     upload_active: bool = True,
     output_path: str = "",
+    domain: str | None = None,
+    trigger: str = "auto",
 ) -> dict:
     """
     Pipeline'ın asıl implementasyonu.
@@ -153,6 +160,7 @@ async def _execute_pipeline(
         "used_combos": used_combos,
         "recent_topics": recent_topics or [],
         "recent_verbs": recent_verbs or [],
+        "domain": domain,
     }
 
     try:
@@ -180,7 +188,7 @@ async def _execute_pipeline(
             "audio": settings.DEFAULT_AUDIO,
             "combo_key": combo_key,
         }
-        await asyncio.to_thread(tracker.create_entry, notion_config, trigger="auto")
+        await asyncio.to_thread(tracker.create_entry, notion_config, trigger=trigger)
         await asyncio.to_thread(tracker.update_with_prompts, prompt_data)
 
         # ── ADIM 3: Video üret (Seedance 2 Mini) ──
@@ -331,7 +339,7 @@ async def _execute_pipeline(
                     "audio": settings.DEFAULT_AUDIO,
                     "combo_key": "",
                 },
-                "auto",
+                trigger,
             )
         await asyncio.to_thread(tracker.update_with_error, str(nvse))
         status.fail(f"Kalite kapısından geçen senaryo yok: {nvse}")
@@ -412,7 +420,7 @@ def health_check():
 # ────────────────────────────────────────
 
 def main():
-    """CLI entry point — CronJob bu fonksiyonu çalıştırır."""
+    """CLI entry point (elle çalıştırma; Railway bot.py çalıştırır)."""
     parser = argparse.ArgumentParser(
         description="DeepMyster V3 — Yeni Referans Standardı Günlük Otonom Video Pipeline"
     )

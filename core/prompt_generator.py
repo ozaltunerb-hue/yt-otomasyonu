@@ -819,6 +819,8 @@ async def generate_prompts(config: dict) -> dict:
     combined_history = list(dict.fromkeys(used_combos + recent_topics))
     # Beat 1 fiil rotasyonu (TUR 17): Notion'daki son fiiller + bu koşudaki önceki adayların fiilleri
     recent_verbs = list(config.get("recent_verbs") or [])
+    # Telegram /uret (bot.py): verilirse 5 senaryonun hepsi bu domain'den; kapılar/puan/dedup aynı
+    domain = config.get("domain") or None
 
     # ── ADIM 1 & 2: Kombinasyon Seçimi ve GPT-4o Senaryo Üretimi (5 deneme, skorla en iyisi) ──
     max_scenario_attempts = 5
@@ -829,7 +831,7 @@ async def generate_prompts(config: dict) -> dict:
     for attempt in range(max_scenario_attempts):
         # Geçerli bir catalyst bul (used_combos'ta olmayan)
         for _ in range(max_dedup_attempts):
-            catalyst = get_creative_catalyst(recent_history=combined_history)
+            catalyst = get_creative_catalyst(recent_history=combined_history, domain=domain)
             camera_archetype = choose_camera_archetype(catalyst["domain_id"])
             combo_key = f"{catalyst['domain_id']}|{catalyst['forced_ship'].lower()}|{catalyst['forced_event'].lower()}|{catalyst['forced_environment'].lower()}|{camera_archetype}"
             if combo_key not in used_combos:

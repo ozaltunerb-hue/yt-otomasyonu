@@ -336,7 +336,7 @@ async function renderPipeline() {
 function renderCron() {
   const el = document.getElementById("cron");
   const c = parseCron(STATE.cron);
-  if (!c) { el.innerHTML = `<div class="empty">Cron zamanı okunamadı (railway.json / api/local.json).</div>`; return; }
+  if (!c) { el.innerHTML = `<div class="empty">Cron yok: üretim Telegram botundan (<code>/uret</code>) tetikleniyor.</div>`; return; }
   const next = nextCronRuns(c);
   const past = STATE.runs.filter(r => isCronRun(r, c)).slice(0, 6);
   const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];

@@ -19,7 +19,7 @@
 | **Sivil/Mürettebat Kıyafeti** | Ayrım net: mürettebat/personel = turuncu/kırmızı/sarı PPE; yolcu/misafir/sürücü = sıradan sivil kıyafet (asla PPE değil) |
 | **Aksiyon/Kalite Kapısı** | `validate_high_action` aktif — sakin/statik senaryoları reddedip yeniden dener |
 | **YouTube Yükleme** | `YOUTUBE_PRIVACY=private` — videolar OTOMATİK PUBLIC OLMAZ; kullanıcı videoyu manuel inceleyip yapay zeka etiketini (AI-disclosure toggle) işaretledikten sonra elle public yapar |
-| **Cron / Otomasyon** | ✅ AKTİF — `railway.json` cronSchedule `30 13 * * 1,5` (Pazartesi + Cuma 16:30 TR). 2026-09-12'de açıldı (commit `1f7a389`); son doğrulanan otomatik koşu 2026-09-21. Kod düzeltme turları sürerken cron'un devam edip etmeyeceği kararı açık (2026-09-24). Cron aktifken her tetikleme otomatik Kie harcamasıdır (bkz. `_knowledge/deploy-registry.md`) |
+| **Cron / Otomasyon** | ❌ Cron KALDIRILDI (2026-09-26). Üretim Telegram botundan: `python bot.py` (Railway start komutu), `/uret` → domain seç. Sadece `TELEGRAM_CHAT_ID` sohbeti, tek seferde tek üretim. Otomatik Kie harcaması yok |
 | **Notion Dedup/Log** | ✅ AKTİF (2026-09-12) — `NOTION_ENABLED=True`, veritabanı kuruldu ve doğrulandı |
 
 ---

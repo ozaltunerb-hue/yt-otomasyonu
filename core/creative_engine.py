@@ -349,12 +349,15 @@ if _missing_names:
     raise RuntimeError(f"SHIP_NAME_PATTERNS eksik: {sorted(_missing_names)}")
 
 
-def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
+def get_creative_catalyst(recent_history: list[str] | None = None, domain: str | None = None) -> dict:
     """
     Geniş denizcilik ilham alanlarından birini seçer ve GPT-4o için bağlam üretir.
     Geçmişteki seçimlere bakarak Visual World (Domain), Gemi Tipi, Event ve Environment tekrarlarını
     strict rotasyonla engeller (LRU).
+    domain verilirse (Telegram /uret) domain rotasyonu atlanır, gemi/olay/ortam LRU'su aynen çalışır.
     """
+    if domain is not None and domain not in MARITIME_INSPIRATION_DOMAINS:
+        raise ValueError(f"Bilinmeyen domain: {domain}")
     if recent_history is None:
         recent_history = []
         
@@ -383,7 +386,9 @@ def get_creative_catalyst(recent_history: list[str] | None = None) -> dict:
     recently_used_domains = recent_domains[-exclude_count:] if recent_domains else []
     available_domains = [d for d in all_domains if d.lower() not in recently_used_domains]
     
-    if available_domains:
+    if domain is not None:
+        chosen_domain_key = domain
+    elif available_domains:
         chosen_domain_key = random.choice(available_domains)
     else:
         # Fallback (asla buraya düşmemeli ama güvenlik için):

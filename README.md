@@ -13,7 +13,7 @@
 
 > Güncel durumun tek doğru kaynağı `BASLANGIC.md`dir — burası sadece yapı/kurulum özetidir, ayrıntı ve gerekçe için `BASLANGIC.md`'ye bakın.
 
-Bu sistem cron aktifken **sıfır insan müdahalesi** ile çalışır. Railway CronJob Pazartesi ve Cuma 16:30 TR'de tetikler ve şu akışı izler (cron durumu için bkz. Railway CronJob bölümü):
+Üretim Telegram botundan tetiklenir (2026-09-26, cron kaldırıldı): `/uret` → 7 domain butonu → seçilen domain ile şu akış çalışır (bkz. Telegram Tetikleyici bölümü):
 
 1. **🧠 Creative Engine** — 7 ilham alanı: 4 gemi domaini (feribot, tersane, marina/yat, kruvaziyer) + 3 çevre odaklı (kıyı hortumu, şehir afeti, plaj). 9 gemilik evren (feribot, katamaran, yat, powerboat, jet ski, kruvaziyer, tender); kargo/tanker/römorkör/balıkçı YOK (2026-09-24). Uyumsuz gemi-ortam kombinasyonları seçilmez. 71 senaryoluk referans kütüphane (8 kategori).
 2. **🤖 GPT-4o** — Gerçekçi, fizik kurallarına uygun, yapılandırılabilir süreli (şu an 15s) tek plan 3 beat'lik senaryo yazar (5 aday); atanan kamera arketipine (`fixed_cctv`/`bystander_handheld`/`chase_pov`) göre yazılır
@@ -32,7 +32,8 @@ Bu sistem cron aktifken **sıfır insan müdahalesi** ile çalışır. Railway C
 
 ```
 YT_Otomasyonu/
-├── main.py                          # CronJob entry point
+├── bot.py                           # Telegram tetikleyici (Railway start komutu)
+├── main.py                          # Pipeline + elle çalıştırma CLI
 ├── config.py                        # Fail-fast yapılandırma
 ├── logger.py                        # Logging
 ├── core/
@@ -46,7 +47,7 @@ YT_Otomasyonu/
 │   ├── video_downloader.py          # Video indirme + cleanup
 │   ├── youtube_uploader.py          # OAuth2 YouTube upload
 │   └── notion_logger.py             # Notion DB tracking + tekrar önleme
-├── railway.json                     # Railway deploy + cron (30 13 * * 1,5)
+├── railway.json                     # Railway deploy: python bot.py, restart ALWAYS, cron yok
 ├── railpack.json                    # Railway build (railpack): çalışma imajına ffmpeg
 ├── .github/workflows/tests.yml      # CI: unittest; Railway "Wait for CI" buna bağlı
 └── requirements.txt                 # Python bağımlılıkları
@@ -96,7 +97,10 @@ ENV=development
 ## 🚀 Çalıştırma
 
 ```bash
-# Tam pipeline (CronJob bu komutu çalıştırır)
+# Telegram botu (Railway bunu çalıştırır)
+python bot.py
+
+# Tam pipeline elle (rastgele domain)
 python main.py
 
 # Test (gerçek üretim yapmadan)
@@ -131,11 +135,12 @@ Veri gömülü değil, dosyalardan okunur:
 - `dashboard_data/token_refresh.json` — `refresh_youtube_token.bat` başarılı olunca tarih + kanal yazar (token yazılmaz).
 - `/api/local.json` (sunucu üretir) — proje içindeki `.mp4` dosyaları, `scratch/kie_*_result.json` senaryoları, `railway.json` cron zamanı.
 
-## 🕐 Railway CronJob
+## 🤖 Telegram Tetikleyici (Railway)
 
-- **Komut:** `python main.py`
-- **Zamanlama:** ✅ AKTİF — `railway.json` cronSchedule `30 13 * * 1,5` (Pazartesi + Cuma 16:30 TR). 2026-09-12'de açıldı (commit `1f7a389`); son doğrulanan otomatik koşu 2026-09-21. Kod düzeltme turları sürerken cron'un devam edip etmeyeceği kararı açık (2026-09-24). Cron'u aktif tutmak otomatik Kie harcaması demektir.
-- **Tip:** CronJob (çalışır, iş bitince kapanır)
+- **Komut:** `python bot.py` (polling). `railway.json`: restart `ALWAYS`, cronSchedule YOK (2026-09-26 kaldırıldı; otomatik Kie harcaması yok, her üretim elle tetiklenir).
+- **Akış:** `/uret` → 7 domain butonu → seçim → `main.run_pipeline(domain=..., trigger="manual")`. Senaryoların 5'i de seçilen domain'den; kapılar, puanlama, Notion dedup aynı. Mesajlar: başladı / yüklendi (YouTube linki) / hata; bitince video Telegram'a da gönderilir (50 MB sınırı).
+- **Güvenlik:** sadece `TELEGRAM_CHAT_ID` sohbetine cevap verir. Aynı anda tek üretim (kilit), meşgulken "üretim sürüyor". Açılışta bekleyen eski güncellemeler atılır (restart eski buton basışını üretime çevirmez).
+- **Env:** `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (.env ve Railway Variables). Eksikse bot açık hata mesajıyla durur. Aynı token'la iki yerde (lokal + Railway) polling çakışır; lokal test ederken Railway'deki bot durdurulmalı.
 - **Deploy (2026-09-25):** `main`'e push → GitHub Actions `tests` (unittest) → geçerse Railway otomatik deploy eder ("Wait for CI"; test kırılırsa deploy atlanır). Öncesinde otomatik deploy YOKTU, Railway 23 Eylül'deki eski commit'te kalmıştı.
 - **YouTube token (HAFTALIK, her Cuma 16:30'dan önce):** Google uygulaması "Testing" modunda olduğu için refresh token onaydan 7 gün sonra ölür; refresh çağrısı yeni refresh token vermez. `refresh_youtube_token.bat`'a çift tıkla → tarayıcıda DeepMyster hesabıyla "İzin ver" → betik kanalı doğrular, Railway'e yazar (Railway yeniden deploy eder), geri okuyup test eder, lokal `.env`'i günceller. Kalıcı çözüm: Google Cloud'da uygulamayı "In production" + doğrulama (ayrı iş).
 - **Build:** Railway `railpack` kullanır, `nixpacks.toml` okunmaz. Sistem paketleri `railpack.json` → `deploy.aptPackages` (ffmpeg, hareket profili için).
@@ -181,7 +186,7 @@ Veri gömülü değil, dosyalardan okunur:
 | Video Adı | Title | YouTube başlığı |
 | Durum | Select | Pipeline durumu |
 | Model | Select | `bytedance/seedance-2-fast` |
-| Tetikleyici | Select | "auto" (cron) veya "manual" |
+| Tetikleyici | Select | "manual" (Telegram /uret) veya "auto" (elle `python main.py`; eski cron kayıtları) |
 | Konu | Rich Text | Senaryo özeti |
 | Prompt | Rich Text | İlk sahne promptu |
 | Combo Key | Rich Text | "domain\|vessel\|event\|environment\|camera" — tekrar önleme |
