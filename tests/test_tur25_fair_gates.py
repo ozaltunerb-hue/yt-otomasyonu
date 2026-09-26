@@ -64,6 +64,35 @@ class TestUnfairRejectsFixed(unittest.TestCase):
         self.assertEqual(validate_visible_trigger(sc, "cruise_ship_operations"), (True, []))
 
 
+class TestUnexpectedlyAdverb(unittest.TestCase):
+    """TUR 26: Tersane dry-run #1 'unexpectedly' ile elendi; tetik görünürdü (kablo kopuyor).
+    Zarf serbest, "unexpected" sıfatı (soyut sebep: 'unexpected friction') yasak kalır."""
+    SCEN = {"scenario_summary": "A restraining cable snaps and the sailing yacht slides down the slipway into the water.",
+            "visible_start": "A restraining cable snaps unexpectedly at the bollard as three workers leap back.",
+            "visible_trigger": "the restraining cable snaps",
+            "physical_movement": "The sailing yacht lurches down the inclined rails.",
+            "visible_consequence": "The hull keeps sliding into the water."}
+
+    def test_adverb_allowed_in_scenario(self):
+        self.assertEqual(validate_visible_trigger(self.SCEN, "shipyard_and_drydock_engineering"), (True, []))
+
+    def test_adjective_still_rejected_in_scenario(self):
+        sc = {**self.SCEN, "physical_movement": "The sailing yacht skews sideways from unexpected friction."}
+        ok, f = validate_visible_trigger(sc, "shipyard_and_drydock_engineering")
+        self.assertFalse(ok)
+        self.assertIn("unexpected", f[0])
+
+    def test_simplifier_gate_k(self):
+        from core.prompt_generator import SIMPLIFIER_GATES, validate_simplified_prompt
+        k = SIMPLIFIER_GATES["K"]
+        adverb = "The restraining cable snaps unexpectedly and the sailing yacht keeps sliding into the water."
+        adjective = "An unexpected force jolts the sailing yacht, which keeps sliding into the water."
+        self.assertFalse([m for m in validate_simplified_prompt(adverb, {}, "shipyard_and_drydock_engineering")[1]
+                          if m.startswith(k)])
+        self.assertTrue([m for m in validate_simplified_prompt(adjective, {}, "shipyard_and_drydock_engineering")[1]
+                         if m.startswith(k)])
+
+
 class TestRealProblemsStillRejected(unittest.TestCase):
     def test_settle_stabilize(self):
         self.assertFalse(ok("The hull tips further as crew rush to stabilize it before it settles."))

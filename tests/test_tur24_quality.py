@@ -120,7 +120,7 @@ class TestVisibleTrigger(unittest.TestCase):
         self.assertFalse(validate_visible_trigger({**GOOD_SCEN, "visible_trigger": ""})[0])
 
     def test_invisible_cause(self):
-        for word in ["friction", "unexpectedly", "instability", "for no reason"]:
+        for word in ["friction", "an unexpected force", "instability", "for no reason"]:
             with self.subTest(word=word):
                 sc = {**GOOD_SCEN, "physical_movement": f"The sailing yacht skews sideways from {word}."}
                 ok, f = validate_visible_trigger(sc)

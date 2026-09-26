@@ -612,7 +612,8 @@ def _harm_stems(text: str) -> dict[str, str]:
 # Tersane "unexpected friction", marina "workers push against the docks", feribot farları yanık
 # sürülen arabalar. Senaryo kapısı + simplifier çıktı kapısı (K, L) aynı regex'leri kullanır.
 _INVISIBLE_CAUSE_RE = re.compile(
-    r"\bfriction\b|\bunexpected(?:ly)?\b|\binstabilit(?:y|ies)\b|\bfor\s+no\s+(?:apparent\s+)?reason\b|"
+    # TUR 26: "unexpectedly" zarfı çıktı ("the cable snaps unexpectedly" tetiği görünür); "unexpected" sıfatı kalır
+    r"\bfriction\b|\bunexpected\b|\binstabilit(?:y|ies)\b|\bfor\s+no\s+(?:apparent\s+)?reason\b|"
     r"\bmysterious(?:ly)?\b|\b(?:unseen|invisible)\s+(?:force|cause|pressure)s?\b|\bout\s+of\s+nowhere\b",
     re.IGNORECASE,
 )
@@ -1253,7 +1254,7 @@ REQUIREMENTS:
 - STRICT INVENTORY: Do NOT add new elements, people, vessels, or objects not explicitly detailed above. 
 - Do NOT include any camera, POV, lighting, or shot-type description (e.g., no "From the escort boat", no "CCTV", no "lens").
 - Preserve PPE colors and raw weather details from the scenario exactly — never white hazmat suits, never glossy/CGI-clean water or ice.
-- Keep the visible trigger on camera; never write friction, 'unexpectedly' or any unseen cause. People never push or hold a vessel or dock by hand."""
+- Keep the visible trigger on camera; never write friction, 'an unexpected force' or any unseen cause. People never push or hold a vessel or dock by hand."""
 
     if feedback:
         user_message += "\n\nYOUR PREVIOUS ATTEMPT WAS REJECTED. Fix these points:\n" + "\n".join(
