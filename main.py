@@ -343,7 +343,8 @@ async def _execute_pipeline(
             )
         await asyncio.to_thread(tracker.update_with_error, str(nvse))
         status.fail(f"Kalite kapısından geçen senaryo yok: {nvse}")
-        return {"success": False, "reason": "no_valid_scenario", "error": str(nvse)}
+        return {"success": False, "reason": "no_valid_scenario", "error": str(nvse),
+                "error_summary": nvse.short_summary()}   # Telegram'a kısa özet (TUR 25)
 
     except Exception as e:
         elapsed = time.time() - start_time

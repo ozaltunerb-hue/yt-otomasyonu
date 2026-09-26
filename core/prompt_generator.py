@@ -286,7 +286,9 @@ _BEAT3_BLACKLIST = [
     ("calm", re.compile(r"\bcalm(?:s|ed|ing|ly)?\b")),
     ("anticipation", re.compile(r"\banticipation\b")),
     ("watch in/intently", re.compile(r"\bwatch(?:es|ing|ed)?\s+(?:in|intently)\b")),
-    ("safe", re.compile(r"\bsafe(?:ly)?\b|\bsafety\s+returns\b")),
+    # Kaçışın hedefi sayılmaz (TUR 25, Tersane #2): "workers scramble to a safe distance" hâlâ hareket
+    ("safe", re.compile(r"(?<!\bto\sa\s)(?<!\btoward\sa\s)(?<!\btowards\sa\s)(?<!\bfor\sa\s)\bsafe(?:ly)?\b"
+                        r"(?!\s+(?:distance|spot|area|place|zone|ground)\b)|\bsafety\s+returns\b")),
     ("resolve", re.compile(r"\bresolv(?:e|es|ed|ing)\b")),
     ("under control", re.compile(r"\bunder\s+control\b")),
     ("recover", re.compile(r"\brecover(?:s|ed|ing)?\b")),
@@ -311,7 +313,8 @@ _BEAT3_STATIC_VERBS = {
     "gesturing", "inspecting", "pointing", "assessing", "signaling", "signalling",
     "stand", "wait", "watch", "sit", "look", "stare", "observe", "remain",
 }
-_STILL_RE = re.compile(r"\bstill\s+(?:\w+ly\s+)?(being\s+\w+|\w+ing)\b")   # "still water" eşleşmez
+# "still water" eşleşmez. TUR 25: "still visibly in motion" / "still in motion" de devam işareti (Tersane #1)
+_STILL_RE = re.compile(r"\bstill\s+(?:\w+ly\s+)?(being\s+\w+|in\s+motion|\w+ing)\b")
 _CONTINUE_RE = re.compile(r"\bcontinu(?:e|es|ed|ing)\s+(?:to\s+)?(\w+)")
 _KEEP_RE = re.compile(r"\bkeeps?\s+(?:on\s+)?(\w+ing)\b")
 
@@ -613,7 +616,9 @@ _INVISIBLE_CAUSE_RE = re.compile(
     r"\bmysterious(?:ly)?\b|\b(?:unseen|invisible)\s+(?:force|cause|pressure)s?\b|\bout\s+of\s+nowhere\b",
     re.IGNORECASE,
 )
-_TRIGGER_EXTRA_RE = re.compile(r"\b(?:heel(?:s|ed|ing)?|gives?\s+way|gave\s+way|broke|tore|torn)\b", re.IGNORECASE)
+# TUR 25: "The cruise liner experiences a heavy roll" reddediliyordu; roll kendi olay havuzumuzdaki tetik
+_TRIGGER_EXTRA_RE = re.compile(r"\b(?:heel(?:s|ed|ing)?|gives?\s+way|gave\s+way|broke|tore|torn|"
+                               r"roll(?:s|ed|ing)?|lurch(?:es|ed|ing)?)\b", re.IGNORECASE)
 _TRIGGER_STOPWORDS = {"the", "a", "an", "and", "over", "onto", "into", "from", "with", "its", "their", "across",
                       "under", "hard", "suddenly", "loose", "down"}
 _VESSEL_OBJECT = (r"(?:yachts?|boats?|hulls?|vessels?|ships?|catamarans?|ferr(?:y|ies)|liners?|powerboats?|"
@@ -945,7 +950,28 @@ def score_scenario(scenario: dict) -> int:
 
 
 class NoValidScenarioError(RuntimeError):
-    """5 senaryo denemesinin hiçbiri kalite kapısından geçemediğinde fırlatılır."""
+    """5 senaryo denemesinin hiçbiri kalite kapısından geçemediğinde fırlatılır.
+
+    attempts: [{"attempt", "failures", ...}] (TUR 25): Telegram'a kısa özet için yapısal liste.
+    """
+
+    def __init__(self, message: str, attempts: list[dict] | None = None):
+        super().__init__(message)
+        self.attempts = attempts or []
+
+    def short_summary(self, max_reason: int = 90) -> str:
+        """Deneme başına tek satır: '#1 Beat 3 son 12 kelimede hareket yok (+1)'. Liste yoksa mesajın başı."""
+        if not self.attempts:
+            return str(self)[:300]
+        lines = [str(self).split(" Denemeler:")[0]]
+        for i, a in enumerate(self.attempts, 1):
+            fails = a.get("failures") or ["?"]
+            reason = re.split(r":\s+'", fails[0], maxsplit=1)[0]   # alıntılanan metni at, kısa listeler kalır
+            if len(reason) > max_reason:
+                reason = reason[:max_reason - 1] + "…"
+            extra = f" (+{len(fails) - 1})" if len(fails) > 1 else ""
+            lines.append(f"#{a.get('attempt', i)} {reason}{extra}")
+        return "\n".join(lines)
 
 
 async def generate_prompts(config: dict) -> dict:
@@ -1013,7 +1039,8 @@ async def generate_prompts(config: dict) -> dict:
     if not accepted:
         raise NoValidScenarioError(
             f"{max_scenario_attempts} senaryo denemesi kalite kapısından geçemedi. Bu tur video üretilmedi. "
-            f"Denemeler: {json.dumps(attempt_log, ensure_ascii=False)}"
+            f"Denemeler: {json.dumps(attempt_log, ensure_ascii=False)}",
+            attempts=attempt_log,
         )
 
     # ── ADIM 3: Seedance 2 Mini Doğukan Promptu (45–60 Kelime, TUR 24 — DEFAULT_DURATION Standardı) ──
@@ -1272,7 +1299,8 @@ async def simplify_with_gate(candidates: list[dict]) -> tuple[dict, dict, list[d
             feedback = [hint for _, hint in issues]
     raise NoValidScenarioError(
         f"Hiçbir senaryonun simplifier çıktısı kapıdan geçmedi. "
-        f"Denemeler: {json.dumps(attempts, ensure_ascii=False)}"
+        f"Denemeler: {json.dumps(attempts, ensure_ascii=False)}",
+        attempts=attempts,
     )
 
 

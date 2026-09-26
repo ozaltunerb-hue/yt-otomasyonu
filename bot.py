@@ -130,7 +130,9 @@ async def produce(bot, chat_id: int, domain: str) -> None:
             error = (result or {}).get("error") or (result or {}).get("reason") or "Bilinmeyen hata"
             if status.data.get("state") == "running":
                 status.fail(error)
-            await bot.send_message(chat_id, f"❌ Üretim başarısız: {str(error)[:500]}")
+            # Kalite kapısı retlerinde deneme başına tek satır özet (TUR 25): ham JSON 500 karakterde kesiliyordu
+            summary = (result or {}).get("error_summary") or str(error)[:500]
+            await bot.send_message(chat_id, f"❌ Üretim başarısız: {summary}"[:4000])
             return
 
         title = result.get("title", "")
