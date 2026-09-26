@@ -24,7 +24,41 @@
 
 ---
 
-## 📋 DEVİR — Telegram tetikleyici (2026-09-26 kapanışı)
+## 📋 DEVİR — Tersane side launch (2026-09-27 kapanışı)
+
+**DEĞİŞMEZLER (kullanıcı kararı):** Ücretli çağrı (GPT/Kie) açık onay olmadan çalıştırılmaz. **Tersane domain'i
+düzelene kadar üretimde kullanılmaz** (Telegram'da Tersane'ye basılmaz). Side launch'ta gemi artık feribot DEĞİL:
+**büyük yat (superyacht / large luxury motor yacht)**.
+
+**Durum (doğrulandı):** TUR 24-28 main'de, CI yeşil, son deploy `69ec2fc4` (`fbaa0b2`) SUCCESS, 400 test.
+- TUR 24 (`2eb3513`): görünür tetik, sahne fiziği, sahneye göre kısa stil eki (63-111 kelime), 45-60 kelimelik
+  hikaye, K/L/M kapıları. **Kruvaziyer Kie testinde kabul edildi.**
+- TUR 25-26: Tersane haksız retleri, Telegram'a deneme başına tek satır ret özeti, "unexpectedly" serbest.
+- TUR 27-28: Tersane side launch (ağırlık ~%70, `EVENT_SHIP_ONLY` şu an Passenger Car Ferry, `REPEATABLE_EVENTS`,
+  beat planı, N kapısı, `rank_candidates` ile son seçim olay ağırlığıyla). GPT dry-run'ları geçti (son: 4/5).
+
+**Sorun (Kie'de doğrulandı): TUR 27-28 side launch Kie testleri başarısız, 3 video.** Son testte prompt "long side
+faces camera", "about 50 m away", "same size and position throughout" dediği halde Seedance feribotu uzakta, burnu
+önde, rıhtım ucundan düşürdü; 9. saniyede sahne kesmesi, ardından devrik gemi. **Sonuç: metinle kompozisyon kontrolü
+yetmiyor.** Prompt'a kural eklemek bu sorunu çözmez.
+
+**Sıradaki oturum (sırayla):**
+1. `EVENT_SHIP_ONLY[SIDE_LAUNCH_EVENT]` süper yata çevrilsin (superyacht / large luxury motor yacht). Evrende
+   "Luxury Motor Yacht" var; ayrı "Superyacht" tipi gerekiyorsa `SHIP_NAME_PATTERNS` ve testler de güncellenir.
+   Side launch beat planı, stil eki ve kişi aralığı feribot varsayıyor; hepsi yata göre gözden geçirilir.
+2. Görselden videoya akış: önce ilk kare görseli üretilir (süper yat yan indirme raylarında, uzun kenarı kameraya
+   dönük), sonra Seedance first-frame ile canlandırılır. **Önce araştırma:** Kie'nin Seedance 2 Mini
+   (`bytedance/seedance-2-fast`) için ilk kare / image-to-video desteği var mı, hangi parametreyle? Görsel üretimi
+   hangi modelle yapılacak? Ücretli deneme kullanıcı onayıyla.
+3. Kullanıcının eski başarılı side launch videosunun prompt'u ve ayarları bulunsun (Notion geçmişi, lokal dosyalar,
+   eski scratch çıktıları). Neyin işe yaradığı oradan çıkarılır.
+
+**Nerede yanılmış olabilirim:** 3 başarısız video tek bir modelle (Seedance 2 Mini, 480p) alındı; daha büyük model
+kompozisyonu tutabilir, denenmedi. Tersane dışındaki domainlerin TUR 24 sonrası Kie sonucu sadece Kruvaziyer'de görüldü.
+
+---
+
+## 📋 DEVİR (ESKİ) — Telegram tetikleyici (2026-09-26 kapanışı)
 
 **DEĞİŞMEZLER (kullanıcı kararı):** Ücretli çağrı (GPT/Kie) açık onay olmadan çalıştırılmaz. Cron YOK; her üretim
 Telegram `/uret` → domain butonu ile. Restart politikası ON_FAILURE kalır, tekrar kontrol edilmez.
