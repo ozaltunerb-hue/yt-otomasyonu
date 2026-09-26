@@ -2,7 +2,7 @@
 #
 # İzin listesi mantığı: sadece şunlar sunulur, geri kalan HER ŞEY 403:
 #   /dashboard.html, /status.json, /dashboard_data/<dosya>, proje içindeki *.mp4
-#   /api/local.json -> panel için üretilen özet (mp4 listesi, scratch senaryoları, cron zamanı);
+#   /api/local.json -> panel için üretilen özet (mp4 listesi, scratch senaryoları);
 #                      o dosyaların kendisi sunulmaz, sadece gerekli alanlar
 # Her zaman 403: nokta ile başlayan her yol parçası (.env, .git, .venv...), .py dosyaları,
 # proje dışına çıkan yollar (../, mutlak yol, symlink), klasör listeleri.
@@ -57,7 +57,7 @@ def resolve(root: str, url_path: str) -> str | None:
 
 
 def local_summary(root: str) -> dict:
-    """Panelin 'Lokal video dosyaları' ve 'Cron' kartları için özet. Dosya içerikleri sunulmaz."""
+    """Panelin 'Lokal video dosyaları' kartı için özet. Dosya içerikleri sunulmaz."""
     videos = []
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [d for d in dirnames if not d.startswith(".") and d not in MP4_SKIP_DIRS]
@@ -83,13 +83,8 @@ def local_summary(root: str) -> dict:
                         scenarios[name] = {k: v.get(k) for k in ("domain", "camera", "seconds", "story", "final_prompt")}
     for v in videos:
         v["info"] = scenarios.get(v["path"].split("/")[-1])
-    cron = ""
-    try:
-        cron = json.load(open(os.path.join(root, "railway.json"), encoding="utf-8"))["deploy"]["cronSchedule"]
-    except Exception:
-        pass
     videos.sort(key=lambda v: v["modified"], reverse=True)
-    return {"videos": videos, "cron": cron}
+    return {"videos": videos}
 
 
 class Handler(BaseHTTPRequestHandler):

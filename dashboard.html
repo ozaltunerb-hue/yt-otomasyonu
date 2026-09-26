@@ -11,7 +11,8 @@
     dashboard_data/notion_runs.json   -> 30 sn'de bir (scripts/dashboard_sync.py Notion'dan çeker)
     dashboard_data/token_refresh.json -> refresh_youtube_token.bat başarılı olunca yazılır
     api/local.json                    -> sunucunun ürettiği özet: lokal .mp4 listesi,
-                                         scratch/kie_*_result.json senaryoları, railway.json cron zamanı
+                                         scratch/kie_*_result.json senaryoları
+  Üretim Railway'de Telegram botu (bot.py, /uret) ile tetiklenir; cron yok (2026-09-26).
 -->
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 <style>
@@ -149,14 +150,15 @@
         <span style="--c: #3a3a36">Bekliyor</span>
         <span style="--c: #fab219">Manuel (elle yapılır)</span>
         <span style="--c: transparent; border-style: dashed">Pasif / atlandı</span>
+        <span style="--c: #2aa3e0">Telegram (Railway'de)</span>
       </div>
     </div>
   </section>
 
   <section class="grid two">
     <div>
-      <h2>Cron</h2>
-      <div class="card" id="cron"></div>
+      <h2>Tetikleme</h2>
+      <div class="card" id="trigger"></div>
     </div>
     <div>
       <h2>YouTube OAuth token</h2>
@@ -179,7 +181,7 @@
 
 <script>
 const TZ = "Europe/Istanbul";
-const STATE = { status: null, runs: [], sync: {}, token: null, cron: "", filter: "all", locals: [], diagramKey: "" };
+const STATE = { status: null, runs: [], sync: {}, token: null, filter: "all", locals: [], diagramKey: "" };
 
 // ── yardımcılar ──
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -216,27 +218,19 @@ function classify(r) {
 }
 const ytId = u => (u.match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{11})/) || [])[1];
 
-// ── cron: "M H * * d,d" (UTC) ──
-function parseCron(expr) {
-  const [m, h, , , dow] = (expr || "").split(/\s+/);
-  if (!/^\d+$/.test(m) || !/^\d+$/.test(h)) return null;
-  const days = dow === "*" ? [0, 1, 2, 3, 4, 5, 6] : dow.split(",").map(Number);
-  return { m: +m, h: +h, days };
-}
-function nextCronRuns(c, n = 3) {
-  const out = [], d = new Date();
-  for (let i = 0; i < 21 && out.length < n; i++) {
-    const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + i, c.h, c.m));
-    if (c.days.includes(t.getUTCDay()) && t > d) out.push(t);
-  }
-  return out;
-}
-function isCronRun(r, c) {
-  if (!c || r.trigger !== "auto" || !r.date) return false;
-  const t = new Date(r.date);
-  if (!c.days.includes(t.getUTCDay())) return false;
-  const mins = t.getUTCHours() * 60 + t.getUTCMinutes() - (c.h * 60 + c.m);
-  return mins >= -5 && mins <= 45;   // Notion kaydı senaryo yazılınca açılır, cron'dan birkaç dk sonra
+// ── domain: combo_key'in ilk parçası; etiketler bot.py DOMAIN_LABELS ile aynı (test_dashboard_server denetler) ──
+const DOMAIN_LABELS = {
+  ferry_operations: "⛴️ Feribot",
+  shipyard_and_drydock_engineering: "🏗️ Tersane",
+  marina_and_yacht_operations: "⛵ Marina & Yat",
+  cruise_ship_operations: "🚢 Kruvaziyer",
+  coastal_tornado_landfall: "🌪️ Kıyı Hortumu",
+  urban_city_disasters: "🏙️ Şehir Afeti",
+  open_beach_coastal_events: "🏖️ Plaj & Sahil",
+};
+function domainOf(r) {
+  const d = (r.combo_key || "").split("|")[0].trim();
+  return d ? DOMAIN_LABELS[d] || d : "";
 }
 
 // ── render: KPI ──
@@ -261,7 +255,7 @@ function renderLive() {
   const el = document.getElementById("live");
   const s = STATE.status;
   if (!s) {
-    el.innerHTML = `<div class="empty">Henüz lokal çalışma yok. <code>python main.py</code> (veya <code>--no-upload</code>) çalışınca adımlar burada canlı görünür.<br>Not: Railway'deki cron kendi sunucusunda çalışır, buraya yazmaz; onun sonucu aşağıdaki Notion kayıtlarına düşer.</div>`;
+    el.innerHTML = `<div class="empty">Henüz lokal çalışma yok. <code>python main.py</code> (veya <code>--no-upload</code>) çalışınca adımlar burada canlı görünür.<br>Not: Asıl üretimler Telegram'dan (<code>/uret</code> → domain seç) Railway'de çalışır ve buraya yazmaz; sonuçları aşağıdaki Notion kayıtlarına düşer (tetikleyici: manual).</div>`;
     return;
   }
   const running = s.state === "running";
@@ -294,23 +288,28 @@ function renderLive() {
 
 // ── render: Mermaid pipeline (status.json'daki adım durumlarıyla boyanır) ──
 const NODES = [
+  ["telegram", "0 · Telegram /uret<br/>(domain seçimi)"],
   ["senaryo", "1 · Senaryo<br/>GPT + kalite kapıları"],
   ["video", "2 · Video üretimi<br/>Seedance 2 (Kie)"],
   ["indirme", "3 · İndirme<br/>+ hareket profili"],
   ["montaj", "4 · Montaj<br/>pasif: tek çekim"],
   ["youtube", "5 · YouTube Shorts"],
   ["instagram", "6 · Instagram @deepmyster<br/>manuel paylaşım"],
+  ["tgvideo", "Telegram'a video<br/>(bot gönderir)"],
 ];
+// Telegram adımları Railway'de koşar, lokal status.json'da yok: sabit "tg" rengiyle çizilir
+const FIXED_CLASS = { montaj: "skipped", instagram: "manual", telegram: "tg", tgvideo: "tg" };
 async function renderPipeline() {
   const byId = Object.fromEntries((STATE.status?.steps || []).map(s => [s.id, s.state]));
-  const cls = id => byId[id] || (id === "montaj" ? "skipped" : id === "instagram" ? "manual" : "pending");
+  const cls = id => byId[id] || FIXED_CLASS[id] || "pending";
   const key = NODES.map(([id]) => cls(id)).join(",");
   if (key === STATE.diagramKey) return;   // durum değişmediyse tekrar çizme
   STATE.diagramKey = key;
   const def = [
     "flowchart LR",
     ...NODES.map(([id, label]) => `  ${id}["${label}"]:::${cls(id)}`),
-    "  senaryo --> video --> indirme --> montaj --> youtube",
+    "  telegram --> senaryo --> video --> indirme --> montaj --> youtube",
+    "  youtube --> tgvideo",
     "  youtube -. elle .-> instagram",
     "  notion[(\"Notion log\")]:::store",
     "  senaryo -.-> notion",
@@ -322,6 +321,7 @@ async function renderPipeline() {
     "  classDef skipped fill:#1a1a19,stroke:#5a5a55,stroke-dasharray:5 4,color:#8a897f",
     "  classDef manual fill:#2a220d,stroke:#fab219,stroke-dasharray:5 4,color:#fab219",
     "  classDef store fill:#1a1a19,stroke:#5a5a55,color:#c3c2b7",
+    "  classDef tg fill:#0e2233,stroke:#2aa3e0,stroke-width:2px,color:#ffffff",
   ].join("\n");
   try {
     if (!window.mermaid) throw new Error("mermaid.js yok");
@@ -332,26 +332,19 @@ async function renderPipeline() {
   }
 }
 
-// ── render: Cron ──
-function renderCron() {
-  const el = document.getElementById("cron");
-  const c = parseCron(STATE.cron);
-  if (!c) { el.innerHTML = `<div class="empty">Cron yok: üretim Telegram botundan (<code>/uret</code>) tetikleniyor.</div>`; return; }
-  const next = nextCronRuns(c);
-  const past = STATE.runs.filter(r => isCronRun(r, c)).slice(0, 6);
-  const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
-  const tr = new Date(Date.UTC(2026, 0, 5, c.h, c.m)).toLocaleTimeString("tr-TR", { timeZone: TZ, hour: "2-digit", minute: "2-digit" });
+// ── render: Tetikleme ──
+function renderTrigger() {
+  const el = document.getElementById("trigger");
+  const tg = STATE.runs.filter(r => r.trigger === "manual" && r.combo_key).slice(0, 6);
   el.innerHTML = `
-    <div class="meta">Railway: <code>${esc(STATE.cron)}</code> (UTC) → ${c.days.map(d => dayNames[d]).join(" + ")} ${tr} TR saati</div>
-    <div style="margin:10px 0 4px">Sıradaki: <span class="big">${fmt(next[0]?.toISOString(), { weekday: "long" })}</span>
-      <span class="meta">(${next.slice(1).map(t => fmt(t.toISOString(), { weekday: "short" })).join(", ")})</span></div>
-    <h2 style="margin-top:14px">Son cron çalışmaları</h2>
-    <div class="rows">${past.length ? past.map(r => {
+    <div>Üretim Telegram'dan: <code>/uret</code> → domain butonu → Railway'de pipeline.</div>
+    <div class="meta" style="margin-top:6px">Cron yok (2026-09-26 kaldırıldı), otomatik Kie harcaması yok. Aynı anda tek üretim; sonuç Notion'a <code>manual</code> olarak düşer, video Telegram'a da gelir.</div>
+    <h2 style="margin-top:14px">Son manual üretimler</h2>
+    <div class="rows">${tg.length ? tg.map(r => {
       const k = classify(r);
-      return `<div class="row"><span>${fmt(r.date, { weekday: "short" })} <span class="meta">· ${esc((r.title || "").slice(0, 48))}</span></span>
+      return `<div class="row"><span>${fmt(r.date, { weekday: "short" })} <span class="meta">· ${esc(domainOf(r))} · ${esc((r.title || "").slice(0, 40))}</span></span>
         <span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span></div>`;
-    }).join("") : `<div class="empty">Notion'da cron saatine denk gelen kayıt yok.</div>`}</div>
-    <div class="meta" style="margin-top:8px">Cron zamanına (±45 dk) denk gelen "auto" Notion kayıtları.</div>`;
+    }).join("") : `<div class="empty">Henüz Telegram'dan üretim yok.</div>`}</div>`;
 }
 
 // ── render: Token ──
@@ -368,16 +361,13 @@ function renderToken() {
   }
   const exp = new Date(t.expires_estimate);
   const left = (exp - Date.now()) / 86400e3;
-  const c = parseCron(STATE.cron);
-  const nextCron = c ? nextCronRuns(c, 1)[0] : null;
-  const beforeCron = nextCron && exp < nextCron;
   const badge = left <= 0 ? `<span class="badge b-err">✕ Süresi doldu</span>`
-    : beforeCron || left < 2 ? `<span class="badge b-run">! Yakında bitiyor</span>`
+    : left < 2 ? `<span class="badge b-run">! Yakında bitiyor</span>`
     : `<span class="badge b-up">✓ Geçerli</span>`;
   el.innerHTML = `${badge}
     <div style="margin-top:10px">Son yenileme: <span class="big">${fmt(t.refreshed_at, { weekday: "short" })}</span> <span class="meta">(${ago(t.refreshed_at)})</span></div>
     <div class="meta">Kanal: ${esc(t.channel)} · Tahmini bitiş: ${fmt(t.expires_estimate, { weekday: "short" })} (${left > 0 ? left.toFixed(1) + " gün kaldı" : "geçti"})</div>
-    ${beforeCron ? `<div class="warnbox">Token, sıradaki cron'dan (${fmt(nextCron.toISOString(), { weekday: "short" })}) önce bitiyor. Cron'dan önce yenile.</div>` : ""}
+    ${left > 0 && left < 2 ? `<div class="warnbox">Token yakında bitiyor. Telegram'dan üretim başlatmadan önce yenile, yoksa YouTube yüklemesi başarısız olur.</div>` : ""}
     ${lastUpLine}${how}`;
 }
 
@@ -398,7 +388,7 @@ function renderVideos() {
     return `<article class="card vcard">
       <div class="thumb">${thumb}</div>
       <div class="vbody">
-        <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span><span>${fmt(r.date)}</span><span>· ${esc(r.trigger || "?")}</span></div>
+        <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span><span>${fmt(r.date)}</span><span>· tetik: ${esc(r.trigger || "?")}</span>${domainOf(r) ? `<span>· ${esc(domainOf(r))}</span>` : ""}</div>
         <div class="vtitle">${esc(r.title || "(başlıksız)")}</div>
         ${r.topic && r.topic !== r.title ? `<div class="vtext">${esc(r.topic.slice(0, 220))}</div>` : ""}
         ${r.error ? `<div class="verr">${esc(r.error.slice(0, 300))}</div>` : ""}
@@ -446,9 +436,8 @@ async function loadSlow() {
     getJSON("dashboard_data/notion_runs.json"), getJSON("dashboard_data/token_refresh.json"), getJSON("api/local.json")]);
   if (runs.status === "fulfilled") { STATE.sync = runs.value; STATE.runs = runs.value.runs || []; }
   STATE.token = token.status === "fulfilled" ? token.value : null;
-  STATE.cron = local.status === "fulfilled" ? local.value.cron || "" : "";
   if (local.status === "fulfilled") setLocal(local.value.videos || []);
-  renderKpis(); renderCron(); renderToken(); renderVideos();
+  renderKpis(); renderTrigger(); renderToken(); renderVideos();
   document.getElementById("refreshed").textContent = "Son yenileme: " + new Date().toLocaleTimeString("tr-TR") + " · canlı durum 3 sn, diğerleri 30 sn";
 }
 function setLocal(videos) {

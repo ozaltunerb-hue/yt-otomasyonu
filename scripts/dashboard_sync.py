@@ -1,6 +1,6 @@
 # Dashboard için Notion video geçmişini lokale çeker (sadece OKUR, Notion'a yazmaz).
 #
-# Neden: cron Railway'de çalışıyor; ürettiği video/yükleme/hata kayıtları proje klasörüne
+# Neden: üretim Railway'de (Telegram /uret) çalışıyor; ürettiği video/yükleme/hata kayıtları proje klasörüne
 # düşmüyor, Notion'a düşüyor. Bu betik onları dashboard_data/notion_runs.json'a yazar,
 # dashboard.html oradan okur. start_dashboard.bat açılışta ve 10 dakikada bir çalıştırır.
 #

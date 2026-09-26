@@ -8,7 +8,9 @@ import http.client
 import importlib.util
 import json
 import os
+import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import threading
@@ -150,11 +152,72 @@ class TestAllowlist(_ServerCase):
         status, body, _ = self.get("/api/local.json")
         self.assertEqual(status, 200)
         data = json.loads(body)
-        self.assertEqual(data["cron"], "30 13 * * 1,5")
+        self.assertNotIn("cron", data)   # cron 2026-09-26'da kaldırıldı
         paths = {v["path"]: v for v in data["videos"]}
         self.assertEqual(set(paths), {"clip.mp4", "scratch/test.mp4"})
         self.assertEqual(paths["clip.mp4"]["info"]["domain"], "d")
         self.assertNotIn(b"secret", body)
+
+
+class TestDashboardHtml(unittest.TestCase):
+    """Panel Telegram tetikleyiciye göre (2026-09-26): cron kalıntısı yok, şema ve kayıtlar güncel."""
+
+    @classmethod
+    def setUpClass(cls):
+        root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        cls.html = open(os.path.join(root, "dashboard.html"), encoding="utf-8").read()
+        cls.js = re.search(r"<script>\s*\n(.*?)</script>", cls.html, re.S).group(1)
+
+    def test_no_cron_left(self):
+        for word in ("parseCron", "renderCron", "nextCronRuns", "isCronRun", "STATE.cron", 'id="cron"', "cronSchedule", "Railway'deki cron"):
+            with self.subTest(word=word):
+                self.assertNotIn(word, self.html)
+
+    def test_domain_labels_match_bot(self):
+        import bot
+        block = re.search(r"const DOMAIN_LABELS = \{(.*?)\};", self.js, re.S).group(1)
+        labels = dict(re.findall(r'^\s*(\w+): "([^"]+)",', block, re.M))
+        self.assertEqual(labels, bot.DOMAIN_LABELS)
+
+    def test_pipeline_has_telegram_boxes(self):
+        nodes = re.search(r"const NODES = \[(.*?)\];", self.js, re.S).group(1)
+        ids = re.findall(r'\["(\w+)",', nodes)
+        self.assertEqual(ids[0], "telegram")
+        self.assertEqual(ids[-1], "tgvideo")
+        self.assertIn("0 · Telegram /uret", nodes)
+        self.assertIn("telegram --> senaryo", self.js)
+        self.assertIn("youtube --> tgvideo", self.js)
+
+    def test_records_show_trigger_and_domain(self):
+        self.assertIn("tetik: ${esc(r.trigger", self.js)
+        self.assertIn("esc(domainOf(r))", self.js)
+        self.assertIn('id="trigger"', self.html)
+
+    def _node(self):
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("node yok")
+        return node
+
+    def test_js_syntax(self):
+        node = self._node()
+        with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as f:
+            f.write(self.js)
+        self.addCleanup(os.remove, f.name)
+        r = subprocess.run([node, "--check", f.name], capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+
+    def test_domain_of(self):
+        node = self._node()
+        start = self.js.index("const DOMAIN_LABELS")
+        end = self.js.index("}", self.js.index("function domainOf")) + 1
+        snippet = self.js[start:end] + """
+console.log(JSON.stringify([
+  domainOf({combo_key: "ferry_operations|passenger car ferry|e|env|fixed_cctv"}),
+  domainOf({combo_key: ""}), domainOf({}), domainOf({combo_key: "old_domain|x|y|z|c"})]));"""
+        r = subprocess.run([node, "-e", snippet], capture_output=True, text=True, encoding="utf-8")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(json.loads(r.stdout), ["⛴️ Feribot", "", "", "old_domain"])
 
 
 if __name__ == "__main__":

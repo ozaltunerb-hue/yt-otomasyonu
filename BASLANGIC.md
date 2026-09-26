@@ -28,7 +28,7 @@
 
 **Durum (doğrulandı):** TUR 1-23 kodu `main`'de (son `b097590`), 279/279 test. Railway aktif deploy = `b097590`
 (GitHub Actions `tests` yeşilse otomatik deploy, "Wait for CI"; tetikleyici 54618a0d). Çalışma imajında ffmpeg var
-(railpack.json). Cron `30 13 * * 1,5` UTC. TUR 21 Kie doğrulaması: 2 video kullanıcı tarafından kabul edildi
+(railpack.json). Cron 2026-09-26'da kaldırıldı, üretim Telegram /uret ile. TUR 21 Kie doğrulaması: 2 video kullanıcı tarafından kabul edildi
 (Video 2 bug'ları — durağan açılış, "the vessel", kargo, zayıf Beat 3 — çözüldü).
 
 **Sıradaki somut adımlar:**
