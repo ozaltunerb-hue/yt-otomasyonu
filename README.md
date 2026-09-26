@@ -47,7 +47,7 @@ YT_Otomasyonu/
 │   ├── video_downloader.py          # Video indirme + cleanup
 │   ├── youtube_uploader.py          # OAuth2 YouTube upload
 │   └── notion_logger.py             # Notion DB tracking + tekrar önleme
-├── railway.json                     # Railway deploy: python bot.py, restart ALWAYS, cron yok
+├── railway.json                     # Railway deploy: python bot.py, restart ON_FAILURE, cron yok
 ├── railpack.json                    # Railway build (railpack): çalışma imajına ffmpeg
 ├── .github/workflows/tests.yml      # CI: unittest; Railway "Wait for CI" buna bağlı
 └── requirements.txt                 # Python bağımlılıkları
@@ -137,7 +137,8 @@ Veri gömülü değil, dosyalardan okunur:
 
 ## 🤖 Telegram Tetikleyici (Railway)
 
-- **Komut:** `python bot.py` (polling). `railway.json`: restart `ALWAYS`, cronSchedule YOK (2026-09-26 kaldırıldı; otomatik Kie harcaması yok, her üretim elle tetiklenir).
+- **Komut:** `python bot.py` (polling). `railway.json`: restart `ON_FAILURE`, cronSchedule YOK (2026-09-26 kaldırıldı; otomatik Kie harcaması yok, her üretim elle tetiklenir).
+- **Tuzak (2026-09-26):** `railway.json`'dan bir anahtarı SİLMEK Railway panelindeki değeri silmez; dosya sadece içinde olan anahtarları uygular. Cron bu yüzden ilk deploy'da kalmıştı, `serviceInstanceUpdate` (cronSchedule null, startCommand, restart) ile ayrıca temizlendi. Railway `ALWAYS`'u ON_FAILURE'a çeviriyordu; dosya da ON_FAILURE yapıldı. Deploy anında eski ve yeni container birkaç saniye üst üste biner, logda tek bir `telegram.error.Conflict` normaldir.
 - **Akış:** `/uret` → 7 domain butonu → seçim → `main.run_pipeline(domain=..., trigger="manual")`. Senaryoların 5'i de seçilen domain'den; kapılar, puanlama, Notion dedup aynı. Mesajlar: başladı / yüklendi (YouTube linki) / hata; bitince video Telegram'a da gönderilir (50 MB sınırı).
 - **Güvenlik:** sadece `TELEGRAM_CHAT_ID` sohbetine cevap verir. Aynı anda tek üretim (kilit), meşgulken "üretim sürüyor". Açılışta bekleyen eski güncellemeler atılır (restart eski buton basışını üretime çevirmez).
 - **Env:** `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (.env ve Railway Variables). Eksikse bot açık hata mesajıyla durur. Aynı token'la iki yerde (lokal + Railway) polling çakışır; lokal test ederken Railway'deki bot durdurulmalı.

@@ -123,7 +123,7 @@ class TestConfig(unittest.TestCase):
     def test_railway_json_runs_bot_without_cron(self):
         deploy = json.load(open(os.path.join(ROOT, "railway.json"), encoding="utf-8"))["deploy"]
         self.assertEqual(deploy["startCommand"], "python bot.py")
-        self.assertEqual(deploy["restartPolicyType"], "ALWAYS")
+        self.assertEqual(deploy["restartPolicyType"], "ON_FAILURE")   # Railway ALWAYS'u zaten buna çeviriyordu (2026-09-26)
         self.assertNotIn("cronSchedule", deploy)
 
     def test_requirements_pin_telegram(self):

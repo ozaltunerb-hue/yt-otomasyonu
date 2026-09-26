@@ -24,7 +24,31 @@
 
 ---
 
-## 📋 DEVİR — Açık işler (2026-09-25, gece kapanışı)
+## 📋 DEVİR — Telegram tetikleyici (2026-09-26 kapanışı)
+
+**DEĞİŞMEZLER (kullanıcı kararı):** Ücretli çağrı (GPT/Kie) açık onay olmadan çalıştırılmaz. Cron YOK; her üretim
+Telegram `/uret` → domain butonu ile. Restart politikası ON_FAILURE kalır, tekrar kontrol edilmez.
+
+**Durum (doğrulandı):** `bot.py` Railway'de (@DeepMysterUretimBot, izinli sohbet tek chat ID; Railway Variables
+TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID). Commit `55b1114` + panel `16a7677`, CI yeşil, deploy `ab56e339` SUCCESS, bot açılış
+logu var. Gerçek Feribot testi (onaylı): 209 sn, YouTube private https://youtube.com/shorts/LrQwJxLLreo, Notion
+`manual` + ferry_operations combo, Hareket 0.58, Kie kredisi 375 (video başı ~175). Kullanıcı Telegram'da 3 mesaj + videoyu
+aldı. Panel: Tetikleme kartı, şemada Telegram kutuları, kayıtlarda tetik + domain. 322 test.
+
+**Borç (doğrulanmadı):** `ab56e339` deploy'undan sonra `/uret` butonlarının geldiği kullanıcıdan teyit edilmedi
+(bot logu temiz). Railway log API'si Feribot koşusunun senaryo satırlarını eksik döndürdü; 5 senaryonun 5'inin feribot
+olduğu bu koşu için logla görülmedi (birim testle güvenceli, görülen 2 ret + seçilen senaryo feribot).
+
+**Nerede yanılmış olabilirim:** Railway'in ALWAYS'u neden ON_FAILURE'a çevirdiği bilinmiyor (plan kısıtı tahmini,
+API "Not Authorized"). Telegram token'ı sohbete yapıştırıldı; iş bitince @BotFather `/revoke` + `.env` ve Railway
+güncellemesi önerildi, kullanıcı karar vermedi.
+
+**Sıradaki somut adım:** Kullanıcı `/uret` ile butonları görür (basmadan). Sonra normal üretim akışı; YouTube token
+haftalık yenileme kuralı aynen geçerli (`refresh_youtube_token.bat`).
+
+---
+
+## 📋 DEVİR (ESKİ) — Açık işler (2026-09-25, gece kapanışı)
 
 **Durum (doğrulandı):** TUR 1-23 kodu `main`'de (son `b097590`), 279/279 test. Railway aktif deploy = `b097590`
 (GitHub Actions `tests` yeşilse otomatik deploy, "Wait for CI"; tetikleyici 54618a0d). Çalışma imajında ffmpeg var
