@@ -394,7 +394,7 @@ class NotionTracker:
             f"Notion get_used_combos {max_attempts} denemede de başarısız: {last_exc}"
         )
 
-    def get_recent_history(self, days: int = 30) -> list[str]:
+    def get_recent_history(self, days: int = 30, limit: int = 20) -> list[str]:
         """
         Son N günün konu ve başlıklarını çeker (GPT'ye negatif yönlendirme olarak vermek için).
 
@@ -449,7 +449,7 @@ class NotionTracker:
                     t = title_rt[0].get("text", {}).get("content", "")
                     if t and t not in history:
                         history.append(t)
-            return list(reversed(history[:20]))
+            return list(reversed(history[:limit]))
         except Exception as e:
             log.warning(f"⚠️ Notion get_recent_history hatası (ihmal edilebilir): {e}")
             return []

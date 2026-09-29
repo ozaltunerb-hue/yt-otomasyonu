@@ -152,9 +152,14 @@ Veri gömülü değil, dosyalardan okunur:
 - **Build:** Railway `railpack` kullanır, `nixpacks.toml` okunmaz. Sistem paketleri `railpack.json` → `deploy.aptPackages` (ffmpeg, hareket profili için).
 - **Güncel durum ve gerekçe:** bkz. `_knowledge/deploy-registry.md` (bu dosya infra durumunun kaynağıdır)
 
-## 🦴 Prompt Hattı: İskelet (TUR 30, varsayılan)
+## ✍️ Prompt Hattı: Creative (TUR 31, varsayılan)
 
-- **Anahtar:** `PROMPT_PIPELINE` ortam değişkeni. `skeleton` (varsayılan) = yeni hat; `legacy` = eski hat (yazıcı sistem prompt'u, 5 aday, skor/sıralama, simplifier, A-N kapıları, fikir kütüphanesi). Final test geçene kadar eski kod silinmez.
+- **Anahtar:** `PROMPT_PIPELINE` = `creative` (varsayılan) / `skeleton` / `legacy`. Hiçbiri silinmedi.
+- **Akış:** Python olay/gemi (LRU), yer ve havayı (iskelet listelerinden rastgele) seçer → GPT-4o, ~80 kelimelik sistem prompt'uyla 40-60 kelimelik hikâyeyi yazar (kurallar: 3 beat, görünür tetik, son cümle hareketle biter) → iki sert kontrol (olay uyuşması, 40-60 kelime; kalırsa eksik kelimeleri söyleyen geri bildirimle 1 tekrar, sonra `CreativeStoryError`) → iskeletle birebir aynı kamera satırı + kıyafet + ışık → preflight → ✋ onay → Kie. Tekrar önleme: Notion'daki son 15 hikâye "bunlardan farklı yaz" diye verilir (Notion "Konu" tam hikâyeyi tutar). 5 aday, skor, simplifier ve A-N kapıları bu hatta yok. Kod: `core/creative_pipeline.py`.
+
+## 🦴 Prompt Hattı: İskelet (TUR 30)
+
+- **Anahtar:** `PROMPT_PIPELINE` ortam değişkeni. `skeleton` = iskelet hattı; `legacy` = eski hat (yazıcı sistem prompt'u, 5 aday, skor/sıralama, simplifier, A-N kapıları, fikir kütüphanesi). Final test geçene kadar eski kod silinmez.
 - **Yeni hat:** Telegram menüsü (kategori, olay) → Python: olay/gemi seçimi (LRU) → gpt-4o-mini boşluk doldurma (yer, hava, kişi sayısı, kişi rolü; listeden/aralıktan doğrulanır, 1 tekrar, sonra `SlotFillError`) → kilitli iskelet + boşluklar = hikaye → tek el kamerası satırı + kıyafet + ışık (en fazla 8 kısıt) → preflight → ✋ onay → Kie. Kod: `core/skeleton_pipeline.py` (`EVENT_SKELETONS`).
 - **Olay havuzu:** 22 olay (Feribot 3, Tersane 5, Marina 3, Kruvaziyer 3, Kıyı Hortumu 3, Şehir 2, Plaj 3). Görünür büyük fiziksel tetiği olmayan 17 olay bu hatta ve Telegram menüsünde yok (`REMOVED_EVENTS`), eski hatta duruyor.
 - **Kamera satırı:** "Handheld phone video by a person standing {yer}, eye level, normal lens; slight hand shake, the phone turns to follow the {nesne}; no zoom, no cuts." "fully in frame" bu hatta yok.

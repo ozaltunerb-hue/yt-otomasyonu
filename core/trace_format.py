@@ -74,6 +74,8 @@ def format_generation(trace: dict, labels: dict | None = None) -> list[tuple[str
     labels = labels or {}
     if trace.get("pipeline") == "skeleton":
         return _format_skeleton(trace, labels)
+    if trace.get("pipeline") == "creative":
+        return _format_creative(trace, labels)
     cands = trace.get("candidates") or []
     sections = [("🔍 1. Seçim",
                  f"Kategori: {labels.get('domain') or trace.get('domain') or 'rastgele'}\n"
@@ -118,6 +120,26 @@ def _format_skeleton(trace: dict, labels: dict) -> list[tuple[str, str]]:
          f"Boşluklar: yer={slots.get('spot')} · hava={slots.get('weather')} · kişi={slots.get('count')} "
          f"{slots.get('people')}\n" + "\n".join(lines)),
         ("🔍 3. Hikaye", f"{trace.get('story_words')} kelime\n{trace.get('story')}"),
+    ]
+
+
+def _format_creative(trace: dict, labels: dict) -> list[tuple[str, str]]:
+    """Creative hattı (TUR 31): seçim, GPT-4o denemeleri (kelime + iki sert kontrol), hikâye."""
+    lo, hi = (trace.get("count_range") or ["?", "?"])[:2]
+    lines = [f"Deneme {a.get('attempt')} · {a.get('words')} kelime · "
+             + ("✅ geçti" if not a.get("issues") else "❌ " + " | ".join(a["issues"])) + f"\n{a.get('story') or '(boş)'}"
+             for a in trace.get("attempts") or []]
+    return [
+        ("🔍 1. Seçim",
+         f"Hat: creative (PROMPT_PIPELINE=creative)\n"
+         f"Kategori: {labels.get('domain') or trace.get('domain')}\n"
+         f"Olay: {labels.get('event') or trace.get('event')}\n"
+         f"Gemi: {trace.get('ship')} (Python, LRU) · kamera: el kamerası\n"
+         f"Yer: {trace.get('spot')} · hava: {trace.get('weather')} (Python, rastgele) · kişi aralığı: {lo}-{hi}\n"
+         f"Ulaşılacak sonuç: {trace.get('outcome', '-')}\n"
+         f"Tekrar önleme: son {trace.get('recent_count', 0)} hikâye GPT'ye verildi"),
+        ("🔍 2. GPT-4o hikâyesi (kontroller: olay uyuşması, 40-60 kelime)", "\n\n".join(lines) or "-"),
+        ("🔍 3. Hikâye", f"{trace.get('story_words')} kelime\n{trace.get('story')}"),
     ]
 
 

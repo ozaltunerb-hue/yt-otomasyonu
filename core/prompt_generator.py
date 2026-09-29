@@ -959,14 +959,32 @@ def _event_stems(text: str) -> set[str]:
             if len(w) >= 4 and w not in _EVENT_STOPWORDS}
 
 
+# Olay köklerinin anlamca eşdeğerleri (TUR 31, veri): "a sudden deluge turns the street into a river" sel
+# olayını taşır ama "flood" kelimesi yok; kelime eşleşmesi onu reddediyordu. Metindeki eşanlamlı kök, olayın
+# kökü sayılır. Eşik (2 kök) aynı kaldı: sadece "street" geçen bir yağmur hikâyesi hâlâ sel sayılmaz.
+_EVENT_SYNONYMS = {
+    "floo": {"delu", "torr", "gush", "inun", "subm", "swam"},        # flood: deluge, torrent, gushing, inundate...
+    "torn": {"twis", "funn", "vort"},                                # tornado: twister, funnel, vortex
+    "wave": {"swel", "brea"},                                        # wave: swell, breaker
+    "snap": {"brea", "crac", "part", "seve"},                        # snaps: breaks, cracks, parts, severs
+    "cabl": {"rope", "line", "wire", "haws"},                        # cable: rope, line, wire, hawser
+    "moor": {"hawe", "haws", "rope"},                                # mooring line
+    "stre": {"road", "aven", "boul", "inte"},                        # street: road, avenue, boulevard, intersection
+    "gust": {"wind", "blas", "squa"},                                # gust: wind, blast, squall
+    "rogu": {"gian", "mons", "towe", "mass"},                        # rogue wave: giant, monster, towering, massive
+}
+
+
 def event_fidelity_issues(event: str, text: str, min_hits: int = 2) -> list[str]:
     """Menü olayı metinde görünüyor mu? Olayın anahtar köklerinden en az `min_hits` tanesi (olay daha az kök
-    taşıyorsa hepsi) metinde geçmeli. Boş liste = uyuşuyor. Yeni prompt kuralı değil: GPT'ye gitmez,
-    sadece seçilen olayla üretilecek videonun aynı olay olduğunu denetler."""
+    taşıyorsa hepsi) metinde geçmeli; eşanlamlı kökler (_EVENT_SYNONYMS) da sayılır. Boş liste = uyuşuyor.
+    Yeni prompt kuralı değil: GPT'ye gitmez, sadece seçilen olayla videonun aynı olay olduğunu denetler."""
     if not event:
         return []
     key = _event_stems(event)
-    found = key & _event_stems(text)
+    text_stems = _event_stems(text)
+    text_stems |= {canon for canon, syns in _EVENT_SYNONYMS.items() if syns & text_stems}
+    found = key & text_stems
     need = min(min_hits, len(key))
     if len(found) >= need:
         return []
@@ -1103,17 +1121,54 @@ class NoValidScenarioError(RuntimeError):
 
 
 async def generate_prompts(config: dict) -> dict:
-    """Prompt hattı seçici (TUR 30). config["prompt_pipeline"] ya da settings.PROMPT_PIPELINE:
-    "skeleton" (varsayılan) = iskelet hattı; "legacy" = eski yazıcı/simplifier/kapı hattı (silinmedi)."""
+    """Prompt hattı seçici. config["prompt_pipeline"] ya da settings.PROMPT_PIPELINE:
+    "creative" (TUR 31, varsayılan) = GPT-4o hikâyeyi kendisi yazar; "skeleton" (TUR 30) = iskelet hattı;
+    "legacy" = eski yazıcı/simplifier/kapı hattı. Hiçbiri silinmedi."""
     if settings.IS_DRY_RUN:
         log.info("🧪 DRY-RUN: Doğukan standardında DeepMyster mock promptları üretiliyor...")
         return _dry_run_output()
-    pipeline = (config.get("prompt_pipeline") or settings.PROMPT_PIPELINE or "skeleton").lower()
+    pipeline = (config.get("prompt_pipeline") or settings.PROMPT_PIPELINE or "creative").lower()
     if pipeline == "legacy":
         return await generate_legacy_prompts(config)
-    if pipeline != "skeleton":
-        raise ValueError(f"Bilinmeyen PROMPT_PIPELINE: {pipeline} (skeleton / legacy)")
-    return await generate_skeleton_prompts(config)
+    if pipeline == "skeleton":
+        return await generate_skeleton_prompts(config)
+    if pipeline != "creative":
+        raise ValueError(f"Bilinmeyen PROMPT_PIPELINE: {pipeline} (creative / skeleton / legacy)")
+    return await generate_creative_prompts(config)
+
+
+async def generate_creative_prompts(config: dict) -> dict:
+    """Creative hattı (TUR 31): Python olay/gemi/yer/hava seçer, GPT-4o 40-60 kelimelik hikâyeyi yazar,
+    iskeletle aynı kamera satırı ve stil eki eklenir. 5 aday, skor, simplifier, A-N kapıları yok."""
+    from core.creative_pipeline import build_creative_scene
+
+    used = list(config.get("used_combos", []))
+    topics = list(config.get("recent_topics", []))
+    history = list(dict.fromkeys(used + topics))
+    scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history, topics,
+                                       _call_gpt)
+    domain, event, ship, story = scene["domain"], scene["event"], scene["ship"], scene["story"]
+    metadata = await _generate_metadata(
+        {"vessel_class": ship or "None", "incident_type": event, "scenario_summary": story},
+        {"domain_title": MARITIME_INSPIRATION_DOMAINS_TITLES.get(domain, domain)})
+    return {
+        "scenes": [{"scene_number": 1, "prompt": scene["prompt"], "story": story,
+                    "style_suffix": scene["style_suffix"], "duration": settings.DEFAULT_DURATION}],
+        "youtube_title": clean_youtube_title(metadata.get("youtube_title", "")),
+        "youtube_description": metadata.get("youtube_description", ""),
+        "tags": metadata.get("tags", []),
+        # Notion "Konu" tam hikâyeyi tutar: sonraki üretimde "bunlardan farklı yaz" listesi buradan gelir
+        "scenario_summary": story,
+        "combo_key": scene["combo_key"],
+        "total_duration": settings.DEFAULT_DURATION,
+        "animal": ship or "None", "talent": event, "category": domain,
+        "beat1_action_verb": "",
+        "gate_context": None,
+        "scenario_text": story,
+        "selection": {"domain_id": domain, "event": event, "environment": scene["spot"],
+                      "ship": ship or "None", "camera": scene["trace"]["camera"]},
+        "trace": scene["trace"],
+    }
 
 
 async def generate_skeleton_prompts(config: dict) -> dict:

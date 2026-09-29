@@ -155,8 +155,8 @@ def is_authorized(update: Update, allowed_chat_id: int) -> bool:
 
 
 def domain_events(domain: str) -> list[str]:
-    """Menüdeki olaylar. İskelet hattında (varsayılan) sadece iskeleti olan 22 olay; eski hatta hepsi."""
-    if settings.PROMPT_PIPELINE == "skeleton":
+    """Menüdeki olaylar. creative (varsayılan) ve skeleton hatlarında aynı 22 olay; eski hatta hepsi."""
+    if settings.PROMPT_PIPELINE in ("creative", "skeleton"):
         return skeleton_events(domain)
     return DOMAIN_ATTRIBUTES[domain]["events"]
 

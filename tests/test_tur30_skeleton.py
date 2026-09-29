@@ -180,11 +180,10 @@ class TestGeneratePrompts(unittest.TestCase):
              patch.object(pg, "_generate_scenario", writer):
             return asyncio.run(pg.generate_prompts(config)), gpt, legacy
 
-    def test_default_is_skeleton(self):
-        self.assertEqual(settings.PROMPT_PIPELINE, os.environ.get("PROMPT_PIPELINE", "skeleton").lower())
+    def test_skeleton_selectable_by_switch(self):
+        # TUR 31: varsayılan "creative"; iskelet hattı anahtarla seçilir (test_tur31_creative varsayılanı sınar)
         from config import Config
-        with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("PROMPT_PIPELINE", None)
+        with patch.dict(os.environ, {"PROMPT_PIPELINE": "skeleton"}, clear=False):
             self.assertEqual(Config().PROMPT_PIPELINE, "skeleton")
 
     def test_skeleton_output_shape(self):

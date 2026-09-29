@@ -112,14 +112,17 @@ class TestDeepMysterCreativeFreedom(unittest.TestCase):
 
     def test_07_catalyst_diversity_distribution(self):
         """10 ardışık katalizör çağrısında zengin alan dağılımı sağlanmalı."""
+        # TUR 31: geçmiş eskiden çıplak domain adıydı; rotasyon sadece 5 parçalı combo'yu tanıdığı için 10 çekiş
+        # tamamen rastgeleydi ve ~%0,7 ihtimalle 3 domainde kalıp CI'ı düşürüyordu (29 Eyl). Artık gerçek combo
+        # geçmişiyle katı rotasyon sınanır: ilk 7 çekişte 7 farklı domain.
         used = []
-        domains_seen = set()
+        seen = []
         for _ in range(10):
             cat = get_creative_catalyst(recent_history=used)
-            used.append(cat["domain_id"])
-            domains_seen.add(cat["domain_id"])
+            used.append(f"{cat['domain_id']}|none|x|x|fixed_cctv")
+            seen.append(cat["domain_id"])
 
-        self.assertGreaterEqual(len(domains_seen), 4)
+        self.assertEqual(len(set(seen[:7])), 7)
 
     def test_08_high_action_validator(self):
         """Sakin/rutin senaryolar reddedilmeli, aktif tehlike içeren senaryolar geçmeli."""

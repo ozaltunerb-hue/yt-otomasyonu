@@ -139,7 +139,8 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     # ── Tekrar önleme & Semantik Negatif Hafıza ──
     used_combos = load_used_combos()
     tracker = NotionTracker()
-    recent_topics = tracker.get_recent_history(days=30)
+    # creative hattı son 15 hikâyeyi "bunlardan farklı yaz" diye verir; konu+başlık çiftleri için 40 (TUR 31)
+    recent_topics = tracker.get_recent_history(days=30, limit=40)
     recent_verbs = tracker.get_recent_beat1_verbs(limit=10)   # Beat 1 fiil rotasyonu (TUR 17)
     if recent_topics:
         log.info(f"🧠 Son 30 günden {len(recent_topics)} semantik konu negatif hafızaya eklendi")
