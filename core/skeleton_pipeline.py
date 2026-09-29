@@ -114,7 +114,7 @@ EVENT_SKELETONS = {
     "Restraining cable snaps during slipway launch": {
         "domain": "shipyard_and_drydock_engineering", "ships": ["Luxury Motor Yacht"],
         "spots": {"Construction slipway": "the construction slipway"},
-        "people": ["shipyard workers"], "weather": WEATHER_SEA, "object": "sliding yacht",
+        "people": ["shipyard workers"], "weather": WEATHER_SEA, "object": "tilting yacht",
         "text": "On {spot} in {weather}, a restraining cable snaps and whips across the concrete as the {ship} breaks "
                 "free on its launch cradle. The {ship} slides bow-first down the inclined rails toward the open water "
                 "while {n} {people} dive clear. It hits the water with a huge splash and keeps rolling and pitching.",

@@ -97,9 +97,18 @@ class TestConfigAndPrompt(unittest.TestCase):
         for e in ("Restraining cable snaps during slipway launch", "Keel blocks collapse under the launching hull"):
             with self.subTest(event=e):
                 o = cp.EVENT_OUTCOMES[e]
-                self.assertIn("tips sideways", o)
-                self.assertIn("on its side", o)
-                self.assertNotIn("hits the water", o)
+                # Yat ileri gitmez: olduğu yerde yana yatar, SONRA yan tarafıyla suya devrilir
+                self.assertEqual(o, "the yacht heels over onto its side in place, then topples sideways into the water "
+                                    "beside it with a huge splash and keeps rolling hard from side to side")
+                self.assertLess(o.index("heels over onto its side in place"), o.index("then topples sideways"))
+                import re
+                self.assertIsNone(re.search(r"\b(?:slides? down|sliding|hurtl\w*|lurch\w*|forward|plung\w*|"
+                                            r"div(?:e|es|ing)|nose\w*|bow-first)\b", o), o)
+        self.assertEqual(sk.EVENT_SKELETONS["Restraining cable snaps during slipway launch"]["object"], "tilting yacht")
+        self.assertEqual(sk.EVENT_SKELETONS["Keel blocks collapse under the launching hull"]["object"], "tilting hull")
+        self.assertIn("the camera pans to follow the tilting yacht",
+                      sk.style_suffix("Restraining cable snaps during slipway launch", "Luxury Motor Yacht",
+                                      "Construction slipway"))
         self.assertEqual(sk.CAMERA_SPOTS["Construction slipway"],
                          "on the quay beside the slipway, level with the yacht's bow, seeing its whole side")
 

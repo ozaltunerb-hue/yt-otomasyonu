@@ -51,12 +51,14 @@ EVENT_OUTCOMES = {
     "Green wave breaks over the rail onto the vehicle deck":
         "seawater pours across the vehicle deck and shoves parked cars sideways into each other",
     # Tersane
+    # Yat kızakta ileri gitmez: olduğu yerde yana yatar, sonra yan tarafıyla suya devrilir (altın video).
+    # İleri kayma yazılınca model yatı suya kafadan sokuyordu.
     "Restraining cable snaps during slipway launch":
-        "the yacht tips sideways off the slipway, slams into the water on its side with a huge splash, "
-        "and keeps rolling hard from side to side",
+        "the yacht heels over onto its side in place, then topples sideways into the water beside it with a "
+        "huge splash and keeps rolling hard from side to side",
     "Keel blocks collapse under the launching hull":
-        "the yacht tips sideways off the slipway, slams into the water on its side with a huge splash, "
-        "and keeps rolling hard from side to side",
+        "the yacht heels over onto its side in place, then topples sideways into the water beside it with a "
+        "huge splash and keeps rolling hard from side to side",
     "Drydock flood gate bursts open":
         "a wall of seawater lifts the hull off its blocks and swings it against the dock wall",
     "Timber shores snap and the hull tips on its keel blocks":
