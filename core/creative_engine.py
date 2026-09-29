@@ -466,15 +466,23 @@ if _missing_names:
     raise RuntimeError(f"SHIP_NAME_PATTERNS eksik: {sorted(_missing_names)}")
 
 
-def get_creative_catalyst(recent_history: list[str] | None = None, domain: str | None = None) -> dict:
+def get_creative_catalyst(recent_history: list[str] | None = None, domain: str | None = None,
+                          event: str | None = None) -> dict:
     """
     Geniş denizcilik ilham alanlarından birini seçer ve GPT-4o için bağlam üretir.
     Geçmişteki seçimlere bakarak Visual World (Domain), Gemi Tipi, Event ve Environment tekrarlarını
     strict rotasyonla engeller (LRU).
     domain verilirse (Telegram /uret) domain rotasyonu atlanır, gemi/olay/ortam LRU'su aynen çalışır.
+    event verilirse (Telegram /uret olay menüsü) olay zorunludur; ortam EVENT_ENV_COMPAT'a göre,
+    gemi olaya izinli gemilerden LRU ile seçilir. domain verilmezse olayın domain'i kullanılır.
     """
     if domain is not None and domain not in MARITIME_INSPIRATION_DOMAINS:
         raise ValueError(f"Bilinmeyen domain: {domain}")
+    if event is not None:
+        owner = next((d for d, a in DOMAIN_ATTRIBUTES.items() if event in a["events"]), None)
+        if owner is None or (domain is not None and domain != owner):
+            raise ValueError(f"Olay bu domain'de yok: {domain} / {event}")
+        domain = owner
     if recent_history is None:
         recent_history = []
         
@@ -569,7 +577,24 @@ def get_creative_catalyst(recent_history: list[str] | None = None, domain: str |
 
     # Gemi, Olay ve Ortam Seçimi (Kendi içlerinde tekrarı minimize eder)
     vessel_envs = VESSEL_ENVIRONMENTS.get(chosen_domain_key)
-    if vessel_envs:
+    if event is not None:
+        # Zorunlu olay (Telegram olay menüsü): uyumlu ortam + olaya izinli gemi, ikisi de LRU
+        compat = EVENT_ENV_COMPAT.get(chosen_domain_key, {})
+        envs = [v for v in attrs["environments"] if event not in compat or v in compat[event]]
+        chosen_event = event
+        if vessel_envs:
+            if event in vessel_envs["vessel_only_events"]:
+                envs = [v for v in envs if v in vessel_envs["environments"]]
+            _, chosen_env = _choose_pair([event], envs)
+            chosen_ship = (_choose_lru(attrs["ships"], recent_ships)
+                           if chosen_env in vessel_envs["environments"] else None)
+        else:
+            ships = [s for s in attrs["ships"] if s in EVENT_SHIP_ONLY.get(event, attrs["ships"])
+                     and event not in SHIP_INCOMPATIBLE.get(s, {}).get("events", set())]
+            chosen_ship = _choose_lru(ships, recent_ships)
+            banned = SHIP_INCOMPATIBLE.get(chosen_ship or "", {}).get("environments", set())
+            _, chosen_env = _choose_pair([event], [v for v in envs if v not in banned])
+    elif vessel_envs:
         # Gemisi opsiyonel domain (TUR 11): önce ortam; şehir/plaj ortamında gemi yok
         chosen_env = _choose_lru(attrs.get("environments", []), recent_envs)
         if chosen_env in vessel_envs["environments"]:

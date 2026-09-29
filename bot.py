@@ -2,7 +2,9 @@
 """
 DeepMyster Telegram tetikleyici (python-telegram-bot, polling).
 
-  /uret  → 7 domain butonu → seçilen domain ile main.run_pipeline (senaryo → Kie → YouTube)
+  /uret → 7 kategori butonu → kategorinin olay butonları (+ 🎲 Rastgele, 🔙 Geri)
+        → onay mesajı (kategori + olay + tahmini maliyet) → ✅ Üret ile main.run_pipeline
+          (senaryo → Kie → YouTube). Olay zorunlu olay olarak gider; ortam/gemi/kamera otomatik.
 
 Kurallar:
   - Sadece TELEGRAM_CHAT_ID'deki sohbete cevap verir; diğerleri sessizce yok sayılır.
@@ -27,7 +29,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
 import main as pipeline
-from core.creative_engine import MARITIME_INSPIRATION_DOMAINS
+from core.creative_engine import DOMAIN_ATTRIBUTES, SIDE_LAUNCH_EVENT
 from infrastructure.run_status import status
 from logger import get_logger
 
@@ -43,8 +45,69 @@ DOMAIN_LABELS = {
     "urban_city_disasters": "🏙️ Şehir Afeti",
     "open_beach_coastal_events": "🏖️ Plaj & Sahil",
 }
+
+# Olay butonları; anahtarlar DOMAIN_ATTRIBUTES "events" ile birebir (test_telegram_bot denetler)
+EVENT_LABELS = {
+    # Feribot
+    "Lashing chain snaps and a parked car breaks loose": "⛓️ Zincir kopar, araç kayar",
+    "Loading ramp hinge snaps and the ramp drops": "🚧 Rampa menteşesi kopar",
+    "Green wave breaks over the rail onto the vehicle deck": "🌊 Dalga araç güvertesine vurur",
+    # Tersane
+    SIDE_LAUNCH_EVENT: "🚢 Yandan suya indirme",
+    "Restraining cable snaps during slipway launch": "🪢 Kızak halatı kopar",
+    "Keel blocks collapse under the launching hull": "🧱 Omurga takozları çöker",
+    "Drydock flood gate bursts open": "💦 Havuz kapağı patlar",
+    "Timber shores snap and the hull tips on its keel blocks": "🪵 Destek kütükleri kırılır",
+    "Crane sling snaps while lowering the hull into the water": "🏗️ Vinç askısı kopar",
+    # Marina & Yat
+    "Mooring line snaps in a storm gust": "🪢 Halat fırtınada kopar",
+    "Jammed throttle sends the boat careening": "🚤 Gaz kolu takılır",
+    "Storm surge wave lifts and buckles the floating pontoon": "🌊 Dalga yüzer iskeleyi büker",
+    "Passing boat's wake slams the boat sideways": "💥 Geçen teknenin dalgası çarpar",
+    # Kruvaziyer
+    "Mooring line snaps and whips across the quay": "🪢 Halat kopar, rıhtımı savurur",
+    "Gangway tears loose as the hull surges": "🪜 Yolcu köprüsü kopar",
+    "Rogue wave breaks over the rail onto the pool deck": "🌊 Dev dalga havuz güvertesinde",
+    "Heavy roll tilts the deck and sends loungers sliding": "↔️ Yalpa şezlongları kaydırır",
+    # Kıyı Hortumu
+    "Tornado forming offshore": "🌪️ Açıkta hortum oluşur",
+    "Tornado approaching coastline": "🌪️ Hortum kıyıya yaklaşır",
+    "Tornado making landfall": "🌪️ Hortum karaya vurur",
+    "Coastal evacuation": "🏃 Kıyı tahliyesi",
+    "Waterfront disruption": "🏚️ Sahil şeridi karışır",
+    "Tornado rain bands and flying debris lash the waterfront": "🌧️ Yağmur ve uçan enkaz",
+    "Coastal debris movement": "🪨 Kıyıda enkaz savrulur",
+    "Marina equipment reacting to severe weather": "⚓ Marina ekipmanı savrulur",
+    # Şehir Afeti
+    "Severe storm hitting downtown": "⛈️ Şehir merkezine fırtına",
+    "Flash flooding in city streets": "🌊 Caddelerde ani sel",
+    "Storm gust tears signs and scaffolding loose downtown": "🪧 Tabela ve iskele uçar",
+    "Falling outdoor objects caused by severe weather": "🧱 Yukarıdan nesneler düşer",
+    "Sudden coastal storm reaching the urban district": "🌀 Kıyı fırtınası şehre ulaşır",
+    "Major weather event disrupting city traffic": "🚗 Trafik felç olur",
+    "Heavy rain overwhelming city streets": "🌧️ Sağanak caddeleri basar",
+    # Plaj & Sahil
+    "Tornado approaching an open beach": "🌪️ Hortum plaja yaklaşır",
+    "Sudden extreme storm hitting the beach": "⛈️ Plaja ani fırtına",
+    "Storm gust rips umbrellas and beach chairs into the air": "⛱️ Şemsiyeler havaya uçar",
+    "Large waves reaching the beach": "🌊 Dev dalgalar plaja ulaşır",
+    "Severe storm disrupting a beachfront area": "🌬️ Sahil şeridinde fırtına",
+    "Beach evacuation during extreme weather": "🏃 Plaj tahliyesi",
+    "Coastal flooding reaching the beachfront": "💧 Sel sahile ulaşır",
+}
+RANDOM_LABEL = "🎲 Rastgele"
+# Video başı ~175 Kie kredisi (BASLANGIC.md, 2026-09 ölçümü) + birkaç GPT çağrısı
+ESTIMATED_COST = "~175 Kie kredisi + birkaç GPT çağrısı"
+
+# Callback verisi kısa ID'lerle (Telegram 64 bayt sınırı): domain ve olay listedeki sıra numarası.
+#   uret:d:<di>         → olay menüsü        uret:e:<di>:<ei|r> → onay mesajı
+#   uret:ok:<di>:<ei|r> → üretimi başlat     uret:back → kategori menüsü    uret:x → iptal
+# Sıra değişirse eski butonun olayı kayar; onay mesajı olayı gösterdiği için fark edilmeden üretim başlamaz.
 CALLBACK_PREFIX = "uret:"
+RANDOM_ID = "r"
+DOMAIN_KEYS = list(DOMAIN_LABELS)
 TELEGRAM_VIDEO_LIMIT = 50 * 1024 * 1024   # Bot API dosya gönderim sınırı
+BUSY_TEXT = "⏳ Üretim sürüyor, bitince tekrar dene."
 
 _production_lock = asyncio.Lock()
 
@@ -66,9 +129,53 @@ def is_authorized(update: Update, allowed_chat_id: int) -> bool:
     return chat is not None and chat.id == allowed_chat_id
 
 
+def domain_events(domain: str) -> list[str]:
+    return DOMAIN_ATTRIBUTES[domain]["events"]
+
+
 def domain_keyboard() -> InlineKeyboardMarkup:
-    buttons = [InlineKeyboardButton(label, callback_data=CALLBACK_PREFIX + key) for key, label in DOMAIN_LABELS.items()]
+    buttons = [InlineKeyboardButton(label, callback_data=f"{CALLBACK_PREFIX}d:{i}")
+               for i, label in enumerate(DOMAIN_LABELS.values())]
     return InlineKeyboardMarkup([buttons[i:i + 2] for i in range(0, len(buttons), 2)])
+
+
+def event_keyboard(di: int) -> InlineKeyboardMarkup:
+    rows = [[InlineKeyboardButton(EVENT_LABELS[e], callback_data=f"{CALLBACK_PREFIX}e:{di}:{ei}")]
+            for ei, e in enumerate(domain_events(DOMAIN_KEYS[di]))]
+    rows.append([InlineKeyboardButton(RANDOM_LABEL, callback_data=f"{CALLBACK_PREFIX}e:{di}:{RANDOM_ID}")])
+    rows.append([InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}back")])
+    return InlineKeyboardMarkup(rows)
+
+
+def confirm_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}ok:{di}:{eid}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def parse_selection(di_raw: str, eid: str | None = None) -> tuple[str, str | None] | None:
+    """Kısa ID → (domain, olay). Olay None = rastgele (motor seçer). Geçersizse None."""
+    if not di_raw.isdigit() or int(di_raw) >= len(DOMAIN_KEYS):
+        return None
+    domain = DOMAIN_KEYS[int(di_raw)]
+    if eid is None or eid == RANDOM_ID:
+        return domain, None
+    events = domain_events(domain)
+    if not eid.isdigit() or int(eid) >= len(events):
+        return None
+    return domain, events[int(eid)]
+
+
+def selection_label(event: str | None) -> str:
+    return EVENT_LABELS[event] if event else RANDOM_LABEL
+
+
+def confirm_text(domain: str, event: str | None) -> str:
+    return (f"Kategori: {DOMAIN_LABELS[domain]}\n"
+            f"Olay: {selection_label(event)}{'' if event else ' (motor seçer)'}\n"
+            f"Tahmini maliyet: {ESTIMATED_COST}\n\n"
+            "Üretim sadece ✅ Üret'e basınca başlar.")
 
 
 def _allowed_chat(context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -78,48 +185,70 @@ def _allowed_chat(context: ContextTypes.DEFAULT_TYPE) -> int:
 async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not is_authorized(update, _allowed_chat(context)):
         return
-    await update.effective_message.reply_text("DeepMyster üretim botu. /uret ile domain seçip video üret.")
+    await update.effective_message.reply_text("DeepMyster üretim botu. /uret ile kategori ve olay seçip video üret.")
 
 
 async def cmd_uret(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not is_authorized(update, _allowed_chat(context)):
         return
     if _production_lock.locked():
-        await update.effective_message.reply_text("⏳ Üretim sürüyor, bitince tekrar dene.")
+        await update.effective_message.reply_text(BUSY_TEXT)
         return
-    await update.effective_message.reply_text("Hangi domain?", reply_markup=domain_keyboard())
+    await update.effective_message.reply_text("Hangi kategori?", reply_markup=domain_keyboard())
 
 
-async def on_domain_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Menü adımları: kategori → olay → onay → üretim. Üretimi sadece ✅ Üret başlatır."""
     query = update.callback_query
     if not is_authorized(update, _allowed_chat(context)):
         return
     await query.answer()
-    domain = (query.data or "").removeprefix(CALLBACK_PREFIX)
-    if domain not in DOMAIN_LABELS:
-        await query.edit_message_text("Bilinmeyen domain. /uret ile tekrar dene.")
+    action, *args = (query.data or "").removeprefix(CALLBACK_PREFIX).split(":")
+
+    if action == "x" and not args:
+        await query.edit_message_text("❌ İptal edildi. /uret ile yeniden başlayabilirsin.")
         return
     if _production_lock.locked():
-        await query.edit_message_text("⏳ Üretim sürüyor, bitince tekrar dene.")
+        await query.edit_message_text(BUSY_TEXT)
         return
-    async with _production_lock:
-        await query.edit_message_text(
-            f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]}\nSenaryo → video → YouTube. Birkaç dakika sürer."
-        )
-        await produce(context.bot, _allowed_chat(context), domain)
+    if action == "back" and not args:
+        await query.edit_message_text("Hangi kategori?", reply_markup=domain_keyboard())
+        return
+
+    sel = None
+    if action == "d" and len(args) == 1:
+        sel = parse_selection(args[0])
+    elif action in ("e", "ok") and len(args) == 2:
+        sel = parse_selection(*args)
+    if sel is None:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    domain, event = sel
+
+    if action == "d":
+        await query.edit_message_text(f"{DOMAIN_LABELS[domain]}: hangi olay?", reply_markup=event_keyboard(int(args[0])))
+    elif action == "e":
+        await query.edit_message_text(confirm_text(domain, event), reply_markup=confirm_keyboard(*args))
+    else:
+        async with _production_lock:
+            await query.edit_message_text(
+                f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)}\n"
+                "Senaryo → video → YouTube. Birkaç dakika sürer."
+            )
+            await produce(context.bot, _allowed_chat(context), domain, event)
 
 
-def _run_pipeline_blocking(domain: str, output_path: str) -> dict:
+def _run_pipeline_blocking(domain: str, event: str | None, output_path: str) -> dict:
     # Pipeline kendi event loop'unda, ayrı thread'de: bot üretim sırasında cevap vermeye devam eder
-    return asyncio.run(pipeline.run_pipeline(domain=domain, trigger="manual", output_path=output_path))
+    return asyncio.run(pipeline.run_pipeline(domain=domain, event=event, trigger="manual", output_path=output_path))
 
 
-async def produce(bot, chat_id: int, domain: str) -> None:
+async def produce(bot, chat_id: int, domain: str, event: str | None = None) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz."""
     video_path = os.path.join(tempfile.gettempdir(), f"deepmyster_tg_{domain}_{int(time.time())}.mp4")
     try:
         try:
-            result = await asyncio.to_thread(_run_pipeline_blocking, domain, video_path)
+            result = await asyncio.to_thread(_run_pipeline_blocking, domain, event, video_path)
         except Exception as e:
             log.error(f"❌ Telegram üretimi çöktü: {e}", exc_info=True)
             status.fail(f"Telegram üretimi çöktü: {e}")
@@ -174,7 +303,7 @@ def build_application(token: str, allowed_chat_id: int) -> Application:
     app.bot_data["allowed_chat_id"] = allowed_chat_id
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("uret", cmd_uret))
-    app.add_handler(CallbackQueryHandler(on_domain_selected, pattern=f"^{CALLBACK_PREFIX}"))
+    app.add_handler(CallbackQueryHandler(on_callback, pattern=f"^{CALLBACK_PREFIX}"))
     app.add_error_handler(on_error)
     return app
 

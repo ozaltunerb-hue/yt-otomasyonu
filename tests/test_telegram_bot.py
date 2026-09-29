@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Telegram tetikleyici (bot.py) + domain parametresi (2026-09-26). API çağrısı yok:
+Telegram tetikleyici (bot.py) + domain parametresi (2026-09-26) + iki seviyeli olay menüsü ve
+zorunlu olay parametresi (2026-09-29). API çağrısı yok:
 Telegram, GPT, Kie, Notion, YouTube mock'lanır. Ücretli hiçbir çağrı yapılmaz.
 """
 import asyncio
@@ -18,7 +19,16 @@ sys.path.insert(0, ROOT)
 import bot
 import core.prompt_generator as pg
 from config import settings
-from core.creative_engine import MARITIME_INSPIRATION_DOMAINS, get_creative_catalyst
+import main
+from core.creative_engine import (
+    DOMAIN_ATTRIBUTES,
+    EVENT_ENV_COMPAT,
+    EVENT_SHIP_ONLY,
+    MARITIME_INSPIRATION_DOMAINS,
+    SHIP_INCOMPATIBLE,
+    VESSEL_ENVIRONMENTS,
+    get_creative_catalyst,
+)
 from core.prompt_generator import NoValidScenarioError
 
 CHAT = 424242
@@ -64,16 +74,19 @@ class TestDomainParameter(unittest.TestCase):
         history = [f"{d}|none|x|x|fixed_cctv" for d in DOMAINS[:-1]]
         self.assertEqual(get_creative_catalyst(recent_history=history)["domain_id"], DOMAINS[-1])
 
-    def _run_generate(self, domain, used_combos=()):
+    def _run_generate(self, domain, used_combos=(), event=None, events_seen=None):
         calls = []
         real = pg.get_creative_catalyst
 
         def spy(**kw):
             calls.append(kw.get("domain"))
+            if events_seen is not None:
+                events_seen.append(kw.get("event"))
             return real(**kw)
 
         gen = AsyncMock(return_value={"scenario_summary": "calm harbor", "beat1_action_verb": "sits"})
-        config = {"used_combos": list(used_combos), "recent_topics": [], "recent_verbs": [], "domain": domain}
+        config = {"used_combos": list(used_combos), "recent_topics": [], "recent_verbs": [], "domain": domain,
+                  "event": event}
         with patch.object(settings, "IS_DRY_RUN", False), patch.object(pg, "get_creative_catalyst", side_effect=spy), \
              patch.object(pg, "_generate_scenario", gen),              patch.object(pg, "_call_gpt", AsyncMock(side_effect=AssertionError("GPT çağrılmamalı"))):
             with self.assertRaises(NoValidScenarioError) as cm:
@@ -100,8 +113,84 @@ class TestDomainParameter(unittest.TestCase):
         self.assertFalse(set(keys) & set(keys2))
 
     def test_generate_prompts_without_domain_passes_none(self):
-        calls, _, _ = self._run_generate(None)
+        seen = []
+        calls, _, _ = self._run_generate(None, events_seen=seen)
         self.assertEqual(set(calls), {None})
+        self.assertEqual(set(seen), {None})
+
+    def test_generate_prompts_forced_event_all_five_scenarios(self):
+        event = "Drydock flood gate bursts open"
+        seen = []
+        _, gen, _ = self._run_generate("shipyard_and_drydock_engineering", event=event, events_seen=seen)
+        self.assertEqual(set(seen), {event})
+        self.assertEqual(gen.await_count, 5)
+        for c in gen.await_args_list:
+            self.assertEqual((c.args[0]["forced_event"], c.args[0]["forced_environment"]), (event, "Drydock interior"))
+
+
+class TestForcedEvent(unittest.TestCase):
+    """get_creative_catalyst(event=...): olay zorunlu, ortam EVENT_ENV_COMPAT'a uyumlu, gemi olaya izinli."""
+
+    def _check(self, domain, event, cat):
+        self.assertEqual((cat["domain_id"], cat["forced_event"]), (domain, event))
+        env, ship = cat["forced_environment"], cat["forced_ship"]
+        compat = EVENT_ENV_COMPAT.get(domain, {})
+        if event in compat:
+            self.assertIn(env, compat[event])
+        self.assertIn(env, DOMAIN_ATTRIBUTES[domain]["environments"])
+        vessel = VESSEL_ENVIRONMENTS.get(domain)
+        if vessel:
+            if event in vessel["vessel_only_events"]:
+                self.assertIn(env, vessel["environments"])
+            self.assertEqual(ship != "None", env in vessel["environments"])
+        elif DOMAIN_ATTRIBUTES[domain]["ships"]:
+            self.assertIn(ship, EVENT_SHIP_ONLY.get(event, DOMAIN_ATTRIBUTES[domain]["ships"]))
+            banned = SHIP_INCOMPATIBLE.get(ship, {})
+            self.assertNotIn(event, banned.get("events", set()))
+            self.assertNotIn(env, banned.get("environments", set()))
+        else:
+            self.assertEqual(ship, "None")
+
+    def test_every_event_forced_and_compatible(self):
+        for d, a in DOMAIN_ATTRIBUTES.items():
+            for e in a["events"]:
+                with self.subTest(domain=d, event=e):
+                    for _ in range(15):
+                        self._check(d, e, get_creative_catalyst(recent_history=[], domain=d, event=e))
+
+    def test_forced_event_beats_recent_history(self):
+        d, e = "ferry_operations", "Loading ramp hinge snaps and the ramp drops"
+        history = [f"{d}|passenger car ferry|{e.lower()}|ferry terminal ramp|fixed_cctv"] * 3
+        for _ in range(10):
+            self._check(d, e, get_creative_catalyst(recent_history=history, domain=d, event=e))
+
+    def test_event_without_domain_uses_owner(self):
+        cat = get_creative_catalyst(recent_history=[], event="Coastal evacuation")
+        self.assertEqual(cat["domain_id"], "coastal_tornado_landfall")
+
+    def test_event_domain_mismatch_rejected(self):
+        with self.assertRaises(ValueError):
+            get_creative_catalyst(recent_history=[], domain="ferry_operations", event="Coastal evacuation")
+        with self.assertRaises(ValueError):
+            get_creative_catalyst(recent_history=[], domain="ferry_operations", event="Ship explodes")
+
+    def test_run_pipeline_passes_event_to_prompt_config(self):
+        seen = {}
+
+        async def gen(config):
+            seen.update(config)
+            raise RuntimeError("stop")
+
+        tracker = MagicMock()
+        tracker.get_recent_history.return_value = []
+        tracker.get_recent_beat1_verbs.return_value = []
+        with patch.object(settings, "IS_DRY_RUN", False), patch.object(main, "load_used_combos", return_value=[]), \
+             patch.object(main, "NotionTracker", return_value=tracker), patch.object(main, "KieClient"), \
+             patch.object(main, "generate_prompts", side_effect=gen):
+            result = asyncio.run(main.run_pipeline(skip_upload=True, domain="ferry_operations",
+                                                   event="Coastal evacuation", trigger="manual"))
+        self.assertFalse(result.get("success"))
+        self.assertEqual((seen["domain"], seen["event"]), ("ferry_operations", "Coastal evacuation"))
 
 
 class TestConfig(unittest.TestCase):
@@ -131,14 +220,45 @@ class TestConfig(unittest.TestCase):
         self.assertRegex(reqs, r"(?m)^python-telegram-bot==\d+\.\d+(\.\d+)?$")
 
 
+def _buttons(markup):
+    return [b for row in markup.inline_keyboard for b in row]
+
+
 class TestKeyboard(unittest.TestCase):
     def test_seven_domain_buttons(self):
         self.assertEqual(list(bot.DOMAIN_LABELS), DOMAINS)
-        buttons = [b for row in bot.domain_keyboard().inline_keyboard for b in row]
+        buttons = _buttons(bot.domain_keyboard())
         self.assertEqual(len(buttons), 7)
-        self.assertEqual([b.callback_data for b in buttons], [bot.CALLBACK_PREFIX + d for d in DOMAINS])
-        for b in buttons:
-            self.assertLessEqual(len(b.callback_data.encode()), 64)   # Telegram callback_data sınırı
+        self.assertEqual([b.callback_data for b in buttons], [f"{bot.CALLBACK_PREFIX}d:{i}" for i in range(7)])
+
+    def test_event_labels_match_pool(self):
+        pool = [e for a in DOMAIN_ATTRIBUTES.values() for e in a["events"]]
+        self.assertEqual(set(bot.EVENT_LABELS), set(pool))
+        for d, a in DOMAIN_ATTRIBUTES.items():
+            labels = [bot.EVENT_LABELS[e] for e in a["events"]]
+            self.assertEqual(len(labels), len(set(labels)), d)   # aynı menüde iki aynı etiket yok
+            for label in labels:
+                self.assertLessEqual(len(label), 40, label)
+
+    def test_event_keyboard_per_domain(self):
+        for di, d in enumerate(DOMAINS):
+            with self.subTest(domain=d):
+                rows = bot.event_keyboard(di).inline_keyboard
+                events = DOMAIN_ATTRIBUTES[d]["events"]
+                self.assertEqual([r[0].text for r in rows[:-2]], [bot.EVENT_LABELS[e] for e in events])
+                self.assertEqual(rows[-2][0].text, "🎲 Rastgele")
+                self.assertEqual(rows[-1][0].text, "🔙 Geri")
+                for ei, e in enumerate(events):
+                    self.assertEqual(bot.parse_selection(*rows[ei][0].callback_data.split(":")[2:]), (d, e))
+
+    def test_all_callback_data_within_64_bytes(self):
+        markups = [bot.domain_keyboard()]
+        for di, d in enumerate(DOMAINS):
+            markups.append(bot.event_keyboard(di))
+            markups += [bot.confirm_keyboard(str(di), str(ei)) for ei in range(len(DOMAIN_ATTRIBUTES[d]["events"]))]
+            markups.append(bot.confirm_keyboard(str(di), bot.RANDOM_ID))
+        for b in (b for m in markups for b in _buttons(m)):
+            self.assertLessEqual(len(b.callback_data.encode()), 64, b.callback_data)   # Telegram sınırı
 
     def test_application_builds_with_handlers(self):
         app = bot.build_application("123:ABC", CHAT)
@@ -152,8 +272,16 @@ class TestHandlers(unittest.TestCase):
         self.lock_patch.start()
         self.addCleanup(self.lock_patch.stop)
 
-    def _select(self, domain, result=None, side_effect=None, chat_id=CHAT, video=True):
-        ctx, upd = _context(), _update(chat_id, data=bot.CALLBACK_PREFIX + domain)
+    def _click(self, data, chat_id=CHAT):
+        ctx, upd = _context(), _update(chat_id, data=bot.CALLBACK_PREFIX + data)
+        runner = AsyncMock()
+        with patch.object(bot.pipeline, "run_pipeline", runner):
+            asyncio.run(bot.on_callback(upd, ctx))
+        return upd, runner
+
+    def _select(self, domain, result=None, side_effect=None, chat_id=CHAT, video=True, eid="r"):
+        di = DOMAINS.index(domain) if domain in DOMAINS else 99
+        ctx, upd = _context(), _update(chat_id, data=f"{bot.CALLBACK_PREFIX}ok:{di}:{eid}")
         path = {}
 
         async def fake_run(**kw):
@@ -167,8 +295,78 @@ class TestHandlers(unittest.TestCase):
 
         runner = AsyncMock(side_effect=fake_run)
         with patch.object(bot.pipeline, "run_pipeline", runner), patch.object(bot.status, "fail"):
-            asyncio.run(bot.on_domain_selected(upd, ctx))
+            asyncio.run(bot.on_callback(upd, ctx))
         return ctx, upd, runner, path.get("out")
+
+    def test_domain_click_shows_events_without_running(self):
+        upd, runner = self._click("d:1")
+        runner.assert_not_awaited()
+        args, kwargs = upd.callback_query.edit_message_text.await_args
+        self.assertIn("Tersane", args[0])
+        texts = [b.text for b in _buttons(kwargs["reply_markup"])]
+        self.assertIn("🚢 Yandan suya indirme", texts)
+        self.assertEqual(texts[-2:], ["🎲 Rastgele", "🔙 Geri"])
+
+    def test_event_click_shows_confirm_without_running(self):
+        upd, runner = self._click("e:0:1")
+        runner.assert_not_awaited()
+        args, kwargs = upd.callback_query.edit_message_text.await_args
+        for part in ("⛴️ Feribot", "🚧 Rampa menteşesi kopar", "Tahmini maliyet", "175"):
+            self.assertIn(part, args[0])
+        buttons = _buttons(kwargs["reply_markup"])
+        self.assertEqual([b.text for b in buttons], ["✅ Üret", "❌ İptal"])
+        self.assertEqual(buttons[0].callback_data, f"{bot.CALLBACK_PREFIX}ok:0:1")
+
+    def test_random_confirm_text(self):
+        upd, runner = self._click("e:4:r")
+        runner.assert_not_awaited()
+        text = upd.callback_query.edit_message_text.await_args.args[0]
+        self.assertIn("🌪️ Kıyı Hortumu", text)
+        self.assertIn("🎲 Rastgele", text)
+
+    def test_back_returns_to_domains(self):
+        upd, runner = self._click("back")
+        runner.assert_not_awaited()
+        markup = upd.callback_query.edit_message_text.await_args.kwargs["reply_markup"]
+        self.assertEqual(len(_buttons(markup)), 7)
+
+    def test_cancel_does_not_run(self):
+        upd, runner = self._click("x")
+        runner.assert_not_awaited()
+        self.assertIn("İptal", upd.callback_query.edit_message_text.await_args.args[0])
+
+    def test_invalid_ids_do_not_run(self):
+        for data in ("d:7", "d:x", "e:0:3", "e:0:-1", "ok:0:9", "ok:7:r", "ok:0", "ok:0:1:2", "zzz", "", "back:1"):
+            with self.subTest(data=data):
+                upd, runner = self._click(data)
+                runner.assert_not_awaited()
+                self.assertIn("Geçersiz", upd.callback_query.edit_message_text.await_args.args[0])
+
+    def test_unauthorized_menu_clicks_ignored(self):
+        for data in ("d:0", "e:0:0", "ok:0:0", "back", "x"):
+            with self.subTest(data=data):
+                upd, runner = self._click(data, chat_id=999)
+                runner.assert_not_awaited()
+                upd.callback_query.edit_message_text.assert_not_awaited()
+                upd.callback_query.answer.assert_not_awaited()
+
+    def test_busy_menu_clicks_do_not_advance(self):
+        for data in ("d:0", "e:0:0", "back"):
+            ctx, upd = _context(), _update(data=bot.CALLBACK_PREFIX + data)
+
+            async def go():
+                async with bot._production_lock:
+                    await bot.on_callback(upd, ctx)
+            asyncio.run(go())
+            self.assertIn("Üretim sürüyor", upd.callback_query.edit_message_text.await_args.args[0])
+
+    def test_confirm_runs_with_forced_event(self):
+        ok = {"success": True, "youtube_url": "u", "title": "t"}
+        ctx, upd, runner, _ = self._select("shipyard_and_drydock_engineering", result=ok, eid="0")
+        kw = runner.await_args.kwargs
+        self.assertEqual((kw["domain"], kw["event"], kw["trigger"]),
+                         ("shipyard_and_drydock_engineering", bot.SIDE_LAUNCH_EVENT, "manual"))
+        self.assertIn("Yandan suya indirme", upd.callback_query.edit_message_text.await_args_list[0].args[0])
 
     def test_unauthorized_command_ignored(self):
         ctx, upd = _context(), _update(chat_id=999)
@@ -191,12 +389,12 @@ class TestHandlers(unittest.TestCase):
         self.assertIn("Üretim sürüyor", upd.effective_message.reply_text.await_args.args[0])
 
     def test_selection_busy_does_not_run(self):
-        ctx, upd = _context(), _update(data=bot.CALLBACK_PREFIX + "ferry_operations")
+        ctx, upd = _context(), _update(data=bot.CALLBACK_PREFIX + "ok:0:0")
         runner = AsyncMock()
 
         async def go():
             async with bot._production_lock:
-                await bot.on_domain_selected(upd, ctx)
+                await bot.on_callback(upd, ctx)
         with patch.object(bot.pipeline, "run_pipeline", runner):
             asyncio.run(go())
         runner.assert_not_awaited()
@@ -215,7 +413,7 @@ class TestHandlers(unittest.TestCase):
         ok = {"success": True, "youtube_url": "https://youtube.com/shorts/abc", "title": "Wave Hits Ferry"}
         ctx, upd, runner, out = self._select("ferry_operations", result=ok)
         kw = runner.await_args.kwargs
-        self.assertEqual((kw["domain"], kw["trigger"]), ("ferry_operations", "manual"))
+        self.assertEqual((kw["domain"], kw["event"], kw["trigger"]), ("ferry_operations", None, "manual"))   # 🎲 Rastgele
         self.assertIn("başladı", upd.callback_query.edit_message_text.await_args.args[0])
         texts = _sent_texts(ctx)
         self.assertTrue(any("https://youtube.com/shorts/abc" in t and t.startswith("✅") for t in texts))

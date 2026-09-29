@@ -1052,6 +1052,7 @@ async def generate_prompts(config: dict) -> dict:
     recent_verbs = list(config.get("recent_verbs") or [])
     # Telegram /uret (bot.py): verilirse 5 senaryonun hepsi bu domain'den; kapılar/puan/dedup aynı
     domain = config.get("domain") or None
+    event = config.get("event") or None   # Telegram olay menüsü: 5 senaryonun hepsi bu olayla
 
     # ── ADIM 1 & 2: Kombinasyon Seçimi ve GPT-4o Senaryo Üretimi (5 deneme, skorla en iyisi) ──
     max_scenario_attempts = 5
@@ -1062,7 +1063,7 @@ async def generate_prompts(config: dict) -> dict:
     for attempt in range(max_scenario_attempts):
         # Geçerli bir catalyst bul (used_combos'ta olmayan)
         for _ in range(max_dedup_attempts):
-            catalyst = get_creative_catalyst(recent_history=combined_history, domain=domain)
+            catalyst = get_creative_catalyst(recent_history=combined_history, domain=domain, event=event)
             camera_archetype = choose_camera_archetype(catalyst["domain_id"], catalyst["forced_environment"])
             combo_key = f"{catalyst['domain_id']}|{catalyst['forced_ship'].lower()}|{catalyst['forced_event'].lower()}|{catalyst['forced_environment'].lower()}|{camera_archetype}"
             # Tekrarı serbest olay (TUR 27, side launch) 60 günlük dedup'a takılmaz

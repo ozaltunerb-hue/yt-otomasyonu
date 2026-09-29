@@ -7,7 +7,7 @@ YouTube Otomasyonu V3 — "DeepMyster" Yeni Referans Standardı Pipeline
 Telegram botundan tetiklenir: tek kesintisiz çekim fiziksel olay senaryosu üretir (süre config.DEFAULT_DURATION ile kontrol edilir) →
 Seedance 2 Mini ile video üretir → YouTube Shorts olarak yükler.
 
-Tetikleme: Telegram botu (bot.py, /uret → domain seç). Railway'de start komutu `python bot.py`;
+Tetikleme: Telegram botu (bot.py, /uret → kategori → olay → onay). Railway'de start komutu `python bot.py`;
 cron yok. Elle çalıştırma aşağıdaki CLI ile hâlâ mümkün.
 
 Çalıştırma:
@@ -63,7 +63,7 @@ def load_used_combos() -> list[str]:
 # ────────────────────────────────────────
 
 async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_path: str = "",
-                       domain: str | None = None, trigger: str = "auto"):
+                       domain: str | None = None, trigger: str = "auto", event: str | None = None):
     """
     Tam otonom video üretim pipeline'ı.
 
@@ -75,6 +75,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
       5. Notion → log kaydet
 
     domain: verilirse senaryolar sadece bu domain'den üretilir (Telegram /uret). trigger: Notion 'Tetikleyici'.
+    event: verilirse senaryolar bu olayla üretilir (Telegram olay menüsü); ortam/gemi/kamera otomatik.
     """
     if dry_run:
         settings.IS_DRY_RUN = True
@@ -112,6 +113,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 upload_active=upload_active,
                 output_path=output_path,
                 domain=domain,
+                event=event,
                 trigger=trigger,
             )
             return result
@@ -145,6 +147,7 @@ async def _execute_pipeline(
     upload_active: bool = True,
     output_path: str = "",
     domain: str | None = None,
+    event: str | None = None,
     trigger: str = "auto",
 ) -> dict:
     """
@@ -161,6 +164,7 @@ async def _execute_pipeline(
         "recent_topics": recent_topics or [],
         "recent_verbs": recent_verbs or [],
         "domain": domain,
+        "event": event,
     }
 
     try:
