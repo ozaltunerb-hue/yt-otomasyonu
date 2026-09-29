@@ -29,18 +29,16 @@ log = logging.getLogger("CreativeEngine")
 MIN_WORDS, MAX_WORDS = 40, 60
 RECENT_STORIES = 15
 
-CREATIVE_SYSTEM = """You write one short scene for a 15-second realistic phone video of a real incident.
-You get the event, the vessel (or none), the place, the weather, how many people are visible and the outcome to reach.
+CREATIVE_SYSTEM = """You write one short scene for a 15-second realistic video of a real incident.
+Input: event, vessel, place, weather, visible people, outcome to reach.
 
 Rules:
 1. 40 to 60 words.
-2. Three beats in order: the event's trigger happens; the physical movement it causes; the result, still unfolding, reaching the given outcome.
-3. The trigger of the event is clearly visible on camera.
-4. The last sentence shows the danger still visibly moving at the very end of the shot.
-5. The event is catastrophic in scale: the water or force is violent and high-volume and the danger dominates the frame; never use mild or harmless images (ankle-deep, floats, honking futilely).
-If a vessel is given, name it by its type.
-
-Make it clearly different from the recent stories you are given.
+2. Three beats: the trigger happens; the movement it causes; the result, still unfolding, reaching the given outcome. The first sentence shows the moment the trigger happens (the wave clears the rail, the cable snaps, the wall of water enters the street); never open with waiting, tension or buildup; describe the scene, never the camera or the video.
+3. The trigger is clearly visible on camera.
+4. The last sentence shows the danger still visibly moving at the very end.
+5. Catastrophic in scale: violent, high-volume water or force dominating the frame; never mild or harmless images (ankle-deep, floats, honking futilely).
+Name any given vessel by its type. Make it different from the recent stories.
 Return JSON only: {"story": "..."}"""
 
 # 3. beat'in ulaşacağı sonuç (TUR 31, veri; kural değil): GPT hikâyeyi kendisi yazar, son beat bu sonuca varır.
@@ -51,12 +49,14 @@ EVENT_OUTCOMES = {
     "Loading ramp hinge snaps and the ramp drops":
         "the steel ramp crashes onto the quay and keeps twisting as the ferry surges against its lines",
     "Green wave breaks over the rail onto the vehicle deck":
-        "seawater floods the vehicle deck and shoves parked cars sideways into each other",
+        "seawater pours across the vehicle deck and shoves parked cars sideways into each other",
     # Tersane
     "Restraining cable snaps during slipway launch":
-        "the yacht hits the water with a huge splash and rolls hard",
+        "the yacht tips sideways off the slipway, slams into the water on its side with a huge splash, "
+        "and keeps rolling hard from side to side",
     "Keel blocks collapse under the launching hull":
-        "the hull slides down the rails tilting hard onto one side as it reaches the water",
+        "the yacht tips sideways off the slipway, slams into the water on its side with a huge splash, "
+        "and keeps rolling hard from side to side",
     "Drydock flood gate bursts open":
         "a wall of seawater lifts the hull off its blocks and swings it against the dock wall",
     "Timber shores snap and the hull tips on its keel blocks":
@@ -86,7 +86,8 @@ EVENT_OUTCOMES = {
         "sheets of rain and flying debris batter the waterfront, smashing railings and signs",
     # Şehir
     "Flash flooding in city streets":
-        "floodwater rises above car windows and sweeps vehicles down the street",
+        "a wall of brown floodwater surges down the street, slams into parked cars and shoves them sideways "
+        "as people run for higher ground",
     "Storm gust tears signs and scaffolding loose downtown":
         "scaffolding and signs crash onto the street and parked cars as more panels tear loose",
     # Plaj

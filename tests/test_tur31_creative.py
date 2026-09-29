@@ -64,19 +64,49 @@ class TestConfigAndPrompt(unittest.TestCase):
     def test_system_prompt_short_and_only_the_rules(self):
         self.assertLessEqual(len(cp.CREATIVE_SYSTEM.split()), 150)
         for rule in ("40 to 60 words", "trigger happens", "reaching the given outcome", "clearly visible on camera",
-                     "still visibly moving at the very end", "catastrophic in scale", "ankle-deep, floats, honking futilely",
-                     "name it by its type", "different from the recent stories"):
+                     "still visibly moving at the very end", "Catastrophic in scale", "ankle-deep, floats, honking futilely",
+                     "Name any given vessel by its type", "different from the recent stories"):
             self.assertIn(rule, cp.CREATIVE_SYSTEM)
         self.assertEqual(cp.CREATIVE_SYSTEM.count("\n1. ") + cp.CREATIVE_SYSTEM.count("\n5. "), 2)   # 5 kural
+        self.assertNotIn("\n6. ", cp.CREATIVE_SYSTEM)   # ilk cümle netleştirmesi 2. kuralın içinde, yeni kural değil
+
+    def test_first_sentence_is_the_trigger_and_no_phone(self):
+        rule2 = [l for l in cp.CREATIVE_SYSTEM.splitlines() if l.startswith("2. ")][0]
+        for part in ("The first sentence shows the moment the trigger happens", "the wave clears the rail",
+                     "the cable snaps", "the wall of water enters the street", "never open with waiting, tension or buildup",
+                     "never the camera or the video"):
+            self.assertIn(part, rule2)
+        self.assertTrue(cp.CREATIVE_SYSTEM.startswith("You write one short scene for a 15-second realistic video"))
+        self.assertNotIn("phone", cp.CREATIVE_SYSTEM.lower())
 
     def test_outcomes_one_sentence_per_event(self):
         self.assertEqual(set(cp.EVENT_OUTCOMES), set(sk.EVENT_SKELETONS))
         for e, o in cp.EVENT_OUTCOMES.items():
             with self.subTest(event=e):
                 self.assertNotIn(".", o.rstrip("."))
-                self.assertLessEqual(len(o.split()), 25)
-        self.assertEqual(cp.EVENT_OUTCOMES["Restraining cable snaps during slipway launch"],
-                         "the yacht hits the water with a huge splash and rolls hard")
+                self.assertLessEqual(len(o.split()), 30)
+
+    def test_outcomes_fast_visible_motion(self):
+        # Final turu denetimi: 15 sn'de görünmeyen yavaş süreç ifadesi yok
+        import re
+        for e, o in cp.EVENT_OUTCOMES.items():
+            with self.subTest(event=e):
+                self.assertIsNone(re.search(r"\b(?:rises?|rising|fills?|filling|gradually|begins? to|slowly|floods)\b", o), o)
+
+    def test_slipway_launches_tip_sideways(self):
+        for e in ("Restraining cable snaps during slipway launch", "Keel blocks collapse under the launching hull"):
+            with self.subTest(event=e):
+                o = cp.EVENT_OUTCOMES[e]
+                self.assertIn("tips sideways", o)
+                self.assertIn("on its side", o)
+                self.assertNotIn("hits the water", o)
+        self.assertEqual(sk.CAMERA_SPOTS["Construction slipway"],
+                         "on the quay beside the slipway, level with the yacht's bow, seeing its whole side")
+
+    def test_flash_flood_is_a_moving_wall(self):
+        o = cp.EVENT_OUTCOMES["Flash flooding in city streets"]
+        self.assertTrue(o.startswith("a wall of brown floodwater surges down the street"))
+        self.assertNotIn("rises", o)
 
     def test_outcome_reaches_gpt(self):
         gpt = AsyncMock(return_value={"story": STORY})
@@ -234,7 +264,8 @@ class TestPipelineCreative(unittest.TestCase):
         self.assertTrue(r["success"], r)
         sent = create.await_args.args[1]
         self.assertTrue(sent.startswith(STORY.rstrip(".")))
-        self.assertIn("Handheld phone video by a person standing on the pool deck", sent)
+        self.assertIn("Handheld footage shot by a person standing on the pool deck", sent)
+        self.assertNotIn("phone", sent[len(STORY):].lower())   # stil ekinde "phone" yok
         tracker.get_recent_history.assert_called_with(days=30, limit=40)
         self.assertIn("eski hikaye", gpt.await_args_list[0].args[1])   # tekrar önleme listesi GPT'ye gitti
         upload.assert_not_awaited()

@@ -162,7 +162,7 @@ Veri gömülü değil, dosyalardan okunur:
 - **Anahtar:** `PROMPT_PIPELINE` ortam değişkeni. `skeleton` = iskelet hattı; `legacy` = eski hat (yazıcı sistem prompt'u, 5 aday, skor/sıralama, simplifier, A-N kapıları, fikir kütüphanesi). Final test geçene kadar eski kod silinmez.
 - **Yeni hat:** Telegram menüsü (kategori, olay) → Python: olay/gemi seçimi (LRU) → gpt-4o-mini boşluk doldurma (yer, hava, kişi sayısı, kişi rolü; listeden/aralıktan doğrulanır, 1 tekrar, sonra `SlotFillError`) → kilitli iskelet + boşluklar = hikaye → tek el kamerası satırı + kıyafet + ışık (en fazla 8 kısıt) → preflight → ✋ onay → Kie. Kod: `core/skeleton_pipeline.py` (`EVENT_SKELETONS`).
 - **Olay havuzu:** 22 olay (Feribot 3, Tersane 5, Marina 3, Kruvaziyer 3, Kıyı Hortumu 3, Şehir 2, Plaj 3). Görünür büyük fiziksel tetiği olmayan 17 olay bu hatta ve Telegram menüsünde yok (`REMOVED_EVENTS`), eski hatta duruyor.
-- **Kamera satırı:** "Handheld phone video by a person standing {yer}, eye level, normal lens; slight hand shake, the phone turns to follow the {nesne}; no zoom, no cuts." "fully in frame" bu hatta yok.
+- **Kamera satırı (final turu):** "Handheld footage shot by a person standing {yer}, eye level, normal lens; slight hand shake, the camera pans to follow the {nesne}; no zoom, no cuts." "phone" kelimesi yok (model elde telefonu ve REC ekranını çiziyordu); olumsuz "no phone" cümlesi bilinçli olarak eklenmedi. "fully in frame" bu hatta yok.
 
 ## ✅ Kalite Kapıları
 

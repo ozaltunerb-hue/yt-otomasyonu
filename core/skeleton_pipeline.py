@@ -41,7 +41,8 @@ CAMERA_SPOTS = {
     "Open vehicle deck": "on the open vehicle deck",
     "Island crossing route": "on the open vehicle deck",
     "Ferry terminal ramp": "on the quay beside the loading ramp",
-    "Construction slipway": "on the shipyard quay facing the bow at the foot of the slipway",
+    # Final turu: yat yana devrilerek suya girer; ön-yan açı hem bordayı hem devrilmeyi gösterir
+    "Construction slipway": "on the quay beside the slipway, level with the yacht's bow, seeing its whole side",
     "Drydock interior": "on the drydock wall",
     "Shipyard basin": "on the basin quay",
     "Floating pontoon dock": "on the next pontoon",
@@ -326,8 +327,9 @@ def fill_skeleton(event: str, ship: str | None, slots: dict) -> str:
 def style_suffix(event: str, ship: str | None, spot: str) -> str:
     """Tek kamera satırı + kıyafet + ışık (en fazla 8 kısıt). Eski ekten kaldırılanlar: TUR 30 notu."""
     s = EVENT_SKELETONS[event]
-    camera = (f"Handheld phone video by a person standing {CAMERA_SPOTS[spot]}, eye level, normal lens; slight hand "
-              f"shake, the phone turns to follow the {s['object']}; no zoom, no cuts.")
+    # Final turu: "phone" kelimesi çıktı; model elde tutulan telefonu ve kayıt (REC) ekranını çiziyordu
+    camera = (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, eye level, normal lens; slight hand "
+              f"shake, the camera pans to follow the {s['object']}; no zoom, no cuts.")
     return f"{camera} {get_realism_guardrails(s['domain'], ship or 'None', spot)}"
 
 

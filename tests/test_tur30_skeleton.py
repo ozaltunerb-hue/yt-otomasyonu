@@ -98,8 +98,9 @@ class TestSkeletonOutput(unittest.TestCase):
                 suffix = sk.style_suffix(e, ship, slots["spot"])
                 total, negative = count_constraints(suffix)
                 self.assertLessEqual(total, 8, suffix)
-                self.assertIn("Handheld phone video by a person standing", suffix)
-                self.assertIn("the phone turns to follow the", suffix)
+                self.assertIn("Handheld footage shot by a person standing", suffix)
+                self.assertIn("the camera pans to follow the", suffix)
+                self.assertNotIn("phone", suffix.lower())   # final turu: telefon/REC ekranı çiziliyordu
                 self.assertIn("no zoom, no cuts", suffix)
                 self.assertIn("Raw natural light matching the weather, never glossy or CGI", suffix)
                 self.assertTrue("wear" in suffix)   # kıyafet satırı korunur
@@ -251,7 +252,7 @@ class TestPipelineWithSkeleton(unittest.TestCase):
         sent = create.await_args.args[1]
         self.assertIn("restraining cable snaps", sent)
         self.assertIn("luxury motor yacht", sent)
-        self.assertIn("Handheld phone video", sent)
+        self.assertIn("Handheld footage shot by a person standing on the quay beside the slipway", sent)
         upload.assert_not_awaited()
 
 
