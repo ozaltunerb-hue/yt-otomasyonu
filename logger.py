@@ -35,3 +35,11 @@ def get_logger(name: str = "YouTubeOtomasyon") -> logging.Logger:
         logger.addHandler(console_handler)
 
     return logger
+
+
+# logging.getLogger ile açılan modül logger'ları (TUR 29): handler'sız kaldıkları için INFO satırları
+# Railway'e hiç düşmüyordu, uyarılar da zaman damgasız görünüyordu. Aynı handler'ı burada alırlar.
+PIPELINE_LOGGERS = ("PromptGenerator", "CreativeEngine", "PromptSanitizer", "NotionLogger", "YouTubeUploader",
+                    "RunStatus", "Archive", "Recovery")
+for _name in PIPELINE_LOGGERS:
+    get_logger(_name)

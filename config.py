@@ -58,6 +58,14 @@ class Config:
         self.YOUTUBE_CATEGORY_ID = os.environ.get("YOUTUBE_CATEGORY_ID", "24")  # Entertainment / Documentary
         self.YOUTUBE_PRIVACY = os.environ.get("YOUTUBE_PRIVACY", "private")
         self.YOUTUBE_ENABLED = os.environ.get("YOUTUBE_ENABLED", "true").lower() == "true"
+        # Yayın kilidi (TUR 29): kullanıcı açıkça onaylayana kadar hiçbir yoldan (Telegram /yayin, CLI)
+        # YouTube'a yükleme yapılmaz. Açmak bilinçli bir kod değişikliği + push ister, ortam değişkeniyle açılmaz.
+        self.PUBLISH_LOCKED = True
+
+        # Kalıcı video arşivi (TUR 29): video.mp4 + meta.json. Railway diski geçicidir; kalıcı kopya
+        # Telegram file_id'dir (Notion "Telegram File ID").
+        self.ARCHIVE_DIR = os.environ.get(
+            "ARCHIVE_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "arsiv"))
 
         # ── Notion ──
         self.NOTION_TOKEN = os.environ.get(

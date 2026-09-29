@@ -46,3 +46,6 @@ scratch/
 status.json
 status.json.tmp
 dashboard_data/
+
+# TUR 29: kalıcı video arşivi (video.mp4 + meta.json), repoya girmez
+arsiv/

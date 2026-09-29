@@ -166,8 +166,10 @@ _STATIC_START_PATTERNS = [
     "positioned near", "stands near",
     "prepares to", "preparing to",
     "quietly waits", "silently waits",
-    "a calm", "the calm",
 ]
+# "a/the calm" (TUR 29): düz alt dize "shattering the calm"ı da reddediyordu; sakinliği bozan fiilden sonra serbest
+_CALM_RE = re.compile(r"\b(?P<prev>[\w'-]+\s+)?(?:a|the)\s+calm\b")
+_CALM_BREAKER_RE = re.compile(r"^(?:shatter|break|broke|disrupt|pierc|rip|tear|tore|split|interrupt|end)", re.IGNORECASE)
 # "Two yachts can be seen..." gibi genel "Two X can be seen" kalıbı (yukarıdaki
 # "can be seen at/near" ikilisinin kaçırdığı, "at/near" olmayan varyantlar için)
 _STATIC_START_REGEX = re.compile(r"\btwo\s+\w+[\w\s]{0,30}\bcan be seen\b", re.IGNORECASE)
@@ -182,7 +184,7 @@ _STATIC_START_REGEXES = [
     ("as X approaches", re.compile(r"\bas\s+(?:it|the\s+(?:[\w-]+\s+){0,3}?[\w-]+)\s+(?:is\s+)?approach(?:es|ing)\b")),
     ("scene opens", re.compile(r"\bscene\s+opens\b")),
     ("observing as", re.compile(r"\bobserv(?:es|ing)\s+as\b")),
-    ("bustling", re.compile(r"\bbustling\b")),
+    # TUR 29: "bustling" çıktı: mekân sıfatı ("winds tear through a bustling street"), Beat 1 fiili ayrıca aranıyor
     ("looming", re.compile(r"\blooming\b")),
     ("signals for/to", re.compile(r"\bsignals?\s+(?:for|to)\b")),
 ]
@@ -213,6 +215,8 @@ _STATIC_START_REGEXES.append(("kamera öznesiyle açılış", _CAMERA_SUBJECT_RE
 def _static_start_hits(vstart_low: str) -> list[str]:
     """Beat 1 blacklist: visible_start'ta eşleşen durgun kurulum kalıpları (küçük harf girdi)."""
     hits = [p for p in _STATIC_START_PATTERNS if p in vstart_low]
+    if any(not (m["prev"] and _CALM_BREAKER_RE.match(m["prev"].strip())) for m in _CALM_RE.finditer(vstart_low)):
+        hits.append("a/the calm")
     hits += [label for label, rx in _STATIC_START_REGEXES if rx.search(vstart_low)]
     return hits
 
@@ -275,6 +279,20 @@ def _action_words(text: str, first_sentence_only: bool) -> list[str]:
 def _beat1_action_words(visible_start: str) -> list[str]:
     """visible_start'ın İLK cümlesindeki aksiyon fiillerini döndürür (boş liste = durgun)."""
     return _action_words(visible_start, first_sentence_only=True)
+
+
+# Anahtar kelime → kelime başında eşleşen regex (TUR 29): düz alt dize araması "realistic"i "list",
+# "pajamas"ı "jam" sayıyordu; aksiyon kapısı sakin metni geçiriyor, skor anlamsız kelimeyle şişiyordu.
+_ACTION_KEYWORD_RES = {
+    kw: re.compile(r"\b" + r"\s+".join(map(re.escape, re.sub(r"e$", "", kw).split())) + r"[\w-]*", re.IGNORECASE)
+    for kw in _HIGH_ACTION_KEYWORDS
+}
+
+
+def _action_keyword_hits(text: str) -> list[str]:
+    """_HIGH_ACTION_KEYWORDS'ten kelime başında eşleşenler; false friend'ler (several, listen...) sayılmaz."""
+    return [kw for kw, rx in _ACTION_KEYWORD_RES.items()
+            if any(m.group(0).lower() not in _BEAT1_FALSE_FRIENDS for m in rx.finditer(text or ""))]
 
 
 # ── Beat 3 kapısı: sonuç hâlâ tehlikeli ve sürüyor mu (2026-09-24) ──
@@ -408,6 +426,8 @@ _TAIL_MOTION_RE = re.compile(
     r"\b(?:mov(?:e|es|ing)|advanc(?:e|es|ing)|roll(?:s|ing)?|fall(?:s|ing)?|pour(?:s|ing)?|rac(?:e|es|ing)|"
     r"charg(?:e|es|ing)|spread(?:s|ing)?|ris(?:e|es|ing)|churn(?:s|ing)?|rock(?:s|ing)|careen(?:s|ing)?|"
     r"skid(?:s|ding)?|fly(?:ing)?|flies|rotat(?:e|es|ing)|thrash(?:es|ing)?|"
+    # TUR 29: "throwing debris high into the air" hareket sayılmıyordu
+    r"throw(?:s|ing|n)?|threw|toss(?:es|ed|ing)?|fling(?:s|ing)?|flung|"
     # TUR 27: kaçışla biten son hareket sayılır ("the four workers run back from the edge")
     r"run(?:s|ning)?|ran|flee(?:s|ing)?|fled|sprint(?:s|ing)?|dash(?:es|ing)?|retreat(?:s|ing)?|bolt(?:s|ing)?)\b",
     re.IGNORECASE)
@@ -477,7 +497,7 @@ def _cast_counts(text: str) -> list[tuple[int, bool, str]]:
     return [(_cast_value(m["num"]), bool(m["hedge"]), m.group(0)) for m in _CAST_RE.finditer(text)]
 
 
-def validate_cast_size(scenario: dict, domain_id: str, event: str = "") -> tuple[bool, list[str]]:
+def validate_cast_size(scenario: dict, domain_id: str, event: str = "", ship: str = "") -> tuple[bool, list[str]]:
     """Ekrandaki kişi sayısı DOMAIN_CAST_RANGES aralığında mı, beat'ler boyunca artmıyor mu?
 
     Env-centric domainlerde sayı serbest, 3 beat'te en az 1 insan ifadesi şart (TUR 16). Beat 1 toplamı aralıkta olmalı (hedge'li sayıda üstte
@@ -493,7 +513,7 @@ def validate_cast_size(scenario: dict, domain_id: str, event: str = "") -> tuple
         return True, []
     if domain_id not in DOMAIN_CAST_RANGES:
         return True, []
-    lo, hi = cast_range(domain_id, event)   # olaya özel aralık varsa o (TUR 27)
+    lo, hi = cast_range(domain_id, event, ship)   # olaya (TUR 27) veya gemiye (TUR 29) özel aralık varsa o
     beat1 = scenario.get("visible_start", "") or ""
     beat1_counts = _cast_counts(beat1)
     if not beat1_counts:
@@ -632,7 +652,7 @@ _INVISIBLE_CAUSE_RE = re.compile(
     re.IGNORECASE,
 )
 # TUR 25: "The cruise liner experiences a heavy roll" reddediliyordu; roll kendi olay havuzumuzdaki tetik
-_TRIGGER_EXTRA_RE = re.compile(r"\b(?:heel(?:s|ed|ing)?|gives?\s+way|gave\s+way|broke|tore|torn|"
+_TRIGGER_EXTRA_RE = re.compile(r"\b(?:heel(?:s|ed|ing)?|gives?\s+way|gave\s+way|given\s+way|giving\s+way|broke|tore|torn|"
                                r"roll(?:s|ed|ing)?|lurch(?:es|ed|ing)?|"
                                # TUR 28: side launch zorunlu ilk cümlesi "tips sideways off the quay edge"
                                r"tip(?:s|ped|ping)|drop(?:s|ped|ping)?)\b", re.IGNORECASE)
@@ -918,13 +938,53 @@ def make_story_validator(gate_context: dict | None):
     return validator
 
 
+class EventMismatchError(RuntimeError):
+    """Menüden seçilen zorunlu olay, seçilen senaryoda veya Kie'ye gidecek hikayede yok (TUR 29). Kie çağrılmaz."""
+
+
+# Olay metninden anahtar kök çıkarımı: bağlaç/edat ve olayı taşımayan dolgu kelimeleri sayılmaz
+_EVENT_STOPWORDS = {
+    "with", "from", "into", "onto", "over", "under", "their", "while", "during", "after", "before", "that",
+    "this", "caused", "causing", "sends", "send", "sending", "making", "makes", "reaching", "reacting",
+    "throws", "huge", "degrees", "edge", "loose",
+}
+
+
+def _event_stems(text: str) -> set[str]:
+    """4+ harfli içerik kelimelerinin 4 harflik kökleri (snaps/snapping → snap, coastal/coastline → coas)."""
+    return {_verb_stem(w)[:4] for w in re.findall(r"[a-z]+", (text or "").lower())
+            if len(w) >= 4 and w not in _EVENT_STOPWORDS}
+
+
+def event_fidelity_issues(event: str, text: str, min_hits: int = 2) -> list[str]:
+    """Menü olayı metinde görünüyor mu? Olayın anahtar köklerinden en az `min_hits` tanesi (olay daha az kök
+    taşıyorsa hepsi) metinde geçmeli. Boş liste = uyuşuyor. Yeni prompt kuralı değil: GPT'ye gitmez,
+    sadece seçilen olayla üretilecek videonun aynı olay olduğunu denetler."""
+    if not event:
+        return []
+    key = _event_stems(event)
+    found = key & _event_stems(text)
+    need = min(min_hits, len(key))
+    if len(found) >= need:
+        return []
+    return [f"Olay uyuşmuyor: menü olayı '{event}' metinde yok "
+            f"(ortak kök {sorted(found) or 'yok'}, gereken {need}, olay kökleri {sorted(key)})"]
+
+
+def scenario_text(scenario: dict) -> str:
+    """Olay denetimi için senaryonun anlatı alanları tek metin."""
+    return " ".join(scenario.get(k, "") or "" for k in
+                    ("scenario_summary", "visible_trigger", "visible_start", "physical_movement", "visible_consequence"))
+
+
 def scenario_gate_results(scenario: dict, catalyst: dict) -> dict[str, tuple[bool, list[str]]]:
     """Tüm senaryo kapıları tek yerde (üretim + dry-run aynı listeyi kullanır)."""
     return {
         "visibility": validate_silent_visibility(scenario),
         "high_action": validate_high_action(scenario),
         "beat3": validate_beat3_ongoing_danger(scenario),
-        "cast": validate_cast_size(scenario, catalyst["domain_id"], catalyst.get("forced_event", "")),
+        "cast": validate_cast_size(scenario, catalyst["domain_id"], catalyst.get("forced_event", ""),
+                                   catalyst.get("forced_ship") or ""),
         "consistency": validate_scenario_consistency(scenario),
         "ship_setting": validate_ship_setting(scenario, catalyst["forced_ship"]),
         "trigger": validate_visible_trigger(scenario, catalyst["domain_id"]),
@@ -950,7 +1010,7 @@ def validate_high_action(scenario: dict) -> tuple[bool, list[str]]:
     summary = scenario.get("scenario_summary", "")
     full_text = f"{visible_start} {movement} {consequence} {summary}".lower()
 
-    matched_action = [kw for kw in _HIGH_ACTION_KEYWORDS if kw in full_text]
+    matched_action = _action_keyword_hits(full_text)
     matched_static = [kw for kw in _STATIC_KEYWORDS if kw in full_text]
 
     if not matched_action:
@@ -989,7 +1049,7 @@ def score_scenario(scenario: dict) -> int:
     vstart_low = visible_start.lower().strip()
 
     score = 0
-    score += sum(1 for kw in _HIGH_ACTION_KEYWORDS if kw in full_text)
+    score += len(_action_keyword_hits(full_text))
 
     if "already" in vstart_low:
         score += 3
@@ -1016,11 +1076,13 @@ class NoValidScenarioError(RuntimeError):
     """5 senaryo denemesinin hiçbiri kalite kapısından geçemediğinde fırlatılır.
 
     attempts: [{"attempt", "failures", ...}] (TUR 25): Telegram'a kısa özet için yapısal liste.
+    trace: generate_prompts ayrıntı kaydı (TUR 29, Telegram "🔍 Ayrıntı" ve Notion için).
     """
 
-    def __init__(self, message: str, attempts: list[dict] | None = None):
+    def __init__(self, message: str, attempts: list[dict] | None = None, trace: dict | None = None):
         super().__init__(message)
         self.attempts = attempts or []
+        self.trace = trace or {}
 
     def short_summary(self, max_reason: int = 90) -> str:
         """Deneme başına tek satır: '#1 Beat 3 son 12 kelimede hareket yok (+1)'. Liste yoksa mesajın başı."""
@@ -1059,6 +1121,8 @@ async def generate_prompts(config: dict) -> dict:
     max_dedup_attempts = 50
     accepted = []   # kapıdan geçenler: {scenario, catalyst, camera_archetype, combo_key, score}
     attempt_log = []  # HİÇBİRİ geçmezse hata mesajında kullanılacak
+    # Ayrıntı kaydı (TUR 29): Telegram "🔍 Ayrıntı" + Notion gövdesi. Seçim mantığını değiştirmez.
+    trace = {"domain": domain, "event": event, "candidates": [], "chosen": {}, "simplifier": []}
 
     for attempt in range(max_scenario_attempts):
         # Geçerli bir catalyst bul (used_combos'ta olmayan)
@@ -1085,13 +1149,19 @@ async def generate_prompts(config: dict) -> dict:
 
         combined_history.append(combo_key)
         used_combos.append(combo_key)
+        trace["candidates"].append({
+            "n": attempt + 1, "domain_id": catalyst["domain_id"], "event": catalyst["forced_event"],
+            "environment": catalyst["forced_environment"], "ship": catalyst["forced_ship"], "camera": camera_archetype,
+            "summary": raw_scenario.get("scenario_summary", ""), "passed": is_valid, "failures": failures,
+            "score": score_scenario(raw_scenario) if is_valid else None,
+        })
 
         if is_valid:
             score = score_scenario(raw_scenario)
             accepted.append({
                 "scenario": raw_scenario, "catalyst": catalyst,
                 "camera_archetype": camera_archetype, "combo_key": combo_key,
-                "score": score,
+                "score": score, "n": attempt + 1,
             })
             log.info(f"✅ Senaryo {attempt+1}/{max_scenario_attempts} kapıdan geçti (skor={score}): {raw_scenario.get('scenario_summary', '')}")
         else:
@@ -1105,16 +1175,29 @@ async def generate_prompts(config: dict) -> dict:
         raise NoValidScenarioError(
             f"{max_scenario_attempts} senaryo denemesi kalite kapısından geçemedi. Bu tur video üretilmedi. "
             f"Denemeler: {json.dumps(attempt_log, ensure_ascii=False)}",
-            attempts=attempt_log,
+            attempts=attempt_log, trace=trace,
         )
 
     # ── ADIM 3: Seedance 2 Mini Doğukan Promptu (45–60 Kelime, TUR 24 — DEFAULT_DURATION Standardı) ──
     # Skor sırasıyla sadeleştirilir; simplifier çıktı kapısından ilk geçen senaryo kullanılır.
     log.info(f"✂️ Sahne Doğukan standardına sadeleştiriliyor (45–60 kelime {settings.DEFAULT_DURATION}s)...")
-    best, simplified, simplify_attempts = await simplify_with_gate(rank_candidates(accepted), presorted=True)
+    ranked = rank_candidates(accepted)
+    try:
+        best, simplified, simplify_attempts = await simplify_with_gate(ranked, presorted=True)
+    except NoValidScenarioError as e:
+        trace["simplifier"] = e.attempts
+        e.trace = trace
+        raise
     scenario, catalyst, camera_archetype, combo_key = (
         best["scenario"], best["catalyst"], best["camera_archetype"], best["combo_key"]
     )
+    trace["chosen"] = {
+        "n": best["n"], "score": best["score"], "order": [c["n"] for c in ranked],
+        "rule": ("olay ağırlığına göre rastgele sıra (EVENT_WEIGHTS), olay içinde skor sırası"
+                 if EVENT_WEIGHTS.get(catalyst["domain_id"]) else "skor sırası (en yüksek önce)")
+                + "; simplifier kapısından ilk geçen aday seçilir",
+    }
+    trace["simplifier"] = simplify_attempts
     log.info(
         f"🏆 Senaryo seçildi (skor={best['score']}, {len(accepted)}/{max_scenario_attempts} kapıdan geçti, "
         f"{len(simplify_attempts)} simplifier denemesi): {scenario.get('scenario_summary', '')}"
@@ -1175,6 +1258,11 @@ async def generate_prompts(config: dict) -> dict:
         # Rewrite sonrası aynı kapılar için bağlam (TUR 21, make_story_validator)
         "gate_context": {"scenario": scenario, "domain_id": catalyst["domain_id"],
                          "ship": catalyst.get("forced_ship") or "", "event": catalyst.get("forced_event") or ""},
+        # Seçilen adayın kimliği (TUR 29): meta.json, Notion, Telegram ayrıntısı
+        "selection": {"domain_id": catalyst["domain_id"], "event": catalyst.get("forced_event") or "",
+                      "environment": catalyst.get("forced_environment") or "", "ship": catalyst.get("forced_ship") or "",
+                      "camera": camera_archetype},
+        "trace": trace,
     }
 
     log.info(f"✅ DeepMyster Pipeline hazır: \"{result['youtube_title']}\" ({settings.DEFAULT_DURATION}s tek kesintisiz çekim)")
@@ -1185,7 +1273,6 @@ async def _generate_scenario(catalyst: dict, camera_archetype: str) -> dict:
     """Katman 2: GPT-4o'ya yaratıcı yönetmenlik rolü vererek özgün denizcilik senaryosu ürettir."""
     duration = settings.DEFAULT_DURATION
     early, late = compute_duration_breakpoints(duration)
-    sys_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""), catalyst.get("forced_event", ""))
     history_text = "\n".join(f"- {h}" for h in catalyst.get("recent_history", [])[-15:]) if catalyst.get("recent_history") else "None (First run)"
     library = catalyst.get("existing_library_reference") or []
     event_guidance = EVENT_GUIDANCE.get(catalyst.get("forced_event") or "")
@@ -1281,7 +1368,8 @@ CREATIVE DIRECTIVE:
 6. The scene must show CONSTANT HIGH ACTION — something actively breaking, colliding, flooding, swinging, or in danger in real time. Never calm, static, or purely observational.
 7. {clothing_rule} Depict raw, natural weather and lighting — never glossy, CGI-clean, or cinematic, Hollywood-polished.{chase_pov_directive}"""
 
-    system_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""), catalyst.get("forced_event", ""))
+    system_prompt = build_scenario_writer_system(duration, catalyst.get("domain_id", ""), catalyst.get("forced_event", ""),
+                                                 catalyst.get("forced_ship") or "")
     result = await _call_gpt(system_prompt, user_message, temperature=0.85)
 
     # Savunma katmanı: GPT alan içine "BEAT 1:" gibi etiket sızdırırsa temizle
@@ -1382,7 +1470,7 @@ async def simplify_with_gate(candidates: list[dict], presorted: bool = False) ->
             issues = _simplified_checks(simplified.get("prompt", ""), scenario, catalyst.get("domain_id", ""),
                                         catalyst.get("forced_ship") or "", catalyst.get("forced_event") or "")
             attempts.append({
-                "summary": scenario.get("scenario_summary", ""), "attempt": attempt + 1,
+                "n": cand.get("n"), "summary": scenario.get("scenario_summary", ""), "attempt": attempt + 1,
                 "prompt": simplified.get("prompt", ""), "failures": [m for m, _ in issues],
             })
             if not issues:

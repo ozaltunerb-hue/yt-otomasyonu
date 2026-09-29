@@ -736,12 +736,15 @@ def compute_duration_breakpoints(duration: int) -> tuple[int, int]:
     return early, late
 
 
-def cast_range(domain_id: str, event: str = "") -> tuple[int, int] | None:
-    """Kişi aralığı: önce olaya özel (EVENT_CAST_RANGES), yoksa domain'in. Env-centric için None."""
-    return EVENT_CAST_RANGES.get(event) or DOMAIN_CAST_RANGES.get(domain_id)
+def cast_range(domain_id: str, event: str = "", ship: str = "") -> tuple[int, int] | None:
+    """Kişi aralığı: önce olaya özel (EVENT_CAST_RANGES), sonra gemiye özel (SHIP_CAST_RANGES), yoksa
+    domain'in. Env-centric için None."""
+    if domain_id not in DOMAIN_CAST_RANGES:
+        return None
+    return EVENT_CAST_RANGES.get(event) or SHIP_CAST_RANGES.get(ship or "") or DOMAIN_CAST_RANGES.get(domain_id)
 
 
-def build_scenario_writer_system(duration: int, domain_id: str = "", event: str = "") -> str:
+def build_scenario_writer_system(duration: int, domain_id: str = "", event: str = "", ship: str = "") -> str:
     """SCENARIO_WRITER_SYSTEM'i config.DEFAULT_DURATION'a göre üretir."""
     early, late = compute_duration_breakpoints(duration)
     
@@ -751,7 +754,7 @@ def build_scenario_writer_system(duration: int, domain_id: str = "", event: str 
         phys_mov = "The sudden physical wrong turn — STRONG VISIBLE PHYSICAL ACTION of the natural event (e.g., sweeps, crashes, rips, floods, slams). The physical movement of the disaster must be explicit and extreme."
         vis_cons = "The immediate dangerous consequence of the natural disaster, still visibly unfolding at <<DURATION>>s, not resolved or safe. Never end with the danger settling, stopping, calming, or being resolved, and never end on people just watching; end mid-action (e.g. 'still surging', 'continues to slide')."
     elif domain_id in DOMAIN_CAST_RANGES:
-        lo, hi = cast_range(domain_id, event)
+        lo, hi = cast_range(domain_id, event, ship)
         cast_rule = (
             f"CAST SIZE: Show approximately {lo}-{hi} people in the "
             f"scene, matching realistic crew/passenger count for this "
@@ -940,6 +943,12 @@ DOMAIN_CAST_RANGES = {
 # "about ten/a dozen/twenty spectators" ile tersane aralığını (2-5) aşıp elendi.
 EVENT_CAST_RANGES = {
     SIDE_LAUNCH_EVENT: (5, 20),
+}
+
+# Gemiye özel kişi aralığı (TUR 29): jet ski'de 1-2 sürücü var; marina aralığı (3-6) "two riders" ve
+# "one rider"ı 7 günde 3 kez haksız reddetti.
+SHIP_CAST_RANGES = {
+    "Jet Ski": (1, 6),
 }
 
 # Import anında kontrol: eksik domain üretim ortasında değil, başlangıçta patlasın.

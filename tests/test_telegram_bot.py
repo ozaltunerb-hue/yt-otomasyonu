@@ -10,6 +10,7 @@ import os
 import re
 import sys
 import tempfile
+import time
 import unittest
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -42,6 +43,7 @@ def _update(chat_id=CHAT, data=None):
     u.callback_query.data = data
     u.callback_query.answer = AsyncMock()
     u.callback_query.edit_message_text = AsyncMock()
+    u.callback_query.edit_message_reply_markup = AsyncMock()
     return u
 
 
@@ -263,7 +265,8 @@ class TestKeyboard(unittest.TestCase):
     def test_application_builds_with_handlers(self):
         app = bot.build_application("123:ABC", CHAT)
         self.assertEqual(app.bot_data["allowed_chat_id"], CHAT)
-        self.assertEqual(len(app.handlers[0]), 3)
+        self.assertEqual(len(app.handlers[0]), 5)   # start, uret, test, yayin, callback (TUR 29)
+        self.assertEqual(app.bot_data["cfg"], {"mode": "TEST", "detail": True, "approval": True})
 
 
 class TestHandlers(unittest.TestCase):
@@ -285,13 +288,18 @@ class TestHandlers(unittest.TestCase):
         path = {}
 
         async def fake_run(**kw):
-            path["out"] = kw["output_path"]
+            path["kw"] = kw
             if side_effect:
                 raise side_effect
+            if not result.get("success"):
+                return result
+            out = os.path.join(tempfile.gettempdir(), f"tg_test_{time.time_ns()}.mp4")
             if video:
-                with open(kw["output_path"], "wb") as f:
+                with open(out, "wb") as f:
                     f.write(b"mp4")
-            return dict(result, video_path=kw["output_path"]) if result.get("success") else result
+                self.addCleanup(lambda: os.path.exists(out) and os.remove(out))
+            path["out"] = out
+            return dict(result, video_path=out)
 
         runner = AsyncMock(side_effect=fake_run)
         with patch.object(bot.pipeline, "run_pipeline", runner), patch.object(bot.status, "fail"):
@@ -328,7 +336,7 @@ class TestHandlers(unittest.TestCase):
         upd, runner = self._click("back")
         runner.assert_not_awaited()
         markup = upd.callback_query.edit_message_text.await_args.kwargs["reply_markup"]
-        self.assertEqual(len(_buttons(markup)), 7)
+        self.assertEqual(len(_buttons(markup)), 9)   # 7 kategori + 🔍 Ayrıntı / ✋ Onay (TUR 29)
 
     def test_cancel_does_not_run(self):
         upd, runner = self._click("x")
@@ -377,7 +385,8 @@ class TestHandlers(unittest.TestCase):
         ctx, upd = _context(), _update()
         asyncio.run(bot.cmd_uret(upd, ctx))
         kwargs = upd.effective_message.reply_text.await_args.kwargs
-        self.assertEqual(len([b for r in kwargs["reply_markup"].inline_keyboard for b in r]), 7)
+        self.assertEqual(len([b for r in kwargs["reply_markup"].inline_keyboard for b in r]), 9)
+        self.assertIn("🧪 TEST", upd.effective_message.reply_text.await_args.args[0])
 
     def test_uret_busy(self):
         ctx, upd = _context(), _update()
@@ -414,12 +423,15 @@ class TestHandlers(unittest.TestCase):
         ctx, upd, runner, out = self._select("ferry_operations", result=ok)
         kw = runner.await_args.kwargs
         self.assertEqual((kw["domain"], kw["event"], kw["trigger"]), ("ferry_operations", None, "manual"))   # 🎲 Rastgele
+        # TUR 29: varsayılan TEST modu → YouTube adımı atlanır, ayrıntı + onay raporlayıcısı bağlı
+        self.assertEqual((kw["mode"], kw["skip_upload"]), ("TEST", True))
+        self.assertTrue(kw["reporter"].detail and kw["reporter"].needs_approval)
         self.assertIn("başladı", upd.callback_query.edit_message_text.await_args.args[0])
         texts = _sent_texts(ctx)
         self.assertTrue(any("https://youtube.com/shorts/abc" in t and t.startswith("✅") for t in texts))
         ctx.bot.send_video.assert_awaited_once()
         self.assertEqual(ctx.bot.send_video.await_args.args[0], CHAT)
-        self.assertFalse(os.path.exists(out))   # geçici video silindi
+        self.assertTrue(os.path.exists(out))   # arşiv videosu silinmez (kalıcı kopya)
         self.assertFalse(bot._production_lock.locked())
 
     def test_upload_failed_still_sends_video(self):

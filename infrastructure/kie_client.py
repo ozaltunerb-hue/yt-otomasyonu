@@ -32,6 +32,20 @@ class ContentFilterError(Exception):
     """Kie AI içerik güvenliği filtresi tarafından reddedildi."""
     pass
 
+
+class KieTimeoutError(RuntimeError):
+    """Polling bütçesi doldu ama task Kie'de hâlâ sürüyor olabilir (TUR 29). task_id ile devam edilir
+    (KieClient.wait_for_task / main.recover_pending_tasks); kayıt hata olarak kapatılmaz."""
+
+    def __init__(self, message: str, task_id: str):
+        super().__init__(message)
+        self.task_id = task_id
+
+
+class SubmissionCancelled(Exception):
+    """before_submit kancası Kie çağrısını durdurdu (kullanıcı iptali, onay süresi, olay uyuşmazlığı).
+    Kie'ye istek gitmez, kredi harcanmaz (TUR 29)."""
+
 MODEL_CONFIG = {
     "bytedance/seedance-2-fast": {
         "model_id": "bytedance/seedance-2-fast",
@@ -133,6 +147,8 @@ class KieClient:
         progress_callback: callable = None,
         style_suffix: str = "",
         story_validator: callable = None,
+        before_submit: callable = None,
+        on_task_created: callable = None,
     ) -> str:
         """
         Tek bir video üretir — içerik güvenliği katmanlarıyla.
@@ -157,6 +173,11 @@ class KieClient:
                 rewrite'ından dönen hikaye aynı simplifier kapılarından geçer (C hariç); kalırsa geri
                 bildirimle bir kez daha yazılır, yine kalırsa preflight'ta PreflightError(content),
                 Kie retry'ında ContentFilterError (TUR 21). None ise kapı yok (eski davranış).
+            before_submit: async (info) -> None. Her ücretli createTask'tan hemen önce çağrılır; info =
+                {"story_before_preflight", "story", "style_suffix", "prompt", "preflight", "attempt"}.
+                SubmissionCancelled / başka hata fırlatırsa Kie'ye istek gitmez (TUR 29: onay, olay denetimi).
+            on_task_created: async (task_id, info) -> None. Task oluşunca, polling başlamadan önce çağrılır
+                (TUR 29: task ID Notion'a ve meta.json'a restart'tan önce yazılsın).
 
         Returns:
             str: Üretilen videonun CDN URL'si
@@ -201,13 +222,21 @@ class KieClient:
 
         for content_attempt in range(max_content_retries + 1):
             current_prompt = join_story_and_style(current_story, style_suffix) if style_suffix else current_story
+            info = {"story_before_preflight": prompt, "story": current_story, "style_suffix": style_suffix,
+                    "prompt": current_prompt, "preflight": dict(preflight_meta or {}), "attempt": content_attempt + 1}
             try:
+                # ── Ücretli çağrıdan önce son kanca: olay denetimi + kullanıcı onayı (TUR 29) ──
+                if before_submit:
+                    await before_submit(info)
+
                 # ── Doğrulama: Seedance'a giden nihai prompt (stil kilidi dahil, sanitizer sonrası) ──
-                log.info(f"📤 Kie'ye gönderilen nihai prompt (ilk 200 karakter): {current_prompt[:200]}")
+                log.info(f"📤 Kie'ye gönderilen nihai prompt ({len(current_prompt.split())} kelime): {current_prompt}")
 
                 # ── Task oluştur ──
                 task_id = await self._create_task(cfg, current_prompt, aspect_ratio, duration, audio, resolution)
                 log.info(f"📋 Task oluşturuldu ({cfg['model_id']}): {task_id}")
+                if on_task_created:
+                    await on_task_created(task_id, info)
 
                 # ── İlk bekleme ──
                 initial_wait = settings.POLL_INITIAL_WAIT
@@ -376,11 +405,17 @@ class KieClient:
 
         return task_id
 
-    async def _poll_for_result(self, cfg: dict, task_id: str, progress_callback: callable = None) -> str:
-        """Task durumunu sorgular ve video URL'sini döndürür."""
+    async def _poll_for_result(self, cfg: dict, task_id: str, progress_callback: callable = None,
+                               max_attempts: int | None = None) -> str:
+        """Task durumunu sorgular ve video URL'sini döndürür.
+
+        5xx ve JSON olmayan yanıt koşuyu düşürmez, deneme sayılıp tekrar sorulur (TUR 29): Kie task'ı
+        sürerken istemcinin vazgeçmesi ücretli videoyu kaybettiriyordu. Bütçe dolunca KieTimeoutError
+        (task_id taşır); task Kie'de sürüyor olabilir, wait_for_task ile devam edilir.
+        """
         url = f"{self._base_url}{cfg['poll_url']}"
         interval = settings.POLL_INTERVAL
-        max_attempts = settings.POLL_MAX_ATTEMPTS
+        max_attempts = max_attempts or settings.POLL_MAX_ATTEMPTS
         consecutive_429 = 0  # Exponential backoff sayacı
 
         async with httpx.AsyncClient(timeout=30) as client:
@@ -402,8 +437,19 @@ class KieClient:
                     # 429 olmayan başarılı yanıt → sayacı sıfırla
                     consecutive_429 = 0
 
-                    resp_data = response.json()
-                    data = resp_data.get("data", {})
+                    if response.status_code >= 500:
+                        log.warning(f"⚠️ Polling sunucu hatası HTTP {response.status_code} (deneme {attempt}/{max_attempts}), "
+                                    f"task {task_id} sürüyor olabilir; tekrar sorulacak")
+                        await asyncio.sleep(interval)
+                        continue
+                    try:
+                        resp_data = response.json()
+                    except ValueError:
+                        log.warning(f"⚠️ Polling JSON olmayan yanıt HTTP {response.status_code} (deneme {attempt}/{max_attempts}): "
+                                    f"{response.text[:120]!r}; tekrar sorulacak")
+                        await asyncio.sleep(interval)
+                        continue
+                    data = resp_data.get("data") or {}
                     state = data.get("state", "unknown")
 
                     if state in ("success", "completed"):
@@ -441,10 +487,45 @@ class KieClient:
                     log.warning(f"⚠️ Polling ağ hatası (deneme {attempt}): {e}")
                     await asyncio.sleep(interval)
 
-        raise RuntimeError(
-            f"Video üretimi zaman aşımı! {max_attempts} deneme sonunda tamamlanmadı. "
-            f"Task ID: {task_id}"
-        )
+        raise KieTimeoutError(
+            f"Video üretimi zaman aşımı! {max_attempts} deneme sonunda tamamlanmadı. Task ID: {task_id} "
+            f"(Kie'de sürüyor olabilir, task ID ile devam edilecek)", task_id)
+
+    async def wait_for_task(self, task_id: str, max_attempts: int | None = None, model: str | None = None) -> str:
+        """Var olan bir task'ı beklemeye devam eder (zaman aşımı sonrası / restart kurtarma, TUR 29).
+        Yeni ücretli çağrı yapmaz; sadece recordInfo sorar."""
+        cfg = MODEL_CONFIG.get(model or settings.DEFAULT_MODEL) or MODEL_CONFIG["bytedance/seedance-2-fast"]
+        return await self._poll_for_result(cfg, task_id, max_attempts=max_attempts)
+
+    async def get_task(self, task_id: str, model: str | None = None) -> dict:
+        """Tek recordInfo sorgusu (ücretsiz): {"state", "video_url", "fail_msg", "prompt"}. Hata fırlatabilir."""
+        cfg = MODEL_CONFIG.get(model or settings.DEFAULT_MODEL) or MODEL_CONFIG["bytedance/seedance-2-fast"]
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.get(f"{self._base_url}{cfg['poll_url']}", params={"taskId": task_id},
+                                        headers=self._headers())
+        response.raise_for_status()
+        data = response.json().get("data") or {}
+        prompt = ""
+        try:
+            prompt = json.loads(json.loads(data.get("param") or "{}").get("input") or "{}").get("prompt", "")
+        except (ValueError, TypeError, AttributeError):
+            pass
+        state = data.get("state", "unknown")
+        return {"state": state, "fail_msg": data.get("failMsg", ""), "prompt": prompt,
+                "video_url": self._extract_video_url(data) if state in ("success", "completed") else None}
+
+    async def get_credit(self) -> float | None:
+        """Kalan Kie kredisi (ücretsiz sorgu). Okunamazsa None: meta.json'da 'doğrulanamadı' olarak kalır."""
+        if settings.IS_DRY_RUN:
+            return None
+        try:
+            async with httpx.AsyncClient(timeout=20) as client:
+                response = await client.get(f"{self._base_url}/chat/credit", headers=self._headers())
+            response.raise_for_status()
+            return response.json().get("data")
+        except Exception as e:
+            log.warning(f"⚠️ Kie kredisi okunamadı: {e}")
+            return None
 
     def _extract_video_url(self, data: dict) -> str | None:
         """Farklı response formatlarından video URL'sini çıkarır."""

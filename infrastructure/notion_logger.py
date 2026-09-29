@@ -28,6 +28,24 @@ STATUS_MERGING = "Birleştiriliyor"
 STATUS_UPLOADING = "Yükleniyor"
 STATUS_COMPLETED = "✅ Tamamlandı"
 STATUS_ERROR = "❌ Hata"
+# TUR 29
+STATUS_AWAITING_APPROVAL = "✋ Onay Bekliyor"      # Kie çağrısı yok; restart'ta sessizce İptal'e çekilir
+STATUS_CANCELLED = "❌ İptal"                       # Kullanıcı iptali / onay süresi; kredi harcanmadı
+STATUS_RECOVERED = "✅ Tamamlandı (Kurtarıldı)"     # Restart/zaman aşımı sonrası task ID ile tamamlandı
+STATUS_TEST_DONE = "✅ Tamamlandı (Test Modu / YouTube Atlandı)"
+
+# TUR 29'da eklenen alanlar. ensure_schema() eksik olanları veritabanına ekler (idempotent).
+EXTRA_PROPERTIES = {
+    "Mod": {"select": {}},                 # TEST / YAYIN
+    "Puan": {"select": {}},                # iyi / kötü (Telegram 👍/👎)
+    "Kie Task ID": {"rich_text": {}},
+    "Kamera": {"rich_text": {}},
+    "Olay": {"rich_text": {}},
+    "Commit": {"rich_text": {}},
+    "Telegram File ID": {"rich_text": {}},
+}
+
+_TEXT_LIMIT = 2000   # Notion rich_text içerik sınırı; gövde blokları bu boyda parçalanır
 
 # Tarihçe sorguları (2026-09-24). used_combos = "yayınlandı/elde video var" sayımı;
 # recent_history = "yazıldı" sayımı, sadece hata kayıtları hariç.
@@ -35,13 +53,118 @@ USED_COMBO_STATUSES = [STATUS_COMPLETED, "✅ Tamamlandı (Upload Başarısız)"
 RECENT_HISTORY_EXCLUDE_STATUSES = [STATUS_ERROR]
 
 
+def _rt(text: str) -> dict:
+    return {"rich_text": [{"text": {"content": (text or "")[:_TEXT_LIMIT]}}]}
+
+
 class NotionTracker:
     """Bir video üretim pipeline'ı boyunca Notion entry'sini yönetir."""
 
-    def __init__(self):
-        self.page_id = None
+    # Veritabanındaki alan adları (ensure_schema doldurur). None = bilinmiyor, filtre uygulanmaz.
+    _schema: set[str] | None = None
+
+    def __init__(self, page_id: str | None = None):
+        self.page_id = page_id
         self.enabled = settings.NOTION_ENABLED
         self._start_time = time.time()
+
+    @classmethod
+    def ensure_schema(cls) -> set[str] | None:
+        """EXTRA_PROPERTIES'te olup veritabanında olmayan alanları ekler. Bot açılışında bir kez çağrılır.
+        Başarısızsa None kalır; yeni alanlar yazılmaya çalışılır, Notion reddederse uyarı loglanır."""
+        if not settings.NOTION_ENABLED or settings.IS_DRY_RUN:
+            return None
+        try:
+            db = _notion_request("GET", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}")
+            have = set(db.get("properties", {}))
+            missing = {k: v for k, v in EXTRA_PROPERTIES.items() if k not in have}
+            if missing:
+                _notion_request("PATCH", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}",
+                                json={"properties": missing})
+                log.info(f"📋 Notion şemasına eklendi: {sorted(missing)}")
+                have |= set(missing)
+            cls._schema = have
+            return have
+        except Exception as e:
+            log.warning(f"⚠️ Notion şema kontrolü başarısız (yeni alanlar yazılamayabilir): {e}")
+            return None
+
+    def _filter(self, properties: dict) -> dict:
+        """Şema biliniyorsa veritabanında olmayan alanları atar (Notion tüm isteği reddetmesin)."""
+        if self._schema is None:
+            return properties
+        dropped = [k for k in properties if k not in self._schema]
+        if dropped:
+            log.warning(f"⚠️ Notion şemasında olmayan alanlar yazılmadı: {dropped}")
+        return {k: v for k, v in properties.items() if k in self._schema}
+
+    def _patch(self, properties: dict) -> None:
+        if not self.enabled or not self.page_id or settings.IS_DRY_RUN:
+            log.info(f"📝 Notion alanları (yazılmadı): {sorted(properties)}")
+            return
+        properties = self._filter(properties)
+        if not properties:
+            return
+        try:
+            _notion_request("PATCH", f"{NOTION_API_URL}/pages/{self.page_id}", json={"properties": properties})
+        except Exception as e:
+            log.warning(f"⚠️ Notion alan güncelleme hatası: {e}")
+
+    def append_body(self, sections: list[tuple[str, str]]) -> None:
+        """Sayfa gövdesine başlık + paragraf blokları ekler (TUR 29). Uzun metin 2000 karakterlik
+        paragraflara bölünür: 'Prompt' alanının 2000 karakter sınırı gövdede yok."""
+        if not self.enabled or not self.page_id or settings.IS_DRY_RUN:
+            log.info(f"📝 Notion gövdesi (yazılmadı): {[t for t, _ in sections]}")
+            return
+        blocks = []
+        for title, text in sections:
+            blocks.append({"object": "block", "type": "heading_3",
+                           "heading_3": {"rich_text": [{"text": {"content": title[:200]}}]}})
+            for i in range(0, max(len(text or ""), 1), _TEXT_LIMIT):
+                blocks.append({"object": "block", "type": "paragraph",
+                               "paragraph": {"rich_text": [{"text": {"content": (text or "")[i:i + _TEXT_LIMIT]}}]}})
+        try:
+            for i in range(0, len(blocks), 100):   # Notion istek başına en fazla 100 blok
+                _notion_request("PATCH", f"{NOTION_API_URL}/blocks/{self.page_id}/children",
+                                json={"children": blocks[i:i + 100]})
+        except Exception as e:
+            log.warning(f"⚠️ Notion gövde yazma hatası: {e}")
+
+    def record_final_prompt(self, prompt: str, selection: dict, commit: str) -> None:
+        """Kie'ye GİDEN son prompt (preflight sonrası) + kamera/olay/commit (TUR 29). 'Prompt' alanı eskiden
+        preflight öncesi metni tutuyordu; rewrite olunca Kie'ye gidenle aynı değildi."""
+        self._patch({"Prompt": _rt(prompt), "Kamera": _rt(selection.get("camera", "")),
+                     "Olay": _rt(selection.get("event", "")), "Commit": _rt(commit)})
+
+    def record_task(self, task_id: str) -> None:
+        """Task ID polling başlamadan yazılır; restart olursa kurtarma bu alandan devam eder."""
+        self.update_status(STATUS_VIDEO_GENERATING, {"Kie Task ID": _rt(task_id)})
+
+    def set_rating(self, value: str) -> None:
+        self._patch({"Puan": {"select": {"name": value}}})
+
+    def set_telegram_file_id(self, file_id: str) -> None:
+        self._patch({"Telegram File ID": _rt(file_id)})
+
+    @staticmethod
+    def find_by_status(statuses: list[str]) -> list[dict]:
+        """Verilen durumlardaki kayıtlar: [{"page_id", "status", "task_id", "mode", "title", "combo_key"}]."""
+        if not settings.NOTION_ENABLED or settings.IS_DRY_RUN:
+            return []
+        payload = {"filter": {"or": [{"property": "Durum", "select": {"equals": s}} for s in statuses]},
+                   "page_size": 100}
+        response = _notion_request("POST", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query", json=payload)
+        out = []
+        for page in response.get("results", []):
+            props = page.get("properties", {})
+
+            def text(name, kind="rich_text"):
+                return "".join(x.get("plain_text") or x.get("text", {}).get("content", "")
+                               for x in props.get(name, {}).get(kind, []) or [])
+            out.append({"page_id": page.get("id", ""), "status": (props.get("Durum", {}).get("select") or {}).get("name", ""),
+                        "task_id": text("Kie Task ID").strip(), "mode": (props.get("Mod", {}).get("select") or {}).get("name", ""),
+                        "title": text("Video Adı", "title"), "combo_key": text("Combo Key")})
+        return out
 
     def create_entry(self, config: dict, trigger: str = "auto") -> str:
         """
@@ -76,10 +199,12 @@ class NotionTracker:
         combo_key = config.get("combo_key", "")
         if combo_key:
             properties["Combo Key"] = {"rich_text": [{"text": {"content": combo_key}}]}
+        if config.get("mode"):   # TUR 29: TEST / YAYIN
+            properties["Mod"] = {"select": {"name": config["mode"]}}
 
         payload = {
             "parent": {"database_id": settings.NOTION_DB_ID},
-            "properties": properties,
+            "properties": self._filter(properties),
         }
 
         try:
@@ -104,6 +229,7 @@ class NotionTracker:
         properties = {"Durum": {"select": {"name": status}}}
         if extra_props:
             properties.update(extra_props)
+        properties = self._filter(properties)
 
         try:
             _notion_request("PATCH", f"{NOTION_API_URL}/pages/{self.page_id}", json={"properties": properties})

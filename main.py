@@ -24,20 +24,24 @@ import asyncio
 import logging
 import argparse
 import shutil
+from datetime import datetime, timezone
 
 # Proje kök dizinini Python path'ine ekle
 sys.path.insert(0, os.path.dirname(__file__))
 
 from config import settings
 from logger import get_logger
-from core.prompt_generator import generate_prompts, NoValidScenarioError, make_story_validator
-from infrastructure.kie_client import KieClient, ContentFilterError
+from core.prompt_generator import (generate_prompts, NoValidScenarioError, make_story_validator, EventMismatchError,
+                                   event_fidelity_issues, scenario_text)
+from core.trace_format import format_generation, format_final_prompt
+from infrastructure.kie_client import KieClient, ContentFilterError, KieTimeoutError, SubmissionCancelled
 from core.prompt_sanitizer import PreflightError
 from infrastructure.motion_profile import motion_profile, format_motion
-from infrastructure.replicate_merger import merge_videos
 from infrastructure.video_downloader import download_video, cleanup_video
 from infrastructure.youtube_uploader import upload_to_youtube
-from infrastructure.notion_logger import NotionTracker
+from infrastructure.notion_logger import (NotionTracker, STATUS_AWAITING_APPROVAL, STATUS_CANCELLED, STATUS_RECOVERED,
+                                          STATUS_TEST_DONE, STATUS_VIDEO_GENERATING, _rt)
+from infrastructure.archive import current_commit, new_archive_dir, save_video, write_meta
 from infrastructure.run_status import status
 
 log = get_logger("DeepMyster")
@@ -62,8 +66,46 @@ def load_used_combos() -> list[str]:
 # ⚙️ ANA PİPELINE
 # ────────────────────────────────────────
 
+# Üretim modu (TUR 29). TEST: hat birebir aynı, sadece YouTube adımı atlanır. YAYIN: settings.PUBLISH_LOCKED
+# açılmadan hiçbir yoldan YouTube'a yüklenmez.
+MODE_TEST = "TEST"
+MODE_PUBLISH = "YAYIN"
+
+
+class PipelineReporter:
+    """Pipeline → arayüz köprüsü (TUR 29, Telegram "🔍 Ayrıntı" / "✋ Onay"). Varsayılan sessizdir ve onay
+    istemez (CLI). Raporlama hatası üretimi durdurmaz; approve False dönerse Kie çağrılmaz."""
+    needs_approval = False
+
+    async def generation(self, trace: dict, prompt_data: dict | None = None) -> None:
+        return None
+
+    async def final_prompt(self, info: dict) -> None:
+        return None
+
+    async def approve(self, info: dict) -> bool:
+        return True
+
+
+async def _report(coro) -> None:
+    try:
+        await coro
+    except Exception as e:
+        log.warning(f"⚠️ Raporlama hatası (üretim sürüyor): {e}")
+
+
+async def _credit(kie) -> float | None:
+    """Kie kredisi; okunamazsa None (meta.json'da doğrulanamadı). Üretimi asla durdurmaz."""
+    try:
+        return await kie.get_credit()
+    except Exception as e:
+        log.warning(f"⚠️ Kie kredisi okunamadı: {e}")
+        return None
+
+
 async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_path: str = "",
-                       domain: str | None = None, trigger: str = "auto", event: str | None = None):
+                       domain: str | None = None, trigger: str = "auto", event: str | None = None,
+                       mode: str | None = None, reporter: PipelineReporter | None = None):
     """
     Tam otonom video üretim pipeline'ı.
 
@@ -71,22 +113,27 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
       1. Tekrar önleme → kullanılan senaryoları yükle
       2. Creative Engine + GPT → tek çekim senaryo + prompt üret (DEFAULT_DURATION saniye)
       3. Seedance 2 Mini → video üret (tek kesintisiz çekim, DEFAULT_DURATION saniye)
-      4. YouTube → Shorts olarak yükle (skip_upload=False ise)
-      5. Notion → log kaydet
+      4. YouTube → Shorts olarak yükle (yayın modu, kilit açıksa)
+      5. Notion + arşiv (video.mp4, meta.json) → log kaydet
 
     domain: verilirse senaryolar sadece bu domain'den üretilir (Telegram /uret). trigger: Notion 'Tetikleyici'.
     event: verilirse senaryolar bu olayla üretilir (Telegram olay menüsü); ortam/gemi/kamera otomatik.
+    mode: TEST (YouTube yok) / YAYIN. Verilmezse yükleme durumuna göre. reporter: Telegram ayrıntı/onay köprüsü.
     """
     if dry_run:
         settings.IS_DRY_RUN = True
         settings.ENV = "development"
 
-    upload_active = settings.YOUTUBE_ENABLED and not skip_upload
+    upload_active = settings.YOUTUBE_ENABLED and not skip_upload and mode != MODE_TEST
+    if upload_active and settings.PUBLISH_LOCKED:
+        log.warning("🔒 Yayın kilidi açık değil: YouTube'a yükleme yapılmayacak (settings.PUBLISH_LOCKED)")
+        upload_active = False
+    mode = mode or (MODE_PUBLISH if upload_active else MODE_TEST)
 
-    mode = "DRY-RUN" if settings.IS_DRY_RUN else "PRODUCTION"
-    log.info(f"🚀 DeepMyster V3 (Yeni Referans Standardı) başlatılıyor... (Mod: {mode})")
+    run_label = "DRY-RUN" if settings.IS_DRY_RUN else "PRODUCTION"
+    log.info(f"🚀 DeepMyster V3 (Yeni Referans Standardı) başlatılıyor... (Mod: {run_label}, {mode})")
     log.info(f"   Model: {settings.DEFAULT_MODEL} | Hedef Süre: {settings.DEFAULT_DURATION}s")
-    log.info(f"   YouTube Upload: {'Aktif' if upload_active else 'Devre Dışı (Skip Upload / Test)'}")
+    log.info(f"   YouTube Upload: {'Aktif' if upload_active else 'Devre Dışı (TEST / kilit / skip)'}")
     log.info(f"   Notion Log: {'Aktif' if settings.NOTION_ENABLED else 'Devre Dışı'}")
 
     # ── Tekrar önleme & Semantik Negatif Hafıza ──
@@ -104,7 +151,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     last_error, reason = None, ""
 
     for attempt in range(max_retries):
-        status.start(mode if upload_active else f"{mode} (upload yok)", attempt + 1, max_retries)
+        status.start(run_label if upload_active else f"{run_label} (upload yok)", attempt + 1, max_retries)
         try:
             result = await _execute_pipeline(
                 used_combos,
@@ -115,6 +162,8 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 domain=domain,
                 event=event,
                 trigger=trigger,
+                mode=mode,
+                reporter=reporter,
             )
             return result
         except (ContentFilterError, PreflightError) as err:
@@ -149,15 +198,25 @@ async def _execute_pipeline(
     domain: str | None = None,
     event: str | None = None,
     trigger: str = "auto",
+    mode: str = MODE_PUBLISH,
+    reporter: PipelineReporter | None = None,
 ) -> dict:
     """
     Pipeline'ın asıl implementasyonu.
     """
+    reporter = reporter or PipelineReporter()
     tracker = NotionTracker()
     kie = KieClient()
     video_paths = []
     start_time = time.time()
     combo_key = ""
+    commit = current_commit()
+    archive_dir = ""
+    # meta.json (TUR 29): kategori/olay/kamera/gemi, son Kie prompt'u, stil eki sürümü (commit), model, çözünürlük,
+    # task ID, mod, kredi öncesi/sonrası
+    meta = {"mode": mode, "commit": commit, "model": settings.DEFAULT_MODEL, "resolution": settings.DEFAULT_RESOLUTION,
+            "duration": settings.DEFAULT_DURATION, "trigger": trigger, "menu_domain": domain, "menu_event": event,
+            "started_at": datetime.now(timezone.utc).isoformat()}
 
     pipeline_config = {
         "used_combos": used_combos,
@@ -171,17 +230,28 @@ async def _execute_pipeline(
         # ── ADIM 1: Prompt üret (Creative Engine + GPT) ──
         status.step("senaryo")
         log.info(f"🧠 Yaratıcı motor çalışıyor (Tek {settings.DEFAULT_DURATION}s kesintisiz çekim standardı)...")
-        prompt_data = await generate_prompts(pipeline_config)
+        try:
+            prompt_data = await generate_prompts(pipeline_config)
+        except NoValidScenarioError as nvse:
+            await _report(reporter.generation(nvse.trace))
+            raise
 
         scenes = prompt_data.get("scenes", [])
         combo_key = prompt_data.get("combo_key", "")
         clip_count = len(scenes)
         total_duration = prompt_data.get("total_duration", settings.DEFAULT_DURATION)
+        selection = prompt_data.get("selection") or {}
+        meta.update({"domain": selection.get("domain_id", ""), "event": selection.get("event", ""),
+                     "environment": selection.get("environment", ""), "ship": selection.get("ship", ""),
+                     "camera": selection.get("camera", ""), "combo_key": combo_key,
+                     "title": prompt_data.get("youtube_title", ""),
+                     "scenario_summary": prompt_data.get("scenario_summary", "")})
 
         log.info(f"🎬 Senaryo: {prompt_data.get('scenario_summary', '')}")
         log.info(f"   {clip_count} sahne, {total_duration}s | Başlık: {prompt_data.get('youtube_title', '')}")
         log.info(f"   Prompt: {scenes[0]['prompt'] if scenes else ''}")
         status.set_title(prompt_data.get("youtube_title", "") or prompt_data.get("scenario_summary", ""))
+        await _report(reporter.generation(prompt_data.get("trace") or {}, prompt_data))
 
         # ── ADIM 2: Notion entry ──
         notion_config = {
@@ -191,14 +261,53 @@ async def _execute_pipeline(
             "orientation": settings.DEFAULT_ORIENTATION,
             "audio": settings.DEFAULT_AUDIO,
             "combo_key": combo_key,
+            "mode": mode,
         }
         await asyncio.to_thread(tracker.create_entry, notion_config, trigger=trigger)
         await asyncio.to_thread(tracker.update_with_prompts, prompt_data)
+        if prompt_data.get("trace"):
+            await asyncio.to_thread(tracker.append_body, format_generation(prompt_data["trace"]))
+
+        # ── Zorunlu olay denetimi (TUR 29): menü olayı seçilen senaryoda ve hikayede yoksa Kie çağrılmaz ──
+        if event:
+            scenario = (prompt_data.get("gate_context") or {}).get("scenario") or {}
+            story = (scenes[0].get("story") or scenes[0].get("prompt", "")) if scenes else ""
+            issues = event_fidelity_issues(event, scenario_text(scenario)) + event_fidelity_issues(event, story)
+            if issues:
+                raise EventMismatchError("; ".join(issues))
 
         # ── ADIM 3: Video üret (Seedance 2 Mini) ──
         log.info(f"🎬 Video üretimi başlıyor ({settings.DEFAULT_MODEL}, {settings.DEFAULT_DURATION}s)...")
-        await asyncio.to_thread(tracker.update_status, "Video Üretiliyor")
         status.step("video")
+        meta["credit_before"] = await _credit(kie)
+
+        async def before_submit(info: dict) -> None:
+            """Ücretli createTask'tan hemen önce: son prompt Notion'a, olay denetimi, ayrıntı, onay."""
+            if event:
+                issues = event_fidelity_issues(event, info.get("story", ""))
+                if issues:
+                    raise EventMismatchError("Kie'ye gidecek hikaye: " + "; ".join(issues))
+            meta.update({"final_prompt": info["prompt"], "story": info.get("story", ""),
+                         "style_suffix": info.get("style_suffix", ""), "preflight": info.get("preflight") or {}})
+            await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)
+            await asyncio.to_thread(tracker.append_body, [format_final_prompt(info)])
+            await _report(reporter.final_prompt(info))
+            if reporter.needs_approval:
+                await asyncio.to_thread(tracker.update_status, STATUS_AWAITING_APPROVAL)
+                if not await reporter.approve(info):
+                    raise SubmissionCancelled("Kie gönderimi onaylanmadı (iptal veya onay süresi doldu)")
+
+        async def on_task_created(task_id: str, info: dict) -> None:
+            """Polling başlamadan task ID'yi kalıcı yaz: restart olursa kurtarma buradan devam eder."""
+            nonlocal archive_dir
+            meta.update({"task_id": task_id, "task_created_at": datetime.now(timezone.utc).isoformat(),
+                         "notion_page_id": tracker.page_id or "", "status": "video_uretiliyor"})
+            try:
+                archive_dir = archive_dir or new_archive_dir(meta.get("domain", ""), task_id)
+                write_meta(archive_dir, meta)
+            except OSError as e:
+                log.warning(f"⚠️ meta.json yazılamadı: {e}")
+            await asyncio.to_thread(tracker.record_task, task_id)
 
         # Hikaye + stil eki ayrı gider: preflight/retry sadece hikayeyi yeniden yazar (TUR 12)
         has_split = "story" in scenes[0] and "style_suffix" in scenes[0]
@@ -212,6 +321,8 @@ async def _execute_pipeline(
             duration=scenes[0].get("duration", settings.DEFAULT_DURATION),
             audio=settings.DEFAULT_AUDIO,
             resolution=settings.DEFAULT_RESOLUTION,
+            before_submit=before_submit,
+            on_task_created=on_task_created,
         )
         video_urls = [video_url]
 
@@ -231,12 +342,20 @@ async def _execute_pipeline(
         except Exception as e:
             log.debug(f"Güvenlik telemetrisi hatası (önemsiz): {e}")
 
-        # ── ADIM 4: Video indir ──
+        # ── ADIM 4: Video indir + kalıcı arşiv ──
         log.info("📥 Video indiriliyor...")
         status.step("indirme")
         final_video_url = video_urls[0]
         video_path = await asyncio.to_thread(download_video, final_video_url)
         video_paths.append(video_path)
+        archived_path = ""
+        if video_path and os.path.exists(video_path):
+            try:
+                archive_dir = archive_dir or new_archive_dir(meta.get("domain", ""), meta.get("task_id", ""))
+                archived_path = save_video(archive_dir, video_path)
+            except OSError as e:
+                log.warning(f"⚠️ Video arşive kopyalanamadı: {e}")
+        meta.update({"video_cdn_url": final_video_url, "credit_after": await _credit(kie)})
 
         # ── Hareket profili (TUR 9): açılış durgunluğu istatistiği, Kie harcamadan ──
         camera = combo_key.split("|")[-1] if combo_key else ""
@@ -247,8 +366,9 @@ async def _execute_pipeline(
             motion_text = f"ölçülemedi: {me}"
             log.warning(f"⚠️ Hareket profili ölçülemedi: {me}")
         await asyncio.to_thread(tracker.update_with_motion, motion_text)
+        meta["motion"] = motion_text
 
-        saved_local_path = video_path
+        saved_local_path = archived_path or video_path
         if output_path:
             shutil.copy(video_path, output_path)
             saved_local_path = output_path
@@ -256,10 +376,10 @@ async def _execute_pipeline(
 
         status.skip("montaj", "Tek kesintisiz çekim, montaj yok")
 
-        # ── ADIM 5: YouTube upload (Shorts) ──
+        # ── ADIM 5: YouTube upload (Shorts) — sadece YAYIN modu ve kilit açıksa ──
         youtube_url = ""
         if not upload_active:
-            status.skip("youtube", "Test modu, yükleme atlandı")
+            status.skip("youtube", "TEST modu / yayın kilidi, yükleme atlandı")
         if upload_active:
             status.step("youtube")
             log.info("📺 YouTube Shorts olarak yükleniyor...")
@@ -288,15 +408,23 @@ async def _execute_pipeline(
             if upload_active:
                 await asyncio.to_thread(tracker.update_status, "✅ Tamamlandı (Upload Başarısız)")
             else:
-                await asyncio.to_thread(tracker.update_status, "✅ Tamamlandı (Test Modu / YouTube Atlandı)")
+                await asyncio.to_thread(tracker.update_status, STATUS_TEST_DONE)
         else:
             await asyncio.to_thread(tracker.update_status, "✅ Tamamlandı")
 
+        meta.update({"status": "tamamlandi", "youtube_url": youtube_url, "elapsed_s": round(elapsed, 1),
+                     "notion_page_id": tracker.page_id or "", "finished_at": datetime.now(timezone.utc).isoformat()})
+        if archive_dir:
+            try:
+                write_meta(archive_dir, meta)
+            except OSError as e:
+                log.warning(f"⚠️ meta.json yazılamadı: {e}")
+
         status.finish(youtube_url)
         log.info(f"🎉 Pipeline tamamlandı! ({elapsed:.0f}s)")
-        log.info(f"   📺 {youtube_url or 'Upload atlandı (Test modu)'}")
+        log.info(f"   📺 {youtube_url or 'Upload atlandı (TEST / kilit)'}")
         log.info(f"   🎬 Başlık: {prompt_data.get('youtube_title', 'N/A')}")
-        log.info(f"   💾 Yerel Dosya: {saved_local_path}")
+        log.info(f"   💾 Arşiv: {archive_dir or saved_local_path}")
 
         return {
             "success": True,
@@ -307,7 +435,7 @@ async def _execute_pipeline(
             "clip_count": clip_count,
             "total_duration": total_duration,
             "elapsed": elapsed,
-            "prompt": scenes[0]["prompt"] if scenes else "",
+            "prompt": meta.get("final_prompt") or (scenes[0]["prompt"] if scenes else ""),
             "description": prompt_data.get("youtube_description", ""),
             "tags": prompt_data.get("tags", []),
             "model": settings.DEFAULT_MODEL,
@@ -315,7 +443,30 @@ async def _execute_pipeline(
             "video_path": saved_local_path,
             "video_cdn_url": final_video_url,
             "privacy": settings.YOUTUBE_PRIVACY,
+            "mode": mode,
+            "task_id": meta.get("task_id", ""),
+            "notion_page_id": tracker.page_id or "",
+            "archive_dir": archive_dir,
         }
+
+    except SubmissionCancelled as sc:
+        log.info(f"✋ Kie gönderimi iptal edildi, kredi harcanmadı: {sc}")
+        await asyncio.to_thread(tracker.update_status, STATUS_CANCELLED, {"Hata": _rt(str(sc))})
+        status.fail(f"İptal: {sc}")
+        return {"success": False, "reason": "cancelled", "error": str(sc), "notion_page_id": tracker.page_id or ""}
+
+    except EventMismatchError as em:
+        log.error(f"🚫 Zorunlu olay denetimi: {em}")
+        await asyncio.to_thread(tracker.update_with_error, str(em))
+        status.fail(str(em))
+        return {"success": False, "reason": "event_mismatch", "error": str(em)}
+
+    except KieTimeoutError as te:
+        # Kayıt hata olarak kapatılmaz: "Video Üretiliyor" + Kie Task ID ile kalır, kurtarma devam eder
+        log.warning(f"⏳ Kie zaman aşımı, task ID ile devam edilecek: {te.task_id}")
+        status.fail(f"Kie zaman aşımı, task {te.task_id} takip ediliyor")
+        return {"success": False, "reason": "kie_timeout", "error": str(te), "task_id": te.task_id,
+                "notion_page_id": tracker.page_id or "", "mode": mode, "archive_dir": archive_dir}
 
     except (ContentFilterError, PreflightError) as err:
         # Senaryoya bağlı ret: bu denemenin Notion kaydı hata olarak kapanır (eskiden
@@ -329,23 +480,10 @@ async def _execute_pipeline(
 
     except NoValidScenarioError as nvse:
         elapsed = time.time() - start_time
-        timestamp = time.strftime("%Y-%m-%d %H:%M")
         log.error(f"🚫 Kalite kapısından geçen senaryo yok ({elapsed:.1f}s): {nvse}")
-
-        if not tracker.page_id:
-            await asyncio.to_thread(
-                tracker.create_entry,
-                {
-                    "topic": f"Boş Cron — {timestamp} | 5 senaryo kalite kapısından geçemedi: {str(nvse)[:300]}",
-                    "model": settings.DEFAULT_MODEL,
-                    "clip_count": 0,
-                    "orientation": settings.DEFAULT_ORIENTATION,
-                    "audio": settings.DEFAULT_AUDIO,
-                    "combo_key": "",
-                },
-                trigger,
-            )
-        await asyncio.to_thread(tracker.update_with_error, str(nvse))
+        # TUR 29: "Boş Cron" kaydı açılmaz (cron yok); ayrıntı Telegram'a ve loga gider
+        if tracker.page_id:
+            await asyncio.to_thread(tracker.update_with_error, str(nvse))
         status.fail(f"Kalite kapısından geçen senaryo yok: {nvse}")
         return {"success": False, "reason": "no_valid_scenario", "error": str(nvse),
                 "error_summary": nvse.short_summary()}   # Telegram'a kısa özet (TUR 25)
@@ -359,11 +497,90 @@ async def _execute_pipeline(
         return {"success": False, "error": error_msg}
 
     finally:
-        # Eğer upload yapıldıysa veya output_path belirtilmişse temp dosyayı temizle
-        if upload_active or output_path:
-            for vp in video_paths:
-                if vp != output_path:
-                    cleanup_video(vp)
+        # Geçici indirme her modda silinir (TUR 29: TEST'te sızıyordu); kalıcı kopya arşivde
+        for vp in video_paths:
+            if vp != output_path:
+                cleanup_video(vp)
+
+
+# ────────────────────────────────────────
+# ♻️ KURTARMA (TUR 29)
+# ────────────────────────────────────────
+
+async def recover_pending_tasks(on_video=None, kie: KieClient | None = None, poll_attempts: int | None = None,
+                                only_page_id: str | None = None) -> list[dict]:
+    """Restart veya Kie zaman aşımından kalan kayıtları tamamlar. Yeni ücretli çağrı YAPMAZ.
+
+    - "✋ Onay Bekliyor": Kie hiç çağrılmadı; sessizce "❌ İptal" olur.
+    - "Video Üretiliyor" + Kie Task ID: task beklenir, video indirilir ve arşivlenir, Notion kapanır,
+      on_video(item) çağrılır (bot videoyu Telegram'a gönderir). YouTube'a YÜKLENMEZ.
+    - Task ID'si olmayan eski kayıtlar atlanır (elle temizlenir).
+    """
+    kie = kie or KieClient()
+    results = []
+    try:
+        records = await asyncio.to_thread(NotionTracker.find_by_status,
+                                          [STATUS_VIDEO_GENERATING, STATUS_AWAITING_APPROVAL])
+    except Exception as e:
+        log.warning(f"⚠️ Kurtarma: Notion sorgusu başarısız: {e}")
+        return results
+    for rec in records:
+        if only_page_id and rec["page_id"].replace("-", "") != only_page_id.replace("-", ""):
+            continue
+        tracker = NotionTracker(page_id=rec["page_id"])
+        item = {"page_id": rec["page_id"], "task_id": rec["task_id"], "title": rec["title"], "mode": rec["mode"]}
+        if rec["status"] == STATUS_AWAITING_APPROVAL:
+            await asyncio.to_thread(tracker.update_status, STATUS_CANCELLED, {
+                "Hata": _rt("Onay beklerken bot yeniden başladı; Kie çağrılmadı, kredi harcanmadı.")})
+            results.append({**item, "action": "cancelled"})
+            continue
+        if not rec["task_id"]:
+            log.info(f"♻️ Kurtarma: task ID'siz eski kayıt atlandı: {rec['title'][:60]}")
+            results.append({**item, "action": "skipped_no_task"})
+            continue
+        try:
+            url = await kie.wait_for_task(rec["task_id"], max_attempts=poll_attempts)
+        except KieTimeoutError:
+            results.append({**item, "action": "still_running"})
+            continue
+        except Exception as e:
+            await asyncio.to_thread(tracker.update_with_error, f"Kurtarma: Kie task başarısız: {e}")
+            results.append({**item, "action": "failed", "error": str(e)})
+            continue
+        path = ""
+        try:
+            path = await asyncio.to_thread(download_video, url)
+            domain = (rec["combo_key"].split("|")[0] if rec["combo_key"] else "") or "kurtarma"
+            archive_dir = new_archive_dir(domain, rec["task_id"])
+            archived = save_video(archive_dir, path)
+            prompt = ""
+            try:
+                prompt = (await kie.get_task(rec["task_id"])).get("prompt", "")
+            except Exception as e:
+                log.warning(f"⚠️ Kurtarma: task prompt'u okunamadı: {e}")
+            write_meta(archive_dir, {"mode": rec["mode"] or "bilinmiyor", "task_id": rec["task_id"],
+                                     "notion_page_id": rec["page_id"], "combo_key": rec["combo_key"],
+                                     "title": rec["title"], "final_prompt": prompt, "video_cdn_url": url,
+                                     "model": settings.DEFAULT_MODEL, "resolution": settings.DEFAULT_RESOLUTION,
+                                     "commit": current_commit(), "recovered": True, "status": "kurtarildi",
+                                     "finished_at": datetime.now(timezone.utc).isoformat()})
+        except Exception as e:
+            await asyncio.to_thread(tracker.update_with_error, f"Kurtarma: video indirilemedi: {e}")
+            results.append({**item, "action": "failed", "error": str(e)})
+            continue
+        finally:
+            if path:
+                cleanup_video(path)
+        await asyncio.to_thread(tracker.update_status, STATUS_RECOVERED, {"Video URL": {"url": url}})
+        done = {**item, "action": "recovered", "video_path": archived, "archive_dir": archive_dir, "video_url": url}
+        log.info(f"♻️ Kurtarıldı: {rec['title'][:60]} (task {rec['task_id']})")
+        if on_video:
+            try:
+                await on_video(done)
+            except Exception as e:
+                log.warning(f"⚠️ Kurtarılan video gönderilemedi: {e}")
+        results.append(done)
+    return results
 
 
 # ────────────────────────────────────────

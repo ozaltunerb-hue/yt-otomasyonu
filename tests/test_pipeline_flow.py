@@ -30,7 +30,7 @@ def _prompt_data(i):
 
 
 def run(kie=("https://cdn/v.mp4",), gen=None, skip_upload=True, youtube_enabled=False,
-        download=None, motion=None, upload=None):
+        download=None, motion=None, upload=None, publish_locked=False):
     trackers = []
 
     def new_tracker():
@@ -46,7 +46,9 @@ def run(kie=("https://cdn/v.mp4",), gen=None, skip_upload=True, youtube_enabled=
     kie_client = MagicMock()
     kie_client.create_video = AsyncMock(side_effect=list(kie))
     upload = upload or AsyncMock(return_value="https://youtu.be/x")
+    # Yükleme modu testleri kilit açıkken eski davranışı sınar; kilidin kendisi TestPublishLock'ta (TUR 29)
     with patch.object(settings, "IS_DRY_RUN", False), patch.object(settings, "YOUTUBE_ENABLED", youtube_enabled), \
+         patch.object(settings, "PUBLISH_LOCKED", publish_locked), \
          patch.object(main, "load_used_combos", return_value=[]), \
          patch.object(main, "NotionTracker", side_effect=new_tracker), \
          patch.object(main, "generate_prompts", gen), \
@@ -96,14 +98,30 @@ class TestNoStuckRecords(unittest.TestCase):
         r = run(kie=[TimeoutError("poll timeout")])
         self.assertFalse(r.result["success"])
         self.assertEqual(r.errors(), ["poll timeout"])
-        self.assertIn("Video Üretiliyor", r.statuses())   # hata öncesi son durum buydu, artık kapanıyor
+        # TUR 29: "Video Üretiliyor" artık task oluşunca (record_task) yazılıyor; Kie task açmadan düştü
+        self.assertNotIn("Video Üretiliyor", r.statuses())
+        r.attempts[0].record_task.assert_not_called()
 
-    def test_no_valid_scenario_opens_and_closes_record(self):
+    def test_no_valid_scenario_opens_no_record(self):
+        # TUR 29: "Boş Cron" kaydı açılmaz; ayrıntı Telegram'a gider
         r = run(gen=AsyncMock(side_effect=NoValidScenarioError("5 senaryo kaldı")))
         self.assertEqual(r.result["reason"], "no_valid_scenario")
+        self.assertIn("5 senaryo kaldı", r.result["error"])
         t = r.attempts[0]
-        self.assertIn("Boş Cron", t.create_entry.call_args.args[0]["topic"])
-        self.assertIn("5 senaryo kaldı", t.update_with_error.call_args.args[0])
+        t.create_entry.assert_not_called()
+        t.update_with_error.assert_not_called()
+
+
+class TestPublishLock(unittest.TestCase):
+    def test_lock_blocks_upload_even_when_enabled(self):
+        r = run(skip_upload=False, youtube_enabled=True, publish_locked=True)
+        r.upload.assert_not_awaited()
+        self.assertEqual(r.result["mode"], "TEST")
+        self.assertEqual(r.statuses()[-1], "✅ Tamamlandı (Test Modu / YouTube Atlandı)")
+
+    def test_real_config_is_locked(self):
+        from config import Config
+        self.assertTrue(Config().PUBLISH_LOCKED)
 
 
 class TestUploadModes(unittest.TestCase):
