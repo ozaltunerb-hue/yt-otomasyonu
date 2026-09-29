@@ -5,6 +5,7 @@ aynı metni kullanır. Sadece biçimlendirme; seçim ya da kapı mantığı yok.
 from __future__ import annotations
 
 import difflib
+import json
 import re
 
 TELEGRAM_LIMIT = 4096
@@ -71,6 +72,8 @@ def _fmt_candidate(c: dict) -> str:
 def format_generation(trace: dict, labels: dict | None = None) -> list[tuple[str, str]]:
     """(başlık, metin) bölümleri: Seçim, Adaylar, Seçilen, Simplifier sonrası hikaye."""
     labels = labels or {}
+    if trace.get("pipeline") == "skeleton":
+        return _format_skeleton(trace, labels)
     cands = trace.get("candidates") or []
     sections = [("🔍 1. Seçim",
                  f"Kategori: {labels.get('domain') or trace.get('domain') or 'rastgele'}\n"
@@ -95,6 +98,27 @@ def format_generation(trace: dict, labels: dict | None = None) -> list[tuple[str
                          f"{status}\n{a.get('prompt') or '(boş)'}")
         sections.append(("🔍 4. Simplifier sonrası hikaye", "\n\n".join(lines)))
     return sections
+
+
+def _format_skeleton(trace: dict, labels: dict) -> list[tuple[str, str]]:
+    """İskelet hattı (TUR 30): seçim, iskelet + boşluklar, hikaye. Aday/skor/simplifier bu hatta yok."""
+    slots = trace.get("slots") or {}
+    attempts = trace.get("slot_attempts") or []
+    lines = [f"Deneme {a.get('attempt')}: {json.dumps(a.get('raw'), ensure_ascii=False)}"
+             + (" · ❌ " + " | ".join(a["errors"]) if a.get("errors") else " · ✅ geçerli") for a in attempts]
+    return [
+        ("🔍 1. Seçim",
+         f"Hat: iskelet (PROMPT_PIPELINE=skeleton)\n"
+         f"Kategori: {labels.get('domain') or trace.get('domain')}\n"
+         f"Olay: {labels.get('event') or trace.get('event')}\n"
+         f"Gemi: {trace.get('ship')} (Python, LRU) · kamera: el kamerası\n"
+         f"Ortam: {slots.get('spot', '-')}"),
+        ("🔍 2. İskelet ve boşluklar (gpt-4o-mini)",
+         f"İskelet: {trace.get('skeleton')}\n\n"
+         f"Boşluklar: yer={slots.get('spot')} · hava={slots.get('weather')} · kişi={slots.get('count')} "
+         f"{slots.get('people')}\n" + "\n".join(lines)),
+        ("🔍 3. Hikaye", f"{trace.get('story_words')} kelime\n{trace.get('story')}"),
+    ]
 
 
 def format_final_prompt(info: dict) -> tuple[str, str]:

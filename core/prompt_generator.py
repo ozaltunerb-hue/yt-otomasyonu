@@ -53,6 +53,9 @@ from core.creative_engine import (
 
 log = logging.getLogger("PromptGenerator")
 
+from core.creative_engine import MARITIME_INSPIRATION_DOMAINS as _DOMAINS
+MARITIME_INSPIRATION_DOMAINS_TITLES = {k: v["title"] for k, v in _DOMAINS.items()}
+
 
 def clean_youtube_title(title: str) -> str:
     """Başlığın başındaki 'DeepMyster:' vb. otomatik kanal öneklerini temizler."""
@@ -77,13 +80,13 @@ def _get_openai_client() -> OpenAI:
     return _openai_client
 
 
-async def _call_gpt(system_prompt: str, user_message: str, temperature: float = 0.85) -> dict:
-    """GPT-4o'yu çağır ve JSON yanıtı parse et."""
+async def _call_gpt(system_prompt: str, user_message: str, temperature: float = 0.85, model: str = "gpt-4o") -> dict:
+    """GPT'yi çağır ve JSON yanıtı parse et (varsayılan gpt-4o; iskelet boşlukları gpt-4o-mini)."""
     try:
         client = _get_openai_client()
         response = await asyncio.to_thread(
             client.chat.completions.create,
-            model="gpt-4o",
+            model=model,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message},
@@ -1100,13 +1103,54 @@ class NoValidScenarioError(RuntimeError):
 
 
 async def generate_prompts(config: dict) -> dict:
-    """
-    Doğukan metodolojisinde tam otonom ve yaratıcı serbestlikli prompt pipeline'ı.
-    """
+    """Prompt hattı seçici (TUR 30). config["prompt_pipeline"] ya da settings.PROMPT_PIPELINE:
+    "skeleton" (varsayılan) = iskelet hattı; "legacy" = eski yazıcı/simplifier/kapı hattı (silinmedi)."""
     if settings.IS_DRY_RUN:
         log.info("🧪 DRY-RUN: Doğukan standardında DeepMyster mock promptları üretiliyor...")
         return _dry_run_output()
+    pipeline = (config.get("prompt_pipeline") or settings.PROMPT_PIPELINE or "skeleton").lower()
+    if pipeline == "legacy":
+        return await generate_legacy_prompts(config)
+    if pipeline != "skeleton":
+        raise ValueError(f"Bilinmeyen PROMPT_PIPELINE: {pipeline} (skeleton / legacy)")
+    return await generate_skeleton_prompts(config)
 
+
+async def generate_skeleton_prompts(config: dict) -> dict:
+    """İskelet hattı (TUR 30): olay başına kilitli hikaye + gpt-4o-mini boşluk doldurma + tek kamera satırı.
+    Yazıcı sistem prompt'u, 5 aday, skor, simplifier ve A-N kapıları bu hatta çalışmaz."""
+    from core.skeleton_pipeline import build_skeleton_scene, first_sentence
+
+    history = list(dict.fromkeys(list(config.get("used_combos", [])) + list(config.get("recent_topics", []))))
+    scene = await build_skeleton_scene(config.get("domain") or None, config.get("event") or None, history, _call_gpt)
+    domain, event, ship, story = scene["domain"], scene["event"], scene["ship"], scene["story"]
+    metadata = await _generate_metadata(
+        {"vessel_class": ship or "None", "incident_type": event, "scenario_summary": story},
+        {"domain_title": MARITIME_INSPIRATION_DOMAINS_TITLES.get(domain, domain)})
+    return {
+        "scenes": [{"scene_number": 1, "prompt": scene["prompt"], "story": story,
+                    "style_suffix": scene["style_suffix"], "duration": settings.DEFAULT_DURATION}],
+        "youtube_title": clean_youtube_title(metadata.get("youtube_title", "")),
+        "youtube_description": metadata.get("youtube_description", ""),
+        "tags": metadata.get("tags", []),
+        "scenario_summary": first_sentence(story),
+        "combo_key": scene["combo_key"],
+        "total_duration": settings.DEFAULT_DURATION,
+        "animal": ship or "None", "talent": event, "category": domain,
+        "beat1_action_verb": "",
+        # Rewrite sonrası A-N kapıları bu hatta yok (iskelet hikayesi); olay denetimi scenario_text ile yapılır
+        "gate_context": None,
+        "scenario_text": story,
+        "selection": {"domain_id": domain, "event": event, "environment": scene["slots"]["spot"],
+                      "ship": ship or "None", "camera": scene["trace"]["camera"]},
+        "trace": scene["trace"],
+    }
+
+
+async def generate_legacy_prompts(config: dict) -> dict:
+    """
+    Eski hat (settings.PROMPT_PIPELINE="legacy"): Doğukan metodolojisinde yaratıcı serbestlikli prompt pipeline'ı.
+    """
     used_combos = config.get("used_combos", [])
     recent_topics = config.get("recent_topics", [])
     combined_history = list(dict.fromkeys(used_combos + recent_topics))

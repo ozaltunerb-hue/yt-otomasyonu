@@ -62,6 +62,11 @@ class Config:
         # YouTube'a yükleme yapılmaz. Açmak bilinçli bir kod değişikliği + push ister, ortam değişkeniyle açılmaz.
         self.PUBLISH_LOCKED = True
 
+        # Prompt hattı (TUR 30): "skeleton" (varsayılan) = olay başına kilitli iskelet + gpt-4o-mini boşluk
+        # doldurma; "legacy" = eski yol (yazıcı sistem prompt'u, 5 aday, skor, simplifier, A-N kapıları,
+        # fikir kütüphanesi). Final test geçene kadar eski kod silinmez, bu anahtarla geri açılır.
+        self.PROMPT_PIPELINE = os.environ.get("PROMPT_PIPELINE", "skeleton").strip().lower()
+
         # Kalıcı video arşivi (TUR 29): video.mp4 + meta.json. Railway diski geçicidir; kalıcı kopya
         # Telegram file_id'dir (Notion "Telegram File ID").
         self.ARCHIVE_DIR = os.environ.get(

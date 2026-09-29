@@ -151,11 +151,21 @@ class NotionTracker:
         """Verilen durumlardaki kayıtlar: [{"page_id", "status", "task_id", "mode", "title", "combo_key"}]."""
         if not settings.NOTION_ENABLED or settings.IS_DRY_RUN:
             return []
-        payload = {"filter": {"or": [{"property": "Durum", "select": {"equals": s}} for s in statuses]},
-                   "page_size": 100}
-        response = _notion_request("POST", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query", json=payload)
+        # Durum başına ayrı sorgu: veritabanında hiç kullanılmamış bir select seçeneğiyle filtre Notion'da
+        # 400 validation_error verir ("select option ... not found", 29 Eyl ilk açılış). O durum boş sayılır.
+        pages = []
+        for s in statuses:
+            payload = {"filter": {"property": "Durum", "select": {"equals": s}}, "page_size": 100}
+            try:
+                response = _notion_request("POST", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query",
+                                           json=payload)
+            except RuntimeError as e:
+                if "not found" in str(e):
+                    continue
+                raise
+            pages += response.get("results", [])
         out = []
-        for page in response.get("results", []):
+        for page in pages:
             props = page.get("properties", {})
 
             def text(name, kind="rich_text"):

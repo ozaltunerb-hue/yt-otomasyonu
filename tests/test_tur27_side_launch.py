@@ -78,7 +78,7 @@ class TestSelection(unittest.TestCase):
              patch.object(pg, "get_creative_catalyst", side_effect=lambda **k: dict(side_cat)) as gcc, \
              patch.object(pg, "_generate_scenario", calls):
             with self.assertRaises(pg.NoValidScenarioError) as cm:
-                asyncio.run(pg.generate_prompts({"used_combos": list(used), "domain": D}))
+                asyncio.run(pg.generate_prompts({"used_combos": list(used), "domain": D, "prompt_pipeline": "legacy"}))
         self.assertEqual(gcc.call_count, 5)   # deneme başına 1 çağrı: dedup döngüsü dönmedi
         self.assertTrue(all(SIDE_LAUNCH_EVENT.lower() in a["combo_key"] for a in cm.exception.attempts))
 

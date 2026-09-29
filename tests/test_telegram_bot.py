@@ -88,7 +88,7 @@ class TestDomainParameter(unittest.TestCase):
 
         gen = AsyncMock(return_value={"scenario_summary": "calm harbor", "beat1_action_verb": "sits"})
         config = {"used_combos": list(used_combos), "recent_topics": [], "recent_verbs": [], "domain": domain,
-                  "event": event}
+                  "event": event, "prompt_pipeline": "legacy"}   # eski hat testleri (TUR 30)
         with patch.object(settings, "IS_DRY_RUN", False), patch.object(pg, "get_creative_catalyst", side_effect=spy), \
              patch.object(pg, "_generate_scenario", gen),              patch.object(pg, "_call_gpt", AsyncMock(side_effect=AssertionError("GPT çağrılmamalı"))):
             with self.assertRaises(NoValidScenarioError) as cm:
@@ -246,7 +246,7 @@ class TestKeyboard(unittest.TestCase):
         for di, d in enumerate(DOMAINS):
             with self.subTest(domain=d):
                 rows = bot.event_keyboard(di).inline_keyboard
-                events = DOMAIN_ATTRIBUTES[d]["events"]
+                events = bot.domain_events(d)   # iskelet hattında sadece iskeleti olan olaylar (TUR 30)
                 self.assertEqual([r[0].text for r in rows[:-2]], [bot.EVENT_LABELS[e] for e in events])
                 self.assertEqual(rows[-2][0].text, "🎲 Rastgele")
                 self.assertEqual(rows[-1][0].text, "🔙 Geri")
@@ -312,7 +312,8 @@ class TestHandlers(unittest.TestCase):
         args, kwargs = upd.callback_query.edit_message_text.await_args
         self.assertIn("Tersane", args[0])
         texts = [b.text for b in _buttons(kwargs["reply_markup"])]
-        self.assertIn("🚢 Yandan suya indirme", texts)
+        self.assertIn("🪢 Kızak halatı kopar", texts)
+        self.assertNotIn("🚢 Yandan suya indirme", texts)   # iskelet hattında yok (TUR 30)
         self.assertEqual(texts[-2:], ["🎲 Rastgele", "🔙 Geri"])
 
     def test_event_click_shows_confirm_without_running(self):
@@ -373,8 +374,8 @@ class TestHandlers(unittest.TestCase):
         ctx, upd, runner, _ = self._select("shipyard_and_drydock_engineering", result=ok, eid="0")
         kw = runner.await_args.kwargs
         self.assertEqual((kw["domain"], kw["event"], kw["trigger"]),
-                         ("shipyard_and_drydock_engineering", bot.SIDE_LAUNCH_EVENT, "manual"))
-        self.assertIn("Yandan suya indirme", upd.callback_query.edit_message_text.await_args_list[0].args[0])
+                         ("shipyard_and_drydock_engineering", "Restraining cable snaps during slipway launch", "manual"))
+        self.assertIn("Kızak halatı kopar", upd.callback_query.edit_message_text.await_args_list[0].args[0])
 
     def test_unauthorized_command_ignored(self):
         ctx, upd = _context(), _update(chat_id=999)

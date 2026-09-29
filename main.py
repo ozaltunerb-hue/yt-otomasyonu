@@ -272,7 +272,9 @@ async def _execute_pipeline(
         if event:
             scenario = (prompt_data.get("gate_context") or {}).get("scenario") or {}
             story = (scenes[0].get("story") or scenes[0].get("prompt", "")) if scenes else ""
-            issues = event_fidelity_issues(event, scenario_text(scenario)) + event_fidelity_issues(event, story)
+            # İskelet hattında senaryo = hikaye (scenario_text); eski hatta yazıcının 3 beat'i
+            chosen = prompt_data.get("scenario_text") or scenario_text(scenario)
+            issues = event_fidelity_issues(event, chosen) + event_fidelity_issues(event, story)
             if issues:
                 raise EventMismatchError("; ".join(issues))
 

@@ -147,7 +147,8 @@ class TestVerbRotation(unittest.TestCase):
         with patch.object(pg, "_generate_scenario", side_effect=fake), \
              patch.object(pg, "validate_silent_visibility", return_value=(False, ["x"])):
             with self.assertRaises(pg.NoValidScenarioError):
-                asyncio.run(pg.generate_prompts({"used_combos": [], "recent_topics": [], "recent_verbs": ["lurches"]}))
+                asyncio.run(pg.generate_prompts({"used_combos": [], "recent_topics": [], "recent_verbs": ["lurches"],
+                                                  "prompt_pipeline": "legacy"}))
         self.assertEqual(seen[0], ["lurches"])
         self.assertEqual(seen[2], ["verb2", "verb1", "lurches"])
 

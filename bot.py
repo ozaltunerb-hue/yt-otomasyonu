@@ -36,6 +36,7 @@ from telegram.ext import Application, CallbackQueryHandler, CommandHandler, Cont
 import main as pipeline
 from config import settings
 from core.creative_engine import DOMAIN_ATTRIBUTES, SIDE_LAUNCH_EVENT
+from core.skeleton_pipeline import skeleton_events
 from core.trace_format import format_final_prompt, format_generation, sections_to_text, split_message
 from infrastructure.archive import update_meta
 from infrastructure.notion_logger import NotionTracker
@@ -154,6 +155,9 @@ def is_authorized(update: Update, allowed_chat_id: int) -> bool:
 
 
 def domain_events(domain: str) -> list[str]:
+    """Menüdeki olaylar. İskelet hattında (varsayılan) sadece iskeleti olan 22 olay; eski hatta hepsi."""
+    if settings.PROMPT_PIPELINE == "skeleton":
+        return skeleton_events(domain)
     return DOMAIN_ATTRIBUTES[domain]["events"]
 
 
