@@ -68,7 +68,9 @@ class TestEventPool(unittest.TestCase):
         self.assertEqual(sum(counts.values()), 22)
 
     def test_removed_events(self):
-        self.assertEqual(len(sk.REMOVED_EVENTS), 17)
+        self.assertEqual(len(sk.REMOVED_EVENTS), 18)   # 30 Eyl: + tabela/iskele (aksiyonsuz video)
+        self.assertIn("Storm gust tears signs and scaffolding loose downtown", sk.REMOVED_EVENTS)
+        self.assertNotIn("Tidal wave surges over a coastal city street", sk.REMOVED_EVENTS)
         for e in ("Coastal evacuation", "Jammed throttle sends the boat careening",
                   "Heavy roll tilts the deck and sends loungers sliding", sk.ALL_EVENTS[3]):
             self.assertIn(e, sk.REMOVED_EVENTS)   # ALL_EVENTS[3] = yandan indirme
@@ -76,7 +78,7 @@ class TestEventPool(unittest.TestCase):
 
     def test_phenomena(self):
         self.assertEqual({k: len(v) for k, v in sk.PHENOMENA.items()},
-                         {"Hortum": 4, "Tsunami": 0, "Sel": 1, "Heyelan": 0, "Dev Dalga": 4})
+                         {"Hortum": 4, "Tsunami": 0, "Sel": 1, "Heyelan": 0, "Dev Dalga": 5})
         for events in sk.PHENOMENA.values():
             self.assertTrue(set(events) <= set(sk.EVENT_SKELETONS))
 
@@ -157,7 +159,7 @@ class TestChoose(unittest.TestCase):
         hist = [f"{d}|none|flash flooding in city streets|downtown city center|bystander_handheld"]
         for _ in range(10):
             _, e, ship = sk.choose_event_and_ship(d, None, hist)
-            self.assertEqual(e, "Storm gust tears signs and scaffolding loose downtown")
+            self.assertEqual(e, "Tidal wave surges over a coastal city street")
             self.assertIsNone(ship)
 
 
@@ -283,7 +285,8 @@ class TestMenu(unittest.TestCase):
         with patch.object(settings, "PROMPT_PIPELINE", "skeleton"):
             self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 22)
         with patch.object(settings, "PROMPT_PIPELINE", "legacy"):
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 39)
+            # 30 Eyl: dev dalga baskını havuza eklendi (tabela/iskele havuzda kaldı, sadece iskeletten çıktı)
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 40)
 
 
 if __name__ == "__main__":

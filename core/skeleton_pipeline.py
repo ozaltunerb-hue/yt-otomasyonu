@@ -59,6 +59,10 @@ CAMERA_SPOTS = {
     "Residential city district": "on a front porch across the street",
     "Residential coastal district": "on a front porch across the street",
     "Suburban coastal city": "on a sidewalk across the street",
+    # Dev dalga baskını (30 Eyl): yüksekten bakış, dalga kıyı yoluna/caddeye çarpar
+    "Coastal road below a seafront promenade": "at the railing of a raised seafront promenade, looking down at the coastal road",
+    "Coastal street of low shopfronts": "on a second-floor balcony, looking down at the coastal street",
+    "Coastal avenue behind a seawall": "on top of the seawall, looking down at the coastal avenue",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -239,12 +243,30 @@ EVENT_SKELETONS = {
                 "fast water shoves parked cars sideways and carries one down the road as {n} {people} climb onto steps "
                 "and ledges. The flood keeps rising, still dragging the car along the street.",
     },
-    "Storm gust tears signs and scaffolding loose downtown": {
-        "domain": "urban_city_disasters", "ships": None, "spots": _CITY_SPOTS,
-        "people": ["pedestrians", "residents"], "weather": WEATHER_SEA, "object": "flying scaffolding",
-        "text": "In {spot} in {weather}, a violent storm gust tears a sign and a sheet of scaffolding loose from a "
-                "building downtown. The metal crashes onto the street and parked cars as {n} {people} sprint for "
-                "doorways. The gust keeps ripping more panels loose, still tumbling debris across the road.",
+    # ÇIKARILDI (30 Eyl, Bahadır): aksiyonsuz videolar veriyordu. Olay havuzda kalır, iskelette olmadığı için
+    # REMOVED_EVENTS'e düşer ve menüde görünmez. Geri almak için bu bloğu, EVENT_OUTCOMES ve EVENT_REQUIRED
+    # satırlarını açmak yeterli.
+    # "Storm gust tears signs and scaffolding loose downtown": {
+    #     "domain": "urban_city_disasters", "ships": None, "spots": _CITY_SPOTS,
+    #     "people": ["pedestrians", "residents"], "weather": WEATHER_SEA, "object": "flying scaffolding",
+    #     "text": "In {spot} in {weather}, a violent storm gust tears a sign and a sheet of scaffolding loose from a "
+    #             "building downtown. The metal crashes onto the street and parked cars as {n} {people} sprint for "
+    #             "doorways. The gust keeps ripping more panels loose, still tumbling debris across the road.",
+    # },
+    # EKLENDİ (30 Eyl, Bahadır onayı). Kaynak: 24 Eyl videosu (dosya 1790240764259-vf8owrlvyva), "A towering tidal
+    # wave crashes over the coastal road, sweeping parked cars into storefronts." Gemi yok; kişi 2-10 (env-centric).
+    "Tidal wave surges over a coastal city street": {
+        "domain": "urban_city_disasters", "ships": None,
+        "spots": {"Coastal road below a seafront promenade": "the coastal road below a raised seafront promenade",
+                  "Coastal street of low shopfronts": "a coastal street lined with low shopfronts",
+                  "Coastal avenue behind a seawall": "the coastal avenue behind the seawall"},
+        "people": ["pedestrians", "residents"],
+        # şehir hava listesinden; "a dark storm light" ve "stormy late-afternoon light" dramatik gökyüzü
+        "weather": ["driving rain and wind", "a dark storm light", "stormy late-afternoon light", "strong gusting wind"],
+        "object": "tidal wave",
+        "text": "At {spot} in {weather}, a towering tidal wave crashes over the sea wall onto the coastal road. The "
+                "water sweeps parked cars into the storefronts as {n} {people} run for the upper floors. The wave "
+                "keeps surging down the street, still carrying cars and debris inland.",
     },
     # ── Plaj & sahil ──
     "Tornado approaching an open beach": {
@@ -283,7 +305,8 @@ PHENOMENA = {
     "Sel": ["Flash flooding in city streets"],
     "Heyelan": [],
     "Dev Dalga": ["Green wave breaks over the rail onto the vehicle deck", "Rogue wave breaks over the rail onto the pool deck",
-                  "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon"],
+                  "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon",
+                  "Tidal wave surges over a coastal city street"],
 }
 
 _NUM = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine", 10: "ten",

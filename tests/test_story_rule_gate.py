@@ -47,6 +47,8 @@ def tearDownModule():
 CABLE, KEEL = cp.SLIPWAY_EVENTS
 FLOOD = "Flash flooding in city streets"
 WAVE = "Rogue wave breaks over the rail onto the pool deck"
+TIDAL = "Tidal wave surges over a coastal city street"
+SIGNS = "Storm gust tears signs and scaffolding loose downtown"
 YACHT = "Luxury Motor Yacht"
 
 GOLDEN = ("The restraining cable snaps with a crack and the luxury motor yacht heels over onto its side on the "
@@ -119,7 +121,8 @@ class TestLocks(unittest.TestCase):
         self.assertEqual(cp.EVENT_REQUIRED[KEEL], side)
         self.assertEqual(cp.EVENT_REQUIRED[FLOOD], [("wall", "surge", "torrent", "wave", "rush"), ("car", "cars", "vehicle")])
         self.assertEqual(cp.EVENT_REQUIRED[WAVE], [("wave",), ("loungers", "chairs", "people", "passengers")])
-        self.assertEqual(set(cp.REQUIRED_APPROVED), {CABLE, KEEL, FLOOD, WAVE})
+        self.assertEqual(cp.EVENT_REQUIRED[TIDAL], [("wave", "surge", "torrent"), ("car", "cars", "vehicle")])
+        self.assertEqual(set(cp.REQUIRED_APPROVED), {CABLE, KEEL, FLOOD, WAVE, TIDAL})
 
     def test_forbidden_exact_and_only_slipway(self):
         self.assertEqual(set(cp.EVENT_FORBIDDEN), {CABLE, KEEL})
@@ -362,6 +365,50 @@ class TestPipeline(unittest.TestCase):
         self.assertIn("kural kapısı", r["error"])
         create.assert_not_awaited()
 
+
+
+class TestCityEventSwap(unittest.TestCase):
+    """30 Eyl: tabela/iskele çıktı (aksiyonsuz video), kıyı şehrinde dev dalga baskını girdi (24 Eyl videosu)."""
+
+    def test_event_sets_equal(self):
+        self.assertEqual(set(cp.EVENT_OUTCOMES), set(sk.EVENT_SKELETONS))
+        self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
+        self.assertEqual(len(sk.EVENT_SKELETONS), 22)
+        self.assertIn(TIDAL, sk.EVENT_SKELETONS)
+        self.assertNotIn(SIGNS, sk.EVENT_SKELETONS)
+        self.assertIn(SIGNS, sk.REMOVED_EVENTS)   # kod silinmedi: havuzda, iskelet dışında
+
+    def test_menu(self):
+        import bot
+        with patch.object(settings, "PROMPT_PIPELINE", "creative"):
+            city = bot.domain_events("urban_city_disasters")
+        self.assertEqual(city, ["Flash flooding in city streets", TIDAL])
+        self.assertEqual(bot.EVENT_LABELS[TIDAL], "🌊 Kıyı şehrinde dev dalga baskını")
+
+    def test_tidal_wave_data(self):
+        s = sk.EVENT_SKELETONS[TIDAL]
+        self.assertEqual(s["domain"], "urban_city_disasters")
+        self.assertIsNone(s["ships"])
+        self.assertEqual(sk.count_range(TIDAL, None), (2, 10))
+        self.assertEqual(set(s["spots"]), {"Coastal road below a seafront promenade", "Coastal street of low shopfronts",
+                                            "Coastal avenue behind a seawall"})
+        self.assertIn("promenade", sk.CAMERA_SPOTS["Coastal road below a seafront promenade"])
+        self.assertIn("second-floor balcony", sk.CAMERA_SPOTS["Coastal street of low shopfronts"])
+        self.assertIn("seawall", sk.CAMERA_SPOTS["Coastal avenue behind a seawall"])
+        self.assertTrue({"a dark storm light", "stormy late-afternoon light"} & set(s["weather"]))
+        self.assertEqual(cp.EVENT_OUTCOMES[TIDAL], "a towering tidal wave crashes over the coastal road, sweeps parked "
+                                                   "cars into storefronts and keeps surging down the street")
+        for spot in s["spots"]:
+            self.assertNotIn("phone", sk.style_suffix(TIDAL, None, spot).lower())
+
+    def test_tidal_story_passes_rules(self):
+        story = ("A towering tidal wave crashes over the seawall onto the coastal road, slamming into a row of parked "
+                 "cars. The water sweeps the cars into the storefronts as six pedestrians sprint up the stairs to the "
+                 "promenade. The wave keeps surging down the street, still dragging cars and debris inland.")
+        self.assertEqual(cp.story_rule_issues(TIDAL, None, story), [])
+        self.assertIn("required", rules(TIDAL, None, story.replace("parked cars", "benches")
+                                        .replace("sweeps the cars", "sweeps the benches")
+                                        .replace("dragging cars", "dragging benches")))
 
 if __name__ == "__main__":
     unittest.main()

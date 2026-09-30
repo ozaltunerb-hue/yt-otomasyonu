@@ -91,8 +91,13 @@ EVENT_OUTCOMES = {
     "Flash flooding in city streets":
         "a wall of brown floodwater surges down the street, slams into parked cars and shoves them sideways "
         "as people run for higher ground",
-    "Storm gust tears signs and scaffolding loose downtown":
-        "scaffolding and signs crash onto the street and parked cars as more panels tear loose",
+    # ÇIKARILDI (30 Eyl, Bahadır): aksiyonsuz videolar veriyordu (bkz. skeleton_pipeline)
+    # "Storm gust tears signs and scaffolding loose downtown":
+    #     "scaffolding and signs crash onto the street and parked cars as more panels tear loose",
+    # EKLENDİ (30 Eyl, Bahadır onayı). Kaynak: 24 Eyl videosu (dosya 1790240764259-vf8owrlvyva)
+    "Tidal wave surges over a coastal city street":
+        "a towering tidal wave crashes over the coastal road, sweeps parked cars into storefronts and keeps surging "
+        "down the street",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -202,16 +207,20 @@ EVENT_REQUIRED = {
     # ONAYLI. Sebep: su yerinde yükselmez, sokaktan gelen bir duvar olur ve arabaları sürükler. Kaynak: final turu
     # "hareketli sel" (30 Eyl, eb3a9f2) ve Bahadır'ın tanımı.
     "Flash flooding in city streets": [("wall", "surge", "torrent", "wave", "rush"), ("car", "cars", "vehicle")],
-    # TASLAK
-    "Storm gust tears signs and scaffolding loose downtown": [("sign", "scaffold"),
-                                                             ("crash", "fall", "fell", "topple", "tear", "rip")],
+    # ÇIKARILDI (30 Eyl, Bahadır): aksiyonsuz videolar veriyordu
+    # "Storm gust tears signs and scaffolding loose downtown": [("sign", "scaffold"),
+    #                                                          ("crash", "fall", "fell", "topple", "tear", "rip")],
+    # ONAYLI. Sebep: dalga kıyı yoluna çarpıp arabaları sürüklemeli. Kaynak: Bahadır'ın beğendiği 24 Eyl videosu
+    # (dosya 1790240764259-vf8owrlvyva) ve Bahadır'ın tanımı (30 Eyl).
+    "Tidal wave surges over a coastal city street": [("wave", "surge", "torrent"), ("car", "cars", "vehicle")],
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),
                                                                 ("air", "cartwheel", "tumble", "fly", "flies")],
     "Large waves reaching the beach": [("wave", "surf", "breaker"), ("chair", "towel", "umbrella", "people")],
 }
-REQUIRED_APPROVED = SLIPWAY_EVENTS + ("Flash flooding in city streets", "Rogue wave breaks over the rail onto the pool deck")
+REQUIRED_APPROVED = SLIPWAY_EVENTS + ("Flash flooding in city streets", "Rogue wave breaks over the rail onto the pool deck",
+                                      "Tidal wave surges over a coastal city street")
 
 # Sadece iki kızak olayı. Sebep: GPT 2. beat'te yatı kızaktan ileri kaydırdı (30 Eyl kızak halatı hikâyeleri),
 # model de yatı suya kafadan soktu (30 Eyl tersane videosu).

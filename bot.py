@@ -92,6 +92,7 @@ EVENT_LABELS = {
     "Severe storm hitting downtown": "⛈️ Şehir merkezine fırtına",
     "Flash flooding in city streets": "🌊 Caddelerde ani sel",
     "Storm gust tears signs and scaffolding loose downtown": "🪧 Tabela ve iskele uçar",
+    "Tidal wave surges over a coastal city street": "🌊 Kıyı şehrinde dev dalga baskını",
     "Falling outdoor objects caused by severe weather": "🧱 Yukarıdan nesneler düşer",
     "Sudden coastal storm reaching the urban district": "🌀 Kıyı fırtınası şehre ulaşır",
     "Major weather event disrupting city traffic": "🚗 Trafik felç olur",

@@ -275,12 +275,19 @@ DOMAIN_ATTRIBUTES = {
             "High-rise city district",
             "Commercial city streets",
             "Residential city district",
-            "Suburban coastal city"
+            "Suburban coastal city",
+            # Dev dalga baskını çekim yerleri (30 Eyl, Bahadır onayı); iskelet dışındaki olaylar da seçebilir
+            "Coastal road below a seafront promenade",
+            "Coastal street of low shopfronts",
+            "Coastal avenue behind a seawall",
         ],
         "events": [
             "Severe storm hitting downtown",
             "Flash flooding in city streets",
+            # 30 Eyl: havuzda kalır, iskelet hattından çıktı (REMOVED_EVENTS); aksiyonsuz video veriyordu
             "Storm gust tears signs and scaffolding loose downtown",
+            # 30 Eyl: Bahadır'ın beğendiği 24 Eyl videosu (dosya 1790240764259-vf8owrlvyva)
+            "Tidal wave surges over a coastal city street",
             "Falling outdoor objects caused by severe weather",
             "Sudden coastal storm reaching the urban district",
             "Major weather event disrupting city traffic",
