@@ -124,10 +124,13 @@ def _format_skeleton(trace: dict, labels: dict) -> list[tuple[str, str]]:
 
 
 def _format_creative(trace: dict, labels: dict) -> list[tuple[str, str]]:
-    """Creative hattı (TUR 31): seçim, GPT-4o denemeleri (kelime + iki sert kontrol), hikâye."""
+    """Creative hattı (TUR 31): seçim, GPT-4o denemeleri (kural kapısı, 30 Eyl), hikâye."""
     lo, hi = (trace.get("count_range") or ["?", "?"])[:2]
-    lines = [f"Deneme {a.get('attempt')} · {a.get('words')} kelime · "
-             + ("✅ geçti" if not a.get("issues") else "❌ " + " | ".join(a["issues"])) + f"\n{a.get('story') or '(boş)'}"
+
+    def status(a: dict) -> str:
+        missing = a.get("missing", a.get("issues"))   # eski kayıtlarda "missing" yok
+        return "✅ geçti" if not missing else "❌ eksik: " + "; ".join(missing)
+    lines = [f"Deneme {a.get('attempt')} · {status(a)} · {a.get('words')} kelime\n{a.get('story') or '(boş)'}"
              for a in trace.get("attempts") or []]
     return [
         ("🔍 1. Seçim",
@@ -138,7 +141,7 @@ def _format_creative(trace: dict, labels: dict) -> list[tuple[str, str]]:
          f"Yer: {trace.get('spot')} · hava: {trace.get('weather')} (Python, rastgele) · kişi aralığı: {lo}-{hi}\n"
          f"Ulaşılacak sonuç: {trace.get('outcome', '-')}\n"
          f"Tekrar önleme: son {trace.get('recent_count', 0)} hikâye GPT'ye verildi"),
-        ("🔍 2. GPT-4o hikâyesi (kontroller: olay uyuşması, 40-60 kelime)", "\n\n".join(lines) or "-"),
+        ("🔍 2. GPT-4o hikâyesi (kural kapısı: 6 sabit kural + olay anahtar grupları, en fazla 3 deneme)", "\n\n".join(lines) or "-"),
         ("🔍 3. Hikâye", f"{trace.get('story_words')} kelime\n{trace.get('story')}"),
     ]
 

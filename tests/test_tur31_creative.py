@@ -132,7 +132,7 @@ class TestConfigAndPrompt(unittest.TestCase):
 
 
 class TestChecks(unittest.TestCase):
-    def test_only_two_hard_checks(self):
+    def test_word_count_and_event_checks(self):
         self.assertEqual(cp.story_issues(WAVE, STORY), [])
         self.assertTrue(any("words" in i for i in cp.story_issues(WAVE, SHORT)))
         self.assertTrue(any("event" in i for i in cp.story_issues(WAVE, OFF_TOPIC)))
@@ -165,11 +165,12 @@ class TestChecks(unittest.TestCase):
         self.assertIn("REJECTED", gpt.await_args_list[1].args[1])
         self.assertEqual(gpt.await_args.kwargs["model"], "gpt-4o")
 
-    def test_two_failures_raise(self):
+    def test_three_failures_raise(self):
+        # 30 Eyl kural kapısı: deneme 2'den 3'e çıktı
         gpt = AsyncMock(return_value={"story": OFF_TOPIC})
         with self.assertRaises(cp.CreativeStoryError):
             asyncio.run(cp.write_story(WAVE, None, "x", "y", [], gpt))
-        self.assertEqual(gpt.await_count, 2)
+        self.assertEqual(gpt.await_count, 3)
 
     def test_recent_stories_filter_and_limit(self):
         texts = [f"Başlık {i}" for i in range(10)] + [f"story {i} " + "word " * 25 for i in range(20)]
@@ -237,7 +238,7 @@ class TestGeneratePrompts(unittest.TestCase):
     def test_detail_says_creative(self):
         r, _ = self.run_gen({"used_combos": [], "event": WAVE})
         text = "\n".join(t + "\n" + b for t, b in format_generation(r["trace"]))
-        for part in ("Hat: creative", STORY, "✅ geçti", "olay uyuşması, 40-60 kelime"):
+        for part in ("Hat: creative", STORY, "Deneme 1 · ✅ geçti", "kural kapısı"):
             self.assertIn(part, text)
 
 

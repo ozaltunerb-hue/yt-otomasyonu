@@ -290,6 +290,14 @@ async def _execute_pipeline(
                 issues = event_fidelity_issues(event, info.get("story", ""))
                 if issues:
                     raise EventMismatchError("Kie'ye gidecek hikaye: " + "; ".join(issues))
+            # Kural kapısı (30 Eyl): preflight hikâyeyi yeniden yazdıysa creative kuralları tekrar denetlenir
+            if (prompt_data.get("trace") or {}).get("pipeline") == "creative":
+                from core.creative_pipeline import story_rule_issues
+                rule_issues = story_rule_issues(selection.get("event", ""), selection.get("ship"),
+                                                info.get("story", ""), info.get("style_suffix"))
+                if rule_issues:
+                    raise EventMismatchError("Kie'ye gidecek hikâye kural kapısından geçmedi: eksik: "
+                                             + "; ".join(i["missing"] for i in rule_issues))
             meta.update({"final_prompt": info["prompt"], "story": info.get("story", ""),
                          "style_suffix": info.get("style_suffix", ""), "preflight": info.get("preflight") or {}})
             await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)
