@@ -114,7 +114,7 @@ class TestLocks(unittest.TestCase):
                 self.assertTrue(all(g and all(isinstance(t, str) and t for t in g) for g in groups))
 
     def test_required_approved_exact(self):
-        side = [("sideways", "on its side", "onto its side")]
+        side = [("sideways", "on its side", "onto its side", "to one side")]
         self.assertEqual(cp.EVENT_REQUIRED[CABLE], side)
         self.assertEqual(cp.EVENT_REQUIRED[KEEL], side)
         self.assertEqual(cp.EVENT_REQUIRED[FLOOD], [("wall", "surge", "torrent", "wave", "rush"), ("car", "cars", "vehicle")])
@@ -137,6 +137,14 @@ class TestLocks(unittest.TestCase):
 
     def test_three_attempts(self):
         self.assertEqual(cp.MAX_ATTEMPTS, 3)
+
+    def test_diversity_gate_locked_and_separate(self):
+        # Ayrı kategori: 6 sabit kurala sayılmaz; eşik Bahadır onayı olmadan gevşetilmez
+        self.assertEqual(cp.DIVERSITY_THRESHOLD, 0.6)
+        self.assertNotIn("diversity", cp.STORY_RULES)
+        self.assertEqual(cp.RECENT_STORIES, 15)
+        self.assertEqual(cp.DIVERSITY_FEEDBACK_TR,
+                         "Bu hikâye son hikâyelere çok benziyor: farklı sahne, farklı ilk cümle yaz.")
 
 
 class TestRules(unittest.TestCase):
@@ -171,7 +179,19 @@ class TestRules(unittest.TestCase):
         self.assertEqual(pg.event_fidelity_issues("Tornado approaching coastline", coast), [])
         self.assertTrue(pg.event_fidelity_issues("Tornado making landfall", "A tornado spins far out at sea."))
         self.assertEqual(pg._EVENT_PHRASE_SYNONYMS, {r"\btouch(?:es|ed|ing)?\s+down\b": "land",
-                                                     r"\bshores?\b": "coas"})
+                                                     r"\bshores?\b": "coas",
+                                                     r"\binland\b": "land",
+                                                     r"\bashore\b": "land"})
+        for text in ("The tornado surges inland, striking the coastal neighborhood.",
+                     "The tornado roars ashore, tearing roofs off the houses."):
+            self.assertEqual(pg.event_fidelity_issues("Tornado making landfall", text), [], text)
+
+    def test_to_one_side_counts_for_slipway(self):
+        keel = ("With a resounding snap, the keel blocks collapse beneath the sailing yacht on the slipway. The vessel "
+                "heaves abruptly, tilting to one side as workers shout and dash for safety. It teeters further, then "
+                "crashes into the adjacent water with an enormous splash, rolling forcefully side to side.")
+        self.assertNotIn("required", rules(KEEL, "Sailing Yacht", keel))
+        self.assertEqual(cp.story_rule_issues(KEEL, "Sailing Yacht", keel), [])
 
     def test_b_camera_words(self):
         for w in ("camera", "video", "phone", "footage", "phones"):
@@ -242,6 +262,28 @@ class TestAttempts(unittest.TestCase):
         self.assertEqual(gpt.await_count, 3)
         self.assertIn("does not move forward", gpt.await_args_list[1].args[1])
         self.assertEqual([bool(a["missing"]) for a in attempts], [True, True, False])
+
+    def test_diversity_rejects_near_copy_and_counts_as_attempt(self):
+        near = GOLDEN.replace("eight shipyard workers", "nine shipyard workers")
+        self.assertGreaterEqual(cp.jaccard(near, GOLDEN), 0.6)
+        self.assertEqual(cp.diversity_issues(GOLDEN, [WAVE_OK, FLOOD_OK]), [])
+        self.assertEqual(len(cp.diversity_issues(near, [WAVE_OK, GOLDEN])), 1)
+        other = ("A sharp metallic crack rings out as the restraining cable parts under heavy rain. The luxury motor "
+                 "yacht heels over to one side while six welders sprint along the quay. Its hull slams sideways into "
+                 "the harbor, throwing a wall of spray, and keeps rocking violently from side to side.")
+        self.assertLess(cp.jaccard(other, GOLDEN), 0.6)
+        gpt = AsyncMock(side_effect=[{"story": near}, {"story": other}])
+        story, attempts = asyncio.run(cp.write_story(CABLE, YACHT, "x", "y", [GOLDEN], gpt))
+        self.assertEqual(story, other)
+        self.assertEqual(len(attempts), 2)   # benzer hikâye bir deneme sayıldı
+        self.assertIn("çeşitlilik", attempts[0]["missing"][0])
+        self.assertIn(cp.DIVERSITY_FEEDBACK_TR, attempts[0]["missing"][0])
+        self.assertIn("too similar to the recent stories", gpt.await_args_list[1].args[1])
+        # sınır: tam eşikte reddedilir
+        with patch.object(cp, "jaccard", return_value=0.6):
+            self.assertEqual(len(cp.diversity_issues("x", ["y"])), 1)
+        with patch.object(cp, "jaccard", return_value=0.59):
+            self.assertEqual(cp.diversity_issues("x", ["y"]), [])
 
     def test_three_failures_no_kie_and_clear_error(self):
         gpt = AsyncMock(return_value={"story": FORWARD})

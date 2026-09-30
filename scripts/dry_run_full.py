@@ -61,14 +61,7 @@ class GptBudgetExhausted(RuntimeError):
     pass
 
 
-def _words(t: str) -> set[str]:
-    return set(re.findall(r"[a-z]+", (t or "").lower()))
-
-
-def jaccard(a: str, b: str) -> float:
-    """Eski örtüşme ölçümü (29-30 Eyl creative kanıt koşusu): kelime kümesi Jaccard, 1 = aynı."""
-    A, B = _words(a), _words(b)
-    return len(A & B) / len(A | B) if A | B else 0.0
+from core.creative_pipeline import jaccard   # eski örtüşme ölçümü; çeşitlilik kapısıyla aynı fonksiyon
 
 
 async def main_creative(out_path: str, only: list[str] | None = None, per_event: int = STORIES_PER_EVENT,

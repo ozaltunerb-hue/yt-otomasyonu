@@ -171,8 +171,10 @@ EVENT_REQUIRED = {
     # ── Tersane ──
     # ONAYLI. Sebep: yat kızaktan kayıp suya kafadan girdi (30 Eyl tersane videosu); istenen görüntü 12 Eyl
     # altın videosu: yerinde yana yatış, yan tarafıyla suya düşüş.
-    "Restraining cable snaps during slipway launch": [("sideways", "on its side", "onto its side")],
-    "Keel blocks collapse under the launching hull": [("sideways", "on its side", "onto its side")],
+    # "to one side": Bahadır onayı, 30 Eyl; "tilting to one side" yazan doğru omurga hikâyesi reddediliyordu
+    # (hedefli kuru prova). İleri kaymayı yasak liste engelliyor.
+    "Restraining cable snaps during slipway launch": [("sideways", "on its side", "onto its side", "to one side")],
+    "Keel blocks collapse under the launching hull": [("sideways", "on its side", "onto its side", "to one side")],
     # TASLAK
     "Drydock flood gate bursts open": [("seawater", "water", "torrent"), ("lift", "float", "swing")],
     "Timber shores snap and the hull tips on its keel blocks": [("topple", "tip", "sideways", "on its side",
@@ -224,6 +226,28 @@ EVENT_FORBIDDEN = {
 FORBIDDEN_FEEDBACK_TR = "yat ileri gitmez; olduğu yerde yana yatar, sonra yan tarafıyla suya düşer."
 FORBIDDEN_FEEDBACK_EN = ("The yacht does not move forward: it heels over onto its side where it stands, then falls "
                          "into the water on its side.")
+
+# ÇEŞİTLİLİK KAPISI (6 sabit kurala sayılmaz, ayrı kategori). Sebep: hedefli kuru provada "Hortum kıyıya
+# yaklaşıyor" iki kez birebir aynı hikâyeyi verdi (Jaccard 1.0), tekrar önleme listesine rağmen. Bahadır onayı,
+# 30 Eyl. KİLİTLİ: eşik onaysız gevşetilmez. Deneme sayılır (3 deneme sınırı aynı).
+DIVERSITY_THRESHOLD = 0.6
+DIVERSITY_FEEDBACK_TR = "Bu hikâye son hikâyelere çok benziyor: farklı sahne, farklı ilk cümle yaz."
+DIVERSITY_FEEDBACK_EN = "This story is too similar to the recent stories: write a different scene and a different first sentence."
+
+
+def jaccard(a: str, b: str) -> float:
+    """Kelime kümesi Jaccard benzerliği (eski örtüşme ölçümü), 1 = aynı."""
+    A, B = set(re.findall(r"[a-z]+", (a or "").lower())), set(re.findall(r"[a-z]+", (b or "").lower()))
+    return len(A & B) / len(A | B) if A | B else 0.0
+
+
+def diversity_issues(story: str, recent: list[str]) -> list[dict]:
+    """Son hikâyelerden biriyle Jaccard >= eşik ise tek sorun döner. Boş liste = yeterince farklı."""
+    top = max((jaccard(story, r) for r in recent), default=0.0)
+    if top >= DIVERSITY_THRESHOLD:
+        return [{"rule": "diversity", "missing": f"çeşitlilik (benzerlik {top:.2f}): {DIVERSITY_FEEDBACK_TR}",
+                 "feedback": DIVERSITY_FEEDBACK_EN}]
+    return []
 
 for _e in set(EVENT_REQUIRED) ^ set(EVENT_OUTCOMES):
     raise RuntimeError(f"EVENT_REQUIRED olaylarla uyuşmuyor: {_e}")
@@ -374,7 +398,7 @@ async def write_story(event: str, ship: str | None, place: str, weather: str, re
         raw = await call_gpt(CREATIVE_SYSTEM, _message(event, ship, place, weather, lo, hi, recent, feedback),
                              temperature=0.9, model="gpt-4o")
         story = str((raw or {}).get("story") or "").strip()
-        found = story_rule_issues(event, ship, story)
+        found = story_rule_issues(event, ship, story) + diversity_issues(story, recent)
         issues = [i["feedback"] for i in found if i["feedback"]]
         attempts.append({"attempt": attempt + 1, "story": story, "words": len(story.split()), "issues": issues,
                          "missing": [i["missing"] for i in found]})

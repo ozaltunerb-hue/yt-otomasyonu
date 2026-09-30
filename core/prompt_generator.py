@@ -979,6 +979,9 @@ _EVENT_SYNONYMS = {
 _EVENT_PHRASE_SYNONYMS = {
     r"\btouch(?:es|ed|ing)?\s+down\b": "land",                          # touch down = landfall
     r"\bshores?\b": "coas",                                              # shore = coastline
+    # inland/ashore: Bahadır onayı, 30 Eyl (hedefli provada "surges inland" yazan iniş hikâyesi kaldı)
+    r"\binland\b": "land",                                               # inland = landfall
+    r"\bashore\b": "land",                                               # ashore = landfall
 }
 
 
