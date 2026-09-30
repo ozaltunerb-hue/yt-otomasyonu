@@ -71,7 +71,8 @@ def jaccard(a: str, b: str) -> float:
     return len(A & B) / len(A | B) if A | B else 0.0
 
 
-async def main_creative(out_path: str):
+async def main_creative(out_path: str, only: list[str] | None = None, per_event: int = STORIES_PER_EVENT,
+                        max_calls: int = MAX_GPT_CALLS):
     import core.prompt_generator as pg
     from core.creative_pipeline import (CreativeStoryError, EVENT_OUTCOMES, MAX_ATTEMPTS, REQUIRED_APPROVED,
                                         build_creative_scene)
@@ -81,15 +82,19 @@ async def main_creative(out_path: str):
     calls = {"n": 0}
 
     async def gpt(system, user, temperature=0.85, model="gpt-4o"):
-        if calls["n"] >= MAX_GPT_CALLS:
-            raise GptBudgetExhausted(f"{MAX_GPT_CALLS} GPT çağrısı sınırı doldu")
+        if calls["n"] >= max_calls:
+            raise GptBudgetExhausted(f"{max_calls} GPT çağrısı sınırı doldu")
         calls["n"] += 1
         return await pg._call_gpt(system, user, temperature=temperature, model=model)
 
     events = list(REQUIRED_APPROVED) + [e for e in EVENT_OUTCOMES if e not in REQUIRED_APPROVED]
+    if only:
+        unknown = set(only) - set(EVENT_OUTCOMES)
+        assert not unknown, f"Bilinmeyen olay: {unknown}"
+        events = list(only)
     combos, recent, rows = [], [], []
     stopped = None
-    for rnd in range(1, STORIES_PER_EVENT + 1):
+    for rnd in range(1, per_event + 1):
         for event in events:
             if stopped:
                 rows.append({"event": event, "round": rnd, "status": "not_run", "reason": stopped})
@@ -135,11 +140,25 @@ async def main_creative(out_path: str):
     print(f"GPT çağrısı: {calls['n']} · DONE -> {out_path}")
 
 
+def _opt(argv: list[str], name: str) -> str | None:
+    """'--ad değer' çiftini argv'den çıkarır."""
+    if name in argv:
+        i = argv.index(name)
+        value = argv[i + 1]
+        del argv[i:i + 2]
+        return value
+    return None
+
+
 if __name__ == "__main__":
-    args = [a for a in sys.argv[1:] if a != "--creative"]
-    if "--creative" in sys.argv[1:]:
+    # Hedefli prova: --creative --events "Olay A;Olay B" --per-event 3 --max-calls 40 [cikti.json]
+    argv = sys.argv[1:]
+    events_opt, per_opt, max_opt = _opt(argv, "--events"), _opt(argv, "--per-event"), _opt(argv, "--max-calls")
+    args = [a for a in argv if a != "--creative"]
+    if "--creative" in argv:
         out_path = args[0] if args else os.path.join(ROOT, "scratch", "dry_run_creative_out.json")
-        asyncio.run(main_creative(out_path))
+        asyncio.run(main_creative(out_path, events_opt.split(";") if events_opt else None,
+                                  int(per_opt or STORIES_PER_EVENT), int(max_opt or MAX_GPT_CALLS)))
     else:
         out_path = args[0] if args else os.path.join(ROOT, "scratch", "dry_run_full_out.json")
         asyncio.run(main(out_path))

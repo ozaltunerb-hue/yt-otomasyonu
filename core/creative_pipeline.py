@@ -215,7 +215,10 @@ REQUIRED_APPROVED = SLIPWAY_EVENTS + ("Flash flooding in city streets", "Rogue w
 # model de yatı suya kafadan soktu (30 Eyl tersane videosu).
 EVENT_FORBIDDEN = {
     e: ("slides down", "sliding", "slides", "lurch", "lurches", "surges forward", "hurtle", "hurtles",
-        "races down", "plunges", "plunging", "dives", "nose", "bow-first")
+        "races down", "plunges", "plunging", "dives", "nose", "bow-first",
+        # Bahadır onayı, 30 Eyl: kuru provada geçen hikâyelerde "careening down the slipway", "plummeting into
+        # the water" vardı. "dive/diving" bilerek yok (işçiler "diving to safety" yazılabilir).
+        "careen", "careens", "careening", "plummet", "plummets", "plummeting", "slide", "slid")
     for e in SLIPWAY_EVENTS
 }
 FORBIDDEN_FEEDBACK_TR = "yat ileri gitmez; olduğu yerde yana yatar, sonra yan tarafıyla suya düşer."
@@ -260,7 +263,7 @@ def trigger_stems(event: str) -> set[str]:
 def story_rule_issues(event: str, ship: str | None, story: str, suffix: str | None = None) -> list[dict]:
     """Kural kapısı. Her sorun: {"rule", "missing" (Telegram, Türkçe), "feedback" (GPT, İngilizce)}.
     Boş liste = geçti. 40-60 kelime biçim kontrolü de burada (önceden vardı, 6 kurala sayılmaz)."""
-    from core.prompt_generator import _EVENT_SYNONYMS, _event_stems, _verb_stem, event_fidelity_issues
+    from core.prompt_generator import _event_stems, _verb_stem, event_fidelity_issues, text_event_stems
     story = story or ""
     out = []
 
@@ -271,9 +274,11 @@ def story_rule_issues(event: str, ship: str | None, story: str, suffix: str | No
     if not MIN_WORDS <= n <= MAX_WORDS:
         add("length", f"40-60 kelime ({n} kelime)", f"The story has {n} words; write {MIN_WORDS} to {MAX_WORDS} words.")
     # a
-    first = _event_stems(_first_sentence(story))
-    first |= {canon for canon, syns in _EVENT_SYNONYMS.items() if syns & first}
-    if not trigger_stems(event) & first:
+    first_sentence = _first_sentence(story)
+    # Gevşetme (Bahadır onayı, 30 Eyl, iyi sel hikâyeleri reddediliyordu: "a wall of brown water bursts..."):
+    # olayın ilk anahtar grubundaki kelimeler de tetik sayılır.
+    if not (trigger_stems(event) & text_event_stems(first_sentence)
+            or find_terms(EVENT_REQUIRED[event][0], first_sentence)):
         add("a_trigger_first", STORY_RULES["a_trigger_first"],
             f"The first sentence must show the trigger happening: '{event}'.")
     # b

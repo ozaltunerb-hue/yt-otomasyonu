@@ -128,7 +128,10 @@ class TestLocks(unittest.TestCase):
         for e in cp.SLIPWAY_EVENTS:
             self.assertEqual(cp.EVENT_FORBIDDEN[e], (
                 "slides down", "sliding", "slides", "lurch", "lurches", "surges forward", "hurtle", "hurtles",
-                "races down", "plunges", "plunging", "dives", "nose", "bow-first"))
+                "races down", "plunges", "plunging", "dives", "nose", "bow-first",
+                "careen", "careens", "careening", "plummet", "plummets", "plummeting", "slide", "slid"))
+            self.assertNotIn("dive", cp.EVENT_FORBIDDEN[e])
+            self.assertNotIn("diving", cp.EVENT_FORBIDDEN[e])
         self.assertEqual(cp.FORBIDDEN_FEEDBACK_TR,
                          "yat ileri gitmez; olduğu yerde yana yatar, sonra yan tarafıyla suya düşer.")
 
@@ -151,6 +154,24 @@ class TestRules(unittest.TestCase):
         # yer kelimesi tetik sayılmaz: "pool deck" açılışı dalga değildir
         calm = "Passengers relax on the pool deck of the ocean cruise liner. " + WAVE_OK
         self.assertIn("a_trigger_first", rules(WAVE, "Ocean Cruise Liner", calm))
+
+    def test_a_first_required_group_counts_as_trigger(self):
+        # Bahadır onayı, 30 Eyl: kuru provada reddedilen iyi sel açılışı
+        wall = ("A wall of brown water bursts from an alley, engulfing the commercial street. Shoppers scream and "
+                "sprint for shop entrances as the floodwater crashes into parked cars, shoving them sideways. The "
+                "torrent keeps rushing down the street while more water pours in from the side alleys.")
+        self.assertNotIn("a_trigger_first", rules(FLOOD, None, wall))
+        rain = "Heavy rain drums on the awnings of the commercial street. " + FLOOD_OK
+        self.assertIn("a_trigger_first", rules(FLOOD, None, rain))
+
+    def test_e_phrase_synonyms_for_tornado(self):
+        land = "A monstrous tornado suddenly touches down in the coastal neighborhood, tearing roofs away."
+        self.assertEqual(pg.event_fidelity_issues("Tornado making landfall", land), [])
+        coast = "A swirling tornado churns across the water toward the shore, ripping sand into the air."
+        self.assertEqual(pg.event_fidelity_issues("Tornado approaching coastline", coast), [])
+        self.assertTrue(pg.event_fidelity_issues("Tornado making landfall", "A tornado spins far out at sea."))
+        self.assertEqual(pg._EVENT_PHRASE_SYNONYMS, {r"\btouch(?:es|ed|ing)?\s+down\b": "land",
+                                                     r"\bshores?\b": "coas"})
 
     def test_b_camera_words(self):
         for w in ("camera", "video", "phone", "footage", "phones"):
@@ -203,9 +224,11 @@ class TestRules(unittest.TestCase):
         self.assertIn("plunges", bad[0]["missing"])
         self.assertIn(cp.FORBIDDEN_FEEDBACK_TR, bad[0]["missing"])
         self.assertIn("does not move forward", bad[0]["feedback"])
-        for w in ("lurches", "hurtles", "dives", "bow-first", "surges forward", "races down", "sliding"):
+        for w in ("lurches", "hurtles", "dives", "bow-first", "surges forward", "races down", "sliding",
+                  "careening down", "plummets", "slid", "slide"):
             with self.subTest(word=w):
                 self.assertIn("forbidden", rules(KEEL, YACHT, GOLDEN + f" It {w}."))
+        self.assertNotIn("forbidden", rules(KEEL, YACHT, GOLDEN + " Two workers are diving clear."))
         crane = "Crane sling snaps while lowering the hull into the water"
         self.assertEqual(cp.EVENT_FORBIDDEN.get(crane), None)
         self.assertNotIn("forbidden", rules(crane, YACHT, "The crane sling snaps and the yacht plunges nose-first."))

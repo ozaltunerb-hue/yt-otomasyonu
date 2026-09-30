@@ -974,6 +974,21 @@ _EVENT_SYNONYMS = {
     "rogu": {"gian", "mons", "towe", "mass"},                        # rogue wave: giant, monster, towering, massive
 }
 
+# Kelime öbeği eşanlamlıları (Bahadır onayı, 30 Eyl): hortum hikâyeleri "touches down" ve "toward the shore"
+# yazıyordu, olay adı kontrolü landfall/coastline arıyordu (kuru prova, iki hortum olayı %50).
+_EVENT_PHRASE_SYNONYMS = {
+    r"\btouch(?:es|ed|ing)?\s+down\b": "land",                          # touch down = landfall
+    r"\bshores?\b": "coas",                                              # shore = coastline
+}
+
+
+def text_event_stems(text: str) -> set[str]:
+    """Metnin olay kökleri: kendi kökleri + eşanlamlı kökler + kelime öbeği eşanlamlıları."""
+    stems = _event_stems(text)
+    stems |= {canon for canon, syns in _EVENT_SYNONYMS.items() if syns & stems}
+    stems |= {canon for pat, canon in _EVENT_PHRASE_SYNONYMS.items() if re.search(pat, text or "", re.IGNORECASE)}
+    return stems
+
 
 def event_fidelity_issues(event: str, text: str, min_hits: int = 2) -> list[str]:
     """Menü olayı metinde görünüyor mu? Olayın anahtar köklerinden en az `min_hits` tanesi (olay daha az kök
@@ -982,8 +997,7 @@ def event_fidelity_issues(event: str, text: str, min_hits: int = 2) -> list[str]
     if not event:
         return []
     key = _event_stems(event)
-    text_stems = _event_stems(text)
-    text_stems |= {canon for canon, syns in _EVENT_SYNONYMS.items() if syns & text_stems}
+    text_stems = text_event_stems(text)
     found = key & text_stems
     need = min(min_hits, len(key))
     if len(found) >= need:
