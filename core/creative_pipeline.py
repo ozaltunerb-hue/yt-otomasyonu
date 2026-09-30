@@ -220,7 +220,10 @@ EVENT_FORBIDDEN = {
         "races down", "plunges", "plunging", "dives", "nose", "bow-first",
         # Bahadır onayı, 30 Eyl: kuru provada geçen hikâyelerde "careening down the slipway", "plummeting into
         # the water" vardı. "dive/diving" bilerek yok (işçiler "diving to safety" yazılabilir).
-        "careen", "careens", "careening", "plummet", "plummets", "plummeting", "slide", "slid")
+        "careen", "careens", "careening", "plummet", "plummets", "plummeting", "slide", "slid",
+        # Bahadır onayı, 30 Eyl; kızak halatı hikâyesi 'begins its descent down the slipway... accelerates
+        # uncontrollably' ile kapıdan geçti. Çekimleriyle eşleşir (descends, descending, accelerates...).
+        "down the slipway", "descent", "descend", "accelerate")
     for e in SLIPWAY_EVENTS
 }
 FORBIDDEN_FEEDBACK_TR = "yat ileri gitmez; olduğu yerde yana yatar, sonra yan tarafıyla suya düşer."

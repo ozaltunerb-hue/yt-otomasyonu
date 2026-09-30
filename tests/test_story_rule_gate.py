@@ -129,7 +129,8 @@ class TestLocks(unittest.TestCase):
             self.assertEqual(cp.EVENT_FORBIDDEN[e], (
                 "slides down", "sliding", "slides", "lurch", "lurches", "surges forward", "hurtle", "hurtles",
                 "races down", "plunges", "plunging", "dives", "nose", "bow-first",
-                "careen", "careens", "careening", "plummet", "plummets", "plummeting", "slide", "slid"))
+                "careen", "careens", "careening", "plummet", "plummets", "plummeting", "slide", "slid",
+                "down the slipway", "descent", "descend", "accelerate"))
             self.assertNotIn("dive", cp.EVENT_FORBIDDEN[e])
             self.assertNotIn("diving", cp.EVENT_FORBIDDEN[e])
         self.assertEqual(cp.FORBIDDEN_FEEDBACK_TR,
@@ -245,10 +246,19 @@ class TestRules(unittest.TestCase):
         self.assertIn(cp.FORBIDDEN_FEEDBACK_TR, bad[0]["missing"])
         self.assertIn("does not move forward", bad[0]["feedback"])
         for w in ("lurches", "hurtles", "dives", "bow-first", "surges forward", "races down", "sliding",
-                  "careening down", "plummets", "slid", "slide"):
+                  "careening down", "plummets", "slid", "slide", "moves down the slipway", "descends",
+                  "is descending", "accelerates", "accelerating"):
             with self.subTest(word=w):
                 self.assertIn("forbidden", rules(KEEL, YACHT, GOLDEN + f" It {w}."))
         self.assertNotIn("forbidden", rules(KEEL, YACHT, GOLDEN + " Two workers are diving clear."))
+        # 30 Eyl hedefli provada kapıdan geçen hikâye artık reddedilir
+        passed_before = ("The restraining cable snaps with a loud crack as the luxury motor yacht begins its descent "
+                         "down the slipway. Crew members scatter, shouting warnings, as the vessel accelerates "
+                         "uncontrollably. The yacht heaves violently to one side, crashing into the water with an "
+                         "explosive splash, rolling back and forth in the strong wind.")
+        bad = [i for i in cp.story_rule_issues(CABLE, YACHT, passed_before) if i["rule"] == "forbidden"][0]
+        for w in ("down the slipway", "descent", "accelerate"):
+            self.assertIn(w, bad["missing"])
         crane = "Crane sling snaps while lowering the hull into the water"
         self.assertEqual(cp.EVENT_FORBIDDEN.get(crane), None)
         self.assertNotIn("forbidden", rules(crane, YACHT, "The crane sling snaps and the yacht plunges nose-first."))
