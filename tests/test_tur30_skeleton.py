@@ -62,15 +62,16 @@ class TestEventPool(unittest.TestCase):
     def test_22_events_by_category(self):
         counts = {d: len(sk.skeleton_events(d)) for d in DOMAIN_ATTRIBUTES}
         self.assertEqual(counts, {"ferry_operations": 3, "shipyard_and_drydock_engineering": 5,
-                                  "marina_and_yacht_operations": 3, "cruise_ship_operations": 3,
+                                  "marina_and_yacht_operations": 2, "cruise_ship_operations": 3,
                                   "coastal_tornado_landfall": 3, "urban_city_disasters": 2,
                                   "open_beach_coastal_events": 3})
-        self.assertEqual(sum(counts.values()), 22)
+        self.assertEqual(sum(counts.values()), 21)
 
     def test_removed_events(self):
-        self.assertEqual(len(sk.REMOVED_EVENTS), 19)   # 30 Eyl: + tabela/iskele (aksiyonsuz video); 1 Eki: + halat
+        self.assertEqual(len(sk.REMOVED_EVENTS), 20)   # 30 Eyl: + tabela/iskele (aksiyonsuz video); 1 Eki: + halat, kontrolsüz yat
         self.assertIn("Storm gust tears signs and scaffolding loose downtown", sk.REMOVED_EVENTS)
         self.assertIn("Mooring line snaps in a storm gust", sk.REMOVED_EVENTS)
+        self.assertIn("Yacht loses control and rams moored boats in the marina", sk.REMOVED_EVENTS)
         self.assertNotIn("Tidal wave surges over a coastal city street", sk.REMOVED_EVENTS)
         for e in ("Coastal evacuation", "Jammed throttle sends the boat careening",
                   "Heavy roll tilts the deck and sends loungers sliding", sk.ALL_EVENTS[3]):
@@ -284,7 +285,7 @@ class TestRecoveryQuery(unittest.TestCase):
 class TestMenu(unittest.TestCase):
     def test_menu_follows_pipeline(self):
         with patch.object(settings, "PROMPT_PIPELINE", "skeleton"):
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 22)
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 21)
         with patch.object(settings, "PROMPT_PIPELINE", "legacy"):
             # 30 Eyl: dev dalga baskını havuza eklendi (tabela/iskele havuzda kaldı, sadece iskeletten çıktı)
             # 1 Eki: kontrolsüz yat havuza eklendi (halat havuzda kaldı, sadece iskeletten çıktı)

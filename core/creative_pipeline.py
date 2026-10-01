@@ -75,10 +75,11 @@ EVENT_OUTCOMES = {
         "the pontoon buckles and tilts, throwing the moored boat against it as more waves roll in",
     "Passing boat's wake slams the boat sideways":
         "the boat heels hard and keeps slamming against the dock as the wake rolls through",
-    # EKLENDİ (1 Eki, Bahadır; TASLAK)
-    "Yacht loses control and rams moored boats in the marina":
-        "the yacht races into the marina out of control, plows into the moored boats along the dock and shoves them "
-        "aside while people jump back",
+    # ÇIKARILDI (1 Eki, Bahadır): kontrolsüz yat videosunda çarpma yok (bkz. skeleton_pipeline)
+    # # EKLENDİ (1 Eki, Bahadır; TASLAK)
+    # "Yacht loses control and rams moored boats in the marina":
+    #     "the yacht races into the marina out of control, plows into the moored boats along the dock and shoves them "
+    #     "aside while people jump back",
     # Kruvaziyer
     "Mooring line snaps and whips across the quay":
         "the snapped line keeps thrashing across the quay while the towering hull swings away from the berth",
@@ -200,11 +201,12 @@ EVENT_REQUIRED = {
     #                                        ("slam", "crash", "ram", "smash", "bang")],
     "Storm surge wave lifts and buckles the floating pontoon": [("pontoon",), ("buckle", "tilt", "twist", "heave")],
     "Passing boat's wake slams the boat sideways": [("wake",), ("heel", "slam", "rock", "roll")],
-    # TASLAK (1 Eki). Sebep: yat bağlı teknelere çarpmalı; çarpma fiili ve somut hedef (bağlı tekne) görünmezse
-    # model yatı düzgün seyreder çizer (halat olayının 1 Eki videolarındaki hata).
-    "Yacht loses control and rams moored boats in the marina": [("plow", "ram", "slam", "crash", "smash"),
-                                                                ("moored boat", "moored yacht", "moored boats",
-                                                                 "docked boat", "docked yachts")],
+    # ÇIKARILDI (1 Eki, Bahadır): kontrolsüz yat videosunda çarpma yok
+    # # TASLAK (1 Eki). Sebep: yat bağlı teknelere çarpmalı; çarpma fiili ve somut hedef (bağlı tekne) görünmezse
+    # # model yatı düzgün seyreder çizer (halat olayının 1 Eki videolarındaki hata).
+    # "Yacht loses control and rams moored boats in the marina": [("plow", "ram", "slam", "crash", "smash"),
+    #                                                             ("moored boat", "moored yacht", "moored boats",
+    #                                                              "docked boat", "docked yachts")],
     # ── Kruvaziyer ──
     # TASLAK
     "Mooring line snaps and whips across the quay": [("line", "rope", "hawser", "cable"), ("whip", "thrash", "lash")],

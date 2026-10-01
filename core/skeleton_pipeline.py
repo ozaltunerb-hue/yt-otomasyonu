@@ -189,21 +189,25 @@ EVENT_SKELETONS = {
                 "fenders squeal against the dock and loose gear flies off the deck as {n} {people} grab the rails. The "
                 "wake keeps rocking the {ship}, still slamming it against the dock.",
     },
-    # EKLENDİ (1 Eki, Bahadır; TASLAK). Halat olayının yerine: yat kontrolü kaybeder, marinaya dalar ve bağlı
-    # teknelere çarpar. Motor yat; kişi 3-6 (marina aralığı), giyim marina kuralı (personel hi-vis).
-    "Yacht loses control and rams moored boats in the marina": {
-        "domain": "marina_and_yacht_operations", "ships": ["Luxury Motor Yacht"],
-        "spots": {"Breakwater at the marina entrance": "the marina entrance",
-                  "Marina berthing pier": "the marina berthing pier",
-                  "Narrow channel between moored boats": "the narrow channel between rows of moored boats"},
-        "people": ["marina staff", "boat owners"],
-        # rüzgârlı gün, yağmur ve rüzgâr, parlak gün + güçlü rüzgâr
-        "weather": ["strong gusting wind", "driving rain and wind", "cold bright daylight with a strong wind"],
-        "object": "runaway yacht",
-        "text": "At {spot} in {weather}, the {ship} loses control and races into the marina at full speed. It rams the "
-                "moored boats along the dock and shoves them aside as {n} {people} jump back onto the pontoon. The "
-                "{ship} keeps plowing forward, still smashing into more moored boats.",
-    },
+    # ÇIKARILDI (1 Eki, Bahadır): kontrolsüz yat videosunda yat kanaldan hızla geçti ama bağlı teknelere
+    # çarpmadı, kontrollü seyreder göründü (halat olayıyla aynı hata). Not: tekne-tekneye çarpma Seedance'te iki
+    # olayda da çıkmadı; su gücü olayları (wake, pontoon) iyi çıktı. Olay havuzda kalır, REMOVED_EVENTS'e düşer.
+    # Geri almak için bu bloğu, EVENT_OUTCOMES ve EVENT_REQUIRED satırlarını açmak yeterli.
+    # # EKLENDİ (1 Eki, Bahadır; TASLAK). Halat olayının yerine: yat kontrolü kaybeder, marinaya dalar ve bağlı
+    # # teknelere çarpar. Motor yat; kişi 3-6 (marina aralığı), giyim marina kuralı (personel hi-vis).
+    # "Yacht loses control and rams moored boats in the marina": {
+    #     "domain": "marina_and_yacht_operations", "ships": ["Luxury Motor Yacht"],
+    #     "spots": {"Breakwater at the marina entrance": "the marina entrance",
+    #               "Marina berthing pier": "the marina berthing pier",
+    #               "Narrow channel between moored boats": "the narrow channel between rows of moored boats"},
+    #     "people": ["marina staff", "boat owners"],
+    #     # rüzgârlı gün, yağmur ve rüzgâr, parlak gün + güçlü rüzgâr
+    #     "weather": ["strong gusting wind", "driving rain and wind", "cold bright daylight with a strong wind"],
+    #     "object": "runaway yacht",
+    #     "text": "At {spot} in {weather}, the {ship} loses control and races into the marina at full speed. It rams the "
+    #             "moored boats along the dock and shoves them aside as {n} {people} jump back onto the pontoon. The "
+    #             "{ship} keeps plowing forward, still smashing into more moored boats.",
+    # },
     # ── Kruvaziyer ──
     "Mooring line snaps and whips across the quay": {
         "domain": "cruise_ship_operations", "ships": ["Ocean Cruise Liner", "Mega Cruise Ship"],

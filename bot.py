@@ -71,7 +71,7 @@ EVENT_LABELS = {
     "Crane sling snaps while lowering the hull into the water": "🏗️ Vinç askısı kopar",
     # Marina & Yat
     "Mooring line snaps in a storm gust": "🪢 Halat fırtınada kopar",   # 1 Eki: iskelet dışı, menüde görünmez
-    "Yacht loses control and rams moored boats in the marina": "🛥️ Yat kontrolsüz marinaya dalar",
+    "Yacht loses control and rams moored boats in the marina": "🛥️ Yat kontrolsüz marinaya dalar",   # 1 Eki: iskelet dışı, menüde görünmez
     "Jammed throttle sends the boat careening": "🚤 Gaz kolu takılır",
     "Storm surge wave lifts and buckles the floating pontoon": "🌊 Dalga yüzer iskeleyi büker",
     "Passing boat's wake slams the boat sideways": "💥 Geçen teknenin dalgası çarpar",

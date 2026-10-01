@@ -232,7 +232,7 @@ DOMAIN_ATTRIBUTES = {
         "events": [# 1 Eki: havuzda kalır, iskelet hattından çıktı (REMOVED_EVENTS); halat kopması görünmedi
                    "Mooring line snaps in a storm gust", "Jammed throttle sends the boat careening",
                    "Storm surge wave lifts and buckles the floating pontoon", "Passing boat's wake slams the boat sideways",
-                   # 1 Eki (Bahadır): halat olayının yerine, yat marinaya dalar ve bağlı teknelere çarpar
+                   # 1 Eki: eklendi ve aynı gün iskelet hattından çıktı (REMOVED_EVENTS); bağlı teknelere çarpmadı
                    "Yacht loses control and rams moored boats in the marina"]
     },
     "cruise_ship_operations": {
