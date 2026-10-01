@@ -23,6 +23,7 @@ from core.skeleton_pipeline import (
     choose_event_and_ship,
     choose_region_view,
     count_range,
+    remember_view,
     style_suffix,
     view_place,
     view_spots,
@@ -446,6 +447,7 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
     """Seçim (Python) + GPT-4o hikâyesi + iskeletle aynı stil eki."""
     domain, event, ship = choose_event_and_ship(domain, event, history)
     view = choose_region_view(event, history)   # şehir olayları (1 Eki); diğerlerinde None
+    remember_view(event, view)                   # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
     spot, weather = pick_setting(event, view=view)
     place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
     recent = recent_stories(history_texts)

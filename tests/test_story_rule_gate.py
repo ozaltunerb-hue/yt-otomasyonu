@@ -67,6 +67,11 @@ WAVE_OK = ("A towering rogue wave breaks over the rail of the ocean cruise liner
            "keeps pouring over the rail, still sweeping chairs and towels across the pool deck toward the far railing.")
 
 
+TIDAL_OK = ("A towering tidal wave crashes over the seawall onto the coastal road, slamming into a row of parked "
+            "cars. The water sweeps the cars into the storefronts as six pedestrians sprint up the stairs to the "
+            "promenade. The wave keeps surging down the street, still dragging cars and debris inland.")
+
+
 def rules(event, ship, story, suffix=None):
     return {i["rule"] for i in cp.story_rule_issues(event, ship, story, suffix)}
 
@@ -429,6 +434,12 @@ class TestRegionViews(unittest.TestCase):
               "italy", "italian", "riviera", "nice", "monaco", "japan", "japanese", "tokyo", "taiwan", "asia",
               "asian", "gulf", "arab", "flag", "sign", "text", "logo")
 
+    def setUp(self):
+        sk._VIEW_MEMORY.clear()   # süreç hafızası testler arasında taşınmasın
+
+    def tearDown(self):
+        sk._VIEW_MEMORY.clear()
+
     def _city_combo(self, view, event=FLOOD):
         return f"urban_city_disasters|none|{event.lower()}|downtown city center#{view}|{sk.SKELETON_CAMERA}"
 
@@ -512,6 +523,70 @@ class TestRegionViews(unittest.TestCase):
         self.assertIn(f"Görünüm: {view}", detail)
         self.assertNotIn("Görünüm:", "\n".join(body for _, body in format_generation(
             {**scene["trace"], "view": None})))
+
+
+    def test_back_to_back_runs_do_not_repeat_view(self):
+        # 1 Eki 15:34 ve 15:45: TEST modunda biten ilk üretim Notion geçmişine girmedi (durum sayılmıyor), ikinci
+        # üretim aynı görünümü aldı. İkinci üretim ilkini beklemeden de başlayabilir: geçmiş iki seferde de aynı.
+        async def gpt(system, user, **kw):
+            return {"story": TIDAL_OK}
+        notion_history = []   # ilk üretim Notion'dan sayılmıyor
+        seen = []
+        for _ in range(6):
+            scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", TIDAL, notion_history, [], gpt))
+            seen.append(scene["trace"]["view"])
+        self.assertEqual(len(set(seen)), 6, seen)   # 6 üretimde 6 farklı görünüm, art arda tekrar yok
+        scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", TIDAL, notion_history, [], gpt))
+        self.assertEqual(scene["trace"]["view"], seen[0])   # döngü en eskiye döner
+        # Seçim anında hafızaya yazılır: ikinci seçim, ilk üretim bitmeden yapılsa da farklı
+        sk._VIEW_MEMORY.clear()
+        first = sk.choose_region_view(TIDAL, [])
+        sk.remember_view(TIDAL, first)
+        for _ in range(20):
+            self.assertNotEqual(sk.choose_region_view(TIDAL, []), first)
+        self.assertNotIn(FLOOD, sk._VIEW_MEMORY)   # olay başına ayrı
+
+    def test_test_mode_counted_in_history(self):
+        from infrastructure import notion_logger as nl
+        self.assertIn("✅ Tamamlandı (Test Modu / YouTube Atlandı)", nl.USED_COMBO_STATUSES)
+        self.assertEqual(nl.USED_COMBO_STATUSES[:2], ["✅ Tamamlandı", "✅ Tamamlandı (Upload Başarısız)"])
+        self.assertNotIn("❌ İptal", nl.USED_COMBO_STATUSES)
+
+    def test_six_runs_six_views_with_notion_and_memory(self):
+        # Gerçek akış: her üretim hem hafızaya hem (TEST modunda bitince) Notion geçmişine girer
+        async def gpt(system, user, **kw):
+            return {"story": TIDAL_OK}
+        notion, seen = [], []
+        for _ in range(6):
+            scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", TIDAL, list(notion), [], gpt))
+            seen.append(scene["trace"]["view"])
+            notion.append(scene["combo_key"])
+        self.assertEqual(len(set(seen)), 6, seen)
+        self.assertEqual(sk.view_history(TIDAL, notion), seen)   # çift sayım yok, sıra korunur
+        scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", TIDAL, list(notion), [], gpt))
+        self.assertEqual(scene["trace"]["view"], seen[0])
+
+    def test_double_count_keeps_lru_order(self):
+        # Notion: önceki günlerden riviera, gulf; bu süreçte gulf sonra riviera seçildi (hafıza). Riviera en yeni.
+        notion = [self._city_combo(v, TIDAL) for v in ("riviera", "gulf_metropolis", "us_coastal_town",
+                                                      "east_asian_coast", "north_african_coast",
+                                                      "north_european_seaside", "gulf_metropolis", "riviera")]
+        sk.remember_view(TIDAL, "gulf_metropolis")
+        sk.remember_view(TIDAL, "riviera")
+        self.assertEqual(sk.view_history(TIDAL, notion), ["us_coastal_town", "east_asian_coast", "north_african_coast",
+                                                          "north_european_seaside", "gulf_metropolis", "riviera"])
+        self.assertEqual(sk.choose_region_view(TIDAL, notion), "us_coastal_town")   # en eski
+        # Hafıza tek başına: iptal edilen üretim Notion'da yok ama sayılır
+        sk._VIEW_MEMORY.clear()
+        sk.remember_view(TIDAL, "us_coastal_town")
+        self.assertEqual(sk.choose_region_view(TIDAL, notion), "east_asian_coast")
+
+    def test_real_notion_combo_key_parsed(self):
+        real = ("urban_city_disasters|none|tidal wave surges over a coastal city street|"
+                "coastal avenue behind a seawall#east_asian_coast|bystander_handheld")
+        self.assertEqual(sk.view_of_combo(real), "east_asian_coast")
+        for _ in range(30):
+            self.assertNotEqual(sk.choose_region_view(TIDAL, [real]), "east_asian_coast")
 
 
 if __name__ == "__main__":

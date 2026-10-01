@@ -16,6 +16,7 @@ import json
 import logging
 import random
 import re
+import threading
 
 from core.creative_engine import (
     DOMAIN_ATTRIBUTES,
@@ -371,13 +372,40 @@ def view_of_combo(combo_key: str) -> str | None:
     return parts[3].split("#", 1)[1].strip().lower() or None
 
 
+# Süreç içi görünüm hafızası (1 Eki, yedek). Sebep: 1 Eki 15:34 ve 15:45 kıyı dalga üretimleri, ikisi de
+# east_asian_coast. Notion geçmişi (get_used_combos) artık TEST modunda bitenleri de sayar; iptal edilen ve henüz
+# bitmemiş üretimler orada yok, onları bu hafıza kapsar. Seçim anında yazılır, Notion geçmişinden daha yeni sayılır.
+# Bot üretimi aynı süreçte çalıştırır; yeniden başlatmada (deploy) silinir, o zaman sadece Notion geçmişi kalır.
+_VIEW_MEMORY: dict[str, list[str]] = {}
+_VIEW_MEMORY_LIMIT = 12
+_VIEW_LOCK = threading.Lock()
+
+
+def remember_view(event: str, view: str | None) -> None:
+    """Seçilen görünümü süreç hafızasına yazar (üretim bitmeden, seçim anında)."""
+    if not view:
+        return
+    with _VIEW_LOCK:
+        _VIEW_MEMORY.setdefault(event, []).append(view)
+        del _VIEW_MEMORY[event][:-_VIEW_MEMORY_LIMIT]
+
+
+def view_history(event: str, history: list[str]) -> list[str]:
+    """Olayın görünüm geçmişi, eskiden yeniye: Notion kayıtları + süreç hafızası. Hafızadaki her üretim Notion'dakinden
+    yenidir; aynı üretim iki yerde de varsa (çift sayım) Notion'daki kopyası düşer, sıra hafızadan gelir."""
+    same = [h for h in history if is_current_universe_combo(h) and h.split("|")[2].strip().lower() == event.lower()]
+    with _VIEW_LOCK:
+        memory = list(_VIEW_MEMORY.get(event, []))
+    notion = [v for v in (view_of_combo(h) for h in same) if v and v not in memory]
+    return notion + memory
+
+
 def choose_region_view(event: str, history: list[str]) -> str | None:
     """Şehir olayları için LRU görünüm, olay başına ayrı döngü: sadece aynı olayın kayıtları sayılır, son seçilen
-    tekrar gelmez. Diğer olaylar için None."""
+    tekrar gelmez. Geçmiş = Notion kayıtları + süreç hafızası (daha yeni). Diğer olaylar için None."""
     if event not in REGION_VIEW_EVENTS:
         return None
-    same = [h for h in history if is_current_universe_combo(h) and h.split("|")[2].strip().lower() == event.lower()]
-    seen = [v for v in (view_of_combo(h) for h in same) if v]
+    seen = view_history(event, history)
     return _lru(list(REGION_VIEWS), seen)
 
 

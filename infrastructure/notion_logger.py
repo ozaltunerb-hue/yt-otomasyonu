@@ -47,9 +47,11 @@ EXTRA_PROPERTIES = {
 
 _TEXT_LIMIT = 2000   # Notion rich_text içerik sınırı; gövde blokları bu boyda parçalanır
 
-# Tarihçe sorguları (2026-09-24). used_combos = "yayınlandı/elde video var" sayımı;
+# Tarihçe sorguları (2026-09-24). used_combos = "elde video var" sayımı (olay/gemi/görünüm LRU'su);
 # recent_history = "yazıldı" sayımı, sadece hata kayıtları hariç.
-USED_COMBO_STATUSES = [STATUS_COMPLETED, "✅ Tamamlandı (Upload Başarısız)"]
+# 1 Eki (Bahadır): TEST modunda biten kayıtlar da sayılır. Sebep: 15:34 ve 15:45 kıyı dalga üretimleri aynı
+# görünümü aldı, ilk üretim TEST modunda bittiği için geçmişe girmemişti.
+USED_COMBO_STATUSES = [STATUS_COMPLETED, "✅ Tamamlandı (Upload Başarısız)", STATUS_TEST_DONE]
 RECENT_HISTORY_EXCLUDE_STATUSES = [STATUS_ERROR]
 
 

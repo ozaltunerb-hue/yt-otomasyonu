@@ -103,9 +103,10 @@ class TestStatusFilter(NotionHistoryBase):
                                      (21, TEST_MANUAL), (22, GENERATING), (23, ERROR)])
     ]
 
-    def test_used_combos_only_published_or_upload_failed(self):
+    def test_used_combos_published_upload_failed_or_test_mode(self):
+        # 1 Eki (Bahadır): TEST modunda bitenler de sayılır (görünüm/olay/gemi LRU'su)
         combos, fake = self.run_tracker(self.PAGES, "get_used_combos")
-        self.assertEqual(combos, [CLEAN[0], CLEAN[1]])  # kronolojik
+        self.assertEqual(combos, [CLEAN[0], CLEAN[1], CLEAN[2]])  # kronolojik; elle test, üretimde ve hata sayılmaz
         self.assertEqual(fake.payloads[0]["page_size"], 100)
 
     def test_recent_history_everything_but_error(self):
