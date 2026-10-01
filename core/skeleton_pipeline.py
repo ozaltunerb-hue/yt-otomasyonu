@@ -343,7 +343,9 @@ REGION_VIEWS = {
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Riviera (Fransa, İtalya)
     "riviera": "cream stone buildings with shuttered windows, cobbled promenade, scooters, plane trees",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Doğu Asya kıyısı (Japonya, Tayvan)
-    "east_asian_coast": "dense mid-rise buildings, narrow lanes, small cars and motorbikes, covered arcade entrances",
+    # 1 Eki (2): videoda Akdeniz çıktı; "covered arcade entrances" Akdeniz çağrışımı yaptı, klima ve kablo eklendi
+    "east_asian_coast": "dense mid-rise apartment blocks with air-conditioner units and tangled overhead wires, "
+                        "narrow lanes, small boxy cars and scooters",
 }
 REGION_VIEW_CLOTHING = "people in light everyday clothes suited to the climate"
 NO_SIGNS = "no readable signs, text or flags"

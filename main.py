@@ -105,7 +105,7 @@ async def _credit(kie) -> float | None:
 
 async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_path: str = "",
                        domain: str | None = None, trigger: str = "auto", event: str | None = None,
-                       mode: str | None = None, reporter: PipelineReporter | None = None):
+                       mode: str | None = None, reporter: PipelineReporter | None = None, view: str | None = None):
     """
     Tam otonom video üretim pipeline'ı.
 
@@ -119,6 +119,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     domain: verilirse senaryolar sadece bu domain'den üretilir (Telegram /uret). trigger: Notion 'Tetikleyici'.
     event: verilirse senaryolar bu olayla üretilir (Telegram olay menüsü); ortam/gemi/kamera otomatik.
     mode: TEST (YouTube yok) / YAYIN. Verilmezse yükleme durumuna göre. reporter: Telegram ayrıntı/onay köprüsü.
+    view: şehir olaylarında Telegram bölge menüsünden seçilen görünüm (None = LRU).
     """
     if dry_run:
         settings.IS_DRY_RUN = True
@@ -165,6 +166,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 trigger=trigger,
                 mode=mode,
                 reporter=reporter,
+                view=view,
             )
             return result
         except (ContentFilterError, PreflightError) as err:
@@ -201,6 +203,7 @@ async def _execute_pipeline(
     trigger: str = "auto",
     mode: str = MODE_PUBLISH,
     reporter: PipelineReporter | None = None,
+    view: str | None = None,
 ) -> dict:
     """
     Pipeline'ın asıl implementasyonu.
@@ -216,7 +219,7 @@ async def _execute_pipeline(
     # meta.json (TUR 29): kategori/olay/kamera/gemi, son Kie prompt'u, stil eki sürümü (commit), model, çözünürlük,
     # task ID, mod, kredi öncesi/sonrası
     meta = {"mode": mode, "commit": commit, "model": settings.DEFAULT_MODEL, "resolution": settings.DEFAULT_RESOLUTION,
-            "duration": settings.DEFAULT_DURATION, "trigger": trigger, "menu_domain": domain, "menu_event": event,
+            "duration": settings.DEFAULT_DURATION, "trigger": trigger, "menu_domain": domain, "menu_event": event, "menu_view": view,
             "started_at": datetime.now(timezone.utc).isoformat()}
 
     pipeline_config = {
@@ -225,6 +228,7 @@ async def _execute_pipeline(
         "recent_verbs": recent_verbs or [],
         "domain": domain,
         "event": event,
+        "view": view,
     }
 
     try:

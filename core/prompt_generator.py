@@ -1163,7 +1163,7 @@ async def generate_creative_prompts(config: dict) -> dict:
     topics = list(config.get("recent_topics", []))
     history = list(dict.fromkeys(used + topics))
     scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history, topics,
-                                       _call_gpt)
+                                       _call_gpt, view=config.get("view") or None)
     domain, event, ship, story = scene["domain"], scene["event"], scene["ship"], scene["story"]
     metadata = await _generate_metadata(
         {"vessel_class": ship or "None", "incident_type": event, "scenario_summary": story},

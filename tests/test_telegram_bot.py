@@ -467,5 +467,147 @@ class TestHandlers(unittest.TestCase):
         self.assertIn("50 MB", _sent_texts(ctx)[0])
 
 
+class TestRegionViewMenu(unittest.TestCase):
+    """1 Eki, Bahadır: şehir olaylarında olaydan sonra bölge görünümü adımı. Kilitli."""
+    CITY = DOMAINS.index("urban_city_disasters")
+    LABELS = ["🎲 Rastgele", "🏜️ Körfez metropolü", "🌴 Kuzey Afrika kıyısı", "🏖️ ABD kıyı kasabası",
+              "🏘️ Kuzey Avrupa sahili", "🏛️ Fransız rivierası", "🏙️ Doğu Asya kıyısı", "⬅️ Geri"]
+
+    def setUp(self):
+        import core.skeleton_pipeline as sk
+        self.sk = sk
+        sk._VIEW_MEMORY.clear()
+        self.addCleanup(sk._VIEW_MEMORY.clear)
+        p = patch.object(bot, "_production_lock", asyncio.Lock())
+        p.start()
+        self.addCleanup(p.stop)
+
+    def _ei(self, event):
+        return bot.domain_events("urban_city_disasters").index(event)
+
+    def _click(self, data):
+        ctx, upd = _context(), _update(CHAT, data=bot.CALLBACK_PREFIX + data)
+        runner = AsyncMock(return_value={"success": False, "reason": "cancelled"})
+        with patch.object(bot.pipeline, "run_pipeline", runner), patch.object(bot.status, "fail"):
+            asyncio.run(bot.on_callback(upd, ctx))
+        return upd, runner
+
+    def test_labels_and_codes_locked(self):
+        self.assertEqual(bot.VIEW_LABELS, {
+            "gulf_metropolis": "🏜️ Körfez metropolü", "north_african_coast": "🌴 Kuzey Afrika kıyısı",
+            "us_coastal_town": "🏖️ ABD kıyı kasabası", "north_european_seaside": "🏘️ Kuzey Avrupa sahili",
+            "riviera": "🏛️ Fransız rivierası", "east_asian_coast": "🏙️ Doğu Asya kıyısı"})
+        self.assertEqual(bot.VIEW_KEYS, list(self.sk.REGION_VIEWS))
+        for label in bot.VIEW_LABELS.values():   # bayrak emojisi (bölgesel gösterge harfleri) yok
+            self.assertFalse(any(0x1F1E6 <= ord(ch) <= 0x1F1FF for ch in label), label)
+
+    def test_city_event_shows_view_step(self):
+        for event in self.sk.REGION_VIEW_EVENTS:
+            with self.subTest(event=event):
+                ei = self._ei(event)
+                upd, runner = self._click(f"e:{self.CITY}:{ei}")
+                runner.assert_not_awaited()
+                args, kwargs = upd.callback_query.edit_message_text.await_args
+                self.assertIn("Bölge: hangi görünüm?", args[0])
+                buttons = _buttons(kwargs["reply_markup"])
+                self.assertEqual([b.text for b in buttons], self.LABELS)
+                self.assertEqual(buttons[0].callback_data, f"{bot.CALLBACK_PREFIX}v:{self.CITY}:{ei}:r")
+                self.assertEqual(buttons[-1].callback_data, f"{bot.CALLBACK_PREFIX}d:{self.CITY}")
+                for vi, b in enumerate(buttons[1:-1]):
+                    self.assertEqual(b.callback_data, f"{bot.CALLBACK_PREFIX}v:{self.CITY}:{ei}:{vi}")
+
+    def test_non_city_and_random_event_skip_view_step(self):
+        for data in ("e:0:1", f"e:{self.CITY}:r", f"e:{DOMAINS.index('marina_and_yacht_operations')}:0"):
+            with self.subTest(data=data):
+                upd, _ = self._click(data)
+                args, kwargs = upd.callback_query.edit_message_text.await_args
+                self.assertNotIn("Bölge", args[0])
+                self.assertEqual([b.text for b in _buttons(kwargs["reply_markup"])], ["✅ Üret", "❌ İptal"])
+        upd, _ = self._click("v:0:1:2")   # şehir dışı olayda bölge kodu geçersiz
+        self.assertIn("Geçersiz seçim", upd.callback_query.edit_message_text.await_args.args[0])
+        upd, _ = self._click(f"v:{self.CITY}:{self._ei(TIDAL_EVENT)}:9")
+        self.assertIn("Geçersiz seçim", upd.callback_query.edit_message_text.await_args.args[0])
+
+    def test_view_click_confirm_and_run(self):
+        ei = self._ei(TIDAL_EVENT)
+        upd, runner = self._click(f"v:{self.CITY}:{ei}:5")
+        runner.assert_not_awaited()
+        args, kwargs = upd.callback_query.edit_message_text.await_args
+        self.assertIn("Bölge: 🏙️ Doğu Asya kıyısı", args[0])
+        self.assertEqual(_buttons(kwargs["reply_markup"])[0].callback_data, f"{bot.CALLBACK_PREFIX}ok:{self.CITY}:{ei}:5")
+        upd, runner = self._click(f"ok:{self.CITY}:{ei}:5")
+        self.assertEqual(runner.await_args.kwargs["view"], "east_asian_coast")
+        self.assertIn("🏙️ Doğu Asya kıyısı", upd.callback_query.edit_message_text.await_args_list[0].args[0])
+        upd, runner = self._click(f"ok:{self.CITY}:{ei}:r")
+        self.assertIsNone(runner.await_args.kwargs["view"])
+        upd, runner = self._click("ok:0:1")   # şehir dışı: view yok
+        self.assertIsNone(runner.await_args.kwargs["view"])
+
+    def test_view_callbacks_within_64_bytes(self):
+        markups = []
+        for event in self.sk.REGION_VIEW_EVENTS:
+            ei = str(self._ei(event))
+            markups.append(bot.view_keyboard(str(self.CITY), ei))
+            markups += [bot.confirm_keyboard(str(self.CITY), ei, v) for v in ["r"] + [str(i) for i in range(6)]]
+        for b in (b for m in markups for b in _buttons(m)):
+            self.assertLessEqual(len(b.callback_data.encode()), 64, b.callback_data)
+
+    def test_chosen_view_reaches_scene_and_combo_key(self):
+        import core.creative_pipeline as cp
+
+        async def gpt(system, user, **kw):
+            gpt.user = user
+            return {"story": TIDAL_STORY}
+        for view in self.sk.REGION_VIEWS:
+            with self.subTest(view=view):
+                scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", TIDAL_EVENT, [], [], gpt, view=view))
+                self.assertEqual(scene["trace"]["view"], view)
+                self.assertEqual(scene["trace"]["view_source"], "menü")
+                self.assertIn(f"#{view}|", scene["combo_key"])
+                self.assertIn(self.sk.REGION_VIEWS[view], gpt.user)
+                self.assertIn(self.sk.REGION_VIEWS[view], scene["style_suffix"])
+                self.assertIn(scene["spot"], self.sk.view_spots(TIDAL_EVENT, view))   # çakışma kuralı geçerli
+                self.assertEqual(self.sk._VIEW_MEMORY[TIDAL_EVENT][-1], view)          # LRU belleğine yazıldı
+        with self.assertRaises(ValueError):
+            asyncio.run(cp.build_creative_scene("cruise_ship_operations", "Rogue wave breaks over the rail onto the pool deck",
+                                                [], [], gpt, view="riviera"))
+
+    def test_random_equals_lru(self):
+        import core.creative_pipeline as cp
+
+        async def gpt(system, user, **kw):
+            return {"story": TIDAL_STORY}
+        order = ["riviera", "gulf_metropolis", "us_coastal_town", "east_asian_coast", "north_african_coast",
+                 "north_european_seaside"]
+        history = [f"urban_city_disasters|none|{TIDAL_EVENT.lower()}|coastal avenue behind a seawall#{v}|"
+                   f"{self.sk.SKELETON_CAMERA}" for v in order]
+        expected = self.sk.choose_region_view(TIDAL_EVENT, history)
+        scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", TIDAL_EVENT, history, [], gpt))
+        self.assertEqual((scene["trace"]["view"], expected), ("riviera", "riviera"))
+        self.assertEqual(scene["trace"]["view_source"], "Python, LRU")
+
+    def test_run_pipeline_passes_view_to_prompt_config(self):
+        seen = {}
+
+        async def gen(config):
+            seen.update(config)
+            raise RuntimeError("stop")
+        tracker = MagicMock()
+        tracker.get_recent_history.return_value = []
+        tracker.get_recent_beat1_verbs.return_value = []
+        with patch.object(settings, "IS_DRY_RUN", False), patch.object(main, "load_used_combos", return_value=[]), \
+             patch.object(main, "NotionTracker", return_value=tracker), patch.object(main, "KieClient"), \
+             patch.object(main, "generate_prompts", side_effect=gen):
+            asyncio.run(main.run_pipeline(skip_upload=True, domain="urban_city_disasters", event=TIDAL_EVENT,
+                                          trigger="manual", view="riviera"))
+        self.assertEqual(seen["view"], "riviera")
+
+
+TIDAL_EVENT = "Tidal wave surges over a coastal city street"
+TIDAL_STORY = ("A towering brown tidal wave thick with debris crashes over the seawall onto the coastal road, slamming "
+               "into a row of parked cars. The water sweeps the cars into the storefronts as six pedestrians sprint up "
+               "the stairs. The wave keeps surging down the street, still dragging cars and debris inland.")
+
+
 if __name__ == "__main__":
     unittest.main()

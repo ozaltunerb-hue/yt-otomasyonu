@@ -412,8 +412,9 @@ class TestCityEventSwap(unittest.TestCase):
         self.assertIn("second-floor balcony", sk.CAMERA_SPOTS["Coastal street of low shopfronts"])
         self.assertIn("seawall", sk.CAMERA_SPOTS["Coastal avenue behind a seawall"])
         self.assertTrue({"a dark storm light", "stormy late-afternoon light"} & set(s["weather"]))
-        self.assertEqual(cp.EVENT_OUTCOMES[TIDAL], "a towering tidal wave crashes over the coastal road, sweeps parked "
-                                                   "cars into storefronts and keeps surging down the street")
+        self.assertEqual(cp.EVENT_OUTCOMES[TIDAL], "a towering brown churning tidal wave thick with debris crashes over "
+                                                   "the coastal road, sweeps parked cars into storefronts and keeps "
+                                                   "surging down the street")
         for spot in s["spots"]:
             self.assertNotIn("phone", sk.style_suffix(TIDAL, None, spot).lower())
 
@@ -453,8 +454,8 @@ class TestRegionViews(unittest.TestCase):
             "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, overhead power lines",
             "north_european_seaside": "brick terraced houses, narrow streets, small parked cars",
             "riviera": "cream stone buildings with shuttered windows, cobbled promenade, scooters, plane trees",
-            "east_asian_coast": "dense mid-rise buildings, narrow lanes, small cars and motorbikes, covered arcade "
-                                "entrances"})
+            "east_asian_coast": "dense mid-rise apartment blocks with air-conditioner units and tangled overhead "
+                                "wires, narrow lanes, small boxy cars and scooters"})
         self.assertEqual(sk.REGION_VIEW_CLOTHING, "people in light everyday clothes suited to the climate")
         self.assertEqual(sk.NO_SIGNS, "no readable signs, text or flags")
 

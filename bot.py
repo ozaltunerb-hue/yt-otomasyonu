@@ -36,7 +36,7 @@ from telegram.ext import Application, CallbackQueryHandler, CommandHandler, Cont
 import main as pipeline
 from config import settings
 from core.creative_engine import DOMAIN_ATTRIBUTES, SIDE_LAUNCH_EVENT
-from core.skeleton_pipeline import skeleton_events
+from core.skeleton_pipeline import REGION_VIEW_EVENTS, REGION_VIEWS, skeleton_events
 from core.trace_format import format_final_prompt, format_generation, sections_to_text, split_message
 from infrastructure.archive import update_meta
 from infrastructure.notion_logger import NotionTracker
@@ -108,12 +108,27 @@ EVENT_LABELS = {
     "Coastal flooding reaching the beachfront": "💧 Sel sahile ulaşır",
 }
 RANDOM_LABEL = "🎲 Rastgele"
+# Bölge görünümü menüsü (1 Eki, Bahadır): sadece REGION_VIEW_EVENTS (sel, kıyı dalga). Bayrak emojisi yok.
+# Kısa kod = REGION_VIEWS sırası (0-5); 🎲 Rastgele = LRU.
+VIEW_LABELS = {
+    "gulf_metropolis": "🏜️ Körfez metropolü",
+    "north_african_coast": "🌴 Kuzey Afrika kıyısı",
+    "us_coastal_town": "🏖️ ABD kıyı kasabası",
+    "north_european_seaside": "🏘️ Kuzey Avrupa sahili",
+    "riviera": "🏛️ Fransız rivierası",
+    "east_asian_coast": "🏙️ Doğu Asya kıyısı",
+}
+VIEW_KEYS = list(REGION_VIEWS)
+if set(VIEW_LABELS) != set(VIEW_KEYS):
+    raise RuntimeError(f"VIEW_LABELS görünümlerle uyuşmuyor: {set(VIEW_LABELS) ^ set(VIEW_KEYS)}")
+VIEW_RANDOM_LABEL = "🎲 Rastgele (sıradaki görünüm)"
 # Video başı ~175 Kie kredisi (BASLANGIC.md, 2026-09 ölçümü) + birkaç GPT çağrısı
 ESTIMATED_COST = "~175 Kie kredisi + birkaç GPT çağrısı"
 
 # Callback verisi kısa ID'lerle (Telegram 64 bayt sınırı): domain ve olay listedeki sıra numarası.
-#   uret:d:<di>         → olay menüsü        uret:e:<di>:<ei|r> → onay mesajı
-#   uret:ok:<di>:<ei|r> → üretimi başlat     uret:back → kategori menüsü    uret:x → iptal
+#   uret:d:<di>         → olay menüsü        uret:e:<di>:<ei|r> → onay mesajı (şehir olayında bölge menüsü)
+#   uret:v:<di>:<ei>:<vi|r> → bölge seçildi, onay mesajı (sadece REGION_VIEW_EVENTS)
+#   uret:ok:<di>:<ei|r>[:<vi|r>] → üretimi başlat     uret:back → kategori menüsü    uret:x → iptal
 #   uret:t:<d|o>        → 🔍 Ayrıntı / ✋ Onay aç-kapa        uret:y:<ok|no> → yayın moduna geçiş onayı
 #   uret:ap:<token>:<y|n> → Kie gönderim onayı               uret:r:<sayfa>:<g|b> → 👍 / 👎 puan
 # Sıra değişirse eski butonun olayı kayar; onay mesajı olayı gösterdiği için fark edilmeden üretim başlamaz.
@@ -194,9 +209,33 @@ def event_keyboard(di: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(rows)
 
 
-def confirm_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+def view_keyboard(di: str, ei: str) -> InlineKeyboardMarkup:
+    """Bölge adımı: 🎲 Rastgele, 6 görünüm, ⬅️ Geri (olay menüsüne)."""
+    buttons = [InlineKeyboardButton(VIEW_LABELS[v], callback_data=f"{CALLBACK_PREFIX}v:{di}:{ei}:{vi}")
+               for vi, v in enumerate(VIEW_KEYS)]
+    rows = [[InlineKeyboardButton(RANDOM_LABEL, callback_data=f"{CALLBACK_PREFIX}v:{di}:{ei}:{RANDOM_ID}")]]
+    rows += [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
+    rows.append([InlineKeyboardButton("⬅️ Geri", callback_data=f"{CALLBACK_PREFIX}d:{di}")])
+    return InlineKeyboardMarkup(rows)
+
+
+def parse_view(vid: str) -> tuple[bool, str | None]:
+    """Kısa kod → (geçerli mi, görünüm). 'r' = rastgele (None)."""
+    if vid == RANDOM_ID:
+        return True, None
+    if vid.isdigit() and int(vid) < len(VIEW_KEYS):
+        return True, VIEW_KEYS[int(vid)]
+    return False, None
+
+
+def view_label(view: str | None) -> str:
+    return VIEW_LABELS[view] if view else VIEW_RANDOM_LABEL
+
+
+def confirm_keyboard(di: str, eid: str, vid: str | None = None) -> InlineKeyboardMarkup:
+    tail = f":{vid}" if vid is not None else ""
     return InlineKeyboardMarkup([[
-        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}ok:{di}:{eid}"),
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}ok:{di}:{eid}{tail}"),
         InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
     ]])
 
@@ -240,10 +279,11 @@ def selection_label(event: str | None) -> str:
     return EVENT_LABELS[event] if event else RANDOM_LABEL
 
 
-def confirm_text(domain: str, event: str | None, cfg: dict | None = None) -> str:
+def confirm_text(domain: str, event: str | None, cfg: dict | None = None, view: str | None = None) -> str:
     cfg = cfg or default_cfg()
     return (f"Kategori: {DOMAIN_LABELS[domain]}\n"
             f"Olay: {selection_label(event)}{'' if event else ' (motor seçer)'}\n"
+            + (f"Bölge: {view_label(view)}\n" if event in REGION_VIEW_EVENTS else "") +
             f"Mod: {mode_label(cfg['mode'])}\n"
             f"🔍 Ayrıntı: {_onoff(cfg['detail'])} · ✋ Onay: {_onoff(cfg['approval'])}\n"
             f"Tahmini maliyet: {ESTIMATED_COST}\n\n"
@@ -380,11 +420,17 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         await query.edit_message_text(menu_text(cfg), reply_markup=domain_keyboard(cfg))
         return
 
-    sel = None
+    sel, view = None, None
     if action == "d" and len(args) == 1:
         sel = parse_selection(args[0])
     elif action in ("e", "ok") and len(args) == 2:
         sel = parse_selection(*args)
+    elif action in ("v", "ok") and len(args) == 3:
+        # Bölge adımı sadece şehir olaylarında (1 Eki)
+        sel = parse_selection(*args[:2])
+        valid, view = parse_view(args[2])
+        if not valid or sel is None or sel[1] not in REGION_VIEW_EVENTS:
+            sel = None
     if sel is None:
         await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
         return
@@ -392,18 +438,25 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
     if action == "d":
         await query.edit_message_text(f"{DOMAIN_LABELS[domain]}: hangi olay?", reply_markup=event_keyboard(int(args[0])))
+    elif action == "e" and event in REGION_VIEW_EVENTS:
+        await query.edit_message_text(f"{DOMAIN_LABELS[domain]} / {EVENT_LABELS[event]}\nBölge: hangi görünüm?",
+                                      reply_markup=view_keyboard(*args))
     elif action == "e":
         await query.edit_message_text(confirm_text(domain, event, cfg), reply_markup=confirm_keyboard(*args))
+    elif action == "v":
+        await query.edit_message_text(confirm_text(domain, event, cfg, view), reply_markup=confirm_keyboard(*args))
     else:
         run_cfg = dict(cfg)   # üretim başlarken mod sabitlenir; sonradan değişiklik bu üretimi etkilemez
         async with _production_lock:
             await query.edit_message_text(
-                f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)}\n"
+                f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)}"
+                + (f" / {view_label(view)}" if event in REGION_VIEW_EVENTS else "") + "\n"
                 f"Mod: {mode_label(run_cfg['mode'])}\n"
                 + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
                    else "Senaryo → video → YouTube.") + " Birkaç dakika sürer."
             )
-            await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data)
+            await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
+                          view=view)
 
 
 async def _on_approval(query, context, token: str, answer: str) -> None:
@@ -437,7 +490,7 @@ def _run_pipeline_blocking(kwargs: dict) -> dict:
 
 
 async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg: dict | None = None,
-                  bot_data: dict | None = None) -> None:
+                  bot_data: dict | None = None, view: str | None = None) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı."""
     cfg = cfg or default_cfg(MODE_TEST)
@@ -446,7 +499,7 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                                 cfg["detail"], cfg["approval"],
                                 {"domain": DOMAIN_LABELS.get(domain, domain), "event": selection_label(event)})
     kwargs = {"domain": domain, "event": event, "trigger": "manual", "mode": cfg["mode"],
-              "skip_upload": cfg["mode"] == MODE_TEST, "reporter": reporter}
+              "skip_upload": cfg["mode"] == MODE_TEST, "reporter": reporter, "view": view}
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:

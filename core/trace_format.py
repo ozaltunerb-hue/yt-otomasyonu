@@ -139,7 +139,8 @@ def _format_creative(trace: dict, labels: dict) -> list[tuple[str, str]]:
          f"Olay: {labels.get('event') or trace.get('event')}\n"
          f"Gemi: {trace.get('ship')} (Python, LRU) · kamera: el kamerası\n"
          f"Yer: {trace.get('spot')} · hava: {trace.get('weather')} (Python, rastgele) · kişi aralığı: {lo}-{hi}\n"
-         + (f"Görünüm: {trace['view']}\n" if trace.get("view") else "") +
+         + (f"Görünüm: {trace['view']}" + (f" ({trace['view_source']})" if trace.get("view_source") else "")
+            + "\n" if trace.get("view") else "") +
          f"Ulaşılacak sonuç: {trace.get('outcome', '-')}\n"
          f"Tekrar önleme: son {trace.get('recent_count', 0)} hikâye GPT'ye verildi"),
         ("🔍 2. GPT-4o hikâyesi (kural kapısı: 6 sabit kural + olay anahtar grupları, en fazla 3 deneme)", "\n\n".join(lines) or "-"),

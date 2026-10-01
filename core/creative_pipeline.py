@@ -18,6 +18,8 @@ import re
 from core.prompt_generator import NoValidScenarioError
 from core.skeleton_pipeline import (
     EVENT_SKELETONS,
+    REGION_VIEW_EVENTS,
+    REGION_VIEWS,
     SKELETON_CAMERA,
     SHIP_PHRASES,
     choose_event_and_ship,
@@ -106,9 +108,11 @@ EVENT_OUTCOMES = {
     # "Storm gust tears signs and scaffolding loose downtown":
     #     "scaffolding and signs crash onto the street and parked cars as more panels tear loose",
     # EKLENDİ (30 Eyl, Bahadır onayı). Kaynak: 24 Eyl videosu (dosya 1790240764259-vf8owrlvyva)
+    # 1 Eki (Bahadır): 6 görünümün videosunda en iyileri kahverengi, çalkantılı, molozlu suydu; temiz kıvrılan dalga
+    # yapay göründü.
     "Tidal wave surges over a coastal city street":
-        "a towering tidal wave crashes over the coastal road, sweeps parked cars into storefronts and keeps surging "
-        "down the street",
+        "a towering brown churning tidal wave thick with debris crashes over the coastal road, sweeps parked cars into "
+        "storefronts and keeps surging down the street",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -443,17 +447,24 @@ async def write_story(event: str, ship: str | None, place: str, weather: str, re
 
 
 async def build_creative_scene(domain: str | None, event: str | None, history: list[str], history_texts: list[str],
-                               call_gpt) -> dict:
-    """Seçim (Python) + GPT-4o hikâyesi + iskeletle aynı stil eki."""
+                               call_gpt, view: str | None = None) -> dict:
+    """Seçim (Python) + GPT-4o hikâyesi + iskeletle aynı stil eki. view: Telegram bölge menüsünden seçilen görünüm
+    (sadece şehir olayları); None ise LRU seçer."""
     domain, event, ship = choose_event_and_ship(domain, event, history)
-    view = choose_region_view(event, history)   # şehir olayları (1 Eki); diğerlerinde None
+    if view is not None:
+        if event not in REGION_VIEW_EVENTS or view not in REGION_VIEWS:
+            raise ValueError(f"Bu olayda bu görünüm seçilemez: {event} / {view}")
+        view_source = "menü"
+    else:
+        view = choose_region_view(event, history)   # şehir olayları (1 Eki); diğerlerinde None
+        view_source = "Python, LRU" if view else None
     remember_view(event, view)                   # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
     spot, weather = pick_setting(event, view=view)
     place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
     recent = recent_stories(history_texts)
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "domain": domain, "event": event, "ship": ship or "None",
-             "camera": SKELETON_CAMERA, "spot": spot, "view": view, "place": place, "weather": weather, "count_range": [lo, hi],
+             "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place, "weather": weather, "count_range": [lo, hi],
              "outcome": EVENT_OUTCOMES[event], "recent_count": len(recent), "attempts": [], "story": "",
              "story_words": 0}
     try:
