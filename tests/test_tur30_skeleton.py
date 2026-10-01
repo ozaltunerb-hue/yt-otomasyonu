@@ -68,8 +68,9 @@ class TestEventPool(unittest.TestCase):
         self.assertEqual(sum(counts.values()), 22)
 
     def test_removed_events(self):
-        self.assertEqual(len(sk.REMOVED_EVENTS), 18)   # 30 Eyl: + tabela/iskele (aksiyonsuz video)
+        self.assertEqual(len(sk.REMOVED_EVENTS), 19)   # 30 Eyl: + tabela/iskele (aksiyonsuz video); 1 Eki: + halat
         self.assertIn("Storm gust tears signs and scaffolding loose downtown", sk.REMOVED_EVENTS)
+        self.assertIn("Mooring line snaps in a storm gust", sk.REMOVED_EVENTS)
         self.assertNotIn("Tidal wave surges over a coastal city street", sk.REMOVED_EVENTS)
         for e in ("Coastal evacuation", "Jammed throttle sends the boat careening",
                   "Heavy roll tilts the deck and sends loungers sliding", sk.ALL_EVENTS[3]):
@@ -286,7 +287,8 @@ class TestMenu(unittest.TestCase):
             self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 22)
         with patch.object(settings, "PROMPT_PIPELINE", "legacy"):
             # 30 Eyl: dev dalga baskını havuza eklendi (tabela/iskele havuzda kaldı, sadece iskeletten çıktı)
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 40)
+            # 1 Eki: kontrolsüz yat havuza eklendi (halat havuzda kaldı, sadece iskeletten çıktı)
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 41)
 
 
 if __name__ == "__main__":

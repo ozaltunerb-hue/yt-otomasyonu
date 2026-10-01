@@ -225,9 +225,15 @@ DOMAIN_ATTRIBUTES = {
     },
     "marina_and_yacht_operations": {
         "ships": ["Luxury Motor Yacht", "Sailing Yacht", "Runaway Powerboat", "Jet Ski"],
-        "environments": ["Floating pontoon dock", "Marina fairway", "Marina fuel dock", "Yacht club entrance"],
-        "events": ["Mooring line snaps in a storm gust", "Jammed throttle sends the boat careening",
-                   "Storm surge wave lifts and buckles the floating pontoon", "Passing boat's wake slams the boat sideways"]
+        "environments": ["Floating pontoon dock", "Marina fairway", "Marina fuel dock", "Yacht club entrance",
+                         # Kontrolsüz yat çekim yerleri (1 Eki, Bahadır); sadece o olayla uyumlu
+                         "Breakwater at the marina entrance", "Marina berthing pier",
+                         "Narrow channel between moored boats"],
+        "events": [# 1 Eki: havuzda kalır, iskelet hattından çıktı (REMOVED_EVENTS); halat kopması görünmedi
+                   "Mooring line snaps in a storm gust", "Jammed throttle sends the boat careening",
+                   "Storm surge wave lifts and buckles the floating pontoon", "Passing boat's wake slams the boat sideways",
+                   # 1 Eki (Bahadır): halat olayının yerine, yat marinaya dalar ve bağlı teknelere çarpar
+                   "Yacht loses control and rams moored boats in the marina"]
     },
     "cruise_ship_operations": {
         "ships": ["Ocean Cruise Liner", "Mega Cruise Ship", "Cruise Tender Boat"],
@@ -349,6 +355,9 @@ EVENT_ENV_COMPAT = {
                                                      "Yacht club entrance"},
         "Storm surge wave lifts and buckles the floating pontoon": {"Floating pontoon dock", "Marina fuel dock"},
         "Passing boat's wake slams the boat sideways": {"Marina fairway", "Yacht club entrance", "Floating pontoon dock"},
+        "Yacht loses control and rams moored boats in the marina": {"Breakwater at the marina entrance",
+                                                                    "Marina berthing pier",
+                                                                    "Narrow channel between moored boats"},
     },
     "cruise_ship_operations": {
         "Mooring line snaps and whips across the quay": {"Cruise terminal berth"},

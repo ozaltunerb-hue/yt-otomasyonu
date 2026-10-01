@@ -49,7 +49,8 @@ FLOOD = "Flash flooding in city streets"
 WAVE = "Rogue wave breaks over the rail onto the pool deck"
 TIDAL = "Tidal wave surges over a coastal city street"
 SIGNS = "Storm gust tears signs and scaffolding loose downtown"
-MOORING = "Mooring line snaps in a storm gust"
+MOORING = "Mooring line snaps in a storm gust"   # 1 Eki: çıkarıldı
+RUNAWAY = "Yacht loses control and rams moored boats in the marina"
 YACHT = "Luxury Motor Yacht"
 
 GOLDEN = ("The restraining cable snaps with a crack and the luxury motor yacht heels over onto its side on the "
@@ -125,26 +126,50 @@ class TestLocks(unittest.TestCase):
         self.assertEqual(cp.EVENT_REQUIRED[TIDAL], [("wave", "surge", "torrent"), ("car", "cars", "vehicle")])
         self.assertEqual(set(cp.REQUIRED_APPROVED), {CABLE, KEEL, FLOOD, WAVE, TIDAL})
 
-    def test_mooring_storm_gust_locked(self):
-        # 1 Eki (marina_yat_3): komşu rıhtım soyut kaldı, gövde çarpmadı; ses açılışı. Gevşetmek onay ister.
-        self.assertEqual(cp.EVENT_REQUIRED[MOORING], [
-            ("snap", "parts", "parted", "break", "broke"),
-            ("neighboring yacht", "neighboring moored yacht", "neighbouring yacht", "next yacht", "adjacent yacht",
-             "neighboring boat"),
-            ("slam", "crash", "ram", "smash", "bang")])
-        self.assertEqual(cp.EVENT_OUTCOMES[MOORING],
-                         "the mooring line snaps and whips across the dock, the yacht swings free and slams its hull "
-                         "into the neighboring moored yacht again and again")
+    def test_runaway_yacht_locked(self):
+        # 1 Eki (Bahadır, TASLAK): halat olayının yerine kontrolsüz yat. Gevşetmek onay ister.
+        self.assertEqual(cp.EVENT_REQUIRED[RUNAWAY], [("plow", "ram", "slam", "crash", "smash"),
+                                                      ("moored boat", "moored yacht", "moored boats", "docked boat",
+                                                       "docked yachts")])
+        self.assertNotIn(RUNAWAY, cp.REQUIRED_APPROVED)
+        self.assertEqual(cp.EVENT_OUTCOMES[RUNAWAY],
+                         "the yacht races into the marina out of control, plows into the moored boats along the dock "
+                         "and shoves them aside while people jump back")
+        # 1 Eki: ses açılışı yasağı 2. kuralda kalır (halat olayı çıksa da)
         self.assertIn("Show only what is visible, never sounds.",
                       cp.CREATIVE_SYSTEM.split("\n2. ", 1)[1].split("\n3. ", 1)[0])
+        self.assertIn(MOORING, sk.REMOVED_EVENTS)
+        self.assertNotIn(MOORING, cp.EVENT_OUTCOMES)
+        self.assertNotIn(MOORING, cp.EVENT_REQUIRED)
 
-    def test_mooring_story_needs_neighbor_yacht(self):
-        ok = ("A storm gust hits the marina and the mooring line on the luxury motor yacht snaps, whipping across the "
-              "floating pontoon as four crew members scramble back from the edge. The yacht swings free of its berth "
-              "and slams its hull into the neighboring moored yacht. Waves keep driving it back, ramming the two "
-              "hulls together again and again.")
-        self.assertEqual(cp.story_rule_issues(MOORING, YACHT, ok), [])
-        self.assertIn("required", rules(MOORING, YACHT, ok.replace("the neighboring moored yacht", "the pontoon")))
+    def test_runaway_yacht_data_and_menu(self):
+        import bot
+        s = sk.EVENT_SKELETONS[RUNAWAY]
+        self.assertEqual(s["domain"], "marina_and_yacht_operations")
+        self.assertEqual(s["ships"], [YACHT])
+        self.assertEqual(set(s["spots"]), {"Breakwater at the marina entrance", "Marina berthing pier",
+                                            "Narrow channel between moored boats"})
+        self.assertEqual(s["weather"], ["strong gusting wind", "driving rain and wind",
+                                        "cold bright daylight with a strong wind"])
+        self.assertEqual(sk.count_range(RUNAWAY, YACHT), (3, 6))
+        for spot in s["spots"]:
+            suffix = sk.style_suffix(RUNAWAY, YACHT, spot)
+            self.assertIn("Marina staff wear orange hi-vis PPE", suffix)
+            self.assertNotIn("phone", suffix.lower())
+        with patch.object(settings, "PROMPT_PIPELINE", "creative"):
+            marina = bot.domain_events("marina_and_yacht_operations")
+        self.assertEqual(set(marina), {"Passing boat's wake slams the boat sideways",
+                                       "Storm surge wave lifts and buckles the floating pontoon", RUNAWAY})
+        self.assertEqual(bot.EVENT_LABELS[RUNAWAY], "🛥️ Yat kontrolsüz marinaya dalar")
+
+    def test_runaway_story_needs_moored_boats(self):
+        ok = ("The luxury motor yacht loses control at the marina entrance and races in at full speed, ramming the "
+              "first moored boats along the dock. Five marina staff jump back onto the pontoon as hulls crack and "
+              "fenders burst. The yacht keeps plowing forward, still smashing moored yachts aside down the narrow "
+              "channel.")
+        self.assertEqual(cp.story_rule_issues(RUNAWAY, YACHT, ok), [])
+        self.assertIn("required", rules(RUNAWAY, YACHT, ok.replace("moored boats", "pontoons")
+                                        .replace("moored yachts", "pontoons")))
 
     def test_forbidden_exact_and_only_slipway(self):
         self.assertEqual(set(cp.EVENT_FORBIDDEN), {CABLE, KEEL})

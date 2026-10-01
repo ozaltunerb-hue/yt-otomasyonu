@@ -49,6 +49,10 @@ CAMERA_SPOTS = {
     "Marina fuel dock": "on the fuel dock",
     "Marina fairway": "on the marina breakwater",
     "Yacht club entrance": "on the marina breakwater",
+    # Kontrolsüz yat (1 Eki): yat marinaya girer, bağlı teknelere çarpar
+    "Breakwater at the marina entrance": "on the breakwater beside the marina entrance",
+    "Marina berthing pier": "on the berthing pier",
+    "Narrow channel between moored boats": "on the pontoon at the edge of the narrow channel",
     "Cruise terminal berth": "on the terminal quay",
     "Open-air pool deck": "on the pool deck",
     "Downtown city center": "on a sidewalk across the street",
@@ -156,14 +160,18 @@ EVENT_SKELETONS = {
                 "quay step back. The {ship} keeps rocking violently, still swinging on the last sling.",
     },
     # ── Marina ──
-    "Mooring line snaps in a storm gust": {
-        "domain": "marina_and_yacht_operations", "ships": ["Luxury Motor Yacht", "Sailing Yacht"],
-        "spots": {"Floating pontoon dock": "the floating pontoon dock", "Marina fuel dock": "the marina fuel dock"},
-        "people": ["marina staff", "boat owners"], "weather": WEATHER_SEA, "object": "swinging yacht",
-        "text": "At {spot} in {weather}, a storm gust hits and a mooring line on the {ship} snaps with a crack. The "
-                "{ship} swings away from the dock and slams its side into the next berth as {n} {people} scramble along "
-                "the pontoon. It keeps swinging in the gusts, still straining against its last line.",
-    },
+    # ÇIKARILDI (1 Eki, Bahadır): iki test videosunda (marina_yat_3 ve halat_kopar) halat kopması görünmedi, yat
+    # serbest kalıp komşu yata çarpmadı; kural kapısından geçen prompt da yatı düzgün seyreder gösterdi. Olay havuzda
+    # kalır, iskelette olmadığı için REMOVED_EVENTS'e düşer ve menüde görünmez. Geri almak için bu bloğu,
+    # EVENT_OUTCOMES ve EVENT_REQUIRED satırlarını açmak yeterli.
+    # "Mooring line snaps in a storm gust": {
+    #     "domain": "marina_and_yacht_operations", "ships": ["Luxury Motor Yacht", "Sailing Yacht"],
+    #     "spots": {"Floating pontoon dock": "the floating pontoon dock", "Marina fuel dock": "the marina fuel dock"},
+    #     "people": ["marina staff", "boat owners"], "weather": WEATHER_SEA, "object": "swinging yacht",
+    #     "text": "At {spot} in {weather}, a storm gust hits and a mooring line on the {ship} snaps with a crack. The "
+    #             "{ship} swings away from the dock and slams its side into the next berth as {n} {people} scramble along "
+    #             "the pontoon. It keeps swinging in the gusts, still straining against its last line.",
+    # },
     "Storm surge wave lifts and buckles the floating pontoon": {
         "domain": "marina_and_yacht_operations", "ships": ["Luxury Motor Yacht", "Sailing Yacht", "Runaway Powerboat"],
         "spots": {"Floating pontoon dock": "the floating pontoon dock", "Marina fuel dock": "the marina fuel dock"},
@@ -180,6 +188,21 @@ EVENT_SKELETONS = {
         "text": "In {spot} in {weather}, a passing boat's wake rolls in and slams the {ship} sideways. It heels hard, "
                 "fenders squeal against the dock and loose gear flies off the deck as {n} {people} grab the rails. The "
                 "wake keeps rocking the {ship}, still slamming it against the dock.",
+    },
+    # EKLENDİ (1 Eki, Bahadır; TASLAK). Halat olayının yerine: yat kontrolü kaybeder, marinaya dalar ve bağlı
+    # teknelere çarpar. Motor yat; kişi 3-6 (marina aralığı), giyim marina kuralı (personel hi-vis).
+    "Yacht loses control and rams moored boats in the marina": {
+        "domain": "marina_and_yacht_operations", "ships": ["Luxury Motor Yacht"],
+        "spots": {"Breakwater at the marina entrance": "the marina entrance",
+                  "Marina berthing pier": "the marina berthing pier",
+                  "Narrow channel between moored boats": "the narrow channel between rows of moored boats"},
+        "people": ["marina staff", "boat owners"],
+        # rüzgârlı gün, yağmur ve rüzgâr, parlak gün + güçlü rüzgâr
+        "weather": ["strong gusting wind", "driving rain and wind", "cold bright daylight with a strong wind"],
+        "object": "runaway yacht",
+        "text": "At {spot} in {weather}, the {ship} loses control and races into the marina at full speed. It rams the "
+                "moored boats along the dock and shoves them aside as {n} {people} jump back onto the pontoon. The "
+                "{ship} keeps plowing forward, still smashing into more moored boats.",
     },
     # ── Kruvaziyer ──
     "Mooring line snaps and whips across the quay": {

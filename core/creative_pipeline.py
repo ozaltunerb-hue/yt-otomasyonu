@@ -67,14 +67,18 @@ EVENT_OUTCOMES = {
     "Crane sling snaps while lowering the hull into the water":
         "the hull plunges nose-first into the basin, throwing up a wall of spray while still swinging on the last sling",
     # Marina
-    # 1 Eki (marina_yat_3): "neighboring berth" soyut kaldı, gövde hiçbir şeye çarpmadı; komşu yat somut nesne.
-    "Mooring line snaps in a storm gust":
-        "the mooring line snaps and whips across the dock, the yacht swings free and slams its hull into the "
-        "neighboring moored yacht again and again",
+    # ÇIKARILDI (1 Eki, Bahadır): marina_yat_3 ve halat_kopar videolarında halat kopması görünmedi (bkz. skeleton_pipeline)
+    # "Mooring line snaps in a storm gust":
+    #     "the mooring line snaps and whips across the dock, the yacht swings free and slams its hull into the "
+    #     "neighboring moored yacht again and again",
     "Storm surge wave lifts and buckles the floating pontoon":
         "the pontoon buckles and tilts, throwing the moored boat against it as more waves roll in",
     "Passing boat's wake slams the boat sideways":
         "the boat heels hard and keeps slamming against the dock as the wake rolls through",
+    # EKLENDİ (1 Eki, Bahadır; TASLAK)
+    "Yacht loses control and rams moored boats in the marina":
+        "the yacht races into the marina out of control, plows into the moored boats along the dock and shoves them "
+        "aside while people jump back",
     # Kruvaziyer
     "Mooring line snaps and whips across the quay":
         "the snapped line keeps thrashing across the quay while the towering hull swings away from the berth",
@@ -189,14 +193,18 @@ EVENT_REQUIRED = {
     "Crane sling snaps while lowering the hull into the water": [("plunge", "drop", "fall", "fell", "crash"),
                                                                  ("spray", "splash")],
     # ── Marina (TASLAK) ──
-    # Sebep: halat koptu, yat serbest kaldı ama gövde komşu rıhtıma çarpmadı ("neighboring berth" soyut, çizilecek
-    # nesne yok); 2. saniyeden sonra kesme oldu, ekip kayboldu. Kaynak: 1 Eki test videosu (marina_yat_3).
-    "Mooring line snaps in a storm gust": [("snap", "parts", "parted", "break", "broke"),
-                                           ("neighboring yacht", "neighboring moored yacht", "neighbouring yacht",
-                                            "next yacht", "adjacent yacht", "neighboring boat"),
-                                           ("slam", "crash", "ram", "smash", "bang")],
+    # ÇIKARILDI (1 Eki, Bahadır): marina_yat_3 ve halat_kopar videolarında halat kopması görünmedi
+    # "Mooring line snaps in a storm gust": [("snap", "parts", "parted", "break", "broke"),
+    #                                        ("neighboring yacht", "neighboring moored yacht", "neighbouring yacht",
+    #                                         "next yacht", "adjacent yacht", "neighboring boat"),
+    #                                        ("slam", "crash", "ram", "smash", "bang")],
     "Storm surge wave lifts and buckles the floating pontoon": [("pontoon",), ("buckle", "tilt", "twist", "heave")],
     "Passing boat's wake slams the boat sideways": [("wake",), ("heel", "slam", "rock", "roll")],
+    # TASLAK (1 Eki). Sebep: yat bağlı teknelere çarpmalı; çarpma fiili ve somut hedef (bağlı tekne) görünmezse
+    # model yatı düzgün seyreder çizer (halat olayının 1 Eki videolarındaki hata).
+    "Yacht loses control and rams moored boats in the marina": [("plow", "ram", "slam", "crash", "smash"),
+                                                                ("moored boat", "moored yacht", "moored boats",
+                                                                 "docked boat", "docked yachts")],
     # ── Kruvaziyer ──
     # TASLAK
     "Mooring line snaps and whips across the quay": [("line", "rope", "hawser", "cable"), ("whip", "thrash", "lash")],
