@@ -324,6 +324,73 @@ ALL_EVENTS = [e for a in DOMAIN_ATTRIBUTES.values() for e in a["events"]]
 # Bu hatta olmayan olaylar (görünür büyük fiziksel tetik yok / başka olayın kopyası / dikey kadraja sığmıyor)
 REMOVED_EVENTS = [e for e in ALL_EVENTS if e not in EVENT_SKELETONS]
 
+# ── BÖLGE GÖRÜNÜMÜ (1 Eki, Bahadır: aynı ortamda tekrar eden videolar) ─────────────────────────────────────────
+# Şehir olaylarında Python, gemi seçer gibi LRU ile bir görünüm seçer (olay başına ayrı döngü). Spot kamera
+# konumunu verir, görünüm mimari, sokak ve araçları; ışığı hava belirler (gökyüzü ifadesi yok). Görünüm hem GPT girdisine (PLACE) hem stil ekine girer. Prompt'a ülke/şehir adı, bayrak ya da
+# yazı girmez; ülke ilhamı sadece bu yorumlarda. Giyim her görünümde nötr (etnik/kültürel giyim tarif edilmez).
+# Seçilen görünüm combo_key'in yer parçasına "#görünüm" olarak yazılır (Notion şeması değişmez, 5 parça korunur).
+REGION_VIEW_EVENTS = ("Flash flooding in city streets", "Tidal wave surges over a coastal city street")
+REGION_VIEWS = {
+    # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Körfez metropolü (BAE, Katar)
+    "gulf_metropolis": "glass towers behind palm-lined multi-lane boulevards, sand-colored low buildings, white SUVs",
+    # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Kuzey Afrika kıyısı (Fas, Tunus)
+    "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, small hatchback cars",
+    # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: ABD kıyı kasabası (Florida, Carolina)
+    "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, overhead power lines",
+    # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Kuzey Avrupa sahil kasabası (Hollanda, İngiltere)
+    "north_european_seaside": "brick terraced houses, narrow streets, small parked cars",
+    # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Riviera (Fransa, İtalya)
+    "riviera": "cream stone buildings with shuttered windows, cobbled promenade, scooters, plane trees",
+    # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Doğu Asya kıyısı (Japonya, Tayvan)
+    "east_asian_coast": "dense mid-rise buildings, narrow lanes, small cars and motorbikes, covered arcade entrances",
+}
+REGION_VIEW_CLOTHING = "people in light everyday clothes suited to the climate"
+NO_SIGNS = "no readable signs, text or flags"
+# Spot ile görünüm cümlede çakışmasın: yüksek bina yeri alçak yapılı görünümlerle, alçak dükkanlı sokak yoğun orta
+# katlı görünümle, yoğun şehir merkezi küçük kasaba görünümüyle eşleşmez. Kamera konumu yine spot'tan gelir.
+REGION_VIEW_EXCLUDED_SPOTS = {
+    "north_african_coast": {"High-rise city district"},
+    "us_coastal_town": {"High-rise city district", "Dense urban downtown"},
+    "north_european_seaside": {"High-rise city district"},
+    "riviera": {"High-rise city district"},
+    "east_asian_coast": {"High-rise city district", "Coastal street of low shopfronts"},
+}
+
+
+def view_spots(event: str, view: str | None) -> list[str]:
+    """Olayın görünümle çakışmayan spot'ları (görünüm yoksa hepsi)."""
+    spots = list(EVENT_SKELETONS[event]["spots"])
+    return [s for s in spots if s not in REGION_VIEW_EXCLUDED_SPOTS.get(view or "", set())]
+
+
+def view_of_combo(combo_key: str) -> str | None:
+    """combo_key yer parçasındaki görünüm ("...|yer#görünüm|..."), yoksa None."""
+    parts = (combo_key or "").split("|")
+    if len(parts) != 5 or "#" not in parts[3]:
+        return None
+    return parts[3].split("#", 1)[1].strip().lower() or None
+
+
+def choose_region_view(event: str, history: list[str]) -> str | None:
+    """Şehir olayları için LRU görünüm, olay başına ayrı döngü: sadece aynı olayın kayıtları sayılır, son seçilen
+    tekrar gelmez. Diğer olaylar için None."""
+    if event not in REGION_VIEW_EVENTS:
+        return None
+    same = [h for h in history if is_current_universe_combo(h) and h.split("|")[2].strip().lower() == event.lower()]
+    seen = [v for v in (view_of_combo(h) for h in same) if v]
+    return _lru(list(REGION_VIEWS), seen)
+
+
+def view_district(event: str, view: str) -> str:
+    """Görünümün cümle hâli. Kıyı dalgasında her görünüm kıyıda geçer."""
+    kind = "seafront district" if event == "Tidal wave surges over a coastal city street" else "city district"
+    return f"a {kind} with {REGION_VIEWS[view]}"
+
+
+def view_place(event: str, place: str, view: str | None) -> str:
+    """GPT'ye giden PLACE: spot cümlesi + görünüm."""
+    return f"{place}, in {view_district(event, view)}" if view else place
+
 # Olayların fiziksel türü (rapor ve menü gruplama için; seçim mantığına girmez)
 PHENOMENA = {
     "Hortum": ["Tornado approaching coastline", "Tornado making landfall",
@@ -374,13 +441,18 @@ def fill_skeleton(event: str, ship: str | None, slots: dict) -> str:
                             weather=slots["weather"], n=n, N=n.capitalize(), people=slots["people"])
 
 
-def style_suffix(event: str, ship: str | None, spot: str) -> str:
-    """Tek kamera satırı + kıyafet + ışık (en fazla 8 kısıt). Eski ekten kaldırılanlar: TUR 30 notu."""
+def style_suffix(event: str, ship: str | None, spot: str, view: str | None = None) -> str:
+    """Tek kamera satırı + kıyafet + ışık (+ şehirde görünüm satırı; en fazla 8 kısıt). Eski ekten kaldırılanlar:
+    TUR 30 notu."""
     s = EVENT_SKELETONS[event]
     # Final turu: "phone" kelimesi çıktı; model elde tutulan telefonu ve kayıt (REC) ekranını çiziyordu
     camera = (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, eye level, normal lens; slight hand "
               f"shake, the camera pans to follow the {s['object']}; no zoom, no cuts.")
-    return f"{camera} {get_realism_guardrails(s['domain'], ship or 'None', spot)}"
+    out = f"{camera} {get_realism_guardrails(s['domain'], ship or 'None', spot)}"
+    if view:
+        # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)
+        out += f" Setting: {view_district(event, view)}, {REGION_VIEW_CLOTHING}, {NO_SIGNS}."
+    return out
 
 
 def validate_slots(event: str, ship: str | None, slots: dict) -> list[str]:

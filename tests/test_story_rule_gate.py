@@ -421,5 +421,98 @@ class TestCityEventSwap(unittest.TestCase):
                                         .replace("sweeps the cars", "sweeps the benches")
                                         .replace("dragging cars", "dragging benches")))
 
+
+class TestRegionViews(unittest.TestCase):
+    """1 Eki, Bahadır: aynı ortamda tekrar eden şehir videoları. Görünüm listesi kilitli."""
+    PLACES = ("uae", "dubai", "qatar", "doha", "morocco", "tunisia", "africa", "america", "usa", "florida",
+              "carolina", "europe", "netherlands", "dutch", "england", "british", "uk", "london", "france", "french",
+              "italy", "italian", "riviera", "nice", "monaco", "japan", "japanese", "tokyo", "taiwan", "asia",
+              "asian", "gulf", "arab", "flag", "sign", "text", "logo")
+
+    def _city_combo(self, view, event=FLOOD):
+        return f"urban_city_disasters|none|{event.lower()}|downtown city center#{view}|{sk.SKELETON_CAMERA}"
+
+    def test_views_locked(self):
+        self.assertEqual(sk.REGION_VIEW_EVENTS, (FLOOD, TIDAL))
+        self.assertEqual(sk.REGION_VIEWS, {
+            "gulf_metropolis": "glass towers behind palm-lined multi-lane boulevards, sand-colored low buildings, "
+                               "white SUVs",
+            "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, small hatchback "
+                                   "cars",
+            "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, overhead power lines",
+            "north_european_seaside": "brick terraced houses, narrow streets, small parked cars",
+            "riviera": "cream stone buildings with shuttered windows, cobbled promenade, scooters, plane trees",
+            "east_asian_coast": "dense mid-rise buildings, narrow lanes, small cars and motorbikes, covered arcade "
+                                "entrances"})
+        self.assertEqual(sk.REGION_VIEW_CLOTHING, "people in light everyday clothes suited to the climate")
+        self.assertEqual(sk.NO_SIGNS, "no readable signs, text or flags")
+
+    def test_lru_never_repeats_last_view(self):
+        history = [self._city_combo(v) for v in ("riviera", "gulf_metropolis", "us_coastal_town", "east_asian_coast",
+                                                  "north_african_coast", "north_european_seaside")]
+        self.assertEqual(sk.choose_region_view(FLOOD, history), "riviera")        # en eskisi
+        for _ in range(20):
+            v = sk.choose_region_view(FLOOD, [self._city_combo("riviera")])
+            self.assertNotEqual(v, "riviera")
+        # Olay başına ayrı döngü: selin geçmişi kıyı dalgayı etkilemez, kıyı dalga kendi geçmişine bakar
+        tidal = [self._city_combo(v, TIDAL) for v in ("gulf_metropolis", "riviera", "us_coastal_town",
+                                                     "east_asian_coast", "north_african_coast",
+                                                     "north_european_seaside")]
+        self.assertEqual(sk.choose_region_view(TIDAL, history + tidal), "gulf_metropolis")
+        self.assertEqual(sk.choose_region_view(FLOOD, history + tidal), "riviera")
+        self.assertIn(sk.choose_region_view(TIDAL, history), sk.REGION_VIEWS)   # kendi geçmişi yok: herhangi biri
+        for _ in range(20):
+            self.assertNotEqual(sk.choose_region_view(TIDAL, [self._city_combo("riviera", TIDAL),
+                                                              self._city_combo("gulf_metropolis")]), "riviera")
+        self.assertIsNone(sk.choose_region_view(WAVE, history))                   # şehir dışı olay: görünüm yok
+        self.assertEqual(sk.view_of_combo(self._city_combo("riviera")), "riviera")
+        self.assertIsNone(sk.view_of_combo(f"urban_city_disasters|none|x|downtown city center|{sk.SKELETON_CAMERA}"))
+
+    def test_spot_view_compat_and_tidal_on_coast(self):
+        self.assertEqual(sk.view_spots(FLOOD, "gulf_metropolis"), list(sk.EVENT_SKELETONS[FLOOD]["spots"]))
+        self.assertNotIn("High-rise city district", sk.view_spots(FLOOD, "us_coastal_town"))
+        self.assertNotIn("Coastal street of low shopfronts", sk.view_spots(TIDAL, "east_asian_coast"))
+        for e in sk.REGION_VIEW_EVENTS:
+            for v in sk.REGION_VIEWS:
+                self.assertTrue(sk.view_spots(e, v), (e, v))
+                self.assertIn("seafront district" if e == TIDAL else "city district", sk.view_district(e, v))
+
+    def test_no_place_names_and_no_signs_in_prompt(self):
+        import re
+        from core.trace_format import count_constraints
+        for e in sk.REGION_VIEW_EVENTS:
+            for v in sk.REGION_VIEWS:
+                for spot in sk.view_spots(e, v):
+                    place = sk.view_place(e, sk.EVENT_SKELETONS[e]["spots"][spot], v)
+                    suffix = sk.style_suffix(e, None, spot, v)
+                    self.assertIn("Setting: ", suffix)
+                    self.assertTrue(suffix.endswith(", no readable signs, text or flags."))
+                    self.assertLessEqual(count_constraints(suffix)[0], 8)
+                    self.assertNotIn("phone", suffix.lower())
+                    for text in (place, suffix.split("Setting: ", 1)[1].replace("no readable signs, text or flags", "")):
+                        words = set(re.findall(r"[a-z]+", text.lower()))
+                        self.assertFalse(words & set(self.PLACES), (v, words & set(self.PLACES)))
+        self.assertNotIn("Setting:", sk.style_suffix(WAVE, "Ocean Cruise Liner", "Open-air pool deck"))
+
+    def test_scene_carries_view(self):
+        async def gpt(system, user, **kw):
+            gpt.user = user
+            return {"story": FLOOD_OK}
+        history = [self._city_combo("riviera")]
+        scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", FLOOD, history, [], gpt))
+        view = scene["trace"]["view"]
+        self.assertIn(view, sk.REGION_VIEWS)
+        self.assertNotEqual(view, "riviera")
+        self.assertIn(f"#{view}|", scene["combo_key"])
+        self.assertTrue(sk.is_current_universe_combo(scene["combo_key"]))   # 5 parça korunur, tarihçeye girer
+        self.assertIn(sk.REGION_VIEWS[view], gpt.user)
+        self.assertIn(sk.REGION_VIEWS[view], scene["style_suffix"])
+        self.assertIn(scene["spot"], sk.view_spots(FLOOD, view))
+        detail = "\n".join(body for _, body in format_generation(scene["trace"]))
+        self.assertIn(f"Görünüm: {view}", detail)
+        self.assertNotIn("Görünüm:", "\n".join(body for _, body in format_generation(
+            {**scene["trace"], "view": None})))
+
+
 if __name__ == "__main__":
     unittest.main()

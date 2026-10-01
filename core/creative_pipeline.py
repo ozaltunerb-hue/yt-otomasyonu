@@ -21,8 +21,11 @@ from core.skeleton_pipeline import (
     SKELETON_CAMERA,
     SHIP_PHRASES,
     choose_event_and_ship,
+    choose_region_view,
     count_range,
     style_suffix,
+    view_place,
+    view_spots,
 )
 
 log = logging.getLogger("CreativeEngine")
@@ -396,11 +399,11 @@ def story_issues(event: str, story: str, ship: str | None = None) -> list[str]:
     return [i["feedback"] for i in story_rule_issues(event, ship, story) if i["feedback"]]
 
 
-def pick_setting(event: str, rng: random.Random | None = None) -> tuple[str, str]:
-    """(yer anahtarı, hava) iskelet listelerinden rastgele."""
+def pick_setting(event: str, rng: random.Random | None = None, view: str | None = None) -> tuple[str, str]:
+    """(yer anahtarı, hava) iskelet listelerinden rastgele; görünüm varsa onunla çakışmayan yerlerden."""
     rng = rng or random
     s = EVENT_SKELETONS[event]
-    return rng.choice(list(s["spots"])), rng.choice(s["weather"])
+    return rng.choice(view_spots(event, view)), rng.choice(s["weather"])
 
 
 def recent_stories(history_texts: list[str], limit: int = RECENT_STORIES) -> list[str]:
@@ -442,12 +445,13 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
                                call_gpt) -> dict:
     """Seçim (Python) + GPT-4o hikâyesi + iskeletle aynı stil eki."""
     domain, event, ship = choose_event_and_ship(domain, event, history)
-    spot, weather = pick_setting(event)
-    place = EVENT_SKELETONS[event]["spots"][spot]
+    view = choose_region_view(event, history)   # şehir olayları (1 Eki); diğerlerinde None
+    spot, weather = pick_setting(event, view=view)
+    place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
     recent = recent_stories(history_texts)
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "domain": domain, "event": event, "ship": ship or "None",
-             "camera": SKELETON_CAMERA, "spot": spot, "place": place, "weather": weather, "count_range": [lo, hi],
+             "camera": SKELETON_CAMERA, "spot": spot, "view": view, "place": place, "weather": weather, "count_range": [lo, hi],
              "outcome": EVENT_OUTCOMES[event], "recent_count": len(recent), "attempts": [], "story": "",
              "story_words": 0}
     try:
@@ -455,13 +459,14 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
     except CreativeStoryError as e:
         e.trace = {**trace, "attempts": e.attempts}
         raise
-    suffix = style_suffix(event, ship, spot)
+    suffix = style_suffix(event, ship, spot, view)
     # f: stil eki sabittir; "phone" girerse Kie'ye gitmez (kod hatası, GPT'ye geri bildirim yok)
     phone = [i for i in story_rule_issues(event, ship, story, suffix) if i["rule"] == "f_no_phone_in_style"]
     if phone:
         raise CreativeStoryError("Stil ekinde 'phone' var, Kie'ye gönderilmedi.", attempts, trace)
-    combo_key = f"{domain}|{(ship or 'none').lower()}|{event.lower()}|{spot.lower()}|{SKELETON_CAMERA}"
+    spot_key = f"{spot.lower()}#{view}" if view else spot.lower()
+    combo_key = f"{domain}|{(ship or 'none').lower()}|{event.lower()}|{spot_key}|{SKELETON_CAMERA}"
     trace.update(attempts=attempts, story=story, story_words=len(story.split()))
-    log.info(f"✍️ Creative: [{domain}] {event} | gemi={ship} | yer={spot} | hava={weather} | {len(story.split())} kelime")
+    log.info(f"✍️ Creative: [{domain}] {event} | gemi={ship} | yer={spot} | görünüm={view} | hava={weather} | {len(story.split())} kelime")
     return {"domain": domain, "event": event, "ship": ship, "spot": spot, "story": story, "style_suffix": suffix,
             "prompt": f"{story.rstrip('.')}. {suffix}", "combo_key": combo_key, "trace": trace}
