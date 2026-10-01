@@ -62,7 +62,7 @@ class TestConfigAndPrompt(unittest.TestCase):
             self.assertEqual(Config().PROMPT_PIPELINE, "creative")
 
     def test_system_prompt_short_and_only_the_rules(self):
-        self.assertLessEqual(len(cp.CREATIVE_SYSTEM.split()), 150)
+        self.assertLessEqual(len(cp.CREATIVE_SYSTEM.split()), 160)
         for rule in ("40 to 60 words", "trigger happens", "reaching the given outcome", "clearly visible on camera",
                      "still visibly moving at the very end", "Catastrophic in scale", "ankle-deep, floats, honking futilely",
                      "Name any given vessel by its type", "different from the recent stories"):

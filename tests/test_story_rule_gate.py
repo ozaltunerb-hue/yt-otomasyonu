@@ -49,6 +49,7 @@ FLOOD = "Flash flooding in city streets"
 WAVE = "Rogue wave breaks over the rail onto the pool deck"
 TIDAL = "Tidal wave surges over a coastal city street"
 SIGNS = "Storm gust tears signs and scaffolding loose downtown"
+MOORING = "Mooring line snaps in a storm gust"
 YACHT = "Luxury Motor Yacht"
 
 GOLDEN = ("The restraining cable snaps with a crack and the luxury motor yacht heels over onto its side on the "
@@ -123,6 +124,27 @@ class TestLocks(unittest.TestCase):
         self.assertEqual(cp.EVENT_REQUIRED[WAVE], [("wave",), ("loungers", "chairs", "people", "passengers")])
         self.assertEqual(cp.EVENT_REQUIRED[TIDAL], [("wave", "surge", "torrent"), ("car", "cars", "vehicle")])
         self.assertEqual(set(cp.REQUIRED_APPROVED), {CABLE, KEEL, FLOOD, WAVE, TIDAL})
+
+    def test_mooring_storm_gust_locked(self):
+        # 1 Eki (marina_yat_3): komşu rıhtım soyut kaldı, gövde çarpmadı; ses açılışı. Gevşetmek onay ister.
+        self.assertEqual(cp.EVENT_REQUIRED[MOORING], [
+            ("snap", "parts", "parted", "break", "broke"),
+            ("neighboring yacht", "neighboring moored yacht", "neighbouring yacht", "next yacht", "adjacent yacht",
+             "neighboring boat"),
+            ("slam", "crash", "ram", "smash", "bang")])
+        self.assertEqual(cp.EVENT_OUTCOMES[MOORING],
+                         "the mooring line snaps and whips across the dock, the yacht swings free and slams its hull "
+                         "into the neighboring moored yacht again and again")
+        self.assertIn("Show only what is visible, never sounds.",
+                      cp.CREATIVE_SYSTEM.split("\n2. ", 1)[1].split("\n3. ", 1)[0])
+
+    def test_mooring_story_needs_neighbor_yacht(self):
+        ok = ("A storm gust hits the marina and the mooring line on the luxury motor yacht snaps, whipping across the "
+              "floating pontoon as four crew members scramble back from the edge. The yacht swings free of its berth "
+              "and slams its hull into the neighboring moored yacht. Waves keep driving it back, ramming the two "
+              "hulls together again and again.")
+        self.assertEqual(cp.story_rule_issues(MOORING, YACHT, ok), [])
+        self.assertIn("required", rules(MOORING, YACHT, ok.replace("the neighboring moored yacht", "the pontoon")))
 
     def test_forbidden_exact_and_only_slipway(self):
         self.assertEqual(set(cp.EVENT_FORBIDDEN), {CABLE, KEEL})

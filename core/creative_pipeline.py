@@ -35,7 +35,7 @@ Input: event, vessel, place, weather, visible people, outcome to reach.
 
 Rules:
 1. 40 to 60 words.
-2. Three beats: the trigger happens; the movement it causes; the result, still unfolding, reaching the given outcome. The first sentence shows the moment the trigger happens (the wave clears the rail, the cable snaps, the wall of water enters the street); never open with waiting, tension or buildup; describe the scene, never the camera or the video.
+2. Three beats: the trigger happens; the movement it causes; the result, still unfolding, reaching the given outcome. The first sentence shows the moment the trigger happens (the wave clears the rail, the cable snaps, the wall of water enters the street); never open with waiting, tension or buildup; describe the scene, never the camera or the video. Show only what is visible, never sounds.
 3. The trigger is clearly visible on camera.
 4. The last sentence shows the danger still visibly moving at the very end.
 5. Catastrophic in scale: violent, high-volume water or force dominating the frame; never mild or harmless images (ankle-deep, floats, honking futilely).
@@ -67,8 +67,10 @@ EVENT_OUTCOMES = {
     "Crane sling snaps while lowering the hull into the water":
         "the hull plunges nose-first into the basin, throwing up a wall of spray while still swinging on the last sling",
     # Marina
+    # 1 Eki (marina_yat_3): "neighboring berth" soyut kaldı, gövde hiçbir şeye çarpmadı; komşu yat somut nesne.
     "Mooring line snaps in a storm gust":
-        "the yacht swings free and slams its hull into the neighboring berth again and again",
+        "the mooring line snaps and whips across the dock, the yacht swings free and slams its hull into the "
+        "neighboring moored yacht again and again",
     "Storm surge wave lifts and buckles the floating pontoon":
         "the pontoon buckles and tilts, throwing the moored boat against it as more waves roll in",
     "Passing boat's wake slams the boat sideways":
@@ -187,7 +189,12 @@ EVENT_REQUIRED = {
     "Crane sling snaps while lowering the hull into the water": [("plunge", "drop", "fall", "fell", "crash"),
                                                                  ("spray", "splash")],
     # ── Marina (TASLAK) ──
-    "Mooring line snaps in a storm gust": [("swing", "slam", "drift")],
+    # Sebep: halat koptu, yat serbest kaldı ama gövde komşu rıhtıma çarpmadı ("neighboring berth" soyut, çizilecek
+    # nesne yok); 2. saniyeden sonra kesme oldu, ekip kayboldu. Kaynak: 1 Eki test videosu (marina_yat_3).
+    "Mooring line snaps in a storm gust": [("snap", "parts", "parted", "break", "broke"),
+                                           ("neighboring yacht", "neighboring moored yacht", "neighbouring yacht",
+                                            "next yacht", "adjacent yacht", "neighboring boat"),
+                                           ("slam", "crash", "ram", "smash", "bang")],
     "Storm surge wave lifts and buckles the floating pontoon": [("pontoon",), ("buckle", "tilt", "twist", "heave")],
     "Passing boat's wake slams the boat sideways": [("wake",), ("heel", "slam", "rock", "roll")],
     # ── Kruvaziyer ──
