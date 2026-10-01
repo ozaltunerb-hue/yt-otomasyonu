@@ -64,8 +64,8 @@ class TestEventPool(unittest.TestCase):
         self.assertEqual(counts, {"ferry_operations": 3, "shipyard_and_drydock_engineering": 5,
                                   "marina_and_yacht_operations": 2, "cruise_ship_operations": 3,
                                   "coastal_tornado_landfall": 3, "urban_city_disasters": 2,
-                                  "open_beach_coastal_events": 3})
-        self.assertEqual(sum(counts.values()), 21)
+                                  "open_beach_coastal_events": 3, "landslide_disasters": 3})   # 2 Eki: heyelan
+        self.assertEqual(sum(counts.values()), 24)
 
     def test_removed_events(self):
         self.assertEqual(len(sk.REMOVED_EVENTS), 20)   # 30 Eyl: + tabela/iskele (aksiyonsuz video); 1 Eki: + halat, kontrolsüz yat
@@ -80,7 +80,7 @@ class TestEventPool(unittest.TestCase):
 
     def test_phenomena(self):
         self.assertEqual({k: len(v) for k, v in sk.PHENOMENA.items()},
-                         {"Hortum": 4, "Tsunami": 0, "Sel": 1, "Heyelan": 0, "Dev Dalga": 5})
+                         {"Hortum": 4, "Tsunami": 0, "Sel": 1, "Heyelan": 3, "Dev Dalga": 5})
         for events in sk.PHENOMENA.values():
             self.assertTrue(set(events) <= set(sk.EVENT_SKELETONS))
 
@@ -285,11 +285,11 @@ class TestRecoveryQuery(unittest.TestCase):
 class TestMenu(unittest.TestCase):
     def test_menu_follows_pipeline(self):
         with patch.object(settings, "PROMPT_PIPELINE", "skeleton"):
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 21)
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 24)   # 2 Eki: + 3 heyelan
         with patch.object(settings, "PROMPT_PIPELINE", "legacy"):
             # 30 Eyl: dev dalga baskını havuza eklendi (tabela/iskele havuzda kaldı, sadece iskeletten çıktı)
             # 1 Eki: kontrolsüz yat havuza eklendi (halat havuzda kaldı, sadece iskeletten çıktı)
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 41)
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 44)   # 2 Eki: + 3 heyelan
 
 
 if __name__ == "__main__":

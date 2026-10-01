@@ -116,7 +116,7 @@ class TestLocks(unittest.TestCase):
 
     def test_required_covers_all_22_events_with_budget(self):
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(cp.EVENT_REQUIRED), 21)
+        self.assertEqual(len(cp.EVENT_REQUIRED), 24)   # 2 Eki: + 3 heyelan
         for e, groups in cp.EVENT_REQUIRED.items():
             with self.subTest(event=e):
                 self.assertTrue(1 <= len(groups) <= 3)
@@ -389,7 +389,7 @@ class TestCityEventSwap(unittest.TestCase):
     def test_event_sets_equal(self):
         self.assertEqual(set(cp.EVENT_OUTCOMES), set(sk.EVENT_SKELETONS))
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(sk.EVENT_SKELETONS), 21)
+        self.assertEqual(len(sk.EVENT_SKELETONS), 24)   # 2 Eki: + 3 heyelan
         self.assertIn(TIDAL, sk.EVENT_SKELETONS)
         self.assertNotIn(SIGNS, sk.EVENT_SKELETONS)
         self.assertIn(SIGNS, sk.REMOVED_EVENTS)   # kod silinmedi: havuzda, iskelet dışında
@@ -588,6 +588,81 @@ class TestRegionViews(unittest.TestCase):
         self.assertEqual(sk.view_of_combo(real), "east_asian_coast")
         for _ in range(30):
             self.assertNotEqual(sk.choose_region_view(TIDAL, [real]), "east_asian_coast")
+
+
+
+class TestLandslide(unittest.TestCase):
+    """2 Eki, Bahadır: ⛰️ Heyelan (TASLAK). Hızlı çamur/su akıntısı; yavaş kayma yok. Kilitli."""
+    EVENTS = ["Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside", "Mud and debris torrent tears through a hillside village"]
+    PLACES = ("italy", "italian", "japan", "brazil", "rio", "peru", "nepal", "india", "china", "turkey", "alps",
+              "andes", "himalaya", "sign", "flag", "logo", "phone")
+
+    def test_events_and_menu(self):
+        import bot
+        self.assertEqual(sk.skeleton_events("landslide_disasters"), self.EVENTS)
+        self.assertEqual(bot.DOMAIN_LABELS["landslide_disasters"], "⛰️ Heyelan")
+        self.assertEqual([bot.EVENT_LABELS[e] for e in self.EVENTS],
+                         ["🌧️ Yamaç sokağına çamur seli", "⛰️ Yamaç çökmesi yola iner", "🏘️ Köy yamacından çamur akıntısı"])
+        self.assertIn("landslide_disasters", sk.ENV_CENTRIC_DOMAINS)
+        for e in self.EVENTS:
+            self.assertNotIn(e, cp.REQUIRED_APPROVED)
+            self.assertNotIn(e, sk.REGION_VIEW_EVENTS)   # ilk sürümde bölge görünümü yok
+
+    def test_outcomes_and_groups_locked(self):
+        self.assertEqual([cp.EVENT_OUTCOMES[e] for e in self.EVENTS], [
+            "a wall of brown mud and water pours down the steep street, slams into parked cars and shoves them sideways "
+            "as people run uphill from the flow",
+            "the saturated slope gives way and a fast torrent of mud and rocks surges across the road, pushing cars into "
+            "the guardrail while drivers scramble out",
+            "a fast torrent of mud, logs and rocks tears down between the houses, ramming walls and sweeping away fences "
+            "and parked vehicles as villagers run to higher ground"])
+        self.assertEqual([cp.EVENT_REQUIRED[e] for e in self.EVENTS], [
+            [("mud",), ("car", "cars", "vehicle", "vehicles")],
+            [("mud", "slope", "hillside"), ("car", "cars", "vehicle", "vehicles", "road")],
+            [("mud",), ("house", "houses", "wall", "walls", "village")]])
+        import re
+        for e in self.EVENTS:
+            o = cp.EVENT_OUTCOMES[e]
+            self.assertLessEqual(len(o.split()), 30)
+            self.assertIsNone(re.search(r"\b(?:slow|slowly|slides?|sliding|creeps?|creeping|rises?|rising)\b", o), o)
+
+    def test_spots_weather_people_style(self):
+        import re
+        from core.trace_format import count_constraints
+        for e in self.EVENTS:
+            s = sk.EVENT_SKELETONS[e]
+            self.assertEqual(len(s["spots"]), 3)
+            self.assertEqual(s["weather"], ["driving rain and wind", "heavy downpour under dark storm light",
+                                            "steady heavy rain, grey low cloud"])
+            self.assertIsNone(s["ships"])
+            self.assertEqual(sk.count_range(e, None), (2, 8))
+            for spot in s["spots"]:
+                suffix = sk.style_suffix(e, None, spot)
+                self.assertLessEqual(count_constraints(suffix)[0], 8, suffix)
+                self.assertTrue(suffix.endswith(" No readable signs, text or flags."))
+                self.assertIn("Bystanders wear civilian clothes", suffix)
+                self.assertIn("emergency responders wear service uniforms", suffix)
+                self.assertIn(sk.CAMERA_SPOTS[spot], suffix)
+                text = (suffix.replace("No readable signs, text or flags.", "") + " " + s["spots"][spot]).lower()
+                self.assertFalse(set(re.findall(r"[a-z]+", text)) & set(self.PLACES), text)
+        self.assertEqual(sk.count_range("Flash flooding in city streets", None), (2, 10))   # diğer env-centric aynı
+        self.assertNotIn("No readable signs", sk.style_suffix("Large waves reaching the beach", None, "Open sandy beach"))
+
+    def test_good_stories_pass(self):
+        ok = {
+            "Mudslide pours down a hillside street": "A wall of brown mud and water pours down the steep hillside street in driving rain, slamming into "
+                    "a row of parked cars. The mudslide shoves the cars sideways as five residents run uphill from the "
+                    "flow. More mud keeps pouring down the street, still dragging cars and debris downhill.",
+            "Rain-soaked slope collapses onto a roadside": "The rain-soaked slope above the hillside road collapses and a fast torrent of mud and rocks surges "
+                    "across the roadside. It pushes two cars into the guardrail as four drivers scramble out. More mud "
+                    "keeps pouring off the slope, still shoving the cars along the road.",
+            "Mud and debris torrent tears through a hillside village": "A mud and debris torrent tears through the hillside village, carrying logs and rocks between the "
+                    "stone houses. It rams walls and sweeps away fences and parked vehicles as six villagers run to "
+                    "higher ground. The torrent keeps tearing downhill, still ramming more walls.",
+        }
+        for e, story in ok.items():
+            with self.subTest(event=e):
+                self.assertEqual(cp.story_rule_issues(e, None, story), [])
 
 
 if __name__ == "__main__":

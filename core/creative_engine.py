@@ -193,6 +193,14 @@ MARITIME_INSPIRATION_DOMAINS = {
         "guidance": "Extreme weather, tornadoes, or massive waves hitting an open sandy beach, beachfront promenade, or coastal resort. The setting MUST be a natural beach or public coastal shoreline. DO NOT force a marina, harbor, ferry terminal, or port into the scene. NO ships are required; focus on the crashing waves, sweeping winds, and beachfront chaos.",
         "example_elements": ["sweeping storm surge", "beachfront promenade", "abandoned beach chairs", "crashing waves", "coastal road"],
         "camera_styles": ["fixed beach resort CCTV", "bystander phone from beachfront balcony", "boardwalk security camera"],
+    },
+    # 2 Eki, Bahadır: Seedance hızlı akan su gücünü iyi çiziyor, yavaş kayan toprağı 15 sn'de göstermiyor; heyelan,
+    # aşırı yağıştan yamaçtan hızla inen çamur ve su akıntısı olarak tanımlanır (kayma/yükselme/yavaş çökme yok).
+    "landslide_disasters": {
+        "title": "Heyelan (Landslide & Mud Torrent)",
+        "guidance": "After extreme rainfall, a fast torrent of brown mud, water, rocks and logs pours down a steep hillside into a street, a road or a village. Always fast, violent flowing mud and water, never slow sliding earth. NO ships or vessels.",
+        "example_elements": ["steep hillside street", "brown mud torrent", "rocks and logs in the flow", "parked cars shoved sideways", "road guardrail"],
+        "camera_styles": ["bystander phone from a balcony across the street", "bystander phone from a road bridge"],
     }
 }
 
@@ -319,6 +327,24 @@ DOMAIN_ATTRIBUTES = {
             "Severe storm disrupting a beachfront area",
             "Beach evacuation during extreme weather",
             "Coastal flooding reaching the beachfront"
+        ]
+    },
+    # 2 Eki, Bahadır: Seedance hızlı akan su gücünü iyi çiziyor, yavaş kayan toprağı 15 sn'de göstermiyor; heyelan,
+    # aşırı yağıştan yamaçtan hızla inen çamur ve su akıntısı olarak tanımlanır (kayma/yükselme/yavaş çökme yok).
+    "landslide_disasters": {
+        "ships": [],
+        "environments": [
+            "Balcony across a steep hillside street", "Rooftop terrace below a hillside street",
+            "Side stairway off a narrow hillside lane",
+            "Behind the guardrail of a hillside road", "Bridge on a side road below the slope",
+            "Far edge of the road across from the slope",
+            "Terrace on the opposite hillside", "High steps on the village square",
+            "Upper-floor balcony of a village house",
+        ],
+        "events": [
+            "Mudslide pours down a hillside street",
+            "Rain-soaked slope collapses onto a roadside",
+            "Mud and debris torrent tears through a hillside village",
         ]
     }
 }
@@ -940,7 +966,8 @@ def get_realism_guardrails(domain_id: str, vessel_class: str, environment: str =
 # Bu domainlerde forced_ship=None olabilir (doğal afet/olay odaklı, gemi zorunlu değil).
 # chase_pov iki ayrı gemi zorunlu kıldığı için buralarda seçilmemeli — aksi halde GPT
 # ikinci gemiyi karşılamak için yoktan bir tekne icat ediyordu (2026-09-23 tespit edildi).
-ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open_beach_coastal_events"]
+ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open_beach_coastal_events",
+                       "landslide_disasters"]   # 2 Eki: heyelan (gemisiz, sivil giyim kuralı)
 
 # Gemi domainlerinde ekrandaki gerçekçi kişi aralığı (2026-09-24). "Max 2" sadece
 # kargo gemileri içindi; kargo domain'i artık yok. Env-centric domainler tabloya

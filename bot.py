@@ -54,6 +54,7 @@ DOMAIN_LABELS = {
     "coastal_tornado_landfall": "🌪️ Kıyı Hortumu",
     "urban_city_disasters": "🏙️ Şehir Afeti",
     "open_beach_coastal_events": "🏖️ Plaj & Sahil",
+    "landslide_disasters": "⛰️ Heyelan",   # 2 Eki, Bahadır (TASLAK olaylar)
 }
 
 # Olay butonları; anahtarlar DOMAIN_ATTRIBUTES "events" ile birebir (test_telegram_bot denetler)
@@ -106,6 +107,10 @@ EVENT_LABELS = {
     "Severe storm disrupting a beachfront area": "🌬️ Sahil şeridinde fırtına",
     "Beach evacuation during extreme weather": "🏃 Plaj tahliyesi",
     "Coastal flooding reaching the beachfront": "💧 Sel sahile ulaşır",
+    # Heyelan (2 Eki, Bahadır; TASLAK)
+    "Mudslide pours down a hillside street": "🌧️ Yamaç sokağına çamur seli",
+    "Rain-soaked slope collapses onto a roadside": "⛰️ Yamaç çökmesi yola iner",
+    "Mud and debris torrent tears through a hillside village": "🏘️ Köy yamacından çamur akıntısı",
 }
 RANDOM_LABEL = "🎲 Rastgele"
 # Bölge görünümü menüsü (1 Eki, Bahadır): sadece REGION_VIEW_EVENTS (sel, kıyı dalga). Bayrak emojisi yok.

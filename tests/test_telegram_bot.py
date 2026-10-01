@@ -230,8 +230,8 @@ class TestKeyboard(unittest.TestCase):
     def test_seven_domain_buttons(self):
         self.assertEqual(list(bot.DOMAIN_LABELS), DOMAINS)
         buttons = _buttons(bot.domain_keyboard())
-        self.assertEqual(len(buttons), 7)
-        self.assertEqual([b.callback_data for b in buttons], [f"{bot.CALLBACK_PREFIX}d:{i}" for i in range(7)])
+        self.assertEqual(len(buttons), 8)   # 2 Eki: + ⛰️ Heyelan
+        self.assertEqual([b.callback_data for b in buttons], [f"{bot.CALLBACK_PREFIX}d:{i}" for i in range(8)])
 
     def test_event_labels_match_pool(self):
         pool = [e for a in DOMAIN_ATTRIBUTES.values() for e in a["events"]]
@@ -337,7 +337,7 @@ class TestHandlers(unittest.TestCase):
         upd, runner = self._click("back")
         runner.assert_not_awaited()
         markup = upd.callback_query.edit_message_text.await_args.kwargs["reply_markup"]
-        self.assertEqual(len(_buttons(markup)), 9)   # 7 kategori + 🔍 Ayrıntı / ✋ Onay (TUR 29)
+        self.assertEqual(len(_buttons(markup)), 10)   # 8 kategori + 🔍 Ayrıntı / ✋ Onay (TUR 29; 2 Eki heyelan)
 
     def test_cancel_does_not_run(self):
         upd, runner = self._click("x")
@@ -345,7 +345,7 @@ class TestHandlers(unittest.TestCase):
         self.assertIn("İptal", upd.callback_query.edit_message_text.await_args.args[0])
 
     def test_invalid_ids_do_not_run(self):
-        for data in ("d:7", "d:x", "e:0:3", "e:0:-1", "ok:0:9", "ok:7:r", "ok:0", "ok:0:1:2", "zzz", "", "back:1"):
+        for data in ("d:8", "d:x", "e:0:3", "e:0:-1", "ok:0:9", "ok:8:r", "ok:0", "ok:0:1:2", "zzz", "", "back:1"):
             with self.subTest(data=data):
                 upd, runner = self._click(data)
                 runner.assert_not_awaited()
@@ -386,7 +386,7 @@ class TestHandlers(unittest.TestCase):
         ctx, upd = _context(), _update()
         asyncio.run(bot.cmd_uret(upd, ctx))
         kwargs = upd.effective_message.reply_text.await_args.kwargs
-        self.assertEqual(len([b for r in kwargs["reply_markup"].inline_keyboard for b in r]), 9)
+        self.assertEqual(len([b for r in kwargs["reply_markup"].inline_keyboard for b in r]), 10)   # 2 Eki: 8 kategori
         self.assertIn("🧪 TEST", upd.effective_message.reply_text.await_args.args[0])
 
     def test_uret_busy(self):

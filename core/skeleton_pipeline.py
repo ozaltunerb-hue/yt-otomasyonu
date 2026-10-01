@@ -68,6 +68,16 @@ CAMERA_SPOTS = {
     "Coastal road below a seafront promenade": "at the railing of a raised seafront promenade, looking down at the coastal road",
     "Coastal street of low shopfronts": "on a second-floor balcony, looking down at the coastal street",
     "Coastal avenue behind a seawall": "on top of the seawall, looking down at the coastal avenue",
+    # Heyelan (2 Eki): her yer akıntıyı karede gösterir
+    "Balcony across a steep hillside street": "on a balcony across the steep hillside street",
+    "Rooftop terrace below a hillside street": "on a rooftop terrace just below the hillside street, facing up the street",
+    "Side stairway off a narrow hillside lane": "at the top of a side stairway beside the narrow hillside lane",
+    "Behind the guardrail of a hillside road": "behind the guardrail on the far side of the hillside road",
+    "Bridge on a side road below the slope": "on a bridge on a side road, facing the slope and the road",
+    "Far edge of the road across from the slope": "on the far edge of the road, across from the slope",
+    "Terrace on the opposite hillside": "on a terrace on the opposite hillside, facing the village",
+    "High steps on the village square": "on the high steps at the edge of the village square",
+    "Upper-floor balcony of a village house": "on the upper-floor balcony of a village house, facing up the slope",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -85,6 +95,9 @@ SHIP_PHRASES = {
     "Ocean Cruise Liner": "ocean cruise liner",
     "Mega Cruise Ship": "mega cruise ship",
 }
+
+# Heyelan havası (2 Eki): üçü de şiddetli yağmur
+LANDSLIDE_WEATHER = ["driving rain and wind", "heavy downpour under dark storm light", "steady heavy rain, grey low cloud"]
 
 _CITY_SPOTS = {"Downtown city center": "the downtown city center", "Dense urban downtown": "a dense downtown street",
                "Commercial city streets": "a commercial street", "High-rise city district": "a high-rise district"}
@@ -296,6 +309,39 @@ EVENT_SKELETONS = {
                 "water sweeps parked cars into the storefronts as {n} {people} run for the upper floors. The wave "
                 "keeps surging down the street, still carrying cars and debris inland.",
     },
+    # ── Heyelan (TASLAK) ──
+    # 2 Eki, Bahadır: Seedance hızlı akan su gücünü iyi çiziyor, yavaş kayan toprağı 15 sn'de göstermiyor; heyelan,
+    # aşırı yağıştan yamaçtan hızla inen çamur ve su akıntısı olarak tanımlanır (kayma/yükselme/yavaş çökme yok).
+    "Mudslide pours down a hillside street": {
+        "domain": "landslide_disasters", "ships": None,
+        "spots": {"Balcony across a steep hillside street": "a steep hillside street",
+                  "Rooftop terrace below a hillside street": "a steep residential street running down the hillside",
+                  "Side stairway off a narrow hillside lane": "a narrow hillside lane"},
+        "people": ["residents", "pedestrians"], "weather": LANDSLIDE_WEATHER, "object": "mud flow",
+        "text": "On {spot} in {weather}, a mudslide pours down the hillside street as a wall of brown mud and water. "
+                "It slams into parked cars and shoves them sideways as {n} {people} run uphill from the flow. The "
+                "mud keeps pouring down the street, still dragging the cars along.",
+    },
+    "Rain-soaked slope collapses onto a roadside": {
+        "domain": "landslide_disasters", "ships": None,
+        "spots": {"Behind the guardrail of a hillside road": "a road cut into a steep hillside",
+                  "Bridge on a side road below the slope": "a hillside road below a steep slope",
+                  "Far edge of the road across from the slope": "a road at the foot of a steep slope"},
+        "people": ["drivers", "residents"], "weather": LANDSLIDE_WEATHER, "object": "mud torrent",
+        "text": "At {spot} in {weather}, the rain-soaked slope collapses onto the roadside and a fast torrent of mud "
+                "and rocks surges across the road. It pushes cars into the guardrail as {n} {people} scramble out. "
+                "More mud keeps pouring off the slope, still shoving the cars along the road.",
+    },
+    "Mud and debris torrent tears through a hillside village": {
+        "domain": "landslide_disasters", "ships": None,
+        "spots": {"Terrace on the opposite hillside": "a hillside village of stone houses",
+                  "High steps on the village square": "a hillside village above its square",
+                  "Upper-floor balcony of a village house": "a steep hillside village"},
+        "people": ["villagers", "residents"], "weather": LANDSLIDE_WEATHER, "object": "debris torrent",
+        "text": "In {spot} in {weather}, a mud and debris torrent tears through the hillside village, carrying logs "
+                "and rocks between the houses. It rams walls and sweeps away fences and parked vehicles as {n} "
+                "{people} run to higher ground. The torrent keeps tearing downhill, still ramming more walls.",
+    },
     # ── Plaj & sahil ──
     "Tornado approaching an open beach": {
         "domain": "open_beach_coastal_events", "ships": None,
@@ -427,7 +473,7 @@ PHENOMENA = {
                "Tornado rain bands and flying debris lash the waterfront", "Tornado approaching an open beach"],
     "Tsunami": [],
     "Sel": ["Flash flooding in city streets"],
-    "Heyelan": [],
+    "Heyelan": ["Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside", "Mud and debris torrent tears through a hillside village"],
     "Dev Dalga": ["Green wave breaks over the rail onto the vehicle deck", "Rogue wave breaks over the rail onto the pool deck",
                   "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon",
                   "Tidal wave surges over a coastal city street"],
@@ -437,6 +483,10 @@ _NUM = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "ei
         11: "eleven", 12: "twelve", 13: "thirteen", 14: "fourteen", 15: "fifteen", 16: "sixteen", 17: "seventeen",
         18: "eighteen", 19: "nineteen", 20: "twenty"}
 ENV_CENTRIC_COUNT = (2, 10)
+# Domain'e özel kişi aralığı (env-centric içinde). 2 Eki, Bahadır: heyelan 2-8
+ENV_CENTRIC_COUNT_BY_DOMAIN = {"landslide_disasters": (2, 8)}
+# "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
+NO_SIGNS_DOMAINS = {"landslide_disasters"}
 
 # Import anında kontrol: iskelet verisi havuzla uyumlu olmalı
 for _e, _s in EVENT_SKELETONS.items():
@@ -459,7 +509,7 @@ def skeleton_events(domain: str) -> list[str]:
 def count_range(event: str, ship: str | None) -> tuple[int, int]:
     s = EVENT_SKELETONS[event]
     if s["domain"] in ENV_CENTRIC_DOMAINS:
-        return ENV_CENTRIC_COUNT
+        return ENV_CENTRIC_COUNT_BY_DOMAIN.get(s["domain"], ENV_CENTRIC_COUNT)
     lo, hi = cast_range(s["domain"], event, ship or "")
     return max(2, lo), min(20, hi)
 
@@ -482,6 +532,8 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)
         out += f" Setting: {view_district(event, view)}, {REGION_VIEW_CLOTHING}, {NO_SIGNS}."
+    elif s["domain"] in NO_SIGNS_DOMAINS:
+        out += f" {NO_SIGNS[0].upper()}{NO_SIGNS[1:]}."   # 2 Eki: heyelan (toplam 8 kısıt)
     return out
 
 

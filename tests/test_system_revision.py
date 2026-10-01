@@ -37,8 +37,8 @@ from core.prompt_sanitizer import sanitize_prompt
 class TestDeepMysterCreativeFreedom(unittest.TestCase):
 
     def test_01_domains_structure(self):
-        """7 denizcilik ilham alanı (kargo temizliği sonrası, 2026-09-24) mevcut ve eksiksiz olmalı."""
-        self.assertEqual(len(MARITIME_INSPIRATION_DOMAINS), 7)
+        """8 ilham alanı (kargo temizliği sonrası 7, 2026-09-24; 2 Eki: + heyelan) mevcut ve eksiksiz olmalı."""
+        self.assertEqual(len(MARITIME_INSPIRATION_DOMAINS), 8)
         for domain_key, domain_data in MARITIME_INSPIRATION_DOMAINS.items():
             self.assertIn("title", domain_data)
             self.assertIn("guidance", domain_data)

@@ -113,6 +113,18 @@ EVENT_OUTCOMES = {
     "Tidal wave surges over a coastal city street":
         "a towering brown churning tidal wave thick with debris crashes over the coastal road, sweeps parked cars into "
         "storefronts and keeps surging down the street",
+    # Heyelan (TASLAK)
+# 2 Eki, Bahadır: Seedance hızlı akan su gücünü iyi çiziyor, yavaş kayan toprağı 15 sn'de göstermiyor; heyelan,
+# aşırı yağıştan yamaçtan hızla inen çamur ve su akıntısı olarak tanımlanır (kayma/yükselme/yavaş çökme yok).
+    "Mudslide pours down a hillside street":
+        "a wall of brown mud and water pours down the steep street, slams into parked cars and shoves them sideways "
+        "as people run uphill from the flow",
+    "Rain-soaked slope collapses onto a roadside":
+        "the saturated slope gives way and a fast torrent of mud and rocks surges across the road, pushing cars into "
+        "the guardrail while drivers scramble out",
+    "Mud and debris torrent tears through a hillside village":
+        "a fast torrent of mud, logs and rocks tears down between the houses, ramming walls and sweeping away fences "
+        "and parked vehicles as villagers run to higher ground",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -238,6 +250,12 @@ EVENT_REQUIRED = {
     # ONAYLI. Sebep: dalga kıyı yoluna çarpıp arabaları sürüklemeli. Kaynak: Bahadır'ın beğendiği 24 Eyl videosu
     # (dosya 1790240764259-vf8owrlvyva) ve Bahadır'ın tanımı (30 Eyl).
     "Tidal wave surges over a coastal city street": [("wave", "surge", "torrent"), ("car", "cars", "vehicle")],
+    # ── Heyelan (TASLAK, 2 Eki, Bahadır) ──
+    # Sebep: çamur akıntısı ve çarptığı somut nesne (araç/ev) görünmezse model yavaş kayan toprak ya da boş yamaç
+    # çiziyor; Seedance hızlı akan su gücünü iyi çiziyor.
+    "Mudslide pours down a hillside street": [("mud",), ("car", "cars", "vehicle", "vehicles")],
+    "Rain-soaked slope collapses onto a roadside": [("mud", "slope", "hillside"), ("car", "cars", "vehicle", "vehicles", "road")],
+    "Mud and debris torrent tears through a hillside village": [("mud",), ("house", "houses", "wall", "walls", "village")],
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),
