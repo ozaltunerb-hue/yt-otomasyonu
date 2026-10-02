@@ -10,7 +10,7 @@
 |---|---|
 | **Süre** | 15 saniye — `config.DEFAULT_DURATION` üzerinden `.env`'deki `DEFAULT_DURATION` ile dinamik, hardcoded değil |
 | **Video Modeli** | `bytedance/seedance-2-fast` (Seedance 2 Mini), 480p — Seedance Full, Veo 3.1 ve Wan 2.6 ile karşılaştırıldıktan sonra bilinçli olarak seçildi |
-| **Gemi/Olay Çeşitliliği** | 7 domain: 4 gemi (`ferry_operations`, `shipyard_and_drydock_engineering`, `marina_and_yacht_operations`, `cruise_ship_operations`) + 3 çevre odaklı (`coastal_tornado_landfall`, `urban_city_disasters`, `open_beach_coastal_events`). 9 gemilik evren `DOMAIN_ATTRIBUTES`'tan türer: Passenger Car Ferry, High-speed Catamaran, Luxury Motor Yacht, Sailing Yacht, Runaway Powerboat, Jet Ski, Ocean Cruise Liner, Mega Cruise Ship, Cruise Tender Boat. **Kargo, tanker, konteyner, römorkör, balıkçı teknesi YOK** (2026-09-24 kargo temizliği; testler bu kelimeleri yasaklar). Uyumsuz kombinasyonlar seçilmez (`SHIP_INCOMPATIBLE`, `VESSEL_ENVIRONMENTS`: tender'da havuz güvertesi yok, tornado'da gemi sadece marina/limanda) |
+| **Gemi/Olay Çeşitliliği** | 8 domain: 4 gemi (`ferry_operations`, `shipyard_and_drydock_engineering`, `marina_and_yacht_operations`, `cruise_ship_operations`) + 4 çevre odaklı (`coastal_tornado_landfall`, `urban_city_disasters`, `open_beach_coastal_events`, `landslide_disasters` 2 Eki). Menüde 24 aktif olay (iskelet hattı). 9 gemilik evren `DOMAIN_ATTRIBUTES`'tan türer: Passenger Car Ferry, High-speed Catamaran, Luxury Motor Yacht, Sailing Yacht, Runaway Powerboat, Jet Ski, Ocean Cruise Liner, Mega Cruise Ship, Cruise Tender Boat. **Kargo, tanker, konteyner, römorkör, balıkçı teknesi YOK** (2026-09-24 kargo temizliği; testler bu kelimeleri yasaklar). Uyumsuz kombinasyonlar seçilmez (`SHIP_INCOMPATIBLE`, `VESSEL_ENVIRONMENTS`: tender'da havuz güvertesi yok, tornado'da gemi sadece marina/limanda) |
 | **Kalite Kapıları** | Senaryo: görünürlük, yüksek aksiyon, Beat 3 devam eden tehlike, cast aralığı (`DOMAIN_CAST_RANGES`), özet-beat tutarlılığı, gemi-ortam uyumu. Simplifier çıktısı (`SIMPLIFIER_GATES`, retry'lı): A Beat 3 devamı (zayıf büyüklük / halt dahil), B kamera öznesi, C Beat 1 fiili, E kişi sayısı, F gemi adı, G ilk cümlede insan tepkisi, H çevre odaklıda en az 1 insan, I ilk cümlede durağan insan, J insanlara yeni zarar fiili, K görünmez sebep, L fizik ihlali, M kelime sayısı, N side launch metni (tablo: README "Kalite Kapıları"). Senaryo kapılarına TUR 24'te görünür tetik ve sahne fiziği eklendi. Preflight/Kie rewrite'ından dönen hikaye de aynı kapılardan geçer (C ve M hariç). Preflight: geçersiz cevapta 3 deneme, `PreflightError` (api/content). Hiçbir kapıda sessiz fallback yok |
 | **Her Videoda İnsan** | Gemi domainlerinde sayılı mürettebat/yolcu (`DOMAIN_CAST_RANGES`); çevre odaklı domainlerde en az 1 izleyici/sivil (senaryo kapısı + H). 2026-09-24 öncesi 8 env-centric çıktının 8'i insansızdı |
 | **Beat 1 Fiil Rotasyonu** | Notion "Beat1 Fiil" alanı; son 10 fiil + koşu içi önceki adayların fiilleri yazıcıya "farklı, belirgin hareketli fiil seç" ipucu olarak gider (kapı değil) |
@@ -24,7 +24,35 @@
 
 ---
 
-## 📋 DEVİR — Tersane side launch (2026-09-27 kapanışı)
+## 📋 DEVİR — Marina, Şehir bölge görünümü, Heyelan (2026-10-02 kapanışı)
+
+**DEĞİŞMEZLER (Bahadır kararı):** Kie çağrısı ve üretim sadece Bahadır'ın açık isteğiyle (Telegram'dan kendisi
+basar). Push öncesi Railway boşta mı bakılır (deploymentLogs: son "başlatılıyor" sonrası "Pipeline tamamlandı" ya da
+"İptal"). Kural/liste gevşetmek onay ister; sabit kural bütçesi 6, olay başına en fazla 3 anahtar grup.
+
+**Durum (doğrulandı):** Son commit `862c608`, deploy `759957c7` SUCCESS, bot TEST modunda açık, 575 test yeşil.
+- **Marina:** halat (`Mooring line snaps in a storm gust`) ve kontrolsüz yat olayları ÇIKTI (REMOVED_EVENTS=20).
+  **Ders: tekne-tekneye çarpma Seedance'te çıkmıyor** (iki videoda da yat çarpmadan düzgün seyretti); su gücü olayları
+  (wake, pontoon) iyi çıkıyor. Menüde marina = wake + pontoon. 2. kurala "Show only what is visible, never sounds."
+  eklendi (sistem prompt'u sınırı 160 kelime).
+- **Şehir bölge görünümü:** sel ve kıyı dalgada 6 görünüm (`REGION_VIEWS`, skeleton_pipeline), olay başına LRU,
+  Telegram'da olaydan sonra "Bölge: hangi görünüm?" adımı (`uret:v:...`). Görünüm Combo Key'in yer parçasında
+  `spot#görünüm`. Kıyı dalga sonucu "brown churning ... thick with debris".
+- **Geçmiş:** `get_used_combos` artık TEST modunda biteni de sayar (olay/gemi/görünüm LRU'su); elle test durumu
+  ("Test — YouTube atlandı") bilerek sayılmaz. İptal/bitmemiş üretim için görünüm süreç hafızası (deploy'da silinir).
+- **Heyelan (ONAYLI):** `landslide_disasters`, 3 çamur akıntısı olayı (hızlı akıntı, yavaş kayma yok), kişi 2-8,
+  stil ekinde "No readable signs, text or flags." Köprü noktası yol çökmesinden çıktı (çamur yola ulaşmadı).
+
+**Açık gözlemler (karar Bahadır'da, kod yok):** kıyı dalga hikâyelerinde "brown" çoğunlukla son cümlede (ilk kare
+temiz dalga olabilir); Doğu Asya'nın yeni öğeleri (klima, kablo) hikâyede geçmiyor, sadece stil ekinde; heyelanda
+"cars slide", "roars" gibi kelimeleri kapı yakalamıyor.
+
+**Nerede yanılmış olabilirim:** Bölge görünümlerinin videoda tutup tutmadığını yalnızca Bahadır'ın 1 Eki videoları
+gösterdi (Doğu Asya tutmamıştı, metni değişti, yeni hali Kie'de denenmedi).
+
+---
+
+## 📋 DEVİR (ESKİ) — Tersane side launch (2026-09-27 kapanışı)
 
 **DEĞİŞMEZLER (kullanıcı kararı):** Ücretli çağrı (GPT/Kie) açık onay olmadan çalıştırılmaz. **Tersane domain'i
 düzelene kadar üretimde kullanılmaz** (Telegram'da Tersane'ye basılmaz). Side launch'ta gemi artık feribot DEĞİL:
