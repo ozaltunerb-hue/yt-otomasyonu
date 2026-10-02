@@ -250,7 +250,7 @@ EVENT_REQUIRED = {
     # ONAYLI. Sebep: dalga kıyı yoluna çarpıp arabaları sürüklemeli. Kaynak: Bahadır'ın beğendiği 24 Eyl videosu
     # (dosya 1790240764259-vf8owrlvyva) ve Bahadır'ın tanımı (30 Eyl).
     "Tidal wave surges over a coastal city street": [("wave", "surge", "torrent"), ("car", "cars", "vehicle")],
-    # ── Heyelan (TASLAK, 2 Eki, Bahadır) ──
+    # ── Heyelan (ONAYLI, 2 Eki, Bahadır: 3 olay test edildi) ──
     # Sebep: çamur akıntısı ve çarptığı somut nesne (araç/ev) görünmezse model yavaş kayan toprak ya da boş yamaç
     # çiziyor; Seedance hızlı akan su gücünü iyi çiziyor.
     "Mudslide pours down a hillside street": [("mud",), ("car", "cars", "vehicle", "vehicles")],
@@ -263,7 +263,10 @@ EVENT_REQUIRED = {
     "Large waves reaching the beach": [("wave", "surf", "breaker"), ("chair", "towel", "umbrella", "people")],
 }
 REQUIRED_APPROVED = SLIPWAY_EVENTS + ("Flash flooding in city streets", "Rogue wave breaks over the rail onto the pool deck",
-                                      "Tidal wave surges over a coastal city street")
+                                      "Tidal wave surges over a coastal city street",
+                                      # ONAYLI (2 Eki, Bahadır): 3 heyelan olayı test edildi
+                                      "Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside",
+                                      "Mud and debris torrent tears through a hillside village")
 
 # Sadece iki kızak olayı. Sebep: GPT 2. beat'te yatı kızaktan ileri kaydırdı (30 Eyl kızak halatı hikâyeleri),
 # model de yatı suya kafadan soktu (30 Eyl tersane videosu).

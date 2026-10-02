@@ -129,7 +129,10 @@ class TestLocks(unittest.TestCase):
         self.assertEqual(cp.EVENT_REQUIRED[FLOOD], [("wall", "surge", "torrent", "wave", "rush"), ("car", "cars", "vehicle")])
         self.assertEqual(cp.EVENT_REQUIRED[WAVE], [("wave",), ("loungers", "chairs", "people", "passengers")])
         self.assertEqual(cp.EVENT_REQUIRED[TIDAL], [("wave", "surge", "torrent"), ("car", "cars", "vehicle")])
-        self.assertEqual(set(cp.REQUIRED_APPROVED), {CABLE, KEEL, FLOOD, WAVE, TIDAL})
+        self.assertEqual(set(cp.REQUIRED_APPROVED), {CABLE, KEEL, FLOOD, WAVE, TIDAL,
+                                                     # 2 Eki: heyelan onaylandı
+                                                     "Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside",
+                                                     "Mud and debris torrent tears through a hillside village"})
 
     def test_marina_removed_events_and_rule2(self):
         # 1 Eki: halat ve kontrolsüz yat iskelet hattından çıktı; ses açılışı yasağı 2. kuralda kalır
@@ -605,7 +608,7 @@ class TestLandslide(unittest.TestCase):
                          ["🌧️ Yamaç sokağına çamur seli", "⛰️ Yamaç çökmesi yola iner", "🏘️ Köy yamacından çamur akıntısı"])
         self.assertIn("landslide_disasters", sk.ENV_CENTRIC_DOMAINS)
         for e in self.EVENTS:
-            self.assertNotIn(e, cp.REQUIRED_APPROVED)
+            self.assertIn(e, cp.REQUIRED_APPROVED)       # 2 Eki: onaylı (test edildi)
             self.assertNotIn(e, sk.REGION_VIEW_EVENTS)   # ilk sürümde bölge görünümü yok
 
     def test_outcomes_and_groups_locked(self):
@@ -631,7 +634,8 @@ class TestLandslide(unittest.TestCase):
         from core.trace_format import count_constraints
         for e in self.EVENTS:
             s = sk.EVENT_SKELETONS[e]
-            self.assertEqual(len(s["spots"]), 3)
+            # 2 Eki: köprü noktası yol çökmesinden çıktı (çamur yola ulaşmadı)
+            self.assertEqual(len(s["spots"]), 2 if e == self.EVENTS[1] else 3)
             self.assertEqual(s["weather"], ["driving rain and wind", "heavy downpour under dark storm light",
                                             "steady heavy rain, grey low cloud"])
             self.assertIsNone(s["ships"])
@@ -647,6 +651,14 @@ class TestLandslide(unittest.TestCase):
                 self.assertFalse(set(re.findall(r"[a-z]+", text)) & set(self.PLACES), text)
         self.assertEqual(sk.count_range("Flash flooding in city streets", None), (2, 10))   # diğer env-centric aynı
         self.assertNotIn("No readable signs", sk.style_suffix("Large waves reaching the beach", None, "Open sandy beach"))
+
+    def test_bridge_spot_removed_only_from_road_collapse(self):
+        self.assertEqual(list(sk.EVENT_SKELETONS[self.EVENTS[1]]["spots"]),
+                         ["Behind the guardrail of a hillside road", "Far edge of the road across from the slope"])
+        for e in self.EVENTS:
+            self.assertNotIn("Bridge on a side road below the slope", sk.EVENT_SKELETONS[e]["spots"])
+        for _ in range(30):
+            self.assertNotEqual(cp.pick_setting(self.EVENTS[1])[0], "Bridge on a side road below the slope")
 
     def test_good_stories_pass(self):
         ok = {

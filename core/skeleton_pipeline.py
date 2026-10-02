@@ -325,7 +325,9 @@ EVENT_SKELETONS = {
     "Rain-soaked slope collapses onto a roadside": {
         "domain": "landslide_disasters", "ships": None,
         "spots": {"Behind the guardrail of a hillside road": "a road cut into a steep hillside",
-                  "Bridge on a side road below the slope": "a hillside road below a steep slope",
+                  # ÇIKARILDI (2 Eki, Bahadır): bu noktadan çekilen testte çamur yola ulaşmadı; 2. deneme
+                  # "Far edge of the road" ile çözüldü. Ortam ve kamera cümlesi havuzda kalır, geri almak için aç.
+                  # "Bridge on a side road below the slope": "a hillside road below a steep slope",
                   "Far edge of the road across from the slope": "a road at the foot of a steep slope"},
         "people": ["drivers", "residents"], "weather": LANDSLIDE_WEATHER, "object": "mud torrent",
         "text": "At {spot} in {weather}, the rain-soaked slope collapses onto the roadside and a fast torrent of mud "
