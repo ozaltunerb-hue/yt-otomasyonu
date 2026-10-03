@@ -390,7 +390,9 @@ REGION_VIEWS = {
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Kuzey Avrupa sahil kasabası (Hollanda, İngiltere)
     "north_european_seaside": "brick terraced houses, narrow streets, small parked cars",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Riviera (Fransa, İtalya)
-    "riviera": "cream stone buildings with shuttered windows, cobbled promenade, scooters, plane trees",
+    # 4 Eki, Bahadır: "cobbled promenade" GPT'ye caddeyi "promenade" diye yazdırıyordu (sel kuru provası, olay adı
+    # kuralından ret); "cobbled streets" oldu. Kıyı dev dalga da bu görünümü kullanır.
+    "riviera": "cream stone buildings with shuttered windows, cobbled streets, scooters, plane trees",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Doğu Asya kıyısı (Japonya, Tayvan)
     # 1 Eki (2): videoda Akdeniz çıktı; "covered arcade entrances" Akdeniz çağrışımı yaptı, klima ve kablo eklendi
     "east_asian_coast": "dense mid-rise apartment blocks with air-conditioner units and tangled overhead wires, "
@@ -420,7 +422,8 @@ def view_of_combo(combo_key: str) -> str | None:
     parts = (combo_key or "").split("|")
     if len(parts) != 5 or "#" not in parts[3]:
         return None
-    return parts[3].split("#", 1)[1].strip().lower() or None
+    # 4 Eki: yer parçası "spot#görünüm#V3+D5" olabilir (yapılandırılmış olaylarda olay çifti)
+    return parts[3].split("#")[1].strip().lower() or None
 
 
 # Süreç içi görünüm hafızası (1 Eki, yedek). Sebep: 1 Eki 15:34 ve 15:45 kıyı dalga üretimleri, ikisi de

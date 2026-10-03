@@ -14,6 +14,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+VIDEO_DURATION_SECONDS = 15
+VIDEO_RESOLUTIONS = ("480p", "720p")   # seedance-2-fast'in desteklediği çözünürlükler
+
+
 class Config:
     def __init__(self):
         self.ENV = os.environ.get("ENV", "production").lower()
@@ -49,7 +53,15 @@ class Config:
         self.DEFAULT_ORIENTATION = "portrait"    # Sabit — Shorts (9:16)
         self.DEFAULT_AUDIO = True               # Sabit — ses her zaman açık (deniz/dalga/fırtına sesleri)
         self.DEFAULT_DURATION = int(os.environ.get("DEFAULT_DURATION", "15"))  # 15 saniye (senaryoya göre sabit)
-        self.DEFAULT_RESOLUTION = "480p"  # Kredi tasarruflu — ASLA DEĞİŞTİRİLMEZ
+        # 3 Eki, Bahadır: 15 saniyenin altında video yok (kesin kural). Seedance üst sınırı da 15 sn: tam 15.
+        if self.DEFAULT_DURATION != VIDEO_DURATION_SECONDS:
+            raise EnvironmentError(f"DEFAULT_DURATION {self.DEFAULT_DURATION} sn; video süresi {VIDEO_DURATION_SECONDS} "
+                                   f"sn olmalı (15 sn altı video yok).")
+        # Çözünürlüğü değiştirmek için TEK yer burası (kodun geri kalanı settings.DEFAULT_RESOLUTION okur).
+        # Kie seedance-2-fast, 15 sn: 480p = 175,5 kredi (11,7/sn), 720p = 372 kredi (24,8/sn). Env değişkeni yok.
+        self.DEFAULT_RESOLUTION = "480p"
+        if self.DEFAULT_RESOLUTION not in VIDEO_RESOLUTIONS:
+            raise EnvironmentError(f"DEFAULT_RESOLUTION {self.DEFAULT_RESOLUTION!r}; izinli: {VIDEO_RESOLUTIONS}")
 
         # ── YouTube Upload ──
         self.YOUTUBE_CLIENT_ID = os.environ.get("YOUTUBE_CLIENT_ID", "")
@@ -80,6 +92,11 @@ class Config:
         )
         self.NOTION_DB_ID = os.environ.get("NOTION_DB_YOUTUBE_OTOMASYON", "")
         self.NOTION_ENABLED = bool(self.NOTION_TOKEN and self.NOTION_DB_ID)
+        # 4 Eki, Bahadır: üretimde Notion zorunlu (geçmiş/tekrar önleme olmadan üretim yok). Sadece DRY_RUN'da kapalı
+        # olabilir.
+        if not self.NOTION_ENABLED and not self.IS_DRY_RUN:
+            raise EnvironmentError("Notion kapalı (NOTION_SOCIAL_TOKEN/NOTION_API_TOKEN ve NOTION_DB_YOUTUBE_OTOMASYON "
+                                   "gerekli); üretim Notion olmadan çalışmaz. Deneme için DRY_RUN=1.")
 
         # ── Polling Ayarları (Kie AI video üretimi) ──
         self.POLL_INITIAL_WAIT = int(os.environ.get("POLL_INITIAL_WAIT", "60"))

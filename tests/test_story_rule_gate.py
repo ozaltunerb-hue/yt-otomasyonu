@@ -17,6 +17,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, ROOT)
 
 import core.creative_pipeline as cp
+import core.event_structure as es
 import core.prompt_generator as pg
 import core.prompt_sanitizer as ps
 import core.skeleton_pipeline as sk
@@ -105,7 +106,7 @@ class TestLocks(unittest.TestCase):
                                            "calm before", "holds its breath", "waiting", "waits"))
         self.assertEqual(cp.SCALE_REDUCERS, ("ankle-deep", "ripple", "harmless", "harmlessly", "gentle", "gently",
                                              "mild", "mildly", "trickle", "puddle", "drizzle", "floats", "futilely",
-                                             "futility"))
+                                             "futility", "bob"))
         self.assertEqual(set(cp.SHIP_TYPE_WORDS), set(sk.SHIP_PHRASES))
 
     def test_system_prompt_untouched(self):
@@ -120,14 +121,16 @@ class TestLocks(unittest.TestCase):
         self.assertEqual(len(cp.EVENT_REQUIRED), 24)   # 2 Eki: + 3 heyelan
         for e, groups in cp.EVENT_REQUIRED.items():
             with self.subTest(event=e):
-                self.assertTrue(1 <= len(groups) <= 3)
+                # yapılandırılmış olaylarda grup yok (olay terimleri event_structure'da)
+                self.assertTrue(len(groups) == 0 if es.is_structured(e) else 1 <= len(groups) <= 3)
                 self.assertTrue(all(g and all(isinstance(t, str) and t for t in g) for g in groups))
 
     def test_required_approved_exact(self):
         side = [("sideways", "on its side", "onto its side", "to one side")]
         self.assertEqual(cp.EVENT_REQUIRED[CABLE], side)
         self.assertEqual(cp.EVENT_REQUIRED[KEEL], side)
-        self.assertEqual(cp.EVENT_REQUIRED[FLOOD], [("wall", "surge", "torrent", "wave", "rush"), ("car", "cars", "vehicle")])
+        # 4 Eki, Bahadır onayı: sel yapılandırılmış hatta, terimler seçilen olaydan (core/event_structure.py)
+        self.assertEqual(cp.EVENT_REQUIRED[FLOOD], [])
         self.assertEqual(cp.EVENT_REQUIRED[WAVE], [("wave",), ("loungers", "chairs", "people", "passengers")])
         self.assertEqual(cp.EVENT_REQUIRED[TIDAL], [("wave", "surge", "torrent"), ("car", "cars", "vehicle")])
         self.assertEqual(set(cp.REQUIRED_APPROVED), {CABLE, KEEL, FLOOD, WAVE, TIDAL,
@@ -188,13 +191,17 @@ class TestRules(unittest.TestCase):
         self.assertIn("a_trigger_first", rules(WAVE, "Ocean Cruise Liner", calm))
 
     def test_a_first_required_group_counts_as_trigger(self):
-        # Bahadır onayı, 30 Eyl: kuru provada reddedilen iyi sel açılışı
-        wall = ("A wall of brown water bursts from an alley, engulfing the commercial street. Shoppers scream and "
-                "sprint for shop entrances as the floodwater crashes into parked cars, shoving them sideways. The "
-                "torrent keeps rushing down the street while more water pours in from the side alleys.")
-        self.assertNotIn("a_trigger_first", rules(FLOOD, None, wall))
-        rain = "Heavy rain drums on the awnings of the commercial street. " + FLOOD_OK
-        self.assertIn("a_trigger_first", rules(FLOOD, None, rain))
+        # Bahadır onayı, 30 Eyl: olayın ilk anahtar grubu tetik sayılır. Sel artık grupsuz (4 Eki); mekanizma
+        # heyelanla denenir: "mud" (3 harf) olay kökü değil, ilk grupta.
+        mud = "Mudslide pours down a hillside street"
+        first = "A wall of brown mud and water barrels down the steep street, slamming into parked cars. "
+        rest = ("Five residents run uphill as the flow shoves the cars sideways. More mud keeps rushing down the "
+                "street, still dragging cars and debris along with it.")
+        self.assertNotIn("a_trigger_first", rules(mud, None, first + rest))
+        self.assertIn("a_trigger_first", rules(mud, None, "Heavy rain drums on the steep street. " + first + rest))
+        # Grupsuz sel: kural çökmez; kilit görsel tek başına tetiği taşır
+        self.assertNotIn("a_trigger_first", rules(FLOOD, None, es.EVENT_KEY_VISUAL[FLOOD] + " " + rest))
+        self.assertIn("a_trigger_first", rules(FLOOD, None, "Heavy rain drums on the commercial street. " + FLOOD_OK))
 
     def test_e_phrase_synonyms_for_tornado(self):
         land = "A monstrous tornado suddenly touches down in the coastal neighborhood, tearing roofs away."
@@ -246,8 +253,8 @@ class TestRules(unittest.TestCase):
     def test_required_groups(self):
         no_side = GOLDEN.replace("heels over onto its side", "tilts hard")
         self.assertIn("required", rules(CABLE, YACHT, no_side))
-        self.assertIn("required", rules(FLOOD, None, FLOOD_OK.replace("parked cars", "kiosks")
-                                        .replace("shoving cars", "shoving stalls")))
+        self.assertNotIn("required", rules(FLOOD, None, FLOOD_OK.replace("parked cars", "kiosks")
+                                           .replace("shoving cars", "shoving stalls")))   # 4 Eki: grupsuz
         self.assertIn("required", rules(WAVE, "Ocean Cruise Liner", WAVE_OK.replace("passengers", "crew")
                                         .replace("loungers", "tables").replace("chairs", "towels")))
 
@@ -457,7 +464,7 @@ class TestRegionViews(unittest.TestCase):
                                    "cars",
             "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, overhead power lines",
             "north_european_seaside": "brick terraced houses, narrow streets, small parked cars",
-            "riviera": "cream stone buildings with shuttered windows, cobbled promenade, scooters, plane trees",
+            "riviera": "cream stone buildings with shuttered windows, cobbled streets, scooters, plane trees",
             "east_asian_coast": "dense mid-rise apartment blocks with air-conditioner units and tangled overhead "
                                 "wires, narrow lanes, small boxy cars and scooters"})
         self.assertEqual(sk.REGION_VIEW_CLOTHING, "people in light everyday clothes suited to the climate")
@@ -513,13 +520,22 @@ class TestRegionViews(unittest.TestCase):
     def test_scene_carries_view(self):
         async def gpt(system, user, **kw):
             gpt.user = user
-            return {"story": FLOOD_OK}
+            return {"slice_1_rest": "It swallows the curbs and pours between the parked cars.",
+                    "slice_2": f"The {gpt.vehicle} is caught by the current, turns sideways and is dragged down the street.",
+                    "slice_3": "A lamppost topples into the current and crashes into the churning brown water."}
         history = [self._city_combo("riviera")]
-        scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", FLOOD, history, [], gpt))
+        es._BEAT_MEMORY.clear()
+
+        def vehicle(view, rng=None):
+            gpt.vehicle = es.REGION_VEHICLES[view][0][0]
+            return gpt.vehicle
+        with patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), patch.object(es, "choose_vehicle", vehicle):
+            scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", FLOOD, history, [], gpt))
         view = scene["trace"]["view"]
         self.assertIn(view, sk.REGION_VIEWS)
         self.assertNotEqual(view, "riviera")
-        self.assertIn(f"#{view}|", scene["combo_key"])
+        self.assertIn(f"#{view}#V1+D2|", scene["combo_key"])
+        self.assertEqual(sk.view_of_combo(scene["combo_key"]), view)
         self.assertTrue(sk.is_current_universe_combo(scene["combo_key"]))   # 5 parça korunur, tarihçeye girer
         self.assertIn(sk.REGION_VIEWS[view], gpt.user)
         self.assertIn(sk.REGION_VIEWS[view], scene["style_suffix"])
@@ -684,13 +700,6 @@ class TestFlashFloodFix(unittest.TestCase):
 
     CAMERA = ("the camera pans to follow the waist-high wall of brown muddy floodwater in one slow short arc, never "
               "swinging around, people only in the middle and far distance; no zoom, no cuts.")
-    HINT = ("Halfway through the story, show a clear consequence of the water: for example, an SUV caught by the "
-            "current turns sideways and is dragged down the street, a car is swept into another car, or parked cars "
-            "slide away one after another. These are only examples; choose your own and write it your way. The first "
-            "sentence shows a fast, waist-high wall of brown muddy water entering the street. People stay in the "
-            "middle and far distance, never close by. Always call the place a street, even if the setting has a "
-            "promenade or square. The last sentence shows a new, concrete action, not a general statement.")
-
     def test_flood_camera_sentence_locked(self):
         from core.trace_format import count_constraints
         self.assertEqual(sk.EVENT_SKELETONS[FLOOD]["object"], "waist-high wall of brown muddy floodwater")
@@ -718,71 +727,246 @@ class TestFlashFloodFix(unittest.TestCase):
                     self.assertNotIn("slow short arc", suffix)
                     self.assertNotIn("middle and far distance", suffix)
 
-    def test_hint_text_locked_and_same_height(self):
-        self.assertEqual(cp.EVENT_HINTS, {FLOOD: self.HINT})
-        self.assertTrue(self.HINT.startswith("Halfway through the story,"))
-        for w in ("video", "camera"):
-            self.assertNotIn(w, self.HINT.lower())
-        # Yükseklik iki yerde aynı: stil eki ve ipucu
-        self.assertIn("waist-high", sk.EVENT_SKELETONS[FLOOD]["object"])
-        self.assertIn("waist-high", self.HINT)
-        self.assertNotIn("knee", self.HINT)
-        self.assertIn("Always call the place a street", self.HINT)
-        self.assertTrue(self.HINT.endswith("The last sentence shows a new, concrete action, not a general statement."))
+    def test_bob_is_a_scale_reducer(self):
+        # 4 Eki: "Cars bob like toys" süzülme ima eder; çekimleri otomatik
+        for w in ("bob", "bobs", "bobbed", "bobbing"):
+            with self.subTest(word=w):
+                story = FLOOD_OK.replace("lifting them", f"the cars {w} as the water lifts them")
+                self.assertIn("d_no_scale_reducers", [i["rule"] for i in cp.story_rule_issues(FLOOD, None, story)])
+        self.assertEqual(cp.find_terms(("bob",), "Bobby's boat"), [])   # başka kelimenin içinde eşleşmez
 
     def test_futility_is_a_scale_reducer(self):
         story = FLOOD_OK.replace("lifting them", "their horns blaring in futility, lifting them")
         self.assertIn("d_no_scale_reducers", [i["rule"] for i in cp.story_rule_issues(FLOOD, None, story)])
         self.assertEqual(cp.find_terms(cp.SCALE_REDUCERS, FLOOD_OK), [])
 
-    def test_hint_only_in_flood_message(self):
-        msg = cp._message(FLOOD, None, "x", "y", 2, 10, [], None)
-        self.assertIn(f"\nHINT: {self.HINT}\nRECENT STORIES:\n", msg)
-        self.assertLess(msg.index("OUTCOME TO REACH"), msg.index("HINT:"))
+
+    def test_no_hint_mechanism_left(self):
+        # 4 Eki: sel ipucu ve ilk cümle kapısı yapılandırılmış hatta taşındı
+        for name in ("EVENT_HINTS", "EVENT_FIRST_SENTENCE", "FIRST_SENTENCE_FEEDBACK"):
+            self.assertFalse(hasattr(cp, name), name)
         for e in sk.EVENT_SKELETONS:
-            if e != FLOOD:
-                with self.subTest(event=e):
-                    m = cp._message(e, None, "x", "y", 2, 10, [], None)
-                    self.assertNotIn("HINT:", m)
-                    self.assertIn(f"OUTCOME TO REACH IN THE LAST BEAT: {cp.EVENT_OUTCOMES[e]}\nRECENT STORIES:\n", m)
+            self.assertNotIn("HINT:", cp._message(e, None, "x", "y", 2, 10, [], None))
+        self.assertEqual(cp.EVENT_OUTCOMES[FLOOD], "a wall of brown floodwater surges down the street, slams into "
+                                                   "parked cars and shoves them sideways as people run for higher ground")
 
-    def test_hint_reaches_gpt(self):
-        gpt = AsyncMock(return_value={"story": FLOOD_OK})
-        asyncio.run(cp.write_story(FLOOD, None, "x", "y", [], gpt))
-        self.assertIn(f"HINT: {self.HINT}", gpt.await_args.args[1])
-        self.assertEqual(gpt.await_args.args[0], cp.CREATIVE_SYSTEM)   # sistem prompt'u aynı
 
-    def test_first_sentence_wall_and_brown(self):
-        self.assertEqual(cp.EVENT_FIRST_SENTENCE, {FLOOD: [("wall",), ("brown", "muddy", "mud")]})
-        self.assertEqual(cp.story_rule_issues(FLOOD, None, FLOOD_OK), [])
-        muddy = FLOOD_OK.replace("wall of brown floodwater", "wall of muddy floodwater", 1)
-        self.assertEqual(cp.story_rule_issues(FLOOD, None, muddy), [])
-        rest = FLOOD_OK.split(". ", 1)[1]
-        cases = {
-            "no wall": ("A torrent of brown floodwater surges down the street and slams into parked cars. " + rest,
-                        ["ilk cümlede: wall"]),
-            "no brown": ("A wall of floodwater surges down the street and slams into parked cars. " + rest,
-                         ["ilk cümlede: brown / muddy / mud"]),
-            # Duvar ve renk sonradan gelirse yetmez: ilk cümlede olmalı
-            "late wall": ("Floodwater surges down the street and slams into parked cars. A wall of brown water "
-                          "follows. " + rest, ["ilk cümlede: wall", "ilk cümlede: brown / muddy / mud"]),
-        }
-        for name, (story, want) in cases.items():
-            with self.subTest(case=name):
-                found = [i for i in cp.story_rule_issues(FLOOD, None, story) if i["missing"].startswith("ilk cümlede")]
-                self.assertEqual([i["missing"] for i in found], want)
-                for i in found:
-                    self.assertEqual(i["rule"], "required")
-                    self.assertEqual(i["feedback"], "The first sentence must show a fast, waist-high wall of brown "
-                                                    "muddy water entering the street.")
+class TestRivieraStreets(unittest.TestCase):
+    """4 Eki, Bahadır: Riviera görünümü "cobbled promenade" -> "cobbled streets". Etkilenen diğer tek olay kıyı dev
+    dalga: stil ekinde ve GPT'ye giden yer tarifinde aynı değişiklik, başka fark yok."""
 
-    def test_first_sentence_gate_only_flood(self):
-        # Sel dışı olaylarda ilk cümlede "wall"/"brown" aranmaz
-        mud = ("A fast torrent of mud and rocks surges across the road as the rain-soaked slope collapses. It pushes "
-               "two cars into the guardrail as four drivers scramble out. More mud keeps pouring off the slope, still "
-               "shoving the cars along the road.")
-        found = cp.story_rule_issues("Rain-soaked slope collapses onto a roadside", None, mud)
-        self.assertFalse([i for i in found if i["missing"].startswith("ilk cümlede")])
+    def test_riviera_text(self):
+        self.assertIn("cobbled streets", sk.REGION_VIEWS["riviera"])
+        self.assertNotIn("promenade", sk.REGION_VIEWS["riviera"])
+
+    def test_tidal_wave_riviera_suffix_and_place(self):
+        old = sk.REGION_VIEWS["riviera"].replace("cobbled streets", "cobbled promenade")
+        for spot in sk.view_spots(TIDAL, "riviera"):
+            with self.subTest(spot=spot):
+                suffix = sk.style_suffix(TIDAL, None, spot, "riviera")
+                self.assertIn("seafront district with cream stone buildings with shuttered windows, cobbled streets, "
+                              "scooters, plane trees", suffix)
+                place = sk.view_place(TIDAL, sk.EVENT_SKELETONS[TIDAL]["spots"][spot], "riviera")
+                self.assertIn("cobbled streets", place)
+                self.assertNotIn("cobbled promenade", suffix + place)
+                # eski metinle tek fark bu kelime
+                self.assertEqual(suffix.replace("cobbled streets", "cobbled promenade"),
+                                 suffix.replace(sk.REGION_VIEWS["riviera"], old))
+        # kıyı dalganın kendi çekim noktası adı değişmedi
+        self.assertIn("Coastal road below a seafront promenade", sk.EVENT_SKELETONS[TIDAL]["spots"])
+
+
+class TestStructuredScene(unittest.TestCase):
+    """4 Eki (Tur 2): sel creative hatta yapılandırılmış yazımla üretilir; diğer olaylar eski yolda."""
+
+    def setUp(self):
+        es._BEAT_MEMORY.clear()
+        sk._VIEW_MEMORY.clear()
+
+    def slices(self, vehicle, s2=None, s3=None):
+        return {"slice_1_rest": "It swallows the curbs and pours between the parked cars.",
+                "slice_2": s2 or f"The {vehicle} is caught by the current, turns sideways and is dragged down the street.",
+                "slice_3": s3 or "A lamppost topples into the current and crashes into the churning brown water."}
+
+    def run_scene(self, responses, view="us_coastal_town"):
+        calls = []
+
+        async def gpt(system, user, **kw):
+            calls.append({"system": system, "user": user, **kw})
+            r = responses[min(len(calls), len(responses)) - 1]
+            if isinstance(r, Exception):
+                raise r
+            return r
+        with patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
+                patch.object(es, "choose_vehicle", lambda v, rng=None: "pickup truck"):
+            scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", FLOOD, [], [], gpt, view=view))
+        return scene, calls
+
+    def test_scene_structure(self):
+        scene, calls = self.run_scene([self.slices("pickup truck")])
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0]["json_schema"], es.SLICE_SCHEMA)
+        self.assertEqual(calls[0]["system"], cp.SLICES_SYSTEM)
+        self.assertIn("4-9s EVENT: the pickup truck is caught by the current, turns sideways and is dragged down "
+                      "the street", calls[0]["user"])
+        self.assertIn("9-15s EVENT: a lamppost topples into the current", calls[0]["user"])
+        self.assertIn(f"OPENING SENTENCE (fixed, already written): {es.EVENT_KEY_VISUAL[FLOOD]}", calls[0]["user"])
+        self.assertTrue(scene["story"].startswith(f"0-4s: {es.EVENT_KEY_VISUAL[FLOOD]} It swallows"))
+        self.assertIn(" 4-9s: The pickup truck", scene["story"])
+        self.assertIn(" 9-15s: A lamppost", scene["story"])
+        self.assertEqual(scene["prompt"], f"{scene['story'].rstrip('.')}. {scene['style_suffix']}")
+        self.assertNotIn("0-4s", scene["plain_story"])
+        self.assertTrue(scene["combo_key"].endswith("#us_coastal_town#V1+D2|bystander_handheld"))
+        self.assertEqual(es.beats_of_combo(scene["combo_key"]), "V1+D2")
+        self.assertTrue(sk.is_current_universe_combo(scene["combo_key"]))
+        spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
+        self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
+        self.assertEqual(es.beat_history(FLOOD, []), ["V1+D2"])   # süreç hafızası seçim anında
+        self.assertEqual(scene["trace"]["beats"], "V1+D2")
+        self.assertEqual(scene["trace"]["vehicle"], "pickup truck")
+
+    def test_slices_system_locked(self):
+        # 4 Eki, Bahadır onayı. Tüm yapılandırılmış olaylarda ortak: olaya özel kelime içermez.
+        self.assertEqual(cp.SLICES_SYSTEM, (
+            "You write the three time slices of one 15-second realistic video of a real incident.\n"
+            "The code already wrote the opening sentence of 0-4s and adds the time labels; never write labels.\n"
+            "Return JSON with three fields:\n"
+            "- slice_1_rest: one sentence of 6 to 18 words that continues 0-4s right after the opening sentence: "
+            "how the opening event hits this place.\n"
+            "- slice_2: the given 4-9s event in 10 to 24 words, in your own words for this place; use every given "
+            "detail.\n"
+            "- slice_3: the given 9-15s event in 10 to 24 words, a new and bigger destruction, still moving at the "
+            "very end.\n"
+            "Rules: describe only what is visible, never sounds, the camera or the video. People stay in the middle "
+            "and far distance and are never the main event. Catastrophic in scale, never mild or harmless. Make it "
+            "different from the recent stories."))
+        low = cp.SLICES_SYSTEM.lower()
+        for word in ("water", "flood", "vehicle", "street", "car ", "cars", "hint", "halfway"):
+            self.assertNotIn(word, low)
+
+    def test_vehicle_is_given_detail_and_checked(self):
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van")
+        msg = cp._slices_message(spec, "x", "heavy rain", 2, 10, [], None)
+        self.assertIn("\nVEHICLE: delivery van\n", msg)
+        self.assertIn("4-9s EVENT: the delivery van is swept into another parked car", msg)
+        sl = es.parse_slices(self.slices("delivery van", s2="The small car is swept into another parked car and both "
+                                         "are shoved along the street.",
+                                         s3="A city bus is shoved sideways by the current and slides across the street."))
+        self.assertIn("4-9s: araç (delivery van)",
+                      [i["missing"] for i in es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl))])
+
+    def test_bad_json_stops_without_retry(self):
+        for bad in ({"story": "x"}, {"slice_1_rest": "a", "slice_2": "b"}, ["x"], ValueError("bozuk JSON"),
+                    RuntimeError("GPT API hatası")):
+            with self.subTest(bad=repr(bad)):
+                with self.assertRaises((es.StructureError, ValueError, RuntimeError)):
+                    _, calls = self.run_scene([bad, self.slices("pickup truck")])
+                # ikinci yanıt hiç istenmedi: hata deneme yemez, akış durur
+
+    def test_bad_json_calls_gpt_once(self):
+        calls = []
+
+        async def gpt(system, user, **kw):
+            calls.append(1)
+            return {"story": "x"}
+        with patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
+                patch.object(es, "choose_vehicle", lambda v, rng=None: "pickup truck"):
+            with self.assertRaises(es.StructureError):
+                asyncio.run(cp.build_creative_scene("urban_city_disasters", FLOOD, [], [], gpt, view="us_coastal_town"))
+        self.assertEqual(len(calls), 1)
+
+    def test_quality_failure_retries_with_feedback(self):
+        bad = self.slices("pickup truck", s3="A low wall collapses into the brown water as more debris arrives.")
+        scene, calls = self.run_scene([bad, self.slices("pickup truck")])
+        self.assertEqual(len(calls), 2)
+        self.assertIn("YOUR PREVIOUS ANSWER WAS REJECTED: 'slice_3' must clearly show this event: a lamppost topples "
+                      "into the current.", calls[1]["user"])
+        self.assertEqual(len(scene["trace"]["attempts"]), 2)
+        self.assertIn("9-15s: seçilen olay (D2) görünmüyor", scene["trace"]["attempts"][0]["missing"])
+
+    def test_three_failures_raise(self):
+        bad = self.slices("pickup truck", s2="The sedan rocks gently in the water as it rises around the wheels.")
+        with self.assertRaises(cp.CreativeStoryError) as ctx:
+            self.run_scene([bad])
+        self.assertEqual(len(ctx.exception.attempts), cp.MAX_ATTEMPTS)
+        self.assertEqual(ctx.exception.trace["beats"], "V1+D2")
+
+    def test_diversity_ignores_shared_key_visual(self):
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "us_coastal_town", "V1", "D2", "pickup truck")
+        sl = es.parse_slices(self.slices("pickup truck"))
+        other = es.parse_slices(self.slices("pickup truck", s2="The pickup truck spins side-on and slides along the "
+                                            "road past the low wooden houses.",
+                                            s3="A streetlight snaps at its base and falls flat into the fast flow."))
+        recent = [es.assemble_story(spec, other)]
+        self.assertEqual(cp.diversity_issues(" ".join(sl.values()), [cp._gpt_text(spec, r) for r in recent]), [])
+        self.assertNotIn("diversity", [i["rule"] for i in cp.structured_issues(spec, sl, recent)])
+
+    def test_other_events_use_old_path(self):
+        calls = []
+
+        async def gpt(system, user, **kw):
+            calls.append(kw)
+            return {"story": WAVE_OK}
+        scene = asyncio.run(cp.build_creative_scene("cruise_ship_operations", WAVE, [], [], gpt))
+        self.assertNotIn("json_schema", calls[0])
+        self.assertNotIn("structure", scene)
+        self.assertNotIn("0-4s", scene["story"])
+
+    def test_metadata_gets_plain_story(self):
+        src = inspect.getsource(pg.generate_creative_prompts)
+        self.assertIn('"scenario_summary": scene.get("plain_story") or story', src)
+        self.assertIn('"structure": scene.get("structure")', src)
+
+
+class TestVideoConfigLocks(unittest.TestCase):
+    """3 Eki, Bahadır: 15 sn altı video yok (açılışta hata); çözünürlük tek yerden (config.py)."""
+
+    def test_current_values(self):
+        import config
+        self.assertEqual((settings.DEFAULT_DURATION, settings.DEFAULT_RESOLUTION), (15, "480p"))
+        self.assertEqual(config.VIDEO_DURATION_SECONDS, 15)
+        self.assertEqual(config.VIDEO_RESOLUTIONS, ("480p", "720p"))
+
+    def test_duration_lock(self):
+        import config
+        for bad in ("10", "5", "14", "20"):
+            with self.subTest(duration=bad), patch.dict(os.environ, {"DEFAULT_DURATION": bad}):
+                with self.assertRaises(EnvironmentError):
+                    config.Config()
+        with patch.dict(os.environ, {"DEFAULT_DURATION": "15"}):
+            self.assertEqual(config.Config().DEFAULT_DURATION, 15)
+
+    def test_resolution_single_source(self):
+        import re
+        hits = []
+        for folder in ("core", "infrastructure", "scripts", "."):
+            base = os.path.join(ROOT, folder)
+            for name in os.listdir(base):
+                path = os.path.join(base, name)
+                if not name.endswith(".py") or name == "config.py" or not os.path.isfile(path):
+                    continue
+                for n, line in enumerate(open(path, encoding="utf-8"), 1):
+                    if not line.lstrip().startswith("#") and re.search(r"""["']480p["']|["']720p["']""", line):
+                        hits.append(f"{folder}/{name}:{n}")
+        self.assertEqual(hits, [])
+        self.assertIsNone(inspect.signature(KieClient.create_video).parameters["resolution"].default)
+
+    def test_create_video_uses_settings_resolution(self):
+        client = KieClient()
+        seen = {}
+
+        async def fake_create(cfg, prompt, aspect, duration, audio, resolution):
+            seen["resolution"] = resolution
+            raise RuntimeError("stop")
+
+        async def fake_preflight(story):
+            return story, False, {}
+
+        with patch.object(settings, "IS_DRY_RUN", False), patch.object(client, "_create_task", fake_create), \
+                patch("core.prompt_sanitizer.gpt_preflight_check", fake_preflight):
+            with self.assertRaises(RuntimeError):
+                asyncio.run(client.create_video(model="bytedance/seedance-2-fast", prompt="x", style_suffix="y"))
+        self.assertEqual(seen["resolution"], settings.DEFAULT_RESOLUTION)
 
 
 if __name__ == "__main__":

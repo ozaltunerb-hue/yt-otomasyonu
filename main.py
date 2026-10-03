@@ -36,6 +36,7 @@ from core.prompt_generator import (generate_prompts, NoValidScenarioError, make_
 from core.trace_format import format_generation, format_final_prompt
 from infrastructure.kie_client import KieClient, ContentFilterError, KieTimeoutError, SubmissionCancelled
 from core.prompt_sanitizer import PreflightError
+from core.event_structure import StructureError
 from infrastructure.motion_profile import motion_profile, format_motion
 from infrastructure.video_downloader import download_video, cleanup_video
 from infrastructure.youtube_uploader import upload_to_youtube
@@ -288,14 +289,29 @@ async def _execute_pipeline(
         status.step("video")
         meta["credit_before"] = await _credit(kie)
 
+        structure = prompt_data.get("structure")   # yapılandırılmış olaylarda spec + dilimler (4 Eki)
+
+        async def structured_rewriter(reason: str) -> str:
+            from core.creative_pipeline import rewrite_structured
+            from core.prompt_generator import _call_gpt
+            return await rewrite_structured(structure, reason, _call_gpt)
+
         async def before_submit(info: dict) -> None:
             """Ücretli createTask'tan hemen önce: son prompt Notion'a, olay denetimi, ayrıntı, onay."""
+            # Sıfır sızıntı (4 Eki): yapılandırılmış olayda son prompt koddan yeniden kurulanla birebir aynı olmalı
+            # (ilk denetim: en güçlüsü; olay adı denetimi de ardından çalışır)
+            if structure:
+                from core.creative_pipeline import submit_issues
+                problems = submit_issues(structure, info)
+                if problems:
+                    raise StructureError("Kie'ye gidecek prompt son denetimden geçmedi: " + "; ".join(problems))
             if event:
                 issues = event_fidelity_issues(event, info.get("story", ""))
                 if issues:
                     raise EventMismatchError("Kie'ye gidecek hikaye: " + "; ".join(issues))
             # Kural kapısı (30 Eyl): preflight hikâyeyi yeniden yazdıysa creative kuralları tekrar denetlenir
-            if (prompt_data.get("trace") or {}).get("pipeline") == "creative":
+            # (yapılandırılmış olaylarda yerini yukarıdaki son denetim aldı)
+            if not structure and (prompt_data.get("trace") or {}).get("pipeline") == "creative":
                 from core.creative_pipeline import story_rule_issues
                 rule_issues = story_rule_issues(selection.get("event", ""), selection.get("ship"),
                                                 info.get("story", ""), info.get("style_suffix"))
@@ -338,6 +354,7 @@ async def _execute_pipeline(
             resolution=settings.DEFAULT_RESOLUTION,
             before_submit=before_submit,
             on_task_created=on_task_created,
+            story_rewriter=structured_rewriter if structure else None,
         )
         video_urls = [video_url]
 
@@ -469,6 +486,14 @@ async def _execute_pipeline(
         await asyncio.to_thread(tracker.update_status, STATUS_CANCELLED, {"Hata": _rt(str(sc))})
         status.fail(f"İptal: {sc}")
         return {"success": False, "reason": "cancelled", "error": str(sc), "notion_page_id": tracker.page_id or ""}
+
+    except StructureError as se:
+        # Yapılandırılmış hat: son denetim, şema, havuz ya da ikinci ret. Yeni senaryo denenmez (4 Eki).
+        log.error(f"🧱 Yapılandırılmış hat durdu, Kie'ye gönderilmedi: {se}")
+        if tracker.page_id:
+            await asyncio.to_thread(tracker.update_with_error, str(se))
+        status.fail(str(se))
+        return {"success": False, "reason": "structure_check", "error": f"Kie'ye gönderilmedi: {se}"}
 
     except EventMismatchError as em:
         log.error(f"🚫 Zorunlu olay denetimi: {em}")

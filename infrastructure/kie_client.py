@@ -143,12 +143,13 @@ class KieClient:
         orientation: str = "portrait",
         duration: int = 10,
         audio: bool = True,
-        resolution: str = "480p",
+        resolution: str | None = None,
         progress_callback: callable = None,
         style_suffix: str = "",
         story_validator: callable = None,
         before_submit: callable = None,
         on_task_created: callable = None,
+        story_rewriter: callable = None,
     ) -> str:
         """
         Tek bir video üretir — içerik güvenliği katmanlarıyla.
@@ -165,7 +166,7 @@ class KieClient:
             orientation: "portrait" veya "landscape"
             duration: Saniye (4-15 arası, Seedance)
             audio: Ses üretimi
-            resolution: "480p" veya "720p" (sadece Seedance)
+            resolution: None ise settings.DEFAULT_RESOLUTION (tek kaynak: config.py)
             style_suffix: Verilirse prompt = sadece hikaye; preflight/rewrite hikayeye uygulanır ve
                 bu sabit stil eki (kamera + gerçekçilik) her denemede değişmeden eklenir (TUR 12).
                 Boşsa eski davranış: prompt tam metin olarak işlenir.
@@ -178,6 +179,9 @@ class KieClient:
                 SubmissionCancelled / başka hata fırlatırsa Kie'ye istek gitmez (TUR 29: onay, olay denetimi).
             on_task_created: async (task_id, info) -> None. Task oluşunca, polling başlamadan önce çağrılır
                 (TUR 29: task ID Notion'a ve meta.json'a restart'tan önce yazılsın).
+            story_rewriter: async (reason) -> yeni hikâye. Yapılandırılmış olaylar (4 Eki): preflight riskli derse ya
+                da Kie içerik filtresi reddederse serbest metin yeniden yazıcı HİÇ kullanılmaz; bu kanca tek kez
+                çağrılır, ikinci retta StructuredRejectError (akış durur, yeni senaryo denenmez).
 
         Returns:
             str: Üretilen videonun CDN URL'si
@@ -190,6 +194,7 @@ class KieClient:
         cfg = MODEL_CONFIG.get(model)
         if not cfg:
             raise ValueError(f"Bilinmeyen model: {model}. Geçerli: {list(MODEL_CONFIG.keys())}")
+        resolution = resolution or settings.DEFAULT_RESOLUTION
 
         aspect_ratio = ORIENTATION_MAP.get(orientation, "9:16")
 
@@ -199,8 +204,21 @@ class KieClient:
         from core.prompt_sanitizer import gpt_preflight_check
         from core.creative_engine import join_story_and_style
         current_story, was_rewritten, preflight_meta = await gpt_preflight_check(prompt)
+        rewrites_left = 1 if story_rewriter else 0
 
-        if was_rewritten:
+        if was_rewritten and story_rewriter:
+            # Preflight'ın kendi yazdığı metin kullanılmaz; bizim yazar bir kez yeniden yazar, preflight tekrar bakar
+            from core.event_structure import StructuredRejectError
+            reason = f"preflight risk {preflight_meta.get('risk_score', '?')}/10: {preflight_meta.get('risk_reasons', [])}"
+            log.info(f"🛡️ GPT Pre-flight riskli buldu, yapılandırılmış yeniden yazım: {reason}")
+            current_story = await story_rewriter(reason)
+            rewrites_left = 0
+            checked, again, preflight_meta = await gpt_preflight_check(current_story)
+            if again:
+                raise StructuredRejectError(f"Preflight yeniden yazımdan sonra da riskli buldu "
+                                            f"({preflight_meta.get('risk_score', '?')}/10), Kie'ye gönderilmedi")
+            preflight_meta = {**preflight_meta, "structured_rewrite": True}
+        elif was_rewritten:
             log.info(f"🛡️ GPT Pre-flight prompt'u yeniden yazdı (risk: {preflight_meta.get('risk_score', '?')}/10)")
             if story_validator:
                 from core.prompt_sanitizer import PreflightError, PromptRewriteError
@@ -249,6 +267,14 @@ class KieClient:
 
             except ContentFilterError as cfe:
                 last_rejection_reason = str(cfe)
+                if story_rewriter:
+                    from core.event_structure import StructuredRejectError
+                    if not rewrites_left:
+                        raise StructuredRejectError(f"Kie içerik filtresi yeniden yazımdan sonra da reddetti: {cfe}") from cfe
+                    log.warning(f"⚠️ Kie içerik filtresi reddetti, yapılandırılmış yeniden yazım: {cfe}")
+                    current_story = await story_rewriter(last_rejection_reason)
+                    rewrites_left = 0
+                    continue
                 if content_attempt < max_content_retries:
                     log.warning(
                         f"⚠️ İçerik filtresi reddetti (deneme {content_attempt + 1}/{max_content_retries + 1}). "
@@ -296,7 +322,7 @@ class KieClient:
         scenes: list[dict],
         orientation: str = "portrait",
         audio: bool = True,
-        resolution: str = "480p",
+        resolution: str | None = None,
         progress_callback: callable = None,
     ) -> list[str]:
         """

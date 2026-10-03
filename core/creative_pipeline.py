@@ -15,6 +15,7 @@ import logging
 import random
 import re
 
+import core.event_structure as es
 from core.prompt_generator import NoValidScenarioError
 from core.skeleton_pipeline import (
     EVENT_SKELETONS,
@@ -133,19 +134,6 @@ EVENT_OUTCOMES = {
     "Large waves reaching the beach":
         "huge waves surge far up the beach, sweeping chairs and towels inland toward the promenade",
 }
-# Olaya özel ipucu (veri; kural değil). GPT mesajına "HINT:" satırı olarak girer; ipucu olmayan olayların mesajı
-# değişmez. Örnekler serbest, kapı hiçbirini zorunlu tutmaz. 3 Eki, Bahadır: sel test videosunda 8-15. sn boştu
-# (yeni olay yok, araçlar yerinde sallandı), kameraya çok yakın koşan kişi başka birine dönüştü.
-EVENT_HINTS = {
-    "Flash flooding in city streets":
-        "Halfway through the story, show a clear consequence of the water: for example, an SUV caught by the "
-        "current turns sideways and is dragged down the street, a car is swept into another car, or parked cars "
-        "slide away one after another. These are only examples; choose your own and write it your way. The first "
-        "sentence shows a fast, waist-high wall of brown muddy water entering the street. People stay in the "
-        "middle and far distance, never close by. Always call the place a street, even if the setting has a "
-        "promenade or square. The last sentence shows a new, concrete action, not a general statement.",
-}
-
 if set(EVENT_OUTCOMES) != set(EVENT_SKELETONS):
     raise RuntimeError(f"EVENT_OUTCOMES iskelet olaylarıyla uyuşmuyor: {set(EVENT_OUTCOMES) ^ set(EVENT_SKELETONS)}")
 
@@ -191,7 +179,9 @@ META_PHRASES = ("as the video ends", "as the clip ends", "the scene ends", "tens
 SCALE_REDUCERS = ("ankle-deep", "ripple", "harmless", "harmlessly", "gentle", "gently", "mild", "mildly",
                   "trickle", "puddle", "drizzle", "floats", "futilely",
                   # 3 Eki, Bahadır: sel kuru provasında "horn blaring in futility" kaçtı ("futilely" eşleşmiyor)
-                  "futility")
+                  "futility",
+                  # 4 Eki, Bahadır: sel kuru provasında "Cars bob like toys" (süzülme ima eder); bobs/bobbed/bobbing
+                  "bob")
 # e: gemi türü (VESSEL satırındaki ad). Hikâyede bu kelimelerden biri geçmeli.
 SHIP_TYPE_WORDS = {
     "Passenger Car Ferry": ("ferry",),
@@ -258,7 +248,10 @@ EVENT_REQUIRED = {
     # ── Şehir ──
     # ONAYLI. Sebep: su yerinde yükselmez, sokaktan gelen bir duvar olur ve arabaları sürükler. Kaynak: final turu
     # "hareketli sel" (30 Eyl, eb3a9f2) ve Bahadır'ın tanımı.
-    "Flash flooding in city streets": [("wall", "surge", "torrent", "wave", "rush"), ("car", "cars", "vehicle")],
+    # 4 Eki, Bahadır onayı: yapılandırılmış hatta (core/event_structure.py) kilit görsel kodda, olay terimleri
+    # seçilen 4-9s / 9-15s olayından gelir; bu gruplar kalktı. Eski: [("wall", "surge", "torrent", "wave", "rush"),
+    # ("car", "cars", "vehicle")]
+    "Flash flooding in city streets": [],
     # ÇIKARILDI (30 Eyl, Bahadır): aksiyonsuz videolar veriyordu
     # "Storm gust tears signs and scaffolding loose downtown": [("sign", "scaffold"),
     #                                                          ("crash", "fall", "fell", "topple", "tear", "rip")],
@@ -282,17 +275,6 @@ REQUIRED_APPROVED = SLIPWAY_EVENTS + ("Flash flooding in city streets", "Rogue w
                                       # ONAYLI (2 Eki, Bahadır): 3 heyelan olayı test edildi
                                       "Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside",
                                       "Mud and debris torrent tears through a hillside village")
-
-# İlk cümlede zorunlu anahtar gruplar (her gruptan en az biri). "required" türünde sayılır, sabit kural değil.
-# 3 Eki, Bahadır: sel test videosunda hareket eden su duvarı yerine alçak köpük dalgası geldi; su duvarı olayın
-# kilit görseli. Yükseklik kelimeyle denetlenmez (GPT çok farklı yazıyor), stil ekinde kodla sabit.
-EVENT_FIRST_SENTENCE = {
-    "Flash flooding in city streets": [("wall",), ("brown", "muddy", "mud")],
-}
-FIRST_SENTENCE_FEEDBACK = {
-    "Flash flooding in city streets": "The first sentence must show a fast, waist-high wall of brown muddy water "
-                                      "entering the street.",
-}
 
 # Sadece iki kızak olayı. Sebep: GPT 2. beat'te yatı kızaktan ileri kaydırdı (30 Eyl kızak halatı hikâyeleri),
 # model de yatı suya kafadan soktu (30 Eyl tersane videosu).
@@ -333,8 +315,6 @@ def diversity_issues(story: str, recent: list[str]) -> list[dict]:
                  "feedback": DIVERSITY_FEEDBACK_EN}]
     return []
 
-for _e in (set(EVENT_HINTS) | set(EVENT_FIRST_SENTENCE)) - set(EVENT_OUTCOMES):
-    raise RuntimeError(f"EVENT_HINTS/EVENT_FIRST_SENTENCE bilinmeyen olay: {_e}")
 for _e in set(EVENT_REQUIRED) ^ set(EVENT_OUTCOMES):
     raise RuntimeError(f"EVENT_REQUIRED olaylarla uyuşmuyor: {_e}")
 
@@ -387,8 +367,9 @@ def story_rule_issues(event: str, ship: str | None, story: str, suffix: str | No
     first_sentence = _first_sentence(story)
     # Gevşetme (Bahadır onayı, 30 Eyl, iyi sel hikâyeleri reddediliyordu: "a wall of brown water bursts..."):
     # olayın ilk anahtar grubundaki kelimeler de tetik sayılır.
+    groups = EVENT_REQUIRED[event]
     if not (trigger_stems(event) & text_event_stems(first_sentence)
-            or find_terms(EVENT_REQUIRED[event][0], first_sentence)):
+            or (groups and find_terms(groups[0], first_sentence))):
         add("a_trigger_first", STORY_RULES["a_trigger_first"],
             f"The first sentence must show the trigger happening: '{event}'.")
     # b
@@ -426,10 +407,6 @@ def story_rule_issues(event: str, ship: str | None, story: str, suffix: str | No
         if not find_terms(group, story):
             add("required", f"anahtar grup: {' / '.join(group)}",
                 f"The story must show one of: {', '.join(group)}.")
-    # İlk cümle anahtar grupları (sadece EVENT_FIRST_SENTENCE olayları)
-    for group in EVENT_FIRST_SENTENCE.get(event, ()):
-        if not find_terms(group, first_sentence):
-            add("required", f"ilk cümlede: {' / '.join(group)}", FIRST_SENTENCE_FEEDBACK[event])
     # Yasak liste (sadece iki kızak olayı)
     bad = find_terms(EVENT_FORBIDDEN.get(event, ()), story)
     if bad:
@@ -472,9 +449,7 @@ def recent_stories(history_texts: list[str], limit: int = RECENT_STORIES) -> lis
 def _message(event: str, ship: str | None, place: str, weather: str, lo: int, hi: int, recent: list[str],
              feedback: list[str] | None) -> str:
     msg = (f"EVENT: {event}\nVESSEL: {SHIP_PHRASES.get(ship or '', 'none')}\nPLACE: {place}\nWEATHER: {weather}\n"
-           f"PEOPLE VISIBLE: {lo} to {hi}\nOUTCOME TO REACH IN THE LAST BEAT: {EVENT_OUTCOMES[event]}\n"
-           + (f"HINT: {EVENT_HINTS[event]}\n" if event in EVENT_HINTS else "")
-           + "RECENT STORIES:\n" + ("\n".join(f"- {s}" for s in recent) or "- (none)"))
+           f"PEOPLE VISIBLE: {lo} to {hi}\nOUTCOME TO REACH IN THE LAST BEAT: {EVENT_OUTCOMES[event]}\nRECENT STORIES:\n" + ("\n".join(f"- {s}" for s in recent) or "- (none)"))
     if feedback:
         msg += "\n\nYOUR PREVIOUS STORY WAS REJECTED: " + " ".join(feedback)
     return msg
@@ -501,6 +476,114 @@ async def write_story(event: str, ship: str | None, place: str, weather: str, re
                              attempts)
 
 
+# ── YAPILANDIRILMIŞ HAT (4 Eki, Bahadır): core/event_structure.py olayları ─────────────────────────────────────
+# GPT sadece üç dilim metnini yazar (strict JSON şeması); kilit görsel, etiketler, 4-9s/9-15s olayı ve araç kodda.
+# API/JSON/şema hatası deneme yemez, akış durur (sessiz yedek yok). Kalite kapısından kalan dilimler geri
+# bildirimle yeniden yazılır (MAX_ATTEMPTS).
+SLICES_SYSTEM = """You write the three time slices of one 15-second realistic video of a real incident.
+The code already wrote the opening sentence of 0-4s and adds the time labels; never write labels.
+Return JSON with three fields:
+- slice_1_rest: one sentence of 6 to 18 words that continues 0-4s right after the opening sentence: how the opening event hits this place.
+- slice_2: the given 4-9s event in 10 to 24 words, in your own words for this place; use every given detail.
+- slice_3: the given 9-15s event in 10 to 24 words, a new and bigger destruction, still moving at the very end.
+Rules: describe only what is visible, never sounds, the camera or the video. People stay in the middle and far distance and are never the main event. Catastrophic in scale, never mild or harmless. Make it different from the recent stories."""
+
+
+def _slices_message(spec: dict, place: str, weather: str, lo: int, hi: int, recent: list[str],
+                    feedback: list[str] | None) -> str:
+    event = spec["event"]
+    msg = (f"OPENING SENTENCE (fixed, already written): {spec['key_visual']}\nPLACE: {place}\nWEATHER: {weather}\n"
+           f"PEOPLE VISIBLE: {lo} to {hi}\nVEHICLE: {spec['vehicle']}\n"
+           f"4-9s EVENT: {es.beat_text(event, 'slice_2', spec['beat_2'], spec['vehicle'])}\n"
+           f"9-15s EVENT: {es.beat_text(event, 'slice_3', spec['beat_3'])}\n"
+           "RECENT STORIES:\n" + ("\n".join(f"- {s}" for s in recent) or "- (none)"))
+    if feedback:
+        msg += "\n\nYOUR PREVIOUS ANSWER WAS REJECTED: " + " ".join(feedback)
+    return msg
+
+
+def _gpt_text(spec: dict, text: str) -> str:
+    """Çeşitlilik ölçümü için sadece GPT'nin yazdığı kısım: kilit görsel ve etiketler çıkar (ortak oldukları için
+    benzerliği yapay olarak şişirmesinler)."""
+    text = (text or "").replace(spec["key_visual"], " ")
+    for label in es.SLICE_LABELS:
+        text = text.replace(f"{label}:", " ")
+    return " ".join(text.split())
+
+
+def structured_issues(spec: dict, slices: dict, recent: list[str]) -> list[dict]:
+    """Dilim kalite kapısı: dilim içeriği (event_structure; toplam kelime ve karakter dahil) + 6 sabit kural +
+    çeşitlilik (GPT metni üzerinde). Genel 40-60 "length" kuralı burada yok: yerini es.TOTAL_WORDS aldı."""
+    out = es.slice_issues(spec, slices)
+    fixed = set(STORY_RULES)
+    out += [i for i in story_rule_issues(spec["event"], spec["ship"], es.plain_story(spec, slices)) if i["rule"] in fixed]
+    gpt_only = " ".join(slices[f] for f in es.SLICE_FIELDS)
+    out += diversity_issues(gpt_only, [_gpt_text(spec, r) for r in recent])
+    return out
+
+
+async def write_slices(spec: dict, place: str, weather: str, recent: list[str], call_gpt,
+                       max_attempts: int = MAX_ATTEMPTS, initial_feedback: list[str] | None = None
+                       ) -> tuple[dict, list[dict]]:
+    """Strict şemalı GPT-4o dilimleri; kapıdan kalırsa geri bildirimle yeniden, en fazla max_attempts deneme.
+    (dilimler, deneme kaydı). GPT/JSON/şema hatası yükselir (deneme sayılmaz, yedek yok)."""
+    lo, hi = count_range(spec["event"], spec["ship"])
+    attempts, feedback = [], initial_feedback
+    for attempt in range(max_attempts):
+        raw = await call_gpt(SLICES_SYSTEM, _slices_message(spec, place, weather, lo, hi, recent, feedback),
+                             temperature=0.9, model="gpt-4o", json_schema=es.SLICE_SCHEMA)
+        slices = es.parse_slices(raw)
+        found = structured_issues(spec, slices, recent)
+        story = es.assemble_story(spec, slices)
+        issues = [i["feedback"] for i in found if i["feedback"]]
+        attempts.append({"attempt": attempt + 1, "story": story, "slices": slices,
+                         "words": len(es.plain_story(spec, slices).split()), "issues": issues,
+                         "missing": [i["missing"] for i in found]})
+        if not found:
+            return slices, attempts
+        feedback = issues
+    raise CreativeStoryError(f"Hikâye {max_attempts} denemede kural kapısından geçmedi, Kie'ye gönderilmedi.",
+                             attempts)
+
+
+REWRITE_FEEDBACK = ("The video safety check rejected the previous text ({reason}). Rewrite the three fields to show "
+                    "the same events with no graphic injury, blood or death.")
+
+
+async def rewrite_structured(structure: dict, reason: str, call_gpt) -> str:
+    """Preflight/Kie reddinden sonra TEK yeniden yazım turu (Bahadır onayı, 4 Eki): bizim yazar aynı şema ve aynı
+    olaylarla, ret nedeni geri bildirimiyle çağrılır; kalite kapısı için ilk yazımdaki gibi MAX_ATTEMPTS deneme.
+    Kie'ye yeniden gönderim hakkı yine tek (kie_client). Kilit görsel, etiketler, olaylar ve stil eki koddan yeniden
+    kurulur. Kapıdan ya da son denetimden geçmezse StructureError (akış durur). Başarılıysa structure["slices"]
+    güncellenir, yeni etiketli hikâye döner."""
+    spec = structure["spec"]
+    try:
+        slices, _ = await write_slices(spec, structure["place"], structure["weather"], structure["recent"], call_gpt,
+                                       max_attempts=MAX_ATTEMPTS,
+                                       initial_feedback=[REWRITE_FEEDBACK.format(reason=reason)])
+    except CreativeStoryError as e:
+        missing = "; ".join((e.attempts[-1].get("missing") or ["?"])) if e.attempts else "?"
+        raise es.StructureError(f"Ret sonrası yeniden yazım kural kapısından geçmedi: {missing}") from e
+    final = es.final_prompt_issues(spec, slices, es.assemble_prompt(spec, slices), es.assemble_story(spec, slices))
+    if final:
+        raise es.StructureError("Ret sonrası yeniden yazım son denetimden geçmedi: "
+                                + "; ".join(i["missing"] for i in final))
+    structure["slices"] = slices
+    structure["rewrites"] = structure.get("rewrites", 0) + 1
+    return es.assemble_story(spec, slices)
+
+
+def submit_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce (main.before_submit): gönderilecek metin structure'dan yeniden kurulanla birebir aynı mı,
+    stil eki beklenen mi, son denetim temiz mi. Boş liste = gönderilebilir."""
+    spec, slices = structure["spec"], structure["slices"]
+    out = []
+    if info.get("style_suffix") != spec["suffix"]:
+        out.append("stil eki gönderimde değişmiş")
+    out += [i["missing"] for i in es.final_prompt_issues(spec, slices, info.get("prompt", ""), info.get("story", ""))]
+    return out
+
+
 async def build_creative_scene(domain: str | None, event: str | None, history: list[str], history_texts: list[str],
                                call_gpt, view: str | None = None) -> dict:
     """Seçim (Python) + GPT-4o hikâyesi + iskeletle aynı stil eki. view: Telegram bölge menüsünden seçilen görünüm
@@ -517,6 +600,9 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
     spot, weather = pick_setting(event, view=view)
     place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
     recent = recent_stories(history_texts)
+    if es.is_structured(event):
+        return await _build_structured_scene(domain, event, ship, spot, view, view_source, weather, place, recent,
+                                             history, call_gpt)
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "domain": domain, "event": event, "ship": ship or "None",
              "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place, "weather": weather, "count_range": [lo, hi],
@@ -538,3 +624,39 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
     log.info(f"✍️ Creative: [{domain}] {event} | gemi={ship} | yer={spot} | görünüm={view} | hava={weather} | {len(story.split())} kelime")
     return {"domain": domain, "event": event, "ship": ship, "spot": spot, "story": story, "style_suffix": suffix,
             "prompt": f"{story.rstrip('.')}. {suffix}", "combo_key": combo_key, "trace": trace}
+
+
+async def _build_structured_scene(domain, event, ship, spot, view, view_source, weather, place, recent, history,
+                                  call_gpt) -> dict:
+    """Yapılandırılmış olay: olay çifti + araç (kod), dilimler (GPT), son denetim (kod). Son denetim tutmazsa
+    StructureError: Kie'ye gidilmez."""
+    b2, b3 = es.choose_beats(event, view, spot, history)
+    vehicle = es.choose_vehicle(view)
+    tag = es.beat_tag(b2, b3)
+    es.remember_beats(event, tag)                # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
+    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle)
+    lo, hi = count_range(event, ship)
+    trace = {"pipeline": "creative", "structured": True, "domain": domain, "event": event, "ship": ship or "None",
+             "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place,
+             "weather": weather, "count_range": [lo, hi], "key_visual": spec["key_visual"], "beats": tag,
+             "vehicle": vehicle, "beat_2_text": es.beat_text(event, "slice_2", b2, vehicle),
+             "beat_3_text": es.beat_text(event, "slice_3", b3), "outcome": EVENT_OUTCOMES[event],
+             "recent_count": len(recent), "attempts": [], "story": "", "story_words": 0}
+    try:
+        slices, attempts = await write_slices(spec, place, weather, recent, call_gpt)
+    except CreativeStoryError as e:
+        e.trace = {**trace, "attempts": e.attempts}
+        raise
+    story = es.assemble_story(spec, slices)
+    prompt = es.assemble_prompt(spec, slices)
+    final = es.final_prompt_issues(spec, slices, prompt, story)
+    if final:
+        raise es.StructureError("Son denetim geçmedi, Kie'ye gönderilmedi: " + "; ".join(i["missing"] for i in final))
+    combo_key = f"{domain}|{(ship or 'none').lower()}|{event.lower()}|{spot.lower()}#{view}#{tag}|{SKELETON_CAMERA}"
+    plain = es.plain_story(spec, slices)
+    trace.update(attempts=attempts, story=story, story_words=len(plain.split()), slices=slices)
+    log.info(f"✍️ Creative (yapılandırılmış): [{domain}] {event} | yer={spot} | görünüm={view} | olaylar={tag} | "
+             f"araç={vehicle} | {len(plain.split())} kelime")
+    return {"domain": domain, "event": event, "ship": ship, "spot": spot, "story": story, "plain_story": plain,
+            "style_suffix": spec["suffix"], "prompt": prompt, "combo_key": combo_key, "trace": trace,
+            "structure": {"spec": spec, "slices": slices, "place": place, "weather": weather, "recent": recent}}

@@ -69,16 +69,17 @@ async def main_creative(out_path: str, only: list[str] | None = None, per_event:
     import core.prompt_generator as pg
     from core.creative_pipeline import (CreativeStoryError, EVENT_OUTCOMES, MAX_ATTEMPTS, REQUIRED_APPROVED,
                                         build_creative_scene)
+    from core.event_structure import StructureError
     from core.skeleton_pipeline import EVENT_SKELETONS
     sys.stdout.reconfigure(encoding="utf-8")
     assert not settings.IS_DRY_RUN
     calls = {"n": 0}
 
-    async def gpt(system, user, temperature=0.85, model="gpt-4o"):
+    async def gpt(system, user, temperature=0.85, model="gpt-4o", json_schema=None):
         if calls["n"] >= max_calls:
             raise GptBudgetExhausted(f"{max_calls} GPT çağrısı sınırı doldu")
         calls["n"] += 1
-        return await pg._call_gpt(system, user, temperature=temperature, model=model)
+        return await pg._call_gpt(system, user, temperature=temperature, model=model, json_schema=json_schema)
 
     events = list(REQUIRED_APPROVED) + [e for e in EVENT_OUTCOMES if e not in REQUIRED_APPROVED]
     if only:
@@ -98,20 +99,28 @@ async def main_creative(out_path: str, only: list[str] | None = None, per_event:
                 scene = await build_creative_scene(domain, event, combos, list(recent), gpt)
                 t = scene["trace"]
                 row.update(status="passed", ship=scene["ship"], spot=scene["spot"], weather=t["weather"],
-                           attempts=t["attempts"], story=scene["story"], prompt=scene["prompt"])
+                           attempts=t["attempts"], story=scene["story"], prompt=scene["prompt"],
+                           view=t.get("view"), beats=t.get("beats"), vehicle=t.get("vehicle"),
+                           slices=t.get("slices"))
                 combos.append(scene["combo_key"])
                 recent.append(scene["story"])
             except CreativeStoryError as e:
                 t = getattr(e, "trace", {}) or {}
                 row.update(status="failed", ship=t.get("ship"), spot=t.get("spot"), weather=t.get("weather"),
-                           attempts=e.attempts, story=(e.attempts[-1]["story"] if e.attempts else ""))
+                           attempts=e.attempts, story=(e.attempts[-1]["story"] if e.attempts else ""),
+                           view=t.get("view"), beats=t.get("beats"), vehicle=t.get("vehicle"))
             except GptBudgetExhausted as e:
                 stopped = str(e)
                 row.update(status="not_run", reason=stopped)
+            except StructureError as e:
+                # Yapılandırılmış hat durdu (şema/JSON/havuz/son denetim): üretimdeki gibi devam edilmez
+                stopped = f"yapılandırılmış hat durdu: {e}"
+                row.update(status="stopped", reason=stopped)
             row["n_attempts"] = len(row.get("attempts") or [])
             rows.append(row)
             miss = " | ".join("; ".join(a["missing"]) or "✅" for a in row.get("attempts") or [])
-            print(f"[{rnd}] {event[:48]:48} {row['status']:7} deneme={row['n_attempts']} {miss}", flush=True)
+            extra = (f" | {row.get('view')} {row.get('beats')} {row.get('vehicle')}" if row.get("beats") else "")
+            print(f"[{rnd}] {event[:48]:48} {row['status']:7} deneme={row['n_attempts']} {miss}{extra}", flush=True)
 
     summary = {}
     for event in events:

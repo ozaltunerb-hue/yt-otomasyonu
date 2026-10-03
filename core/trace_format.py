@@ -74,6 +74,8 @@ def format_generation(trace: dict, labels: dict | None = None) -> list[tuple[str
     labels = labels or {}
     if trace.get("pipeline") == "skeleton":
         return _format_skeleton(trace, labels)
+    if trace.get("pipeline") == "creative" and trace.get("structured"):
+        return _format_structured(trace, labels)
     if trace.get("pipeline") == "creative":
         return _format_creative(trace, labels)
     cands = trace.get("candidates") or []
@@ -148,6 +150,36 @@ def _format_creative(trace: dict, labels: dict) -> list[tuple[str, str]]:
     ]
 
 
+def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
+    """Yapılandırılmış hat (4 Eki, core/event_structure.py): kodun seçtikleri, GPT-4o dilim denemeleri, hikâye."""
+    lo, hi = (trace.get("count_range") or ["?", "?"])[:2]
+
+    def status(a: dict) -> str:
+        return "✅ geçti" if not a.get("missing") else "❌ eksik: " + "; ".join(a["missing"])
+    lines = [f"Deneme {a.get('attempt')} · {status(a)} · {a.get('words')} kelime\n{a.get('story') or '(boş)'}"
+             for a in trace.get("attempts") or []]
+    beats = trace.get("beats") or "-"
+    b2, _, b3 = beats.partition("+")
+    return [
+        ("🔍 1. Seçim (kod)",
+         f"Hat: yapılandırılmış (kilit görsel + olay havuzu kodda, GPT sadece cümle yazar)\n"
+         f"Kategori: {labels.get('domain') or trace.get('domain')}\n"
+         f"Olay: {labels.get('event') or trace.get('event')}\n"
+         f"Yer: {trace.get('spot')} · hava: {trace.get('weather')} · kişi aralığı: {lo}-{hi}\n"
+         + (f"Görünüm: {trace['view']}" + (f" ({trace['view_source']})" if trace.get("view_source") else "")
+            + "\n" if trace.get("view") else "") +
+         f"Kilit görsel (0-4s): {trace.get('key_visual')}\n"
+         f"Araç: {trace.get('vehicle')}\n"
+         f"4-9s olayı ({b2 or '-'}): {trace.get('beat_2_text', '-')}\n"
+         f"9-15s olayı ({b3 or '-'}): {trace.get('beat_3_text', '-')}\n"
+         f"Tekrar önleme: olay çifti {beats} (son 3 üretimin olayları elendi, LRU) · son "
+         f"{trace.get('recent_count', 0)} hikâye GPT'ye verildi"),
+        ("🔍 2. GPT-4o dilimleri (strict şema; kalite kapısı + son denetim, en fazla 3 deneme)",
+         "\n\n".join(lines) or "-"),
+        ("🔍 3. Hikâye", f"{trace.get('story_words')} kelime (etiketsiz)\n{trace.get('story')}"),
+    ]
+
+
 def format_final_prompt(info: dict) -> tuple[str, str]:
     """(başlık, metin): Kie'ye giden TAM prompt, kelime ve kısıt sayısı, preflight farkı."""
     prompt = info.get("prompt", "")
@@ -159,6 +191,9 @@ def format_final_prompt(info: dict) -> tuple[str, str]:
     if diff:
         risk = (info.get("preflight") or {}).get("risk_score", "?")
         text += f"\n\n⚠️ Preflight / güvenlik yeniden yazımı hikayeyi değiştirdi (risk {risk}/10):\n{diff}"
+        if (info.get("preflight") or {}).get("structured_rewrite"):
+            text += ("\n(Yapılandırılmış yeniden yazım: dilimleri bizim yazar yeniden yazdı; kilit görsel, etiketler, "
+                     "olaylar ve stil eki koddan yeniden kuruldu, son denetimden geçti.)")
     return "🔍 5. Kie'ye giden son prompt", text
 
 

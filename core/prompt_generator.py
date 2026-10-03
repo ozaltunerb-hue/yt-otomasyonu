@@ -80,10 +80,14 @@ def _get_openai_client() -> OpenAI:
     return _openai_client
 
 
-async def _call_gpt(system_prompt: str, user_message: str, temperature: float = 0.85, model: str = "gpt-4o") -> dict:
-    """GPT'yi çağır ve JSON yanıtı parse et (varsayılan gpt-4o; iskelet boşlukları gpt-4o-mini)."""
+async def _call_gpt(system_prompt: str, user_message: str, temperature: float = 0.85, model: str = "gpt-4o",
+                    json_schema: dict | None = None) -> dict:
+    """GPT'yi çağır ve JSON yanıtı parse et (varsayılan gpt-4o; iskelet boşlukları gpt-4o-mini).
+    json_schema verilirse OpenAI structured outputs (strict şema); model reddederse (refusal) hata, yedek yok."""
     try:
         client = _get_openai_client()
+        response_format = ({"type": "json_schema", "json_schema": json_schema} if json_schema
+                           else {"type": "json_object"})
         response = await asyncio.to_thread(
             client.chat.completions.create,
             model=model,
@@ -93,9 +97,12 @@ async def _call_gpt(system_prompt: str, user_message: str, temperature: float = 
             ],
             temperature=temperature,
             max_tokens=1000,
-            response_format={"type": "json_object"},
+            response_format=response_format,
         )
-        raw = response.choices[0].message.content
+        message = response.choices[0].message
+        if json_schema and getattr(message, "refusal", None):
+            raise RuntimeError(f"GPT şemalı yanıtı reddetti: {message.refusal}")
+        raw = message.content
         return json.loads(raw)
     except json.JSONDecodeError as e:
         log.error(f"❌ GPT yanıtı JSON parse edilemedi: {e}", exc_info=True)
@@ -1166,11 +1173,15 @@ async def generate_creative_prompts(config: dict) -> dict:
                                        _call_gpt, view=config.get("view") or None)
     domain, event, ship, story = scene["domain"], scene["event"], scene["ship"], scene["story"]
     metadata = await _generate_metadata(
-        {"vessel_class": ship or "None", "incident_type": event, "scenario_summary": story},
+        # 4 Eki: yapılandırılmış olaylarda zaman etiketsiz düz metin (etiketler YouTube metnine sızmasın)
+        {"vessel_class": ship or "None", "incident_type": event,
+         "scenario_summary": scene.get("plain_story") or story},
         {"domain_title": MARITIME_INSPIRATION_DOMAINS_TITLES.get(domain, domain)})
     return {
         "scenes": [{"scene_number": 1, "prompt": scene["prompt"], "story": story,
                     "style_suffix": scene["style_suffix"], "duration": settings.DEFAULT_DURATION}],
+        # Yapılandırılmış olaylarda Kie öncesi son denetimin spec'i (TUR 3: before_submit); diğerlerinde None
+        "structure": scene.get("structure"),
         "youtube_title": clean_youtube_title(metadata.get("youtube_title", "")),
         "youtube_description": metadata.get("youtube_description", ""),
         "tags": metadata.get("tags", []),

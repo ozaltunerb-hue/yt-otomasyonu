@@ -24,4 +24,6 @@ jobs:
         env:
           KIE_API_KEY: ci-dummy
           OPENAI_API_KEY: sk-ci-dummy
+          NOTION_SOCIAL_TOKEN: ci-dummy
+          NOTION_DB_YOUTUBE_OTOMASYON: ci-dummy
         run: python -m unittest discover -s tests

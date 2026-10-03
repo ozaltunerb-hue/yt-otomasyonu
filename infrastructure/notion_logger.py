@@ -453,8 +453,9 @@ class NotionTracker:
                         history.append(t)
             return list(reversed(history[:limit]))
         except Exception as e:
-            log.warning(f"⚠️ Notion get_recent_history hatası (ihmal edilebilir): {e}")
-            return []
+            # 4 Eki, Bahadır: sessiz yedek yok. Boş geçmiş, çeşitlilik kapısını ve "farklı yaz" listesini kör eder.
+            log.error(f"❌ Notion get_recent_history hatası, üretim durduruluyor: {e}")
+            raise RuntimeError(f"Notion get_recent_history başarısız: {e}") from e
 
     def get_recent_beat1_verbs(self, limit: int = 10) -> list[str]:
         """Son `limit` hata-olmayan kaydın Beat 1 fiilleri (en yeni önce). Yazıcıya "farklı fiil seç"
