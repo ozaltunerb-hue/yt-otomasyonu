@@ -104,7 +104,8 @@ class TestLocks(unittest.TestCase):
                                            "tension mounts", "suspense", "anticipation", "about to", "moments before",
                                            "calm before", "holds its breath", "waiting", "waits"))
         self.assertEqual(cp.SCALE_REDUCERS, ("ankle-deep", "ripple", "harmless", "harmlessly", "gentle", "gently",
-                                             "mild", "mildly", "trickle", "puddle", "drizzle", "floats", "futilely"))
+                                             "mild", "mildly", "trickle", "puddle", "drizzle", "floats", "futilely",
+                                             "futility"))
         self.assertEqual(set(cp.SHIP_TYPE_WORDS), set(sk.SHIP_PHRASES))
 
     def test_system_prompt_untouched(self):
@@ -675,6 +676,113 @@ class TestLandslide(unittest.TestCase):
         for e, story in ok.items():
             with self.subTest(event=e):
                 self.assertEqual(cp.story_rule_issues(e, None, story), [])
+
+
+class TestFlashFloodFix(unittest.TestCase):
+    """3 Eki, Bahadır: sel test videosu. Yakın koşan kişi dönüştü + kamera savruldu (A), 8-15. sn boş (B),
+    su duvarı yerine alçak köpük dalgası (C). Değişiklik sadece sel olayında."""
+
+    CAMERA = ("the camera pans to follow the waist-high wall of brown muddy floodwater in one slow short arc, never "
+              "swinging around, people only in the middle and far distance; no zoom, no cuts.")
+    HINT = ("Halfway through the story, show a clear consequence of the water: for example, an SUV caught by the "
+            "current turns sideways and is dragged down the street, a car is swept into another car, or parked cars "
+            "slide away one after another. These are only examples; choose your own and write it your way. The first "
+            "sentence shows a fast, waist-high wall of brown muddy water entering the street. People stay in the "
+            "middle and far distance, never close by. Always call the place a street, even if the setting has a "
+            "promenade or square. The last sentence shows a new, concrete action, not a general statement.")
+
+    def test_flood_camera_sentence_locked(self):
+        from core.trace_format import count_constraints
+        self.assertEqual(sk.EVENT_SKELETONS[FLOOD]["object"], "waist-high wall of brown muddy floodwater")
+        for spot in sk.EVENT_SKELETONS[FLOOD]["spots"]:
+            for v in [None] + list(sk.REGION_VIEWS):
+                if v and spot not in sk.view_spots(FLOOD, v):
+                    continue
+                with self.subTest(spot=spot, view=v):
+                    suffix = sk.style_suffix(FLOOD, None, spot, v)
+                    self.assertIn(f"Handheld footage shot by a person standing {sk.CAMERA_SPOTS[spot]}, eye level, "
+                                  f"normal lens; slight hand shake, {self.CAMERA}", suffix)
+                    self.assertLessEqual(count_constraints(suffix)[0], 8, suffix)
+                    self.assertNotIn("phone", suffix.lower())
+
+    def test_other_events_suffix_untouched(self):
+        self.assertEqual(set(sk.CAMERA_MOTION_EXTRA), {FLOOD})
+        for e, s in sk.EVENT_SKELETONS.items():
+            if e == FLOOD:
+                continue
+            ship = (s["ships"] or [None])[0]
+            for spot in s["spots"]:
+                with self.subTest(event=e, spot=spot):
+                    suffix = sk.style_suffix(e, ship, spot)
+                    self.assertIn(f"the camera pans to follow the {s['object']}; no zoom, no cuts.", suffix)
+                    self.assertNotIn("slow short arc", suffix)
+                    self.assertNotIn("middle and far distance", suffix)
+
+    def test_hint_text_locked_and_same_height(self):
+        self.assertEqual(cp.EVENT_HINTS, {FLOOD: self.HINT})
+        self.assertTrue(self.HINT.startswith("Halfway through the story,"))
+        for w in ("video", "camera"):
+            self.assertNotIn(w, self.HINT.lower())
+        # Yükseklik iki yerde aynı: stil eki ve ipucu
+        self.assertIn("waist-high", sk.EVENT_SKELETONS[FLOOD]["object"])
+        self.assertIn("waist-high", self.HINT)
+        self.assertNotIn("knee", self.HINT)
+        self.assertIn("Always call the place a street", self.HINT)
+        self.assertTrue(self.HINT.endswith("The last sentence shows a new, concrete action, not a general statement."))
+
+    def test_futility_is_a_scale_reducer(self):
+        story = FLOOD_OK.replace("lifting them", "their horns blaring in futility, lifting them")
+        self.assertIn("d_no_scale_reducers", [i["rule"] for i in cp.story_rule_issues(FLOOD, None, story)])
+        self.assertEqual(cp.find_terms(cp.SCALE_REDUCERS, FLOOD_OK), [])
+
+    def test_hint_only_in_flood_message(self):
+        msg = cp._message(FLOOD, None, "x", "y", 2, 10, [], None)
+        self.assertIn(f"\nHINT: {self.HINT}\nRECENT STORIES:\n", msg)
+        self.assertLess(msg.index("OUTCOME TO REACH"), msg.index("HINT:"))
+        for e in sk.EVENT_SKELETONS:
+            if e != FLOOD:
+                with self.subTest(event=e):
+                    m = cp._message(e, None, "x", "y", 2, 10, [], None)
+                    self.assertNotIn("HINT:", m)
+                    self.assertIn(f"OUTCOME TO REACH IN THE LAST BEAT: {cp.EVENT_OUTCOMES[e]}\nRECENT STORIES:\n", m)
+
+    def test_hint_reaches_gpt(self):
+        gpt = AsyncMock(return_value={"story": FLOOD_OK})
+        asyncio.run(cp.write_story(FLOOD, None, "x", "y", [], gpt))
+        self.assertIn(f"HINT: {self.HINT}", gpt.await_args.args[1])
+        self.assertEqual(gpt.await_args.args[0], cp.CREATIVE_SYSTEM)   # sistem prompt'u aynı
+
+    def test_first_sentence_wall_and_brown(self):
+        self.assertEqual(cp.EVENT_FIRST_SENTENCE, {FLOOD: [("wall",), ("brown", "muddy", "mud")]})
+        self.assertEqual(cp.story_rule_issues(FLOOD, None, FLOOD_OK), [])
+        muddy = FLOOD_OK.replace("wall of brown floodwater", "wall of muddy floodwater", 1)
+        self.assertEqual(cp.story_rule_issues(FLOOD, None, muddy), [])
+        rest = FLOOD_OK.split(". ", 1)[1]
+        cases = {
+            "no wall": ("A torrent of brown floodwater surges down the street and slams into parked cars. " + rest,
+                        ["ilk cümlede: wall"]),
+            "no brown": ("A wall of floodwater surges down the street and slams into parked cars. " + rest,
+                         ["ilk cümlede: brown / muddy / mud"]),
+            # Duvar ve renk sonradan gelirse yetmez: ilk cümlede olmalı
+            "late wall": ("Floodwater surges down the street and slams into parked cars. A wall of brown water "
+                          "follows. " + rest, ["ilk cümlede: wall", "ilk cümlede: brown / muddy / mud"]),
+        }
+        for name, (story, want) in cases.items():
+            with self.subTest(case=name):
+                found = [i for i in cp.story_rule_issues(FLOOD, None, story) if i["missing"].startswith("ilk cümlede")]
+                self.assertEqual([i["missing"] for i in found], want)
+                for i in found:
+                    self.assertEqual(i["rule"], "required")
+                    self.assertEqual(i["feedback"], "The first sentence must show a fast, waist-high wall of brown "
+                                                    "muddy water entering the street.")
+
+    def test_first_sentence_gate_only_flood(self):
+        # Sel dışı olaylarda ilk cümlede "wall"/"brown" aranmaz
+        mud = ("A fast torrent of mud and rocks surges across the road as the rain-soaked slope collapses. It pushes "
+               "two cars into the guardrail as four drivers scramble out. More mud keeps pouring off the slope, still "
+               "shoving the cars along the road.")
+        found = cp.story_rule_issues("Rain-soaked slope collapses onto a roadside", None, mud)
+        self.assertFalse([i for i in found if i["missing"].startswith("ilk cümlede")])
 
 
 if __name__ == "__main__":

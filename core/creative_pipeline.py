@@ -133,6 +133,19 @@ EVENT_OUTCOMES = {
     "Large waves reaching the beach":
         "huge waves surge far up the beach, sweeping chairs and towels inland toward the promenade",
 }
+# Olaya özel ipucu (veri; kural değil). GPT mesajına "HINT:" satırı olarak girer; ipucu olmayan olayların mesajı
+# değişmez. Örnekler serbest, kapı hiçbirini zorunlu tutmaz. 3 Eki, Bahadır: sel test videosunda 8-15. sn boştu
+# (yeni olay yok, araçlar yerinde sallandı), kameraya çok yakın koşan kişi başka birine dönüştü.
+EVENT_HINTS = {
+    "Flash flooding in city streets":
+        "Halfway through the story, show a clear consequence of the water: for example, an SUV caught by the "
+        "current turns sideways and is dragged down the street, a car is swept into another car, or parked cars "
+        "slide away one after another. These are only examples; choose your own and write it your way. The first "
+        "sentence shows a fast, waist-high wall of brown muddy water entering the street. People stay in the "
+        "middle and far distance, never close by. Always call the place a street, even if the setting has a "
+        "promenade or square. The last sentence shows a new, concrete action, not a general statement.",
+}
+
 if set(EVENT_OUTCOMES) != set(EVENT_SKELETONS):
     raise RuntimeError(f"EVENT_OUTCOMES iskelet olaylarıyla uyuşmuyor: {set(EVENT_OUTCOMES) ^ set(EVENT_SKELETONS)}")
 
@@ -176,7 +189,9 @@ META_PHRASES = ("as the video ends", "as the clip ends", "the scene ends", "tens
                 "waiting", "waits")
 # d: ölçek küçültücüler (sistem prompt'u 5. kuraldaki örneklerle uyumlu)
 SCALE_REDUCERS = ("ankle-deep", "ripple", "harmless", "harmlessly", "gentle", "gently", "mild", "mildly",
-                  "trickle", "puddle", "drizzle", "floats", "futilely")
+                  "trickle", "puddle", "drizzle", "floats", "futilely",
+                  # 3 Eki, Bahadır: sel kuru provasında "horn blaring in futility" kaçtı ("futilely" eşleşmiyor)
+                  "futility")
 # e: gemi türü (VESSEL satırındaki ad). Hikâyede bu kelimelerden biri geçmeli.
 SHIP_TYPE_WORDS = {
     "Passenger Car Ferry": ("ferry",),
@@ -268,6 +283,17 @@ REQUIRED_APPROVED = SLIPWAY_EVENTS + ("Flash flooding in city streets", "Rogue w
                                       "Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside",
                                       "Mud and debris torrent tears through a hillside village")
 
+# İlk cümlede zorunlu anahtar gruplar (her gruptan en az biri). "required" türünde sayılır, sabit kural değil.
+# 3 Eki, Bahadır: sel test videosunda hareket eden su duvarı yerine alçak köpük dalgası geldi; su duvarı olayın
+# kilit görseli. Yükseklik kelimeyle denetlenmez (GPT çok farklı yazıyor), stil ekinde kodla sabit.
+EVENT_FIRST_SENTENCE = {
+    "Flash flooding in city streets": [("wall",), ("brown", "muddy", "mud")],
+}
+FIRST_SENTENCE_FEEDBACK = {
+    "Flash flooding in city streets": "The first sentence must show a fast, waist-high wall of brown muddy water "
+                                      "entering the street.",
+}
+
 # Sadece iki kızak olayı. Sebep: GPT 2. beat'te yatı kızaktan ileri kaydırdı (30 Eyl kızak halatı hikâyeleri),
 # model de yatı suya kafadan soktu (30 Eyl tersane videosu).
 EVENT_FORBIDDEN = {
@@ -307,6 +333,8 @@ def diversity_issues(story: str, recent: list[str]) -> list[dict]:
                  "feedback": DIVERSITY_FEEDBACK_EN}]
     return []
 
+for _e in (set(EVENT_HINTS) | set(EVENT_FIRST_SENTENCE)) - set(EVENT_OUTCOMES):
+    raise RuntimeError(f"EVENT_HINTS/EVENT_FIRST_SENTENCE bilinmeyen olay: {_e}")
 for _e in set(EVENT_REQUIRED) ^ set(EVENT_OUTCOMES):
     raise RuntimeError(f"EVENT_REQUIRED olaylarla uyuşmuyor: {_e}")
 
@@ -398,6 +426,10 @@ def story_rule_issues(event: str, ship: str | None, story: str, suffix: str | No
         if not find_terms(group, story):
             add("required", f"anahtar grup: {' / '.join(group)}",
                 f"The story must show one of: {', '.join(group)}.")
+    # İlk cümle anahtar grupları (sadece EVENT_FIRST_SENTENCE olayları)
+    for group in EVENT_FIRST_SENTENCE.get(event, ()):
+        if not find_terms(group, first_sentence):
+            add("required", f"ilk cümlede: {' / '.join(group)}", FIRST_SENTENCE_FEEDBACK[event])
     # Yasak liste (sadece iki kızak olayı)
     bad = find_terms(EVENT_FORBIDDEN.get(event, ()), story)
     if bad:
@@ -440,7 +472,9 @@ def recent_stories(history_texts: list[str], limit: int = RECENT_STORIES) -> lis
 def _message(event: str, ship: str | None, place: str, weather: str, lo: int, hi: int, recent: list[str],
              feedback: list[str] | None) -> str:
     msg = (f"EVENT: {event}\nVESSEL: {SHIP_PHRASES.get(ship or '', 'none')}\nPLACE: {place}\nWEATHER: {weather}\n"
-           f"PEOPLE VISIBLE: {lo} to {hi}\nOUTCOME TO REACH IN THE LAST BEAT: {EVENT_OUTCOMES[event]}\nRECENT STORIES:\n" + ("\n".join(f"- {s}" for s in recent) or "- (none)"))
+           f"PEOPLE VISIBLE: {lo} to {hi}\nOUTCOME TO REACH IN THE LAST BEAT: {EVENT_OUTCOMES[event]}\n"
+           + (f"HINT: {EVENT_HINTS[event]}\n" if event in EVENT_HINTS else "")
+           + "RECENT STORIES:\n" + ("\n".join(f"- {s}" for s in recent) or "- (none)"))
     if feedback:
         msg += "\n\nYOUR PREVIOUS STORY WAS REJECTED: " + " ".join(feedback)
     return msg

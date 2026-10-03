@@ -279,7 +279,8 @@ EVENT_SKELETONS = {
     "Flash flooding in city streets": {
         "domain": "urban_city_disasters", "ships": None, "spots": _CITY_SPOTS,
         "people": ["pedestrians", "residents"], "weather": ["heavy rain", "driving rain and wind", "a dark storm light"],
-        "object": "floodwater",
+        # 3 Eki, Bahadır: son test videosunda su duvarı yerine alçak köpük dalgası geldi; kilit görsel kodla sabit
+        "object": "waist-high wall of brown muddy floodwater",
         "text": "In {spot} in {weather}, a brown flash flood surges down the block, rising over the curbs. The "
                 "fast water shoves parked cars sideways and carries one down the road as {n} {people} climb onto steps "
                 "and ledges. The flood keeps rising, still dragging the car along the street.",
@@ -499,6 +500,15 @@ for _e, _s in EVENT_SKELETONS.items():
         raise RuntimeError(f"EVENT_SKELETONS[{_e}] havuzla uyuşmuyor: {_bad}")
 
 
+# Olaya özel kamera hareketi eki (kamera cümlesinin içinde, virgülle; yeni kısıt sayılmaz). 3 Eki, Bahadır: sel
+# test videosunda kameraya çok yakın koşan adam ~7. sn'de başka birine dönüştü, kamera savrulunca arkadaki
+# gökdelenler de şekil değiştirdi.
+CAMERA_MOTION_EXTRA = {
+    "Flash flooding in city streets": " in one slow short arc, never swinging around, people only in the middle and "
+                                      "far distance",
+}
+
+
 class SlotFillError(RuntimeError):
     """gpt-4o-mini boşlukları iki denemede de geçerli dolduramadı (sessiz yedek yok)."""
 
@@ -529,7 +539,7 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     s = EVENT_SKELETONS[event]
     # Final turu: "phone" kelimesi çıktı; model elde tutulan telefonu ve kayıt (REC) ekranını çiziyordu
     camera = (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, eye level, normal lens; slight hand "
-              f"shake, the camera pans to follow the {s['object']}; no zoom, no cuts.")
+              f"shake, the camera pans to follow the {s['object']}{CAMERA_MOTION_EXTRA.get(event, '')}; no zoom, no cuts.")
     out = f"{camera} {get_realism_guardrails(s['domain'], ship or 'None', spot)}"
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)
