@@ -24,7 +24,53 @@
 
 ---
 
-## 📋 DEVİR — Marina, Şehir bölge görünümü, Heyelan (2026-10-02 kapanışı)
+## 📋 DEVİR — Şehir sel: yapılandırılmış hat (2026-10-04 kapanışı)
+
+**DEĞİŞMEZLER (Bahadır kararı, bağlayıcı):**
+- 15 saniyenin altında video yok (`config.py` açılışta kilitler). Üretim `seedance-2-fast`, 480p, 15 sn; Kling
+  denendi ve elendi (su duvarı durdu, son saniyeler boş), Kling desteği eklenmeyecek.
+- Hedef "bizim sistemimizden sıfır hata": hiçbir yerde sessiz yedek yok, şüphede Kie'ye istek gitmez.
+- Onaylı bir değerden/davranıştan sapmadan önce Bahadır'a sorulur (gerekçe + ölçümle).
+- Kie çağrısı yalnızca Bahadır'ın açık onayıyla. Ölü kod temizliği ayrı turda, onayla.
+
+**DURUM — doğrulanan:** commit `86d93e5`, CI yeşil, Railway deploy `8afc625a` SUCCESS. 656 test, ağ kapalıyken de
+geçiyor. Sel olayı (`Flash flooding in city streets`) yapılandırılmış hatta (`core/event_structure.py`):
+- Hikâye `0-4s: … 4-9s: … 9-15s: …`. 0-4s kilit görseli kodda: "A waist-high wall of brown muddy floodwater surges
+  into the street." Etiketleri kod ekler.
+- 4-9s (V1–V8 araç olayı) ve 9-15s (D1–D8 büyük yıkım) havuzdan: son 3 üretimin olayları elenir, LRU (Notion
+  combo_key `spot#görünüm#V6+D2` + süreç hafızası). 5 yasak eşleşme, D7 (tahta çit) körfezde/yüksek binada yok.
+  Araç bölge görünümünün listesinden.
+- GPT-4o strict JSON şemasıyla sadece 3 dilim yazar (`SLICES_SYSTEM`, olaydan bağımsız, testle kilitli). Kelime
+  6-18 / 10-24 / 10-24, toplam 40-70 (genel 40-60 bu olayda yok). Esnek olay terimleri (kök + eşanlamlı).
+- Kie öncesi son denetim (`final_prompt_issues`, `main.before_submit` → `submit_issues`): prompt koddan yeniden
+  kurulanla birebir aynı olmalı; 1400 karakter (Seedance sınırı 20000).
+- Preflight/Kie reddinde serbest yeniden yazıcı KULLANILMAZ: bizim yazar ret nedeniyle yeniden yazar (3 kalite
+  denemesi), Kie'ye yeniden gönderim tek, ikinci retta durur (yeni senaryo denenmez).
+- Notion: `get_recent_history` hatası üretimi durdurur; üretimde Notion zorunlu (CI'da `ci-dummy`).
+- Kie testleri (3-4 Eki): zaman damgalı prompt'la Seedance 15 sn'yi aksiyonla doldurdu; yapılandırılmış prompt
+  (task `57713f97`, V6+D2) üç dilimi zamanında çizdi, Bahadır kabul etti. İnsan kuralına gerek yok: Seedance kamera
+  cümlesinden insanları uzakta çiziyor.
+- Riviera görünümü "cobbled streets" (kıyı dev dalgayı da etkiler). Ölçek küçültücüye "futility" ve "bob".
+
+**DURUM — borç / doğrulanmadı:** Canlıda Telegram'dan yeni hatla sel üretimi henüz yapılmadı (bot üzerinden ilk
+gerçek akış, "Ayrıntı" mesajının görünümü teyitsiz). Kuru provada 7 denemenin 3'ü kelime sınırıyla kalmıştı; sınırlar
+genişletildi ama yeni sınırlarla kuru prova koşulmadı.
+
+**YAKLAŞIMIM (öneri, bağlayıcı değil):** Diğer olayları tek tek taşımak sadece veri işi (`EVENT_KEY_VISUAL` +
+`EVENT_BEATS`); önce test videosuyla kanıtlanmış kilit görsel, havuz listesi Bahadır'a gösterilir. Kıyı dev dalga en
+yakın aday (aynı bölge görünümleri ve araç listesi kullanılabilir).
+
+**Nerede yanılmış olabilirim:** Tek bir yapılandırılmış Kie videosu var; havuzdaki 16 olayın çoğu Seedance'te
+denenmedi (özellikle V5 yana yatma, D5 otobüs, D1 sıra sıra araçlar). Kelime kapısı anlamı tam yakalamıyor
+("The uprooted tree…" sökülme anını göstermeden geçti).
+
+**Sıradaki somut adım:** Bahadır Telegram'dan bir sel üretimi bassın (TEST modu); Ayrıntı mesajı ve video kontrol
+edilsin. Sonra: ölü kod listesi (legacy `generate_legacy_prompts` zinciri, skeleton boşluk doldurma,
+`get_recent_beat1_verbs` + `recent_verbs`, bot legacy dalı) ayrı turda; ardından sıradaki olayın taşınması.
+
+---
+
+## 📋 DEVİR (ESKİ) — Marina, Şehir bölge görünümü, Heyelan (2026-10-02 kapanışı)
 
 **DEĞİŞMEZLER (Bahadır kararı):** Kie çağrısı ve üretim sadece Bahadır'ın açık isteğiyle (Telegram'dan kendisi
 basar). Push öncesi Railway boşta mı bakılır (deploymentLogs: son "başlatılıyor" sonrası "Pipeline tamamlandı" ya da
