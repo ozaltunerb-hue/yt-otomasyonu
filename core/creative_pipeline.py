@@ -496,10 +496,17 @@ def _slices_message(spec: dict, place: str, weather: str, lo: int, hi: int, rece
     event = spec["event"]
     msg = (f"OPENING SENTENCE (fixed, already written): {spec['key_visual']}\nPLACE: {place}\nWEATHER: {weather}\n"
            f"PEOPLE VISIBLE: {lo} to {hi}\nVEHICLE: {spec['vehicle']}\n"
-           f"4-9s EVENT: {es.beat_text(event, 'slice_2', spec['beat_2'], spec['vehicle'])}\n"
+           # 4 Eki, Bahadır: kişi sayısını kod seçer, GPT cümleye döker (sadece kişi kuralı olan olaylarda)
+           + (f"PEOPLE RUNNING AWAY: {es.people_word(spec)} (slice_1_rest must say that {es.people_word(spec)} "
+              f"people run away from the wave)\n" if es.has_people_rule(event) else "")
+           + f"4-9s EVENT: {es.beat_text(event, 'slice_2', spec['beat_2'], spec['vehicle'])}\n"
            f"9-15s EVENT: {es.beat_text(event, 'slice_3', spec['beat_3'])}\n"
            "RECENT STORIES:\n" + ("\n".join(f"- {s}" for s in recent) or "- (none)"))
-    if feedback:
+    if feedback and es.SLICE_RULES.get(event):
+        # 4 Eki, Bahadır: birikimli geri bildirim; düzeltilen madde sonraki denemede silinmesin
+        msg += ("\n\nYOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already "
+                "correct: " + " ".join(feedback))
+    elif feedback:
         msg += "\n\nYOUR PREVIOUS ANSWER WAS REJECTED: " + " ".join(feedback)
     return msg
 
@@ -543,7 +550,8 @@ async def write_slices(spec: dict, place: str, weather: str, recent: list[str], 
                          "missing": [i["missing"] for i in found]})
         if not found:
             return slices, attempts
-        feedback = issues
+        # Dilim kapısı olan olaylarda önceki tüm ret nedenleri (tekrarsız) birikir; diğerlerinde sadece son ret
+        feedback = list(dict.fromkeys((feedback or []) + issues)) if es.SLICE_RULES.get(spec["event"]) else issues
     raise CreativeStoryError(f"Hikâye {max_attempts} denemede kural kapısından geçmedi, Kie'ye gönderilmedi.",
                              attempts)
 
@@ -634,14 +642,15 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     StructureError: Kie'ye gidilmez."""
     b2, b3 = es.choose_beats(event, view, spot, history)
     vehicle = es.choose_vehicle(view)
+    people = es.choose_people(event, ship)       # kaçan kişi sayısı N (kişi kuralı olan olaylarda); combo_key'e girmez
     tag = es.beat_tag(b2, b3)
     es.remember_beats(event, tag)                # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
-    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle)
+    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people)
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "structured": True, "domain": domain, "event": event, "ship": ship or "None",
              "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place,
              "weather": weather, "count_range": [lo, hi], "key_visual": spec["key_visual"], "beats": tag,
-             "vehicle": vehicle, "beat_2_text": es.beat_text(event, "slice_2", b2, vehicle),
+             "vehicle": vehicle, "people_running": people, "beat_2_text": es.beat_text(event, "slice_2", b2, vehicle),
              "beat_3_text": es.beat_text(event, "slice_3", b3), "outcome": EVENT_OUTCOMES[event],
              "recent_count": len(recent), "attempts": [], "story": "", "story_words": 0}
     try:

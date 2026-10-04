@@ -30,8 +30,12 @@ def combo(view="riviera", tag=None, spot="downtown city center", event=FLOOD):
 
 
 S1 = "It swallows the curbs and pours between the parked cars."
-S1_TIDAL = "It smashes over the railings and pours between the parked cars."
+S1_TIDAL = "It smashes over the railings as {word} pedestrians run from the wave."
 PAD = " in the churning brown water"
+
+
+def s1_tidal(people):
+    return S1_TIDAL.format(word=es.NUMBER_WORDS[people])
 
 
 def fake_slices(b2, b3, vehicle, event=FLOOD, s1=S1):
@@ -44,21 +48,26 @@ def fake_slices(b2, b3, vehicle, event=FLOOD, s1=S1):
     return {"slice_1_rest": es.clean_slice(s1), "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
 
 
-def build(b2="V1", b3="D2", view="us_coastal_town", spot="Downtown city center", vehicle="pickup truck", event=FLOOD):
-    spec = es.build_spec(event, None, spot, view, b2, b3, vehicle)
-    slices = fake_slices(b2, b3, vehicle, event, S1_TIDAL if event == TIDAL else S1)
+def build(b2="V1", b3="D2", view="us_coastal_town", spot="Downtown city center", vehicle="pickup truck", event=FLOOD,
+          people=5):
+    people = people if es.has_people_rule(event) else None
+    spec = es.build_spec(event, None, spot, view, b2, b3, vehicle, people)
+    slices = fake_slices(b2, b3, vehicle, event, s1_tidal(people) if event == TIDAL else S1)
     return spec, slices, es.assemble_prompt(spec, slices)
 
 
 def slices_from_message(user):
-    """Sahte GPT (yapılandırılmış hat): kullanıcı mesajındaki 4-9s / 9-15s olaylarını dilim olarak döndürür."""
-    line = dict(l.split(": ", 1) for l in user.splitlines() if l.startswith(("4-9s EVENT", "9-15s EVENT")))
+    """Sahte GPT (yapılandırılmış hat): kullanıcı mesajındaki 4-9s / 9-15s olaylarını ve kaçan kişi sayısını (N)
+    dilim olarak döndürür."""
+    line = dict(l.split(": ", 1) for l in user.splitlines()
+                if l.startswith(("4-9s EVENT", "9-15s EVENT", "PEOPLE RUNNING AWAY")))
     s2, s3 = cap(line["4-9s EVENT"]), cap(line["9-15s EVENT"])
     if len(s2.split()) < 12:
         s2 += PAD
     if len(s3.split()) < 12:
         s3 += PAD
-    return {"slice_1_rest": S1_TIDAL, "slice_2": s2 + ".", "slice_3": s3 + "."}
+    word = line["PEOPLE RUNNING AWAY"].split()[0]
+    return {"slice_1_rest": S1_TIDAL.format(word=word), "slice_2": s2 + ".", "slice_3": s3 + "."}
 
 
 class TestLockedData(unittest.TestCase):
@@ -475,7 +484,7 @@ class TestTidal(unittest.TestCase):
     def test_pools_locked(self):
         self.assertEqual({k: v["text"] for k, v in BT["slice_2"].items()}, {
             "T1": "the {vehicle} is lifted and flung against a storefront",
-            "T2": "the {vehicle} is lifted and carried down the street on top of the surge",
+            "T2": "the {vehicle} is carried down the street by the surge",   # 4 Eki: havalanma yok
             "T3": "the {vehicle} is slammed into the car parked ahead and both are shoved along",
             "T4": "the {vehicle} is spun sideways and dragged along the street",
             "T5": "the {vehicle} tips over onto its side in the churning water",
@@ -527,13 +536,18 @@ class TestTidal(unittest.TestCase):
 
     def test_variants_and_wrong_event(self):
         ok = {"T1": "The surge heaves the sedan up and hurls it into a shop window.",
-              "T2": "The pickup truck rides on top of the surge and is swept down the street.",
+              "T2": "The surge sweeps the pickup truck along the street.",
               "T4": "The SUV whirls broadside and is dragged along the road.",
               "W1": "One after another, the parked cars are torn loose and washed away.",
               "W4": "A newsstand is ripped off its base and carried down the street.",
               "W7": "The shop glass shatters and the water carries tables and chairs out.",
               "W8": "A green trash bin rolls through the water and slams into a car."}
+        # 4 Eki, Bahadır: kuru provada reddedilen ifadeler artık geçer
+        ok.update({"W1": "A sequence of parked vehicles is torn free, each swept away in a chaotic stream.",
+                   "T7": "The SUV is thrust backward, colliding forcefully with parked trucks."})
         bad = {"T1": "The sedan is lifted by the water.",
+               "T7": "The SUV is thrust forward into parked trucks.",
+               "T2": "The SUV is lifted on top of the surge.",
                "T6": "The SUV is pushed onto the sidewalk.",
                "W4": "A low wall collapses into the water.",
                "W7": "Shop windows burst as the water rises."}
@@ -546,6 +560,167 @@ class TestTidal(unittest.TestCase):
             with self.subTest(bad=bid):
                 self.assertTrue(es.missing_term_groups(BT[slot][bid]["terms"], s))
 
+    def test_people_count_range(self):
+        self.assertEqual(sk.count_range(TIDAL, None), (3, 6))
+        self.assertEqual(sk.count_range(FLOOD, None), (2, 10))   # diğer olaylar aynı
+        self.assertEqual(sk.EVENT_COUNT, {TIDAL: (3, 6)})
+
+    def test_slice_rules_locked(self):
+        self.assertEqual(set(es.SLICE_RULES), {TIDAL})   # sel ve diğer olaylarda dilim kapısı yok
+        r = {x["rule"]: x for x in es.SLICE_RULES[TIDAL]}
+        self.assertEqual(set(r), {"slice_flee", "slice_count"})
+        self.assertEqual(r["slice_flee"]["terms"], ("run", "ran", "running", "flee", "fled", "fleeing", "sprint",
+                                                    "scatter", "dash", "bolt", "race",
+                                                    "scramble", "dart", "hurry"))
+        self.assertTrue(r["slice_count"]["people"])
+        self.assertNotIn("terms", r["slice_count"])   # terim koddan: spec'teki N'in kelimesi
+        self.assertEqual(es.NUMBER_WORDS, {3: "three", 4: "four", 5: "five", 6: "six"})
+        self.assertEqual(r["slice_flee"]["feedback"], "'slice_1_rest' must show people running away from the wave.")
+        self.assertEqual(r["slice_count"]["feedback"].format(word="five"),
+                         "'slice_1_rest' must say that five people run away from the wave.")
+        self.assertTrue(all(x["field"] == "slice_1_rest" for x in r.values()))
+
+    def test_people_chosen_by_code(self):
+        rng = random.Random(4)
+        seen = {es.choose_people(TIDAL, None, rng) for _ in range(300)}
+        self.assertEqual(seen, {3, 4, 5, 6})
+        self.assertIsNone(es.choose_people(FLOOD, None, rng))
+        spec = es.build_spec(TIDAL, None, "Coastal avenue behind a seawall", "riviera", "T2", "W3", "small car", 4)
+        self.assertEqual(spec["people"], 4)
+        self.assertNotIn("people", build()[0])   # sel spec'i aynı
+        with self.assertRaises(es.StructureError):
+            es.build_spec(TIDAL, None, "Coastal avenue behind a seawall", "riviera", "T2", "W3", "small car")
+        with self.assertRaises(es.StructureError):
+            es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V1", "D2", "small car", 4)
+
+    def test_people_line_in_message(self):
+        import core.creative_pipeline as cp
+        for n, word in es.NUMBER_WORDS.items():
+            spec, _, _ = build("T2", "W3", "riviera", "Coastal avenue behind a seawall", "small car", TIDAL, n)
+            msg = cp._slices_message(spec, "P", "W", 3, 6, [], None)
+            with self.subTest(n=n):
+                self.assertIn(f"\nVEHICLE: small car\nPEOPLE RUNNING AWAY: {word} (slice_1_rest must say that {word} "
+                              f"people run away from the wave)\n4-9s EVENT: ", msg)
+
+    def test_people_out_of_range_caught_in_final_check(self):
+        spec, slices, prompt = build("T2", "W3", "riviera", "Coastal avenue behind a seawall", "small car", TIDAL, 5)
+        self.assertEqual(es.final_prompt_issues(spec, slices, prompt), [])
+        for bad in (2, 7, None, "five"):
+            with self.subTest(people=bad):
+                self.assertIn("people", {i["rule"] for i in es.final_prompt_issues({**spec, "people": bad}, slices,
+                                                                                    prompt)})
+        fspec, fsl, fprompt = build()
+        self.assertIn("people", {i["rule"] for i in es.final_prompt_issues({**fspec, "people": 4}, fsl, fprompt)})
+
+    def test_flee_and_count_gates(self):
+        spec, slices, _ = build("T4", "W2", "riviera", "Coastal road below a seafront promenade", "small car",
+                                event=TIDAL, people=5)
+
+        def codes(s1, sp=spec):
+            sl = {**slices, "slice_1_rest": es.clean_slice(s1)}
+            return {i["rule"] for i in es.final_prompt_issues(sp, sl, es.assemble_prompt(sp, sl))}
+        ok = ["It smashes over the railings as five pedestrians run from the wave.",
+              "Five residents sprint away from the promenade as it hits.",
+              "Five people scatter up the steps away from the water.",
+              "Five pedestrians are fleeing up the side street.",
+              "Five people dash for the stairs as the water pours in.",
+              "Five residents raced away from the seafront.",
+              # 4 Eki: kuru provada reddedilen kaçış fiilleri
+              "Five people scramble frantically, darting between shops.",
+              "Five residents hurry toward higher ground."]
+        for s1 in ok:
+            with self.subTest(ok=s1):
+                self.assertFalse(codes(s1) & {"slice_flee", "slice_count", "slice_words"})
+        self.assertIn("slice_flee", codes("It smashes over the railings and five pedestrians watch the wave."))
+        # "rush" kaçış sayılmaz: suyun kendisi de "rushes" (4 Eki, Bahadır)
+        self.assertIn("slice_flee", codes("Five pedestrians stand still as the water rushes over the railings."))
+        self.assertIn("slice_flee", codes("Five shoppers rush up the stairs away from the water."))
+        self.assertIn("slice_count", codes("It smashes over the railings as pedestrians run from the wave."))
+        # N'e özel: başka sayı ya da belirsiz miktar yetmez
+        for s1 in ("It smashes over the railings as three pedestrians run from the wave.",
+                   "It smashes over the railings as eight pedestrians run away.",
+                   "A handful of people scatter up the steps away from the water.",
+                   "Several pedestrians are fleeing up the side street.",
+                   "A few residents run from the seafront."):
+            with self.subTest(bad=s1):
+                self.assertIn("slice_count", codes(s1))
+        # aynı cümle N=3 olan spec'te geçer
+        spec3 = es.build_spec(TIDAL, None, spec["spot"], spec["view"], "T4", "W2", "small car", 3)
+        self.assertNotIn("slice_count", codes("It smashes over the railings as three pedestrians run from the wave.",
+                                              spec3))
+        both = codes("It smashes over the railings and pours between the parked cars.")
+        self.assertTrue({"slice_flee", "slice_count"} <= both)
+        # kapılar sadece slice_1_rest'e bakar: kaçış 4-9s'de yazılırsa sayılmaz
+        sl = {**slices, "slice_1_rest": es.clean_slice("It smashes over the railings and pours into the street."),
+              "slice_2": es.clean_slice(slices["slice_2"] + " as five people run")}
+        self.assertTrue({"slice_flee", "slice_count"} <= {i["rule"] for i in es.slice_issues(spec, sl)})
+        # feedback GPT'ye gider
+        fb = {i["rule"]: i["feedback"] for i in es.slice_issues(spec, {**slices, "slice_1_rest": "It hits the road."})}
+        self.assertEqual(fb["slice_flee"], "'slice_1_rest' must show people running away from the wave.")
+        self.assertEqual(fb["slice_count"], "'slice_1_rest' must say that five people run away from the wave.")
+
+    def test_cumulative_feedback(self):
+        import asyncio
+        import core.creative_pipeline as cp
+        spec, good, _ = build("T4", "W2", "riviera", "Coastal road below a seafront promenade", "small car",
+                              event=TIDAL, people=5)
+        no_flee = {**good, "slice_1_rest": es.clean_slice("It smashes over the railings and pours into the street.")}
+        no_w2 = {**good, "slice_3": es.clean_slice("A low wall collapses into the churning brown water nearby.")}
+        answers, users = [no_flee, no_w2, good], []
+
+        async def gpt(system, user, **kw):
+            users.append(user)
+            return answers[len(users) - 1]
+        slices, attempts = asyncio.run(cp.write_slices(spec, "P", "W", [], gpt))
+        self.assertEqual(len(attempts), 3)
+        head = "YOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already correct: "
+        flee = "'slice_1_rest' must show people running away from the wave."
+        count = "'slice_1_rest' must say that five people run away from the wave."
+        w2 = "'slice_3' must clearly show this event: a lamppost topples into the surge."
+        self.assertNotIn("REJECTED", users[0])
+        self.assertIn(head, users[1])
+        self.assertIn(flee, users[1])
+        self.assertIn(count, users[1])
+        # 3. denemede 1. denemenin nedenleri de listede (düzeltilmiş olsa bile), tekrarsız
+        tail = users[2].split(head, 1)[1]
+        self.assertTrue(all(x in tail for x in (flee, count, w2)))
+        self.assertEqual(tail.count(flee), 1)
+
+    def test_flood_feedback_and_message_unchanged(self):
+        import asyncio
+        import core.creative_pipeline as cp
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van")
+        self.assertEqual(cp._slices_message(spec, "PLACE X", "heavy rain", 2, 10, ["old story one", "old story two"],
+                                            None),
+                         "OPENING SENTENCE (fixed, already written): A waist-high wall of brown muddy floodwater "
+                         "surges into the street.\nPLACE: PLACE X\nWEATHER: heavy rain\nPEOPLE VISIBLE: 2 to 10\n"
+                         "VEHICLE: delivery van\n4-9s EVENT: the delivery van is swept into another parked car and "
+                         "both are shoved along\n9-15s EVENT: a city bus is shoved sideways by the current\n"
+                         "RECENT STORIES:\n- old story one\n- old story two")
+        self.assertTrue(cp._slices_message(spec, "PLACE X", "heavy rain", 2, 10, [], ["Fix A.", "Fix B."]).endswith(
+            "RECENT STORIES:\n- (none)\n\nYOUR PREVIOUS ANSWER WAS REJECTED: Fix A. Fix B."))
+        # sel yeniden denemesi birikmez: 3. mesajda sadece 2. denemenin nedeni var
+        spec, good, _ = build("V1", "D2", "riviera", "Downtown city center", "small car")
+        bad_v1 = {**good, "slice_2": es.clean_slice("The small car sits in the churning brown water on the street.")}
+        bad_d2 = {**good, "slice_3": es.clean_slice("A low wall collapses into the churning brown water nearby.")}
+        answers, users = [bad_v1, bad_d2, good], []
+
+        async def gpt(system, user, **kw):
+            users.append(user)
+            return answers[len(users) - 1]
+        asyncio.run(cp.write_slices(spec, "P", "W", [], gpt))
+        self.assertIn("YOUR PREVIOUS ANSWER WAS REJECTED: ", users[2])
+        self.assertNotIn("WERE REJECTED", users[2])
+        self.assertNotIn("'slice_2' must clearly show", users[2])
+        self.assertIn("'slice_3' must clearly show", users[2])
+        self.assertNotIn("PEOPLE RUNNING AWAY", users[0])
+
+    def test_flood_has_no_slice_gates(self):
+        spec, slices, prompt = build()
+        sl = {**slices, "slice_1_rest": es.clean_slice("It swallows the curbs and pours between the parked cars.")}
+        rules = {i["rule"] for i in es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl))}
+        self.assertFalse(rules & {"slice_flee", "slice_count"})
+
     def test_all_combinations_pass_final_check(self):
         n, longest = 0, 0
         head = f"0-4s: {es.EVENT_KEY_VISUAL[TIDAL]} "
@@ -556,7 +731,8 @@ class TestTidal(unittest.TestCase):
                 for b2, b3 in pairs:
                     self.assertNotIn((b2, b3), BT["excluded_pairs"])
                     for vehicle, _ in es.REGION_VEHICLES[view]:
-                        spec, slices, prompt = build(b2, b3, view, spot, vehicle, event=TIDAL)
+                        # N her prompt'ta değişir (3-6 döngü): her sayı kelimesi kapıdan geçer
+                        spec, slices, prompt = build(b2, b3, view, spot, vehicle, event=TIDAL, people=3 + n % 4)
                         issues = es.final_prompt_issues(spec, slices, prompt, es.assemble_story(spec, slices))
                         if issues:
                             self.fail(f"{view}/{spot}/{b2}+{b3}/{vehicle}: {issues}\n{prompt}")

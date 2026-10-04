@@ -18,7 +18,7 @@ import re
 import threading
 
 import config
-from core.skeleton_pipeline import REGION_VIEWS, style_suffix, view_spots
+from core.skeleton_pipeline import REGION_VIEWS, count_range, style_suffix, view_spots
 from core.trace_format import count_constraints
 
 FLOOD = "Flash flooding in city streets"
@@ -83,7 +83,8 @@ _BACKWARD = ("backward", "backwards", "in reverse", "rear-first", "rear first", 
              "rear end first", "boot first", "trunk first")
 _TOGETHER = ("together", "bumper", "side by side", "in tandem", "locked", "both", "pair")
 _ROW = ("row", "line", "one by one", "one after another", "one after the other", "in turn", "in sequence",
-        "in succession")
+        "in succession",
+        "sequence")   # 4 Eki, Bahadır: kuru provada "A sequence of parked vehicles" reddedildi
 _RIP_AWAY = ("rip", "tear", "tore", "torn", "wrench", "break loose", "breaks loose", "broke loose", "pull", "drag",
              "sweep", "swept", "carry", "carried", "peel", "wash")
 _FALL = ("topple", "fall", "fell", "collapse", "crash", "snap", "tip", "keel over", "go down", "goes down",
@@ -153,8 +154,11 @@ EVENT_BEATS = {
         "slice_2": {
             "T1": {"text": "the {vehicle} is lifted and flung against a storefront",
                    "terms": [_LIFT + _FLING, _SHOP]},
-            "T2": {"text": "the {vehicle} is lifted and carried down the street on top of the surge",
-                   "terms": [_LIFT + ("ride", "rode", "on top", "atop", "crest"), _DRAG]},
+            # 4 Eki, Bahadır: araç havalanmaz, su taşır (eski: "is lifted and carried down the street on top of
+            # the surge")
+            "T2": {"text": "the {vehicle} is carried down the street by the surge",
+                   "terms": [("carry", "carried", "sweep", "swept", "drag", "dragged", "push", "pushed", "wash",
+                              "washed"), ("down the street", "along the street", "down the road")]},
             "T3": {"text": "the {vehicle} is slammed into the car parked ahead and both are shoved along",
                    "terms": [_HIT, ("ahead", "in front", "another", "second", "other", "next", "parked")]},
             "T4": {"text": "the {vehicle} is spun sideways and dragged along the street",
@@ -163,8 +167,9 @@ EVENT_BEATS = {
                    "terms": [_TIP]},
             "T6": {"text": "the {vehicle} is pushed onto the sidewalk and slams into a lamppost",
                    "terms": [_CURB, _POLE]},
+            # 4 Eki, Bahadır: "thrust" (kuru provada "thrust backward" reddedildi); _DRAG selle ortak, ona eklenmez
             "T7": {"text": "the {vehicle} is carried backwards down the street, bumping parked cars",
-                   "terms": [_BACKWARD, _DRAG]},
+                   "terms": [_BACKWARD, _DRAG + ("thrust",)]},
             "T8": {"text": "the {vehicle} and the car behind it are dragged away together, bumper to bumper",
                    "terms": [_TOGETHER, _DRAG]},
         },
@@ -206,6 +211,36 @@ EVENT_BEATS = {
         "excluded_spots": {"W6": {"Coastal avenue behind a seawall"}},
     },
 }
+
+# ── Olaya özel dilim kapıları (4 Eki, Bahadır onayı; sadece kıyı dev dalga): terimlerden biri dilimde geçmeli.
+# Çekimler otomatik (find_terms). "people": True olan kuralın terimi koddan gelir: spec'teki N'in sayı kelimesi
+# (kod N'i olayın kişi aralığından seçer, GPT cümleye döker). ─────────────────────────────────────────────────
+NUMBER_WORDS = {3: "three", 4: "four", 5: "five", 6: "six"}
+SLICE_RULES = {
+    TIDAL: [
+        {"rule": "slice_flee", "field": "slice_1_rest",
+         "terms": ("run", "ran", "running", "flee", "fled", "fleeing", "sprint", "scatter", "dash", "bolt", "race",
+                   # 4 Eki, Bahadır: kuru provada "scramble", "darting" reddedildi
+                   "scramble", "dart", "hurry"),
+         "missing": "0-4s: insanların kaçışı",
+         "feedback": "'slice_1_rest' must show people running away from the wave."},
+        {"rule": "slice_count", "field": "slice_1_rest", "people": True,
+         "missing": "0-4s: kaçan kişi sayısı ({word})",
+         "feedback": "'slice_1_rest' must say that {word} people run away from the wave."},
+    ],
+}
+
+
+def has_people_rule(event: str) -> bool:
+    return any(r.get("people") for r in SLICE_RULES.get(event, ()))
+
+
+def choose_people(event: str, ship: str | None, rng: random.Random | None = None) -> int | None:
+    """Kaçan kişi sayısı N (olayın kişi aralığından); kişi kuralı olmayan olayda None."""
+    if not has_people_rule(event):
+        return None
+    lo, hi = count_range(event, ship)
+    return (rng or random).randint(lo, hi)
 
 
 class StructureError(RuntimeError):
@@ -352,13 +387,24 @@ def clean_slice(text: str) -> str:
 
 
 # ── Birleştirme ve spec ─────────────────────────────────────────────────────────────────────────────────────
-def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: str, b3: str, vehicle: str) -> dict:
-    """Kie'ye gidecek prompt'u kuran ve denetleyen her şey (slices hariç)."""
+def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: str, b3: str, vehicle: str,
+               people: int | None = None) -> dict:
+    """Kie'ye gidecek prompt'u kuran ve denetleyen her şey (slices hariç). people: kaçan kişi sayısı N (sadece
+    kişi kuralı olan olaylarda, zorunlu)."""
     if not is_structured(event):
         raise StructureError(f"Yapılandırılmış olay değil: {event}")
-    return {"event": event, "ship": ship, "spot": spot, "view": view, "beat_2": b2, "beat_3": b3,
+    if has_people_rule(event) != (people is not None):
+        raise StructureError(f"Kaçan kişi sayısı uyuşmuyor: {event} / {people}")
+    spec = {"event": event, "ship": ship, "spot": spot, "view": view, "beat_2": b2, "beat_3": b3,
             "vehicle": vehicle, "key_visual": EVENT_KEY_VISUAL[event],
             "suffix": style_suffix(event, ship, spot, view)}
+    if people is not None:
+        spec["people"] = people
+    return spec
+
+
+def people_word(spec: dict) -> str:
+    return NUMBER_WORDS.get(spec.get("people"), "")
 
 
 def assemble_story(spec: dict, slices: dict[str, str]) -> str:
@@ -412,6 +458,11 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
         out.append(_issue("total_words", f"toplam {TOTAL_WORDS[0]}-{TOTAL_WORDS[1]} kelime ({total})",
                           f"The three fields plus the fixed opening must total {TOTAL_WORDS[0]} to {TOTAL_WORDS[1]} "
                           f"words; now {total}."))
+    for r in SLICE_RULES.get(event, ()):
+        word = people_word(spec)
+        terms = (word,) if r.get("people") else r["terms"]
+        if not (all(terms) and find_terms(terms, slices.get(r["field"], ""))):
+            out.append(_issue(r["rule"], r["missing"].format(word=word), r["feedback"].format(word=word)))
     beats = EVENT_BEATS[event]
     s2, s3 = slices.get("slice_2", ""), slices.get("slice_3", "")
     vterms = vehicle_terms(spec["view"], spec["vehicle"])
@@ -437,6 +488,12 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
         out.append(_issue("key_visual", "kilit görsel spec'te değişmiş"))
     if spec.get("suffix") != expected_suffix:
         out.append(_issue("suffix", "stil eki beklenenle aynı değil"))
+    if has_people_rule(spec["event"]):
+        lo, hi = count_range(spec["event"], spec["ship"])
+        if not (isinstance(spec.get("people"), int) and lo <= spec["people"] <= hi and people_word(spec)):
+            out.append(_issue("people", f"kaçan kişi sayısı {lo}-{hi} değil ({spec.get('people')})"))
+    elif "people" in spec:
+        out.append(_issue("people", "kişi kuralı olmayan olayda kaçan kişi sayısı var"))
     rebuilt_story = assemble_story({**spec, "key_visual": EVENT_KEY_VISUAL.get(spec["event"], "")}, slices)
     rebuilt = assemble_prompt({**spec, "key_visual": EVENT_KEY_VISUAL.get(spec["event"], ""),
                                "suffix": expected_suffix}, slices)
@@ -475,6 +532,8 @@ def _validate_data() -> None:
     for view, vehicles in REGION_VEHICLES.items():
         if not vehicles or any(not t for _, t in vehicles):
             raise StructureError(f"Görünümde araç/terim yok: {view}")
+    if set(SLICE_RULES) - set(EVENT_KEY_VISUAL):
+        raise StructureError(f"Dilim kapısı yapılandırılmamış olayda: {set(SLICE_RULES) - set(EVENT_KEY_VISUAL)}")
     for event, key in EVENT_KEY_VISUAL.items():
         if event not in EVENT_BEATS or not key.endswith(".") or "\n" in key:
             raise StructureError(f"Kilit görsel/olay havuzu eksik: {event}")
@@ -492,6 +551,13 @@ def _validate_data() -> None:
         for d in list(b["excluded_views"]) + list(b["excluded_spots"]):
             if d not in b["slice_3"]:
                 raise StructureError(f"Bölge kısıtı bilinmeyen id: {d}")
+        for r in SLICE_RULES.get(event, ()):
+            if r["field"] not in SLICE_FIELDS or not (r.get("people") or r.get("terms")):
+                raise StructureError(f"Dilim kapısı hatalı: {event}/{r.get('rule')}")
+        if has_people_rule(event):
+            lo, hi = count_range(event, None)
+            if any(n not in NUMBER_WORDS for n in range(lo, hi + 1)):
+                raise StructureError(f"Kişi aralığının sayı kelimesi yok: {event} {lo}-{hi}")
         for view in REGION_VIEWS:
             for spot in view_spots(event, view):
                 if not allowed_pairs(event, view, spot):

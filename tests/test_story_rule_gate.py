@@ -415,7 +415,7 @@ class TestCityEventSwap(unittest.TestCase):
         s = sk.EVENT_SKELETONS[TIDAL]
         self.assertEqual(s["domain"], "urban_city_disasters")
         self.assertIsNone(s["ships"])
-        self.assertEqual(sk.count_range(TIDAL, None), (2, 10))
+        self.assertEqual(sk.count_range(TIDAL, None), (3, 6))   # 4 Eki, Bahadır: olaya özel, küçük belirli sayı
         self.assertEqual(set(s["spots"]), {"Coastal road below a seafront promenade", "Coastal street of low shopfronts",
                                             "Coastal avenue behind a seawall"})
         self.assertIn("promenade", sk.CAMERA_SPOTS["Coastal road below a seafront promenade"])
