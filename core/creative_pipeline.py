@@ -95,12 +95,19 @@ EVENT_OUTCOMES = {
     "Rogue wave breaks over the rail onto the pool deck":
         "waves keep sweeping loungers and people across the pool deck",
     # Kıyı hortumu
-    "Tornado approaching coastline":
-        "the tornado reaches the shore, ripping sand, water and debris high into the air",
+    # ÇIKARILDI (4 Eki, Bahadır; TASLAK): menüden çıktı (bkz. skeleton_pipeline)
+    # "Tornado approaching coastline":
+    #     "the tornado reaches the shore, ripping sand, water and debris high into the air",
     "Tornado making landfall":
         "the tornado tears roofs and signs away and hurls debris across the street",
-    "Tornado rain bands and flying debris lash the waterfront":
-        "sheets of rain and flying debris batter the waterfront, smashing railings and signs",
+    # ÇIKARILDI (4 Eki, Bahadır; TASLAK): menüden çıktı (bkz. skeleton_pipeline)
+    # "Tornado rain bands and flying debris lash the waterfront":
+    #     "sheets of rain and flying debris batter the waterfront, smashing railings and signs",
+    # EKLENDİ (4 Eki, Bahadır; TASLAK)
+    "Tornado crosses a marina quay":
+        "the tornado tears across the marina quay, snapping masts and hurling boat covers and debris toward the road",
+    "Tornado sweeps down a coastal avenue":
+        "the tornado sweeps down the coastal avenue, uprooting palm trees and hurling signs and debris along the road",
     # Şehir
     "Flash flooding in city streets":
         "a wall of brown floodwater surges down the street, slams into parked cars and shoves them sideways "
@@ -240,11 +247,18 @@ EVENT_REQUIRED = {
     # videosu (kabul edildi) ve Bahadır'ın tanımı.
     "Rogue wave breaks over the rail onto the pool deck": [("wave",), ("loungers", "chairs", "people", "passengers")],
     # ── Kıyı hortumu (TASLAK) ──
-    "Tornado approaching coastline": [("tornado", "twister", "funnel"), ("shore", "coast", "beach", "waterfront"),
-                                      ("debris", "sand", "spray")],
-    "Tornado making landfall": [("tornado", "twister", "funnel"), ("roof", "sign", "debris")],
-    "Tornado rain bands and flying debris lash the waterfront": [("tornado", "twister", "funnel"), ("rain",),
-                                                                 ("debris",)],
+    # ÇIKARILDI (4 Eki, Bahadır; TASLAK): menüden çıktı (bkz. skeleton_pipeline)
+    # "Tornado approaching coastline": [("tornado", "twister", "funnel"), ("shore", "coast", "beach", "waterfront"),
+    #                                   ("debris", "sand", "spray")],
+    # TASLAK (4 Eki, Bahadır hazırlığı, onay bekliyor): yapılandırılmış hatta; tetik kilit cümlede olay adından.
+    # Eski: [("tornado", "twister", "funnel"), ("roof", "sign", "debris")]
+    "Tornado making landfall": [],
+    # ÇIKARILDI (4 Eki, Bahadır; TASLAK): menüden çıktı (bkz. skeleton_pipeline)
+    # "Tornado rain bands and flying debris lash the waterfront": [("tornado", "twister", "funnel"), ("rain",),
+    #                                                              ("debris",)],
+    # EKLENDİ (4 Eki, Bahadır; TASLAK): yapılandırılmış hatta, grupsuz
+    "Tornado crosses a marina quay": [],
+    "Tornado sweeps down a coastal avenue": [],
     # ── Şehir ──
     # ONAYLI. Sebep: su yerinde yükselmez, sokaktan gelen bir duvar olur ve arabaları sürükler. Kaynak: final turu
     # "hareketli sel" (30 Eyl, eb3a9f2) ve Bahadır'ın tanımı.

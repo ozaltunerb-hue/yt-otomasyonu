@@ -81,6 +81,12 @@ class TestLockedData(unittest.TestCase):
                          "down the steep street.",
             es.SLOPE: "The saturated slope collapses and a fast torrent of brown mud and rocks surges across the road.",
             es.VILLAGE: "A massive torrent of brown mud, logs and rocks bursts through the drenched hillside village.",
+            # 4 Eki, TASLAK (Bahadır hazırlığı, onay bekliyor): hortum
+            es.LANDFALL: "A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air.",
+            es.MARINA_TORNADO: "A violent tornado crosses the marina, bending masts and ripping covers off the yachts as "
+                               "it sweeps toward the quay road.",
+            es.AVENUE: "A violent tornado sweeps down a palm-lined coastal avenue, hurling signs, branches and debris "
+                       "along the road.",
         })
         self.assertEqual(es.SLICE_LABELS, ("0-4s", "4-9s", "9-15s"))
         self.assertEqual(es.SLICE_FIELDS, ("slice_1_rest", "slice_2", "slice_3"))
@@ -133,7 +139,8 @@ class TestLockedData(unittest.TestCase):
 
     def test_structured_events(self):
         # 4 Eki: kıyı dev dalga da yapılandırılmış hatta; diğer olaylar eski yolda
-        self.assertEqual(es.structured_events(), (FLOOD, TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE))
+        self.assertEqual(es.structured_events(), (FLOOD, TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE,
+                                                  es.LANDFALL, es.MARINA_TORNADO, es.AVENUE))
         self.assertEqual(TIDAL, "Tidal wave surges over a coastal city street")
         self.assertFalse(es.is_structured("Rogue wave breaks over the rail onto the pool deck"))
 
@@ -568,11 +575,13 @@ class TestTidal(unittest.TestCase):
     def test_people_count_range(self):
         self.assertEqual(sk.count_range(TIDAL, None), (3, 6))
         self.assertEqual(sk.count_range(FLOOD, None), (2, 10))   # diğer olaylar aynı
-        self.assertEqual(sk.EVENT_COUNT, {TIDAL: (3, 6), es.MUDSLIDE: (3, 6), es.SLOPE: (3, 6), es.VILLAGE: (3, 6)})
+        self.assertEqual(sk.EVENT_COUNT, {TIDAL: (3, 6), es.MUDSLIDE: (3, 6), es.SLOPE: (3, 6), es.VILLAGE: (3, 6),
+                                          es.LANDFALL: (3, 6), es.MARINA_TORNADO: (3, 6), es.AVENUE: (3, 6)})
 
     def test_slice_rules_locked(self):
         # selde dilim kapısı yok; heyelan (TASLAK) aynı mekanizma
-        self.assertEqual(set(es.SLICE_RULES), {TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE})
+        self.assertEqual(set(es.SLICE_RULES), {TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE,
+                                               es.LANDFALL, es.MARINA_TORNADO, es.AVENUE})
         r = {x["rule"]: x for x in es.SLICE_RULES[TIDAL]}
         self.assertEqual(set(r), {"slice_flee", "slice_count"})
         self.assertEqual(r["slice_flee"]["terms"], ("run", "ran", "running", "flee", "fled", "fleeing", "sprint",
@@ -895,7 +904,7 @@ class TestLandslideStructure(unittest.TestCase):
                 self.assertEqual(b["excluded_spots"], spots)
 
     def test_vehicles_locked(self):
-        self.assertEqual({e: [n for n, _ in l] for e, l in es.EVENT_VEHICLES.items()}, self.VEHICLES)
+        self.assertEqual({e: [n for n, _ in es.EVENT_VEHICLES[e]] for e in LANDSLIDE}, self.VEHICLES)
         rng = random.Random(5)
         for e, names in self.VEHICLES.items():
             self.assertEqual({es.choose_event_vehicle(e, rng) for _ in range(200)}, set(names))
@@ -1071,6 +1080,325 @@ class TestLandslideStructure(unittest.TestCase):
             "YOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already correct: Fix A.")
         fspec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van")
         self.assertNotIn("PEOPLE RUNNING AWAY", cp._slices_message(fspec, "P", "W", 2, 10, [], None))
+
+
+TORNADO = (es.LANDFALL, es.MARINA_TORNADO, es.AVENUE)
+
+
+class TestTornadoStructure(unittest.TestCase):
+    """4 Eki, TASLAK (Bahadır hazırlığı, onay bekliyor): hortum 3 olayı yapılandırılmış hatta, bölge görünümü yok
+    (heyelandaki yol). KİLİT: havuz metinleri, yasak eşleşmeler, kamera dışlamaları ve araç listeleri onaysız değişmez."""
+
+    POOLS = {
+        es.LANDFALL: ({
+            "C1": "the {vehicle} is shoved sideways across the street by the wind",
+            "C2": "the {vehicle} tips over onto its side as roof tiles rain down around it",
+            "C3": "a flying street sign slams into the windshield of the {vehicle}",
+            "C4": "the {vehicle} slides along the street and slams into a parked car",
+            "C5": "the {vehicle} is lifted off the road and flung down the street",
+            "C6": "the {vehicle} is swept up into the air, spins, and crashes down onto the sidewalk",
+        }, {
+            "E1": "the tornado tears the roof off a house and scatters the pieces across the street",
+            "E2": "the tornado rips a billboard frame from its supports and throws it aside",
+            "E3": "a wall of dust and debris sweeps across the street and engulfs the end of the block",
+            "E4": "the tornado uproots a large tree and flings it through the air",
+            "E5": "the tornado rips the front off a small shop, sending shutters and signs flying",
+            "E6": "the tornado tears away a section of fence and carries it down the street",
+        }, {("C2", "E1")},
+            {"E1": {"Residential coastal district"}}),
+        es.MARINA_TORNADO: ({
+            "Y1": "the {vehicle} is shoved sideways across the quay by the wind",
+            "Y2": "the {vehicle} tips over onto its side on the quay road",
+            "Y3": "the {vehicle} is pushed along the quay by the wind and slams into a lamppost",
+            "Y4": "a flying wooden crate smashes the windshield of the {vehicle}",
+            "Y5": "the {vehicle} is lifted off the quay road and flung into a stack of dock boxes",
+            "Y6": "the {vehicle} is swept up into the air, spins, and crashes down onto the quay",
+        }, {
+            "Z1": "a row of yacht masts bends and snaps in the wind",
+            "Z2": "boat covers and canvas are ripped off the yachts and fly across the dock",
+            "Z3": "a small yacht is torn from its moorings and pushed along the dock by the wind",
+            "Z4": "a yacht tips over at its berth, its mast crashing onto the dock",
+            "Z5": "a marina office roof is torn off and scattered",
+            "Z6": "the tornado hurls deck chairs and café tables from the quay terrace",
+        }, set(), {}),
+        es.AVENUE: ({
+            "P1": "the {vehicle} is shoved sideways across the avenue by the wind",
+            "P2": "the {vehicle} tips over onto its side",
+            "P3": "the {vehicle} is pushed against a lamppost and pinned there",
+            "P4": "a palm tree crashes onto the road in front of the {vehicle}",
+            "P5": "the {vehicle} is lifted off the avenue and flung into a bus shelter, shattering its glass",
+            "P6": "the {vehicle} is swept up into the air, spins, and crashes down across the avenue",
+        }, {
+            "Q1": "the tornado rips a row of palm trees out of the ground and flings them across the avenue",
+            "Q2": "the tornado tears a billboard from its frame and sends it spinning away",
+            "Q3": "the tornado hurls a cloud of signs, branches and bins along the avenue",
+            "Q4": "the tornado tears the roof off a bus shelter and throws it aside",
+            "Q5": "the tornado topples a line of street lamps one by one",
+            "Q6": "the tornado rips the awnings off a row of shops and flings them high",
+        }, {("P3", "Q5"), ("P5", "Q4"), ("P4", "Q1")},
+            {"Q5": {"Downtown city center", "High-rise coastal city"}}),
+    }
+    SPOTS = {es.LANDFALL: ["Beachfront promenade", "Residential coastal district", "Downtown city center"],
+             es.MARINA_TORNADO: ["Marina berthing pier"],
+             es.AVENUE: ["Downtown city center", "Residential coastal district", "High-rise coastal city"]}
+    VEHICLES = ["pickup truck", "small car", "white van", "SUV"]
+
+    def setUp(self):
+        es._BEAT_MEMORY.clear()
+
+    def build(self, event, b2, b3, spot, vehicle, people=5):
+        spec = es.build_spec(event, None, spot, None, b2, b3, vehicle, people)
+        s1 = f"Within seconds {es.NUMBER_WORDS[people]} people run for cover from the tornado."
+        slices = fake_slices(b2, b3, vehicle, event, s1)
+        return spec, slices, es.assemble_prompt(spec, slices)
+
+    def test_menu_and_category(self):
+        import bot
+        import core.creative_pipeline as cp
+        from core.creative_engine import DOMAIN_ATTRIBUTES
+        self.assertEqual(sk.skeleton_events("coastal_tornado_landfall"), list(TORNADO))
+        for e in ("Tornado approaching coastline", "Tornado rain bands and flying debris lash the waterfront"):
+            self.assertIn(e, sk.REMOVED_EVENTS)          # kod silinmedi: havuzda, iskelet dışında
+            self.assertNotIn(e, cp.EVENT_OUTCOMES)
+            self.assertNotIn(e, cp.EVENT_REQUIRED)
+        self.assertEqual(bot.EVENT_LABELS[es.MARINA_TORNADO], "🌪️ Hortum marina rıhtımını geçer")
+        self.assertEqual(bot.EVENT_LABELS[es.AVENUE], "🌪️ Hortum sahil caddesini süpürür")
+        env = DOMAIN_ATTRIBUTES["coastal_tornado_landfall"]["environments"]
+        self.assertIn("Marina berthing pier", env)
+        self.assertEqual(len(env), 13)                    # 12 + yalnızca rıhtım
+        self.assertEqual(sk.PHENOMENA["Hortum"], list(TORNADO) + ["Tornado approaching an open beach"])
+        # plaj olayı aynı kaldı
+        self.assertEqual(sk.EVENT_SKELETONS["Tornado approaching an open beach"]["domain"], "open_beach_coastal_events")
+        self.assertFalse(es.is_structured("Tornado approaching an open beach"))
+
+    def test_skeletons_and_outcomes(self):
+        import core.creative_pipeline as cp
+        for e in TORNADO:
+            s = sk.EVENT_SKELETONS[e]
+            with self.subTest(event=e):
+                self.assertEqual(list(s["spots"]), self.SPOTS[e])
+                self.assertIsNone(s["ships"])            # marina dahil gemisiz
+                self.assertEqual(s["weather"], sk.WEATHER_STORM)
+                self.assertEqual(sk.count_range(e, None), (3, 6))
+                self.assertEqual(cp.EVENT_REQUIRED[e], [])
+                self.assertNotIn(e, sk.REGION_VIEW_EVENTS)
+                self.assertEqual(es.structure_views(e), [None])
+        self.assertEqual(sk.CAMERA_SPOTS["Marina berthing pier"], "on the berthing pier")
+        self.assertEqual(cp.EVENT_OUTCOMES[es.MARINA_TORNADO],
+                         "the tornado tears across the marina quay, snapping masts and hurling boat covers and debris "
+                         "toward the road")
+        self.assertEqual(cp.EVENT_OUTCOMES[es.AVENUE],
+                         "the tornado sweeps down the coastal avenue, uprooting palm trees and hurling signs and debris "
+                         "along the road")
+
+    def test_pools_locked(self):
+        for e, (s2, s3, pairs, spots) in self.POOLS.items():
+            b = es.EVENT_BEATS[e]
+            with self.subTest(event=e):
+                self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, s2)
+                self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, s3)
+                self.assertEqual(b["excluded_pairs"], pairs)
+                self.assertEqual(b["excluded_views"], {})
+                self.assertEqual(b["excluded_spots"], spots)
+                self.assertEqual([n for n, _ in es.EVENT_VEHICLES[e]], self.VEHICLES)
+
+    def test_key_visuals_pass_trigger_and_event_name(self):
+        import core.creative_pipeline as cp
+        for e in TORNADO:
+            with self.subTest(event=e):
+                found = {i["rule"] for i in cp.story_rule_issues(e, None, es.EVENT_KEY_VISUAL[e])}
+                self.assertFalse(found & {"a_trigger_first", "e_event_and_ship_named", "required"})
+                # kilit cümle olmadan tetik kuralı kalır
+                self.assertIn("a_trigger_first", {i["rule"] for i in cp.story_rule_issues(e, None, "Cars sit still.")})
+
+    def test_canonical_terms_pass(self):
+        for e in TORNADO:
+            for slot in ("slice_2", "slice_3"):
+                for bid, beat in es.EVENT_BEATS[e][slot].items():
+                    for vehicle in self.VEHICLES:
+                        text = cap(es.beat_text(e, slot, bid, vehicle))
+                        with self.subTest(beat=bid, vehicle=vehicle):
+                            self.assertEqual(es.missing_term_groups(beat["terms"], text), [])
+
+    def test_variants_and_wrong_event(self):
+        ok = {(es.LANDFALL, "C1"): "A gust shoves the SUV broadside across the street.",
+              (es.LANDFALL, "C3"): "A spinning signpost smashes through the windscreen of the white van.",
+              (es.LANDFALL, "E2"): "The tornado wrenches a huge billboard off its frame and hurls it away.",
+              (es.MARINA_TORNADO, "Y4"): "A wooden pallet slams into the pickup truck, shattering its front glass.",
+              (es.MARINA_TORNADO, "Z1"): "The masts along the pier buckle and crack one after another.",
+              (es.MARINA_TORNADO, "Z3"): "The wind rips a sailboat free of its lines and drags it along the dock.",
+              (es.AVENUE, "P5"): "The wind heaves the small car off the road and hurls it into a bus stop.",
+              (es.AVENUE, "P4"): "A palm tree crashes down, narrowly missing the small car.",
+              (es.LANDFALL, "C4"): "The SUV skids across the road and crashes into a stationary car.",
+              (es.LANDFALL, "E5"): "The tornado shears the front off a small store, launching its shutters.",
+              (es.LANDFALL, "C5"): "The wind lifts the white van off the road and hurls it down the street.",
+              (es.LANDFALL, "C6"): "The SUV is swept up into the air, spun around and slammed onto the sidewalk.",
+              (es.MARINA_TORNADO, "Y1"): "The white van skids sideways across the quay in the gusts.",
+              (es.MARINA_TORNADO, "Y6"): "The pickup truck is hoisted skyward, whirls and plunges onto the quay.",
+              (es.AVENUE, "Q5"): "One by one the street lights bend and crash onto the avenue.",
+              (es.AVENUE, "Q6"): "The tornado tears the shop awnings away and they whirl high above the road."}
+        bad = {(es.LANDFALL, "C3"): "A flying street sign slams into the side of a parked bus.",
+               (es.LANDFALL, "E1"): "The tornado tears a billboard off its frame.",
+               (es.MARINA_TORNADO, "Y3"): "The SUV is pushed along the quay into a stack of boxes.",
+               (es.MARINA_TORNADO, "Z4"): "A yacht tips over at its berth in the wind.",
+               (es.AVENUE, "P4"): "A palm tree sways beside the small car.",
+               (es.LANDFALL, "C5"): "The SUV is pushed down the street by the wind.",
+               (es.LANDFALL, "C6"): "The SUV is swept up into the air and spins.",
+               (es.MARINA_TORNADO, "Y5"): "The white van is flung into a stack of dock boxes.",
+               (es.MARINA_TORNADO, "Z3"): "A small yacht drifts by the dock in the wind.",
+               (es.AVENUE, "P6"): "The SUV and the car behind it are pushed along the avenue together.",
+               (es.AVENUE, "Q4"): "The tornado tears the roof off a house and throws it aside."}
+        for (e, bid), s in ok.items():
+            slot = "slice_3" if bid[0] in "EZQ" else "slice_2"
+            with self.subTest(ok=bid):
+                self.assertEqual(es.missing_term_groups(es.EVENT_BEATS[e][slot][bid]["terms"], s), [])
+        for (e, bid), s in bad.items():
+            slot = "slice_3" if bid[0] in "EZQ" else "slice_2"
+            with self.subTest(bad=bid):
+                self.assertTrue(es.missing_term_groups(es.EVENT_BEATS[e][slot][bid]["terms"], s))
+
+    def test_all_combinations_pass_final_check(self):
+        n, longest = 0, 0
+        for e in TORNADO:
+            head = f"0-4s: {es.EVENT_KEY_VISUAL[e]} "
+            for spot in sk.view_spots(e, None):
+                pairs = es.allowed_pairs(e, None, spot)
+                self.assertTrue(pairs, (e, spot))
+                for b2, b3 in pairs:
+                    self.assertNotIn((b2, b3), es.EVENT_BEATS[e]["excluded_pairs"])
+                    for vehicle in self.VEHICLES:
+                        spec, slices, prompt = self.build(e, b2, b3, spot, vehicle, people=3 + n % 4)
+                        issues = es.final_prompt_issues(spec, slices, prompt, es.assemble_story(spec, slices))
+                        if issues:
+                            self.fail(f"{e}/{spot}/{b2}+{b3}/{vehicle}: {issues}\n{prompt}")
+                        self.assertTrue(prompt.startswith(head))
+                        self.assertNotIn("Setting:", prompt)
+                        longest = max(longest, len(prompt))
+                        n += 1
+        # karaya vurma (35 + 30 + 35) × 4; marina 36 × 4; cadde (28 + 33 + 28) × 4
+        self.assertEqual(n, 400 + 144 + 356)
+        self.assertLess(longest, es.MAX_PROMPT_CHARS)
+
+    def test_excluded_spots(self):
+        def d3(e, spot):
+            return {d for _, d in es.allowed_pairs(e, None, spot)}
+        self.assertNotIn("E1", d3(es.LANDFALL, "Residential coastal district"))
+        self.assertIn("E1", d3(es.LANDFALL, "Downtown city center"))
+        self.assertIn("Z4", d3(es.MARINA_TORNADO, "Marina berthing pier"))   # 4 Eki: dışlama kalktı
+        self.assertNotIn("Q5", d3(es.AVENUE, "Downtown city center"))
+        self.assertNotIn("Q5", d3(es.AVENUE, "High-rise coastal city"))
+        self.assertIn("Q5", d3(es.AVENUE, "Residential coastal district"))
+
+    def test_people_gate_and_line(self):
+        import core.creative_pipeline as cp
+        for e in TORNADO:
+            r = {x["rule"]: x for x in es.SLICE_RULES[e]}
+            self.assertEqual(r["slice_flee"]["terms"], es.SLICE_RULES[TIDAL][0]["terms"])
+            self.assertEqual(r["slice_flee"]["feedback"],
+                             "'slice_1_rest' must show people running away from the tornado.")
+        spec, slices, _ = self.build(es.AVENUE, "P1", "Q2", "Downtown city center", "SUV", 6)
+        msg = cp._slices_message(spec, "P", "W", 3, 6, [], None)
+        self.assertIn("\nVEHICLE: SUV\nPEOPLE RUNNING AWAY: six (slice_1_rest must say that six people run away "
+                      "from the tornado)\n4-9s EVENT: ", msg)
+
+        def codes(s1):
+            sl = {**slices, "slice_1_rest": es.clean_slice(s1)}
+            return {i["rule"] for i in es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl))}
+        self.assertFalse(codes("Six pedestrians sprint for cover from the tornado.") & {"slice_flee", "slice_count"})
+        self.assertIn("slice_count", codes("Four pedestrians sprint for cover from the tornado."))
+        self.assertIn("slice_count", codes("A few pedestrians sprint for cover from the tornado."))
+        self.assertIn("slice_flee", codes("Six pedestrians stare up at the funnel."))
+        fb = {i["rule"]: i["feedback"] for i in es.slice_issues(spec, {**slices, "slice_1_rest": "It hits the road."})}
+        self.assertEqual(fb["slice_count"], "'slice_1_rest' must say that six people run away from the tornado.")
+
+    def test_scene_without_view(self):
+        import asyncio
+        import core.creative_pipeline as cp
+        from core.trace_format import format_generation
+        calls = []
+
+        async def gpt(system, user, **kw):
+            calls.append(user)
+            sl = slices_from_message(user)
+            return {**sl, "slice_1_rest": sl["slice_1_rest"].replace("pedestrians run from the wave",
+                                                                     "pedestrians run from the tornado")}
+        for e in TORNADO:
+            with self.subTest(event=e):
+                scene = asyncio.run(cp.build_creative_scene("coastal_tornado_landfall", e, [], [], gpt))
+                t = scene["trace"]
+                self.assertIsNone(t["view"])
+                self.assertIsNone(scene["ship"])
+                self.assertIn(t["vehicle"], self.VEHICLES)
+                self.assertIn(t["people_running"], (3, 4, 5, 6))
+                self.assertIn(f"|{t['spot'].lower()}##{t['beats']}|", scene["combo_key"])
+                self.assertIsNone(sk.view_of_combo(scene["combo_key"]))
+                self.assertEqual(es.beats_of_combo(scene["combo_key"]), t["beats"])
+                self.assertTrue(sk.is_current_universe_combo(scene["combo_key"]))
+                self.assertNotIn("Görünüm", "\n".join(body for _, body in format_generation(t)))
+                spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
+                self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
+                self.assertIn("run away from the tornado", calls[-1])
+
+    def test_flying_beats(self):
+        # 4 Eki, Bahadır onayı: C5/C6, Y5/Y6, P5/P6 araç havalanır; Y6/P6 artık "birlikte itilir" değil
+        for e, ids in ((es.LANDFALL, ("C5", "C6")), (es.MARINA_TORNADO, ("Y5", "Y6")), (es.AVENUE, ("P5", "P6"))):
+            for bid in ids:
+                terms = es.EVENT_BEATS[e]["slice_2"][bid]["terms"]
+                with self.subTest(beat=bid):
+                    self.assertIs(terms[0], es._LIFT_AIR)
+        self.assertEqual(es._LIFT_AIR, es._LIFT + ("swept up", "sweep up", "sweeps up", "ascend"))
+        for w in ("into the air", "in the air", "through the air", "skyward", "aloft", "hover"):
+            self.assertNotIn(w, es._LIFT_AIR)
+        y5 = es.EVENT_BEATS[es.MARINA_TORNADO]["slice_2"]["Y5"]["terms"]
+        y6 = es.EVENT_BEATS[es.MARINA_TORNADO]["slice_2"]["Y6"]["terms"]
+        # 4 Eki kuru prova: araba havalanmadan "into the air" başka nesneyle geçiyordu, artık reddedilir
+        self.assertTrue(es.missing_term_groups(y5, "The small car hovers momentarily before crashing into dock boxes, "
+                                                   "scattering shattered fragments into the air."))
+        self.assertEqual(es.missing_term_groups(y6, "The small car ascends in a chaotic spin, flinging shards of glass "
+                                                    "and metal before it crashes onto the quay."), [])
+        # 4 Eki kuru prova: doğru anlatılan Z3 ve Y3 reddediliyordu
+        z3 = es.EVENT_BEATS[es.MARINA_TORNADO]["slice_3"]["Z3"]["terms"]
+        y3 = es.EVENT_BEATS[es.MARINA_TORNADO]["slice_2"]["Y3"]["terms"]
+        for text in ("A small yacht breaks free, dragged relentlessly across the pier by the powerful gusts.",
+                     "A small yacht, unmoored, is dragged along the dock by the wind.",
+                     "A yacht snaps loose, carried by the relentless winds along the dock."):
+            self.assertEqual(es.missing_term_groups(z3, text), [], text)
+        for text in ("The wind hurls the SUV across the quay, crashing it into a steel lamppost.",
+                     "The wind forces the SUV along the quay, crashing it with a crunch into a lamppost."):
+            self.assertEqual(es.missing_term_groups(y3, text), [], text)
+        for e in TORNADO:
+            for beat in es.EVENT_BEATS[e]["slice_2"].values():
+                self.assertNotIn(es._TOGETHER_LANDSLIDE, beat["terms"])
+        # heyelan H6/R6 hâlâ kendi listesini kullanır
+        self.assertIs(es.EVENT_BEATS[es.MUDSLIDE]["slice_2"]["H6"]["terms"][0], es._TOGETHER_LANDSLIDE)
+        self.assertIs(es.EVENT_BEATS[es.SLOPE]["slice_2"]["R6"]["terms"][0], es._TOGETHER_LANDSLIDE)
+
+    def test_landslide_message_unchanged(self):
+        # 4 Eki: hortum eklenirken heyelan mesajı bayt bayt aynı (sel ve tidal: test_flood_and_tidal_messages_unchanged)
+        import core.creative_pipeline as cp
+        spec = es.build_spec(es.MUDSLIDE, None, "Balcony across a steep hillside street", None, "H3", "M2", "SUV", 4)
+        self.assertEqual(
+            cp._slices_message(spec, "P", "W", 3, 6, [], ["Fix A.", "Fix B."]),
+            "OPENING SENTENCE (fixed, already written): A massive wall of brown mud and rocks tears loose from the "
+            "saturated hillside and pours down the steep street.\nPLACE: P\nWEATHER: W\nPEOPLE VISIBLE: 3 to 6\n"
+            "VEHICLE: SUV\nPEOPLE RUNNING AWAY: four (slice_1_rest must say that four people run away from the mud)\n"
+            "4-9s EVENT: the SUV is spun around by the mud and dragged downhill\n"
+            "9-15s EVENT: a utility pole snaps and falls into the mud\nRECENT STORIES:\n- (none)\n\n"
+            "YOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already correct: "
+            "Fix A. Fix B.")
+
+    def test_no_candidates_never(self):
+        from itertools import combinations
+        k = es.RECENT_BEAT_BLOCK
+        for e in TORNADO:
+            b = es.EVENT_BEATS[e]
+            for spot in sk.view_spots(e, None):
+                pairs = es.allowed_pairs(e, None, spot)
+                worst = min(sum(1 for v, d in pairs if v not in x2 and d not in x3)
+                            for x2 in map(set, combinations(b["slice_2"], k))
+                            for x3 in map(set, combinations(b["slice_3"], k)))
+                with self.subTest(event=e, spot=spot):
+                    self.assertGreater(worst, 0)
 
 
 if __name__ == "__main__":

@@ -88,6 +88,9 @@ EVENT_LABELS = {
     "Coastal evacuation": "🏃 Kıyı tahliyesi",
     "Waterfront disruption": "🏚️ Sahil şeridi karışır",
     "Tornado rain bands and flying debris lash the waterfront": "🌧️ Yağmur ve uçan enkaz",
+    # 4 Eki (TASLAK): yapılandırılmış hat hortum olayları
+    "Tornado crosses a marina quay": "🌪️ Hortum marina rıhtımını geçer",
+    "Tornado sweeps down a coastal avenue": "🌪️ Hortum sahil caddesini süpürür",
     "Coastal debris movement": "🪨 Kıyıda enkaz savrulur",
     "Marina equipment reacting to severe weather": "⚓ Marina ekipmanı savrulur",
     # Şehir Afeti

@@ -248,15 +248,18 @@ EVENT_SKELETONS = {
                 "seawater keeps pouring over the rail, still surging across the pool deck.",
     },
     # ── Kıyı hortumu (gemisiz ortamlar) ──
-    "Tornado approaching coastline": {
-        "domain": "coastal_tornado_landfall", "ships": None,
-        "spots": {"Beachfront promenade": "the beachfront promenade", "Coastal resort beach": "a resort beach",
-                  "High-rise coastal city": "a high-rise waterfront"},
-        "people": ["onlookers", "residents", "beachgoers"], "weather": WEATHER_STORM, "object": "tornado",
-        "text": "In {weather}, a huge tornado spins across the sea toward {spot}, pulling up a column of spray. Debris "
-                "starts lifting along the coast as {n} {people} run inland. The tornado keeps approaching the coastline, "
-                "still tearing up water and debris.",
-    },
+    # ÇIKARILDI (4 Eki, Bahadır; TASLAK, onay bekliyor): hortum yapılandırılmış hatta 3 olayla (karaya vurma, marina,
+    # sahil caddesi). Olay havuzda kalır, iskelette olmadığı için REMOVED_EVENTS'e düşer ve menüde görünmez. Geri
+    # almak için bu bloğu, EVENT_OUTCOMES ve EVENT_REQUIRED satırlarını açmak yeterli.
+    # "Tornado approaching coastline": {
+    #     "domain": "coastal_tornado_landfall", "ships": None,
+    #     "spots": {"Beachfront promenade": "the beachfront promenade", "Coastal resort beach": "a resort beach",
+    #               "High-rise coastal city": "a high-rise waterfront"},
+    #     "people": ["onlookers", "residents", "beachgoers"], "weather": WEATHER_STORM, "object": "tornado",
+    #     "text": "In {weather}, a huge tornado spins across the sea toward {spot}, pulling up a column of spray. Debris "
+    #             "starts lifting along the coast as {n} {people} run inland. The tornado keeps approaching the coastline, "
+    #             "still tearing up water and debris.",
+    # },
     "Tornado making landfall": {
         "domain": "coastal_tornado_landfall", "ships": None,
         "spots": {"Beachfront promenade": "the beachfront promenade", "Residential coastal district": "a coastal neighborhood",
@@ -266,14 +269,35 @@ EVENT_SKELETONS = {
                 "into the air. Sand and debris whirl around its base as {n} {people} sprint for cover. The tornado keeps "
                 "moving inland, still hurling debris across the street.",
     },
-    "Tornado rain bands and flying debris lash the waterfront": {
+    # ÇIKARILDI (4 Eki, Bahadır; TASLAK, onay bekliyor): yukarıdaki notla aynı
+    # "Tornado rain bands and flying debris lash the waterfront": {
+    #     "domain": "coastal_tornado_landfall", "ships": None,
+    #     "spots": {"Beachfront promenade": "the beachfront promenade", "Coastal resort beach": "a resort waterfront",
+    #               "High-rise coastal city": "a high-rise waterfront"},
+    #     "people": ["onlookers", "residents", "pedestrians"], "weather": WEATHER_STORM, "object": "flying debris",
+    #     "text": "At {spot} in {weather}, the outer rain bands of a tornado lash the waterfront, driving sheets of rain "
+    #             "sideways. Flying debris tumbles along the ground and smashes into railings as {n} {people} run for "
+    #             "shelter. The rain bands keep sweeping in, still hurling debris across the waterfront.",
+    # },
+    # EKLENDİ (4 Eki, Bahadır; TASLAK, onay bekliyor). Gemisiz; tek spot marina kategorisinin rıhtımı.
+    "Tornado crosses a marina quay": {
         "domain": "coastal_tornado_landfall", "ships": None,
-        "spots": {"Beachfront promenade": "the beachfront promenade", "Coastal resort beach": "a resort waterfront",
-                  "High-rise coastal city": "a high-rise waterfront"},
-        "people": ["onlookers", "residents", "pedestrians"], "weather": WEATHER_STORM, "object": "flying debris",
-        "text": "At {spot} in {weather}, the outer rain bands of a tornado lash the waterfront, driving sheets of rain "
-                "sideways. Flying debris tumbles along the ground and smashes into railings as {n} {people} run for "
-                "shelter. The rain bands keep sweeping in, still hurling debris across the waterfront.",
+        "spots": {"Marina berthing pier": "the marina berthing pier beside the quay road"},
+        "people": ["onlookers", "boat owners", "pedestrians"], "weather": WEATHER_STORM, "object": "tornado",
+        "text": "In {weather}, a tornado crosses the marina at {spot}, bending masts and ripping covers off the moored "
+                "yachts. Canvas and debris whirl across the quay as {n} {people} run inland. The tornado keeps crossing "
+                "the marina quay, still hurling debris toward the road.",
+    },
+    # EKLENDİ (4 Eki, Bahadır; TASLAK, onay bekliyor). Spotlar hortumun mevcut şehir spotları.
+    "Tornado sweeps down a coastal avenue": {
+        "domain": "coastal_tornado_landfall", "ships": None,
+        "spots": {"Downtown city center": "a palm-lined coastal avenue downtown",
+                  "Residential coastal district": "a palm-lined coastal avenue through a residential neighborhood",
+                  "High-rise coastal city": "a palm-lined coastal avenue below high-rise towers"},
+        "people": ["onlookers", "residents", "pedestrians"], "weather": WEATHER_STORM, "object": "tornado",
+        "text": "In {weather}, a tornado sweeps down {spot}, hurling signs, branches and debris along the road. Palm "
+                "trees bend and snap as {n} {people} sprint for cover. The tornado keeps sweeping down the coastal "
+                "avenue, still flinging debris across the street.",
     },
     # ── Şehir ──
     "Flash flooding in city streets": {
@@ -475,8 +499,9 @@ def view_place(event: str, place: str, view: str | None) -> str:
 
 # Olayların fiziksel türü (rapor ve menü gruplama için; seçim mantığına girmez)
 PHENOMENA = {
-    "Hortum": ["Tornado approaching coastline", "Tornado making landfall",
-               "Tornado rain bands and flying debris lash the waterfront", "Tornado approaching an open beach"],
+    # 4 Eki (TASLAK): kıyıya yaklaşma ve yağmur bantları menüden çıktı, marina ve sahil caddesi eklendi
+    "Hortum": ["Tornado making landfall", "Tornado crosses a marina quay", "Tornado sweeps down a coastal avenue",
+               "Tornado approaching an open beach"],
     "Tsunami": [],
     "Sel": ["Flash flooding in city streets"],
     "Heyelan": ["Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside", "Mud and debris torrent tears through a hillside village"],
@@ -493,10 +518,14 @@ ENV_CENTRIC_COUNT = (2, 10)
 ENV_CENTRIC_COUNT_BY_DOMAIN = {"landslide_disasters": (2, 8)}
 # Olaya özel kişi aralığı (domain'den önce gelir). 4 Eki, Bahadır: kıyı dev dalgada küçük, belirli sayı 3-6
 EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
-               # TASLAK (4 Eki, Bahadır hazırlığı, onay bekliyor): heyelan 3-6
+               # 4 Eki, Bahadır onayı (canlı, 5c9ca3d): heyelan 3-6
                "Mudslide pours down a hillside street": (3, 6),
                "Rain-soaked slope collapses onto a roadside": (3, 6),
-               "Mud and debris torrent tears through a hillside village": (3, 6)}
+               "Mud and debris torrent tears through a hillside village": (3, 6),
+               # TASLAK (4 Eki, Bahadır hazırlığı, onay bekliyor): hortum 3-6
+               "Tornado making landfall": (3, 6),
+               "Tornado crosses a marina quay": (3, 6),
+               "Tornado sweeps down a coastal avenue": (3, 6)}
 # "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
 NO_SIGNS_DOMAINS = {"landslide_disasters"}
 

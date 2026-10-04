@@ -268,7 +268,9 @@ DOMAIN_ATTRIBUTES = {
             "Coastal resort beach",
             "Empty sandy shoreline",
             "Marina",
-            "Harbor Area"
+            "Harbor Area",
+            # 4 Eki, Bahadır (TASLAK): "Tornado crosses a marina quay" spotu, marina kategorisinin rıhtımı
+            "Marina berthing pier"
         ],
         "events": [
             "Tornado forming offshore",
@@ -278,7 +280,10 @@ DOMAIN_ATTRIBUTES = {
             "Waterfront disruption",
             "Tornado rain bands and flying debris lash the waterfront",
             "Coastal debris movement",
-            "Marina equipment reacting to severe weather"
+            "Marina equipment reacting to severe weather",
+            # 4 Eki, Bahadır (TASLAK): yapılandırılmış hat hortum olayları
+            "Tornado crosses a marina quay",
+            "Tornado sweeps down a coastal avenue"
         ]
     },
     "urban_city_disasters": {
