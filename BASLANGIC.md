@@ -24,7 +24,44 @@
 
 ---
 
-## 📋 DEVİR — Şehir sel: yapılandırılmış hat (2026-10-04 kapanışı)
+## 📋 DEVİR — Kıyı dev dalga: yapılandırılmış hat (2026-10-04 kapanışı)
+
+**DURUM — doğrulanan:** commit `0592fe6`, Railway deploy `4129f174` SUCCESS (CI'ı bekledi), bot açıldı. 675 test.
+Yapılandırılmış hat (kilit cümle + havuzlar + Kie öncesi son denetim) artık sel VE kıyı dev dalgada canlı.
+- Kilit cümle: "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street."
+- 4-9s T1–T8 (araç), 9-15s W1–W8 (yıkım); 5 yasak eşleşme. W6 (alçak duvar) "Coastal avenue behind a seawall"
+  spotunda yok: kamera seawall'un üstünde duruyor. T2 "carried down the street by the surge" (araç havalanmaz).
+- Kaçan kişi sayısı N (3-6) kodla seçilir, GPT'ye kelimeyle verilir ("PEOPLE RUNNING AWAY: five ..."); slice_1_rest'te
+  N'in kelimesi ve kaçış fiili zorunlu (`SLICE_RULES`). "rush" kaçış listesinde YOK (su da "rushes").
+- Birikimli geri bildirim (sadece `SLICE_RULES` olan olaylar): önceki tüm ret nedenleri tek listede gider. Sel aynı.
+- Kuru prova (GPT, Kie yok): 6/6 geçti, 4'ü ilk denemede.
+
+**Test videoları (Bahadır değerlendirmesi):** 6 video (Körfez, Riviera, Kuzey Afrika, ABD x2, Doğu Asya): 4 çok iyi,
+1 iyi, 1 orta (Riviera, otobüs).
+
+**Açık gözlemler (karar Bahadır'da, kod yok):**
+- Araç, GPT'nin kendi yazdığı "lifts" ile havalanabiliyor (yasak kelime kapısı bilerek eklenmedi).
+- W5 (otobüs) zayıf kalabilir.
+- Seedance bazen kesme yapıyor.
+- Dalga 3-5 sn'de duman gibi görünebiliyor.
+
+**Silinecek ölü kod (sistem oturunca ayrı tur, onayla; şimdi SİLİNMEZ):**
+1. `EVENT_SKELETONS[...]["text"]` (sel ve kıyı dev dalga): creative hatta kullanılmıyor, sadece `PROMPT_PIPELINE=skeleton`.
+2. `EVENT_REQUIRED` içindeki "Eski: [...]" yorum satırları (sel, kıyı dev dalga).
+3. `write_story` / `_message` / `CREATIVE_SYSTEM`: bu iki olay girmiyor; diğer olaylar kullandığı için sadece bu iki
+   olaya özel parçalar.
+4. `main.before_submit` içindeki `if not structure and ...` kural kapısı dalı: bu iki olay için çalışmıyor.
+5. `core/creative_engine.py` legacy havuzundaki kıyı dev dalga satırı (sadece `PROMPT_PIPELINE=legacy`).
+Not: `EVENT_OUTCOMES` ölü değil (yapılandırılmış hattın ayrıntısında "outcome" olarak yazılıyor).
+
+**Sıradaki:** Heyelan yapılandırılmış hatta taşınacak, sonra hortum/plaj, kruvaziyer/marina, tersane, feribot.
+
+**Not:** Yerel dal `master`, GitHub dalı `main`. Push her zaman `git push origin HEAD:main`. GitHub'da yanlışlıkla
+açılmış `master` dalı duruyor (silme Bahadır'da).
+
+---
+
+## 📋 DEVİR (ESKİ) — Şehir sel: yapılandırılmış hat (2026-10-04 kapanışı)
 
 **DEĞİŞMEZLER (Bahadır kararı, bağlayıcı):**
 - 15 saniyenin altında video yok (`config.py` açılışta kilitler). Üretim `seedance-2-fast`, 480p, 15 sn; Kling
