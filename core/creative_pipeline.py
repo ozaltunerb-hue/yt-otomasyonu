@@ -263,9 +263,13 @@ EVENT_REQUIRED = {
     # ── Heyelan (ONAYLI, 2 Eki, Bahadır: 3 olay test edildi) ──
     # Sebep: çamur akıntısı ve çarptığı somut nesne (araç/ev) görünmezse model yavaş kayan toprak ya da boş yamaç
     # çiziyor; Seedance hızlı akan su gücünü iyi çiziyor.
-    "Mudslide pours down a hillside street": [("mud",), ("car", "cars", "vehicle", "vehicles")],
-    "Rain-soaked slope collapses onto a roadside": [("mud", "slope", "hillside"), ("car", "cars", "vehicle", "vehicles", "road")],
-    "Mud and debris torrent tears through a hillside village": [("mud",), ("house", "houses", "wall", "walls", "village")],
+    # TASLAK (4 Eki, Bahadır hazırlığı, onay bekliyor): yapılandırılmış hatta; tetik kilit cümlede olay adından.
+    # Eski: [("mud",), ("car", "cars", "vehicle", "vehicles")]
+    "Mudslide pours down a hillside street": [],
+    # Eski: [("mud", "slope", "hillside"), ("car", "cars", "vehicle", "vehicles", "road")]
+    "Rain-soaked slope collapses onto a roadside": [],
+    # Eski: [("mud",), ("house", "houses", "wall", "walls", "village")]
+    "Mud and debris torrent tears through a hillside village": [],
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),
@@ -497,8 +501,7 @@ def _slices_message(spec: dict, place: str, weather: str, lo: int, hi: int, rece
     msg = (f"OPENING SENTENCE (fixed, already written): {spec['key_visual']}\nPLACE: {place}\nWEATHER: {weather}\n"
            f"PEOPLE VISIBLE: {lo} to {hi}\nVEHICLE: {spec['vehicle']}\n"
            # 4 Eki, Bahadır: kişi sayısını kod seçer, GPT cümleye döker (sadece kişi kuralı olan olaylarda)
-           + (f"PEOPLE RUNNING AWAY: {es.people_word(spec)} (slice_1_rest must say that {es.people_word(spec)} "
-              f"people run away from the wave)\n" if es.has_people_rule(event) else "")
+           + es.people_line(spec)
            + f"4-9s EVENT: {es.beat_text(event, 'slice_2', spec['beat_2'], spec['vehicle'])}\n"
            f"9-15s EVENT: {es.beat_text(event, 'slice_3', spec['beat_3'])}\n"
            "RECENT STORIES:\n" + ("\n".join(f"- {s}" for s in recent) or "- (none)"))
@@ -641,8 +644,9 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     """Yapılandırılmış olay: olay çifti + araç (kod), dilimler (GPT), son denetim (kod). Son denetim tutmazsa
     StructureError: Kie'ye gidilmez."""
     b2, b3 = es.choose_beats(event, view, spot, history)
-    vehicle = es.choose_vehicle(view)
-    people = es.choose_people(event, ship)       # kaçan kişi sayısı N (kişi kuralı olan olaylarda); combo_key'e girmez
+    # Görünümü olmayan olayda (heyelan, TASLAK) araç olayın kendi listesinden
+    vehicle = es.choose_vehicle(view) if view is not None else es.choose_event_vehicle(event)
+    people =es.choose_people(event, ship)       # kaçan kişi sayısı N (kişi kuralı olan olaylarda); combo_key'e girmez
     tag = es.beat_tag(b2, b3)
     es.remember_beats(event, tag)                # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
     spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people)
@@ -663,7 +667,9 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     final = es.final_prompt_issues(spec, slices, prompt, story)
     if final:
         raise es.StructureError("Son denetim geçmedi, Kie'ye gönderilmedi: " + "; ".join(i["missing"] for i in final))
-    combo_key = f"{domain}|{(ship or 'none').lower()}|{event.lower()}|{spot.lower()}#{view}#{tag}|{SKELETON_CAMERA}"
+    # Görünüm yoksa boş bırakılır ("spot##H1+M1"): view_of_combo None döner, olay çifti 3. parçada kalır
+    combo_key = (f"{domain}|{(ship or 'none').lower()}|{event.lower()}|{spot.lower()}#{view or ''}#{tag}|"
+                 f"{SKELETON_CAMERA}")
     plain = es.plain_story(spec, slices)
     trace.update(attempts=attempts, story=story, story_words=len(plain.split()), slices=slices)
     log.info(f"✍️ Creative (yapılandırılmış): [{domain}] {event} | yer={spot} | görünüm={view} | olaylar={tag} | "

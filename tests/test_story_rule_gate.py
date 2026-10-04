@@ -190,14 +190,13 @@ class TestRules(unittest.TestCase):
         self.assertIn("a_trigger_first", rules(WAVE, "Ocean Cruise Liner", calm))
 
     def test_a_first_required_group_counts_as_trigger(self):
-        # Bahadır onayı, 30 Eyl: olayın ilk anahtar grubu tetik sayılır. Sel artık grupsuz (4 Eki); mekanizma
-        # heyelanla denenir: "mud" (3 harf) olay kökü değil, ilk grupta.
-        mud = "Mudslide pours down a hillside street"
-        first = "A wall of brown mud and water barrels down the steep street, slamming into parked cars. "
+        # Bahadır onayı, 30 Eyl: olayın ilk anahtar grubu tetik sayılır. Sel ve heyelan artık grupsuz (4 Eki);
+        # mekanizma kızak olayıyla denenir: "sideways" olay kökü değil, ilk grupta.
+        first = "The luxury motor yacht heels over sideways on the slipway as the workers sprint clear. "
         rest = ("Five residents run uphill as the flow shoves the cars sideways. More mud keeps rushing down the "
                 "street, still dragging cars and debris along with it.")
-        self.assertNotIn("a_trigger_first", rules(mud, None, first + rest))
-        self.assertIn("a_trigger_first", rules(mud, None, "Heavy rain drums on the steep street. " + first + rest))
+        self.assertNotIn("a_trigger_first", rules(CABLE, YACHT, first + rest))
+        self.assertIn("a_trigger_first", rules(CABLE, YACHT, "Heavy rain drums on the slipway. " + first + rest))
         # Grupsuz sel: kural çökmez; kilit görsel tek başına tetiği taşır
         self.assertNotIn("a_trigger_first", rules(FLOOD, None, es.EVENT_KEY_VISUAL[FLOOD] + " " + rest))
         self.assertIn("a_trigger_first", rules(FLOOD, None, "Heavy rain drums on the commercial street. " + FLOOD_OK))
@@ -636,10 +635,8 @@ class TestLandslide(unittest.TestCase):
             "the guardrail while drivers scramble out",
             "a fast torrent of mud, logs and rocks tears down between the houses, ramming walls and sweeping away fences "
             "and parked vehicles as villagers run to higher ground"])
-        self.assertEqual([cp.EVENT_REQUIRED[e] for e in self.EVENTS], [
-            [("mud",), ("car", "cars", "vehicle", "vehicles")],
-            [("mud", "slope", "hillside"), ("car", "cars", "vehicle", "vehicles", "road")],
-            [("mud",), ("house", "houses", "wall", "walls", "village")]])
+        # 4 Eki (TASLAK, onay bekliyor): yapılandırılmış hatta, anahtar gruplar kalktı (core/event_structure.py)
+        self.assertEqual([cp.EVENT_REQUIRED[e] for e in self.EVENTS], [[], [], []])
         import re
         for e in self.EVENTS:
             o = cp.EVENT_OUTCOMES[e]
@@ -656,7 +653,7 @@ class TestLandslide(unittest.TestCase):
             self.assertEqual(s["weather"], ["driving rain and wind", "heavy downpour under dark storm light",
                                             "steady heavy rain, grey low cloud"])
             self.assertIsNone(s["ships"])
-            self.assertEqual(sk.count_range(e, None), (2, 8))
+            self.assertEqual(sk.count_range(e, None), (3, 6))   # 4 Eki (TASLAK): olaya özel 3-6
             for spot in s["spots"]:
                 suffix = sk.style_suffix(e, None, spot)
                 self.assertLessEqual(count_constraints(suffix)[0], 8, suffix)

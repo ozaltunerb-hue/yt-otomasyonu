@@ -492,7 +492,11 @@ ENV_CENTRIC_COUNT = (2, 10)
 # Domain'e özel kişi aralığı (env-centric içinde). 2 Eki, Bahadır: heyelan 2-8
 ENV_CENTRIC_COUNT_BY_DOMAIN = {"landslide_disasters": (2, 8)}
 # Olaya özel kişi aralığı (domain'den önce gelir). 4 Eki, Bahadır: kıyı dev dalgada küçük, belirli sayı 3-6
-EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6)}
+EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
+               # TASLAK (4 Eki, Bahadır hazırlığı, onay bekliyor): heyelan 3-6
+               "Mudslide pours down a hillside street": (3, 6),
+               "Rain-soaked slope collapses onto a roadside": (3, 6),
+               "Mud and debris torrent tears through a hillside village": (3, 6)}
 # "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
 NO_SIGNS_DOMAINS = {"landslide_disasters"}
 

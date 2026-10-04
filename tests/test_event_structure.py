@@ -76,6 +76,11 @@ class TestLockedData(unittest.TestCase):
             FLOOD: "A waist-high wall of brown muddy floodwater surges into the street.",
             # 4 Eki, Bahadır onayı
             TIDAL: "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
+            # 4 Eki, TASLAK (Bahadır hazırlığı, onay bekliyor): heyelan
+            es.MUDSLIDE: "A massive wall of brown mud and rocks tears loose from the saturated hillside and pours "
+                         "down the steep street.",
+            es.SLOPE: "The saturated slope collapses and a fast torrent of brown mud and rocks surges across the road.",
+            es.VILLAGE: "A massive torrent of brown mud, logs and rocks bursts through the drenched hillside village.",
         })
         self.assertEqual(es.SLICE_LABELS, ("0-4s", "4-9s", "9-15s"))
         self.assertEqual(es.SLICE_FIELDS, ("slice_1_rest", "slice_2", "slice_3"))
@@ -128,7 +133,7 @@ class TestLockedData(unittest.TestCase):
 
     def test_structured_events(self):
         # 4 Eki: kıyı dev dalga da yapılandırılmış hatta; diğer olaylar eski yolda
-        self.assertEqual(es.structured_events(), (FLOOD, TIDAL))
+        self.assertEqual(es.structured_events(), (FLOOD, TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE))
         self.assertEqual(TIDAL, "Tidal wave surges over a coastal city street")
         self.assertFalse(es.is_structured("Rogue wave breaks over the rail onto the pool deck"))
 
@@ -563,10 +568,11 @@ class TestTidal(unittest.TestCase):
     def test_people_count_range(self):
         self.assertEqual(sk.count_range(TIDAL, None), (3, 6))
         self.assertEqual(sk.count_range(FLOOD, None), (2, 10))   # diğer olaylar aynı
-        self.assertEqual(sk.EVENT_COUNT, {TIDAL: (3, 6)})
+        self.assertEqual(sk.EVENT_COUNT, {TIDAL: (3, 6), es.MUDSLIDE: (3, 6), es.SLOPE: (3, 6), es.VILLAGE: (3, 6)})
 
     def test_slice_rules_locked(self):
-        self.assertEqual(set(es.SLICE_RULES), {TIDAL})   # sel ve diğer olaylarda dilim kapısı yok
+        # selde dilim kapısı yok; heyelan (TASLAK) aynı mekanizma
+        self.assertEqual(set(es.SLICE_RULES), {TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE})
         r = {x["rule"]: x for x in es.SLICE_RULES[TIDAL]}
         self.assertEqual(set(r), {"slice_flee", "slice_count"})
         self.assertEqual(r["slice_flee"]["terms"], ("run", "ran", "running", "flee", "fled", "fleeing", "sprint",
@@ -775,7 +781,8 @@ class TestNeverRunsOutOfCandidates(unittest.TestCase):
             b = es.EVENT_BEATS[event]
             blocks2 = [set(c) for c in combinations(b["slice_2"], k)]
             blocks3 = [set(c) for c in combinations(b["slice_3"], k)]
-            for view in sk.REGION_VIEWS:
+            # 4 Eki: görünümsüz olaylarda (heyelan) tek görünüm None
+            for view in es.structure_views(event):
                 for spot in sk.view_spots(event, view):
                     pairs = es.allowed_pairs(event, view, spot)
                     worst = min(sum(1 for v, d in pairs if v not in x2 and d not in x3)
@@ -785,16 +792,285 @@ class TestNeverRunsOutOfCandidates(unittest.TestCase):
 
     def test_choose_beats_long_run(self):
         # Gerçek akış: her seçim geçmişe eklenir; 200 üretim boyunca hiç aday tükenmez
-        for event, spot in ((FLOOD, "Downtown city center"), (TIDAL, "Coastal avenue behind a seawall")):
-            for view in sk.REGION_VIEWS:
+        cases = [(FLOOD, "Downtown city center"), (TIDAL, "Coastal avenue behind a seawall")]
+        cases += [(e, spot) for e in LANDSLIDE for spot in sk.EVENT_SKELETONS[e]["spots"]]
+        for event, spot in cases:
+            for view in es.structure_views(event):
                 if spot not in sk.view_spots(event, view):
                     continue
                 es._BEAT_MEMORY.clear()
                 rng, hist = random.Random(7), []
                 for _ in range(200):
                     p = es.choose_beats(event, view, spot, hist, rng)
-                    hist.append(combo(view=view, tag=es.beat_tag(*p), spot=spot.lower(), event=event))
+                    hist.append(combo(view=view or "", tag=es.beat_tag(*p), spot=spot.lower(), event=event))
         es._BEAT_MEMORY.clear()
+
+
+LANDSLIDE = (es.MUDSLIDE, es.SLOPE, es.VILLAGE)
+
+
+class TestLandslideStructure(unittest.TestCase):
+    """4 Eki, TASLAK (Bahadır hazırlığı, onay bekliyor): heyelan 3 olayı yapılandırılmış hatta, bölge görünümü yok.
+    KİLİT: havuz metinleri, yasak eşleşmeler ve araç listeleri onaysız değişmez."""
+
+    POOLS = {
+        es.MUDSLIDE: ({
+            "H1": "the {vehicle} is shoved sideways by the mud and slams into the car parked beside it",
+            "H2": "the {vehicle} is pushed down the street by the mud, bumping parked cars",
+            "H3": "the {vehicle} is spun around by the mud and dragged downhill",
+            "H4": "the {vehicle} is buried to its windows and pushed against a house wall",
+            "H5": "the {vehicle} tips over onto its side in the mud",
+            "H6": "the {vehicle} and the car behind it are pushed down the street together, bumper to bumper",
+        }, {
+            "M1": "a row of parked cars is pushed down the street one by one",
+            "M2": "a utility pole snaps and falls into the mud",
+            "M3": "a low garden wall collapses and its stones tumble down the street",
+            "M4": "a tree is torn out of the slope and carried down with the mud",
+            "M5": "a wooden fence is torn away and carried off",
+            "M6": "the mud rams a house corner and tears off its wooden porch",
+        }, {("H2", "M1"), ("H6", "M1"), ("H4", "M3"), ("H4", "M6")}, {}),
+        es.SLOPE: ({
+            "R1": "the {vehicle} is shoved sideways across the road by the mud and rocks",
+            "R2": "the {vehicle} is pushed against the guardrail and pinned there",
+            "R3": "a rolling boulder strikes the {vehicle}, which spins and slides down the road",
+            "R4": "the {vehicle} is buried to its windows in the mud and pushed toward the road edge",
+            "R5": "the {vehicle} tips over onto its side in the mud",
+            "R6": "the {vehicle} and the car behind it are shoved along the road together",
+        }, {
+            "S1": "a section of the guardrail is bent and torn away by the mud",
+            "S2": "a large boulder rolls across the road and smashes into a parked car",
+            "S3": "a tree is torn out of the slope and slides across the road",
+            "S4": "a utility pole snaps and falls across the road",
+            "S5": "more of the slope gives way and a second surge of mud and rocks pours onto the road",
+            "S6": "a row of parked cars is shoved toward the road edge",
+        }, {("R3", "S2"), ("R2", "S1"), ("R6", "S6")},
+            # kamera korkuluğun hemen arkasında
+            {"S1": {"Behind the guardrail of a hillside road"}}),
+        es.VILLAGE: ({
+            "K1": "the {vehicle} is swept down the lane and rammed against a house wall",
+            "K2": "the {vehicle} is spun around by the torrent and dragged along the lane",
+            "K3": "the {vehicle} is buried to its windows and pushed against a fence",
+            "K4": "the {vehicle} tips over onto its side in the torrent",
+            "K5": "the {vehicle} slams into a pile of logs and both are carried away",
+            "K6": "the {vehicle} is shoved into a parked motorbike and both are carried along",
+        }, {
+            "L1": "a wooden house corner is struck and its wall collapses",
+            "L2": "a stretch of wooden fence is torn away and carried off",
+            "L3": "a large tree is uprooted and rolls down with the torrent",
+            "L4": "a roof section is torn off a shed and swept away",
+            "L5": "a pile of logs breaks loose and rolls down the lane",
+            "L6": "a stone wall collapses and its stones tumble into the torrent",
+        }, {("K1", "L1"), ("K3", "L2"), ("K5", "L5"), ("K1", "L6")},
+            # kamera köy evinin üst kat balkonunda
+            {"L1": {"Upper-floor balcony of a village house"}}),
+    }
+    VEHICLES = {es.MUDSLIDE: ["pickup truck", "small car", "white van", "SUV"],
+                es.SLOPE: ["pickup truck", "small car", "white van", "SUV"],
+                es.VILLAGE: ["pickup truck", "small van", "old hatchback"]}
+
+    def setUp(self):
+        es._BEAT_MEMORY.clear()
+
+    def build(self, event, b2, b3, spot, vehicle, people=5, s1=None):
+        spec = es.build_spec(event, None, spot, None, b2, b3, vehicle, people)
+        word = es.NUMBER_WORDS[people]
+        slices = fake_slices(b2, b3, vehicle, event, s1 or f"Within seconds {word} residents run uphill from the flow.")
+        return spec, slices, es.assemble_prompt(spec, slices)
+
+    def test_names_from_code(self):
+        self.assertEqual(sk.skeleton_events("landslide_disasters"), list(LANDSLIDE))
+        for e in LANDSLIDE:
+            self.assertNotIn(e, sk.REGION_VIEW_EVENTS)
+            self.assertEqual(es.structure_views(e), [None])
+        self.assertEqual(es.structure_views(FLOOD), list(sk.REGION_VIEWS))
+
+    def test_pools_locked(self):
+        for e, (s2, s3, pairs, spots) in self.POOLS.items():
+            b = es.EVENT_BEATS[e]
+            with self.subTest(event=e):
+                self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, s2)
+                self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, s3)
+                self.assertEqual(b["excluded_pairs"], pairs)
+                self.assertEqual(b["excluded_views"], {})
+                self.assertEqual(b["excluded_spots"], spots)
+
+    def test_vehicles_locked(self):
+        self.assertEqual({e: [n for n, _ in l] for e, l in es.EVENT_VEHICLES.items()}, self.VEHICLES)
+        rng = random.Random(5)
+        for e, names in self.VEHICLES.items():
+            self.assertEqual({es.choose_event_vehicle(e, rng) for _ in range(200)}, set(names))
+        spec = es.build_spec(es.VILLAGE, None, "High steps on the village square", None, "K2", "L3", "old hatchback", 4)
+        self.assertEqual(es.spec_vehicle_terms(spec), ("hatchback",))
+        with self.assertRaises(es.StructureError):
+            es.choose_event_vehicle(FLOOD)        # sel araç listesini görünümden alır, değişmedi
+        with self.assertRaises(es.StructureError):
+            es.spec_vehicle_terms({**spec, "vehicle": "SUV"})
+
+    def test_key_visuals_pass_trigger_and_event_name(self):
+        import core.creative_pipeline as cp
+        for e in LANDSLIDE:
+            with self.subTest(event=e):
+                self.assertEqual(cp.EVENT_REQUIRED[e], [])
+                found = {i["rule"] for i in cp.story_rule_issues(e, None, es.EVENT_KEY_VISUAL[e])}
+                self.assertFalse(found & {"a_trigger_first", "e_event_and_ship_named", "required"})
+
+    def test_canonical_terms_pass(self):
+        for e in LANDSLIDE:
+            for slot in ("slice_2", "slice_3"):
+                for bid, beat in es.EVENT_BEATS[e][slot].items():
+                    for vehicle in self.VEHICLES[e]:
+                        text = cap(es.beat_text(e, slot, bid, vehicle))
+                        with self.subTest(beat=bid, vehicle=vehicle):
+                            self.assertEqual(es.missing_term_groups(beat["terms"], text), [])
+
+    def test_variants_and_wrong_event(self):
+        ok = {(es.MUDSLIDE, "H1"): "The mud shoves the SUV broadside into the neighboring parked car.",
+              (es.MUDSLIDE, "H3"): "The pickup truck whirls around and is dragged down the slope.",
+              (es.MUDSLIDE, "H4"): "The small car is engulfed up to its windows and pressed against a cottage.",
+              (es.MUDSLIDE, "M6"): "The flow smashes into the corner of a house, ripping away its veranda.",
+              (es.SLOPE, "R2"): "The mud rams the white van into the crash barrier and pins it there.",
+              (es.SLOPE, "R3"): "A boulder slams into the SUV, which skids and spins along the road.",
+              (es.SLOPE, "S5"): "Another section of hillside gives way and fresh mud pours over the road.",
+              (es.VILLAGE, "K5"): "The small van crashes into a stack of timber and both are swept away.",
+              (es.VILLAGE, "K6"): "The torrent shoves the pickup truck into a moped and carries both along.",
+              (es.VILLAGE, "L5"): "A woodpile breaks loose and its logs tumble down the lane."}
+        bad = {(es.MUDSLIDE, "H1"): "The SUV is pushed down the street by the mud.",
+               (es.MUDSLIDE, "H4"): "The small car is pushed against a house wall.",
+               (es.MUDSLIDE, "M6"): "A low garden wall collapses into the mud.",
+               (es.SLOPE, "R2"): "The white van is shoved sideways across the road.",
+               (es.SLOPE, "S1"): "A utility pole snaps and falls across the road.",
+               (es.VILLAGE, "K6"): "The pickup truck is shoved into a parked car and both are carried along.",
+               (es.VILLAGE, "L1"): "A stone wall is struck by the torrent."}
+        for (e, bid), s in ok.items():
+            slot = "slice_3" if bid[0] in "MSL" else "slice_2"
+            with self.subTest(ok=bid):
+                self.assertEqual(es.missing_term_groups(es.EVENT_BEATS[e][slot][bid]["terms"], s), [])
+        for (e, bid), s in bad.items():
+            slot = "slice_3" if bid[0] in "MSL" else "slice_2"
+            with self.subTest(bad=bid):
+                self.assertTrue(es.missing_term_groups(es.EVENT_BEATS[e][slot][bid]["terms"], s))
+
+    def test_together_terms_h6_r6(self):
+        # 4 Eki, Bahadır onayı: heyelana özel "birlikte" grubu; sel/tidal ortak _TOGETHER aynı
+        self.assertEqual(es._TOGETHER, ("together", "bumper", "side by side", "in tandem", "locked", "both", "pair"))
+        self.assertEqual(es._TOGETHER_LANDSLIDE, es._TOGETHER + ("the car behind it", "trailing", "following"))
+        self.assertIs(es.EVENT_BEATS[FLOOD]["slice_2"]["V8"]["terms"][0], es._TOGETHER)
+        self.assertIs(es.EVENT_BEATS[TIDAL]["slice_2"]["T8"]["terms"][0], es._TOGETHER)
+        h6 = es.EVENT_BEATS[es.MUDSLIDE]["slice_2"]["H6"]["terms"]
+        r6 = es.EVENT_BEATS[es.SLOPE]["slice_2"]["R6"]["terms"]
+        ok = [(h6, "The pickup truck and the car behind it are forcibly pushed down the street by the mud."),
+              (r6, "The relentless mudflow catches the pickup truck, dragging it and the trailing car along the road."),
+              (h6, "The SUV is shoved down the street, the following car swept along with it."),
+              (r6, "The white van and the car behind it slide along the road in the torrent.")]
+        for terms, text in ok:
+            with self.subTest(ok=text):
+                self.assertEqual(es.missing_term_groups(terms, text), [])
+        bad = [(h6, "The SUV is pushed down the street behind a parked car."),
+               (r6, "The small car is shoved along the road behind the parked cars."),
+               (r6, "The small car is shoved along the road, a parked car behind it.")]
+        for terms, text in bad:
+            with self.subTest(bad=text):
+                self.assertTrue(es.missing_term_groups(terms, text))
+        # sel ve tidal: aynı ifade hâlâ reddedilir (ortak liste değişmedi)
+        v8 = es.EVENT_BEATS[FLOOD]["slice_2"]["V8"]["terms"]
+        self.assertTrue(es.missing_term_groups(v8, "The sedan and the car behind it are swept down the street."))
+
+    def test_all_combinations_pass_final_check(self):
+        n, longest = 0, 0
+        for e in LANDSLIDE:
+            head = f"0-4s: {es.EVENT_KEY_VISUAL[e]} "
+            for spot in sk.view_spots(e, None):
+                pairs = es.allowed_pairs(e, None, spot)
+                self.assertTrue(pairs, (e, spot))
+                for b2, b3 in pairs:
+                    self.assertNotIn((b2, b3), es.EVENT_BEATS[e]["excluded_pairs"])
+                    for vehicle in self.VEHICLES[e]:
+                        spec, slices, prompt = self.build(e, b2, b3, spot, vehicle, people=3 + n % 4)
+                        issues = es.final_prompt_issues(spec, slices, prompt, es.assemble_story(spec, slices))
+                        if issues:
+                            self.fail(f"{e}/{spot}/{b2}+{b3}/{vehicle}: {issues}\n{prompt}")
+                        self.assertTrue(prompt.startswith(head))
+                        self.assertNotIn("Setting:", prompt)   # görünüm cümlesi yok
+                        longest = max(longest, len(prompt))
+                        n += 1
+        # çamur: 3 spot × 32 çift × 4 araç; yol: (28 + 33) × 4; köy: (32 + 32 + 27) × 3
+        self.assertEqual(n, 384 + 244 + 273)
+        self.assertLess(longest, es.MAX_PROMPT_CHARS)
+
+    def test_excluded_spots(self):
+        self.assertNotIn("S1", {d for _, d in es.allowed_pairs(es.SLOPE, None, "Behind the guardrail of a hillside road")})
+        self.assertIn("S1", {d for _, d in es.allowed_pairs(es.SLOPE, None, "Far edge of the road across from the slope")})
+        self.assertNotIn("L1", {d for _, d in es.allowed_pairs(es.VILLAGE, None, "Upper-floor balcony of a village house")})
+        self.assertIn("L1", {d for _, d in es.allowed_pairs(es.VILLAGE, None, "Terrace on the opposite hillside")})
+
+    def test_people_gate_and_line(self):
+        import core.creative_pipeline as cp
+        for e in LANDSLIDE:
+            self.assertEqual(sk.count_range(e, None), (3, 6))
+            r = {x["rule"]: x for x in es.SLICE_RULES[e]}
+            self.assertEqual(r["slice_flee"]["terms"], es.SLICE_RULES[TIDAL][0]["terms"])
+            self.assertNotIn("rush", r["slice_flee"]["terms"])
+            self.assertEqual(r["slice_flee"]["feedback"], "'slice_1_rest' must show people running away from the mud.")
+        spec, slices, _ = self.build(es.MUDSLIDE, "H3", "M2", "Balcony across a steep hillside street", "SUV", 4)
+        msg = cp._slices_message(spec, "P", "W", 3, 6, [], None)
+        self.assertIn("\nVEHICLE: SUV\nPEOPLE RUNNING AWAY: four (slice_1_rest must say that four people run away "
+                      "from the mud)\n4-9s EVENT: ", msg)
+
+        def codes(s1):
+            sl = {**slices, "slice_1_rest": es.clean_slice(s1)}
+            return {i["rule"] for i in es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl))}
+        self.assertFalse(codes("Four residents scramble uphill away from the mud.") & {"slice_flee", "slice_count"})
+        self.assertIn("slice_count", codes("Five residents scramble uphill away from the mud."))
+        self.assertIn("slice_count", codes("Several residents scramble uphill away from the mud."))
+        self.assertIn("slice_flee", codes("Four residents watch from a doorway as it comes."))
+        self.assertIn("slice_flee", codes("Four residents stand still as the mud rushes past."))
+        fb = {i["rule"]: i["feedback"] for i in es.slice_issues(spec, {**slices, "slice_1_rest": "It hits the road."})}
+        self.assertEqual(fb["slice_count"], "'slice_1_rest' must say that four people run away from the mud.")
+
+    def test_scene_without_view(self):
+        import asyncio
+        import core.creative_pipeline as cp
+        from core.trace_format import format_generation
+        calls = []
+
+        async def gpt(system, user, **kw):
+            calls.append(user)
+            sl = slices_from_message(user)
+            return {**sl, "slice_1_rest": sl["slice_1_rest"].replace("pedestrians run from the wave",
+                                                                     "residents run uphill from the mud")}
+        for e in LANDSLIDE:
+            with self.subTest(event=e):
+                scene = asyncio.run(cp.build_creative_scene("landslide_disasters", e, [], [], gpt))
+                t = scene["trace"]
+                self.assertIsNone(t["view"])
+                self.assertIn(t["vehicle"], self.VEHICLES[e])
+                self.assertIn(t["people_running"], (3, 4, 5, 6))
+                self.assertIn(f"|{t['spot'].lower()}##{t['beats']}|", scene["combo_key"])
+                self.assertIsNone(sk.view_of_combo(scene["combo_key"]))
+                self.assertEqual(es.beats_of_combo(scene["combo_key"]), t["beats"])
+                self.assertEqual(es.beat_history(e, [scene["combo_key"]])[-1], t["beats"])
+                self.assertTrue(sk.is_current_universe_combo(scene["combo_key"]))
+                self.assertNotIn("None", scene["combo_key"])
+                detail = "\n".join(body for _, body in format_generation(t))
+                self.assertNotIn("Görünüm", detail)
+                self.assertNotIn("None", scene["prompt"])
+                spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
+                self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
+                self.assertIn("run away from the mud", calls[-1])
+
+    def test_flood_and_tidal_messages_unchanged(self):
+        import core.creative_pipeline as cp
+        spec = es.build_spec(TIDAL, None, "Coastal avenue behind a seawall", "riviera", "T2", "W3", "small car", 5)
+        self.assertEqual(
+            cp._slices_message(spec, "P", "W", 3, 6, ["old"], ["Fix A."]),
+            "OPENING SENTENCE (fixed, already written): A towering brown tidal wave thick with debris crashes over the "
+            "waterfront onto the coastal street.\nPLACE: P\nWEATHER: W\nPEOPLE VISIBLE: 3 to 6\nVEHICLE: small car\n"
+            "PEOPLE RUNNING AWAY: five (slice_1_rest must say that five people run away from the wave)\n"
+            "4-9s EVENT: the small car is carried down the street by the surge\n"
+            "9-15s EVENT: a street tree is uprooted and carried along\nRECENT STORIES:\n- old\n\n"
+            "YOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already correct: Fix A.")
+        fspec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van")
+        self.assertNotIn("PEOPLE RUNNING AWAY", cp._slices_message(fspec, "P", "W", 2, 10, [], None))
 
 
 if __name__ == "__main__":

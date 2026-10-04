@@ -18,11 +18,15 @@ import re
 import threading
 
 import config
-from core.skeleton_pipeline import REGION_VIEWS, count_range, style_suffix, view_spots
+from core.skeleton_pipeline import (EVENT_SKELETONS, REGION_VIEW_EVENTS, REGION_VIEWS, count_range, style_suffix,
+                                    view_spots)
 from core.trace_format import count_constraints
 
 FLOOD = "Flash flooding in city streets"
 TIDAL = "Tidal wave surges over a coastal city street"
+MUDSLIDE = "Mudslide pours down a hillside street"
+SLOPE = "Rain-soaked slope collapses onto a roadside"
+VILLAGE = "Mud and debris torrent tears through a hillside village"
 
 SLICE_LABELS = ("0-4s", "4-9s", "9-15s")
 SLICE_FIELDS = ("slice_1_rest", "slice_2", "slice_3")
@@ -46,6 +50,11 @@ EVENT_KEY_VISUAL = {
     FLOOD: "A waist-high wall of brown muddy floodwater surges into the street.",
     # 4 Eki, Bahadır onayı. Kaynak: EVENT_OUTCOMES'taki kahverengi molozlu dalga (1 Eki, 6 görünüm videosu).
     TIDAL: "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
+    # TASLAK (4 Eki, Bahadır hazırlığı, onay bekliyor): heyelan
+    MUDSLIDE: "A massive wall of brown mud and rocks tears loose from the saturated hillside and pours down the steep "
+              "street.",
+    SLOPE: "The saturated slope collapses and a fast torrent of brown mud and rocks surges across the road.",
+    VILLAGE: "A massive torrent of brown mud, logs and rocks bursts through the drenched hillside village.",
 }
 
 # ── Bölge araçları (4-9s'deki {vehicle}). Görünüm tariflerindeki araçlardan. terms: dilimde aranan ad. ──────
@@ -57,6 +66,14 @@ REGION_VEHICLES = {
     "north_european_seaside": [("small car", ("car",)), ("hatchback", ("hatchback",)), ("delivery van", ("van",))],
     "riviera": [("small car", ("car",)), ("hatchback", ("hatchback",)), ("delivery van", ("van",))],
     "east_asian_coast": [("small boxy car", ("car",)), ("compact car", ("car",)), ("small van", ("van",))],
+}
+# ── Olay araçları: bölge görünümü olmayan olaylarda (TASLAK, 4 Eki, heyelan). Görünümlü olaylar REGION_VEHICLES. ─
+EVENT_VEHICLES = {
+    MUDSLIDE: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)),
+               ("SUV", ("suv",))],
+    SLOPE: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)),
+            ("SUV", ("suv",))],
+    VILLAGE: [("pickup truck", ("pickup", "truck")), ("small van", ("van",)), ("old hatchback", ("hatchback",))],
 }
 
 # ── Olay havuzları. terms: her gruptan en az bir terim dilimde geçmeli (kök + eşanlamlı; çekimler otomatik:
@@ -89,6 +106,27 @@ _RIP_AWAY = ("rip", "tear", "tore", "torn", "wrench", "break loose", "breaks loo
              "sweep", "swept", "carry", "carried", "peel", "wash")
 _FALL = ("topple", "fall", "fell", "collapse", "crash", "snap", "tip", "keel over", "go down", "goes down",
          "went down", "bend", "buckle", "give way", "gives way")
+# Heyelan (TASLAK, 4 Eki). Kıyı dev dalga/sel girdilerindeki aynı terimler adlandırıldı; o girdiler olduğu gibi kalır.
+_COLLAPSE = ("collapse", "crumble", "topple", "fall", "fell", "give way", "gives way", "gave way", "burst", "break",
+             "broke", "cave", "tumble", "burst apart")
+_UPROOT = ("uproot", "rip", "tear", "tore", "torn", "topple", "fall", "fell", "wrench", "pull", "snap", "carry",
+           "carried", "sweep", "swept", "wash")
+_FENCE = ("fence", "fences", "fencing", "picket")
+_TEAR = ("tear", "tore", "torn", "rip", "wrench", "sweep", "swept", "carry", "carried", "pull", "snap", "break",
+         "broke", "collapse", "flatten", "uproot")
+_BURY = ("bury", "buried", "engulf", "swallow", "submerge", "sink", "sank", "sunk", "to its windows",
+         "up to its windows", "window-deep", "door-deep")
+_HOUSE = ("wall", "house", "home", "building", "facade", "façade", "cottage", "cabin", "doorway")
+_GUARDRAIL = ("guardrail", "guard rail", "crash barrier", "barrier", "railing")
+_ROCK = ("boulder", "rock", "stone")
+_LOGS = ("log", "logs", "timber", "lumber", "woodpile", "wood pile", "tree trunk", "trunks")
+_BUMP = ("bump", "knock", "clip", "scrape", "graze", "jostle", "hit", "slam", "crash", "ram", "smash", "collide")
+_NEIGHBOR = ("beside", "next", "another", "other", "second", "parked", "adjacent", "neighboring", "neighbouring")
+# Heyelan H6/R6 (4 Eki, Bahadır onayı): kuru provada GPT "the car behind it", "the trailing car" yazdı. Ortak
+# _TOGETHER (sel, kıyı dev dalga) değişmez; çıplak "behind" bilerek yok.
+_TOGETHER_LANDSLIDE = _TOGETHER + ("the car behind it", "trailing", "following")
+_DOWNHILL = ("downhill", "down the hill", "down the slope", "down the street", "down the lane", "along the lane",
+             "down the road", "along the road")
 
 EVENT_BEATS = {
     FLOOD: {
@@ -210,24 +248,145 @@ EVENT_BEATS = {
         # Kamera seawall'un üstünde duruyor: "alçak duvar çöker" olayı kameranın durduğu duvar gibi çizilir
         "excluded_spots": {"W6": {"Coastal avenue behind a seawall"}},
     },
+    # ── Heyelan (TASLAK, 4 Eki, Bahadır hazırlığı; onay bekliyor) ──
+    MUDSLIDE: {
+        "slice_2": {
+            "H1": {"text": "the {vehicle} is shoved sideways by the mud and slams into the car parked beside it",
+                   "terms": [_SIDEWAYS, _HIT, _NEIGHBOR]},
+            "H2": {"text": "the {vehicle} is pushed down the street by the mud, bumping parked cars",
+                   "terms": [_DRAG, _BUMP]},
+            "H3": {"text": "the {vehicle} is spun around by the mud and dragged downhill",
+                   "terms": [_SPIN, _DRAG + _DOWNHILL]},
+            "H4": {"text": "the {vehicle} is buried to its windows and pushed against a house wall",
+                   "terms": [_BURY, _HOUSE]},
+            "H5": {"text": "the {vehicle} tips over onto its side in the mud",
+                   "terms": [_TIP]},
+            "H6": {"text": "the {vehicle} and the car behind it are pushed down the street together, bumper to bumper",
+                   "terms": [_TOGETHER_LANDSLIDE, _DRAG]},
+        },
+        "slice_3": {
+            "M1": {"text": "a row of parked cars is pushed down the street one by one",
+                   "terms": [_ROW, _CAR, _DRAG]},
+            "M2": {"text": "a utility pole snaps and falls into the mud",
+                   "terms": [_POLE, _FALL]},
+            "M3": {"text": "a low garden wall collapses and its stones tumble down the street",
+                   "terms": [("wall", "walls"), _COLLAPSE]},
+            "M4": {"text": "a tree is torn out of the slope and carried down with the mud",
+                   "terms": [("tree", "trees"), _UPROOT]},
+            "M5": {"text": "a wooden fence is torn away and carried off",
+                   "terms": [_FENCE, _TEAR]},
+            "M6": {"text": "the mud rams a house corner and tears off its wooden porch",
+                   "terms": [("porch", "veranda", "front steps", "stoop", "house corner", "corner of a house",
+                              "corner of the house"), _TEAR + ("crush", "smash", "rip off", "rip away")]},
+        },
+        "excluded_pairs": {("H2", "M1"), ("H6", "M1"), ("H4", "M3"), ("H4", "M6")},
+        "excluded_views": {},
+        "excluded_spots": {},
+    },
+    SLOPE: {
+        "slice_2": {
+            "R1": {"text": "the {vehicle} is shoved sideways across the road by the mud and rocks",
+                   "terms": [_SIDEWAYS + ("across the road", "across both lanes"), _DRAG]},
+            "R2": {"text": "the {vehicle} is pushed against the guardrail and pinned there",
+                   "terms": [_GUARDRAIL, _HIT]},
+            "R3": {"text": "a rolling boulder strikes the {vehicle}, which spins and slides down the road",
+                   "terms": [_ROCK, _SPIN + ("slide", "slid", "skid")]},
+            "R4": {"text": "the {vehicle} is buried to its windows in the mud and pushed toward the road edge",
+                   "terms": [_BURY, ("edge", "shoulder", "verge", "side of the road", "roadside", "drop-off",
+                                     "drop off")]},
+            "R5": {"text": "the {vehicle} tips over onto its side in the mud",
+                   "terms": [_TIP]},
+            "R6": {"text": "the {vehicle} and the car behind it are shoved along the road together",
+                   "terms": [_TOGETHER_LANDSLIDE, _DRAG]},
+        },
+        "slice_3": {
+            "S1": {"text": "a section of the guardrail is bent and torn away by the mud",
+                   "terms": [_GUARDRAIL, ("bend", "bent", "buckle", "twist", "tear", "tore", "torn", "rip", "wrench",
+                                          "snap", "break", "broke", "collapse", "crumple", "flatten")]},
+            "S2": {"text": "a large boulder rolls across the road and smashes into a parked car",
+                   "terms": [_ROCK, ("roll", "tumble", "bounce", "crash", "smash", "slam", "hurtle", "careen",
+                                     "barrel", "ram", "hit", "strike", "struck"), _CAR]},
+            "S3": {"text": "a tree is torn out of the slope and slides across the road",
+                   "terms": [("tree", "trees"), _UPROOT + ("slide", "slid")]},
+            "S4": {"text": "a utility pole snaps and falls across the road",
+                   "terms": [_POLE, _FALL]},
+            "S5": {"text": "more of the slope gives way and a second surge of mud and rocks pours onto the road",
+                   "terms": [("more", "second", "another", "again", "fresh", "new", "further"),
+                             ("slope", "hillside", "mud", "rock", "rocks", "landslide", "torrent", "surge"),
+                             ("give way", "gives way", "gave way", "collapse", "pour", "surge", "slide", "slid",
+                              "crash", "tumble", "break", "broke", "burst")]},
+            "S6": {"text": "a row of parked cars is shoved toward the road edge",
+                   "terms": [_ROW, _CAR, _DRAG]},
+        },
+        "excluded_pairs": {("R3", "S2"), ("R2", "S1"), ("R6", "S6")},
+        "excluded_views": {},
+        # Kamera korkuluğun hemen arkasında duruyor: "korkuluk eğilip kopar" kameranın durduğu korkuluk gibi çizilir
+        "excluded_spots": {"S1": {"Behind the guardrail of a hillside road"}},
+    },
+    VILLAGE: {
+        "slice_2": {
+            "K1": {"text": "the {vehicle} is swept down the lane and rammed against a house wall",
+                   "terms": [_DRAG, _HIT, _HOUSE]},
+            "K2": {"text": "the {vehicle} is spun around by the torrent and dragged along the lane",
+                   "terms": [_SPIN, _DRAG]},
+            "K3": {"text": "the {vehicle} is buried to its windows and pushed against a fence",
+                   "terms": [_BURY, _FENCE]},
+            "K4": {"text": "the {vehicle} tips over onto its side in the torrent",
+                   "terms": [_TIP]},
+            "K5": {"text": "the {vehicle} slams into a pile of logs and both are carried away",
+                   "terms": [_LOGS, _DRAG]},
+            "K6": {"text": "the {vehicle} is shoved into a parked motorbike and both are carried along",
+                   "terms": [("motorbike", "motorcycle", "moped", "scooter", "bike"), _DRAG]},
+        },
+        "slice_3": {
+            "L1": {"text": "a wooden house corner is struck and its wall collapses",
+                   "terms": [("house", "home", "cottage", "cabin", "building"), _COLLAPSE]},
+            "L2": {"text": "a stretch of wooden fence is torn away and carried off",
+                   "terms": [_FENCE, _TEAR]},
+            "L3": {"text": "a large tree is uprooted and rolls down with the torrent",
+                   "terms": [("tree", "trees"), _UPROOT + ("roll", "tumble")]},
+            "L4": {"text": "a roof section is torn off a shed and swept away",
+                   "terms": [("roof", "roofing", "rooftop"), _TEAR]},
+            "L5": {"text": "a pile of logs breaks loose and rolls down the lane",
+                   "terms": [_LOGS, ("roll", "tumble", "break loose", "breaks loose", "broke loose", "scatter",
+                                     "spill", "crash", "bounce", "slide", "slid", "sweep", "swept", "carry",
+                                     "carried")]},
+            "L6": {"text": "a stone wall collapses and its stones tumble into the torrent",
+                   "terms": [("wall", "walls"), _COLLAPSE]},
+        },
+        "excluded_pairs": {("K1", "L1"), ("K3", "L2"), ("K5", "L5"), ("K1", "L6")},
+        "excluded_views": {},
+        # Kamera bir köy evinin üst kat balkonunda: "ev köşesi vurulur, duvarı çöker" kameranın durduğu ev gibi çizilir
+        "excluded_spots": {"L1": {"Upper-floor balcony of a village house"}},
+    },
 }
 
-# ── Olaya özel dilim kapıları (4 Eki, Bahadır onayı; sadece kıyı dev dalga): terimlerden biri dilimde geçmeli.
-# Çekimler otomatik (find_terms). "people": True olan kuralın terimi koddan gelir: spec'teki N'in sayı kelimesi
-# (kod N'i olayın kişi aralığından seçer, GPT cümleye döker). ─────────────────────────────────────────────────
+# ── Olaya özel dilim kapıları (4 Eki, Bahadır onayı): terimlerden biri dilimde geçmeli. Çekimler otomatik
+# (find_terms). "people": True olan kuralın terimi koddan gelir: spec'teki N'in sayı kelimesi (kod N'i olayın kişi
+# aralığından seçer, GPT cümleye döker). "away_from": kaçılan şey (mesaj satırı ve geri bildirim). ───────────────
 NUMBER_WORDS = {3: "three", 4: "four", 5: "five", 6: "six"}
-SLICE_RULES = {
-    TIDAL: [
-        {"rule": "slice_flee", "field": "slice_1_rest",
-         "terms": ("run", "ran", "running", "flee", "fled", "fleeing", "sprint", "scatter", "dash", "bolt", "race",
-                   # 4 Eki, Bahadır: kuru provada "scramble", "darting" reddedildi
-                   "scramble", "dart", "hurry"),
+_FLEE = ("run", "ran", "running", "flee", "fled", "fleeing", "sprint", "scatter", "dash", "bolt", "race",
+         # 4 Eki, Bahadır: kuru provada "scramble", "darting" reddedildi. "rush" YOK (su da "rushes")
+         "scramble", "dart", "hurry")
+
+
+def _people_rules(away_from: str) -> list[dict]:
+    return [
+        {"rule": "slice_flee", "field": "slice_1_rest", "terms": _FLEE,
          "missing": "0-4s: insanların kaçışı",
-         "feedback": "'slice_1_rest' must show people running away from the wave."},
-        {"rule": "slice_count", "field": "slice_1_rest", "people": True,
+         "feedback": f"'slice_1_rest' must show people running away from {away_from}."},
+        {"rule": "slice_count", "field": "slice_1_rest", "people": True, "away_from": away_from,
          "missing": "0-4s: kaçan kişi sayısı ({word})",
-         "feedback": "'slice_1_rest' must say that {word} people run away from the wave."},
-    ],
+         "feedback": "'slice_1_rest' must say that {word} people run away from " + away_from + "."},
+    ]
+
+
+SLICE_RULES = {
+    TIDAL: _people_rules("the wave"),
+    # TASLAK (4 Eki, heyelan)
+    MUDSLIDE: _people_rules("the mud"),
+    SLOPE: _people_rules("the mud"),
+    VILLAGE: _people_rules("the mud"),
 }
 
 
@@ -346,6 +505,34 @@ def vehicle_terms(view: str, vehicle: str) -> tuple[str, ...]:
     raise StructureError(f"Araç görünümde yok: {vehicle} / {view}")
 
 
+# Görünümü olmayan olaylar (TASLAK, 4 Eki, heyelan): araç olayın kendi listesinden (EVENT_VEHICLES).
+def event_vehicles(event: str, view: str | None) -> list[tuple[str, tuple[str, ...]]]:
+    """Olayın araç listesi: görünüm varsa görünümün (REGION_VEHICLES), yoksa olayın (EVENT_VEHICLES)."""
+    if view is not None:
+        if view not in REGION_VEHICLES:
+            raise StructureError(f"Görünümün araç listesi yok: {view}")
+        return REGION_VEHICLES[view]
+    if event not in EVENT_VEHICLES:
+        raise StructureError(f"Olayın araç listesi yok: {event}")
+    return EVENT_VEHICLES[event]
+
+
+def choose_event_vehicle(event: str, rng: random.Random | None = None) -> str:
+    return (rng or random).choice([v for v, _ in event_vehicles(event, None)])
+
+
+def spec_vehicle_terms(spec: dict) -> tuple[str, ...]:
+    for v, terms in event_vehicles(spec["event"], spec["view"]):
+        if v == spec["vehicle"]:
+            return terms
+    raise StructureError(f"Araç listede yok: {spec['vehicle']} / {spec['event']} / {spec['view']}")
+
+
+def structure_views(event: str) -> list[str | None]:
+    """Olayın görünümleri: bölge görünümlü olaylarda 6 görünüm, diğerlerinde [None]."""
+    return list(REGION_VIEWS) if event in REGION_VIEW_EVENTS else [None]
+
+
 def beat_text(event: str, slot: str, beat_id: str, vehicle: str | None = None) -> str:
     return EVENT_BEATS[event][slot][beat_id]["text"].format(vehicle=vehicle or "")
 
@@ -407,6 +594,16 @@ def people_word(spec: dict) -> str:
     return NUMBER_WORDS.get(spec.get("people"), "")
 
 
+def people_line(spec: dict) -> str:
+    """GPT'ye giden kaçan kişi satırı (kişi kuralı olan olaylarda), yoksa boş."""
+    rule = next((r for r in SLICE_RULES.get(spec["event"], ()) if r.get("people")), None)
+    if not rule:
+        return ""
+    w = people_word(spec)
+    return (f"PEOPLE RUNNING AWAY: {w} (slice_1_rest must say that {w} people run away from "
+            f"{rule['away_from']})\n")
+
+
 def assemble_story(spec: dict, slices: dict[str, str]) -> str:
     s1, s2, s3 = (slices[f] for f in SLICE_FIELDS)
     a, b, c = SLICE_LABELS
@@ -465,7 +662,7 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             out.append(_issue(r["rule"], r["missing"].format(word=word), r["feedback"].format(word=word)))
     beats = EVENT_BEATS[event]
     s2, s3 = slices.get("slice_2", ""), slices.get("slice_3", "")
-    vterms = vehicle_terms(spec["view"], spec["vehicle"])
+    vterms = spec_vehicle_terms(spec)
     if not find_terms(vterms, s2):
         out.append(_issue("beat_vehicle", f"4-9s: araç ({spec['vehicle']})",
                           f"'slice_2' must name the {spec['vehicle']}."))
@@ -532,6 +729,8 @@ def _validate_data() -> None:
     for view, vehicles in REGION_VEHICLES.items():
         if not vehicles or any(not t for _, t in vehicles):
             raise StructureError(f"Görünümde araç/terim yok: {view}")
+    if set(EVENT_VEHICLES) - set(EVENT_KEY_VISUAL):
+        raise StructureError(f"Araç listesi yapılandırılmamış olayda: {set(EVENT_VEHICLES) - set(EVENT_KEY_VISUAL)}")
     if set(SLICE_RULES) - set(EVENT_KEY_VISUAL):
         raise StructureError(f"Dilim kapısı yapılandırılmamış olayda: {set(SLICE_RULES) - set(EVENT_KEY_VISUAL)}")
     for event, key in EVENT_KEY_VISUAL.items():
@@ -558,7 +757,15 @@ def _validate_data() -> None:
             lo, hi = count_range(event, None)
             if any(n not in NUMBER_WORDS for n in range(lo, hi + 1)):
                 raise StructureError(f"Kişi aralığının sayı kelimesi yok: {event} {lo}-{hi}")
-        for view in REGION_VIEWS:
+        if event in REGION_VIEW_EVENTS:
+            if event in EVENT_VEHICLES or b["excluded_views"] and set().union(*b["excluded_views"].values()) - set(REGION_VIEWS):
+                raise StructureError(f"Görünümlü olayda olay araç listesi ya da bilinmeyen görünüm: {event}")
+        elif not EVENT_VEHICLES.get(event) or any(not t for _, t in EVENT_VEHICLES[event]) or b["excluded_views"]:
+            raise StructureError(f"Görünümsüz olayın araç listesi yok ya da görünüm kısıtı var: {event}")
+        for d, spots in b["excluded_spots"].items():
+            if spots - set(EVENT_SKELETONS[event]["spots"]):
+                raise StructureError(f"Bilinmeyen spot: {event}/{d}: {spots - set(EVENT_SKELETONS[event]['spots'])}")
+        for view in structure_views(event):
             for spot in view_spots(event, view):
                 if not allowed_pairs(event, view, spot):
                     raise StructureError(f"İzinli olay çifti yok: {event} / {view} / {spot}")
