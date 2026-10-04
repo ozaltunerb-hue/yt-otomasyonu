@@ -46,7 +46,9 @@ waterfront". Plajdaki "Tornado approaching an open beach" dokunulmadı.
   - Toplam kelime: marinaya özel `TOTAL_WORDS_BY_EVENT` 40–75; diğer tüm olaylar genel `TOTAL_WORDS` 40–70.
   - `_CRASH_DOWN`'a "collapse"; hortuma özel `_TORNADO_RIP` listesi ("dislodge" dahil); Z6 kırılma grubu genişletildi
     (annihilate, splinter, obliterate, demolish, wreck, wreak, rupture, pulverize, tear apart, blow apart).
-  - Son test videosu başarısız. Karar: yarın devam; olay menüde kalıyor, çıkarılmayacak.
+  - Yeni tasarımın ilk üretimi Kie kredisi bittiği için (402 Credits insufficient) video üretemedi, tasarım henüz
+    DENENMEDİ. Yarın Kie kredisi yüklendikten sonra aynı Onay metniyle yeniden denenecek. Olay menüde kalıyor,
+    çıkarılmayacak.
 - **Cadde (Tornado sweeps down a coastal avenue):** P4 düzeltmesi ("a falling palm tree crashes onto the {vehicle},
   crushing its roof") canlıda (`41747ba`). Yeni video henüz üretilmedi, yarın test edilecek.
 
@@ -57,7 +59,7 @@ waterfront". Plajdaki "Tornado approaching an open beach" dokunulmadı.
 - Y2: "winds tip" gibi sadece-rüzgâr anlatımlarına dikkat.
 - 70 kelime toplam sınırı hikâyeleri sık reddediyor (marina için 75 yapıldı).
 
-**Sıradaki:** marina tekrar test, cadde testi, sonra plaj ("Tornado approaching an open beach" olduğu gibi),
+**Sıradaki:** Önce Kie kredisi yüklenmeli (marina ve cadde testleri için). Marina tekrar test, cadde testi, sonra plaj ("Tornado approaching an open beach" olduğu gibi),
 kruvaziyer + marina kategorisi, tersane, feribot. **YouTube OAuth token yenileme: 6 Ekim gecesine kadar.**
 
 **Not:** Push her zaman `git push origin HEAD:main` (yerel dal `master`). Kuru provalar `scripts/dry_run_full.py`
