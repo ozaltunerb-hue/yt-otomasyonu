@@ -257,7 +257,9 @@ EVENT_REQUIRED = {
     #                                                          ("crash", "fall", "fell", "topple", "tear", "rip")],
     # ONAYLI. Sebep: dalga kıyı yoluna çarpıp arabaları sürüklemeli. Kaynak: Bahadır'ın beğendiği 24 Eyl videosu
     # (dosya 1790240764259-vf8owrlvyva) ve Bahadır'ın tanımı (30 Eyl).
-    "Tidal wave surges over a coastal city street": [("wave", "surge", "torrent"), ("car", "cars", "vehicle")],
+    # 4 Eki, Bahadır onayı: yapılandırılmış hatta (sel gibi); tetik kilit cümlede olay adından (tidal, wave).
+    # Eski: [("wave", "surge", "torrent"), ("car", "cars", "vehicle")]
+    "Tidal wave surges over a coastal city street": [],
     # ── Heyelan (ONAYLI, 2 Eki, Bahadır: 3 olay test edildi) ──
     # Sebep: çamur akıntısı ve çarptığı somut nesne (araç/ev) görünmezse model yavaş kayan toprak ya da boş yamaç
     # çiziyor; Seedance hızlı akan su gücünü iyi çiziyor.

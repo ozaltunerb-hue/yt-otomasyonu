@@ -22,6 +22,7 @@ from core.skeleton_pipeline import REGION_VIEWS, style_suffix, view_spots
 from core.trace_format import count_constraints
 
 FLOOD = "Flash flooding in city streets"
+TIDAL = "Tidal wave surges over a coastal city street"
 
 SLICE_LABELS = ("0-4s", "4-9s", "9-15s")
 SLICE_FIELDS = ("slice_1_rest", "slice_2", "slice_3")
@@ -43,6 +44,8 @@ RECENT_BEAT_BLOCK = 3          # son N üretimde geçen 4-9s / 9-15s olayı tekr
 EVENT_KEY_VISUAL = {
     # 3 Eki, Bahadır onayı. Kaynak: zaman damgalı Seedance testi (fd6882cd) ve stil ekindeki kamera nesnesi.
     FLOOD: "A waist-high wall of brown muddy floodwater surges into the street.",
+    # 4 Eki, Bahadır onayı. Kaynak: EVENT_OUTCOMES'taki kahverengi molozlu dalga (1 Eki, 6 görünüm videosu).
+    TIDAL: "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
 }
 
 # ── Bölge araçları (4-9s'deki {vehicle}). Görünüm tariflerindeki araçlardan. terms: dilimde aranan ad. ──────
@@ -68,6 +71,23 @@ _POLE = ("lamppost", "lamp post", "streetlight", "street light", "street lamp", 
 _HIT = ("into", "against", "crash", "slam", "smash", "collide", "ram", "hit", "strike", "struck", "plow", "plough",
         "bang", "jam", "pin", "wedge", "press", "hurl", "throw", "threw", "thrown")
 _CAR = ("car", "cars", "vehicle", "sedan", "hatchback", "suv", "van", "truck", "pickup")
+# Kıyı dev dalga (4 Eki). Sel girdileriyle aynı terimler burada adlandırıldı; sel girdileri olduğu gibi kalır.
+_SIDEWAYS = ("sideways", "sideway", "broadside", "side-on", "side on")
+_FLING = ("fling", "flung", "toss", "hurl", "throw", "threw", "thrown", "launch")
+_SHOP = ("storefront", "store front", "shopfront", "shop front", "shop window", "shop", "store", "facade", "façade",
+         "building")
+_CURB = ("sidewalk", "pavement", "curb", "kerb", "footpath")
+_TIP = ("tip", "topple", "overturn", "flip", "roll over", "rolls over", "rolled over", "capsize", "keel over",
+        "on its side", "onto its side", "on to its side", "on its roof")
+_BACKWARD = ("backward", "backwards", "in reverse", "rear-first", "rear first", "tail-first", "tail first",
+             "rear end first", "boot first", "trunk first")
+_TOGETHER = ("together", "bumper", "side by side", "in tandem", "locked", "both", "pair")
+_ROW = ("row", "line", "one by one", "one after another", "one after the other", "in turn", "in sequence",
+        "in succession")
+_RIP_AWAY = ("rip", "tear", "tore", "torn", "wrench", "break loose", "breaks loose", "broke loose", "pull", "drag",
+             "sweep", "swept", "carry", "carried", "peel", "wash")
+_FALL = ("topple", "fall", "fell", "collapse", "crash", "snap", "tip", "keel over", "go down", "goes down",
+         "went down", "bend", "buckle", "give way", "gives way")
 
 EVENT_BEATS = {
     FLOOD: {
@@ -127,6 +147,63 @@ EVENT_BEATS = {
         # Bölge uyumu: tahta çit körfez metropolünde ve yüksek bina bölgesinde seçilmez
         "excluded_views": {"D7": {"gulf_metropolis"}},
         "excluded_spots": {"D7": {"High-rise city district"}},
+    },
+    # 4 Eki, Bahadır onayı (havuzlar ve yasak eşleşmeler).
+    TIDAL: {
+        "slice_2": {
+            "T1": {"text": "the {vehicle} is lifted and flung against a storefront",
+                   "terms": [_LIFT + _FLING, _SHOP]},
+            "T2": {"text": "the {vehicle} is lifted and carried down the street on top of the surge",
+                   "terms": [_LIFT + ("ride", "rode", "on top", "atop", "crest"), _DRAG]},
+            "T3": {"text": "the {vehicle} is slammed into the car parked ahead and both are shoved along",
+                   "terms": [_HIT, ("ahead", "in front", "another", "second", "other", "next", "parked")]},
+            "T4": {"text": "the {vehicle} is spun sideways and dragged along the street",
+                   "terms": [_SIDEWAYS + _SPIN, _DRAG]},
+            "T5": {"text": "the {vehicle} tips over onto its side in the churning water",
+                   "terms": [_TIP]},
+            "T6": {"text": "the {vehicle} is pushed onto the sidewalk and slams into a lamppost",
+                   "terms": [_CURB, _POLE]},
+            "T7": {"text": "the {vehicle} is carried backwards down the street, bumping parked cars",
+                   "terms": [_BACKWARD, _DRAG]},
+            "T8": {"text": "the {vehicle} and the car behind it are dragged away together, bumper to bumper",
+                   "terms": [_TOGETHER, _DRAG]},
+        },
+        "slice_3": {
+            "W1": {"text": "a row of parked vehicles is ripped loose one by one and washed away",
+                   "terms": [_ROW, _CAR, _RIP_AWAY]},
+            "W2": {"text": "a lamppost topples into the surge",
+                   "terms": [_POLE, _FALL]},
+            "W3": {"text": "a street tree is uprooted and carried along",
+                   "terms": [("tree", "trees"), ("uproot", "rip", "tear", "tore", "torn", "topple", "fall", "fell",
+                                                 "wrench", "pull", "snap", "carry", "carried", "sweep", "swept",
+                                                 "wash")]},
+            "W4": {"text": "a roadside kiosk is torn off its base and swept away",
+                   "terms": [("kiosk", "booth", "newsstand", "news stand", "snack bar", "hut", "shack"),
+                             ("tear", "tore", "torn", "rip", "wrench", "sweep", "swept", "carry", "carried", "wash",
+                              "pull", "snap", "break", "broke", "topple", "lift", "uproot")]},
+            "W5": {"text": "a city bus is shoved sideways by the surge",
+                   "terms": [("bus", "buses"), ("shove", "push", "sideways", "sweep", "swept", "drag", "slide", "slid",
+                                                "tilt", "lurch", "skid", "swing", "swung", "turn")]},
+            "W6": {"text": "a low wall collapses into the water",
+                   "terms": [("wall", "walls"), ("collapse", "crumble", "topple", "fall", "fell", "give way",
+                                                 "gives way", "gave way", "burst", "break", "broke", "cave",
+                                                 "tumble", "burst apart")]},
+            "W7": {"text": "shopfront windows burst and the surge pours through, carrying out chairs and tables",
+                   "terms": [("window", "glass", "shopfront", "shop front", "storefront", "store front", "shop",
+                              "cafe", "café", "restaurant"),
+                             ("burst", "shatter", "smash", "break", "broke", "explode", "blow out", "blew out",
+                              "cave", "give way", "gives way", "gave way"),
+                             ("chair", "table", "furniture", "stool")]},
+            "W8": {"text": "a dumpster tumbles down the street and smashes into a parked car",
+                   "terms": [("dumpster", "skip", "trash bin", "rubbish bin", "garbage bin", "waste container",
+                              "garbage container", "trash container", "container", "bin"),
+                             ("tumble", "roll", "smash", "slam", "crash", "barrel", "bounce", "hurtle", "careen",
+                              "ram")]},
+        },
+        "excluded_pairs": {("T6", "W2"), ("T1", "W7"), ("T2", "W1"), ("T8", "W1"), ("T3", "W8")},
+        "excluded_views": {},
+        # Kamera seawall'un üstünde duruyor: "alçak duvar çöker" olayı kameranın durduğu duvar gibi çizilir
+        "excluded_spots": {"W6": {"Coastal avenue behind a seawall"}},
     },
 }
 

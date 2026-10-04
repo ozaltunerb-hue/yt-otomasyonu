@@ -15,7 +15,9 @@ import core.event_structure as es
 import core.skeleton_pipeline as sk
 
 FLOOD = es.FLOOD
+TIDAL = es.TIDAL
 B = es.EVENT_BEATS[FLOOD]
+BT = es.EVENT_BEATS[TIDAL]
 
 
 def cap(s):
@@ -28,28 +30,44 @@ def combo(view="riviera", tag=None, spot="downtown city center", event=FLOOD):
 
 
 S1 = "It swallows the curbs and pours between the parked cars."
+S1_TIDAL = "It smashes over the railings and pours between the parked cars."
 PAD = " in the churning brown water"
 
 
-def fake_slices(b2, b3, vehicle):
-    s2 = cap(es.beat_text(FLOOD, "slice_2", b2, vehicle))
-    s3 = cap(es.beat_text(FLOOD, "slice_3", b3))
+def fake_slices(b2, b3, vehicle, event=FLOOD, s1=S1):
+    s2 = cap(es.beat_text(event, "slice_2", b2, vehicle))
+    s3 = cap(es.beat_text(event, "slice_3", b3))
     if len(s2.split()) < 12:
         s2 += PAD
     if len(s3.split()) < 12:
         s3 += PAD
-    return {"slice_1_rest": es.clean_slice(S1), "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
+    return {"slice_1_rest": es.clean_slice(s1), "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
 
 
-def build(b2="V1", b3="D2", view="us_coastal_town", spot="Downtown city center", vehicle="pickup truck"):
-    spec = es.build_spec(FLOOD, None, spot, view, b2, b3, vehicle)
-    slices = fake_slices(b2, b3, vehicle)
+def build(b2="V1", b3="D2", view="us_coastal_town", spot="Downtown city center", vehicle="pickup truck", event=FLOOD):
+    spec = es.build_spec(event, None, spot, view, b2, b3, vehicle)
+    slices = fake_slices(b2, b3, vehicle, event, S1_TIDAL if event == TIDAL else S1)
     return spec, slices, es.assemble_prompt(spec, slices)
+
+
+def slices_from_message(user):
+    """Sahte GPT (yapılandırılmış hat): kullanıcı mesajındaki 4-9s / 9-15s olaylarını dilim olarak döndürür."""
+    line = dict(l.split(": ", 1) for l in user.splitlines() if l.startswith(("4-9s EVENT", "9-15s EVENT")))
+    s2, s3 = cap(line["4-9s EVENT"]), cap(line["9-15s EVENT"])
+    if len(s2.split()) < 12:
+        s2 += PAD
+    if len(s3.split()) < 12:
+        s3 += PAD
+    return {"slice_1_rest": S1_TIDAL, "slice_2": s2 + ".", "slice_3": s3 + "."}
 
 
 class TestLockedData(unittest.TestCase):
     def test_key_visual_and_labels(self):
-        self.assertEqual(es.EVENT_KEY_VISUAL, {FLOOD: "A waist-high wall of brown muddy floodwater surges into the street."})
+        self.assertEqual(es.EVENT_KEY_VISUAL, {
+            FLOOD: "A waist-high wall of brown muddy floodwater surges into the street.",
+            # 4 Eki, Bahadır onayı
+            TIDAL: "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
+        })
         self.assertEqual(es.SLICE_LABELS, ("0-4s", "4-9s", "9-15s"))
         self.assertEqual(es.SLICE_FIELDS, ("slice_1_rest", "slice_2", "slice_3"))
         # 4 Eki, Bahadır onayı: 6-14/10-20/40-60'tan genişletildi
@@ -99,9 +117,11 @@ class TestLockedData(unittest.TestCase):
         self.assertEqual(es.MAX_PROMPT_CHARS, 1400)
         self.assertLess(es.MAX_PROMPT_CHARS, es.SEEDANCE_PROMPT_LIMIT)
 
-    def test_only_flood_structured(self):
-        self.assertEqual(es.structured_events(), (FLOOD,))
-        self.assertFalse(es.is_structured("Tidal wave surges over a coastal city street"))
+    def test_structured_events(self):
+        # 4 Eki: kıyı dev dalga da yapılandırılmış hatta; diğer olaylar eski yolda
+        self.assertEqual(es.structured_events(), (FLOOD, TIDAL))
+        self.assertEqual(TIDAL, "Tidal wave surges over a coastal city street")
+        self.assertFalse(es.is_structured("Rogue wave breaks over the rail onto the pool deck"))
 
 
 class TestFlexibleTerms(unittest.TestCase):
@@ -440,7 +460,165 @@ class TestFinalCheckNegatives(unittest.TestCase):
 
     def test_not_structured_event(self):
         with self.assertRaises(es.StructureError):
-            es.build_spec("Tidal wave surges over a coastal city street", None, "x", None, "V1", "D1", "car")
+            es.build_spec("Rogue wave breaks over the rail onto the pool deck", None, "x", None, "V1", "D1", "car")
+
+
+class TestTidal(unittest.TestCase):
+    """4 Eki, Bahadır onayı: kıyı dev dalga selin yapısında. KİLİT: havuz ve yasaklar onaysız değişmez."""
+
+    TIDAL_SPOTS = ["Coastal road below a seafront promenade", "Coastal street of low shopfronts",
+                   "Coastal avenue behind a seawall"]
+
+    def setUp(self):
+        es._BEAT_MEMORY.clear()
+
+    def test_pools_locked(self):
+        self.assertEqual({k: v["text"] for k, v in BT["slice_2"].items()}, {
+            "T1": "the {vehicle} is lifted and flung against a storefront",
+            "T2": "the {vehicle} is lifted and carried down the street on top of the surge",
+            "T3": "the {vehicle} is slammed into the car parked ahead and both are shoved along",
+            "T4": "the {vehicle} is spun sideways and dragged along the street",
+            "T5": "the {vehicle} tips over onto its side in the churning water",
+            "T6": "the {vehicle} is pushed onto the sidewalk and slams into a lamppost",
+            "T7": "the {vehicle} is carried backwards down the street, bumping parked cars",
+            "T8": "the {vehicle} and the car behind it are dragged away together, bumper to bumper",
+        })
+        self.assertEqual({k: v["text"] for k, v in BT["slice_3"].items()}, {
+            "W1": "a row of parked vehicles is ripped loose one by one and washed away",
+            "W2": "a lamppost topples into the surge",
+            "W3": "a street tree is uprooted and carried along",
+            "W4": "a roadside kiosk is torn off its base and swept away",
+            "W5": "a city bus is shoved sideways by the surge",
+            "W6": "a low wall collapses into the water",
+            "W7": "shopfront windows burst and the surge pours through, carrying out chairs and tables",
+            "W8": "a dumpster tumbles down the street and smashes into a parked car",
+        })
+        self.assertEqual(BT["excluded_pairs"], {("T6", "W2"), ("T1", "W7"), ("T2", "W1"), ("T8", "W1"), ("T3", "W8")})
+        self.assertEqual(BT["excluded_views"], {})
+        # Kamera seawall'un üstünde: "alçak duvar çöker" kameranın durduğu duvar gibi çizilir
+        self.assertEqual(BT["excluded_spots"], {"W6": {"Coastal avenue behind a seawall"}})
+
+    def test_spots_and_views(self):
+        self.assertIn(TIDAL, sk.REGION_VIEW_EVENTS)   # araç bölge görünümünden gelir
+        self.assertEqual(list(sk.EVENT_SKELETONS[TIDAL]["spots"]), self.TIDAL_SPOTS)
+        self.assertEqual(sum(len(sk.view_spots(TIDAL, v)) for v in sk.REGION_VIEWS), 17)
+        for view in sk.REGION_VIEWS:
+            self.assertTrue(es.REGION_VEHICLES[view])
+
+    def test_key_visual_passes_trigger_and_event_name(self):
+        import core.creative_pipeline as cp
+        self.assertEqual(cp.EVENT_REQUIRED[TIDAL], [])
+        key = es.EVENT_KEY_VISUAL[TIDAL]
+        found = {i["rule"] for i in cp.story_rule_issues(TIDAL, None, key)}
+        self.assertNotIn("a_trigger_first", found)
+        self.assertNotIn("e_event_and_ship_named", found)
+        self.assertNotIn("required", found)
+        # kilit cümle olmadan tetik kuralı kalır (kural gevşemedi)
+        self.assertIn("a_trigger_first", {i["rule"] for i in cp.story_rule_issues(TIDAL, None, "Cars sit on the street.")})
+
+    def test_canonical_terms_pass(self):
+        for slot in ("slice_2", "slice_3"):
+            for bid, beat in BT[slot].items():
+                for view, vehicles in es.REGION_VEHICLES.items():
+                    for vehicle, _ in vehicles:
+                        text = cap(es.beat_text(TIDAL, slot, bid, vehicle))
+                        with self.subTest(beat=bid, vehicle=vehicle):
+                            self.assertEqual(es.missing_term_groups(beat["terms"], text), [])
+
+    def test_variants_and_wrong_event(self):
+        ok = {"T1": "The surge heaves the sedan up and hurls it into a shop window.",
+              "T2": "The pickup truck rides on top of the surge and is swept down the street.",
+              "T4": "The SUV whirls broadside and is dragged along the road.",
+              "W1": "One after another, the parked cars are torn loose and washed away.",
+              "W4": "A newsstand is ripped off its base and carried down the street.",
+              "W7": "The shop glass shatters and the water carries tables and chairs out.",
+              "W8": "A green trash bin rolls through the water and slams into a car."}
+        bad = {"T1": "The sedan is lifted by the water.",
+               "T6": "The SUV is pushed onto the sidewalk.",
+               "W4": "A low wall collapses into the water.",
+               "W7": "Shop windows burst as the water rises."}
+        for bid, s in ok.items():
+            slot = "slice_2" if bid.startswith("T") else "slice_3"
+            with self.subTest(ok=bid):
+                self.assertEqual(es.missing_term_groups(BT[slot][bid]["terms"], s), [])
+        for bid, s in bad.items():
+            slot = "slice_2" if bid.startswith("T") else "slice_3"
+            with self.subTest(bad=bid):
+                self.assertTrue(es.missing_term_groups(BT[slot][bid]["terms"], s))
+
+    def test_all_combinations_pass_final_check(self):
+        n, longest = 0, 0
+        head = f"0-4s: {es.EVENT_KEY_VISUAL[TIDAL]} "
+        for view in sk.REGION_VIEWS:
+            for spot in sk.view_spots(TIDAL, view):
+                pairs = es.allowed_pairs(TIDAL, view, spot)
+                self.assertTrue(pairs, (view, spot))
+                for b2, b3 in pairs:
+                    self.assertNotIn((b2, b3), BT["excluded_pairs"])
+                    for vehicle, _ in es.REGION_VEHICLES[view]:
+                        spec, slices, prompt = build(b2, b3, view, spot, vehicle, event=TIDAL)
+                        issues = es.final_prompt_issues(spec, slices, prompt, es.assemble_story(spec, slices))
+                        if issues:
+                            self.fail(f"{view}/{spot}/{b2}+{b3}/{vehicle}: {issues}\n{prompt}")
+                        self.assertTrue(prompt.startswith(head))
+                        i = [prompt.index(f"{l}: ") for l in es.SLICE_LABELS]
+                        self.assertEqual(i, sorted(i))
+                        longest = max(longest, len(prompt))
+                        n += 1
+        # 12 görünüm×spot × 59 çift + 5 seawall × 51 çift = 708 + 255 = 963 çift; × 3 araç
+        self.assertEqual(n, 2865)
+        self.assertLess(longest, es.MAX_PROMPT_CHARS)
+
+    def test_w6_never_on_seawall(self):
+        for view in sk.REGION_VIEWS:
+            self.assertNotIn("W6", {d for _, d in es.allowed_pairs(TIDAL, view, "Coastal avenue behind a seawall")})
+            self.assertIn("W6", {d for _, d in es.allowed_pairs(TIDAL, view, "Coastal road below a seafront promenade")})
+
+    def test_recent_beats_blocked_and_events_separate(self):
+        hist = [combo(tag="T1+W1", event=TIDAL), combo(tag="T2+W2", event=TIDAL), combo(tag="T3+W3", event=TIDAL),
+                combo(tag="V4+D4")]
+        rng = random.Random(3)
+        for _ in range(200):
+            b2, b3 = es.choose_beats(TIDAL, "riviera", "Coastal road below a seafront promenade", hist, rng)
+            self.assertNotIn(b2, {"T1", "T2", "T3"})
+            self.assertNotIn(b3, {"W1", "W2", "W3"})
+        self.assertEqual(es.beat_history(TIDAL, hist), ["T1+W1", "T2+W2", "T3+W3"])
+        es.remember_beats(FLOOD, "V5+D5")
+        self.assertEqual(es.beat_history(TIDAL, []), [])
+
+
+class TestNeverRunsOutOfCandidates(unittest.TestCase):
+    """Son RECENT_BEAT_BLOCK üretim en kötü durumda RECENT_BEAT_BLOCK farklı 4-9s ve RECENT_BEAT_BLOCK farklı
+    9-15s olayını engeller. Her yapılandırılmış olay × her görünüm × her spot için, olası her engel kümesinde en az
+    bir izinli çift kalır: choose_beats StructureError'a düşmez."""
+
+    def test_every_block_leaves_a_pair(self):
+        from itertools import combinations
+        k = es.RECENT_BEAT_BLOCK
+        for event in es.structured_events():
+            b = es.EVENT_BEATS[event]
+            blocks2 = [set(c) for c in combinations(b["slice_2"], k)]
+            blocks3 = [set(c) for c in combinations(b["slice_3"], k)]
+            for view in sk.REGION_VIEWS:
+                for spot in sk.view_spots(event, view):
+                    pairs = es.allowed_pairs(event, view, spot)
+                    worst = min(sum(1 for v, d in pairs if v not in x2 and d not in x3)
+                                for x2 in blocks2 for x3 in blocks3)
+                    with self.subTest(event=event, view=view, spot=spot):
+                        self.assertGreater(worst, 0)
+
+    def test_choose_beats_long_run(self):
+        # Gerçek akış: her seçim geçmişe eklenir; 200 üretim boyunca hiç aday tükenmez
+        for event, spot in ((FLOOD, "Downtown city center"), (TIDAL, "Coastal avenue behind a seawall")):
+            for view in sk.REGION_VIEWS:
+                if spot not in sk.view_spots(event, view):
+                    continue
+                es._BEAT_MEMORY.clear()
+                rng, hist = random.Random(7), []
+                for _ in range(200):
+                    p = es.choose_beats(event, view, spot, hist, rng)
+                    hist.append(combo(view=view, tag=es.beat_tag(*p), spot=spot.lower(), event=event))
+        es._BEAT_MEMORY.clear()
 
 
 if __name__ == "__main__":

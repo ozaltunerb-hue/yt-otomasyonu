@@ -31,6 +31,7 @@ from core.creative_engine import (
     get_creative_catalyst,
 )
 from core.prompt_generator import NoValidScenarioError
+from test_event_structure import slices_from_message
 
 CHAT = 424242
 DOMAINS = list(MARITIME_INSPIRATION_DOMAINS)
@@ -557,13 +558,13 @@ class TestRegionViewMenu(unittest.TestCase):
 
         async def gpt(system, user, **kw):
             gpt.user = user
-            return {"story": TIDAL_STORY}
+            return slices_from_message(user)   # 4 Eki: kıyı dev dalga yapılandırılmış hatta
         for view in self.sk.REGION_VIEWS:
             with self.subTest(view=view):
                 scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", TIDAL_EVENT, [], [], gpt, view=view))
                 self.assertEqual(scene["trace"]["view"], view)
                 self.assertEqual(scene["trace"]["view_source"], "menü")
-                self.assertIn(f"#{view}|", scene["combo_key"])
+                self.assertIn(f"#{view}#", scene["combo_key"])   # 4 Eki: yer#görünüm#olay çifti
                 self.assertIn(self.sk.REGION_VIEWS[view], gpt.user)
                 self.assertIn(self.sk.REGION_VIEWS[view], scene["style_suffix"])
                 self.assertIn(scene["spot"], self.sk.view_spots(TIDAL_EVENT, view))   # çakışma kuralı geçerli
@@ -576,7 +577,7 @@ class TestRegionViewMenu(unittest.TestCase):
         import core.creative_pipeline as cp
 
         async def gpt(system, user, **kw):
-            return {"story": TIDAL_STORY}
+            return slices_from_message(user)
         order = ["riviera", "gulf_metropolis", "us_coastal_town", "east_asian_coast", "north_african_coast",
                  "north_european_seaside"]
         history = [f"urban_city_disasters|none|{TIDAL_EVENT.lower()}|coastal avenue behind a seawall#{v}|"
@@ -604,9 +605,6 @@ class TestRegionViewMenu(unittest.TestCase):
 
 
 TIDAL_EVENT = "Tidal wave surges over a coastal city street"
-TIDAL_STORY = ("A towering brown tidal wave thick with debris crashes over the seawall onto the coastal road, slamming "
-               "into a row of parked cars. The water sweeps the cars into the storefronts as six pedestrians sprint up "
-               "the stairs. The wave keeps surging down the street, still dragging cars and debris inland.")
 
 
 if __name__ == "__main__":

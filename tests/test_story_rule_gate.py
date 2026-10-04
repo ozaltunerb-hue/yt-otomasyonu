@@ -18,6 +18,7 @@ sys.path.insert(0, ROOT)
 
 import core.creative_pipeline as cp
 import core.event_structure as es
+from test_event_structure import slices_from_message
 import core.prompt_generator as pg
 import core.prompt_sanitizer as ps
 import core.skeleton_pipeline as sk
@@ -68,9 +69,6 @@ WAVE_OK = ("A towering rogue wave breaks over the rail of the ocean cruise liner
            "keeps pouring over the rail, still sweeping chairs and towels across the pool deck toward the far railing.")
 
 
-TIDAL_OK = ("A towering tidal wave crashes over the seawall onto the coastal road, slamming into a row of parked "
-            "cars. The water sweeps the cars into the storefronts as six pedestrians sprint up the stairs to the "
-            "promenade. The wave keeps surging down the street, still dragging cars and debris inland.")
 
 
 def rules(event, ship, story, suffix=None):
@@ -132,7 +130,8 @@ class TestLocks(unittest.TestCase):
         # 4 Eki, Bahadır onayı: sel yapılandırılmış hatta, terimler seçilen olaydan (core/event_structure.py)
         self.assertEqual(cp.EVENT_REQUIRED[FLOOD], [])
         self.assertEqual(cp.EVENT_REQUIRED[WAVE], [("wave",), ("loungers", "chairs", "people", "passengers")])
-        self.assertEqual(cp.EVENT_REQUIRED[TIDAL], [("wave", "surge", "torrent"), ("car", "cars", "vehicle")])
+        # 4 Eki, Bahadır onayı: kıyı dev dalga da yapılandırılmış hatta (core/event_structure.py)
+        self.assertEqual(cp.EVENT_REQUIRED[TIDAL], [])
         self.assertEqual(set(cp.REQUIRED_APPROVED), {CABLE, KEEL, FLOOD, WAVE, TIDAL,
                                                      # 2 Eki: heyelan onaylandı
                                                      "Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside",
@@ -434,9 +433,10 @@ class TestCityEventSwap(unittest.TestCase):
                  "cars. The water sweeps the cars into the storefronts as six pedestrians sprint up the stairs to the "
                  "promenade. The wave keeps surging down the street, still dragging cars and debris inland.")
         self.assertEqual(cp.story_rule_issues(TIDAL, None, story), [])
-        self.assertIn("required", rules(TIDAL, None, story.replace("parked cars", "benches")
-                                        .replace("sweeps the cars", "sweeps the benches")
-                                        .replace("dragging cars", "dragging benches")))
+        # 4 Eki: anahtar gruplar kalktı (yapılandırılmış hat); olay terimleri seçilen 4-9s / 9-15s olayından gelir
+        self.assertNotIn("required", rules(TIDAL, None, story.replace("parked cars", "benches")
+                                           .replace("sweeps the cars", "sweeps the benches")
+                                           .replace("dragging cars", "dragging benches")))
 
 
 class TestRegionViews(unittest.TestCase):
@@ -550,7 +550,7 @@ class TestRegionViews(unittest.TestCase):
         # 1 Eki 15:34 ve 15:45: TEST modunda biten ilk üretim Notion geçmişine girmedi (durum sayılmıyor), ikinci
         # üretim aynı görünümü aldı. İkinci üretim ilkini beklemeden de başlayabilir: geçmiş iki seferde de aynı.
         async def gpt(system, user, **kw):
-            return {"story": TIDAL_OK}
+            return slices_from_message(user)   # 4 Eki: kıyı dev dalga yapılandırılmış hatta
         notion_history = []   # ilk üretim Notion'dan sayılmıyor
         seen = []
         for _ in range(6):
@@ -576,7 +576,7 @@ class TestRegionViews(unittest.TestCase):
     def test_six_runs_six_views_with_notion_and_memory(self):
         # Gerçek akış: her üretim hem hafızaya hem (TEST modunda bitince) Notion geçmişine girer
         async def gpt(system, user, **kw):
-            return {"story": TIDAL_OK}
+            return slices_from_message(user)   # 4 Eki: kıyı dev dalga yapılandırılmış hatta
         notion, seen = [], []
         for _ in range(6):
             scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", TIDAL, list(notion), [], gpt))
