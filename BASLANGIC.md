@@ -24,7 +24,44 @@
 
 ---
 
-## 📋 DEVİR — Kıyı dev dalga: yapılandırılmış hat (2026-10-04 kapanışı)
+## 📋 DEVİR — Heyelan: yapılandırılmış hat (2026-10-04 kapanışı)
+
+**DURUM — doğrulanan:** commit `5c9ca3d`, Railway deploy `9383ff44` SUCCESS (CI'ı bekledi), bot TEST modunda açıldı.
+687 test. Heyelanın 3 olayı (`Mudslide pours down a hillside street`, `Rain-soaked slope collapses onto a roadside`,
+`Mud and debris torrent tears through a hillside village`) yapılandırılmış hatta canlı. Yapılandırılmış olaylar artık:
+sel, kıyı dev dalga, heyelan (3).
+- Kilit cümleler `EVENT_KEY_VISUAL`'da; 4-9s H1–H6 / R1–R6 / K1–K6, 9-15s M1–M6 / S1–S6 / L1–L6. `EVENT_REQUIRED`
+  bu üç olayda `[]` (kilit cümleler tetik ve olay adı kurallarından grupsuz geçiyor).
+- Kaçan kişi sayısı 3-6 (`EVENT_COUNT`), kod seçer, GPT'ye kelimeyle gider ("... run away from the mud").
+- Bölge görünümü yok: araç olaya özel listeden (`EVENT_VEHICLES`); combo_key yer parçası `spot##H3+M1` (görünüm
+  boş, "None" yazılmaz); ayrıntıda "Görünüm" satırı yok.
+- Kamera noktası dışlamaları: S1 (korkuluk kopar) "Behind the guardrail of a hillside road" spotunda yok; L1 (ev
+  köşesi çöker) "Upper-floor balcony of a village house" spotunda yok (kamera o yapının üstünde).
+- H6/R6 için heyelana özel `_TOGETHER_LANDSLIDE` ("the car behind it", "trailing", "following"); sel/tidal ortak
+  `_TOGETHER` listesi değişmedi.
+
+**Test videoları (Bahadır değerlendirmesi):** çamur seli (H1+M3) iyi, 3 kesme; yamaç çökmesi (R2+S4) çok iyi, tek
+çekim; köy (K4+L3) iyi, ağaç yuvarlanmıyor, kesmeler var.
+
+**Açık gözlemler (karar Bahadır'da, kod yok):**
+- 70 kelime toplam sınırı çamur selinde sık ret nedeni (kilit cümle 21 kelime; 3. denemeye gidiyor).
+- "the car behind it" kalıbı katı ("the sedan behind it", "joined by the car behind" reddedildi).
+- S5 fiil grubu dar ("crumbles", "cascades", "spills" yok).
+- Araç havalanması: GPT kendi "lifted" yazabiliyor.
+- Seedance kesme yapabiliyor.
+- L3 (ağaç yuvarlanır) zayıf çiziliyor.
+
+**Fikir (karar yok):** İleride farklı kamera açılarıyla üretim denenebilir; spot listesi veri olduğu için geri dönüş
+kolay. Yeni açıda kameranın durduğu yapıyı çökerten maddeler `excluded_spots` ile dışlanmalı.
+
+**Sıradaki:** hortum + plaj, sonra kruvaziyer + marina, tersane, feribot.
+
+**Not:** Push her zaman `git push origin HEAD:main` (yerel dal `master`). `.git/worktrees/yt_head_wt` boş kalıntı
+klasörü OneDrive kilidi yüzünden silinemiyor; commit'lerde "Permission denied" uyarısı verir, işleve etkisi yok.
+
+---
+
+## 📋 DEVİR (ESKİ) — Kıyı dev dalga: yapılandırılmış hat (2026-10-04 kapanışı)
 
 **DURUM — doğrulanan:** commit `0592fe6`, Railway deploy `4129f174` SUCCESS (CI'ı bekledi), bot açıldı. 675 test.
 Yapılandırılmış hat (kilit cümle + havuzlar + Kie öncesi son denetim) artık sel VE kıyı dev dalgada canlı.
