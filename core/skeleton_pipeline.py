@@ -53,6 +53,8 @@ CAMERA_SPOTS = {
     # Kontrolsüz yat (1 Eki): yat marinaya girer, bağlı teknelere çarpar
     "Breakwater at the marina entrance": "on the breakwater beside the marina entrance",
     "Marina berthing pier": "on the berthing pier",
+    # 4 Eki, Bahadır: hortum marina olayının yeni kamera noktası
+    "High marina terrace": "from a high terrace overlooking the marina and quay",
     "Narrow channel between moored boats": "on the pontoon at the edge of the narrow channel",
     "Cruise terminal berth": "on the terminal quay",
     "Open-air pool deck": "on the pool deck",
@@ -282,7 +284,9 @@ EVENT_SKELETONS = {
     # EKLENDİ (4 Eki, Bahadır; TASLAK, onay bekliyor). Gemisiz; tek spot marina kategorisinin rıhtımı.
     "Tornado crosses a marina quay": {
         "domain": "coastal_tornado_landfall", "ships": None,
-        "spots": {"Marina berthing pier": "the marina berthing pier beside the quay road"},
+        # 4 Eki, Bahadır: tek spot yüksek teras (eski: "Marina berthing pier": "the marina berthing pier beside
+        # the quay road")
+        "spots": {"High marina terrace": "the marina quay"},
         "people": ["onlookers", "boat owners", "pedestrians"], "weather": WEATHER_STORM, "object": "tornado",
         "text": "In {weather}, a tornado crosses the marina at {spot}, bending masts and ripping covers off the moored "
                 "yachts. Canvas and debris whirl across the quay as {n} {people} run inland. The tornado keeps crossing "

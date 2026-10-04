@@ -270,7 +270,9 @@ DOMAIN_ATTRIBUTES = {
             "Marina",
             "Harbor Area",
             # 4 Eki, Bahadır (TASLAK): "Tornado crosses a marina quay" spotu, marina kategorisinin rıhtımı
-            "Marina berthing pier"
+            "Marina berthing pier",
+            # 4 Eki, Bahadır: marina olayının yeni tek spotu
+            "High marina terrace"
         ],
         "events": [
             "Tornado forming offshore",

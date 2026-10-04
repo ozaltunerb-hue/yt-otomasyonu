@@ -104,8 +104,11 @@ EVENT_OUTCOMES = {
     # "Tornado rain bands and flying debris lash the waterfront":
     #     "sheets of rain and flying debris batter the waterfront, smashing railings and signs",
     # EKLENDİ (4 Eki, Bahadır; TASLAK)
+    # 4 Eki, Bahadır: marina yeniden tasarımı (eski: "...snapping masts and hurling boat covers and debris toward
+    # the road")
     "Tornado crosses a marina quay":
-        "the tornado tears across the marina quay, snapping masts and hurling boat covers and debris toward the road",
+        "the tornado tears across the marina quay, ripping awnings, signs and quay furniture loose and hurling debris "
+        "toward the road",
     "Tornado sweeps down a coastal avenue":
         "the tornado sweeps down the coastal avenue, uprooting palm trees and hurling signs and debris along the road",
     # Şehir

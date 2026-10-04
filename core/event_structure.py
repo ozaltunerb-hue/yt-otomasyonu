@@ -38,6 +38,8 @@ SLICE_FIELDS = ("slice_1_rest", "slice_2", "slice_3")
 # yapılandırılmış olaylarda yerini bu toplama bırakır; diğer olaylarda aynen geçerli.
 SLICE_WORDS = {"slice_1_rest": (6, 18), "slice_2": (10, 24), "slice_3": (10, 24)}
 TOTAL_WORDS = (40, 70)
+# Olaya özel toplam kelime aralığı (genel TOTAL_WORDS yerine). 4 Eki, Bahadır: hortum marina 40-75
+TOTAL_WORDS_BY_EVENT = {"Tornado crosses a marina quay": (40, 75)}
 # Kie seedance-2-fast prompt sınırı 20000 karakter (docs.kie.ai/market/bytedance/seedance-2-fast, 4 Eki doğrulandı).
 # Bizim sınırımız onun çok altında: en uzun stil eki 742 + 60 kelimelik hikâye (kelime başına 8 karakterle ~480)
 # ≈ 1224; 1200 bu hikâyeyi haksız reddederdi. Tam kapsam testinde ölçülen en uzun prompt 1062. 70 kelimelik
@@ -64,8 +66,10 @@ EVENT_KEY_VISUAL = {
     # and ripping covers off the yachts as it sweeps toward the quay road." Ara taslak (canlıya alınmadı; Z6/Y5 ile
     # aynı nesneler, 22 kelime): "A violent tornado slams into the marina, ripping covers off the yachts and hurling
     # deck chairs and dock boxes across the quay."
-    MARINA_TORNADO: "A violent tornado slams into the marina, ripping covers off the yachts and hurling debris across "
-                    "the quay.",
+    # 4 Eki, Bahadır: marina yeniden tasarımı (yüksek teras, rıhtım ve kafe sahneleri). Önceki canlı metin:
+    # "A violent tornado slams into the marina, ripping covers off the yachts and hurling debris across the quay."
+    MARINA_TORNADO: "A violent tornado tears in from the sea onto the marina quay, ripping palms and umbrellas off the "
+                    "ground.",
     AVENUE: "A violent tornado sweeps down a palm-lined coastal avenue, hurling signs, branches and debris along the "
             "road.",
 }
@@ -157,7 +161,11 @@ _BOAT = ("yacht", "boat", "sailboat", "motorboat", "cruiser")
 # "hovers ... fragments into the air" Y5'ten geçti). "ascend" eklendi, "hover" bilerek yok.
 _LIFT_AIR = _LIFT + ("swept up", "sweep up", "sweeps up", "ascend")
 _CRASH_DOWN = ("crash", "slam", "smash", "land", "drop", "plunge", "plummet", "come down", "comes down", "came down",
-               "fall", "fell", "hit", "strike", "struck")
+               "fall", "fell", "hit", "strike", "struck",
+               "collapse")   # 4 Eki, Bahadır: sadece kabulü genişletir
+# Marina söküm/fırlatma (4 Eki, Bahadır): hortuma özel; heyelanın ortak _TEAR listesi değişmez
+_TORNADO_RIP = ("tear", "tore", "torn", "rip", "wrench", "strip", "peel", "dislodge", "snap", "break", "broke",
+                "sweep", "swept", "carry", "carried") + _FLING + _AIRBORNE
 _DOWNHILL = ("downhill", "down the hill", "down the slope", "down the street", "down the lane", "along the lane",
              "down the road", "along the road")
 
@@ -437,17 +445,17 @@ EVENT_BEATS = {
         "excluded_spots": {"E1": {"Residential coastal district"}},
     },
     MARINA_TORNADO: {
+        # 4 Eki, Bahadır: marina yeniden tasarımı. Y1/Y3 yeni metin; Z1-Z6 tamamen yeni (direk ve yat sahneleri çıktı)
         "slice_2": {
-            "Y1": {"text": "the {vehicle} is shoved sideways across the quay by the wind",
-                   "terms": [_SIDEWAYS, _DRAG + _BLOW + ("skid",)]},
+            "Y1": {"text": "the {vehicle} is hit by flying debris and slides sideways across the quay",
+                   "terms": [("debris", "wreckage", "rubble", "shrapnel", "flying object", "flying objects"),
+                             _SIDEWAYS]},
             "Y2": {"text": "the {vehicle} tips over onto its side on the quay road",
                    "terms": [_TIP]},
-            "Y3": {"text": "the {vehicle} is pushed along the quay by the wind and slams into a lamppost",
-                   "terms": [_DRAG + _BLOW + ("hurl", "force"), _POLE]},
+            "Y3": {"text": "the {vehicle} slides along the quay and slams into a lamppost",
+                   "terms": [_DRAG + _BLOW + ("hurl", "force", "skid"), _POLE]},
             "Y4": {"text": "a flying wooden crate smashes the windshield of the {vehicle}",
                    "terms": [("crate", "box", "pallet", "barrel", "cask"), _WINDSHIELD]},
-            # 4 Eki, Bahadır onayı: uçma güncellemesi (eski Y5 "slides into a stack of dock boxes, scattering
-            # them", eski Y6 "and the car behind it are pushed along the quay together")
             "Y5": {"text": "the {vehicle} is lifted off the quay road and flung into a stack of dock boxes",
                    "terms": [_LIFT_AIR, _FLING + ("slam", "smash", "crash", "hurtle"),
                              ("box", "boxes", "crate", "crates", "dock box", "locker", "bin", "bins", "stack")]},
@@ -455,29 +463,29 @@ EVENT_BEATS = {
                    "terms": [_LIFT_AIR, _SPIN, _CRASH_DOWN]},
         },
         "slice_3": {
-            "Z1": {"text": "a row of yacht masts bends and snaps in the wind",
-                   "terms": [("mast", "masts", "rigging"),
-                             ("bend", "bent", "snap", "break", "broke", "buckle", "crack", "split", "topple")]},
-            "Z2": {"text": "boat covers and canvas are ripped off the yachts and fly across the dock",
-                   "terms": [("cover", "covers", "canvas", "tarp", "tarpaulin", "sail", "bimini", "awning"),
-                             _TEAR + _AIRBORNE]},
-            "Z3": {"text": "a small yacht is torn from its moorings and pushed along the dock by the wind",
-                   "terms": [_BOAT, ("mooring", "moorings", "line", "lines", "rope", "ropes", "berth", "cleat",
-                                     "tie", "ties", "unmoor", "free", "loose", "dislodge"), _TEAR + _DRAG]},
-            "Z4": {"text": "a yacht tips over at its berth, its mast crashing onto the dock",
-                   "terms": [_BOAT, _TIP + ("heel", "lean", "list"), ("mast", "masts")]},
-            "Z5": {"text": "a marina office roof is torn off and scattered",
+            "Z1": {"text": "the tornado tears the awning off the harbor café and flings it across the quay",
+                   "terms": [("awning", "awnings", "canopy", "canopies", "sunshade", "parasol"), _TORNADO_RIP]},
+            "Z2": {"text": "the tornado rips the front off a small kiosk, sending its shutters and signs flying",
+                   "terms": [("kiosk", "booth", "stall", "hut", "shutter", "shutters", "sign", "signs"), _TORNADO_RIP]},
+            "Z3": {"text": "a wall of dust and debris rolls across the quay and engulfs the café terrace",
+                   "terms": [("dust", "debris", "dirt", "sand", "spray"),
+                             ("engulf", "swallow", "envelop", "blanket", "smother", "bury", "buried", "roll", "sweep",
+                              "swept")]},
+            "Z4": {"text": "the tornado rips the roof off the marina office and scatters the pieces across the quay",
                    "terms": [("roof", "roofing"), ("office", "building", "hut", "cabin", "clubhouse", "shed",
-                                                   "kiosk"), _TEAR + ("scatter", "peel", "strip")]},
-            "Z6": {"text": "the tornado hurls deck chairs and café tables from the quay terrace",
-                   "terms": [("chair", "chairs", "table", "tables", "furniture", "stool", "parasol", "umbrella"),
-                             _FLING + _TEAR + _AIRBORNE]},
+                                                   "kiosk"), _TORNADO_RIP]},
+            "Z5": {"text": "the tornado sweeps dock boxes and rubbish bins off the quay and hurls them across the road",
+                   "terms": [("box", "boxes", "dock box", "bin", "bins", "rubbish bin", "trash can", "crate",
+                              "crates"), _TORNADO_RIP]},
+            "Z6": {"text": "the tornado shatters the glass front of a quayside shop and hurls tables and chairs into the "
+                           "street",
+                   "terms": [("glass", "window", "windows", "shopfront", "storefront", "shop front"),
+                             ("shatter", "smash", "burst", "break", "broke", "explode", "blow out", "blew out"),
+                             ("table", "tables", "chair", "chairs", "furniture", "stool")]},
         },
-        # Havuzlarda aynı nesne iki kez görünmüyor (Y3 lamba; Z'de lamba yok)
-        "excluded_pairs": set(),
+        # Aynı nesne iki kez: kutu (Y5/Z5), sandık (Y4/Z5)
+        "excluded_pairs": {("Y5", "Z5"), ("Y4", "Z5")},
         "excluded_views": {},
-        # 4 Eki, Bahadır: Z4 @ Marina berthing pier dışlaması kaldırıldı (tek spot olduğu için Z4'ü tümden
-        # kapatıyordu)
         "excluded_spots": {},
     },
     AVENUE: {
@@ -820,9 +828,10 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
                           f"The full prompt is {prompt_len} characters; shorten the three fields so it is at most "
                           f"{MAX_PROMPT_CHARS}."))
     total = len(plain_story(spec, slices).split())
-    if not TOTAL_WORDS[0] <= total <= TOTAL_WORDS[1]:
-        out.append(_issue("total_words", f"toplam {TOTAL_WORDS[0]}-{TOTAL_WORDS[1]} kelime ({total})",
-                          f"The three fields plus the fixed opening must total {TOTAL_WORDS[0]} to {TOTAL_WORDS[1]} "
+    tw = TOTAL_WORDS_BY_EVENT.get(event, TOTAL_WORDS)
+    if not tw[0] <= total <= tw[1]:
+        out.append(_issue("total_words", f"toplam {tw[0]}-{tw[1]} kelime ({total})",
+                          f"The three fields plus the fixed opening must total {tw[0]} to {tw[1]} "
                           f"words; now {total}."))
     for r in SLICE_RULES.get(event, ()):
         word = people_word(spec)
