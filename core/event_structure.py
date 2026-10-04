@@ -480,7 +480,13 @@ EVENT_BEATS = {
             "Z6": {"text": "the tornado shatters the glass front of a quayside shop and hurls tables and chairs into the "
                            "street",
                    "terms": [("glass", "window", "windows", "shopfront", "storefront", "shop front"),
-                             ("shatter", "smash", "burst", "break", "broke", "explode", "blow out", "blew out"),
+                             ("shatter", "smash", "burst", "break", "broke", "explode", "blow out", "blew out",
+                              "annihilate", "splinter",   # 4 Eki, Bahadır: kuru provada reddediliyordu
+                              # 4 Eki, Bahadır: "obliterates" reddediliyordu. Çok kelimeli terimlerde çekim sadece
+                              # son kelimeye uygulandığı için "tears/tore/torn apart" vb. ayrıca yazıldı
+                              "obliterate", "demolish", "wreck", "wreak", "rupture", "pulverize",
+                              "tear apart", "tears apart", "tore apart", "torn apart", "tearing apart",
+                              "blow apart", "blows apart", "blew apart", "blown apart", "blowing apart"),
                              ("table", "tables", "chair", "chairs", "furniture", "stool")]},
         },
         # Aynı nesne iki kez: kutu (Y5/Z5), sandık (Y4/Z5)

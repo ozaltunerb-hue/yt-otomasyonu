@@ -1140,7 +1140,7 @@ class TestTornadoStructure(unittest.TestCase):
             {"Q5": {"Downtown city center", "High-rise coastal city"}}),
     }
     SPOTS = {es.LANDFALL: ["Beachfront promenade", "Residential coastal district", "Downtown city center"],
-             es.MARINA_TORNADO: ["High marina terrace"],
+             es.MARINA_TORNADO: ["High marina balcony"],
              es.AVENUE: ["Downtown city center", "Residential coastal district", "High-rise coastal city"]}
     VEHICLES = ["pickup truck", "small car", "white van", "SUV"]
 
@@ -1166,7 +1166,7 @@ class TestTornadoStructure(unittest.TestCase):
         self.assertEqual(bot.EVENT_LABELS[es.AVENUE], "🌪️ Hortum sahil caddesini süpürür")
         env = DOMAIN_ATTRIBUTES["coastal_tornado_landfall"]["environments"]
         self.assertIn("Marina berthing pier", env)        # eski nokta silinmedi
-        self.assertIn("High marina terrace", env)         # 4 Eki: marinanın yeni tek noktası
+        self.assertIn("High marina balcony", env)         # 4 Eki: marinanın yeni tek noktası
         self.assertEqual(len(env), 14)                    # 12 + rıhtım + yüksek teras
         self.assertEqual(sk.PHENOMENA["Hortum"], list(TORNADO) + ["Tornado approaching an open beach"])
         # plaj olayı aynı kaldı
@@ -1186,7 +1186,7 @@ class TestTornadoStructure(unittest.TestCase):
                 self.assertNotIn(e, sk.REGION_VIEW_EVENTS)
                 self.assertEqual(es.structure_views(e), [None])
         self.assertEqual(sk.CAMERA_SPOTS["Marina berthing pier"], "on the berthing pier")   # tabloda kaldı
-        self.assertEqual(sk.CAMERA_SPOTS["High marina terrace"], "from a high terrace overlooking the marina and quay")
+        self.assertEqual(sk.CAMERA_SPOTS["High marina balcony"], "on a high balcony overlooking the marina and quay")
         self.assertEqual(cp.EVENT_OUTCOMES[es.MARINA_TORNADO],
                          "the tornado tears across the marina quay, ripping awnings, signs and quay furniture loose and "
                          "hurling debris "
@@ -1288,8 +1288,8 @@ class TestTornadoStructure(unittest.TestCase):
             return {d for _, d in es.allowed_pairs(e, None, spot)}
         self.assertNotIn("E1", d3(es.LANDFALL, "Residential coastal district"))
         self.assertIn("E1", d3(es.LANDFALL, "Downtown city center"))
-        self.assertEqual(sk.view_spots(es.MARINA_TORNADO, None), ["High marina terrace"])
-        self.assertEqual(d3(es.MARINA_TORNADO, "High marina terrace"), {"Z1", "Z2", "Z3", "Z4", "Z5", "Z6"})
+        self.assertEqual(sk.view_spots(es.MARINA_TORNADO, None), ["High marina balcony"])
+        self.assertEqual(d3(es.MARINA_TORNADO, "High marina balcony"), {"Z1", "Z2", "Z3", "Z4", "Z5", "Z6"})
         self.assertNotIn("Q5", d3(es.AVENUE, "Downtown city center"))
         self.assertNotIn("Q5", d3(es.AVENUE, "High-rise coastal city"))
         self.assertIn("Q5", d3(es.AVENUE, "Residential coastal district"))
@@ -1450,7 +1450,7 @@ class TestMarinaRedesign(unittest.TestCase):
         # marina: 75'e kadar geçer, 76 ve üstü kalır (iki taraf da denenir)
         seen = set()
         for extra in range(0, 12):
-            n, rules = total_rules(es.MARINA_TORNADO, "High marina terrace", "Y2", "Z3", "SUV", extra)
+            n, rules = total_rules(es.MARINA_TORNADO, "High marina balcony", "Y2", "Z3", "SUV", extra)
             seen.add(n)
             with self.subTest(event="marina", words=n):
                 self.assertEqual("total_words" in rules, not 40 <= n <= 75)
@@ -1496,6 +1496,50 @@ class TestMarinaRedesign(unittest.TestCase):
         self.assertNotIn("dislodge", es._TEAR)
         self.assertIn("collapse", es._CRASH_DOWN)
         self.assertIn("plummet", es._CRASH_DOWN)
+
+    def test_camera_line_balcony(self):
+        # 4 Eki, Bahadır: "High marina terrace" → "High marina balcony"; Kie'ye giden kamera cümlesi düzgün okunur
+        from core.creative_engine import DOMAIN_ATTRIBUTES
+        self.assertNotIn("High marina terrace", sk.CAMERA_SPOTS)
+        self.assertEqual(list(sk.EVENT_SKELETONS[es.MARINA_TORNADO]["spots"]), ["High marina balcony"])
+        env = DOMAIN_ATTRIBUTES["coastal_tornado_landfall"]["environments"]
+        self.assertIn("High marina balcony", env)
+        self.assertNotIn("High marina terrace", env)
+        suffix = sk.style_suffix(es.MARINA_TORNADO, None, "High marina balcony")
+        self.assertTrue(suffix.startswith("Handheld footage shot by a person standing on a high balcony overlooking "
+                                          "the marina and quay, eye level"), suffix)
+        for spot, cam in sk.CAMERA_SPOTS.items():
+            self.assertFalse(cam.startswith("from "), spot)   # "standing from ..." kırık cümle olmasın
+
+    def test_z6_break_group_only_marina(self):
+        z6 = es.EVENT_BEATS[es.MARINA_TORNADO]["slice_3"]["Z6"]["terms"]
+        for t in ("The whirlwind annihilates the shop's glass front, scattering tables and chairs down the quay.",
+                  "The tornado strikes a quayside shop, splintering the glass facade and launching tables and chairs.",
+                  "The tornado smashes the shop window and chairs and tables fly into the street.",
+                  # 4 Eki ikinci tur: kuru provada "obliterates" reddediliyordu
+                  "The tornado obliterates the shop's glass facade, violently propelling tables and chairs across the "
+                  "drenched street.",
+                  "The wind demolishes the shop window and flings tables and chairs.",
+                  "The gust tears apart the shop's glass front, hurling tables.",
+                  "The glass front blew apart and chairs flew into the street.",
+                  "The glass front ruptures and chairs fly.",
+                  "The tornado pulverizes the window, scattering tables.",
+                  "The storm wreaks havoc on the shop window, throwing chairs.",
+                  "The tornado wrecks the shop's glass front and tables tumble out."):
+            with self.subTest(text=t):
+                self.assertEqual(es.missing_term_groups(z6, t), [])
+        # yeni kelimeler başka hiçbir olayın terimlerinde yok (sadece marina Z6)
+        new = {"annihilate", "splinter", "obliterate", "demolish", "wreck", "wreak", "rupture", "pulverize",
+               "tear apart", "tears apart", "tore apart", "torn apart", "tearing apart",
+               "blow apart", "blows apart", "blew apart", "blown apart", "blowing apart"}
+        self.assertTrue(new <= set(z6[1]))
+        for e, b in es.EVENT_BEATS.items():
+            for slot in ("slice_2", "slice_3"):
+                for bid, beat in b[slot].items():
+                    if (e, bid) == (es.MARINA_TORNADO, "Z6"):
+                        continue
+                    words = {w for g in beat["terms"] for w in g}
+                    self.assertFalse(words & new, (e, bid))
 
     def test_crash_down_addition_only_widens(self):
         # "collapse" eklenmesi C6/P6'da hiçbir hikâyeyi reddetmeye başlamaz; sadece yeni ifadeleri kabul eder
