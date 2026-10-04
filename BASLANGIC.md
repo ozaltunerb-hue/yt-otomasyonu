@@ -24,7 +24,48 @@
 
 ---
 
-## 📋 DEVİR — Heyelan: yapılandırılmış hat (2026-10-04 kapanışı)
+## 📋 DEVİR — Hortum devir notu (4 Eki)
+
+**KURAL (Bahadır, bağlayıcı):** Olay ya da kategori çıkarılmaz, başka bir şeyle değiştirilmez; karar verilen olay
+çalışana kadar iyileştirilir. Tüm düzeltmeler kodda yapılır (havuz, kilit cümle, sınır); GPT'ye yeni kural eklenmez.
+Olay bazlı sınırlar diğer olayları etkilememeli.
+
+**Hortum yapılandırılmış hatta (3 olay, görünüm yok, araç `EVENT_VEHICLES`, kaçan kişi N 3-6).** Menüden çıkanlar
+(kod silinmedi, `REMOVED_EVENTS`): "Tornado approaching coastline", "Tornado rain bands and flying debris lash the
+waterfront". Plajdaki "Tornado approaching an open beach" dokunulmadı.
+
+- **Karaya vurma (Tornado making landfall) — ONAYLI.** Kodda kilit cümle ("A violent tornado makes landfall on the
+  waterfront, tearing roofs and signs into the air."), C1–C6 / E1–E6 havuzları.
+- **Marina (Tornado crosses a marina quay) — yeniden tasarlandı, commit `efb4115` canlıda.**
+  - Kilit cümle: "A violent tornado tears in from the sea onto the marina quay, ripping palms and umbrellas off the
+    ground."
+  - Kamera noktası "High marina balcony" ("on a high balcony overlooking the marina and quay"); olayın tek noktası.
+    "Marina berthing pier" kamera tablosunda ve hortum ortam listesinde duruyor.
+  - Havuzlar: Y1–Y6 (araç), Z1–Z6 (hortum temaslı rıhtım/kafe/kiosk/ofis/dükkân sahneleri; yat ve direk sahneleri
+    çıkarıldı). Dışlamalar: (Y5,Z5), (Y4,Z5).
+  - Toplam kelime: marinaya özel `TOTAL_WORDS_BY_EVENT` 40–75; diğer tüm olaylar genel `TOTAL_WORDS` 40–70.
+  - `_CRASH_DOWN`'a "collapse"; hortuma özel `_TORNADO_RIP` listesi ("dislodge" dahil); Z6 kırılma grubu genişletildi
+    (annihilate, splinter, obliterate, demolish, wreck, wreak, rupture, pulverize, tear apart, blow apart).
+  - Son test videosu başarısız. Karar: yarın devam; olay menüde kalıyor, çıkarılmayacak.
+- **Cadde (Tornado sweeps down a coastal avenue):** P4 düzeltmesi ("a falling palm tree crashes onto the {vehicle},
+  crushing its roof") canlıda (`41747ba`). Yeni video henüz üretilmedi, yarın test edilecek.
+
+**Açık gözlemler (karar Bahadır'da, kod yok):**
+- Y1 "sideways" şartı fazla katı: GPT "skidding across the quay" yazınca reddediyor.
+- Eski iskelet metninde (`skeleton_pipeline.py`) hâlâ "bending masts and ripping covers off the moored yachts" duruyor
+  (aktif creative hatta kullanılmıyor, sadece `PROMPT_PIPELINE=skeleton`).
+- Y2: "winds tip" gibi sadece-rüzgâr anlatımlarına dikkat.
+- 70 kelime toplam sınırı hikâyeleri sık reddediyor (marina için 75 yapıldı).
+
+**Sıradaki:** marina tekrar test, cadde testi, sonra plaj ("Tornado approaching an open beach" olduğu gibi),
+kruvaziyer + marina kategorisi, tersane, feribot. **YouTube OAuth token yenileme: 6 Ekim gecesine kadar.**
+
+**Not:** Push her zaman `git push origin HEAD:main` (yerel dal `master`). Kuru provalar `scripts/dry_run_full.py`
+ile; olay çifti zorlamak için oturumlarda geçici bir sarmalayıcı kullanıldı (repoda yok).
+
+---
+
+## 📋 DEVİR (ESKİ) — Heyelan: yapılandırılmış hat (2026-10-04 kapanışı)
 
 **DURUM — doğrulanan:** commit `5c9ca3d`, Railway deploy `9383ff44` SUCCESS (CI'ı bekledi), bot TEST modunda açıldı.
 687 test. Heyelanın 3 olayı (`Mudslide pours down a hillside street`, `Rain-soaked slope collapses onto a roadside`,
