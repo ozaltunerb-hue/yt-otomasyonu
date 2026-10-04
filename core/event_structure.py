@@ -60,8 +60,12 @@ EVENT_KEY_VISUAL = {
     VILLAGE: "A massive torrent of brown mud, logs and rocks bursts through the drenched hillside village.",
     # TASLAK (4 Eki, Bahadır hazırlığı, onay bekliyor): hortum
     LANDFALL: "A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air.",
-    MARINA_TORNADO: "A violent tornado crosses the marina, bending masts and ripping covers off the yachts as it sweeps "
-                    "toward the quay road.",
+    # 4 Eki, Bahadır: marina test videosunda sorun çıktı. Eski: "A violent tornado crosses the marina, bending masts
+    # and ripping covers off the yachts as it sweeps toward the quay road." Ara taslak (canlıya alınmadı; Z6/Y5 ile
+    # aynı nesneler, 22 kelime): "A violent tornado slams into the marina, ripping covers off the yachts and hurling
+    # deck chairs and dock boxes across the quay."
+    MARINA_TORNADO: "A violent tornado slams into the marina, ripping covers off the yachts and hurling debris across "
+                    "the quay.",
     AVENUE: "A violent tornado sweeps down a palm-lined coastal avenue, hurling signs, branches and debris along the "
             "road.",
 }
@@ -459,7 +463,7 @@ EVENT_BEATS = {
                              _TEAR + _AIRBORNE]},
             "Z3": {"text": "a small yacht is torn from its moorings and pushed along the dock by the wind",
                    "terms": [_BOAT, ("mooring", "moorings", "line", "lines", "rope", "ropes", "berth", "cleat",
-                                     "tie", "ties", "unmoor", "free", "loose"), _TEAR + _DRAG]},
+                                     "tie", "ties", "unmoor", "free", "loose", "dislodge"), _TEAR + _DRAG]},
             "Z4": {"text": "a yacht tips over at its berth, its mast crashing onto the dock",
                    "terms": [_BOAT, _TIP + ("heel", "lean", "list"), ("mast", "masts")]},
             "Z5": {"text": "a marina office roof is torn off and scattered",
@@ -484,10 +488,13 @@ EVENT_BEATS = {
                    "terms": [_TIP]},
             "P3": {"text": "the {vehicle} is pushed against a lamppost and pinned there",
                    "terms": [_POLE, _HIT]},
-            "P4": {"text": "a palm tree crashes onto the road in front of the {vehicle}",
+            # 4 Eki, Bahadır: cadde test videosunda sorun çıktı; palmiye artık araca çarpar (eski: "a palm tree
+            # crashes onto the road in front of the {vehicle}"; "narrowly/missing" kaldırıldı)
+            "P4": {"text": "a falling palm tree crashes onto the {vehicle}, crushing its roof",
                    "terms": [("palm", "palms", "palm tree", "tree", "trunk"),
                              ("crash", "fall", "fell", "topple", "slam", "smash", "drop", "come down", "comes down",
-                              "came down"), ("in front", "ahead", "path", "missing", "narrowly")]},
+                              "came down", "collapse"), ("roof", "rooftop", "crush", "crumple", "cave", "flatten",
+                                                         "dent")]},
             # 4 Eki, Bahadır onayı: uçma güncellemesi (eski P5 "slides into a bus shelter, shattering its glass",
             # eski P6 "and the car behind it are pushed along the avenue together")
             "P5": {"text": "the {vehicle} is lifted off the avenue and flung into a bus shelter, shattering its glass",

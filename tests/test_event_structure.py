@@ -83,8 +83,9 @@ class TestLockedData(unittest.TestCase):
             es.VILLAGE: "A massive torrent of brown mud, logs and rocks bursts through the drenched hillside village.",
             # 4 Eki, TASLAK (Bahadır hazırlığı, onay bekliyor): hortum
             es.LANDFALL: "A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air.",
-            es.MARINA_TORNADO: "A violent tornado crosses the marina, bending masts and ripping covers off the yachts as "
-                               "it sweeps toward the quay road.",
+            # 4 Eki, Bahadır: marina kilit cümlesi değişti (ikinci tur: debris)
+            es.MARINA_TORNADO: "A violent tornado slams into the marina, ripping covers off the yachts and hurling "
+                               "debris across the quay.",
             es.AVENUE: "A violent tornado sweeps down a palm-lined coastal avenue, hurling signs, branches and debris "
                        "along the road.",
         })
@@ -1125,7 +1126,7 @@ class TestTornadoStructure(unittest.TestCase):
             "P1": "the {vehicle} is shoved sideways across the avenue by the wind",
             "P2": "the {vehicle} tips over onto its side",
             "P3": "the {vehicle} is pushed against a lamppost and pinned there",
-            "P4": "a palm tree crashes onto the road in front of the {vehicle}",
+            "P4": "a falling palm tree crashes onto the {vehicle}, crushing its roof",
             "P5": "the {vehicle} is lifted off the avenue and flung into a bus shelter, shattering its glass",
             "P6": "the {vehicle} is swept up into the air, spins, and crashes down across the avenue",
         }, {
@@ -1228,7 +1229,7 @@ class TestTornadoStructure(unittest.TestCase):
               (es.MARINA_TORNADO, "Z1"): "The masts along the pier buckle and crack one after another.",
               (es.MARINA_TORNADO, "Z3"): "The wind rips a sailboat free of its lines and drags it along the dock.",
               (es.AVENUE, "P5"): "The wind heaves the small car off the road and hurls it into a bus stop.",
-              (es.AVENUE, "P4"): "A palm tree crashes down, narrowly missing the small car.",
+              (es.AVENUE, "P4"): "A falling palm tree crashes onto the white van, crushing its roof.",
               (es.LANDFALL, "C4"): "The SUV skids across the road and crashes into a stationary car.",
               (es.LANDFALL, "E5"): "The tornado shears the front off a small store, launching its shutters.",
               (es.LANDFALL, "C5"): "The wind lifts the white van off the road and hurls it down the street.",
@@ -1241,7 +1242,7 @@ class TestTornadoStructure(unittest.TestCase):
                (es.LANDFALL, "E1"): "The tornado tears a billboard off its frame.",
                (es.MARINA_TORNADO, "Y3"): "The SUV is pushed along the quay into a stack of boxes.",
                (es.MARINA_TORNADO, "Z4"): "A yacht tips over at its berth in the wind.",
-               (es.AVENUE, "P4"): "A palm tree sways beside the small car.",
+               (es.AVENUE, "P4"): "A palm tree crashes down, narrowly missing the car.",
                (es.LANDFALL, "C5"): "The SUV is pushed down the street by the wind.",
                (es.LANDFALL, "C6"): "The SUV is swept up into the air and spins.",
                (es.MARINA_TORNADO, "Y5"): "The white van is flung into a stack of dock boxes.",
@@ -1361,7 +1362,9 @@ class TestTornadoStructure(unittest.TestCase):
         y3 = es.EVENT_BEATS[es.MARINA_TORNADO]["slice_2"]["Y3"]["terms"]
         for text in ("A small yacht breaks free, dragged relentlessly across the pier by the powerful gusts.",
                      "A small yacht, unmoored, is dragged along the dock by the wind.",
-                     "A yacht snaps loose, carried by the relentless winds along the dock."):
+                     "A yacht snaps loose, carried by the relentless winds along the dock.",
+                     # 4 Eki ikinci tur: kuru provada "dislodge" reddediliyordu
+                     "The relentless gusts dislodge a small yacht, shoving it against the pier."):
             self.assertEqual(es.missing_term_groups(z3, text), [], text)
         for text in ("The wind hurls the SUV across the quay, crashing it into a steel lamppost.",
                      "The wind forces the SUV along the quay, crashing it with a crunch into a lamppost."):
@@ -1372,6 +1375,25 @@ class TestTornadoStructure(unittest.TestCase):
         # heyelan H6/R6 hâlâ kendi listesini kullanır
         self.assertIs(es.EVENT_BEATS[es.MUDSLIDE]["slice_2"]["H6"]["terms"][0], es._TOGETHER_LANDSLIDE)
         self.assertIs(es.EVENT_BEATS[es.SLOPE]["slice_2"]["R6"]["terms"][0], es._TOGETHER_LANDSLIDE)
+
+    def test_p4_hits_vehicle_and_marina_key(self):
+        # 4 Eki, Bahadır: P4 palmiye araca çarpar; "narrowly/missing" artık geçmez
+        import core.creative_pipeline as cp
+        p4 = es.EVENT_BEATS[es.AVENUE]["slice_2"]["P4"]["terms"]
+        self.assertNotIn("missing", p4[2])
+        self.assertNotIn("narrowly", p4[2])
+        for text in ("A palm tree crashes down, narrowly missing the car.",
+                     "A palm tree sways beside the small car.",
+                     "A palm tree crashes onto the road in front of the SUV."):
+            self.assertTrue(es.missing_term_groups(p4, text), text)
+        for text in ("A falling palm tree crashes onto the white van, crushing its roof.",
+                     "A towering palm topples onto the SUV and crumples its roof.",
+                     # 4 Eki ikinci tur: kuru provada "collapsing onto a small car" reddediliyordu
+                     "A towering palm tree collapses onto the small car, crumpling its roof."):
+            self.assertEqual(es.missing_term_groups(p4, text), [], text)
+        self.assertIn(("P4", "Q1"), es.EVENT_BEATS[es.AVENUE]["excluded_pairs"])
+        found = {i["rule"] for i in cp.story_rule_issues(es.MARINA_TORNADO, None, es.EVENT_KEY_VISUAL[es.MARINA_TORNADO])}
+        self.assertFalse(found & {"a_trigger_first", "e_event_and_ship_named", "required"})
 
     def test_landslide_message_unchanged(self):
         # 4 Eki: hortum eklenirken heyelan mesajı bayt bayt aynı (sel ve tidal: test_flood_and_tidal_messages_unchanged)
