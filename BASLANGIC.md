@@ -19,6 +19,7 @@
 | **Sivil/Mürettebat Kıyafeti** | Ayrım net: mürettebat/personel = turuncu/kırmızı/sarı PPE; yolcu/misafir/sürücü = sıradan sivil kıyafet (asla PPE değil) |
 | **Aksiyon/Kalite Kapısı** | `validate_high_action` aktif — sakin/statik senaryoları reddedip yeniden dener |
 | **YouTube Yükleme** | `YOUTUBE_PRIVACY=private` — videolar OTOMATİK PUBLIC OLMAZ; kullanıcı videoyu manuel inceleyip yapay zeka etiketini (AI-disclosure toggle) işaretledikten sonra elle public yapar |
+| **YouTube OAuth Token** | ✅ Google uygulaması **Production** (2026-10-07). 7 günlük ömür ve haftalık yenileme KALKTI. Token yine 3 durumda ölür: 6 ay hiç kullanılmazsa, Google hesabından erişim iptal edilirse, çok sayıda yeni token alınırsa (en eskiler geçersizleşir). Sadece bot YouTube yetki hatası verirse `refresh_youtube_token.bat` (masaüstü kısayolu) çalıştırılır; BİTTİ yazısı görülmeden pencere kapatılmaz. Betik önce yerel `.env` + `master.env`'e, sonra Railway'e yazar; adım logu `dashboard_data/token_refresh_runs.log` |
 | **Cron / Otomasyon** | ❌ Cron KALDIRILDI (2026-09-26). Üretim Telegram botundan: `python bot.py` (Railway start komutu), `/uret` → domain seç. Sadece `TELEGRAM_CHAT_ID` sohbeti, tek seferde tek üretim. Otomatik Kie harcaması yok |
 | **Notion Dedup/Log** | ✅ AKTİF (2026-09-12) — `NOTION_ENABLED=True`, veritabanı kuruldu ve doğrulandı |
 
@@ -60,7 +61,8 @@ waterfront". Plajdaki "Tornado approaching an open beach" dokunulmadı.
 - 70 kelime toplam sınırı hikâyeleri sık reddediyor (marina için 75 yapıldı).
 
 **Sıradaki:** Önce Kie kredisi yüklenmeli (marina ve cadde testleri için). Marina tekrar test, cadde testi, sonra plaj ("Tornado approaching an open beach" olduğu gibi),
-kruvaziyer + marina kategorisi, tersane, feribot. **YouTube OAuth token yenileme: 6 Ekim gecesine kadar.**
+kruvaziyer + marina kategorisi, tersane, feribot. ~~YouTube OAuth token yenileme: 6 Ekim gecesine kadar.~~
+(7 Eki: uygulama Production'a geçti, haftalık yenileme yok; bkz. GÜNCEL DURUM "YouTube OAuth Token".)
 
 **Not:** Push her zaman `git push origin HEAD:main` (yerel dal `master`). Kuru provalar `scripts/dry_run_full.py`
 ile; olay çifti zorlamak için oturumlarda geçici bir sarmalayıcı kullanıldı (repoda yok).
@@ -269,7 +271,7 @@ API "Not Authorized"). Telegram token'ı sohbete yapıştırıldı; iş bitince 
 güncellemesi önerildi, kullanıcı karar vermedi.
 
 **Sıradaki somut adım:** Kullanıcı `/uret` ile butonları görür (basmadan). Sonra normal üretim akışı; YouTube token
-haftalık yenileme kuralı aynen geçerli (`refresh_youtube_token.bat`).
+haftalık yenileme kuralı aynen geçerli (`refresh_youtube_token.bat`). (7 Eki: geçersiz, Production'a geçildi.)
 
 ---
 
@@ -287,6 +289,7 @@ haftalık yenileme kuralı aynen geçerli (`refresh_youtube_token.bat`).
    retry, preflight, Kie, indirme, YouTube), Notion'daki yeni `auto` kaydı (Durum, Hareket ARTIK DOLU olmalı, Beat1 Fiil,
    YouTube URL), Kie kredisi (koşu öncesi 726.0, `scratch/cron_credit_before.json`).
 3. Ayrı iş: Google Cloud'da OAuth uygulamasını "In production" + doğrulama (7 günlük token sorunu kalıcı biter).
+   (7 Eki: YAPILDI, uygulama Production. 1. maddedeki haftalık yenileme artık gerekmez.)
 
 **Bilerek açık:** P1 stil kilidi uzunluğu (cron hareket verisi bekliyor), U3 yön dönüşü ölçülmüyor, Kie kredi/dolar kuru
 doğrulanmadı (video başı ~175 kredi), süreç dışarıdan öldürülürse Notion kaydı takılabilir (süpürücü yok).

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """TUR 23: scripts/refresh_youtube_token.py. Gerçek Google/Railway çağrısı yok; ağ ve onay akışı mock'lanır.
-Kritik: yanlış kanal/başarısız doğrulamada Railway'e yazılmaz; başarıda Railway + .env güncellenir."""
+Kritik: yanlış kanalda hiçbir yere yazılmaz; doğrulanmış token önce .env'e, sonra Railway'e yazılır."""
 import importlib.util
 import os
 import sys
@@ -35,11 +35,15 @@ class TestMainFlow(unittest.TestCase):
             p.start()
             self.addCleanup(p.stop)
 
-    def run_main(self, title="DeepMyster", stored_matches=True, new_token="NEWTOKEN"):
+    def run_main(self, title="DeepMyster", stored_matches=True, new_token="NEWTOKEN", upsert_fails=False):
         writes, state = [], {"railway": "OLD"}
+        self.local_at_upsert = None
 
         def railway(query, variables, token):
             if "variableUpsert" in query:
+                self.local_at_upsert = open(local, encoding="utf-8").read()   # sıra kontrolü: yerel önce mi yazıldı
+                if upsert_fails:
+                    raise RuntimeError("Railway API: ['boom']")
                 writes.append(variables["i"]["value"])
                 state["railway"] = variables["i"]["value"] if stored_matches else "SOMETHING_ELSE"
                 return {"variableUpsert": True}
@@ -63,10 +67,27 @@ class TestMainFlow(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(writes, ["NEWTOKEN"])
         self.assertIn('YOUTUBE_REFRESH_TOKEN="NEWTOKEN"', local)
-        # Dashboard kaydı: tarih + kanal var, token değeri yok
+        # Dashboard kaydı: tarih + kanal + Production modu var; token değeri ve 7 günlük bitiş tahmini yok
         log = open(self.refresh_log, encoding="utf-8").read()
         self.assertIn('"channel": "DeepMyster"', log)
+        self.assertIn('"mode": "production"', log)
+        self.assertNotIn("expires_estimate", log)
         self.assertNotIn("NEWTOKEN", log)
+        run_log = open(self.run_log, encoding="utf-8").read()
+        self.assertIn("✅ BİTTİ", run_log)
+        self.assertIn("6 ay hiç kullanılmazsa", run_log)
+        self.assertNotIn("NEWTOKEN", run_log)
+
+    def test_local_written_before_railway(self):
+        # 7 Eki: pencere Railway adımında kapatıldı, yerel eski kaldı. Artık yerel önce yazılır.
+        self.run_main()
+        self.assertIn('YOUTUBE_REFRESH_TOKEN="NEWTOKEN"', self.local_at_upsert)
+
+    def test_railway_write_fails_local_still_updated(self):
+        code, writes, local = self.run_main(upsert_fails=True)
+        self.assertEqual((code, writes), (1, []))
+        self.assertIn('YOUTUBE_REFRESH_TOKEN="NEWTOKEN"', local)
+        self.assertIn("BİTTİ (HATALI)", open(self.run_log, encoding="utf-8").read())
 
     def test_wrong_channel_writes_nothing(self):
         code, writes, local = self.run_main(title="Başka Kanal")
@@ -91,18 +112,6 @@ class TestMainFlow(unittest.TestCase):
     def test_missing_credentials(self):
         with patch.object(rt, "read_env", return_value={}):
             self.assertEqual(rt.main(), 1)
-
-
-class TestDeadlineText(unittest.TestCase):
-    def test_turkey_time_seven_days_later(self):
-        from datetime import datetime, timezone
-        t = datetime(2026, 10, 7, 17, 40, 9, tzinfo=timezone.utc)   # 7 Eki 20:40 TR
-        self.assertEqual(rt.deadline_text(t), "Son gün: 14 Ekim Çarşamba 20:40, bir gün önce tekrar çalıştır.")
-
-    def test_crosses_midnight_in_turkey(self):
-        from datetime import datetime, timezone
-        t = datetime(2026, 12, 28, 21, 15, tzinfo=timezone.utc)     # TR'de 29 Ara 00:15
-        self.assertEqual(rt.deadline_text(t), "Son gün: 5 Ocak Salı 00:15, bir gün önce tekrar çalıştır.")
 
 
 class TestBatFile(unittest.TestCase):

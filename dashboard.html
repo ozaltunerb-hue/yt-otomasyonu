@@ -356,10 +356,19 @@ function renderToken() {
   const t = STATE.token;
   const lastUp = STATE.runs.find(r => r.youtube_url);
   const lastUpLine = lastUp ? `<div class="meta" style="margin-top:8px">Son başarılı YouTube yüklemesi: ${fmt(lastUp.date)} (${ago(lastUp.date)})</div>` : "";
-  const how = `<div class="meta" style="margin-top:8px">Yenilemek için proje klasöründe <code>refresh_youtube_token.bat</code> dosyasına çift tıkla.</div>`;
+  const how = `<div class="meta" style="margin-top:8px">Sadece bot YouTube yetki hatası verirse: proje klasöründe <code>refresh_youtube_token.bat</code> dosyasına çift tıkla, BİTTİ yazısını görmeden pencereyi kapatma.</div>`;
   if (!t) {
     el.innerHTML = `<span class="badge b-run">! Kayıt yok</span>
       <p class="vtext">Son yenileme tarihi henüz kaydedilmemiş. Bir sonraki <code>refresh_youtube_token.bat</code> çalışmasından sonra burada görünür.</p>${lastUpLine}${how}`;
+    return;
+  }
+  // 7 Eki 2026'dan beri Google uygulaması Production: 7 günlük bitiş yok, kayıtta expires_estimate yazılmaz
+  if (!t.expires_estimate) {
+    el.innerHTML = `<span class="badge b-up">✓ Production, süresiz</span>
+      <div style="margin-top:10px">Son yenileme: <span class="big">${fmt(t.refreshed_at, { weekday: "short" })}</span> <span class="meta">(${ago(t.refreshed_at)})</span></div>
+      <div class="meta">Kanal: ${esc(t.channel)} · Haftalık yenileme gerekmez.</div>
+      <div class="meta">Token yine de 3 durumda ölür: 6 ay hiç kullanılmazsa, Google hesabından erişim iptal edilirse, çok sayıda yeni token alınırsa (en eskiler geçersizleşir).</div>
+      ${lastUpLine}${how}`;
     return;
   }
   const exp = new Date(t.expires_estimate);

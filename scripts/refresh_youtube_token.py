@@ -1,17 +1,19 @@
-# Haftalık YouTube OAuth yenileme (TUR 23). refresh_youtube_token.bat çift tıklamayla çağırır.
+# YouTube OAuth token yenileme ONARIM aracı (TUR 23). refresh_youtube_token.bat çift tıklamayla çağırır.
 #
-# Neden onay akışı: Google "Testing" modundaki uygulamada refresh token onaydan 7 gün sonra ölür;
-# refresh_token grant'i yeni refresh token DÖNDÜRMEZ (2026-09-25 doğrulandı). Tek çare yeniden onay.
+# 7 Eki 2026'dan beri Google uygulaması PRODUCTION modunda: refresh token'ın 7 günlük ömrü yok, haftalık yenileme
+# gerekmez. Token yine de şu 3 durumda ölür: 6 ay hiç kullanılmazsa, Google hesabından erişim iptal edilirse,
+# aynı hesap için çok sayıda yeni token alınırsa (en eskiler geçersizleşir). Bu araç sadece o durumlarda çalıştırılır.
+# refresh_token grant'i yeni refresh token DÖNDÜRMEZ (2026-09-25 doğrulandı); tek çare yeniden onay.
 #
-# Akış: mevcut Railway token durumu (bilgi) -> tarayıcıda Google onayı -> yeni token ile kanal
-# DeepMyster mı doğrula -> Railway YOUTUBE_REFRESH_TOKEN upsert (Railway yeniden deploy eder) ->
-# Railway'den geri okuyup tekrar doğrula -> lokal .env + master.env güncelle.
-# Hiçbir token değeri ekrana yazılmaz. Başarı: çıkış kodu 0, hata: 1.
+# Akış: mevcut Railway token durumu (bilgi) -> tarayıcıda Google onayı -> yeni token ile kanal DeepMyster mı
+# doğrula -> ÖNCE lokal .env + master.env (pencere erken kapanırsa yerel yine güncel kalsın, 7 Eki dersi) ->
+# Railway YOUTUBE_REFRESH_TOKEN upsert (Railway yeniden deploy eder) -> Railway'den geri okuyup tekrar doğrula.
+# Hiçbir token değeri ekrana veya loga yazılmaz. Başarı: çıkış kodu 0, hata: 1.
 import json
 import os
 import sys
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
 import requests
 
@@ -19,16 +21,16 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_ROOT = os.path.abspath(os.path.join(ROOT, "..", ".."))
 LOCAL_ENV = os.path.join(ROOT, ".env")
 MASTER_ENV = os.path.join(REPO_ROOT, "_knowledge", "credentials", "master.env")
-# dashboard.html okur: sadece tarih + kanal adı, token değeri ASLA yazılmaz
+# dashboard.html okur: sadece tarih + kanal adı + mod, token değeri ASLA yazılmaz
 REFRESH_LOG = os.path.join(ROOT, "dashboard_data", "token_refresh.json")
 # Her çalıştırmanın adım adım kaydı (pencere kapanınca hata mesajı kaybolmasın). Token değeri ASLA yazılmaz.
 RUN_LOG = os.path.join(ROOT, "dashboard_data", "token_refresh_runs.log")
 READBACK_ATTEMPTS = 4
 READBACK_WAIT_SEC = 5
-TR_TZ = timezone(timedelta(hours=3))   # Türkiye 2016'dan beri sabit UTC+3, yaz saati yok
-TR_MONTHS = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
-             "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"]
-TR_DAYS = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
+OAUTH_MODE = "production"
+DEATH_CAUSES = ("Token süresiz, ancak 3 durumda ölür: 6 ay hiç kullanılmazsa, Google hesabından erişim iptal "
+                "edilirse, çok sayıda yeni token alınırsa (en eskiler geçersizleşir).")
+DONT_CLOSE = "⚠️  Bu pencereyi BİTTİ yazısını görmeden KAPATMA (tarayıcı 'Yetkilendirme Başarılı' dese bile)."
 
 PROJECT_ID = "9c2fa508-f546-43f4-b3a8-766ec1054a04"
 SERVICE_ID = "0a7ef648-fefd-4c8c-8f32-75a00b04c04c"
@@ -77,21 +79,13 @@ def log(msg: str) -> None:
         pass
 
 
-def deadline_text(refreshed_at: datetime) -> str:
-    """Testing modunda token onaydan 7 gün sonra ölür; son günü Türkiye saatiyle yazar."""
-    end = (refreshed_at + timedelta(days=7)).astimezone(TR_TZ)
-    return (f"Son gün: {end.day} {TR_MONTHS[end.month - 1]} {TR_DAYS[end.weekday()]} {end:%H:%M}, "
-            "bir gün önce tekrar çalıştır.")
-
-
 def record_refresh(channel: str) -> None:
-    """Son başarılı yenilemenin zamanını dashboard için kaydeder. Hata olursa yenilemeyi bozmaz."""
-    now = datetime.now(timezone.utc)
+    """Son yenilemenin zamanını dashboard için kaydeder (Production: bitiş tahmini yok). Hata olursa yenilemeyi bozmaz."""
     try:
         os.makedirs(os.path.dirname(REFRESH_LOG), exist_ok=True)
         with open(REFRESH_LOG, "w", encoding="utf-8") as f:
-            json.dump({"refreshed_at": now.isoformat(timespec="seconds"), "channel": channel,
-                       "expires_estimate": (now + timedelta(days=7)).isoformat(timespec="seconds")}, f, ensure_ascii=False)
+            json.dump({"refreshed_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "channel": channel,
+                       "mode": OAUTH_MODE}, f, ensure_ascii=False)
     except OSError as e:
         log(f"     (Dashboard kaydı yazılamadı: {e})")
 
@@ -152,14 +146,16 @@ def main() -> int:
     if not (cid and secret and rw):
         log("❌ HATA: .env içinde YOUTUBE_CLIENT_ID / YOUTUBE_CLIENT_SECRET / RAILWAY_TOKEN eksik.")
         return 1
+    print(DONT_CLOSE + "\n")
 
     log("1/5  Railway'deki mevcut token kontrol ediliyor...")
     old = railway_vars(rw).get(KEY, "")
     ok, err = access_token(cid, secret, old) if old else (None, "Railway'de token yok")
-    log(f"     Mevcut token: {'geçerli' if ok else 'GEÇERSİZ (' + err + ')'} — yine de yenileniyor (7 günlük süre sıfırlanır).")
+    log(f"     Mevcut token: {'geçerli' if ok else 'GEÇERSİZ (' + err + ')'} — yenileniyor.")
 
     log("2/5  Tarayıcıda Google onay sayfası açılıyor. DeepMyster kanalının hesabıyla gir ve 'İzin ver'e tıkla.")
     print("     'Google bu uygulamayı doğrulamadı' çıkarsa: Gelişmiş -> Devam et.")
+    print("     " + DONT_CLOSE)
     sys.path.insert(0, ROOT)
     from setup_youtube import get_credentials_via_local_server   # sadece onay fonksiyonu; o betiğin main'i çağrılmaz
     creds = get_credentials_via_local_server(cid, secret, SCOPES)
@@ -169,6 +165,7 @@ def main() -> int:
         return 1
 
     log("3/5  Yeni token doğrulanıyor...")
+    print("     " + DONT_CLOSE)
     tok, err = access_token(cid, secret, new)
     title = channel_title(tok) if tok else None
     if title != EXPECTED_CHANNEL:
@@ -176,18 +173,8 @@ def main() -> int:
         return 1
     log(f"     Kanal: {title} ✓")
 
-    log("4/5  Railway'e yazılıyor (servis yeniden deploy edilir, ~3 dk)...")
-    railway("mutation($i:VariableUpsertInput!){ variableUpsert(input:$i) }",
-            {"i": {"projectId": PROJECT_ID, "environmentId": ENV_ID, "serviceId": SERVICE_ID, "name": KEY, "value": new}}, rw)
-    log("     Railway yazma isteği kabul edildi.")
-    # Yazma kabul edildiyse geri okuma aksasa bile yerele kaydedilir; aksi halde Railway ile yerel senkronsuz kalır.
-    railway_ok = verify_railway(rw, cid, secret, new)
-    if railway_ok:
-        log("     Railway güncellendi ve doğrulandı ✓")
-    else:
-        log("⚠️  UYARI: Railway'e yazıldı ama geri okunarak doğrulanamadı. Yerel dosyalara yine de kaydediliyor.")
-
-    log("5/5  Lokal .env ve master.env güncelleniyor...")
+    # Önce yerel: Railway adımında pencere kapanır ya da hata olursa yerelde yine yeni (geçerli) token kalır
+    log("4/5  Lokal .env ve master.env güncelleniyor...")
     local_ok = True
     for path in (LOCAL_ENV, MASTER_ENV):
         if not os.path.exists(path):
@@ -200,14 +187,28 @@ def main() -> int:
             log(f"❌ HATA: {os.path.basename(path)} yazılamadı ({type(e).__name__}: {e})")
     record_refresh(title)
 
+    log("5/5  Railway'e yazılıyor (servis yeniden deploy edilir)...")
+    try:
+        railway("mutation($i:VariableUpsertInput!){ variableUpsert(input:$i) }",
+                {"i": {"projectId": PROJECT_ID, "environmentId": ENV_ID, "serviceId": SERVICE_ID, "name": KEY, "value": new}}, rw)
+    except Exception as e:
+        log(f"❌ HATA: Railway'e yazılamadı ({type(e).__name__}: {e}). Yerel dosyalar güncel, bot hâlâ eski token'ı kullanıyor.")
+        log("❌ BİTTİ (HATALI) — Scripti tekrar çalıştır ya da Railway panelinden YOUTUBE_REFRESH_TOKEN'ı kontrol et.")
+        return 1
+    log("     Railway yazma isteği kabul edildi.")
+    railway_ok = verify_railway(rw, cid, secret, new)
+    if railway_ok:
+        log("     Railway güncellendi ve doğrulandı ✓")
+
     if railway_ok and local_ok:
-        log("\n✅ BAŞARILI — YouTube token yenilendi, 7 gün geçerli. "
-            + deadline_text(datetime.now(timezone.utc)))
+        log("\n✅ BİTTİ — YouTube token yenilendi. Uygulama Production modunda. " + DEATH_CAUSES
+            + " Sadece bot YouTube yetki hatası verirse tekrar çalıştır.")
         return 0
     if not railway_ok:
-        log("⚠️  Token yenilendi ama Railway doğrulanamadı. Railway panelinden YOUTUBE_REFRESH_TOKEN'ı kontrol et.")
+        log("⚠️  Token yenilendi ama Railway geri okunarak doğrulanamadı. Railway panelinden YOUTUBE_REFRESH_TOKEN'ı kontrol et.")
     if not local_ok:
         log("⚠️  Railway güncel ama yerel dosyalardan en az biri yazılamadı (yukarıdaki satıra bak).")
+    log("❌ BİTTİ (UYARILI) — Yukarıdaki satırları oku, sonra bir tuşa bas.")
     return 1
 
 
@@ -218,6 +219,7 @@ if __name__ == "__main__":
         code = main()
     except Exception as e:
         log(f"\n❌ HATA: {type(e).__name__}: {e}")
+        log("❌ BİTTİ (HATALI)")
         code = 1
     log(f"=== Bitti, çıkış kodu {code} ===")
     sys.exit(code)

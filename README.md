@@ -132,7 +132,8 @@ Veri gömülü değil, dosyalardan okunur:
 
 - `status.json` — lokal `python main.py` her adımda yazar; panel 3 sn'de bir okur ("Şu an çalışan"). Railway'deki Telegram üretimleri buraya yazmaz; onlar Notion kayıtlarında (tetik: manual, domain etiketiyle) görünür.
 - `dashboard_data/notion_runs.json` — `scripts/dashboard_sync.py` Notion'dan çeker (sadece okur); bat açılışta ve 10 dk'da bir çalıştırır.
-- `dashboard_data/token_refresh.json` — `refresh_youtube_token.bat` başarılı olunca tarih + kanal yazar (token yazılmaz).
+- `dashboard_data/token_refresh.json` — `refresh_youtube_token.bat` yerel dosyaları güncelleyince tarih + kanal + mod (`production`) yazar (token yazılmaz).
+- `dashboard_data/token_refresh_runs.log` — `refresh_youtube_token.bat`'ın her çalıştırmasının adım adım kaydı (token yazılmaz).
 - `/api/local.json` (sunucu üretir) — proje içindeki `.mp4` dosyaları, `scratch/kie_*_result.json` senaryoları.
 
 ## 🤖 Telegram Tetikleyici (Railway)
@@ -148,7 +149,8 @@ Veri gömülü değil, dosyalardan okunur:
 - **Güvenlik:** sadece `TELEGRAM_CHAT_ID` sohbetine cevap verir. Aynı anda tek üretim (kilit), meşgulken "üretim sürüyor". Açılışta bekleyen eski güncellemeler atılır (restart eski buton basışını üretime çevirmez).
 - **Env:** `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` (.env ve Railway Variables). Eksikse bot açık hata mesajıyla durur. Aynı token'la iki yerde (lokal + Railway) polling çakışır; lokal test ederken Railway'deki bot durdurulmalı.
 - **Deploy (2026-09-25):** `main`'e push → GitHub Actions `tests` (unittest) → geçerse Railway otomatik deploy eder ("Wait for CI"; test kırılırsa deploy atlanır). Öncesinde otomatik deploy YOKTU, Railway 23 Eylül'deki eski commit'te kalmıştı.
-- **YouTube token (HAFTALIK, her Cuma 16:30'dan önce):** Google uygulaması "Testing" modunda olduğu için refresh token onaydan 7 gün sonra ölür; refresh çağrısı yeni refresh token vermez. `refresh_youtube_token.bat`'a çift tıkla → tarayıcıda DeepMyster hesabıyla "İzin ver" → betik kanalı doğrular, Railway'e yazar (Railway yeniden deploy eder), geri okuyup test eder, lokal `.env`'i günceller. Kalıcı çözüm: Google Cloud'da uygulamayı "In production" + doğrulama (ayrı iş).
+- **YouTube token (Production, 2026-10-07'den beri):** Google uygulaması "In production" modunda; refresh token'ın 7 günlük ömrü yok, haftalık yenileme gerekmez. Token yine 3 durumda ölür: 6 ay hiç kullanılmazsa, Google hesabından erişim iptal edilirse, çok sayıda yeni token alınırsa (en eskiler geçersizleşir). Refresh çağrısı yeni refresh token vermez; tek çare yeniden onay. Sadece bot YouTube yetki hatası verirse `refresh_youtube_token.bat`'a (masaüstü kısayolu) çift tıkla → tarayıcıda DeepMyster hesabıyla "İzin ver" → betik kanalı doğrular, ÖNCE lokal `.env` + `master.env`'i günceller, SONRA Railway'e yazar (Railway yeniden deploy eder) ve geri okuyup test eder. Tarayıcı "Yetkilendirme Başarılı" dese de pencere BİTTİ yazısı görülmeden kapatılmaz.
+- **Push öncesi testler (2026-10-07 kuralı):** `.venv\Scripts\python.exe scripts\run_tests_offline.py` — tüm paket, ağ kapalı, CI'daki sahte anahtarlarla; tamamı yeşil değilse push yok.
 - **Build:** Railway `railpack` kullanır, `nixpacks.toml` okunmaz. Sistem paketleri `railpack.json` → `deploy.aptPackages` (ffmpeg, hareket profili için).
 - **Güncel durum ve gerekçe:** bkz. `_knowledge/deploy-registry.md` (bu dosya infra durumunun kaynağıdır)
 
