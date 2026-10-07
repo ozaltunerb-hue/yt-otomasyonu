@@ -1,0 +1,3 @@
+# Yerel sanal ortam Railway'e yüklenmez (Railway kendi ortamını requirements.txt'den kurar)
+.venv/
+venv/
