@@ -28,6 +28,13 @@ class TestEnvFile(unittest.TestCase):
 class TestMainFlow(unittest.TestCase):
     ENV = {"YOUTUBE_CLIENT_ID": "cid", "YOUTUBE_CLIENT_SECRET": "sec", "RAILWAY_TOKEN": "rw"}
 
+    def setUp(self):
+        # Gerçek dashboard_data/token_refresh_runs.log'a yazılmasın; geri okuma denemeleri beklemesin
+        self.run_log = os.path.join(tempfile.mkdtemp(), "runs.log")
+        for p in (patch.object(rt, "RUN_LOG", self.run_log), patch.object(rt.time, "sleep")):
+            p.start()
+            self.addCleanup(p.stop)
+
     def run_main(self, title="DeepMyster", stored_matches=True, new_token="NEWTOKEN"):
         writes, state = [], {"railway": "OLD"}
 
@@ -71,14 +78,31 @@ class TestMainFlow(unittest.TestCase):
         code, writes, _ = self.run_main(new_token=None)
         self.assertEqual((code, writes), (1, []))
 
-    def test_railway_readback_mismatch_fails_and_keeps_local(self):
+    def test_railway_readback_mismatch_still_saves_local(self):
+        # Railway yazmayı kabul ettiyse geri okuma tutmasa da yerel kaydedilir (7 Eki: Railway ile yerel senkronsuz kaldı)
         code, writes, local = self.run_main(stored_matches=False)
-        self.assertEqual(code, 1)
-        self.assertIn('"OLD"', local)       # Railway doğrulanmadan lokal yazılmaz
+        self.assertEqual(code, 1)                       # pencere açık kalsın, uyarı okunsun
+        self.assertEqual(writes, ["NEWTOKEN"])
+        self.assertIn('YOUTUBE_REFRESH_TOKEN="NEWTOKEN"', local)
+        log = open(self.run_log, encoding="utf-8").read()
+        self.assertIn(f"Geri okuma {rt.READBACK_ATTEMPTS}/{rt.READBACK_ATTEMPTS} başarısız", log)
+        self.assertNotIn("NEWTOKEN", log)               # log dosyasına token değeri yazılmaz
 
     def test_missing_credentials(self):
         with patch.object(rt, "read_env", return_value={}):
             self.assertEqual(rt.main(), 1)
+
+
+class TestDeadlineText(unittest.TestCase):
+    def test_turkey_time_seven_days_later(self):
+        from datetime import datetime, timezone
+        t = datetime(2026, 10, 7, 17, 40, 9, tzinfo=timezone.utc)   # 7 Eki 20:40 TR
+        self.assertEqual(rt.deadline_text(t), "Son gün: 14 Ekim Çarşamba 20:40, bir gün önce tekrar çalıştır.")
+
+    def test_crosses_midnight_in_turkey(self):
+        from datetime import datetime, timezone
+        t = datetime(2026, 12, 28, 21, 15, tzinfo=timezone.utc)     # TR'de 29 Ara 00:15
+        self.assertEqual(rt.deadline_text(t), "Son gün: 5 Ocak Salı 00:15, bir gün önce tekrar çalıştır.")
 
 
 class TestBatFile(unittest.TestCase):
