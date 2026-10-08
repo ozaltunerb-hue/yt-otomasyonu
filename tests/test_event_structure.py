@@ -1638,19 +1638,21 @@ class TestFireStructure(unittest.TestCase):
                                                   "a hillside village neighborhood"),
         },
         es.FACADE_FIRE: {
-            "Balcony across from a downtown tower": ("on a balcony across the street from the tower",
+            # 8 Eki (2), Bahadır: hepsi yüksek; kaldırım noktaları çıktı
+            "Balcony across from a downtown tower": ("on a high balcony across the street from the tower",
                                                      "the downtown city center"),
-            "Sidewalk across from a downtown tower": ("on the sidewalk across the street from the tower",
-                                                      "the downtown city center"),
-            "Balcony across from a coastal high-rise": ("on a balcony across the street from the tower",
+            "Rooftop terrace across from a downtown tower": ("on a rooftop terrace across the street from the "
+                                                             "tower", "the downtown city center"),
+            "Balcony across from a coastal high-rise": ("on a high balcony across the street from the tower",
                                                         "a high-rise coastal city"),
-            "Sidewalk across from a coastal high-rise": ("on the sidewalk across the street from the tower",
-                                                         "a high-rise coastal city"),
+            "Rooftop terrace across from a coastal high-rise": ("on a rooftop terrace across the street from the "
+                                                                "tower", "a high-rise coastal city"),
         },
         es.FIRE_TORNADO: {
             "Overlook above the burning valley road": ("on a roadside overlook above the burning valley road",
                                                        "a burning valley road"),
-            "Balcony of a roadside house": ("on a balcony of a roadside house", "a burning valley road"),
+            "Balcony of a roadside house": ("on a high balcony of a roadside house overlooking the road",
+                                            "a burning valley road"),
         },
     }
     WEATHER = ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
@@ -1712,6 +1714,7 @@ class TestFireStructure(unittest.TestCase):
                 self.assertEqual(es.rain_words(self.KEY[e]), [])
 
     def test_camera_lines_place_and_weather(self):
+        from core.creative_engine import DOMAIN_ATTRIBUTES
         for e in FIRE:
             s = sk.EVENT_SKELETONS[e]
             with self.subTest(event=e):
@@ -1730,6 +1733,12 @@ class TestFireStructure(unittest.TestCase):
                     self.assertLessEqual(count_constraints(suffix)[0], 8)
                 for x in list(s["spots"].values()) + s["weather"] + [s["text"]]:
                     self.assertEqual(es.rain_words(x), [], x)
+        # 8 Eki (2): yangında alçak (kaldırım) kamera noktası yok; cephe yangınının 4 noktası da yüksek
+        env = DOMAIN_ATTRIBUTES["fire_disasters"]["environments"]
+        self.assertFalse([s for s in env if "sidewalk" in s.lower() or "sidewalk" in sk.CAMERA_SPOTS[s]])
+        self.assertEqual(len(sk.EVENT_SKELETONS[es.FACADE_FIRE]["spots"]), 4)
+        for spot in sk.EVENT_SKELETONS[es.FACADE_FIRE]["spots"]:
+            self.assertRegex(sk.CAMERA_SPOTS[spot], r"^on a (high balcony|rooftop terrace) ")
         # mevcut olayların kamera satırları değişmedi (aynı ortam adları başka olaylarda)
         self.assertEqual(sk.CAMERA_SPOTS["Downtown city center"], "on a sidewalk across the street")
         self.assertEqual(sk.CAMERA_SPOTS["High-rise coastal city"], "on a sidewalk across the street")
@@ -1867,7 +1876,7 @@ class TestFireStructure(unittest.TestCase):
     def test_no_lift_only_wildfire_and_facade(self):
         self.assertEqual(es.NO_LIFT_SLICE, {es.WILDFIRE: ("slice_2",), es.FACADE_FIRE: ("slice_2",)})
         for e, b2, b3, spot in ((es.WILDFIRE, "K2", "L3", "Embankment above the village road"),
-                                (es.FACADE_FIRE, "M6", "N1", "Sidewalk across from a downtown tower")):
+                                (es.FACADE_FIRE, "M6", "N1", "Rooftop terrace across from a downtown tower")):
             spec, slices, _ = self.build(e, b2, b3, spot, "SUV")
             self.assertNotIn("fire_no_lift", self.codes(spec, slices))
             for add in (", lifted off its wheels", " as it goes airborne", " and is swept up by the blast"):

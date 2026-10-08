@@ -368,8 +368,9 @@ DOMAIN_ATTRIBUTES = {
         "ships": [],
         "environments": [
             "Balcony of a hillside house", "Embankment above the village road",
-            "Balcony across from a downtown tower", "Sidewalk across from a downtown tower",
-            "Balcony across from a coastal high-rise", "Sidewalk across from a coastal high-rise",
+            # 8 Eki (2), Bahadır: cephe yangınında kameralar yüksek; kaldırım noktaları çıktı, çatı terasları girdi
+            "Balcony across from a downtown tower", "Rooftop terrace across from a downtown tower",
+            "Balcony across from a coastal high-rise", "Rooftop terrace across from a coastal high-rise",
             "Overlook above the burning valley road", "Balcony of a roadside house",
         ],
         "events": [

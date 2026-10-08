@@ -83,12 +83,13 @@ CAMERA_SPOTS = {
     # Yangın (8 Eki, Bahadır; TASLAK): olay başına 2 kamera, Bahadır'ın kamera cümleleri birebir
     "Balcony of a hillside house": "on a balcony of a hillside house overlooking the street and the burning slope",
     "Embankment above the village road": "on a roadside embankment above the village road",
-    "Balcony across from a downtown tower": "on a balcony across the street from the tower",
-    "Sidewalk across from a downtown tower": "on the sidewalk across the street from the tower",
-    "Balcony across from a coastal high-rise": "on a balcony across the street from the tower",
-    "Sidewalk across from a coastal high-rise": "on the sidewalk across the street from the tower",
+    # 8 Eki (2), Bahadır: cephe yangını ve ateş hortumu balkonunda kamera yüksek; kaldırım noktaları çıktı
+    "Balcony across from a downtown tower": "on a high balcony across the street from the tower",
+    "Rooftop terrace across from a downtown tower": "on a rooftop terrace across the street from the tower",
+    "Balcony across from a coastal high-rise": "on a high balcony across the street from the tower",
+    "Rooftop terrace across from a coastal high-rise": "on a rooftop terrace across the street from the tower",
     "Overlook above the burning valley road": "on a roadside overlook above the burning valley road",
-    "Balcony of a roadside house": "on a balcony of a roadside house",
+    "Balcony of a roadside house": "on a high balcony of a roadside house overlooking the road",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -399,10 +400,11 @@ EVENT_SKELETONS = {
     },
     "Flames race up a tower facade": {
         "domain": "fire_disasters", "ships": None,
+        # 8 Eki (2): 4 nokta, hepsi yüksek (balkon + çatı terası)
         "spots": {"Balcony across from a downtown tower": "the downtown city center",
-                  "Sidewalk across from a downtown tower": "the downtown city center",
+                  "Rooftop terrace across from a downtown tower": "the downtown city center",
                   "Balcony across from a coastal high-rise": "a high-rise coastal city",
-                  "Sidewalk across from a coastal high-rise": "a high-rise coastal city"},
+                  "Rooftop terrace across from a coastal high-rise": "a high-rise coastal city"},
         "people": ["pedestrians", "residents"], "weather": FIRE_WEATHER, "object": "burning facade",
         "text": "In {spot} in {weather}, flames race up the glass facade of a tower, blowing out windows. Burning "
                 "debris falls onto the street as {n} {people} run from the tower. The fire keeps climbing floor "

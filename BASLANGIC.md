@@ -25,6 +25,54 @@
 
 ---
 
+## 📋 DEVİR: Yangın devir notu (8 Eki)
+
+**Durum:** Yeni kategori 🔥 Yangın (`fire_disasters`), 3 TASLAK olay yapılandırılmış hatta (commit `338e575`, kamera
+düzeltmesi bu notla aynı commit'te). Bölge görünümü yok, araç `EVENT_VEHICLES` (pickup truck, small car, white van,
+SUV), kaçan kişi 3-6 (`EVENT_COUNT`). Henüz video testi yapılmadı.
+
+**Olaylar ve kilit cümleler (Bahadır'ın metni birebir):**
+- 🔥 Orman yangını mahalleye ulaşır (`Wall of flames sweeps into a hillside neighborhood`): "A towering wall of flames
+  sweeps down the forested slope and slams into the edge of the neighborhood, igniting roofs and trees." Havuz K1-K6 /
+  L1-L6, kaçış "the flames".
+- 🔥 Apartman cephe yangını (`Flames race up a tower facade`): "Flames race up the glass facade of a tower, blowing out
+  windows and raining burning debris onto the street." Havuz M1-M6 / N1-N6, kaçış "the flames".
+- 🔥 Ateş hortumu (`Fire tornado tears across a burning roadside`): "A violent fire tornado tears across a burning
+  roadside, hurling flames, burning branches and embers across the road." Havuz T1-T6 / U1-U6, kaçış "the fire
+  tornado".
+
+**Kamera noktaları (hepsi yüksek; nokta = ortam anahtarı, Bahadır'ın ortam tarifi PLACE metninde):**
+- Orman yangını: "Balcony of a hillside house" (on a balcony of a hillside house overlooking the street and the
+  burning slope), "Embankment above the village road" (on a roadside embankment above the village road). PLACE: a
+  hillside village neighborhood. L1 ve L5 balkon noktasında seçilmez (kameranın durduğu ev).
+- Cephe yangını: "Balcony across from a downtown tower" ve "Balcony across from a coastal high-rise" (on a high
+  balcony across the street from the tower); "Rooftop terrace across from a downtown tower" ve "Rooftop terrace
+  across from a coastal high-rise" (on a rooftop terrace across the street from the tower). PLACE: the downtown city
+  center / a high-rise coastal city. Kaldırım noktaları 8 Eki'de çıktı.
+- Ateş hortumu: "Overlook above the burning valley road" (on a roadside overlook above the burning valley road),
+  "Balcony of a roadside house" (on a high balcony of a roadside house overlooking the road). PLACE: a burning
+  valley road. U1 balkon noktasında seçilmez.
+
+**Hava havuzu (`FIRE_WEATHER`):** hot dry wind and thick smoke haze / gusty dry wind under an orange smoky sky /
+heavy smoke and scorching still air.
+
+**Kapılar (sadece yangın olayları, `core/event_structure.py`):**
+- Yağmur/ıslaklık yasağı (`rain_words`): hikâyede (kilit cümle dahil) ve stil ekinde yağış anlamındaki "rain",
+  wet, soaked, drenched, rain-soaked, downpour, puddle vb. geçerse ret.
+- Kural: "rain" fiili yanan ya da düşen bir nesneyle (±3 kelime: ember, spark, debris, glass, burning, flaming...)
+  birlikte geçerse serbesttir ("embers rain onto", "raining burning debris": Bahadır'ın kendi metinleri).
+- Uçma yasağı (`NO_LIFT_SLICE`): orman ve cephe yangınında 4-9s'de araç havalanırsa (lift, airborne, off the ground,
+  swept up...) ret. Ateş hortumunda araç havalanır (T1, T3).
+- Terim listeleri yangına özel (`_FIRE_*`); alev bir şeye değmeli, sadece rüzgâr anlatımı geçmez. "rush" kaçış
+  sayılmaz (mevcut `_FLEE`).
+
+**Gözlem:** Genel 40-70 kelime sınırı orman yangınında sık 2.-3. denemeye itiyor (kilit cümle 22 kelime; ilk kuru
+provada 6 hikâyenin 3'ü sınır yüzünden en az bir kez reddedildi, hepsi 3 denemede geçti). Sınır değişmedi.
+
+**Bekleyen iş:** 4. olay "Yangın söndürme helikopteri alev duvarına su bırakır", ilk yangın testi geçince eklenecek.
+
+---
+
 ## 📋 DEVİR — Hortum devir notu (4 Eki)
 
 **KURAL (Bahadır, bağlayıcı):** Olay ya da kategori çıkarılmaz, başka bir şeyle değiştirilmez; karar verilen olay
