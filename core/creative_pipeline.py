@@ -136,6 +136,16 @@ EVENT_OUTCOMES = {
     "Mud and debris torrent tears through a hillside village":
         "a fast torrent of mud, logs and rocks tears down between the houses, ramming walls and sweeping away fences "
         "and parked vehicles as villagers run to higher ground",
+    # Yangın (TASLAK, 8 Eki, Bahadır): yapılandırılmış hatta; trace/rapor için, GPT mesajına girmez
+    "Wall of flames sweeps into a hillside neighborhood":
+        "the wall of flames slams into the neighborhood, igniting roofs, trees and fences one after another as "
+        "residents run from the fire",
+    "Flames race up a tower facade":
+        "the flames keep climbing the tower facade, blowing out windows and dropping burning debris onto the street "
+        "below",
+    "Fire tornado tears across a burning roadside":
+        "the fire tornado keeps tearing along the roadside, hurling burning branches, embers and debris across the "
+        "road",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -287,6 +297,10 @@ EVENT_REQUIRED = {
     "Rain-soaked slope collapses onto a roadside": [],
     # Eski: [("mud",), ("house", "houses", "wall", "walls", "village")]
     "Mud and debris torrent tears through a hillside village": [],
+    # ── Yangın (TASLAK, 8 Eki, Bahadır): yapılandırılmış hatta, grupsuz; tetik kilit cümlede olay adından ──
+    "Wall of flames sweeps into a hillside neighborhood": [],
+    "Flames race up a tower facade": [],
+    "Fire tornado tears across a burning roadside": [],
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),

@@ -30,6 +30,11 @@ VILLAGE = "Mud and debris torrent tears through a hillside village"
 LANDFALL = "Tornado making landfall"
 MARINA_TORNADO = "Tornado crosses a marina quay"
 AVENUE = "Tornado sweeps down a coastal avenue"
+# 🔥 Yangın (TASLAK, 8 Eki, Bahadır)
+WILDFIRE = "Wall of flames sweeps into a hillside neighborhood"
+FACADE_FIRE = "Flames race up a tower facade"
+FIRE_TORNADO = "Fire tornado tears across a burning roadside"
+FIRE_EVENTS = (WILDFIRE, FACADE_FIRE, FIRE_TORNADO)
 
 SLICE_LABELS = ("0-4s", "4-9s", "9-15s")
 SLICE_FIELDS = ("slice_1_rest", "slice_2", "slice_3")
@@ -72,6 +77,13 @@ EVENT_KEY_VISUAL = {
                     "ground.",
     AVENUE: "A violent tornado sweeps down a palm-lined coastal avenue, hurling signs, branches and debris along the "
             "road.",
+    # TASLAK (8 Eki, Bahadır): yangın kilit cümleleri, Bahadır'ın metni birebir
+    WILDFIRE: "A towering wall of flames sweeps down the forested slope and slams into the edge of the neighborhood, "
+              "igniting roofs and trees.",
+    FACADE_FIRE: "Flames race up the glass facade of a tower, blowing out windows and raining burning debris onto the "
+                 "street.",
+    FIRE_TORNADO: "A violent fire tornado tears across a burning roadside, hurling flames, burning branches and embers "
+                  "across the road.",
 }
 
 # ── Bölge araçları (4-9s'deki {vehicle}). Görünüm tariflerindeki araçlardan. terms: dilimde aranan ad. ──────
@@ -98,6 +110,13 @@ EVENT_VEHICLES = {
                      ("SUV", ("suv",))],
     AVENUE: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)),
              ("SUV", ("suv",))],
+    # TASLAK (8 Eki, yangın). Orman ve cephe yangınında araç havalanmaz (NO_LIFT_SLICE); ateş hortumunda havalanır
+    WILDFIRE: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)),
+               ("SUV", ("suv",))],
+    FACADE_FIRE: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)),
+                  ("SUV", ("suv",))],
+    FIRE_TORNADO: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)),
+                   ("SUV", ("suv",))],
 }
 
 # ── Olay havuzları. terms: her gruptan en az bir terim dilimde geçmeli (kök + eşanlamlı; çekimler otomatik:
@@ -168,6 +187,86 @@ _TORNADO_RIP = ("tear", "tore", "torn", "rip", "wrench", "strip", "peel", "dislo
                 "sweep", "swept", "carry", "carried") + _FLING + _AIRBORNE
 _DOWNHILL = ("downhill", "down the hill", "down the slope", "down the street", "down the lane", "along the lane",
              "down the road", "along the road")
+# Yangın (TASLAK, 8 Eki, Bahadır): yangına özel YENİ listeler; mevcut sel/heyelan/hortum listelerine dokunulmaz ve
+# onlardan türetilmez. Alevin bir şeye değdiği görünmeli: alev/tutuşma grupları sadece "rüzgâr esiyor" anlatımını
+# geçirmez. Çok kelimeli terimlerde çekim sadece son kelimeye uygulanır, diğer çekimler ayrıca yazılır.
+_FIRE_FLAME = ("flame", "fire", "blaze", "burn", "burnt", "inferno", "ablaze", "alight", "afire", "firestorm")
+_FIRE_IGNITE = ("ignite", "catch fire", "catches fire", "caught fire", "catching fire", "set alight", "sets alight",
+                "setting alight", "set ablaze", "sets ablaze", "setting ablaze", "set on fire", "sets on fire",
+                "setting on fire", "set fire", "sets fire", "setting fire", "burst into flame", "bursts into flame",
+                "burst into flames", "bursts into flames", "bursting into flames", "go up in flames",
+                "goes up in flames", "went up in flames", "going up in flames", "engulf", "consume", "torch",
+                "kindle", "swallow", "devour", "envelop", "ablaze", "alight", "on fire", "in flames")
+_FIRE_EMBER = ("ember", "spark", "cinder", "glowing ash", "burning ash", "firebrand")
+_FIRE_FALL = ("fall", "fell", "fallen", "crash", "topple", "drop", "collapse", "come down", "comes down",
+              "came down", "coming down", "tumble", "plunge", "slam", "smash", "land")
+_FIRE_TREE = ("tree", "pine", "trunk", "branch", "limb", "bough")
+_FIRE_REVERSE = ("reverse", "back up", "backs up", "backed up", "backing up", "backward", "backwards", "retreat")
+_FIRE_BACK = _FIRE_REVERSE + ("back away", "backs away", "backed away", "backing away", "lurch back",
+                              "lurches back", "lurched back", "lurching back", "jerk back", "jerks back",
+                              "jerked back", "pull back", "pulls back", "pulled back", "roll back", "rolls back",
+                              "rolled back")
+_FIRE_STOP = ("skid", "stop", "brake", "halt", "screech", "jolt", "slide", "slid")
+_FIRE_TOUCH = ("lick", "touch", "reach", "scorch", "sear", "engulf", "wrap", "lap", "curl", "blister", "char",
+               "singe", "envelop", "cover", "brush", "swallow")
+_FIRE_FRONT = ("hood", "bonnet", "bumper", "grille", "grill", "front", "windshield", "windscreen")
+_FIRE_ROOF = ("roof", "rooftop", "roofs")
+_FIRE_SWERVE = ("swerve", "veer", "dodge", "weave", "steer", "jerk", "lurch", "swing", "swung")
+_FIRE_RAIL = ("guardrail", "guard rail", "crash barrier", "barrier", "railing")
+_FIRE_UTURN = ("u-turn", "turn around", "turns around", "turned around", "turning around", "whip around",
+               "whips around", "whipped around", "wheel around", "wheels around", "spin around", "spins around",
+               "spun around", "swing around", "swings around", "swung around", "turn back", "turns back",
+               "turned back", "about-face")
+_FIRE_CLOSE = ("close", "block", "cut off", "cuts off", "seal", "swallow", "engulf", "cover", "fill", "consume",
+               "behind")
+_FIRE_SPEED = ("race", "speed", "sped", "flee", "fled", "accelerate", "tear", "tore", "hurtle", "barrel", "zoom",
+               "dash", "bolt", "drive", "drove", "away")
+_FIRE_GLASS = ("window", "glass", "windshield", "windscreen")
+_FIRE_CRACK = ("crack", "shatter", "split", "craze", "burst", "break", "broke", "blow out",
+               "blows out", "blew out", "explode")
+_FIRE_HOUSE = ("roof", "rooftop", "house", "home", "cottage")
+_FIRE_FENCE = ("fence", "fencing", "picket", "palisade")
+_FIRE_POLE = ("power pole", "utility pole", "telephone pole", "electricity pole", "pole", "pylon")
+_FIRE_WIRE = ("wire", "cable", "power line", "line")
+_FIRE_SNAP = ("snap", "break", "broke", "sever", "part", "fall", "fell", "drop", "whip", "lash", "spark")
+_FIRE_PANEL = ("panel", "cladding", "sheet", "section", "slab")
+_FIRE_DEBRIS = ("debris", "wreckage", "rubble", "fragment", "chunk", "piece", "panel", "cladding")
+_FIRE_CRUSH = ("crush", "crumple", "cave", "flatten", "dent", "roof", "smash")
+_FIRE_CURB = ("curb", "kerb", "sidewalk", "pavement", "footpath")
+_FIRE_AWNING = ("awning", "canopy", "sunshade", "shade")
+_FIRE_FLOOR = ("floor", "storey", "story", "level", "above", "upper", "higher")
+_FIRE_BLOWOUT = ("blow out", "blows out", "blew out", "blowing out", "burst", "shatter", "explode", "smash", "break",
+                 "broke", "pop")
+_FIRE_PEEL = ("peel", "tear", "tore", "torn", "rip", "strip", "detach", "break", "broke", "come loose",
+              "comes loose", "fall", "fell", "tumble", "drop", "plunge")
+_FIRE_SMOKE = ("smoke",)
+_FIRE_POUR = ("pour", "billow", "roll", "surge", "erupt", "belch", "spew", "gush", "burst", "climb")
+_FIRE_TOWER = ("tower", "facade", "façade", "building", "floor", "storey", "story")
+_FIRE_BALCONY = ("balcony", "balconies", "terrace")
+_FIRE_FURNITURE = ("plant", "furniture", "chair", "table", "sofa", "cushion", "pot")
+# Ateş hortumu: araç havalanır (hortumdaki mantık, yangına özel kopya). "into the air" bilerek yok
+_FIRE_LIFT = ("lift", "hoist", "raise", "heave", "off its wheels", "off the ground", "off the road",
+              "off the pavement", "airborne", "pick up", "picked up", "picks up", "swept up", "sweep up", "sweeps up",
+              "ascend")
+_FIRE_FLING = ("fling", "flung", "toss", "hurl", "throw", "threw", "thrown", "launch", "slam", "smash", "crash",
+               "hurtle")
+_FIRE_SPIN = ("spin", "spun", "twirl", "whirl", "rotate", "twist", "spiral", "tumble", "cartwheel", "roll")
+_FIRE_CRASH_DOWN = ("crash", "slam", "smash", "land", "drop", "plunge", "plummet", "come down", "comes down",
+                    "came down", "fall", "fell", "hit", "strike", "struck", "collapse")
+_FIRE_SKID = ("skid", "slide", "slid", "fishtail", "sideways", "swerve", "veer")
+_FIRE_RIP = ("rip", "tear", "tore", "torn", "wrench", "strip", "peel", "snap", "break", "broke", "lift", "hurl",
+             "fling", "flung", "toss", "throw", "threw", "thrown", "scatter", "blow off", "blows off", "blew off",
+             "sweep", "swept", "carry", "carried", "pull", "uproot", "suck", "spit")
+_FIRE_SIGN = ("billboard", "hoarding", "advertising board", "signboard", "sign")
+_FIRE_BRUSH = ("brush", "brushwood", "scrub", "undergrowth", "shrub", "bush", "dry grass", "grass", "twig")
+_FIRE_SUCK = ("suck", "spit", "spew", "hurl", "fling", "flung", "toss", "throw", "threw", "thrown", "scatter",
+              "whirl", "swirl", "lift", "draw", "pull", "sweep", "swept", "blast")
+_FIRE_TRAILER = ("trailer", "caravan", "camper")
+_FIRE_TOSS = _FIRE_RIP + ("tip", "topple", "overturn", "flip", "roll")
+_FIRE_FUEL = ("trailer", "caravan", "camper", "woodpile", "wood pile", "firewood", "log pile", "log", "logs")
+_FIRE_TILE = ("tile", "shingle", "slate")
+_FIRE_BURST = ("burst", "shatter", "crack", "explode", "split", "pop", "fly", "flies", "flew", "break",
+               "broke")
 
 EVENT_BEATS = {
     FLOOD: {
@@ -538,7 +637,146 @@ EVENT_BEATS = {
         # Kamera kaldırımda: "sokak lambaları devrilir" kameranın durduğu kaldırıma düşer
         "excluded_spots": {"Q5": {"Downtown city center", "High-rise coastal city"}},
     },
+    # ── Yangın (TASLAK, 8 Eki, Bahadır): metinler ve yasak eşleşmeler Bahadır'ın, terim grupları yangına özel ──
+    WILDFIRE: {
+        "slice_2": {
+            "K1": {"text": "the {vehicle} reverses hard down the road as a burning tree crashes across the lane in front "
+                           "of it",
+                   "terms": [_FIRE_REVERSE, _FIRE_FLAME, _FIRE_TREE, _FIRE_FALL]},
+            "K2": {"text": "the {vehicle} skids to a stop as flames leap across the road and lick its hood",
+                   "terms": [_FIRE_STOP, _FIRE_FLAME, _FIRE_TOUCH, _FIRE_FRONT]},
+            "K3": {"text": "a burning branch falls onto the {vehicle}, setting its roof alight",
+                   "terms": [_FIRE_TREE, _FIRE_FALL, _FIRE_ROOF, _FIRE_IGNITE]},
+            "K4": {"text": "the {vehicle} swerves around a falling burning pine and slams into the guardrail",
+                   "terms": [_FIRE_SWERVE, _FIRE_FLAME, _FIRE_TREE, _FIRE_RAIL]},
+            "K5": {"text": "the {vehicle} U-turns in a cloud of smoke and speeds away as the flames close the road "
+                           "behind it",
+                   "terms": [_FIRE_UTURN, _FIRE_FLAME, _FIRE_CLOSE]},
+            "K6": {"text": "embers rain onto the {vehicle} as it races down the road, its rear window cracking in the "
+                           "heat",
+                   "terms": [_FIRE_EMBER, _FIRE_GLASS, _FIRE_CRACK]},
+        },
+        "slice_3": {
+            "L1": {"text": "the flames leap onto the roofs of the nearest houses and ignite them one after another",
+                   "terms": [_FIRE_FLAME, _FIRE_HOUSE, _FIRE_IGNITE]},
+            "L2": {"text": "a shower of glowing embers rains onto the street and sets a wooden fence alight",
+                   "terms": [_FIRE_EMBER, _FIRE_FENCE, _FIRE_IGNITE]},
+            "L3": {"text": "the fire races across a garden, engulfing a parked trailer and a woodpile",
+                   "terms": [_FIRE_FLAME, _FIRE_FUEL, _FIRE_IGNITE]},
+            "L4": {"text": "the wall of flames swallows a row of trees along the road, sending sparks high into the air",
+                   "terms": [_FIRE_FLAME, _FIRE_TREE, _FIRE_IGNITE]},
+            "L5": {"text": "a house roof catches fire and its tiles burst apart in the heat",
+                   "terms": [_FIRE_ROOF, _FIRE_IGNITE, _FIRE_TILE, _FIRE_BURST]},
+            "L6": {"text": "the flames climb a power pole and snap the wires, which whip across the street in a shower "
+                           "of sparks",
+                   "terms": [_FIRE_FLAME, _FIRE_POLE, _FIRE_WIRE, _FIRE_SNAP]},
+        },
+        "excluded_pairs": {("K1", "L4"), ("K3", "L2"), ("K6", "L2")},
+        "excluded_views": {},
+        # Kamera bir yamaç evinin balkonunda (Bahadır onayı, 8 Eki): ev çatısını yakan maddeler o noktada seçilmez
+        "excluded_spots": {"L1": {"Balcony of a hillside house"}, "L5": {"Balcony of a hillside house"}},
+    },
+    FACADE_FIRE: {
+        "slice_2": {
+            "M1": {"text": "a burning panel crashes onto the {vehicle} parked below, crushing its roof",
+                   "terms": [_FIRE_FLAME, _FIRE_PANEL, _FIRE_FALL, _FIRE_CRUSH]},
+            "M2": {"text": "shattered glass rains onto the {vehicle} as it speeds away from the tower",
+                   "terms": [("glass", "shard"), _FIRE_SPEED]},
+            "M3": {"text": "burning debris lands on the hood of the {vehicle}, which lurches back in a hurry",
+                   "terms": [_FIRE_FLAME, _FIRE_DEBRIS, _FIRE_FRONT, _FIRE_BACK]},
+            "M4": {"text": "the {vehicle} swerves around a falling flaming panel and mounts the curb",
+                   "terms": [_FIRE_SWERVE, _FIRE_FLAME, _FIRE_DEBRIS, _FIRE_CURB]},
+            "M5": {"text": "a burning awning drops onto the {vehicle}, which reverses sharply",
+                   "terms": [_FIRE_FLAME, _FIRE_AWNING, _FIRE_FALL, _FIRE_BACK]},
+            "M6": {"text": "flaming debris smashes the windshield of the {vehicle} as it brakes hard",
+                   "terms": [_FIRE_FLAME, _FIRE_DEBRIS, _FIRE_GLASS, _FIRE_STOP]},
+        },
+        "slice_3": {
+            "N1": {"text": "the flames climb floor after floor, blowing out window after window",
+                   "terms": [_FIRE_FLAME, _FIRE_FLOOR, _FIRE_GLASS, _FIRE_BLOWOUT]},
+            "N2": {"text": "a balcony awning catches fire and the flames leap to the floor above",
+                   "terms": [_FIRE_AWNING + _FIRE_BALCONY, _FIRE_IGNITE, _FIRE_FLOOR]},
+            "N3": {"text": "burning panels peel off the facade and tumble down in a trail of sparks",
+                   "terms": [_FIRE_FLAME, _FIRE_PANEL, _FIRE_PEEL]},
+            "N4": {"text": "a wall of smoke and fire pours out of the upper floors and rolls up the tower",
+                   "terms": [_FIRE_SMOKE, _FIRE_FLAME, _FIRE_POUR, _FIRE_TOWER]},
+            "N5": {"text": "a row of windows explodes outward, spraying glass and flames over the street",
+                   "terms": [_FIRE_GLASS, _FIRE_BLOWOUT, _FIRE_FLAME]},
+            "N6": {"text": "the fire jumps to the neighboring balcony, igniting its plants and furniture",
+                   "terms": [_FIRE_FLAME, _FIRE_BALCONY, _FIRE_IGNITE, _FIRE_FURNITURE]},
+        },
+        "excluded_pairs": {("M1", "N3"), ("M2", "N5"), ("M5", "N2")},
+        "excluded_views": {},
+        "excluded_spots": {},
+    },
+    FIRE_TORNADO: {
+        "slice_2": {
+            "T1": {"text": "the {vehicle} is lifted off the road by the swirling flames and flung into a burning tree",
+                   "terms": [_FIRE_LIFT, _FIRE_FLING, _FIRE_FLAME, _FIRE_TREE]},
+            "T2": {"text": "a burning branch hurled by the tornado smashes the windshield of the {vehicle}",
+                   "terms": [_FIRE_FLAME, _FIRE_TREE, _FIRE_GLASS]},
+            "T3": {"text": "the {vehicle} is swept up into the air, spins, and crashes down onto the road in a shower "
+                           "of sparks",
+                   "terms": [_FIRE_LIFT, _FIRE_SPIN, _FIRE_CRASH_DOWN]},
+            "T4": {"text": "the {vehicle} skids sideways as the fire tornado crosses the road behind it, throwing "
+                           "embers across its roof",
+                   "terms": [_FIRE_SKID, _FIRE_EMBER, _FIRE_ROOF]},
+            "T5": {"text": "the {vehicle} is shoved against the guardrail by the whirling flames and its hood catches "
+                           "fire",
+                   "terms": [_FIRE_RAIL, _FIRE_FRONT, _FIRE_IGNITE]},
+            "T6": {"text": "flaming debris slams into the side of the {vehicle}, which spins and stops across the road",
+                   "terms": [_FIRE_FLAME, _FIRE_DEBRIS, _FIRE_SPIN]},
+        },
+        "slice_3": {
+            "U1": {"text": "the fire tornado rips the burning roof off a house and scatters flaming pieces across the "
+                           "street",
+                   "terms": [_FIRE_ROOF, _FIRE_RIP, _FIRE_FLAME]},
+            "U2": {"text": "the fire tornado uproots a burning tree and flings it down the road",
+                   "terms": [_FIRE_TREE, _FIRE_RIP, _FIRE_FLAME]},
+            "U3": {"text": "the whirling flames tear a billboard from its supports and hurl it aside",
+                   "terms": [_FIRE_SIGN, _FIRE_RIP, _FIRE_FLAME]},
+            "U4": {"text": "the tornado sucks up a pile of burning brush and spits it across the road in a fountain of "
+                           "sparks",
+                   "terms": [_FIRE_BRUSH, _FIRE_SUCK, _FIRE_FLAME + _FIRE_EMBER]},
+            "U5": {"text": "the fire tornado tears a section of burning fence away and carries it across the field",
+                   "terms": [_FIRE_FENCE, _FIRE_RIP, _FIRE_FLAME]},
+            "U6": {"text": "the fire tornado sweeps over a parked trailer, tossing it aside in a cloud of fire and smoke",
+                   "terms": [_FIRE_TRAILER, _FIRE_TOSS, _FIRE_FLAME]},
+        },
+        "excluded_pairs": {("T1", "U2"), ("T2", "U2"), ("T4", "U4")},
+        "excluded_views": {},
+        # Kamera bir yol kenarı evinin balkonunda (Bahadır onayı, 8 Eki): "evin çatısı kopar" o noktada seçilmez
+        "excluded_spots": {"U1": {"Balcony of a roadside house"}},
+    },
 }
+
+# ── Yangın kapıları (TASLAK, 8 Eki, Bahadır). Sadece FIRE_EVENTS; diğer olayların denetimi değişmez. ─────────────
+# Yağmur/ıslaklık yasağı: kilit cümle, havuz, hava, yer metni, stil eki ve GPT hikâyesinde. "rain" fiili sadece
+# yanan/düşen bir şeyle birlikte geçerse serbest ("embers rain onto", "raining burning debris": Bahadır'ın kendi
+# metinleri); yağış anlamındaki her "rain" reddedilir.
+NO_RAIN_EVENTS = FIRE_EVENTS
+_FIRE_WET = ("wet", "wetness", "soak", "drench", "rain-soaked", "waterlogged", "puddle", "downpour", "drizzle",
+             "rainfall", "rainstorm", "raindrop", "rainwater", "rainy", "sleet", "damp", "monsoon")
+_RAIN_TOKENS = ("rain", "rains", "rained", "raining")
+_RAIN_FALLING_OK = ("ember", "spark", "cinder", "ash", "debris", "glass", "shard", "burning", "flaming", "glowing",
+                    "fragment", "panel", "branch", "piece", "firebrand", "rubble", "flame")
+_RAIN_WINDOW = 3
+# Orman ve cephe yangınında araç havalanmaz (Bahadır onayı, 8 Eki): 4-9s'de kalkma ifadesi reddedilir
+NO_LIFT_SLICE = {WILDFIRE: ("slice_2",), FACADE_FIRE: ("slice_2",)}
+_FIRE_NO_LIFT = ("lift", "hoist", "airborne", "off its wheels", "off the ground", "swept up", "sweep up", "sweeps up",
+                 "levitate")
+
+
+def rain_words(text: str) -> list[str]:
+    """Yağış/ıslaklık ifadeleri. Yanan/düşen bir nesnenin yanında (±3 kelime) geçen "rain" fiili sayılmaz."""
+    found = find_terms(_FIRE_WET, text)
+    tokens = re.findall(r"[a-z]+(?:-[a-z]+)*", (text or "").lower())
+    for i, tok in enumerate(tokens):
+        if tok in _RAIN_TOKENS:
+            near = tokens[max(0, i - _RAIN_WINDOW):i] + tokens[i + 1:i + 1 + _RAIN_WINDOW]
+            if not any(w.startswith(ok) for w in near for ok in _RAIN_FALLING_OK):
+                found.append(tok)
+    return list(dict.fromkeys(found))
 
 # ── Olaya özel dilim kapıları (4 Eki, Bahadır onayı): terimlerden biri dilimde geçmeli. Çekimler otomatik
 # (find_terms). "people": True olan kuralın terimi koddan gelir: spec'teki N'in sayı kelimesi (kod N'i olayın kişi
@@ -570,6 +808,10 @@ SLICE_RULES = {
     LANDFALL: _people_rules("the tornado"),
     MARINA_TORNADO: _people_rules("the tornado"),
     AVENUE: _people_rules("the tornado"),
+    # TASLAK (8 Eki, yangın): mevcut kaçış listesi (_FLEE, "rush" yok)
+    WILDFIRE: _people_rules("the flames"),
+    FACADE_FIRE: _people_rules("the flames"),
+    FIRE_TORNADO: _people_rules("the fire tornado"),
 }
 
 
@@ -857,6 +1099,20 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             event_text = beat_text(event, slot, bid, spec["vehicle"])
             out.append(_issue("beat_terms", f"{label}: seçilen olay ({bid}) görünmüyor",
                               f"'{slot}' must clearly show this event: {event_text}."))
+    # Yangın (8 Eki): yağmur/ıslaklık yasağı (kilit cümle dahil tüm hikâye) ve 4-9s'de araç havalanmaz
+    if event in NO_RAIN_EVENTS:
+        wet = rain_words(plain_story(spec, slices))
+        if wet:
+            out.append(_issue("fire_no_rain", f"yağmur/ıslaklık yasak ({', '.join(wet)})",
+                              f"Remove {', '.join(repr(w) for w in wet)}: the air is hot and dry; no rain, wet or "
+                              f"soaked surfaces anywhere."))
+    for slot in NO_LIFT_SLICE.get(event, ()):
+        lifted = find_terms(_FIRE_NO_LIFT, slices.get(slot, ""))
+        if lifted:
+            label = "4-9s" if slot == "slice_2" else "9-15s"
+            out.append(_issue("fire_no_lift", f"{label}: araç havalanmaz ({', '.join(lifted)})",
+                              f"In '{slot}' the {spec['vehicle']} stays on the ground: remove "
+                              f"{', '.join(repr(w) for w in lifted)}."))
     return out
 
 
@@ -892,6 +1148,8 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
     n_constraints = count_constraints(expected_suffix)[0]
     if n_constraints > 8:
         out.append(_issue("suffix_constraints", f"stil eki {n_constraints} kısıt (en fazla 8)"))
+    if spec["event"] in NO_RAIN_EVENTS and rain_words(expected_suffix):   # 8 Eki: yangında stil eki de yağmursuz
+        out.append(_issue("fire_no_rain_suffix", f"stil ekinde yağmur/ıslaklık ({', '.join(rain_words(expected_suffix))})"))
     if len(prompt) > MAX_PROMPT_CHARS and not any(i["rule"] == "prompt_chars" for i in out):
         out.append(_issue("prompt_chars", f"prompt {len(prompt)} karakter (en fazla {MAX_PROMPT_CHARS})"))
     # 6 sabit kural (genel 40-60 "length" yerine TOTAL_WORDS; olay grupları ve çeşitlilik burada değil)

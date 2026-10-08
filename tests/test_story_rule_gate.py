@@ -116,7 +116,7 @@ class TestLocks(unittest.TestCase):
 
     def test_required_covers_all_22_events_with_budget(self):
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(cp.EVENT_REQUIRED), 24)   # 2 Eki: + 3 heyelan
+        self.assertEqual(len(cp.EVENT_REQUIRED), 27)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın
         for e, groups in cp.EVENT_REQUIRED.items():
             with self.subTest(event=e):
                 # yapılandırılmış olaylarda grup yok (olay terimleri event_structure'da)
@@ -398,7 +398,7 @@ class TestCityEventSwap(unittest.TestCase):
     def test_event_sets_equal(self):
         self.assertEqual(set(cp.EVENT_OUTCOMES), set(sk.EVENT_SKELETONS))
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(sk.EVENT_SKELETONS), 24)   # 2 Eki: + 3 heyelan
+        self.assertEqual(len(sk.EVENT_SKELETONS), 27)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın
         self.assertIn(TIDAL, sk.EVENT_SKELETONS)
         self.assertNotIn(SIGNS, sk.EVENT_SKELETONS)
         self.assertIn(SIGNS, sk.REMOVED_EVENTS)   # kod silinmedi: havuzda, iskelet dışında

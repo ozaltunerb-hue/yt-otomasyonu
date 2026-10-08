@@ -88,6 +88,13 @@ class TestLockedData(unittest.TestCase):
                                "umbrellas off the ground.",
             es.AVENUE: "A violent tornado sweeps down a palm-lined coastal avenue, hurling signs, branches and debris "
                        "along the road.",
+            # 8 Eki, TASLAK: yangın kilit cümleleri (Bahadır'ın metni birebir; TestFireStructure ayrıca kilitler)
+            es.WILDFIRE: "A towering wall of flames sweeps down the forested slope and slams into the edge of the "
+                         "neighborhood, igniting roofs and trees.",
+            es.FACADE_FIRE: "Flames race up the glass facade of a tower, blowing out windows and raining burning "
+                            "debris onto the street.",
+            es.FIRE_TORNADO: "A violent fire tornado tears across a burning roadside, hurling flames, burning "
+                             "branches and embers across the road.",
         })
         self.assertEqual(es.SLICE_LABELS, ("0-4s", "4-9s", "9-15s"))
         self.assertEqual(es.SLICE_FIELDS, ("slice_1_rest", "slice_2", "slice_3"))
@@ -141,7 +148,8 @@ class TestLockedData(unittest.TestCase):
     def test_structured_events(self):
         # 4 Eki: kıyı dev dalga da yapılandırılmış hatta; diğer olaylar eski yolda
         self.assertEqual(es.structured_events(), (FLOOD, TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE,
-                                                  es.LANDFALL, es.MARINA_TORNADO, es.AVENUE))
+                                                  es.LANDFALL, es.MARINA_TORNADO, es.AVENUE,
+                                                  es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO))   # 8 Eki
         self.assertEqual(TIDAL, "Tidal wave surges over a coastal city street")
         self.assertFalse(es.is_structured("Rogue wave breaks over the rail onto the pool deck"))
 
@@ -577,12 +585,15 @@ class TestTidal(unittest.TestCase):
         self.assertEqual(sk.count_range(TIDAL, None), (3, 6))
         self.assertEqual(sk.count_range(FLOOD, None), (2, 10))   # diğer olaylar aynı
         self.assertEqual(sk.EVENT_COUNT, {TIDAL: (3, 6), es.MUDSLIDE: (3, 6), es.SLOPE: (3, 6), es.VILLAGE: (3, 6),
-                                          es.LANDFALL: (3, 6), es.MARINA_TORNADO: (3, 6), es.AVENUE: (3, 6)})
+                                          es.LANDFALL: (3, 6), es.MARINA_TORNADO: (3, 6), es.AVENUE: (3, 6),
+                                          # 8 Eki (TASLAK): yangın
+                                          es.WILDFIRE: (3, 6), es.FACADE_FIRE: (3, 6), es.FIRE_TORNADO: (3, 6)})
 
     def test_slice_rules_locked(self):
         # selde dilim kapısı yok; heyelan (TASLAK) aynı mekanizma
         self.assertEqual(set(es.SLICE_RULES), {TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE,
-                                               es.LANDFALL, es.MARINA_TORNADO, es.AVENUE})
+                                               es.LANDFALL, es.MARINA_TORNADO, es.AVENUE,
+                                               es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO})   # 8 Eki: yangın
         r = {x["rule"]: x for x in es.SLICE_RULES[TIDAL]}
         self.assertEqual(set(r), {"slice_flee", "slice_count"})
         self.assertEqual(r["slice_flee"]["terms"], ("run", "ran", "running", "flee", "fled", "fleeing", "sprint",
@@ -1551,6 +1562,436 @@ class TestMarinaRedesign(unittest.TestCase):
                 with self.subTest(beat=bid, text=t):
                     self.assertEqual(es.missing_term_groups(terms, t), [])
 
+
+
+FIRE = (es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO)
+
+
+class TestFireStructure(unittest.TestCase):
+    """8 Eki, TASLAK (Bahadır): 🔥 Yangın kategorisi, 3 olay yapılandırılmış hatta (heyelan/hortum deseni, bölge
+    görünümü yok). KİLİT: kilit cümleler, kamera satırları, hava, havuz metinleri, yasak eşleşmeler, kamera
+    dışlamaları, araç listeleri ve yağmur/uçma yasakları onaysız değişmez. Terim listeleri yangına özel ve yeni."""
+
+    KEY = {
+        es.WILDFIRE: "A towering wall of flames sweeps down the forested slope and slams into the edge of the "
+                     "neighborhood, igniting roofs and trees.",
+        es.FACADE_FIRE: "Flames race up the glass facade of a tower, blowing out windows and raining burning debris "
+                        "onto the street.",
+        es.FIRE_TORNADO: "A violent fire tornado tears across a burning roadside, hurling flames, burning branches "
+                         "and embers across the road.",
+    }
+    POOLS = {
+        es.WILDFIRE: ({
+            "K1": "the {vehicle} reverses hard down the road as a burning tree crashes across the lane in front of it",
+            "K2": "the {vehicle} skids to a stop as flames leap across the road and lick its hood",
+            "K3": "a burning branch falls onto the {vehicle}, setting its roof alight",
+            "K4": "the {vehicle} swerves around a falling burning pine and slams into the guardrail",
+            "K5": "the {vehicle} U-turns in a cloud of smoke and speeds away as the flames close the road behind it",
+            "K6": "embers rain onto the {vehicle} as it races down the road, its rear window cracking in the heat",
+        }, {
+            "L1": "the flames leap onto the roofs of the nearest houses and ignite them one after another",
+            "L2": "a shower of glowing embers rains onto the street and sets a wooden fence alight",
+            "L3": "the fire races across a garden, engulfing a parked trailer and a woodpile",
+            "L4": "the wall of flames swallows a row of trees along the road, sending sparks high into the air",
+            "L5": "a house roof catches fire and its tiles burst apart in the heat",
+            "L6": "the flames climb a power pole and snap the wires, which whip across the street in a shower of sparks",
+        }, {("K1", "L4"), ("K3", "L2"), ("K6", "L2")},
+            {"L1": {"Balcony of a hillside house"}, "L5": {"Balcony of a hillside house"}}),
+        es.FACADE_FIRE: ({
+            "M1": "a burning panel crashes onto the {vehicle} parked below, crushing its roof",
+            "M2": "shattered glass rains onto the {vehicle} as it speeds away from the tower",
+            "M3": "burning debris lands on the hood of the {vehicle}, which lurches back in a hurry",
+            "M4": "the {vehicle} swerves around a falling flaming panel and mounts the curb",
+            "M5": "a burning awning drops onto the {vehicle}, which reverses sharply",
+            "M6": "flaming debris smashes the windshield of the {vehicle} as it brakes hard",
+        }, {
+            "N1": "the flames climb floor after floor, blowing out window after window",
+            "N2": "a balcony awning catches fire and the flames leap to the floor above",
+            "N3": "burning panels peel off the facade and tumble down in a trail of sparks",
+            "N4": "a wall of smoke and fire pours out of the upper floors and rolls up the tower",
+            "N5": "a row of windows explodes outward, spraying glass and flames over the street",
+            "N6": "the fire jumps to the neighboring balcony, igniting its plants and furniture",
+        }, {("M1", "N3"), ("M2", "N5"), ("M5", "N2")}, {}),
+        es.FIRE_TORNADO: ({
+            "T1": "the {vehicle} is lifted off the road by the swirling flames and flung into a burning tree",
+            "T2": "a burning branch hurled by the tornado smashes the windshield of the {vehicle}",
+            "T3": "the {vehicle} is swept up into the air, spins, and crashes down onto the road in a shower of sparks",
+            "T4": "the {vehicle} skids sideways as the fire tornado crosses the road behind it, throwing embers across "
+                  "its roof",
+            "T5": "the {vehicle} is shoved against the guardrail by the whirling flames and its hood catches fire",
+            "T6": "flaming debris slams into the side of the {vehicle}, which spins and stops across the road",
+        }, {
+            "U1": "the fire tornado rips the burning roof off a house and scatters flaming pieces across the street",
+            "U2": "the fire tornado uproots a burning tree and flings it down the road",
+            "U3": "the whirling flames tear a billboard from its supports and hurl it aside",
+            "U4": "the tornado sucks up a pile of burning brush and spits it across the road in a fountain of sparks",
+            "U5": "the fire tornado tears a section of burning fence away and carries it across the field",
+            "U6": "the fire tornado sweeps over a parked trailer, tossing it aside in a cloud of fire and smoke",
+        }, {("T1", "U2"), ("T2", "U2"), ("T4", "U4")}, {"U1": {"Balcony of a roadside house"}}),
+    }
+    # spot (kamera noktası) -> (kamera satırı, PLACE metni = Bahadır'ın ortam tarifi)
+    SPOTS = {
+        es.WILDFIRE: {
+            "Balcony of a hillside house": ("on a balcony of a hillside house overlooking the street and the burning "
+                                            "slope", "a hillside village neighborhood"),
+            "Embankment above the village road": ("on a roadside embankment above the village road",
+                                                  "a hillside village neighborhood"),
+        },
+        es.FACADE_FIRE: {
+            "Balcony across from a downtown tower": ("on a balcony across the street from the tower",
+                                                     "the downtown city center"),
+            "Sidewalk across from a downtown tower": ("on the sidewalk across the street from the tower",
+                                                      "the downtown city center"),
+            "Balcony across from a coastal high-rise": ("on a balcony across the street from the tower",
+                                                        "a high-rise coastal city"),
+            "Sidewalk across from a coastal high-rise": ("on the sidewalk across the street from the tower",
+                                                         "a high-rise coastal city"),
+        },
+        es.FIRE_TORNADO: {
+            "Overlook above the burning valley road": ("on a roadside overlook above the burning valley road",
+                                                       "a burning valley road"),
+            "Balcony of a roadside house": ("on a balcony of a roadside house", "a burning valley road"),
+        },
+    }
+    WEATHER = ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
+               "heavy smoke and scorching still air"]
+    VEHICLES = ["pickup truck", "small car", "white van", "SUV"]
+    AWAY = {es.WILDFIRE: "the flames", es.FACADE_FIRE: "the flames", es.FIRE_TORNADO: "the fire tornado"}
+
+    def setUp(self):
+        es._BEAT_MEMORY.clear()
+
+    def slices(self, e, b2, b3, vehicle, people):
+        s1 = f"{cap(es.NUMBER_WORDS[people])} people run from {self.AWAY[e]}."
+        return {"slice_1_rest": es.clean_slice(s1),
+                "slice_2": es.clean_slice(cap(es.beat_text(e, "slice_2", b2, vehicle))),
+                "slice_3": es.clean_slice(cap(es.beat_text(e, "slice_3", b3)))}
+
+    def build(self, e, b2, b3, spot, vehicle, people=5):
+        spec = es.build_spec(e, None, spot, None, b2, b3, vehicle, people)
+        slices = self.slices(e, b2, b3, vehicle, people)
+        return spec, slices, es.assemble_prompt(spec, slices)
+
+    def codes(self, spec, slices):
+        return {i["rule"] for i in es.final_prompt_issues(spec, slices, es.assemble_prompt(spec, slices))}
+
+    def test_menu_and_category(self):
+        import bot
+        import core.creative_pipeline as cp
+        from core.creative_engine import DOMAIN_ATTRIBUTES, ENV_CENTRIC_DOMAINS, MARITIME_INSPIRATION_DOMAINS
+        self.assertEqual(es.FIRE_EVENTS, FIRE)
+        self.assertEqual(bot.DOMAIN_LABELS["fire_disasters"], "🔥 Yangın")
+        self.assertEqual([bot.EVENT_LABELS[e] for e in FIRE],
+                         ["🔥 Orman yangını mahalleye ulaşır", "🔥 Apartman cephe yangını", "🔥 Ateş hortumu"])
+        self.assertEqual(sk.skeleton_events("fire_disasters"), list(FIRE))
+        self.assertEqual(DOMAIN_ATTRIBUTES["fire_disasters"]["ships"], [])
+        self.assertEqual(DOMAIN_ATTRIBUTES["fire_disasters"]["environments"],
+                         [s for e in FIRE for s in self.SPOTS[e]])
+        self.assertIn("fire_disasters", MARITIME_INSPIRATION_DOMAINS)
+        self.assertIn("fire_disasters", ENV_CENTRIC_DOMAINS)
+        self.assertEqual(sk.PHENOMENA["Yangın"], list(FIRE))
+        for e in FIRE:
+            with self.subTest(event=e):
+                self.assertTrue(es.is_structured(e))
+                self.assertNotIn(e, sk.REGION_VIEW_EVENTS)
+                self.assertEqual(es.structure_views(e), [None])
+                self.assertEqual(cp.EVENT_REQUIRED[e], [])
+                self.assertNotIn(e, cp.REQUIRED_APPROVED)      # TASLAK
+                self.assertEqual(sk.count_range(e, None), (3, 6))
+                self.assertIsNone(sk.EVENT_SKELETONS[e]["ships"])
+                self.assertEqual(sk.EVENT_SKELETONS[e]["domain"], "fire_disasters")
+
+    def test_key_visuals_locked_and_pass(self):
+        import core.creative_pipeline as cp
+        for e in FIRE:
+            with self.subTest(event=e):
+                self.assertEqual(es.EVENT_KEY_VISUAL[e], self.KEY[e])
+                found = {i["rule"] for i in cp.story_rule_issues(e, None, self.KEY[e])}
+                self.assertFalse(found & {"a_trigger_first", "e_event_and_ship_named", "required"})
+                self.assertIn("a_trigger_first", {i["rule"] for i in cp.story_rule_issues(e, None, "Cars sit still.")})
+                self.assertEqual(es.rain_words(self.KEY[e]), [])
+
+    def test_camera_lines_place_and_weather(self):
+        for e in FIRE:
+            s = sk.EVENT_SKELETONS[e]
+            with self.subTest(event=e):
+                self.assertEqual(s["weather"], self.WEATHER)
+                self.assertIs(s["weather"], sk.FIRE_WEATHER)
+                self.assertEqual({k: v for k, v in s["spots"].items()}, {k: p for k, (_, p) in self.SPOTS[e].items()})
+                for spot, (camera, place) in self.SPOTS[e].items():
+                    self.assertEqual(sk.CAMERA_SPOTS[spot], camera)
+                    suffix = sk.style_suffix(e, None, spot)
+                    self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {camera}, eye level"),
+                                    suffix)
+                    self.assertTrue(suffix.endswith(" No readable signs, text or flags."), suffix)
+                    self.assertNotIn("phone", suffix.lower())
+                    self.assertEqual(es.rain_words(suffix), [])
+                    from core.trace_format import count_constraints
+                    self.assertLessEqual(count_constraints(suffix)[0], 8)
+                for x in list(s["spots"].values()) + s["weather"] + [s["text"]]:
+                    self.assertEqual(es.rain_words(x), [], x)
+        # mevcut olayların kamera satırları değişmedi (aynı ortam adları başka olaylarda)
+        self.assertEqual(sk.CAMERA_SPOTS["Downtown city center"], "on a sidewalk across the street")
+        self.assertEqual(sk.CAMERA_SPOTS["High-rise coastal city"], "on a sidewalk across the street")
+        self.assertEqual(sk.LANDSLIDE_WEATHER, ["driving rain and wind", "heavy downpour under dark storm light",
+                                                "steady heavy rain, grey low cloud"])
+
+    def test_pools_locked(self):
+        for e, (s2, s3, pairs, spots) in self.POOLS.items():
+            b = es.EVENT_BEATS[e]
+            with self.subTest(event=e):
+                self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, s2)
+                self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, s3)
+                self.assertEqual(b["excluded_pairs"], pairs)
+                self.assertEqual(b["excluded_views"], {})
+                self.assertEqual(b["excluded_spots"], spots)
+                self.assertEqual([n for n, _ in es.EVENT_VEHICLES[e]], self.VEHICLES)
+                for t in list(s2.values()) + list(s3.values()):
+                    self.assertEqual(es.rain_words(t), [], t)
+
+    def test_fire_term_lists_are_new(self):
+        # Yangın maddeleri kaynakta sadece _FIRE_* listelerini kullanır; mevcut sel/heyelan/hortum listelerine
+        # (_TEAR, _CRASH_DOWN, _TORNADO_RIP...) başvuru yok. Kimlik (is) karşılaştırması kullanılmaz: Python aynı
+        # içerikli sabit demetleri tek nesnede birleştirebilir.
+        import ast
+        import inspect
+        tree = ast.parse(inspect.getsource(es))
+        beats = next(n.value for n in tree.body if isinstance(n, ast.Assign)
+                     and any(getattr(t, "id", None) == "EVENT_BEATS" for t in n.targets))
+        fire_names = {"WILDFIRE", "FACADE_FIRE", "FIRE_TORNADO"}
+        seen = 0
+        for key, val in zip(beats.keys, beats.values):
+            if getattr(key, "id", None) not in fire_names:
+                continue
+            seen += 1
+            for slot in ("slice_2", "slice_3"):
+                slot_node = val.values[[k.value for k in val.keys].index(slot)]
+                for bid_node, beat in zip(slot_node.keys, slot_node.values):
+                    terms = beat.values[[k.value for k in beat.keys].index("terms")]
+                    names = {n.id for n in ast.walk(terms) if isinstance(n, ast.Name)}
+                    with self.subTest(beat=bid_node.value):
+                        self.assertTrue(names and all(n.startswith("_FIRE_") for n in names), names)
+        self.assertEqual(seen, 3)
+        # mevcut ortak listeler aynı kaldı (örnek kilitler)
+        self.assertEqual(es._CRASH_DOWN, ("crash", "slam", "smash", "land", "drop", "plunge", "plummet", "come down",
+                                          "comes down", "came down", "fall", "fell", "hit", "strike", "struck",
+                                          "collapse"))
+        self.assertEqual(es._TEAR, ("tear", "tore", "torn", "rip", "wrench", "sweep", "swept", "carry", "carried",
+                                    "pull", "snap", "break", "broke", "collapse", "flatten", "uproot"))
+        self.assertEqual(es._FLEE, ("run", "ran", "running", "flee", "fled", "fleeing", "sprint", "scatter", "dash",
+                                    "bolt", "race", "scramble", "dart", "hurry"))
+        self.assertEqual(es.TOTAL_WORDS, (40, 70))
+        for e in FIRE:
+            self.assertNotIn(e, es.TOTAL_WORDS_BY_EVENT)
+
+    def test_canonical_terms_pass(self):
+        for e in FIRE:
+            for slot in ("slice_2", "slice_3"):
+                for bid, beat in es.EVENT_BEATS[e][slot].items():
+                    for vehicle in self.VEHICLES:
+                        text = cap(es.beat_text(e, slot, bid, vehicle))
+                        with self.subTest(beat=bid, vehicle=vehicle):
+                            self.assertEqual(es.missing_term_groups(beat["terms"], text), [])
+
+    def test_variants_and_flame_contact(self):
+        ok = {(es.WILDFIRE, "K1"): "The SUV backs up fast as a blazing pine topples across the lane ahead.",
+              (es.WILDFIRE, "K2"): "The white van screeches to a halt as flames sweep over the road and scorch its "
+                                   "bonnet.",
+              (es.WILDFIRE, "K3"): "A flaming limb crashes onto the small car and its roof bursts into flames.",
+              (es.WILDFIRE, "K5"): "The pickup truck whips around in the smoke and races off as the fire seals the road.",
+              (es.WILDFIRE, "L2"): "Glowing embers shower the street and set a picket fence ablaze.",
+              (es.WILDFIRE, "L6"): "Fire climbs a utility pole and the burning cables snap and lash across the street.",
+              (es.FACADE_FIRE, "M3"): "Burning wreckage lands on the hood of the SUV, which jerks back in a hurry.",
+              (es.FACADE_FIRE, "N2"): "A balcony canopy catches fire and the flames leap to the upper floor.",
+              (es.FACADE_FIRE, "N6"): "The fire leaps to the next balcony and engulfs its plants and chairs.",
+              (es.FIRE_TORNADO, "T1"): "The swirling flames heave the van off the road and hurl it into a burning "
+                                       "tree.",
+              (es.FIRE_TORNADO, "T3"): "The SUV is picked up by the vortex, spins wildly and slams down onto the road.",
+              (es.FIRE_TORNADO, "U4"): "The tornado sucks up burning brush and spews it across the road in sparks."}
+        bad = {
+            # sadece rüzgâr: alev bir şeye değmiyor
+            (es.WILDFIRE, "L4"): "The hot wind bends a row of trees along the road.",
+            (es.WILDFIRE, "L1"): "Strong wind sweeps over the roofs of the nearest houses.",
+            (es.WILDFIRE, "K2"): "The SUV skids to a stop as the wind gusts across the road.",
+            (es.FACADE_FIRE, "N4"): "A gust of wind rolls up the tower.",
+            (es.FACADE_FIRE, "N6"): "The wind shakes the plants on the neighboring balcony.",
+            (es.FIRE_TORNADO, "U3"): "The wind tears a billboard from its supports.",
+            # olay eksik
+            (es.WILDFIRE, "K3"): "A burning branch falls beside the small car.",
+            (es.FACADE_FIRE, "M1"): "A burning panel falls near the SUV.",
+            (es.FIRE_TORNADO, "T1"): "The van is pushed into a burning tree.",
+            (es.FIRE_TORNADO, "T3"): "The SUV spins on the road.",
+        }
+        for (e, bid), s in ok.items():
+            slot = "slice_2" if bid[0] in "KMT" else "slice_3"
+            with self.subTest(ok=bid):
+                self.assertEqual(es.missing_term_groups(es.EVENT_BEATS[e][slot][bid]["terms"], s), [])
+        for (e, bid), s in bad.items():
+            slot = "slice_2" if bid[0] in "KMT" else "slice_3"
+            with self.subTest(bad=bid, text=s):
+                self.assertTrue(es.missing_term_groups(es.EVENT_BEATS[e][slot][bid]["terms"], s))
+
+    def test_rain_ban(self):
+        for t in ("Heavy rain falls on the burning roofs.", "It is raining.", "The rain-soaked road shines.",
+                  "Drenched trees burn.", "Cars roll over the wet asphalt.", "A downpour hits the street.",
+                  "The street is soaked.", "Puddles reflect the flames.", "Rainy smoke drifts.",
+                  "Embers fall as the rain starts."):
+            with self.subTest(text=t):
+                self.assertTrue(es.rain_words(t), t)
+        for t in ("Embers rain onto the SUV.", "A shower of glowing embers rains onto the street.",
+                  "Shattered glass rains onto the van.", "Raining burning debris onto the street.",
+                  "Sparks rain down on the road.", "A shower of sparks whips across the street."):
+            with self.subTest(text=t):
+                self.assertEqual(es.rain_words(t), [], t)
+        for e in FIRE:
+            spot = next(iter(self.SPOTS[e]))
+            b2, b3 = es.allowed_pairs(e, None, spot)[0]
+            spec, slices, _ = self.build(e, b2, b3, spot, "SUV")
+            with self.subTest(event=e):
+                self.assertNotIn("fire_no_rain", self.codes(spec, slices))
+                for f in es.SLICE_FIELDS:
+                    wet = {**slices, f: es.clean_slice(slices[f].rstrip(".") + " on the wet road")}
+                    self.assertIn("fire_no_rain", self.codes(spec, wet), f)
+                rain = {**slices, "slice_3": es.clean_slice(slices["slice_3"].rstrip(".") + " in the heavy rain")}
+                fb = {i["rule"]: i for i in es.slice_issues(spec, rain)}
+                self.assertEqual(fb["fire_no_rain"]["missing"], "yağmur/ıslaklık yasak (rain)")
+                self.assertEqual(fb["fire_no_rain"]["feedback"],
+                                 "Remove 'rain': the air is hot and dry; no rain, wet or soaked surfaces anywhere.")
+        # diğer olaylarda yağmur kapısı yok (heyelan yağmurlu kalır)
+        spec = es.build_spec(es.MUDSLIDE, None, "Balcony across a steep hillside street", None, "H3", "M2", "SUV", 4)
+        sl = {"slice_1_rest": "Four people run from the mud in the heavy rain.",
+              "slice_2": "The SUV is spun around by the mud and dragged downhill in the rain.",
+              "slice_3": "A utility pole snaps and falls into the mud on the wet street."}
+        self.assertFalse({i["rule"] for i in es.slice_issues(spec, sl)} & {"fire_no_rain", "fire_no_lift"})
+
+    def test_no_lift_only_wildfire_and_facade(self):
+        self.assertEqual(es.NO_LIFT_SLICE, {es.WILDFIRE: ("slice_2",), es.FACADE_FIRE: ("slice_2",)})
+        for e, b2, b3, spot in ((es.WILDFIRE, "K2", "L3", "Embankment above the village road"),
+                                (es.FACADE_FIRE, "M6", "N1", "Sidewalk across from a downtown tower")):
+            spec, slices, _ = self.build(e, b2, b3, spot, "SUV")
+            self.assertNotIn("fire_no_lift", self.codes(spec, slices))
+            for add in (", lifted off its wheels", " as it goes airborne", " and is swept up by the blast"):
+                lifted = {**slices, "slice_2": es.clean_slice(slices["slice_2"].rstrip(".") + add)}
+                with self.subTest(event=e, add=add):
+                    self.assertIn("fire_no_lift", self.codes(spec, lifted))
+            fb = {i["rule"]: i for i in es.slice_issues(spec, {**slices, "slice_2": "The SUV goes airborne."})}
+            self.assertEqual(fb["fire_no_lift"]["feedback"], "In 'slice_2' the SUV stays on the ground: remove "
+                                                             "'airborne'.")
+        # ateş hortumunda araç havalanır (T1/T3)
+        spec, slices, _ = self.build(es.FIRE_TORNADO, "T3", "U5", "Overlook above the burning valley road", "SUV")
+        self.assertEqual(self.codes(spec, slices), set())
+
+    def test_all_combinations_pass_final_check(self):
+        n, longest = 0, 0
+        for e in FIRE:
+            head = f"0-4s: {self.KEY[e]} "
+            for spot in sk.view_spots(e, None):
+                pairs = es.allowed_pairs(e, None, spot)
+                self.assertTrue(pairs, (e, spot))
+                for b2, b3 in pairs:
+                    for vehicle in self.VEHICLES:
+                        spec, slices, prompt = self.build(e, b2, b3, spot, vehicle, people=3 + n % 4)
+                        issues = es.final_prompt_issues(spec, slices, prompt, es.assemble_story(spec, slices))
+                        if issues:
+                            self.fail(f"{e}/{spot}/{b2}+{b3}/{vehicle}: {issues}\n{prompt}")
+                        self.assertTrue(prompt.startswith(head))
+                        self.assertIn(sk.CAMERA_SPOTS[spot], prompt)
+                        longest = max(longest, len(prompt))
+                        n += 1
+        # orman: balkon 24 - 3 + set 33; cephe 4 nokta × 33; ateş hortumu: tepe 33 + balkon 30 - 3; × 4 araç
+        self.assertEqual(n, (21 + 33) * 4 + 33 * 4 * 4 + (33 + 27) * 4)
+        self.assertLess(longest, es.MAX_PROMPT_CHARS)
+
+    def test_excluded_spots(self):
+        def d3(e, spot):
+            return {d for _, d in es.allowed_pairs(e, None, spot)}
+        self.assertFalse({"L1", "L5"} & d3(es.WILDFIRE, "Balcony of a hillside house"))
+        self.assertTrue({"L1", "L5"} <= d3(es.WILDFIRE, "Embankment above the village road"))
+        self.assertNotIn("U1", d3(es.FIRE_TORNADO, "Balcony of a roadside house"))
+        self.assertIn("U1", d3(es.FIRE_TORNADO, "Overlook above the burning valley road"))
+        for spot in self.SPOTS[es.FACADE_FIRE]:
+            self.assertEqual(d3(es.FACADE_FIRE, spot), {"N1", "N2", "N3", "N4", "N5", "N6"})
+
+    def test_people_gate_and_line(self):
+        import core.creative_pipeline as cp
+        for e in FIRE:
+            r = {x["rule"]: x for x in es.SLICE_RULES[e]}
+            self.assertIs(r["slice_flee"]["terms"], es._FLEE)
+            self.assertNotIn("rush", r["slice_flee"]["terms"])
+            self.assertEqual(r["slice_flee"]["feedback"],
+                             f"'slice_1_rest' must show people running away from {self.AWAY[e]}.")
+        spec, slices, _ = self.build(es.FIRE_TORNADO, "T2", "U5", "Overlook above the burning valley road", "SUV", 6)
+        msg = cp._slices_message(spec, "P", "W", 3, 6, [], None)
+        self.assertIn("\nVEHICLE: SUV\nPEOPLE RUNNING AWAY: six (slice_1_rest must say that six people run away "
+                      "from the fire tornado)\n4-9s EVENT: ", msg)
+
+        def codes(s1):
+            return self.codes(spec, {**slices, "slice_1_rest": es.clean_slice(s1)})
+        self.assertFalse(codes("Six drivers sprint away from the fire tornado.") & {"slice_flee", "slice_count"})
+        self.assertIn("slice_count", codes("Four drivers sprint away from the fire tornado."))
+        self.assertIn("slice_flee", codes("Six drivers rush away from the fire tornado."))   # "rush" kaçış sayılmaz
+        self.assertIn("slice_flee", codes("Six drivers stare at the fire tornado."))
+
+    def test_message_camera_place_weather(self):
+        import core.creative_pipeline as cp
+        spec, _, _ = self.build(es.WILDFIRE, "K2", "L3", "Balcony of a hillside house", "white van", 4)
+        msg = cp._slices_message(spec, "a hillside village neighborhood", self.WEATHER[1], 3, 6, [], None)
+        self.assertEqual(
+            msg,
+            "OPENING SENTENCE (fixed, already written): " + self.KEY[es.WILDFIRE] + "\n"
+            "PLACE: a hillside village neighborhood\nWEATHER: gusty dry wind under an orange smoky sky\n"
+            "PEOPLE VISIBLE: 3 to 6\nVEHICLE: white van\n"
+            "PEOPLE RUNNING AWAY: four (slice_1_rest must say that four people run away from the flames)\n"
+            "4-9s EVENT: the white van skids to a stop as flames leap across the road and lick its hood\n"
+            "9-15s EVENT: the fire races across a garden, engulfing a parked trailer and a woodpile\n"
+            "RECENT STORIES:\n- (none)")
+        self.assertEqual(es.rain_words(msg), [])
+        self.assertEqual(spec["suffix"], sk.style_suffix(es.WILDFIRE, None, "Balcony of a hillside house"))
+
+    def test_scene_without_view(self):
+        import asyncio
+        import core.creative_pipeline as cp
+        calls = []
+
+        async def gpt(system, user, **kw):
+            calls.append(user)
+            line = dict(l.split(": ", 1) for l in user.splitlines()
+                        if l.startswith(("4-9s EVENT", "9-15s EVENT", "PEOPLE RUNNING AWAY")))
+            word = line["PEOPLE RUNNING AWAY"].split()[0]
+            away = line["PEOPLE RUNNING AWAY"].split("run away from ")[1].rstrip(")")
+            return {"slice_1_rest": f"{cap(word)} people run from {away}.",
+                    "slice_2": cap(line["4-9s EVENT"]) + ".", "slice_3": cap(line["9-15s EVENT"]) + "."}
+        for e in FIRE:
+            with self.subTest(event=e):
+                scene = asyncio.run(cp.build_creative_scene("fire_disasters", e, [], [], gpt))
+                t = scene["trace"]
+                self.assertIsNone(t["view"])
+                self.assertIsNone(scene["ship"])
+                self.assertIn(t["spot"], self.SPOTS[e])
+                self.assertEqual(t["place"], self.SPOTS[e][t["spot"]][1])
+                self.assertIn(t["weather"], self.WEATHER)
+                self.assertIn(t["vehicle"], self.VEHICLES)
+                self.assertIn(t["people_running"], (3, 4, 5, 6))
+                self.assertIn(f"|{t['spot'].lower()}##{t['beats']}|", scene["combo_key"])
+                self.assertTrue(scene["combo_key"].startswith("fire_disasters|none|"))
+                self.assertTrue(sk.is_current_universe_combo(scene["combo_key"]))
+                self.assertIn(self.SPOTS[e][t["spot"]][0], scene["prompt"])
+                spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
+                self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
+                self.assertIn(f"run away from {self.AWAY[e]}", calls[-1])
+
+    def test_no_candidates_never(self):
+        from itertools import combinations
+        k = es.RECENT_BEAT_BLOCK
+        for e in FIRE:
+            b = es.EVENT_BEATS[e]
+            for spot in sk.view_spots(e, None):
+                pairs = es.allowed_pairs(e, None, spot)
+                worst = min(sum(1 for v, d in pairs if v not in x2 and d not in x3)
+                            for x2 in map(set, combinations(b["slice_2"], k))
+                            for x3 in map(set, combinations(b["slice_3"], k)))
+                with self.subTest(event=e, spot=spot):
+                    self.assertGreater(worst, 0)
 
 if __name__ == "__main__":
     unittest.main()

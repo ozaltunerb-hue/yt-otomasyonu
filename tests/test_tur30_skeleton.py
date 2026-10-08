@@ -64,8 +64,9 @@ class TestEventPool(unittest.TestCase):
         self.assertEqual(counts, {"ferry_operations": 3, "shipyard_and_drydock_engineering": 5,
                                   "marina_and_yacht_operations": 2, "cruise_ship_operations": 3,
                                   "coastal_tornado_landfall": 3, "urban_city_disasters": 2,
-                                  "open_beach_coastal_events": 3, "landslide_disasters": 3})   # 2 Eki: heyelan
-        self.assertEqual(sum(counts.values()), 24)
+                                  "open_beach_coastal_events": 3, "landslide_disasters": 3,   # 2 Eki: heyelan
+                                  "fire_disasters": 3})   # 8 Eki: yangın
+        self.assertEqual(sum(counts.values()), 27)
 
     def test_removed_events(self):
         # 30 Eyl: + tabela/iskele (aksiyonsuz video); 1 Eki: + halat, kontrolsüz yat; 4 Eki (TASLAK): + hortum kıyıya
@@ -84,7 +85,7 @@ class TestEventPool(unittest.TestCase):
 
     def test_phenomena(self):
         self.assertEqual({k: len(v) for k, v in sk.PHENOMENA.items()},
-                         {"Hortum": 4, "Tsunami": 0, "Sel": 1, "Heyelan": 3, "Dev Dalga": 5})
+                         {"Hortum": 4, "Tsunami": 0, "Sel": 1, "Heyelan": 3, "Yangın": 3, "Dev Dalga": 5})   # 8 Eki: + yangın
         for events in sk.PHENOMENA.values():
             self.assertTrue(set(events) <= set(sk.EVENT_SKELETONS))
 
@@ -289,12 +290,12 @@ class TestRecoveryQuery(unittest.TestCase):
 class TestMenu(unittest.TestCase):
     def test_menu_follows_pipeline(self):
         with patch.object(settings, "PROMPT_PIPELINE", "skeleton"):
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 24)   # 2 Eki: + 3 heyelan
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 27)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın
         with patch.object(settings, "PROMPT_PIPELINE", "legacy"):
             # 30 Eyl: dev dalga baskını havuza eklendi (tabela/iskele havuzda kaldı, sadece iskeletten çıktı)
             # 1 Eki: kontrolsüz yat havuza eklendi (halat havuzda kaldı, sadece iskeletten çıktı)
-            # 2 Eki: + 3 heyelan; 4 Eki (TASLAK): + hortum marina, sahil caddesi
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 46)
+            # 2 Eki: + 3 heyelan; 4 Eki (TASLAK): + hortum marina, sahil caddesi; 8 Eki: + 3 yangın
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 49)
 
 
 if __name__ == "__main__":

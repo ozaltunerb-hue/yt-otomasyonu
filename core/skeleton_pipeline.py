@@ -80,6 +80,15 @@ CAMERA_SPOTS = {
     "Terrace on the opposite hillside": "on a terrace on the opposite hillside, facing the village",
     "High steps on the village square": "on the high steps at the edge of the village square",
     "Upper-floor balcony of a village house": "on the upper-floor balcony of a village house, facing up the slope",
+    # Yangın (8 Eki, Bahadır; TASLAK): olay başına 2 kamera, Bahadır'ın kamera cümleleri birebir
+    "Balcony of a hillside house": "on a balcony of a hillside house overlooking the street and the burning slope",
+    "Embankment above the village road": "on a roadside embankment above the village road",
+    "Balcony across from a downtown tower": "on a balcony across the street from the tower",
+    "Sidewalk across from a downtown tower": "on the sidewalk across the street from the tower",
+    "Balcony across from a coastal high-rise": "on a balcony across the street from the tower",
+    "Sidewalk across from a coastal high-rise": "on the sidewalk across the street from the tower",
+    "Overlook above the burning valley road": "on a roadside overlook above the burning valley road",
+    "Balcony of a roadside house": "on a balcony of a roadside house",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -100,6 +109,9 @@ SHIP_PHRASES = {
 
 # Heyelan havası (2 Eki): üçü de şiddetli yağmur
 LANDSLIDE_WEATHER = ["driving rain and wind", "heavy downpour under dark storm light", "steady heavy rain, grey low cloud"]
+# Yangın havası (8 Eki, Bahadır): kuru ve dumanlı; yağmur/ıslaklık yok (event_structure yağmur kapısı denetler)
+FIRE_WEATHER = ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
+                "heavy smoke and scorching still air"]
 
 _CITY_SPOTS = {"Downtown city center": "the downtown city center", "Dense urban downtown": "a dense downtown street",
                "Commercial city streets": "a commercial street", "High-rise city district": "a high-rise district"}
@@ -373,6 +385,38 @@ EVENT_SKELETONS = {
                 "and rocks between the houses. It rams walls and sweeps away fences and parked vehicles as {n} "
                 "{people} run to higher ground. The torrent keeps tearing downhill, still ramming more walls.",
     },
+    # ── Yangın (TASLAK, 8 Eki, Bahadır) ──
+    # Yapılandırılmış hatta (core/event_structure.py); bu metin sadece PROMPT_PIPELINE=skeleton içindir.
+    # Yer metinleri Bahadır'ın ortam tarifleri; kamera noktası spot anahtarı (heyelan deseni).
+    "Wall of flames sweeps into a hillside neighborhood": {
+        "domain": "fire_disasters", "ships": None,
+        "spots": {"Balcony of a hillside house": "a hillside village neighborhood",
+                  "Embankment above the village road": "a hillside village neighborhood"},
+        "people": ["residents", "villagers"], "weather": FIRE_WEATHER, "object": "wall of flames",
+        "text": "In {spot} in {weather}, a towering wall of flames sweeps down the forested slope into the "
+                "neighborhood, igniting roofs and trees. Glowing embers shower the street as {n} {people} run from "
+                "the flames. The fire keeps spreading from house to house, still igniting more roofs.",
+    },
+    "Flames race up a tower facade": {
+        "domain": "fire_disasters", "ships": None,
+        "spots": {"Balcony across from a downtown tower": "the downtown city center",
+                  "Sidewalk across from a downtown tower": "the downtown city center",
+                  "Balcony across from a coastal high-rise": "a high-rise coastal city",
+                  "Sidewalk across from a coastal high-rise": "a high-rise coastal city"},
+        "people": ["pedestrians", "residents"], "weather": FIRE_WEATHER, "object": "burning facade",
+        "text": "In {spot} in {weather}, flames race up the glass facade of a tower, blowing out windows. Burning "
+                "debris falls onto the street as {n} {people} run from the tower. The fire keeps climbing floor "
+                "after floor, still blowing out more windows.",
+    },
+    "Fire tornado tears across a burning roadside": {
+        "domain": "fire_disasters", "ships": None,
+        "spots": {"Overlook above the burning valley road": "a burning valley road",
+                  "Balcony of a roadside house": "a burning valley road"},
+        "people": ["drivers", "residents"], "weather": FIRE_WEATHER, "object": "fire tornado",
+        "text": "On {spot} in {weather}, a violent fire tornado tears across the burning roadside, hurling flames "
+                "and burning branches across the road. Embers whirl around its base as {n} {people} run from it. "
+                "The fire tornado keeps tearing along the road, still flinging burning debris.",
+    },
     # ── Plaj & sahil ──
     "Tornado approaching an open beach": {
         "domain": "open_beach_coastal_events", "ships": None,
@@ -509,6 +553,9 @@ PHENOMENA = {
     "Tsunami": [],
     "Sel": ["Flash flooding in city streets"],
     "Heyelan": ["Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside", "Mud and debris torrent tears through a hillside village"],
+    # 8 Eki (TASLAK)
+    "Yangın": ["Wall of flames sweeps into a hillside neighborhood", "Flames race up a tower facade",
+               "Fire tornado tears across a burning roadside"],
     "Dev Dalga": ["Green wave breaks over the rail onto the vehicle deck", "Rogue wave breaks over the rail onto the pool deck",
                   "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon",
                   "Tidal wave surges over a coastal city street"],
@@ -529,9 +576,14 @@ EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
                # TASLAK (4 Eki, Bahadır hazırlığı, onay bekliyor): hortum 3-6
                "Tornado making landfall": (3, 6),
                "Tornado crosses a marina quay": (3, 6),
-               "Tornado sweeps down a coastal avenue": (3, 6)}
+               "Tornado sweeps down a coastal avenue": (3, 6),
+               # TASLAK (8 Eki, Bahadır): yangın 3-6
+               "Wall of flames sweeps into a hillside neighborhood": (3, 6),
+               "Flames race up a tower facade": (3, 6),
+               "Fire tornado tears across a burning roadside": (3, 6)}
 # "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
-NO_SIGNS_DOMAINS = {"landslide_disasters"}
+NO_SIGNS_DOMAINS = {"landslide_disasters",
+                    "fire_disasters"}   # 8 Eki: yangın (heyelan deseni, toplam 8 kısıt)
 
 # Import anında kontrol: iskelet verisi havuzla uyumlu olmalı
 for _e, _s in EVENT_SKELETONS.items():

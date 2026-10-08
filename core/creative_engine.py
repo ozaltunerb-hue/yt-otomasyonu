@@ -201,6 +201,13 @@ MARITIME_INSPIRATION_DOMAINS = {
         "guidance": "After extreme rainfall, a fast torrent of brown mud, water, rocks and logs pours down a steep hillside into a street, a road or a village. Always fast, violent flowing mud and water, never slow sliding earth. NO ships or vessels.",
         "example_elements": ["steep hillside street", "brown mud torrent", "rocks and logs in the flow", "parked cars shoved sideways", "road guardrail"],
         "camera_styles": ["bystander phone from a balcony across the street", "bystander phone from a road bridge"],
+    },
+    # 8 Eki, Bahadır (TASLAK): 🔥 Yangın. Kuru, dumanlı hava; yağmur ve ıslak zemin hiçbir yerde yok.
+    "fire_disasters": {
+        "title": "Yangın (Wildfire & Fire)",
+        "guidance": "A violent, fast-spreading fire in hot, dry, smoky air: a wall of flames sweeping into a hillside neighborhood, flames racing up a tower facade, or a fire tornado tearing across a burning roadside. The flames visibly touch and ignite roofs, trees, vehicles and buildings. NO ships or vessels.",
+        "example_elements": ["wall of flames", "burning roofs and trees", "falling burning debris", "glowing embers", "thick smoke"],
+        "camera_styles": ["bystander phone from a balcony across the street", "bystander phone from a roadside embankment"],
     }
 }
 
@@ -352,6 +359,23 @@ DOMAIN_ATTRIBUTES = {
             "Mudslide pours down a hillside street",
             "Rain-soaked slope collapses onto a roadside",
             "Mud and debris torrent tears through a hillside village",
+        ]
+    },
+    # 8 Eki, Bahadır (TASLAK): 🔥 Yangın. Ortamlar kamera noktalarıdır (heyelan deseni); Bahadır'ın ortam
+    # tarifleri (Hillside village neighborhood, Downtown city center, High-rise coastal city, Burning valley road)
+    # iskeletin yer metnine (PLACE) gider.
+    "fire_disasters": {
+        "ships": [],
+        "environments": [
+            "Balcony of a hillside house", "Embankment above the village road",
+            "Balcony across from a downtown tower", "Sidewalk across from a downtown tower",
+            "Balcony across from a coastal high-rise", "Sidewalk across from a coastal high-rise",
+            "Overlook above the burning valley road", "Balcony of a roadside house",
+        ],
+        "events": [
+            "Wall of flames sweeps into a hillside neighborhood",
+            "Flames race up a tower facade",
+            "Fire tornado tears across a burning roadside",
         ]
     }
 }
@@ -974,7 +998,8 @@ def get_realism_guardrails(domain_id: str, vessel_class: str, environment: str =
 # chase_pov iki ayrı gemi zorunlu kıldığı için buralarda seçilmemeli — aksi halde GPT
 # ikinci gemiyi karşılamak için yoktan bir tekne icat ediyordu (2026-09-23 tespit edildi).
 ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open_beach_coastal_events",
-                       "landslide_disasters"]   # 2 Eki: heyelan (gemisiz, sivil giyim kuralı)
+                       "landslide_disasters",   # 2 Eki: heyelan (gemisiz, sivil giyim kuralı)
+                       "fire_disasters"]        # 8 Eki: yangın (gemisiz, sivil giyim kuralı)
 
 # Gemi domainlerinde ekrandaki gerçekçi kişi aralığı (2026-09-24). "Max 2" sadece
 # kargo gemileri içindi; kargo domain'i artık yok. Env-centric domainler tabloya
