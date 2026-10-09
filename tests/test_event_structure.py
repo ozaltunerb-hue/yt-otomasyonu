@@ -2374,19 +2374,21 @@ class TestSupercell(unittest.TestCase):
             "A3": "the {vehicle} swerves as hail shatters its rear window and dents the hood",
             "A4": "a shop awning collapses under a pile of giant hail and crashes onto the sidewalk",
             "A5": "hail tears through a patio umbrella and flips café tables across the terrace",
-            "A6": "hail strips the branches from a tree and bounces across the street",
+            # 10 Eki (2), Bahadır: zayıf maddeler değişti (A6, B3, B4, B6)
+            "A6": "a hailstone punches through the roof of a parked car and its windows burst outward",
         }, {
             "B1": "a wall of hail sweeps down the street, shattering shop windows along the row",
             "B2": "hail shatters the glass of a bus shelter and the pieces scatter across the sidewalk",
-            "B3": "the street turns white as hailstones bounce high off the road and the cars",
-            "B4": "hail smashes through a greenhouse roof and glass rains down",
+            "B3": "hail rips a shop awning loose and it tumbles down the street over the parked cars",
+            "B4": "hail smashes through a skylight above a shop and glass rains onto the sidewalk below",
             "B5": "hail caves in the roofs of a line of parked cars",
-            "B6": "hailstones crack a tree trunk and a heavy branch crashes onto the road",
-        }, {("A2", "B5"), ("A4", "B1"), ("A1", "B5")}, {}),
+            "B6": "hail blasts the windows out of a parked bus and glass sprays across the road",
+        }, {("A2", "B5"), ("A4", "B1"), ("A1", "B5"), ("A6", "B5"), ("A4", "B3")},
+            {"B4": {"Rooftop terrace across the street"}}),
         es.DOWNBURST: ({
             "I1": "a huge tree crashes across the road in front of the {vehicle} as it brakes hard",
             "I2": "a tree topples onto a row of parked cars, crushing their roofs",
-            "I3": "the {vehicle} swerves as a heavy branch slams into the road beside it",
+            "I3": "a heavy branch crashes onto the hood of the {vehicle} as it swerves",   # 10 Eki (2)
             "I4": "a utility pole snaps and falls across the street, wires whipping",
             "I5": "a shop sign rips from a wall and flies down the street",
             "I6": "wind rips the awning off a shop and hurls it down the street",
@@ -2394,11 +2396,12 @@ class TestSupercell(unittest.TestCase):
         }, {
             "J1": "a second line of trees bends flat and snaps one after another along the road",
             "J2": "a streetlamp bends and collapses onto the sidewalk",
-            "J3": "a wall of dust and leaves sweeps down the avenue, hurling bins and branches",
-            "J4": "a fence collapses and its panels tumble across the yards",
+            "J3": "a sheet of metal roofing slices down the street and slams into a parked car",   # 10 Eki (2)
+            "J4": "the wind rips a garage door off its frame and sends it skidding down the street",   # 10 Eki (2)
             "J5": "roof tiles peel off a house and fly across the street",
             "J6": "the wind shoves a parked car sideways into a fence",
-        }, {("I2", "J1"), ("I4", "J2"), ("I6", "J3")}, {"J5": {"Balcony of a hillside house over the street"}}),
+        }, {("I2", "J1"), ("I4", "J2"), ("I6", "J3"), ("I5", "J3")},
+            {"J5": {"Balcony of a hillside house over the street"}, "J4": {"Balcony of a hillside house over the street"}}),
         es.LIGHTNING: ({
             "O1": "broken wires drop and whip across the road, spitting sparks in front of the {vehicle}",
             "O2": "the transformer falls onto the road in a burst of fire and sparks",
@@ -2407,13 +2410,13 @@ class TestSupercell(unittest.TestCase):
             "O5": "the pole snaps and crashes across the road, wires whipping and sparking",
             "O6": "the streetlights explode one after another along the road",
         }, {
-            "X1": "the whole block goes dark as sparks keep pouring from the broken lines",
+            "X1": "a burning wire drops onto a parked car and flames leap across its hood",   # 10 Eki (2)
             "X2": "lightning strikes again, shattering a tree trunk and scattering burning branches",
-            "X3": "loose wires whip along the road, throwing sparks",
+            "X3": "a bolt hits a car roof in a burst of sparks and its windows blow out",   # 10 Eki (2)
             "X4": "flames climb the base of a broken pole in the rain",
             "X5": "another transformer blows farther down the street in a flash of fire",
             "X6": "burning branches fall onto a parked car",
-        }, {("O2", "X5"), ("O4", "X2"), ("O5", "X1")}, {}),
+        }, {("O2", "X5"), ("O4", "X2"), ("O5", "X1"), ("O1", "X1")}, {}),
         es.STORM_HIGHWAY: ({
             "H1": "the overturned truck grinds across the lanes in a shower of sparks as the {vehicle} swerves to avoid "
                   "it",
@@ -2425,12 +2428,12 @@ class TestSupercell(unittest.TestCase):
             "H7": "the wind lifts the {vehicle} off the lane and flips it over the guardrail",
         }, {
             "S1": "a van tips over and slides along the guardrail in a shower of sparks",
-            "S2": "the wind sweeps boxes and debris across all lanes",
-            "S3": "cars skid to a stop in a long line as dust and rain sweep over the road",
+            "S2": "a gust flips a car onto its roof and it slides along the asphalt",   # 10 Eki (2)
+            "S3": "a chain of cars slams into each other in the blowing rain and dust, one after another",   # 10 Eki (2)
             "S4": "a row of trees along the highway bends flat and scatters branches across the lanes",
             "S5": "a car spins around and slams into the guardrail",
             "S6": "a second truck tips over and slides across the lanes",
-        }, {("H6", "S6"), ("H4", "S5"), ("H3", "S2")}, {"H5": {"Overpass above the highway"}}),
+        }, {("H6", "S6"), ("H4", "S5"), ("H3", "S2"), ("H7", "S2")}, {"H5": {"Overpass above the highway"}}),
     }
     STREET = {"Balcony of a high apartment across the street": "on a high balcony across the street, overlooking the "
                                                                "street",
@@ -2556,14 +2559,19 @@ class TestSupercell(unittest.TestCase):
 
     def test_variants_and_wrong_event(self):
         ok = {(es.HAIL, "A1"): "A giant hailstone punches through the windscreen of the SUV as it skids to a halt.",
-              (es.HAIL, "B3"): "Hailstones bounce off every car until the whole street is carpeted white.",
+              (es.HAIL, "B3"): "Hail tears a shop awning loose and it cartwheels down the street over the cars.",
               (es.DOWNBURST, "I7"): "The wind heaves the white van off the road and slams it down onto its side.",
               (es.DOWNBURST, "J5"): "Roof shingles rip off a house and fly across the street.",
               (es.LIGHTNING, "O3"): "The small car screeches to a stop as a shower of sparks pours over its hood.",
-              (es.LIGHTNING, "X1"): "The block goes black while sparks keep pouring from the broken lines.",
+              (es.LIGHTNING, "X1"): "A blazing cable falls onto a parked sedan and fire spreads over its bonnet.",
               (es.STORM_HIGHWAY, "H7"): "The gust picks up the pickup truck and flips it over the crash barrier.",
               (es.STORM_HIGHWAY, "S5"): "A sedan spins around and smashes into the guardrail."}
         bad = {(es.HAIL, "A1"): "Rain pours over the SUV as it brakes hard.",
+               # 10 Eki (2): eski atmosferik metinler yeni maddeleri artık karşılamaz
+               (es.HAIL, "B3"): "The street turns white as hailstones bounce high off the road and the cars.",
+               (es.LIGHTNING, "X1"): "The whole block goes dark as sparks keep pouring from the broken lines.",
+               (es.STORM_HIGHWAY, "S2"): "The wind sweeps boxes and debris across all lanes.",
+               (es.DOWNBURST, "J3"): "A wall of dust and leaves sweeps down the avenue, hurling bins and branches.",
                (es.DOWNBURST, "I7"): "The wind pushes the white van along the road.",
                (es.LIGHTNING, "X5"): "The street stays quiet farther down.",
                (es.STORM_HIGHWAY, "H6"): "A car drives behind the SUV."}
@@ -2595,6 +2603,24 @@ class TestSupercell(unittest.TestCase):
         self.assertIn("beat_vehicle", self.codes(spec, {**sl, "slice_2": "The driver brakes hard as sparks rain over "
                                                                          "the hood of the bus."}))
 
+    def test_replaced_items_oct10(self):
+        # 10 Eki (2), Bahadır: zayıf maddelerin yerine gelen 11 aksiyon/temas maddesi; I3'te araç kapısı geçerli
+        replaced = {es.HAIL: ("A6", "B3", "B4", "B6"), es.DOWNBURST: ("I3", "J3", "J4"), es.LIGHTNING: ("X1", "X3"),
+                    es.STORM_HIGHWAY: ("S2", "S3")}
+        for e, ids in replaced.items():
+            for bid in ids:
+                slot = "slice_2" if bid in es.EVENT_BEATS[e]["slice_2"] else "slice_3"
+                text = es.beat_text(e, slot, bid, "SUV")
+                with self.subTest(beat=bid):
+                    self.assertGreaterEqual(len(text.split()), 10)
+                    self.assertEqual(es.missing_term_groups(es.EVENT_BEATS[e][slot][bid]["terms"], text), [])
+        spec, sl = self.build(es.DOWNBURST, "I3", "J6", vehicle="white van")
+        self.assertNotIn("beat_vehicle", self.codes(spec, sl))
+        self.assertIn("beat_vehicle", self.codes(spec, {**sl, "slice_2": "A heavy branch crashes onto the hood of the "
+                                                                         "bus as it swerves."}))
+        self.assertIn("beat_terms", self.codes(spec, {**sl, "slice_2": "The white van swerves past a heavy branch "
+                                                                       "lying on the road."}))
+
     def test_people_rule(self):
         import core.creative_pipeline as cp
         for e in STORM:
@@ -2617,8 +2643,9 @@ class TestSupercell(unittest.TestCase):
                         if issues:
                             self.fail(f"{e}/{spot}/{b2}+{b3}/{v}: {issues}")
                         n += 1
-        # dolu 3 × 33; downburst 39 + 39 + 32 (J5 tepe evinde yok); yıldırım 3 × 33; otoyol 33 (H5 üstgeçitte yok) + 39
-        self.assertEqual(n, (3 * 33 + 39 + 39 + 32 + 3 * 33 + 33 + 39) * 4)
+        # 10 Eki (2): dolu 31 + 25 (B4 çatı terasında yok) + 31; downburst 38 + 38 + 24 (J4, J5 tepe evinde yok);
+        # yıldırım 3 × 32; otoyol 32 (H5 üstgeçitte yok) + 38
+        self.assertEqual(n, (31 + 25 + 31 + 38 + 38 + 24 + 3 * 32 + 32 + 38) * 4)
 
     def test_spot_exclusions(self):
         def pairs(e, spot):
@@ -2626,6 +2653,11 @@ class TestSupercell(unittest.TestCase):
         self.assertNotIn("J5", {d for _, d in pairs(es.DOWNBURST, "Balcony of a hillside house over the street")})
         self.assertIn("J5", {d for _, d in pairs(es.DOWNBURST, "Rooftop terrace across the street")})
         self.assertNotIn("H5", {v for v, _ in pairs(es.STORM_HIGHWAY, "Overpass above the highway")})
+        # 10 Eki (2): B4 (çatı penceresi) çatı terasında, J4 (garaj kapısı) tepe evinde yok; S2/S3 üstgeçitte var
+        self.assertNotIn("B4", {d for _, d in pairs(es.HAIL, "Rooftop terrace across the street")})
+        self.assertIn("B4", {d for _, d in pairs(es.HAIL, "Balcony of a high apartment across the street")})
+        self.assertNotIn("J4", {d for _, d in pairs(es.DOWNBURST, "Balcony of a hillside house over the street")})
+        self.assertTrue({"S2", "S3"} <= {d for _, d in pairs(es.STORM_HIGHWAY, "Overpass above the highway")})
         self.assertIn("H5", {v for v, _ in pairs(es.STORM_HIGHWAY, "Balcony of a house above the highway")})
 
     def test_no_candidates_never(self):

@@ -25,6 +25,38 @@
 
 ---
 
+## 📋 DEVİR: Süper hücre havuzlarında zayıf maddeler değişti + GENEL İLKE (10 Eki)
+
+**GENEL İLKE (Bahadır, 10 Eki):** Bütün kategorilerde aksiyon/temas birinci planda; atmosferik veya sakin maddeler
+istenmiyor. Yeni havuz maddesi yazarken ve mevcutları gözden geçirirken bu esas alınır.
+
+**Değişen 11 madde (Bahadır onaylı, metin birebir; eski metinler kodda yorum olarak duruyor):**
+- Dolu: A6 "a hailstone punches through the roof of a parked car and its windows burst outward"; B3 "hail rips a
+  shop awning loose and it tumbles down the street over the parked cars"; B4 "hail smashes through a skylight above a
+  shop and glass rains onto the sidewalk below"; B6 "hail blasts the windows out of a parked bus and glass sprays
+  across the road".
+- Downburst: I3 "a heavy branch crashes onto the hood of the {vehicle} as it swerves"; J3 "a sheet of metal roofing
+  slices down the street and slams into a parked car"; J4 "the wind rips a garage door off its frame and sends it
+  skidding down the street".
+- Yıldırım: X1 "a burning wire drops onto a parked car and flames leap across its hood"; X3 "a bolt hits a car roof
+  in a burst of sparks and its windows blow out".
+- Otoyol: S2 "a gust flips a car onto its roof and it slides along the asphalt"; S3 "a chain of cars slams into each
+  other in the blowing rain and dust, one after another".
+
+**Yeni yasak eşleşmeler (aynı nesne/eylem iki kez):** (A6,B5) park halindeki araba çatısı; (A4,B3) dükkân tentesi;
+(I5,J3) caddeden uçan yassı parça (tabela / metal levha); (O1,X1) kopan tel aşağı düşer; (H7,S2) araç takla atıp ters
+döner. Eski onaylı eşleşmeler duruyor; (H3,S2) yeni S2 ile gerekçesini yitirdi (karar Bahadır'da).
+
+**Yeni kamera dışlamaları:** B4 (çatı penceresi) çatı terasında; J4 (garaj kapısı) tepe evi balkonunda. S2/S3
+üstgeçide dokunmuyor, orada seçilebilir.
+
+**Terimler:** yeni `_STORM_*` listeleri (_STORM_ROOF, _STORM_BUS, _STORM_BLAST, _STORM_HOOD, _STORM_METAL,
+_STORM_SLICE, _STORM_GARAGE, _STORM_SKID_AWAY, _STORM_ROOF_FLIP, _STORM_PILEUP); artık kullanılmayan 9 fırtına listesi
+silindi. Diğer kategorilerin listeleri değişmedi. I3'te araç kapısı geçerli. Yeni maddelerin hepsi 13-17 kelime;
+10 kelime altında kalan onaylı maddeler: J2, O6, X6, H6, S5 (GPT dilimi 10-24'e tamamlıyor).
+
+---
+
 ## 📋 DEVİR: ⛈️ Süper hücre fırtınası kategorisi (10 Eki)
 
 **Durum:** Yeni kategori `supercell_storms` "⛈️ Süper hücre fırtınası", 4 TASLAK olay yapılandırılmış hatta. Havuzlar
