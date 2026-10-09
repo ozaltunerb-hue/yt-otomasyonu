@@ -119,6 +119,7 @@ EVENT_LABELS = {
     "Wall of flames sweeps into a hillside neighborhood": "🔥 Orman yangını mahalleye ulaşır",
     "Flames race up a tower facade": "🔥 Apartman cephe yangını",
     "Fire tornado tears across a burning roadside": "🔥 Ateş hortumu",
+    "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": "🔥 Yangın söndürme helikopteri",   # 10 Eki
 }
 RANDOM_LABEL = "🎲 Rastgele"
 # Bölge görünümü menüsü (1 Eki, Bahadır): sadece REGION_VIEW_EVENTS (sel, kıyı dalga). Bayrak emojisi yok.

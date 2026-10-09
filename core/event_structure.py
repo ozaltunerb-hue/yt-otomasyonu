@@ -34,7 +34,9 @@ AVENUE = "Tornado sweeps down a coastal avenue"
 WILDFIRE = "Wall of flames sweeps into a hillside neighborhood"
 FACADE_FIRE = "Flames race up a tower facade"
 FIRE_TORNADO = "Fire tornado tears across a burning roadside"
-FIRE_EVENTS = (WILDFIRE, FACADE_FIRE, FIRE_TORNADO)
+# 10 Eki, Bahadır (havuzlar onaylı): yangın söndürme helikopteri
+HELICOPTER = "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood"
+FIRE_EVENTS = (WILDFIRE, FACADE_FIRE, FIRE_TORNADO, HELICOPTER)
 
 SLICE_LABELS = ("0-4s", "4-9s", "9-15s")
 SLICE_FIELDS = ("slice_1_rest", "slice_2", "slice_3")
@@ -46,7 +48,9 @@ TOTAL_WORDS = (40, 70)
 # Olaya özel toplam kelime aralığı (genel TOTAL_WORDS yerine). 4 Eki, Bahadır: hortum marina 40-75
 TOTAL_WORDS_BY_EVENT = {"Tornado crosses a marina quay": (40, 75),
                         # 10 Eki, Bahadır: orman yangını 40-75 (kilit cümle 22 kelime; diğer yangınlar 40-70)
-                        "Wall of flames sweeps into a hillside neighborhood": (40, 75)}
+                        "Wall of flames sweeps into a hillside neighborhood": (40, 75),
+                        # 10 Eki, Bahadır: helikopter 40-75 (kilit cümle 24 kelime)
+                        "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (40, 75)}
 # Kie seedance-2-fast prompt sınırı 20000 karakter (docs.kie.ai/market/bytedance/seedance-2-fast, 4 Eki doğrulandı).
 # Bizim sınırımız onun çok altında: en uzun stil eki 742 + 60 kelimelik hikâye (kelime başına 8 karakterle ~480)
 # ≈ 1224; 1200 bu hikâyeyi haksız reddederdi. Tam kapsam testinde ölçülen en uzun prompt 1062. 70 kelimelik
@@ -86,6 +90,9 @@ EVENT_KEY_VISUAL = {
                  "street.",
     FIRE_TORNADO: "A violent fire tornado tears across a burning roadside, hurling flames, burning branches and embers "
                   "across the road.",
+    # 10 Eki, Bahadır onayı: helikopter kilit cümlesi birebir
+    HELICOPTER: "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the "
+                "wall of flames racing toward the houses.",
 }
 
 # ── Bölge araçları (4-9s'deki {vehicle}). Görünüm tariflerindeki araçlardan. terms: dilimde aranan ad. ──────
@@ -119,6 +126,9 @@ EVENT_VEHICLES = {
                   ("SUV", ("suv",))],
     FIRE_TORNADO: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)),
                    ("SUV", ("suv",))],
+    # 10 Eki: helikopter (araç sadece F3/F6'da; havalanmaz, NO_LIFT_SLICE)
+    HELICOPTER: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)),
+                 ("SUV", ("suv",))],
 }
 
 # ── Olay havuzları. terms: her gruptan en az bir terim dilimde geçmeli (kök + eşanlamlı; çekimler otomatik:
@@ -270,6 +280,33 @@ _FIRE_TRAILER = ("trailer", "caravan", "camper")
 _FIRE_TOSS = _FIRE_RIP + ("tip", "topple", "overturn", "flip", "roll")
 _FIRE_FUEL = ("trailer", "caravan", "camper", "woodpile", "wood pile", "firewood", "log pile", "log", "logs")
 _FIRE_TILE = ("tile", "shingle", "slate")
+# Helikopter (10 Eki, Bahadır): su, buhar, helikopter, rotor rüzgârı. Yeni listeler; mevcutlar değişmez.
+_FIRE_WATER = ("water", "deluge", "cascade", "torrent", "spray", "retardant", "slurry", "waterload")
+_FIRE_STEAM = ("steam", "vapor", "vapour", "mist", "white cloud", "white smoke")
+_FIRE_HELI = ("helicopter", "chopper", "rotorcraft", "aircraft", "heli")
+_FIRE_DROP = ("drop", "dump", "release", "unload", "pour", "spill", "fall", "fell", "crash", "slam", "douse",
+              "drench", "unleash", "let go", "lets go")
+_FIRE_DOUSE = ("extinguish", "douse", "drench", "quench", "smother", "snuff", "put out", "puts out", "knock down",
+               "knocks down", "flatten", "collapse", "die down", "dies down", "die out", "dies out", "sink", "sank",
+               "shrink", "fizzle", "beat back", "beats back", "kill")
+_FIRE_DOWNDRAFT = ("downdraft", "down draft", "downwash", "rotor wash", "rotorwash", "rotor", "blade", "gust", "blast",
+                   "wind")
+_FIRE_SMOKE_EMBER = ("smoke", "ember", "spark", "ash", "cinder")
+_FIRE_BEND = ("bend", "bent", "sway", "thrash", "whip", "flatten", "lash", "shake", "shook", "toss", "scatter", "blow",
+              "blew", "blown", "swirl", "fling", "flung")
+_FIRE_LOW = ("low", "skim", "swoop", "roar", "thunder", "buzz", "sweep", "swept", "hover", "fly", "flies", "flew",
+             "pass", "scream")
+_FIRE_PATH = ("road", "street", "lane", "in front", "ahead", "path")
+_FIRE_RETURN = ("fight back", "fights back", "flare", "reignite", "re-ignite", "rekindle", "surge", "burst", "erupt",
+                "roar back", "roars back", "fresh", "again", "renewed")
+_FIRE_AGAIN = ("another", "second", "again", "circle back", "circles back", "circled back", "return", "come back",
+               "comes back", "came back", "fresh", "new", "more")
+_FIRE_RETREAT = ("sink", "sank", "shrink", "retreat", "die down", "dies down", "recede", "fall back", "falls back",
+                 "fell back", "subside", "dwindle", "ebb", "beaten back", "pushed back", "driven back")
+_FIRE_LEAP = ("leap", "jump", "spread", "race", "catch", "ignite", "engulf", "climb", "lick", "reach")
+_FIRE_PULLUP = ("pull up", "pulls up", "pulled up", "pulling up", "climb", "rise", "rose", "peel away", "peels away",
+                "bank away", "banks away", "fly off", "flies off", "flew off", "away", "veer off", "veers off", "soar")
+_FIRE_SECOND = ("second", "another", "other", "new", "two", "pair")
 _FIRE_BURST = ("burst", "shatter", "crack", "explode", "split", "pop", "fly", "flies", "flew", "break",
                "broke")
 
@@ -755,6 +792,49 @@ EVENT_BEATS = {
         # Kamera bir yol kenarı evinin balkonunda (Bahadır onayı, 8 Eki): "evin çatısı kopar" o noktada seçilmez
         "excluded_spots": {"U1": {"Balcony of a roadside house"}},
     },
+    # ── Helikopter (10 Eki, Bahadır: havuzlar ve yasak eşleşmeler ONAYLI, metin birebir) ──
+    HELICOPTER: {
+        "slice_2": {
+            "F1": {"text": "the water load slams into the flames, flattening a section of the wall into a cloud of white "
+                           "steam",
+                   "terms": [_FIRE_WATER, _FIRE_FLAME, _FIRE_STEAM]},
+            "F2": {"text": "the helicopter drops a second load and the water crashes down onto burning rooftops, sending "
+                           "steam and sparks billowing",
+                   "terms": [_FIRE_WATER, _FIRE_HOUSE, _FIRE_STEAM]},
+            "F3": {"text": "the {vehicle} speeds down the street as the helicopter's downdraft whips smoke and embers "
+                           "across the road",
+                   "terms": [_FIRE_SPEED, _FIRE_DOWNDRAFT, _FIRE_SMOKE_EMBER]},
+            "F4": {"text": "the helicopter roars low over the street, its downdraft bending the burning trees and "
+                           "scattering embers",
+                   "terms": [_FIRE_HELI, _FIRE_DOWNDRAFT, _FIRE_TREE, _FIRE_BEND]},
+            "F5": {"text": "a wall of water falls on a burning house, the flames collapsing into thick white steam",
+                   "terms": [_FIRE_WATER, _FIRE_HOUSE, _FIRE_STEAM]},
+            "F6": {"text": "the {vehicle} brakes hard as a drenching cascade of water spills across the road in front of "
+                           "it",
+                   "terms": [_FIRE_STOP, _FIRE_WATER, _FIRE_PATH]},
+        },
+        "slice_3": {
+            "G1": {"text": "the flames fight back, a fresh burst of fire swallowing trees beside the water line",
+                   "terms": [_FIRE_FLAME, _FIRE_RETURN, _FIRE_TREE]},
+            "G2": {"text": "the helicopter circles back and drops another huge load, extinguishing a row of burning trees "
+                           "in a cloud of steam",
+                   "terms": [_FIRE_HELI, _FIRE_DROP + _FIRE_WATER, _FIRE_TREE, _FIRE_DOUSE]},
+            "G3": {"text": "thick white steam rolls over the street as the wall of flames sinks back toward the slope",
+                   "terms": [_FIRE_STEAM, _FIRE_FLAME, _FIRE_RETREAT]},
+            "G4": {"text": "embers blow past the helicopter as flames leap to a roof the water missed",
+                   "terms": [_FIRE_EMBER, _FIRE_HOUSE, _FIRE_FLAME, _FIRE_LEAP]},
+            "G5": {"text": "the helicopter pulls up and away as the flames roar back behind it",
+                   "terms": [_FIRE_HELI, _FIRE_PULLUP, _FIRE_FLAME, _FIRE_RETURN]},
+            "G6": {"text": "a second helicopter swoops in and drops water on the flames along the road",
+                   "terms": [_FIRE_SECOND, _FIRE_HELI, _FIRE_DROP + _FIRE_WATER, _FIRE_FLAME]},
+        },
+        "excluded_pairs": {("F1", "G3"), ("F2", "G2"), ("F5", "G3")},
+        "excluded_views": {},
+        # Kamera bir yamaç evinin balkonunda (orman yangınındaki L1/L5 gibi): yanan çatıya/eve su düşmesi (F2, F5)
+        # ve alevin ıskalanan bir çatıya sıçraması (G4) kameranın durduğu ev gibi çizilebilir; o noktada seçilmez
+        "excluded_spots": {"F2": {"Balcony of a hillside house"}, "F5": {"Balcony of a hillside house"},
+                           "G4": {"Balcony of a hillside house"}},
+    },
 }
 
 # ── Yangın kapıları (TASLAK, 8 Eki, Bahadır). Sadece FIRE_EVENTS; diğer olayların denetimi değişmez. ─────────────
@@ -769,19 +849,29 @@ _RAIN_FALLING_OK = ("ember", "spark", "cinder", "ash", "debris", "glass", "shard
                     "fragment", "panel", "branch", "piece", "firebrand", "rubble", "flame")
 _RAIN_WINDOW = 3
 # Orman ve cephe yangınında araç havalanmaz (Bahadır onayı, 8 Eki): 4-9s'de kalkma ifadesi reddedilir
-NO_LIFT_SLICE = {WILDFIRE: ("slice_2",), FACADE_FIRE: ("slice_2",)}
+NO_LIFT_SLICE = {WILDFIRE: ("slice_2",), FACADE_FIRE: ("slice_2",),
+                 HELICOPTER: ("slice_2",)}   # 10 Eki: helikopterde de araç havalanmaz
+# Helikopter (10 Eki, Bahadır): ıslaklığın sebebi yağmur değil, helikopterin bıraktığı su. Bu olayda su bırakma
+# ıslaklığı (wet, soak, drench...) serbest ve "rain" fiili suyla birlikte de geçebilir ("water rains down"); yağış
+# ("heavy rain", downpour, rainfall, rain-soaked...) yine reddedilir.
+WATER_DROP_EVENTS = (HELICOPTER,)
+_WATER_DROP_OK = ("wet", "wetness", "soak", "drench", "waterlogged", "puddle", "damp")
+_WATER_FALLING_OK = ("water", "spray", "droplet", "load")
 _FIRE_NO_LIFT = ("lift", "hoist", "airborne", "off its wheels", "off the ground", "swept up", "sweep up", "sweeps up",
                  "levitate")
 
 
-def rain_words(text: str) -> list[str]:
-    """Yağış/ıslaklık ifadeleri. Yanan/düşen bir nesnenin yanında (±3 kelime) geçen "rain" fiili sayılmaz."""
-    found = find_terms(_FIRE_WET, text)
+def rain_words(text: str, water_drop: bool = False) -> list[str]:
+    """Yağış/ıslaklık ifadeleri. Yanan/düşen bir nesnenin yanında (±3 kelime) geçen "rain" fiili sayılmaz.
+    water_drop (helikopter, 10 Eki): su bırakma ıslaklığı serbest, "rain" suyla birlikte de serbest; yağış yasak."""
+    wet = tuple(w for w in _FIRE_WET if w not in _WATER_DROP_OK) if water_drop else _FIRE_WET
+    falling_ok = _RAIN_FALLING_OK + (_WATER_FALLING_OK if water_drop else ())
+    found = find_terms(wet, text)
     tokens = re.findall(r"[a-z]+(?:-[a-z]+)*", (text or "").lower())
     for i, tok in enumerate(tokens):
         if tok in _RAIN_TOKENS:
             near = tokens[max(0, i - _RAIN_WINDOW):i] + tokens[i + 1:i + 1 + _RAIN_WINDOW]
-            if not any(w.startswith(ok) for w in near for ok in _RAIN_FALLING_OK):
+            if not any(w.startswith(ok) for w in near for ok in falling_ok):
                 found.append(tok)
     return list(dict.fromkeys(found))
 
@@ -819,6 +909,7 @@ SLICE_RULES = {
     WILDFIRE: _people_rules("the flames"),
     FACADE_FIRE: _people_rules("the flames"),
     FIRE_TORNADO: _people_rules("the fire tornado"),
+    HELICOPTER: _people_rules("the flames"),   # 10 Eki: orman gibi
 }
 
 
@@ -901,8 +992,11 @@ def allowed_pairs(event: str, view: str | None, spot: str) -> list[tuple[str, st
     b = EVENT_BEATS[event]
     def ok3(d):
         return view not in b["excluded_views"].get(d, set()) and spot not in b["excluded_spots"].get(d, set())
+
+    def ok2(v):   # 10 Eki: kamera noktası dışlaması 4-9s maddesinde de olabilir (helikopter F2/F5)
+        return spot not in b["excluded_spots"].get(v, set())
     return [(v, d) for v in b["slice_2"] for d in b["slice_3"]
-            if (v, d) not in b["excluded_pairs"] and ok3(d)]
+            if (v, d) not in b["excluded_pairs"] and ok2(v) and ok3(d)]
 
 
 def choose_beats(event: str, view: str | None, spot: str, history: list[str],
@@ -1096,7 +1190,9 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
     beats = EVENT_BEATS[event]
     s2, s3 = slices.get("slice_2", ""), slices.get("slice_3", "")
     vterms = spec_vehicle_terms(spec)
-    if not find_terms(vterms, s2):
+    # 10 Eki: araç sadece seçilen 4-9s maddesinin metninde {vehicle} varsa zorunlu (mevcut tüm olaylarda hepsinde var;
+    # helikopterin F1/F2/F4/F5 maddeleri araçsız)
+    if "{vehicle}" in beats["slice_2"][spec["beat_2"]]["text"] and not find_terms(vterms, s2):
         out.append(_issue("beat_vehicle", f"4-9s: araç ({spec['vehicle']})",
                           f"'slice_2' must name the {spec['vehicle']}."))
     for slot, bid, text in (("slice_2", spec["beat_2"], s2), ("slice_3", spec["beat_3"], s3)):
@@ -1108,7 +1204,7 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
                               f"'{slot}' must clearly show this event: {event_text}."))
     # Yangın (8 Eki): yağmur/ıslaklık yasağı (kilit cümle dahil tüm hikâye) ve 4-9s'de araç havalanmaz
     if event in NO_RAIN_EVENTS:
-        wet = rain_words(plain_story(spec, slices))
+        wet = rain_words(plain_story(spec, slices), event in WATER_DROP_EVENTS)
         if wet:
             out.append(_issue("fire_no_rain", f"yağmur/ıslaklık yasak ({', '.join(wet)})",
                               f"Remove {', '.join(repr(w) for w in wet)}: the air is hot and dry; no rain, wet or "
@@ -1155,8 +1251,9 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
     n_constraints = count_constraints(expected_suffix)[0]
     if n_constraints > 8:
         out.append(_issue("suffix_constraints", f"stil eki {n_constraints} kısıt (en fazla 8)"))
-    if spec["event"] in NO_RAIN_EVENTS and rain_words(expected_suffix):   # 8 Eki: yangında stil eki de yağmursuz
-        out.append(_issue("fire_no_rain_suffix", f"stil ekinde yağmur/ıslaklık ({', '.join(rain_words(expected_suffix))})"))
+    suffix_wet = rain_words(expected_suffix, spec["event"] in WATER_DROP_EVENTS)
+    if spec["event"] in NO_RAIN_EVENTS and suffix_wet:   # 8 Eki: yangında stil eki de yağmursuz
+        out.append(_issue("fire_no_rain_suffix", f"stil ekinde yağmur/ıslaklık ({', '.join(suffix_wet)})"))
     if len(prompt) > MAX_PROMPT_CHARS and not any(i["rule"] == "prompt_chars" for i in out):
         out.append(_issue("prompt_chars", f"prompt {len(prompt)} karakter (en fazla {MAX_PROMPT_CHARS})"))
     # 6 sabit kural (genel 40-60 "length" yerine TOTAL_WORDS; olay grupları ve çeşitlilik burada değil)
@@ -1196,8 +1293,11 @@ def _validate_data() -> None:
         for v, d in b["excluded_pairs"]:
             if v not in b["slice_2"] or d not in b["slice_3"]:
                 raise StructureError(f"Yasak eşleşme bilinmeyen id: {v}-{d}")
-        for d in list(b["excluded_views"]) + list(b["excluded_spots"]):
+        for d in b["excluded_views"]:
             if d not in b["slice_3"]:
+                raise StructureError(f"Bölge kısıtı bilinmeyen id: {d}")
+        for d in b["excluded_spots"]:   # 10 Eki: kamera noktası dışlaması 4-9s ya da 9-15s maddesinde
+            if d not in b["slice_3"] and d not in b["slice_2"]:
                 raise StructureError(f"Bölge kısıtı bilinmeyen id: {d}")
         for r in SLICE_RULES.get(event, ()):
             if r["field"] not in SLICE_FIELDS or not (r.get("people") or r.get("terms")):

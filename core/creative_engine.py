@@ -380,6 +380,8 @@ DOMAIN_ATTRIBUTES = {
             "Wall of flames sweeps into a hillside neighborhood",
             "Flames race up a tower facade",
             "Fire tornado tears across a burning roadside",
+            # 10 Eki, Bahadır: 4. olay
+            "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
         ]
     }
 }

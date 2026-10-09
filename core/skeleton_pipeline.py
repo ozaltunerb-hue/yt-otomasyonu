@@ -427,6 +427,16 @@ EVENT_SKELETONS = {
                 "and burning branches across the road. Embers whirl around its base as {n} {people} run from it. "
                 "The fire tornado keeps tearing along the road, still flinging burning debris.",
     },
+    # 10 Eki, Bahadır: helikopter. Kamera noktaları orman yangınıyla aynı iki yüksek nokta (alçak kamera yok)
+    "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": {
+        "domain": "fire_disasters", "ships": None,
+        "spots": {"Balcony of a hillside house": "a hillside village neighborhood",
+                  "Embankment above the village road": "a hillside village neighborhood"},
+        "people": ["residents", "villagers"], "weather": FIRE_WEATHER, "object": "firefighting helicopter",
+        "text": "In {spot} in {weather}, a firefighting helicopter swoops over the neighborhood and drops a huge load "
+                "of water onto the wall of flames racing toward the houses. Thick white steam rolls up as {n} {people} "
+                "run from the flames. The helicopter circles back, still fighting the fire along the slope.",
+    },
     # ── Plaj & sahil ──
     "Tornado approaching an open beach": {
         "domain": "open_beach_coastal_events", "ships": None,
@@ -565,7 +575,8 @@ PHENOMENA = {
     "Heyelan": ["Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside", "Mud and debris torrent tears through a hillside village"],
     # 8 Eki (TASLAK)
     "Yangın": ["Wall of flames sweeps into a hillside neighborhood", "Flames race up a tower facade",
-               "Fire tornado tears across a burning roadside"],
+               "Fire tornado tears across a burning roadside",
+               "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood"],   # 10 Eki
     "Dev Dalga": ["Green wave breaks over the rail onto the vehicle deck", "Rogue wave breaks over the rail onto the pool deck",
                   "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon",
                   "Tidal wave surges over a coastal city street"],
@@ -590,7 +601,9 @@ EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
                # TASLAK (8 Eki, Bahadır): yangın 3-6
                "Wall of flames sweeps into a hillside neighborhood": (3, 6),
                "Flames race up a tower facade": (3, 6),
-               "Fire tornado tears across a burning roadside": (3, 6)}
+               "Fire tornado tears across a burning roadside": (3, 6),
+               # 10 Eki, Bahadır: helikopter 3-6 (orman gibi)
+               "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (3, 6)}
 # "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
 NO_SIGNS_DOMAINS = {"landslide_disasters",
                     "fire_disasters"}   # 8 Eki: yangın (heyelan deseni, toplam 8 kısıt)

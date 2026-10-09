@@ -146,6 +146,10 @@ EVENT_OUTCOMES = {
     "Fire tornado tears across a burning roadside":
         "the fire tornado keeps tearing along the roadside, hurling burning branches, embers and debris across the "
         "road",
+    # 10 Eki, Bahadır
+    "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood":
+        "the helicopter keeps dropping water on the wall of flames, turning sections into white steam as the fire "
+        "fights back toward the houses",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -301,6 +305,7 @@ EVENT_REQUIRED = {
     "Wall of flames sweeps into a hillside neighborhood": [],
     "Flames race up a tower facade": [],
     "Fire tornado tears across a burning roadside": [],
+    "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": [],   # 10 Eki
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),

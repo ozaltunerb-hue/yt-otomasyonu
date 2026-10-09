@@ -95,6 +95,9 @@ class TestLockedData(unittest.TestCase):
                             "debris onto the street.",
             es.FIRE_TORNADO: "A violent fire tornado tears across a burning roadside, hurling flames, burning "
                              "branches and embers across the road.",
+            # 10 Eki, Bahadır onayı: helikopter (TestHelicopter ayrıca kilitler)
+            es.HELICOPTER: "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of "
+                           "water onto the wall of flames racing toward the houses.",
         })
         self.assertEqual(es.SLICE_LABELS, ("0-4s", "4-9s", "9-15s"))
         self.assertEqual(es.SLICE_FIELDS, ("slice_1_rest", "slice_2", "slice_3"))
@@ -149,7 +152,8 @@ class TestLockedData(unittest.TestCase):
         # 4 Eki: kıyı dev dalga da yapılandırılmış hatta; diğer olaylar eski yolda
         self.assertEqual(es.structured_events(), (FLOOD, TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE,
                                                   es.LANDFALL, es.MARINA_TORNADO, es.AVENUE,
-                                                  es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO))   # 8 Eki
+                                                  es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO,   # 8 Eki
+                                                  es.HELICOPTER))   # 10 Eki
         self.assertEqual(TIDAL, "Tidal wave surges over a coastal city street")
         self.assertFalse(es.is_structured("Rogue wave breaks over the rail onto the pool deck"))
 
@@ -587,13 +591,15 @@ class TestTidal(unittest.TestCase):
         self.assertEqual(sk.EVENT_COUNT, {TIDAL: (3, 6), es.MUDSLIDE: (3, 6), es.SLOPE: (3, 6), es.VILLAGE: (3, 6),
                                           es.LANDFALL: (3, 6), es.MARINA_TORNADO: (3, 6), es.AVENUE: (3, 6),
                                           # 8 Eki (TASLAK): yangın
-                                          es.WILDFIRE: (3, 6), es.FACADE_FIRE: (3, 6), es.FIRE_TORNADO: (3, 6)})
+                                          es.WILDFIRE: (3, 6), es.FACADE_FIRE: (3, 6), es.FIRE_TORNADO: (3, 6),
+                                          es.HELICOPTER: (3, 6)})   # 10 Eki
 
     def test_slice_rules_locked(self):
         # selde dilim kapısı yok; heyelan (TASLAK) aynı mekanizma
         self.assertEqual(set(es.SLICE_RULES), {TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE,
                                                es.LANDFALL, es.MARINA_TORNADO, es.AVENUE,
-                                               es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO})   # 8 Eki: yangın
+                                               es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO,   # 8 Eki: yangın
+                                               es.HELICOPTER})   # 10 Eki
         r = {x["rule"]: x for x in es.SLICE_RULES[TIDAL]}
         self.assertEqual(set(r), {"slice_flee", "slice_count"})
         self.assertEqual(r["slice_flee"]["terms"], ("run", "ran", "running", "flee", "fled", "fleeing", "sprint",
@@ -1450,7 +1456,8 @@ class TestMarinaRedesign(unittest.TestCase):
     def test_total_words_override_only_marina(self):
         self.assertEqual(es.TOTAL_WORDS, (40, 70))
         # 10 Eki, Bahadır: orman yangını da 40-75 (TestFireStructure ayrıca kilitler)
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT, {es.MARINA_TORNADO: (40, 75), es.WILDFIRE: (40, 75)})
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT, {es.MARINA_TORNADO: (40, 75), es.WILDFIRE: (40, 75),
+                                                   es.HELICOPTER: (40, 75)})   # 10 Eki: helikopter
         w = "abcd"
 
         def total_rules(event, spot, b2, b3, vehicle, extra):
@@ -1684,17 +1691,17 @@ class TestFireStructure(unittest.TestCase):
         import bot
         import core.creative_pipeline as cp
         from core.creative_engine import DOMAIN_ATTRIBUTES, ENV_CENTRIC_DOMAINS, MARITIME_INSPIRATION_DOMAINS
-        self.assertEqual(es.FIRE_EVENTS, FIRE)
+        self.assertEqual(es.FIRE_EVENTS, FIRE + (es.HELICOPTER,))   # 10 Eki: 4. olay (TestHelicopter)
         self.assertEqual(bot.DOMAIN_LABELS["fire_disasters"], "🔥 Yangın")
         self.assertEqual([bot.EVENT_LABELS[e] for e in FIRE],
                          ["🔥 Orman yangını mahalleye ulaşır", "🔥 Apartman cephe yangını", "🔥 Ateş hortumu"])
-        self.assertEqual(sk.skeleton_events("fire_disasters"), list(FIRE))
+        self.assertEqual(sk.skeleton_events("fire_disasters"), list(FIRE) + [es.HELICOPTER])
         self.assertEqual(DOMAIN_ATTRIBUTES["fire_disasters"]["ships"], [])
         self.assertEqual(DOMAIN_ATTRIBUTES["fire_disasters"]["environments"],
                          [s for e in FIRE for s in self.SPOTS[e]])
         self.assertIn("fire_disasters", MARITIME_INSPIRATION_DOMAINS)
         self.assertIn("fire_disasters", ENV_CENTRIC_DOMAINS)
-        self.assertEqual(sk.PHENOMENA["Yangın"], list(FIRE))
+        self.assertEqual(sk.PHENOMENA["Yangın"], list(FIRE) + [es.HELICOPTER])
         for e in FIRE:
             with self.subTest(event=e):
                 self.assertTrue(es.is_structured(e))
@@ -1879,7 +1886,8 @@ class TestFireStructure(unittest.TestCase):
         self.assertFalse({i["rule"] for i in es.slice_issues(spec, sl)} & {"fire_no_rain", "fire_no_lift"})
 
     def test_no_lift_only_wildfire_and_facade(self):
-        self.assertEqual(es.NO_LIFT_SLICE, {es.WILDFIRE: ("slice_2",), es.FACADE_FIRE: ("slice_2",)})
+        self.assertEqual(es.NO_LIFT_SLICE, {es.WILDFIRE: ("slice_2",), es.FACADE_FIRE: ("slice_2",),
+                                            es.HELICOPTER: ("slice_2",)})   # 10 Eki
         for e, b2, b3, spot in ((es.WILDFIRE, "K2", "L3", "Embankment above the village road"),
                                 (es.FACADE_FIRE, "M6", "N1", "Rooftop terrace across from a downtown tower")):
             spec, slices, _ = self.build(e, b2, b3, spot, "SUV")
@@ -2085,6 +2093,239 @@ class TestOct10Changes(unittest.TestCase):
         # sadece rüzgâr hâlâ geçmez
         self.assertTrue(es.missing_term_groups(k4, "The SUV maneuvers around a pine bending in the wind and hits the "
                                                    "guardrail."))
+
+
+class TestHelicopter(unittest.TestCase):
+    """10 Eki, Bahadır: 🔥 Yangın söndürme helikopteri (4. yangın olayı). Havuzlar ONAYLI. KİLİT."""
+
+    E = es.HELICOPTER
+    KEY = ("A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the wall "
+           "of flames racing toward the houses.")
+    S2 = {
+        "F1": "the water load slams into the flames, flattening a section of the wall into a cloud of white steam",
+        "F2": "the helicopter drops a second load and the water crashes down onto burning rooftops, sending steam and "
+              "sparks billowing",
+        "F3": "the {vehicle} speeds down the street as the helicopter's downdraft whips smoke and embers across the road",
+        "F4": "the helicopter roars low over the street, its downdraft bending the burning trees and scattering embers",
+        "F5": "a wall of water falls on a burning house, the flames collapsing into thick white steam",
+        "F6": "the {vehicle} brakes hard as a drenching cascade of water spills across the road in front of it",
+    }
+    S3 = {
+        "G1": "the flames fight back, a fresh burst of fire swallowing trees beside the water line",
+        "G2": "the helicopter circles back and drops another huge load, extinguishing a row of burning trees in a cloud "
+              "of steam",
+        "G3": "thick white steam rolls over the street as the wall of flames sinks back toward the slope",
+        "G4": "embers blow past the helicopter as flames leap to a roof the water missed",
+        "G5": "the helicopter pulls up and away as the flames roar back behind it",
+        "G6": "a second helicopter swoops in and drops water on the flames along the road",
+    }
+    SPOTS = {"Balcony of a hillside house": "on a balcony of a hillside house overlooking the street and the burning "
+                                            "slope",
+             "Embankment above the village road": "on a roadside embankment above the village road"}
+    VEHICLES = ["pickup truck", "small car", "white van", "SUV"]
+
+    def setUp(self):
+        es._BEAT_MEMORY.clear()
+
+    def slices(self, b2, b3, vehicle, people, s1=None):
+        return {"slice_1_rest": es.clean_slice(s1 or f"{cap(es.NUMBER_WORDS[people])} people run from the flames."),
+                "slice_2": es.clean_slice(cap(es.beat_text(self.E, "slice_2", b2, vehicle))),
+                "slice_3": es.clean_slice(cap(es.beat_text(self.E, "slice_3", b3)))}
+
+    def build(self, b2, b3, spot="Embankment above the village road", vehicle="SUV", people=5, **kw):
+        spec = es.build_spec(self.E, None, spot, None, b2, b3, vehicle, people)
+        sl = self.slices(b2, b3, vehicle, people, **kw)
+        return spec, sl
+
+    def codes(self, spec, sl):
+        return {i["rule"] for i in es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl))}
+
+    def test_menu_and_registrations(self):
+        import bot
+        import core.creative_pipeline as cp
+        from core.creative_engine import DOMAIN_ATTRIBUTES
+        self.assertEqual(self.E, "Firefighting helicopter drops water on the flames racing toward a hillside "
+                                 "neighborhood")
+        self.assertEqual(bot.EVENT_LABELS[self.E], "🔥 Yangın söndürme helikopteri")
+        self.assertEqual(DOMAIN_ATTRIBUTES["fire_disasters"]["events"][-1], self.E)
+        self.assertIn(self.E, es.FIRE_EVENTS)
+        self.assertIn(self.E, es.NO_RAIN_EVENTS)
+        self.assertEqual(es.WATER_DROP_EVENTS, (self.E,))
+        self.assertEqual(cp.EVENT_REQUIRED[self.E], [])
+        self.assertNotIn(self.E, cp.REQUIRED_APPROVED)
+        self.assertIn(self.E, cp.EVENT_OUTCOMES)
+        self.assertEqual(sk.count_range(self.E, None), (3, 6))
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[self.E], (40, 75))
+        self.assertEqual(es.structure_views(self.E), [None])
+        self.assertEqual([n for n, _ in es.EVENT_VEHICLES[self.E]], self.VEHICLES)
+
+    def test_key_visual_and_pools_locked(self):
+        import core.creative_pipeline as cp
+        self.assertEqual(es.EVENT_KEY_VISUAL[self.E], self.KEY)
+        found = {i["rule"] for i in cp.story_rule_issues(self.E, None, self.KEY)}
+        self.assertFalse(found & {"a_trigger_first", "e_event_and_ship_named", "required"})
+        b = es.EVENT_BEATS[self.E]
+        self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, self.S2)
+        self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, self.S3)
+        self.assertEqual(b["excluded_pairs"], {("F1", "G3"), ("F2", "G2"), ("F5", "G3")})
+        self.assertEqual(b["excluded_views"], {})
+        # kamera evi: yanan çatıya/eve su (F2, F5) ve ıskalanan çatıya alev (G4) balkon noktasında seçilmez
+        self.assertEqual(b["excluded_spots"], {"F2": {"Balcony of a hillside house"},
+                                               "F5": {"Balcony of a hillside house"},
+                                               "G4": {"Balcony of a hillside house"}})
+
+    def test_cameras_high_and_weather(self):
+        s = sk.EVENT_SKELETONS[self.E]
+        self.assertEqual(list(s["spots"]), list(self.SPOTS))
+        self.assertEqual(set(s["spots"].values()), {"a hillside village neighborhood"})
+        self.assertIs(s["weather"], sk.FIRE_WEATHER)
+        for spot, cam in self.SPOTS.items():
+            self.assertEqual(sk.CAMERA_SPOTS[spot], cam)
+            suffix = sk.style_suffix(self.E, None, spot)
+            self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {cam}, eye level"))
+            self.assertIn("the camera pans to follow the firefighting helicopter", suffix)
+            self.assertTrue(suffix.endswith(" No readable signs, text or flags."))
+            self.assertEqual(es.rain_words(suffix, True), [])
+        # orman yangını aynı iki noktayı kullanmaya devam eder
+        self.assertEqual(list(sk.EVENT_SKELETONS[es.WILDFIRE]["spots"]), list(self.SPOTS))
+
+    def test_term_lists_fire_only_and_canonical_pass(self):
+        import ast
+        import inspect
+        tree = ast.parse(inspect.getsource(es))
+        beats = next(n.value for n in tree.body if isinstance(n, ast.Assign)
+                     and any(getattr(t, "id", None) == "EVENT_BEATS" for t in n.targets))
+        node = next(v for k, v in zip(beats.keys, beats.values) if getattr(k, "id", None) == "HELICOPTER")
+        names = {n.id for n in ast.walk(node) if isinstance(n, ast.Name)}
+        self.assertTrue(names and all(n.startswith("_FIRE_") for n in names), names)
+        for slot in ("slice_2", "slice_3"):
+            for bid, beat in es.EVENT_BEATS[self.E][slot].items():
+                for v in self.VEHICLES:
+                    text = cap(es.beat_text(self.E, slot, bid, v))
+                    with self.subTest(beat=bid, vehicle=v):
+                        self.assertEqual(es.missing_term_groups(beat["terms"], text), [])
+                        self.assertEqual(es.rain_words(text, True), [])
+
+    def test_variants_and_wrong_event(self):
+        ok = {"F1": "The water crashes into the blaze, turning a stretch of flames into white vapor.",
+              "F3": "The pickup truck races away as the rotor wash blasts smoke and sparks over the road.",
+              "F6": "The SUV stops short as a deluge of water spills over the street ahead.",
+              "G2": "The chopper returns and dumps more water, dousing a line of burning pines in steam.",
+              "G3": "White steam drifts across the street as the flames recede toward the slope.",
+              "G5": "The helicopter climbs away as the fire flares again behind it."}
+        bad = {"F1": "The helicopter flies over the neighborhood.",
+               "F4": "The helicopter roars low over the street.",
+               "G2": "The helicopter circles back over the trees.",
+               "G6": "A second helicopter appears over the road."}
+        for bid, s in ok.items():
+            slot = "slice_2" if bid[0] == "F" else "slice_3"
+            with self.subTest(ok=bid):
+                self.assertEqual(es.missing_term_groups(es.EVENT_BEATS[self.E][slot][bid]["terms"], s), [])
+        for bid, s in bad.items():
+            slot = "slice_2" if bid[0] == "F" else "slice_3"
+            with self.subTest(bad=bid):
+                self.assertTrue(es.missing_term_groups(es.EVENT_BEATS[self.E][slot][bid]["terms"], s))
+
+    def test_water_not_rain(self):
+        # su bırakma ıslaklığı serbest, yağış yine yasak
+        for t in ("A drenching cascade of water spills across the road.", "The roofs are soaked and wet.",
+                  "Water rains down on the burning roofs."):
+            with self.subTest(text=t):
+                self.assertEqual(es.rain_words(t, True), [])
+        for t in ("Heavy rain falls on the flames.", "A downpour hits the street.", "The rain-soaked road.",
+                  "Rainy smoke drifts."):
+            with self.subTest(text=t):
+                self.assertTrue(es.rain_words(t, True))
+        # diğer yangın olaylarında "drench" hâlâ reddedilir (varsayılan davranış aynı)
+        self.assertEqual(es.rain_words("A drenching cascade of water spills across the road."), ["drench"])
+        spec, sl = self.build("F6", "G1", vehicle="white van")
+        self.assertNotIn("fire_no_rain", self.codes(spec, sl))
+        rain = {**sl, "slice_3": es.clean_slice(sl["slice_3"].rstrip(".") + " in the heavy rain")}
+        self.assertIn("fire_no_rain", self.codes(spec, rain))
+        wf = es.build_spec(es.WILDFIRE, None, "Embankment above the village road", None, "K2", "L3", "SUV", 5)
+        wsl = {"slice_1_rest": "Five people run from the flames.",
+               "slice_2": "The SUV skids to a stop as flames leap across the road and lick its hood.",
+               "slice_3": "The fire races across a garden, engulfing a trailer and a woodpile on the drenched lawn."}
+        self.assertIn("fire_no_rain", {i["rule"] for i in es.slice_issues(wf, wsl)})
+
+    def test_vehicle_required_only_in_vehicle_beats(self):
+        for b2 in ("F1", "F2", "F4", "F5"):
+            spec, sl = self.build(b2, "G1", vehicle="pickup truck")
+            with self.subTest(beat=b2):
+                self.assertNotIn("beat_vehicle", self.codes(spec, sl))
+        for b2 in ("F3", "F6"):
+            spec, sl = self.build(b2, "G1", vehicle="pickup truck")
+            no_vehicle = {**sl, "slice_2": es.clean_slice(sl["slice_2"].replace("pickup truck", "crowd"))}
+            with self.subTest(beat=b2):
+                self.assertNotIn("beat_vehicle", self.codes(spec, sl))
+                self.assertIn("beat_vehicle", self.codes(spec, no_vehicle))
+
+    def test_no_lift(self):
+        spec, sl = self.build("F3", "G1")
+        lifted = {**sl, "slice_2": es.clean_slice(sl["slice_2"].rstrip(".") + ", lifted off its wheels")}
+        self.assertIn("fire_no_lift", self.codes(spec, lifted))
+
+    def test_total_words_75(self):
+        spec, sl = self.build("F2", "G2")
+        base = len(es.plain_story(spec, {**sl, "slice_1_rest": ""}).split())
+        for words, bad in ((75, False), (76, True)):
+            s1 = "Five people run from the flames" + " far" * (words - base - 6)
+            sl2 = {**sl, "slice_1_rest": es.clean_slice(s1)}
+            self.assertEqual(len(es.plain_story(spec, sl2).split()), words)
+            with self.subTest(words=words):
+                self.assertEqual("total_words" in {i["rule"] for i in es.slice_issues(spec, sl2)}, bad)
+
+    def test_all_combinations_and_spot_exclusions(self):
+        def pairs(spot):
+            return es.allowed_pairs(self.E, None, spot)
+        balcony = pairs("Balcony of a hillside house")
+        self.assertFalse({v for v, _ in balcony} & {"F2", "F5"})
+        self.assertNotIn("G4", {d for _, d in balcony})
+        self.assertEqual(len(balcony), 4 * 5 - 1)
+        self.assertEqual(len(pairs("Embankment above the village road")), 36 - 3)
+        n = 0
+        for spot in self.SPOTS:
+            for b2, b3 in pairs(spot):
+                for v in self.VEHICLES:
+                    spec, sl = self.build(b2, b3, spot=spot, vehicle=v, people=3 + n % 4)
+                    issues = es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl), es.assemble_story(spec, sl))
+                    if issues:
+                        self.fail(f"{spot}/{b2}+{b3}/{v}: {issues}")
+                    n += 1
+        self.assertEqual(n, (19 + 33) * 4)
+        # 4-9s dışlaması diğer olaylarda hiçbir şeyi değiştirmez (mevcut dışlamaların hepsi 9-15s)
+        for e, b in es.EVENT_BEATS.items():
+            if e != self.E:
+                self.assertFalse(set(b["excluded_spots"]) & set(b["slice_2"]), e)
+
+    def test_no_candidates_never(self):
+        from itertools import combinations
+        b = es.EVENT_BEATS[self.E]
+        for spot in self.SPOTS:
+            ps_ = es.allowed_pairs(self.E, None, spot)
+            worst = min(sum(1 for v, d in ps_ if v not in x2 and d not in x3)
+                        for x2 in map(set, combinations(b["slice_2"], es.RECENT_BEAT_BLOCK))
+                        for x3 in map(set, combinations(b["slice_3"], es.RECENT_BEAT_BLOCK)))
+            with self.subTest(spot=spot):
+                self.assertGreater(worst, 0)
+
+    def test_scene_build(self):
+        import asyncio
+        import core.creative_pipeline as cp
+
+        async def gpt(system, user, **kw):
+            line = dict(l.split(": ", 1) for l in user.splitlines()
+                        if l.startswith(("4-9s EVENT", "9-15s EVENT", "PEOPLE RUNNING AWAY")))
+            word = line["PEOPLE RUNNING AWAY"].split()[0]
+            return {"slice_1_rest": f"{cap(word)} people run from the flames.",
+                    "slice_2": cap(line["4-9s EVENT"]) + ".", "slice_3": cap(line["9-15s EVENT"]) + "."}
+        scene = asyncio.run(cp.build_creative_scene("fire_disasters", self.E, [], [], gpt))
+        t = scene["trace"]
+        self.assertIn(t["spot"], self.SPOTS)
+        self.assertIn(self.SPOTS[t["spot"]], scene["prompt"])
+        self.assertTrue(scene["combo_key"].startswith("fire_disasters|none|firefighting helicopter"))
+        spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
+        self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
 
 if __name__ == "__main__":
     unittest.main()

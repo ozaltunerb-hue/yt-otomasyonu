@@ -25,6 +25,34 @@
 
 ---
 
+## 📋 DEVİR: Yangın söndürme helikopteri eklendi (10 Eki)
+
+**Durum:** 🔥 Yangın kategorisinin 4. olayı, TASLAK, yapılandırılmış hatta: `Firefighting helicopter drops water on the
+flames racing toward a hillside neighborhood` (menü "🔥 Yangın söndürme helikopteri"). Havuzlar Bahadır onaylı,
+birebir. Henüz video testi yapılmadı.
+- Kilit cümle: "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the
+  wall of flames racing toward the houses." (24 kelime). Havuzlar F1-F6 (4-9s), G1-G6 (9-15s); yasak eşleşmeler
+  (F1,G3), (F2,G2), (F5,G3).
+- Kamera: orman yangınının iki yüksek noktası ("Balcony of a hillside house", "Embankment above the village road"),
+  alçak kamera yok. Hava `FIRE_WEATHER`, kaçan kişi 3-6 ("the flames"), toplam kelime 40-75 (olaya özel).
+- Kamera evi dışlaması (balkon noktasında seçilmez): F2 (yanan çatılara su), F5 (yanan eve su duvarı), G4 (alev
+  ıskalanan çatıya sıçrar). Bunun için `excluded_spots` artık 4-9s maddelerini de kabul ediyor; mevcut olayların
+  tüm dışlamaları 9-15s'de olduğu için onlarda değişiklik yok.
+- Araç sadece F3 ve F6'da geçiyor: 4-9s araç kapısı artık seçilen maddenin metninde `{vehicle}` varsa zorunlu
+  (mevcut tüm olayların 4-9s maddelerinde var, davranış aynı). `NO_LIFT_SLICE` bu olayda da 4-9s'de geçerli.
+- Yağmur kapısı: bu olayda ıslaklığın sebebi helikopterin suyu. `WATER_DROP_EVENTS`: wet, soak, drench, damp,
+  puddle serbest; "rain" fiili suyla birlikte serbest ("water rains down"); yağış (heavy rain, downpour, rainfall,
+  rain-soaked, rainy...) yine reddedilir. Diğer yangın olaylarında kapı değişmedi.
+- Terim listeleri yeni `_FIRE_*` (_FIRE_WATER, _FIRE_STEAM, _FIRE_HELI, _FIRE_DROP, _FIRE_DOUSE, _FIRE_DOWNDRAFT
+  ...); mevcut listeler değişmedi. Preflight bu olayda da danışman.
+
+**Gözlemler (karar Bahadır'da, kod yok):**
+- Orman yangını videosunda alev, yerde yakıt varmış gibi evlerin önünde birden her yeri tutuşturuyor (Bahadır
+  gözlemi). Orman testlerinde tekrar ederse havuz/kilit cümle ayarı düşünülecek.
+- Karaya vurmanın 3 kamerası hâlâ yer seviyesinde; onaylı, değişmedi.
+
+---
+
 ## 📋 DEVİR: Preflight danışman, yeniden yazım kaydı, orman 75 kelime, hortum cadde balkonu (10 Eki)
 
 **Preflight (sadece yapılandırılmış hat: sel, tidal, 3 heyelan, 3 hortum, 3 yangın).** Preflight artık danışman:
@@ -106,7 +134,8 @@ heavy smoke and scorching still air.
 provada 6 hikâyenin 3'ü sınır yüzünden en az bir kez reddedildi, hepsi 3 denemede geçti). 10 Eki: orman 40-75
 oldu (yukarıdaki 10 Eki notu); cephe ve ateş hortumu 40-70.
 
-**Bekleyen iş:** 4. olay "Yangın söndürme helikopteri alev duvarına su bırakır", ilk yangın testi geçince eklenecek.
+**Bekleyen iş:** ~~4. olay "Yangın söndürme helikopteri alev duvarına su bırakır", ilk yangın testi geçince
+eklenecek.~~ 10 Eki: eklendi (yukarıdaki helikopter notu).
 
 ---
 
