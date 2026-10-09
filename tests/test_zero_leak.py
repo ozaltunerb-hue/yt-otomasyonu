@@ -185,42 +185,82 @@ class TestNothingReachesKie(unittest.TestCase):
         self.assertEqual(h.result["reason"], "no_valid_scenario")
         self.assertIn("9-15s: seçilen olay (D2) görünmüyor", h.result["error_summary"])
 
-    def test_preflight_unsafe_twice_stops(self):
-        h = Harness(gpt=[slices(), slices(s1="It rushes over the curbs and floods the low porches.")],
-                    preflight=preflight_seq(("unsafe", "a calm street"), ("unsafe", "a calm street"))).run()
-        self.assertNoKie(h)
-        self.assertEqual(h.result["reason"], "structure_check")
-        self.assertIn("Preflight yeniden yazımdan sonra da riskli", h.result["error"])
-        self.assertEqual(h.gen_calls, 1)                       # yeni senaryo denenmez
-        self.assertEqual(len(h.gpt_calls), 2)                  # ilk yazım + tek yeniden yazım
+    # 10 Eki, Bahadır: yapılandırılmış hatta preflight danışmandır. Riskli dese de senaryo kodun ürettiği
+    # haliyle Kie'ye gider (onaydan sonra), yeniden yazılmaz, akış durmaz; puan + sebep onay mesajına, Notion
+    # gövdesine/Güvenlik alanına ve sonuç mesajına yazılır. (Eski testler: test_preflight_unsafe_twice_stops,
+    # test_rewrite_breaks_rules, test_preflight_text_never_used; o davranış kaldırıldı.)
+    def test_preflight_unsafe_is_advisory_story_unchanged(self):
+        pre = preflight_seq(("unsafe", "A gentle stream. 4-9s: car. 9-15s: pole."))
+        h = Harness(preflight=pre).run()
+        self.assertTrue(h.result.get("success"), h.result)
+        self.assertEqual(len(pre.calls), 1)                    # tekrar bakılmaz
+        self.assertEqual(len(h.gpt_calls), 1)                  # yeniden yazım yok
+        self.assertEqual(len(h.sent_prompts), 1)
+        self.assertTrue(h.sent_prompts[0].startswith(f"0-4s: {KEY} It swallows the curbs"))
+        self.assertNotIn("gentle stream", h.sent_prompts[0])
+        h.free_rewriter.assert_not_called()
+        self.assertEqual(h.result["preflight_warning"], "⚠️ Preflight riski 8/10: graphic")
+        tracker = h.trackers[-1]
+        bodies = "\n".join(str(c) for c in tracker.append_body.call_args_list)
+        self.assertIn("⚠️ Preflight riski 8/10: graphic", bodies)          # Notion gövdesi (son prompt bölümü)
+        self.assertNotIn("Preflight / güvenlik yeniden yazımı", bodies)
+        safety = tracker.update_with_safety_info.call_args.args[0]
+        self.assertTrue(safety["preflight_advisory_risky"])
+        self.assertFalse(safety["preflight_rewritten"])
+        self.assertEqual(safety["rejection_reasons"], ["graphic"])
 
-    def test_rewrite_breaks_rules(self):
-        # Preflight riskli; yeniden yazım kalite kapısında 3 denemede de kalır -> Kie'ye hiç istek yok
-        bad_rewrite = slices(s2="The sedan rocks gently in the water as the rain keeps falling.")
-        h = Harness(gpt=[slices(), bad_rewrite], preflight=preflight_seq(("unsafe", "x"), "safe")).run()
+    def test_preflight_safe_has_no_warning(self):
+        h = Harness().run()
+        self.assertTrue(h.result.get("success"), h.result)
+        self.assertEqual(h.result["preflight_warning"], "")
+        self.assertNotIn("Preflight riski", "\n".join(str(c) for c in h.trackers[-1].append_body.call_args_list))
+
+    def test_preflight_crash_still_stops(self):
+        # Preflight'ın kendisi çökerse üretim durmaya devam eder (Kie'ye istek yok)
+        async def crash(prompt):
+            raise ps.PreflightError("GPT Pre-flight 3 denemede geçerli sonuç vermedi (api)", "api")
+        h = Harness(preflight=crash).run()
         self.assertNoKie(h)
-        self.assertEqual(h.result["reason"], "structure_check")
-        self.assertIn("Ret sonrası yeniden yazım kural kapısından geçmedi", h.result["error"])
-        self.assertEqual(len(h.gpt_calls), 1 + cp.MAX_ATTEMPTS)
+        self.assertFalse(h.result.get("success"))
 
     def test_tampered_rewrite_caught_before_submit(self):
-        # Yeniden yazım kilit görseli silen bir metin döndürse (structure güncellenmeden), son denetim yakalar
+        # Kie reddinden sonraki yeniden yazım kilit görseli silen bir metin döndürse (structure güncellenmeden),
+        # son denetim yakalar; ikinci Kie isteği gitmez
         async def tampered(structure, reason, call_gpt):
             return "0-4s: A low foamy wave rolls in. 4-9s: x. 9-15s: y."
-        h = Harness(preflight=preflight_seq(("unsafe", "x"), "safe"), rewrite=tampered).run()
-        self.assertNoKie(h)
+        create = AsyncMock(side_effect=[ContentFilterError("flagged"), "task-2"])
+        h = Harness(create=create, rewrite=tampered).run()
+        self.assertEqual(create.call_count, 1)
         self.assertEqual(h.result["reason"], "structure_check")
         self.assertIn("son denetimden geçmedi", h.result["error"])
 
-    def test_preflight_text_never_used(self):
-        # Preflight'ın kilit görseli silen kendi metni gönderilmez; bizim yazar yeniden yazar
-        h = Harness(gpt=[slices(), slices(s1="It rushes over the curbs and floods the low porches.")],
-                    preflight=preflight_seq(("unsafe", "A gentle stream. 4-9s: car. 9-15s: pole."), "safe")).run()
+    def test_kie_reject_rewrite_attempts_written_to_notion(self):
+        # 10 Eki, Bahadır: yeniden yazım denemelerinin tam metni (dilimler + kapı retleri) Notion gövdesine
+        bad = slices(s2="The sedan rocks gently in the water as the rain keeps falling.")
+        good = slices(s1="It rushes over the curbs and floods the low porches.")
+        h = Harness(gpt=[slices(), bad, good], create=AsyncMock(side_effect=[ContentFilterError("flagged"),
+                                                                             "task-2"])).run()
         self.assertTrue(h.result.get("success"), h.result)
-        self.assertEqual(len(h.sent_prompts), 1)
-        self.assertTrue(h.sent_prompts[0].startswith(f"0-4s: {KEY} It rushes over the curbs"))
-        self.assertNotIn("gentle stream", h.sent_prompts[0])
-        h.free_rewriter.assert_not_called()
+        sections = [s for c in h.trackers[-1].append_body.call_args_list for s in c.args[0]]
+        rw = [text for title, text in sections if title == "🔁 Yapılandırılmış yeniden yazım denemeleri"]
+        self.assertEqual(len(rw), 1)
+        self.assertIn("Sebep: flagged", rw[0])
+        self.assertIn("Sonuç: geçti", rw[0])
+        self.assertIn("Deneme 1 · ❌ eksik: ", rw[0])
+        self.assertIn("The sedan rocks gently in the water", rw[0])          # reddedilen denemenin tam metni
+        self.assertIn("Deneme 2 · ✅ geçti", rw[0])
+        self.assertIn("It rushes over the curbs and floods the low porches.", rw[0])
+
+    def test_kie_reject_rewrite_failure_also_written_to_notion(self):
+        bad = slices(s2="The sedan rocks gently in the water as the rain keeps falling.")
+        h = Harness(gpt=[slices(), bad, bad, bad], create=AsyncMock(side_effect=[ContentFilterError("flagged"),
+                                                                                 "task-2"])).run()
+        self.assertEqual(h.result["reason"], "structure_check")
+        sections = [s for c in h.trackers[-1].append_body.call_args_list for s in c.args[0]]
+        rw = [text for title, text in sections if title == "🔁 Yapılandırılmış yeniden yazım denemeleri"]
+        self.assertEqual(len(rw), 1)
+        self.assertIn("Sonuç: kural kapısından geçmedi: ", rw[0])
+        self.assertEqual(rw[0].count("The sedan rocks gently"), cp.MAX_ATTEMPTS)
 
     def test_kie_rejects_twice_stops(self):
         create = AsyncMock(side_effect=[ContentFilterError("flagged"), ContentFilterError("flagged")])
@@ -416,6 +456,47 @@ class TestReporting(unittest.TestCase):
         self.assertEqual(set(row["slices"]), set(es.SLICE_FIELDS))
         self.assertTrue(row["prompt"].startswith(f"0-4s: {KEY} "))
 
+
+
+class TestPreflightAdvisoryScope(unittest.TestCase):
+    """10 Eki, Bahadır: preflight danışmanlığı SADECE yapılandırılmış hat (story_rewriter verilen çağrı). Serbest hatta
+    preflight'ın yeniden yazdığı hikâye eskisi gibi kullanılır."""
+
+    def run_video(self, story_rewriter):
+        client = KieClient()
+        create = AsyncMock(return_value="task-1")
+
+        async def pre(prompt):
+            return "REWRITTEN SAFE STORY", True, {"risk_score": 7, "risk_reasons": ["peril"], "preflight_passed": False,
+                                                  "rewritten": True}
+        with patch.object(settings, "IS_DRY_RUN", False), patch.object(settings, "POLL_INITIAL_WAIT", 0), \
+                patch.object(ps, "gpt_preflight_check", pre), patch.object(client, "_create_task", create), \
+                patch.object(client, "_poll_for_result", AsyncMock(return_value="u")):
+            asyncio.run(client.create_video(model="bytedance/seedance-2-fast", prompt="ORIGINAL STORY",
+                                            style_suffix="SUFFIX.", story_rewriter=story_rewriter))
+        return create.call_args.args[1], client._last_preflight_meta
+
+    def test_free_pipeline_still_uses_preflight_rewrite(self):
+        prompt, meta = self.run_video(None)
+        self.assertTrue(prompt.startswith("REWRITTEN SAFE STORY"))
+        self.assertTrue(meta["rewritten"])
+        self.assertNotIn("advisory", meta)
+
+    def test_structured_pipeline_keeps_story(self):
+        rewriter = AsyncMock(side_effect=AssertionError("yeniden yazım çağrılmamalı"))
+        prompt, meta = self.run_video(rewriter)
+        self.assertTrue(prompt.startswith("ORIGINAL STORY"))
+        rewriter.assert_not_called()
+        self.assertEqual((meta["advisory"], meta["risky"], meta["rewritten"]), (True, True, False))
+
+    def test_warning_line_format(self):
+        from core.trace_format import format_final_prompt, preflight_warning
+        meta = {"advisory": True, "risky": True, "risk_score": 7, "risk_reasons": ["peril", "fire"]}
+        self.assertEqual(preflight_warning(meta), "⚠️ Preflight riski 7/10: peril; fire")
+        self.assertEqual(preflight_warning({**meta, "risky": False}), "")
+        self.assertEqual(preflight_warning({"risk_score": 7, "risk_reasons": ["x"], "rewritten": True}), "")
+        info = {"prompt": "p", "story": "s", "story_before_preflight": "s", "style_suffix": "", "preflight": meta}
+        self.assertIn("\n\n⚠️ Preflight riski 7/10: peril; fire", format_final_prompt(info)[1])
 
 if __name__ == "__main__":
     unittest.main()

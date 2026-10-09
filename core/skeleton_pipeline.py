@@ -55,6 +55,11 @@ CAMERA_SPOTS = {
     "Marina berthing pier": "on the berthing pier",
     # 4 Eki, Bahadır: hortum marina olayının yeni kamera noktası
     "High marina balcony": "on a high balcony overlooking the marina and quay",
+    # 10 Eki, Bahadır: hortum cadde olayının yüksek kamera noktaları (eski kaldırım/veranda noktaları başka olaylarda)
+    "High balcony over a downtown avenue": "on a high balcony across the street, overlooking the avenue",
+    "Upper-floor balcony over a residential avenue": "on an upper-floor balcony across the street, overlooking the "
+                                                     "avenue",
+    "High balcony over a high-rise avenue": "on a high balcony across the street, overlooking the avenue",
     "Narrow channel between moored boats": "on the pontoon at the edge of the narrow channel",
     "Cruise terminal berth": "on the terminal quay",
     "Open-air pool deck": "on the pool deck",
@@ -308,9 +313,12 @@ EVENT_SKELETONS = {
     # EKLENDİ (4 Eki, Bahadır; TASLAK, onay bekliyor). Spotlar hortumun mevcut şehir spotları.
     "Tornado sweeps down a coastal avenue": {
         "domain": "coastal_tornado_landfall", "ships": None,
-        "spots": {"Downtown city center": "a palm-lined coastal avenue downtown",
-                  "Residential coastal district": "a palm-lined coastal avenue through a residential neighborhood",
-                  "High-rise coastal city": "a palm-lined coastal avenue below high-rise towers"},
+        # 10 Eki, Bahadır: kamera yüksek balkonda (eski: Downtown city center, Residential coastal district,
+        # High-rise coastal city; aynı yer metinleri)
+        "spots": {"High balcony over a downtown avenue": "a palm-lined coastal avenue downtown",
+                  "Upper-floor balcony over a residential avenue":
+                      "a palm-lined coastal avenue through a residential neighborhood",
+                  "High balcony over a high-rise avenue": "a palm-lined coastal avenue below high-rise towers"},
         "people": ["onlookers", "residents", "pedestrians"], "weather": WEATHER_STORM, "object": "tornado",
         "text": "In {weather}, a tornado sweeps down {spot}, hurling signs, branches and debris along the road. Palm "
                 "trees bend and snap as {n} {people} sprint for cover. The tornado keeps sweeping down the coastal "

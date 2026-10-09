@@ -25,6 +25,42 @@
 
 ---
 
+## 📋 DEVİR: Preflight danışman, yeniden yazım kaydı, orman 75 kelime, hortum cadde balkonu (10 Eki)
+
+**Preflight (sadece yapılandırılmış hat: sel, tidal, 3 heyelan, 3 hortum, 3 yangın).** Preflight artık danışman:
+riskli dese de senaryo kodun ürettiği haliyle kalır, yeniden yazılmaz, `StructuredRejectError` ile durulmaz
+(`infrastructure/kie_client.py`, `create_video` KATMAN 1; meta'da `advisory`/`risky`). Riskliyse (safe=false ve
+puan 5+) "⚠️ Preflight riski X/10: <sebep>" satırı ✋ Onay mesajına ve Notion gövdesine (`format_final_prompt`),
+Notion "Güvenlik" alanına ("Pre-flight: riskli (danışman, senaryo değişmedi)") ve Telegram sonuç mesajına (YAYIN
+dahil, `result["preflight_warning"]`) yazılır. Değişmeyenler: serbest hat (feribot, tersane, marina, kruvaziyer,
+plaj) preflight'ın yeniden yazdığı hikâyeyi eskisi gibi kullanır; preflight çökerse (`PreflightError`) üretim durur;
+Kie'nin gerçek reddinden sonraki tek yapılandırılmış yeniden yazım aynı. Kaynak: 8 Eki yangında 3 durma (puan
+6-8/10, sebepler "people in peril", "children if any are minors" gibi metinde olmayan varsayımlar; preflight sabit
+kilit cümledeki "burning" kelimesini de siliyordu).
+
+**Yeniden yazım kaydı.** Kie reddi sonrası yapılandırılmış yeniden yazımın tüm denemeleri (tam dilim metni, kapı
+retleri, sebep, sonuç) başarılı da olsa başarısız da olsa Notion gövdesine "🔁 Yapılandırılmış yeniden yazım
+denemeleri" bölümü olarak yazılır (`structure["rewrite_log"]`, `format_rewrite_attempts`). Not: ilk yazımın 3
+denemede de kaldığı üretimlerde (ör. 8 Eki K4+L2) Notion kaydı açılmıyor, ayrıntı sadece Telegram'da.
+
+**Orman yangını.** `TOTAL_WORDS_BY_EVENT` içinde 40-75 (marina gibi olaya özel); cephe ve ateş hortumu dahil diğer
+tüm olaylar 40-70. `_FIRE_FLAME`'e fiery, aflame, smolder, smoulder; `_FIRE_SWERVE`'e maneuver, manoeuvre, evade,
+sidestep, careen, zigzag eklendi (sadece ekleme; 8 Eki K4 retleri "fiery", "maneuvers").
+
+**Hortum cadde (Tornado sweeps down a coastal avenue).** Kamera yüksek balkonda: "High balcony over a downtown
+avenue" ve "High balcony over a high-rise avenue" (on a high balcony across the street, overlooking the avenue),
+"Upper-floor balcony over a residential avenue" (on an upper-floor balcony across the street, overlooking the
+avenue). Yer metinleri aynı. Eski üç nokta (Downtown city center, Residential coastal district, High-rise coastal
+city) caddenin listesinden çıktı, tablolarda kalıyor (sel ve karaya vurma kullanıyor). Q5 dışlaması kalktı (kamera
+artık kaldırımda değil). Karaya vurma, marina ve plaj kameraları değişmedi; karaya vurmanın üç noktası hâlâ yer
+seviyesinde (karar Bahadır'da). Stil ekindeki "eye level" yüksek noktalarla çelişiyor, bilerek dokunulmadı.
+
+**Kanıt:** 735 test; sel, tidal, 3 heyelan, karaya vurma, marina, cephe yangını ve ateş hortumu için mesaj, stil eki
+ve prompt bayt bayt aynı (cephe ve ateş hortumunda sadece terim genişlemesinin denetim etkisi kontrol edildi).
+Ücretli çağrı yapılmadı.
+
+---
+
 ## 📋 DEVİR: Yangın devir notu (8 Eki)
 
 **Durum:** Yeni kategori 🔥 Yangın (`fire_disasters`), 3 TASLAK olay yapılandırılmış hatta (commit `338e575`, kamera
@@ -66,8 +102,9 @@ heavy smoke and scorching still air.
 - Terim listeleri yangına özel (`_FIRE_*`); alev bir şeye değmeli, sadece rüzgâr anlatımı geçmez. "rush" kaçış
   sayılmaz (mevcut `_FLEE`).
 
-**Gözlem:** Genel 40-70 kelime sınırı orman yangınında sık 2.-3. denemeye itiyor (kilit cümle 22 kelime; ilk kuru
-provada 6 hikâyenin 3'ü sınır yüzünden en az bir kez reddedildi, hepsi 3 denemede geçti). Sınır değişmedi.
+**Gözlem:** Genel 40-70 kelime sınırı orman yangınında sık 2.-3. denemeye itiyordu (kilit cümle 22 kelime; ilk kuru
+provada 6 hikâyenin 3'ü sınır yüzünden en az bir kez reddedildi, hepsi 3 denemede geçti). 10 Eki: orman 40-75
+oldu (yukarıdaki 10 Eki notu); cephe ve ateş hortumu 40-70.
 
 **Bekleyen iş:** 4. olay "Yangın söndürme helikopteri alev duvarına su bırakır", ilk yangın testi geçince eklenecek.
 

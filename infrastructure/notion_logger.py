@@ -512,6 +512,8 @@ class NotionTracker:
             parts.append(f"Pre-flight Risk: {risk_score}/10")
         if safety_data.get("preflight_rewritten"):
             parts.append("Pre-flight: GPT Rewrite uygulandı")
+        if safety_data.get("preflight_advisory_risky"):   # 10 Eki: yapılandırılmış hat, danışman
+            parts.append("Pre-flight: riskli (danışman, senaryo değişmedi)")
         retries = safety_data.get("content_retries", 0)
         if retries > 0:
             parts.append(f"Content Filter Retry: {retries}x")

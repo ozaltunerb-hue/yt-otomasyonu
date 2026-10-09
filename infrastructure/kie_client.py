@@ -179,9 +179,11 @@ class KieClient:
                 SubmissionCancelled / başka hata fırlatırsa Kie'ye istek gitmez (TUR 29: onay, olay denetimi).
             on_task_created: async (task_id, info) -> None. Task oluşunca, polling başlamadan önce çağrılır
                 (TUR 29: task ID Notion'a ve meta.json'a restart'tan önce yazılsın).
-            story_rewriter: async (reason) -> yeni hikâye. Yapılandırılmış olaylar (4 Eki): preflight riskli derse ya
-                da Kie içerik filtresi reddederse serbest metin yeniden yazıcı HİÇ kullanılmaz; bu kanca tek kez
-                çağrılır, ikinci retta StructuredRejectError (akış durur, yeni senaryo denenmez).
+            story_rewriter: async (reason) -> yeni hikâye. Yapılandırılmış olaylar (4 Eki): Kie içerik filtresi
+                reddederse serbest metin yeniden yazıcı HİÇ kullanılmaz; bu kanca tek kez çağrılır, ikinci retta
+                StructuredRejectError (akış durur, yeni senaryo denenmez). Preflight bu olaylarda danışmandır
+                (10 Eki, Bahadır): riskli dese de hikâye değişmez ve akış durmaz; puan + sebep preflight
+                meta'sında ("advisory", "risky") onay mesajına, Notion'a ve sonuç mesajına gider.
 
         Returns:
             str: Üretilen videonun CDN URL'si
@@ -206,18 +208,15 @@ class KieClient:
         current_story, was_rewritten, preflight_meta = await gpt_preflight_check(prompt)
         rewrites_left = 1 if story_rewriter else 0
 
-        if was_rewritten and story_rewriter:
-            # Preflight'ın kendi yazdığı metin kullanılmaz; bizim yazar bir kez yeniden yazar, preflight tekrar bakar
-            from core.event_structure import StructuredRejectError
-            reason = f"preflight risk {preflight_meta.get('risk_score', '?')}/10: {preflight_meta.get('risk_reasons', [])}"
-            log.info(f"🛡️ GPT Pre-flight riskli buldu, yapılandırılmış yeniden yazım: {reason}")
-            current_story = await story_rewriter(reason)
-            rewrites_left = 0
-            checked, again, preflight_meta = await gpt_preflight_check(current_story)
-            if again:
-                raise StructuredRejectError(f"Preflight yeniden yazımdan sonra da riskli buldu "
-                                            f"({preflight_meta.get('risk_score', '?')}/10), Kie'ye gönderilmedi")
-            preflight_meta = {**preflight_meta, "structured_rewrite": True}
+        if story_rewriter:
+            # 10 Eki, Bahadır: yapılandırılmış hatta preflight danışmandır. Senaryo kodun ürettiği haliyle kalır
+            # (preflight'ın yazdığı metin de bizim yeniden yazımımız da kullanılmaz), akış durmaz; karar ✋ Onay'da.
+            # Preflight'ın kendisi çökerse (PreflightError) yukarıda zaten durulmuştur.
+            current_story = prompt
+            preflight_meta = {**preflight_meta, "advisory": True, "risky": was_rewritten, "rewritten": False}
+            if was_rewritten:
+                log.warning(f"⚠️ GPT Pre-flight riskli buldu (danışman, senaryo değişmedi): "
+                            f"{preflight_meta.get('risk_score', '?')}/10 {preflight_meta.get('risk_reasons', [])}")
         elif was_rewritten:
             log.info(f"🛡️ GPT Pre-flight prompt'u yeniden yazdı (risk: {preflight_meta.get('risk_score', '?')}/10)")
             if story_validator:

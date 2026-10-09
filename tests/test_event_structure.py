@@ -1148,11 +1148,13 @@ class TestTornadoStructure(unittest.TestCase):
             "Q5": "the tornado topples a line of street lamps one by one",
             "Q6": "the tornado rips the awnings off a row of shops and flings them high",
         }, {("P3", "Q5"), ("P5", "Q4"), ("P4", "Q1")},
-            {"Q5": {"Downtown city center", "High-rise coastal city"}}),
+            {}),   # 10 Eki, Bahadır: kamera yüksek balkonda, Q5 dışlaması kalktı
     }
     SPOTS = {es.LANDFALL: ["Beachfront promenade", "Residential coastal district", "Downtown city center"],
              es.MARINA_TORNADO: ["High marina balcony"],
-             es.AVENUE: ["Downtown city center", "Residential coastal district", "High-rise coastal city"]}
+             # 10 Eki, Bahadır: cadde yüksek balkon noktaları
+             es.AVENUE: ["High balcony over a downtown avenue", "Upper-floor balcony over a residential avenue",
+                         "High balcony over a high-rise avenue"]}
     VEHICLES = ["pickup truck", "small car", "white van", "SUV"]
 
     def setUp(self):
@@ -1178,7 +1180,7 @@ class TestTornadoStructure(unittest.TestCase):
         env = DOMAIN_ATTRIBUTES["coastal_tornado_landfall"]["environments"]
         self.assertIn("Marina berthing pier", env)        # eski nokta silinmedi
         self.assertIn("High marina balcony", env)         # 4 Eki: marinanın yeni tek noktası
-        self.assertEqual(len(env), 14)                    # 12 + rıhtım + yüksek teras
+        self.assertEqual(len(env), 17)                    # 12 + rıhtım + yüksek teras + 3 cadde balkonu (10 Eki)
         self.assertEqual(sk.PHENOMENA["Hortum"], list(TORNADO) + ["Tornado approaching an open beach"])
         # plaj olayı aynı kaldı
         self.assertEqual(sk.EVENT_SKELETONS["Tornado approaching an open beach"]["domain"], "open_beach_coastal_events")
@@ -1290,8 +1292,8 @@ class TestTornadoStructure(unittest.TestCase):
                         self.assertNotIn("Setting:", prompt)
                         longest = max(longest, len(prompt))
                         n += 1
-        # karaya vurma (35 + 30 + 35) × 4; marina (36 - 2) × 4; cadde (28 + 33 + 28) × 4
-        self.assertEqual(n, 400 + 136 + 356)
+        # karaya vurma (35 + 30 + 35) × 4; marina (36 - 2) × 4; cadde 3 × 33 × 4 (10 Eki: Q5 dışlaması kalktı)
+        self.assertEqual(n, 400 + 136 + 396)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -1301,9 +1303,9 @@ class TestTornadoStructure(unittest.TestCase):
         self.assertIn("E1", d3(es.LANDFALL, "Downtown city center"))
         self.assertEqual(sk.view_spots(es.MARINA_TORNADO, None), ["High marina balcony"])
         self.assertEqual(d3(es.MARINA_TORNADO, "High marina balcony"), {"Z1", "Z2", "Z3", "Z4", "Z5", "Z6"})
-        self.assertNotIn("Q5", d3(es.AVENUE, "Downtown city center"))
-        self.assertNotIn("Q5", d3(es.AVENUE, "High-rise coastal city"))
-        self.assertIn("Q5", d3(es.AVENUE, "Residential coastal district"))
+        # 10 Eki, Bahadır: cadde kamerası yüksek balkonda, Q5 üç noktada da seçilebilir
+        for spot in self.SPOTS[es.AVENUE]:
+            self.assertEqual(d3(es.AVENUE, spot), {"Q1", "Q2", "Q3", "Q4", "Q5", "Q6"})
 
     def test_people_gate_and_line(self):
         import core.creative_pipeline as cp
@@ -1447,7 +1449,8 @@ class TestMarinaRedesign(unittest.TestCase):
 
     def test_total_words_override_only_marina(self):
         self.assertEqual(es.TOTAL_WORDS, (40, 70))
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT, {es.MARINA_TORNADO: (40, 75)})
+        # 10 Eki, Bahadır: orman yangını da 40-75 (TestFireStructure ayrıca kilitler)
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT, {es.MARINA_TORNADO: (40, 75), es.WILDFIRE: (40, 75)})
         w = "abcd"
 
         def total_rules(event, spot, b2, b3, vehicle, extra):
@@ -1468,7 +1471,7 @@ class TestMarinaRedesign(unittest.TestCase):
         self.assertTrue({71, 75, 76} <= seen, seen)
         # karaya vurma ve cadde: 70 üstü kalır
         for event, spot, b2, b3 in ((es.LANDFALL, "Downtown city center", "C2", "E3"),
-                                    (es.AVENUE, "Downtown city center", "P2", "Q3")):
+                                    (es.AVENUE, "High balcony over a downtown avenue", "P2", "Q3")):
             for extra in range(0, 12):
                 n, rules = total_rules(event, spot, b2, b3, "SUV", extra)
                 with self.subTest(event=event, words=n):
@@ -1790,7 +1793,9 @@ class TestFireStructure(unittest.TestCase):
         self.assertEqual(es._FLEE, ("run", "ran", "running", "flee", "fled", "fleeing", "sprint", "scatter", "dash",
                                     "bolt", "race", "scramble", "dart", "hurry"))
         self.assertEqual(es.TOTAL_WORDS, (40, 70))
-        for e in FIRE:
+        # 10 Eki, Bahadır: sadece orman yangını 40-75; cephe ve ateş hortumu genel 40-70
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[es.WILDFIRE], (40, 75))
+        for e in (es.FACADE_FIRE, es.FIRE_TORNADO):
             self.assertNotIn(e, es.TOTAL_WORDS_BY_EVENT)
 
     def test_canonical_terms_pass(self):
@@ -2001,6 +2006,85 @@ class TestFireStructure(unittest.TestCase):
                             for x3 in map(set, combinations(b["slice_3"], k)))
                 with self.subTest(event=e, spot=spot):
                     self.assertGreater(worst, 0)
+
+
+class TestOct10Changes(unittest.TestCase):
+    """10 Eki, Bahadır: hortum cadde yüksek balkon, orman 75 kelime + terim genişletmesi. KİLİT."""
+
+    def test_avenue_high_balcony_cameras(self):
+        cams = {"High balcony over a downtown avenue": "on a high balcony across the street, overlooking the avenue",
+                "Upper-floor balcony over a residential avenue":
+                    "on an upper-floor balcony across the street, overlooking the avenue",
+                "High balcony over a high-rise avenue": "on a high balcony across the street, overlooking the avenue"}
+        places = ["a palm-lined coastal avenue downtown",
+                  "a palm-lined coastal avenue through a residential neighborhood",
+                  "a palm-lined coastal avenue below high-rise towers"]
+        s = sk.EVENT_SKELETONS[es.AVENUE]
+        self.assertEqual(list(s["spots"]), list(cams))
+        self.assertEqual(list(s["spots"].values()), places)              # yer metinleri aynı kaldı
+        for spot, cam in cams.items():
+            self.assertEqual(sk.CAMERA_SPOTS[spot], cam)
+            suffix = sk.style_suffix(es.AVENUE, None, spot)
+            self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {cam}, eye level,"), suffix)
+        self.assertEqual(es.EVENT_BEATS[es.AVENUE]["excluded_spots"], {})
+
+    def test_other_tornado_and_beach_cameras_unchanged(self):
+        self.assertEqual({spot: sk.CAMERA_SPOTS[spot] for spot in sk.EVENT_SKELETONS[es.LANDFALL]["spots"]}, {
+            "Beachfront promenade": "further along the promenade",
+            "Residential coastal district": "on a front porch across the street",
+            "Downtown city center": "on a sidewalk across the street"})
+        self.assertEqual({spot: sk.CAMERA_SPOTS[spot] for spot in sk.EVENT_SKELETONS[es.MARINA_TORNADO]["spots"]},
+                         {"High marina balcony": "on a high balcony overlooking the marina and quay"})
+        beach = "Tornado approaching an open beach"
+        self.assertEqual({spot: sk.CAMERA_SPOTS[spot] for spot in sk.EVENT_SKELETONS[beach]["spots"]}, {
+            "Open sandy beach": "at the top of the beach", "Wide public beach": "at the top of the beach",
+            "Coastal resort beach": "on a hotel terrace above the beach"})
+        # eski cadde noktaları tablolarda kalır (başka olaylar kullanıyor)
+        self.assertEqual(sk.CAMERA_SPOTS["High-rise coastal city"], "on a sidewalk across the street")
+        self.assertIn("Downtown city center", sk.EVENT_SKELETONS[es.FLOOD]["spots"])
+        from core.creative_engine import DOMAIN_ATTRIBUTES
+        env = DOMAIN_ATTRIBUTES["coastal_tornado_landfall"]["environments"]
+        for old in ("Downtown city center", "Residential coastal district", "High-rise coastal city"):
+            self.assertIn(old, env)
+
+    def test_wildfire_75_words_only(self):
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[es.WILDFIRE], (40, 75))
+        self.assertEqual(es.TOTAL_WORDS, (40, 70))
+
+        def rules(event, spot, b2, b3, words):
+            spec = es.build_spec(event, None, spot, None, b2, b3, "SUV", 5)
+            s2 = es.clean_slice(cap(es.beat_text(event, "slice_2", b2, "SUV")))
+            s3 = es.clean_slice(cap(es.beat_text(event, "slice_3", b3)))
+            base = len(es.plain_story(spec, {"slice_1_rest": "", "slice_2": s2, "slice_3": s3}).split())
+            extra = words - base - 6
+            sl = {"slice_1_rest": es.clean_slice("Five people run from the flames" + " far" * extra),
+                  "slice_2": s2, "slice_3": s3}
+            self.assertEqual(len(es.plain_story(spec, sl).split()), words)
+            return {i["rule"] for i in es.slice_issues(spec, sl)}
+        for words, bad in ((70, False), (75, False), (76, True)):
+            with self.subTest(event="orman", words=words):
+                self.assertEqual("total_words" in rules(es.WILDFIRE, "Embankment above the village road", "K2",
+                                                         "L3", words), bad)
+        for words, bad in ((70, False), (71, True)):
+            with self.subTest(event="cephe", words=words):
+                self.assertEqual("total_words" in rules(es.FACADE_FIRE, "Rooftop terrace across from a downtown tower",
+                                                         "M5", "N2", words), bad)
+
+    def test_fire_term_additions(self):
+        for w in ("fiery", "aflame", "smolder", "smoulder"):
+            self.assertIn(w, es._FIRE_FLAME)
+        for w in ("maneuver", "manoeuvre", "evade", "sidestep", "careen", "zigzag"):
+            self.assertIn(w, es._FIRE_SWERVE)
+        k4 = es.EVENT_BEATS[es.WILDFIRE]["slice_2"]["K4"]["terms"]
+        # 8 Eki canlı ret: "fiery" ve "maneuvers" eşleşmiyordu
+        for t in ("The SUV maneuvers around a falling fiery pine and slams into the guardrail.",
+                  "The small car sidesteps a toppling pine, smouldering branches everywhere, and hits the barrier.",
+                  "The white van careens past a fiery tree and crashes into the railing."):
+            with self.subTest(text=t):
+                self.assertEqual(es.missing_term_groups(k4, t), [])
+        # sadece rüzgâr hâlâ geçmez
+        self.assertTrue(es.missing_term_groups(k4, "The SUV maneuvers around a pine bending in the wind and hits the "
+                                                   "guardrail."))
 
 if __name__ == "__main__":
     unittest.main()

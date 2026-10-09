@@ -44,7 +44,9 @@ SLICE_FIELDS = ("slice_1_rest", "slice_2", "slice_3")
 SLICE_WORDS = {"slice_1_rest": (6, 18), "slice_2": (10, 24), "slice_3": (10, 24)}
 TOTAL_WORDS = (40, 70)
 # Olaya özel toplam kelime aralığı (genel TOTAL_WORDS yerine). 4 Eki, Bahadır: hortum marina 40-75
-TOTAL_WORDS_BY_EVENT = {"Tornado crosses a marina quay": (40, 75)}
+TOTAL_WORDS_BY_EVENT = {"Tornado crosses a marina quay": (40, 75),
+                        # 10 Eki, Bahadır: orman yangını 40-75 (kilit cümle 22 kelime; diğer yangınlar 40-70)
+                        "Wall of flames sweeps into a hillside neighborhood": (40, 75)}
 # Kie seedance-2-fast prompt sınırı 20000 karakter (docs.kie.ai/market/bytedance/seedance-2-fast, 4 Eki doğrulandı).
 # Bizim sınırımız onun çok altında: en uzun stil eki 742 + 60 kelimelik hikâye (kelime başına 8 karakterle ~480)
 # ≈ 1224; 1200 bu hikâyeyi haksız reddederdi. Tam kapsam testinde ölçülen en uzun prompt 1062. 70 kelimelik
@@ -190,7 +192,8 @@ _DOWNHILL = ("downhill", "down the hill", "down the slope", "down the street", "
 # Yangın (TASLAK, 8 Eki, Bahadır): yangına özel YENİ listeler; mevcut sel/heyelan/hortum listelerine dokunulmaz ve
 # onlardan türetilmez. Alevin bir şeye değdiği görünmeli: alev/tutuşma grupları sadece "rüzgâr esiyor" anlatımını
 # geçirmez. Çok kelimeli terimlerde çekim sadece son kelimeye uygulanır, diğer çekimler ayrıca yazılır.
-_FIRE_FLAME = ("flame", "fire", "blaze", "burn", "burnt", "inferno", "ablaze", "alight", "afire", "firestorm")
+_FIRE_FLAME = ("flame", "fire", "blaze", "burn", "burnt", "inferno", "ablaze", "alight", "afire", "firestorm",
+               "fiery", "aflame", "smolder", "smoulder")   # 10 Eki, Bahadır: canlıda "fiery" reddedildi
 _FIRE_IGNITE = ("ignite", "catch fire", "catches fire", "caught fire", "catching fire", "set alight", "sets alight",
                 "setting alight", "set ablaze", "sets ablaze", "setting ablaze", "set on fire", "sets on fire",
                 "setting on fire", "set fire", "sets fire", "setting fire", "burst into flame", "bursts into flame",
@@ -211,7 +214,9 @@ _FIRE_TOUCH = ("lick", "touch", "reach", "scorch", "sear", "engulf", "wrap", "la
                "singe", "envelop", "cover", "brush", "swallow")
 _FIRE_FRONT = ("hood", "bonnet", "bumper", "grille", "grill", "front", "windshield", "windscreen")
 _FIRE_ROOF = ("roof", "rooftop", "roofs")
-_FIRE_SWERVE = ("swerve", "veer", "dodge", "weave", "steer", "jerk", "lurch", "swing", "swung")
+_FIRE_SWERVE = ("swerve", "veer", "dodge", "weave", "steer", "jerk", "lurch", "swing", "swung",
+                # 10 Eki, Bahadır: canlıda "maneuvers" reddedildi
+                "maneuver", "manoeuvre", "evade", "sidestep", "careen", "zigzag")
 _FIRE_RAIL = ("guardrail", "guard rail", "crash barrier", "barrier", "railing")
 _FIRE_UTURN = ("u-turn", "turn around", "turns around", "turned around", "turning around", "whip around",
                "whips around", "whipped around", "wheel around", "wheels around", "spin around", "spins around",
@@ -634,8 +639,10 @@ EVENT_BEATS = {
         # Aynı nesne iki kez: lamba (P3/Q5), otobüs durağı (P5/Q4), palmiye (P4/Q1)
         "excluded_pairs": {("P3", "Q5"), ("P5", "Q4"), ("P4", "Q1")},
         "excluded_views": {},
-        # Kamera kaldırımda: "sokak lambaları devrilir" kameranın durduğu kaldırıma düşer
-        "excluded_spots": {"Q5": {"Downtown city center", "High-rise coastal city"}},
+        # 10 Eki, Bahadır: kamera yüksek balkonda, Q5 dışlaması kalktı (eski: kamera kaldırımdaydı, "sokak
+        # lambaları devrilir" kameranın durduğu kaldırıma düşüyordu: {"Q5": {"Downtown city center",
+        # "High-rise coastal city"}})
+        "excluded_spots": {},
     },
     # ── Yangın (TASLAK, 8 Eki, Bahadır): metinler ve yasak eşleşmeler Bahadır'ın, terim grupları yangına özel ──
     WILDFIRE: {

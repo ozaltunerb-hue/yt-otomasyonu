@@ -607,5 +607,26 @@ class TestRegionViewMenu(unittest.TestCase):
 TIDAL_EVENT = "Tidal wave surges over a coastal city street"
 
 
+
+class TestPreflightWarningInResult(unittest.TestCase):
+    """10 Eki, Bahadır: danışman preflight uyarısı Telegram sonuç mesajında (TEST ve YAYIN)."""
+
+    def send(self, res):
+        sent = AsyncMock()
+        fake_bot = MagicMock(send_message=sent)
+        with patch.object(bot, "_run_pipeline_blocking", return_value=res), \
+                patch.object(bot, "deliver_video", AsyncMock()):
+            asyncio.run(bot.produce(fake_bot, 1, "fire_disasters"))
+        return sent.call_args_list[0].args[1]
+
+    def test_warning_line_in_publish_and_test(self):
+        w = "⚠️ Preflight riski 7/10: peril"
+        self.assertEqual(self.send({"success": True, "title": "T", "youtube_url": "https://y", "mode": bot.MODE_PUBLISH,
+                                    "preflight_warning": w}), f"✅ Yüklendi: T\nhttps://y\n{w}")
+        self.assertEqual(self.send({"success": True, "title": "T", "mode": bot.MODE_TEST, "preflight_warning": w}),
+                         f"🧪 TEST üretimi tamamlandı (YouTube'a yüklenmedi): T\n{w}")
+        self.assertEqual(self.send({"success": True, "title": "T", "mode": bot.MODE_TEST, "preflight_warning": ""}),
+                         "🧪 TEST üretimi tamamlandı (YouTube'a yüklenmedi): T")
+
 if __name__ == "__main__":
     unittest.main()

@@ -544,12 +544,14 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
     title = result.get("title", "")
     youtube_url = result.get("youtube_url", "")
     is_test = result.get("mode") == MODE_TEST
+    # 10 Eki, Bahadır: yapılandırılmış hatta danışman preflight riskli dediyse sonuç mesajında da (YAYIN dahil)
+    warning = f"\n{result['preflight_warning']}" if result.get("preflight_warning") else ""
     if youtube_url:
-        await bot.send_message(chat_id, f"✅ Yüklendi: {title}\n{youtube_url}")
+        await bot.send_message(chat_id, f"✅ Yüklendi: {title}\n{youtube_url}{warning}")
     elif is_test:
-        await bot.send_message(chat_id, f"🧪 TEST üretimi tamamlandı (YouTube'a yüklenmedi): {title}")
+        await bot.send_message(chat_id, f"🧪 TEST üretimi tamamlandı (YouTube'a yüklenmedi): {title}{warning}")
     else:
-        await bot.send_message(chat_id, f"⚠️ Video üretildi ama YouTube'a yüklenmedi: {title}")
+        await bot.send_message(chat_id, f"⚠️ Video üretildi ama YouTube'a yüklenmedi: {title}{warning}")
     await deliver_video(bot, chat_id, result.get("video_path", ""), title, result.get("mode", ""),
                         result.get("notion_page_id", ""), result.get("archive_dir", ""), bot_data)
 

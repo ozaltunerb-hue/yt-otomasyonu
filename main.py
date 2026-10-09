@@ -33,7 +33,7 @@ from config import settings
 from logger import get_logger
 from core.prompt_generator import (generate_prompts, NoValidScenarioError, make_story_validator, EventMismatchError,
                                    event_fidelity_issues, scenario_text)
-from core.trace_format import format_generation, format_final_prompt
+from core.trace_format import format_generation, format_final_prompt, format_rewrite_attempts, preflight_warning
 from infrastructure.kie_client import KieClient, ContentFilterError, KieTimeoutError, SubmissionCancelled
 from core.prompt_sanitizer import PreflightError
 from core.event_structure import StructureError
@@ -294,7 +294,13 @@ async def _execute_pipeline(
         async def structured_rewriter(reason: str) -> str:
             from core.creative_pipeline import rewrite_structured
             from core.prompt_generator import _call_gpt
-            return await rewrite_structured(structure, reason, _call_gpt)
+            try:
+                return await rewrite_structured(structure, reason, _call_gpt)
+            finally:
+                # 10 Eki, Bahadır: denemelerin tam metni (dilimler + kapı retleri) başarılı da olsa Notion'a
+                log_entry = (structure.get("rewrite_log") or [None])[-1]
+                if log_entry:
+                    await asyncio.to_thread(tracker.append_body, [format_rewrite_attempts(log_entry)])
 
         async def before_submit(info: dict) -> None:
             """Ücretli createTask'tan hemen önce: son prompt Notion'a, olay denetimi, ayrıntı, onay."""
@@ -368,6 +374,7 @@ async def _execute_pipeline(
                 safety_data = {
                     "preflight_risk_score": preflight_meta.get('risk_score', 0),
                     "preflight_rewritten": preflight_meta.get('rewritten', False),
+                    "preflight_advisory_risky": bool(preflight_meta.get('advisory') and preflight_meta.get('risky')),
                     "rejection_reasons": preflight_meta.get('risk_reasons', []),
                 }
                 await asyncio.to_thread(tracker.update_with_safety_info, safety_data)
@@ -479,6 +486,8 @@ async def _execute_pipeline(
             "task_id": meta.get("task_id", ""),
             "notion_page_id": tracker.page_id or "",
             "archive_dir": archive_dir,
+            # 10 Eki: yapılandırılmış hatta danışman preflight riskli dediyse Telegram sonuç mesajına (YAYIN dahil)
+            "preflight_warning": preflight_warning(getattr(kie, "_last_preflight_meta", {}) or {}),
         }
 
     except SubmissionCancelled as sc:

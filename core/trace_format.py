@@ -180,6 +180,25 @@ def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
     ]
 
 
+def preflight_warning(meta: dict | None) -> str:
+    """Yapılandırılmış hatta danışman preflight riskli dediyse tek satır (10 Eki, Bahadır), yoksa boş."""
+    meta = meta or {}
+    if not (meta.get("advisory") and meta.get("risky")):
+        return ""
+    reasons = "; ".join(str(r) for r in meta.get("risk_reasons") or []) or "sebep belirtilmedi"
+    return f"⚠️ Preflight riski {meta.get('risk_score', '?')}/10: {reasons}"
+
+
+def format_rewrite_attempts(entry: dict) -> tuple[str, str]:
+    """(başlık, metin): yapılandırılmış yeniden yazımın (Kie reddi sonrası) tüm denemeleri tam metin (10 Eki)."""
+    def status(a: dict) -> str:
+        return "✅ geçti" if not a.get("missing") else "❌ eksik: " + "; ".join(a["missing"])
+    lines = [f"Deneme {a.get('attempt')} · {status(a)} · {a.get('words')} kelime\n{a.get('story') or '(boş)'}"
+             for a in entry.get("attempts") or []]
+    text = f"Sebep: {entry.get('reason', '-')}\nSonuç: {entry.get('result', '-')}\n\n" + ("\n\n".join(lines) or "-")
+    return "🔁 Yapılandırılmış yeniden yazım denemeleri", text
+
+
 def format_final_prompt(info: dict) -> tuple[str, str]:
     """(başlık, metin): Kie'ye giden TAM prompt, kelime ve kısıt sayısı, preflight farkı."""
     prompt = info.get("prompt", "")
@@ -187,6 +206,9 @@ def format_final_prompt(info: dict) -> tuple[str, str]:
     text = (f"{len(prompt.split())} kelime (hikaye {len((info.get('story') or '').split())} + stil eki "
             f"{len((info.get('style_suffix') or '').split())}) · stil ekinde {total} kısıt, {negative} olumsuz\n"
             f"Kie denemesi: {info.get('attempt', 1)}\n\n{prompt}")
+    warning = preflight_warning(info.get("preflight"))
+    if warning:
+        text += f"\n\n{warning}"
     diff = word_diff(info.get("story_before_preflight", ""), info.get("story", ""))
     if diff:
         risk = (info.get("preflight") or {}).get("risk_score", "?")

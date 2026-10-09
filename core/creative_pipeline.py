@@ -601,17 +601,25 @@ async def rewrite_structured(structure: dict, reason: str, call_gpt) -> str:
     kurulur. Kapıdan ya da son denetimden geçmezse StructureError (akış durur). Başarılıysa structure["slices"]
     güncellenir, yeni etiketli hikâye döner."""
     spec = structure["spec"]
+    # 10 Eki, Bahadır: her denemenin tam metni ve sonucu kaydedilir (main.py Notion gövdesine yazar)
+    entry = {"reason": reason, "attempts": [], "result": "?"}
+    structure.setdefault("rewrite_log", []).append(entry)
     try:
-        slices, _ = await write_slices(spec, structure["place"], structure["weather"], structure["recent"], call_gpt,
-                                       max_attempts=MAX_ATTEMPTS,
-                                       initial_feedback=[REWRITE_FEEDBACK.format(reason=reason)])
+        slices, attempts = await write_slices(spec, structure["place"], structure["weather"], structure["recent"],
+                                              call_gpt, max_attempts=MAX_ATTEMPTS,
+                                              initial_feedback=[REWRITE_FEEDBACK.format(reason=reason)])
     except CreativeStoryError as e:
+        entry["attempts"] = e.attempts
         missing = "; ".join((e.attempts[-1].get("missing") or ["?"])) if e.attempts else "?"
+        entry["result"] = f"kural kapısından geçmedi: {missing}"
         raise es.StructureError(f"Ret sonrası yeniden yazım kural kapısından geçmedi: {missing}") from e
+    entry["attempts"] = attempts
     final = es.final_prompt_issues(spec, slices, es.assemble_prompt(spec, slices), es.assemble_story(spec, slices))
     if final:
+        entry["result"] = "son denetimden geçmedi: " + "; ".join(i["missing"] for i in final)
         raise es.StructureError("Ret sonrası yeniden yazım son denetimden geçmedi: "
                                 + "; ".join(i["missing"] for i in final))
+    entry["result"] = "geçti"
     structure["slices"] = slices
     structure["rewrites"] = structure.get("rewrites", 0) + 1
     return es.assemble_story(spec, slices)
