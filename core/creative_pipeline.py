@@ -150,6 +150,15 @@ EVENT_OUTCOMES = {
     "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood":
         "the helicopter keeps dropping water on the wall of flames, turning sections into white steam as the fire "
         "fights back toward the houses",
+    # Süper hücre fırtınası (TASLAK, 10 Eki, Bahadır): yapılandırılmış hatta; trace/rapor için
+    "Giant hail pounds a street under a dark supercell":
+        "giant hail keeps pounding the street, shattering windshields and shop windows as people run for cover",
+    "Downburst slams into a tree-lined street":
+        "the downburst keeps tearing down the street, toppling trees and poles onto the road and parked cars",
+    "Lightning bolt slams into a transformer on a utility pole":
+        "sparks keep pouring from the broken lines as wires whip across the road and the street goes dark",
+    "Violent gust slams into a highway":
+        "the gusts keep battering the highway, overturning heavy vehicles and sweeping debris across the lanes",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -306,6 +315,11 @@ EVENT_REQUIRED = {
     "Flames race up a tower facade": [],
     "Fire tornado tears across a burning roadside": [],
     "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": [],   # 10 Eki
+    # ── Süper hücre fırtınası (TASLAK, 10 Eki): yapılandırılmış hatta, grupsuz ──
+    "Giant hail pounds a street under a dark supercell": [],
+    "Downburst slams into a tree-lined street": [],
+    "Lightning bolt slams into a transformer on a utility pole": [],
+    "Violent gust slams into a highway": [],
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),

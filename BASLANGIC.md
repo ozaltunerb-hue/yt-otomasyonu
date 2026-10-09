@@ -25,6 +25,42 @@
 
 ---
 
+## 📋 DEVİR: ⛈️ Süper hücre fırtınası kategorisi (10 Eki)
+
+**Durum:** Yeni kategori `supercell_storms` "⛈️ Süper hücre fırtınası", 4 TASLAK olay yapılandırılmış hatta. Havuzlar
+ve kameralar Bahadır onaylı, metin birebir. Henüz video testi yapılmadı. Bölge görünümü yok, araç `EVENT_VEHICLES`
+(pickup truck, small car, white van, SUV), kaçan kişi 3-6 ("the storm"), toplam kelime 40-75 (olaya özel).
+Hava `STORM_WEATHER` (yangından ayrı): a dark greenish-grey supercell sky with dramatic storm light / towering
+supercell clouds and violent gusting wind / dramatic green-tinted light under a dark supercell.
+
+| Menü | Olay sabiti (İngilizce ad) | Havuz |
+|---|---|---|
+| ⛈️ Dev dolu araç ve camları parçalıyor | HAIL (Giant hail pounds a street under a dark supercell) | A1-A6 / B1-B6 |
+| ⛈️ Düz hat rüzgârı ağaçları deviriyor | DOWNBURST (Downburst slams into a tree-lined street) | I1-I7 / J1-J6 |
+| ⛈️ Yıldırım trafoya çarpıyor | LIGHTNING (Lightning bolt slams into a transformer on a utility pole) | O1-O6 / X1-X6 |
+| ⛈️ Fırtına otoyolda tırı deviriyor | STORM_HIGHWAY (Violent gust slams into a highway) | H1-H7 / S1-S6 |
+
+- Menü etiketleri: Telegram butonu en fazla 40 karakter (test kilidi); "Dev dolu araçları ve camları parçalıyor" ve
+  "Düz hat rüzgârı (downburst) ağaç ve direkleri devirip..." kısaltıldı.
+- Otoyol olayının İngilizce adında ve kategori açıklamasında "truck" yok: kargo temizliği testi (test_cargo_free)
+  eski hattın GPT mesajlarında truck/trailer/lorry'yi yasaklıyor. Kilit cümle ve havuzlar onaylı metinle birebir
+  ("truck", "trailer" geçiyor; o test onları taramıyor).
+- Kameralar (hepsi yüksek): olay 1-3 "Balcony of a high apartment across the street" (on a high balcony across the
+  street, overlooking the street), "Rooftop terrace across the street" (on a rooftop terrace across the street),
+  "Balcony of a hillside house over the street" (on a balcony of a hillside house overlooking the street); olay 4
+  "Overpass above the highway" (on an overpass above the highway), "Balcony of a house above the highway" (on a high
+  balcony of a house overlooking the highway). "Balcony of a hillside house" adı yangında başka kamera cümlesiyle
+  kayıtlı olduğu için fırtına noktasının adı "... over the street" (kamera cümlesi onaylı metin).
+- Kamera dışlamaları: J5 (bir evin çatı kiremitleri uçar) tepe evi balkonunda; H5 (otoyol tabelası kopar) üstgeçitte
+  (tabelalar çoğu zaman üstgeçide asılı). Diğer maddeler kameranın durduğu yapıya dokunmuyor.
+- Kapılar: yağmur/dolu/fırtına serbest (NO_RAIN_EVENTS dışı), araç havalanabilir (NO_LIFT_SLICE yok; I7, H7). 4-9s
+  araç kapısı sadece `{vehicle}` geçen maddelerde. Terim listeleri yeni `_STORM_*`; mevcut listeler değişmedi.
+  Preflight danışman.
+- Not: bazı onaylı maddeler 10 kelimenin altında (ör. X6 "burning branches fall onto a parked car"); GPT dilimi
+  10-24 kelimeye tamamlıyor (dilim kelime kapısı aynı).
+
+---
+
 ## 📋 DEVİR: Yangın söndürme helikopteri eklendi (10 Eki)
 
 **Durum:** 🔥 Yangın kategorisinin 4. olayı, TASLAK, yapılandırılmış hatta: `Firefighting helicopter drops water on the

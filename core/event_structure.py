@@ -37,6 +37,12 @@ FIRE_TORNADO = "Fire tornado tears across a burning roadside"
 # 10 Eki, Bahadır (havuzlar onaylı): yangın söndürme helikopteri
 HELICOPTER = "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood"
 FIRE_EVENTS = (WILDFIRE, FACADE_FIRE, FIRE_TORNADO, HELICOPTER)
+# ⛈️ Süper hücre fırtınası (TASLAK, 10 Eki, Bahadır). Yağmur/dolu serbest (NO_RAIN_EVENTS dışı), araç havalanır.
+HAIL = "Giant hail pounds a street under a dark supercell"
+DOWNBURST = "Downburst slams into a tree-lined street"
+LIGHTNING = "Lightning bolt slams into a transformer on a utility pole"
+STORM_HIGHWAY = "Violent gust slams into a highway"
+STORM_EVENTS = (HAIL, DOWNBURST, LIGHTNING, STORM_HIGHWAY)
 
 SLICE_LABELS = ("0-4s", "4-9s", "9-15s")
 SLICE_FIELDS = ("slice_1_rest", "slice_2", "slice_3")
@@ -50,7 +56,12 @@ TOTAL_WORDS_BY_EVENT = {"Tornado crosses a marina quay": (40, 75),
                         # 10 Eki, Bahadır: orman yangını 40-75 (kilit cümle 22 kelime; diğer yangınlar 40-70)
                         "Wall of flames sweeps into a hillside neighborhood": (40, 75),
                         # 10 Eki, Bahadır: helikopter 40-75 (kilit cümle 24 kelime)
-                        "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (40, 75)}
+                        "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (40, 75),
+                        # 10 Eki, Bahadır: süper hücre fırtınasının 4 olayı 40-75 (kilit cümleler uzun)
+                        "Giant hail pounds a street under a dark supercell": (40, 75),
+                        "Downburst slams into a tree-lined street": (40, 75),
+                        "Lightning bolt slams into a transformer on a utility pole": (40, 75),
+                        "Violent gust slams into a highway": (40, 75)}
 # Kie seedance-2-fast prompt sınırı 20000 karakter (docs.kie.ai/market/bytedance/seedance-2-fast, 4 Eki doğrulandı).
 # Bizim sınırımız onun çok altında: en uzun stil eki 742 + 60 kelimelik hikâye (kelime başına 8 karakterle ~480)
 # ≈ 1224; 1200 bu hikâyeyi haksız reddederdi. Tam kapsam testinde ölçülen en uzun prompt 1062. 70 kelimelik
@@ -93,6 +104,13 @@ EVENT_KEY_VISUAL = {
     # 10 Eki, Bahadır onayı: helikopter kilit cümlesi birebir
     HELICOPTER: "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the "
                 "wall of flames racing toward the houses.",
+    # 10 Eki, Bahadır onayı: süper hücre fırtınası kilit cümleleri birebir
+    HAIL: "Giant hail pounds a street under a dark supercell, shattering windshields and tearing through shop awnings.",
+    DOWNBURST: "A violent downburst slams into a tree-lined street, bending trees flat and tearing signs and branches "
+               "through the air.",
+    LIGHTNING: "A lightning bolt slams into a transformer on a utility pole, exploding in a shower of sparks above the "
+               "street.",
+    STORM_HIGHWAY: "A violent gust slams into a highway, flipping a truck onto its side as cars brake hard around it.",
 }
 
 # ── Bölge araçları (4-9s'deki {vehicle}). Görünüm tariflerindeki araçlardan. terms: dilimde aranan ad. ──────
@@ -129,6 +147,11 @@ EVENT_VEHICLES = {
     # 10 Eki: helikopter (araç sadece F3/F6'da; havalanmaz, NO_LIFT_SLICE)
     HELICOPTER: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)),
                  ("SUV", ("suv",))],
+    # 10 Eki: süper hücre fırtınası (araç havalanabilir)
+    HAIL: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)), ("SUV", ("suv",))],
+    DOWNBURST: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)), ("SUV", ("suv",))],
+    LIGHTNING: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)), ("SUV", ("suv",))],
+    STORM_HIGHWAY: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)), ("SUV", ("suv",))],
 }
 
 # ── Olay havuzları. terms: her gruptan en az bir terim dilimde geçmeli (kök + eşanlamlı; çekimler otomatik:
@@ -307,6 +330,88 @@ _FIRE_LEAP = ("leap", "jump", "spread", "race", "catch", "ignite", "engulf", "cl
 _FIRE_PULLUP = ("pull up", "pulls up", "pulled up", "pulling up", "climb", "rise", "rose", "peel away", "peels away",
                 "bank away", "banks away", "fly off", "flies off", "flew off", "away", "veer off", "veers off", "soar")
 _FIRE_SECOND = ("second", "another", "other", "new", "two", "pair")
+# ⛈️ Süper hücre fırtınası (10 Eki, Bahadır): yeni _STORM_* listeleri; mevcut listeler değişmez ve kullanılmaz.
+_STORM_HAIL = ("hail", "hailstone", "ice", "ice ball", "ice chunk")
+_STORM_GLASS = ("windshield", "windscreen", "window", "glass", "pane")
+_STORM_SMASH = ("smash", "shatter", "crack", "break", "broke", "burst", "explode", "punch through",
+                "punches through", "cave", "crumple", "dent", "pierce")
+_STORM_BRAKE = ("brake", "stop", "skid", "halt", "screech", "jolt")
+_STORM_SWERVE = ("swerve", "veer", "dodge", "jerk", "lurch", "skid", "slide", "slid", "fishtail", "zigzag")
+_STORM_ROW = ("row", "line", "one after another", "one after the other", "one by one", "in turn", "in succession",
+              "all the")
+_STORM_CAR = ("car", "cars", "vehicle", "sedan", "hatchback", "suv", "van", "truck", "pickup")
+_STORM_AWNING = ("awning", "canopy", "sunshade", "shade")
+_STORM_COLLAPSE = ("collapse", "cave", "crash", "fall", "fell", "drop", "tear", "tore", "torn", "rip", "give way",
+                   "gives way", "gave way", "buckle", "sag", "tumble")
+_STORM_UMBRELLA = ("umbrella", "parasol")
+_STORM_FURNITURE = ("table", "chair", "furniture", "stool")
+_STORM_TREE = ("tree", "branch", "limb", "bough", "trunk", "leaves", "foliage", "pine", "palm", "oak")
+_STORM_STRIP = ("strip", "shred", "tear", "tore", "torn", "rip", "snap", "break", "broke", "batter", "pound", "lash",
+                "split")
+_STORM_SHOP = ("shop", "store", "storefront", "shopfront", "shop front", "window", "café", "cafe", "display")
+_STORM_SHELTER = ("bus shelter", "bus stop", "shelter")
+_STORM_BOUNCE = ("bounce", "rebound", "ricochet", "skip", "scatter", "spray", "pile", "carpet", "cover")
+_STORM_WHITE = ("white", "carpet", "cover", "blanket", "pile", "bury", "buried", "coat")
+_STORM_GREENHOUSE = ("greenhouse", "glasshouse", "conservatory", "hothouse", "skylight", "glass roof")
+_STORM_CAVE = ("cave", "crumple", "dent", "crush", "flatten", "pound", "batter", "buckle", "smash", "punch")
+_STORM_FALL = ("crash", "fall", "fell", "drop", "topple", "collapse", "come down", "comes down", "came down", "slam",
+               "smash", "plunge", "land", "tumble")
+_STORM_CRUSH = ("crush", "crumple", "cave", "flatten", "smash", "dent", "pin", "roof")
+_STORM_POLE = ("utility pole", "power pole", "telephone pole", "electricity pole", "pole", "pylon")
+_STORM_WIRE = ("wire", "cable", "power line", "line")
+_STORM_SNAP = ("snap", "break", "broke", "split", "crack", "fall", "fell", "topple", "collapse", "crash", "give way",
+               "gives way", "gave way")
+_STORM_WHIP = ("whip", "lash", "thrash", "flail", "writhe", "snake", "dance", "jerk", "swing", "swung")
+_STORM_SIGN = ("sign", "signboard", "billboard", "hoarding", "advertising board", "signpost")
+_STORM_RIP = ("rip", "tear", "tore", "torn", "wrench", "peel", "strip", "snap", "break loose", "breaks loose",
+              "broke loose", "pull", "blow off", "blows off", "blew off", "pry", "lift")
+_STORM_FLY = ("fly", "flies", "flew", "flying", "hurl", "fling", "flung", "toss", "throw", "threw", "thrown", "sail",
+              "tumble", "cartwheel", "spin", "spun", "whirl", "blow", "blew", "blown", "carry", "carried", "sweep",
+              "swept")
+# Araç havalanır (bu kategoride NO_LIFT_SLICE yok)
+_STORM_LIFT = ("lift", "hoist", "raise", "heave", "off the road", "off the ground", "off its wheels", "off the lane",
+               "airborne", "pick up", "picks up", "picked up", "swept up", "sweep up", "sweeps up")
+_STORM_SIDE = ("on its side", "onto its side", "on to its side", "on its roof", "onto its roof", "flip", "overturn",
+               "roll over", "rolls over", "rolled over", "tip", "topple", "capsize", "keel over")
+_STORM_SLAM_DOWN = ("slam", "crash", "smash", "drop", "land", "plunge", "come down", "comes down", "came down", "hurl",
+                    "throw", "threw", "thrown", "fling", "flung")
+_STORM_SECOND = ("second", "another", "more", "next", "fresh", "new", "further", "again")
+_STORM_BEND = ("bend", "bent", "bow", "flatten", "lean", "sway", "whip", "lash")
+_STORM_LAMP = ("streetlamp", "street lamp", "streetlight", "street light", "lamppost", "lamp post", "light pole",
+               "lamp")
+_STORM_DUST = ("dust", "leaves", "leaf", "debris", "dirt", "sand", "grit")
+_STORM_SWEEP = ("sweep", "swept", "roll", "rush", "race", "surge", "barrel", "blow", "blew", "blown", "tear", "tore",
+                "drive", "drove")
+_STORM_BINS = ("bin", "trash can", "dumpster", "branch", "debris", "garbage can", "rubbish")
+_STORM_FENCE = ("fence", "fencing", "picket", "panel")
+_STORM_TILE = ("tile", "shingle", "slate", "roofing")
+_STORM_PEEL = ("peel", "rip", "tear", "tore", "torn", "strip", "fly", "flies", "flew", "blow off", "blows off",
+               "blew off", "lift", "scatter")
+_STORM_SHOVE = ("shove", "push", "slide", "slid", "drag", "sweep", "swept", "skid", "roll", "blow", "blew", "blown",
+                "pin", "slam")
+_STORM_SIDEWAYS = ("sideways", "broadside", "side-on", "side on", "across the lane", "across the lanes",
+                   "across lanes")
+_STORM_SPARK = ("spark", "arc", "flash", "fireball", "ember")
+_STORM_TRANSFORMER = ("transformer", "power box", "electrical box", "substation")
+_STORM_FIRE = ("fire", "flame", "blaze", "burn", "ablaze", "alight", "fireball", "spark", "fiery")
+_STORM_BOLT = ("bolt", "lightning", "strike", "struck")
+_STORM_SPLIT = ("split", "shatter", "crack", "explode", "blast", "rip", "tear", "tore", "torn", "cleave",
+                "burst")
+_STORM_EXPLODE = ("explode", "burst", "blow", "blew", "blown", "pop", "shatter", "flash", "spark", "blow out",
+                  "blows out", "blew out")
+_STORM_DARK = ("dark", "black", "blackout", "power cut", "goes out", "go out", "went out", "lights out", "unlit")
+_STORM_CLIMB = ("climb", "spread", "lick", "creep", "engulf", "catch", "ignite", "flare", "crawl")
+_STORM_TRUCK = ("truck", "lorry", "semi", "tractor-trailer", "big rig", "rig", "trailer")
+_STORM_GRIND = ("grind", "scrape", "slide", "slid", "skid", "drag", "screech", "skate", "plow", "plough", "careen")
+_STORM_LANE = ("lane", "highway", "road", "carriageway", "motorway", "asphalt")
+_STORM_CARGO = ("cargo", "box", "crate", "load", "goods", "parcel", "package", "debris")
+_STORM_SPIN = ("spin", "spun", "twirl", "whirl", "rotate", "pirouette", "turn", "swing", "swung")
+_STORM_CLIP = ("clip", "hit", "strike", "struck", "graze", "bump", "nick", "slam", "smash", "crash", "ram")
+_STORM_GUARDRAIL = ("guardrail", "guard rail", "crash barrier", "barrier", "railing", "median")
+_STORM_VAN = ("van", "minivan", "camper")
+_STORM_SCATTER = ("scatter", "strew", "spray", "fling", "flung", "hurl", "throw", "threw", "thrown", "litter", "shower",
+                  "send", "sent", "spill", "dump", "sweep", "swept", "blow", "blew", "blown")
+_STORM_RAINDUST = ("dust", "rain", "spray", "debris", "grit", "sand", "hail")
 _FIRE_BURST = ("burst", "shatter", "crack", "explode", "split", "pop", "fly", "flies", "flew", "break",
                "broke")
 
@@ -835,6 +940,147 @@ EVENT_BEATS = {
         "excluded_spots": {"F2": {"Balcony of a hillside house"}, "F5": {"Balcony of a hillside house"},
                            "G4": {"Balcony of a hillside house"}},
     },
+    # ── ⛈️ Süper hücre fırtınası (10 Eki, Bahadır: havuzlar, yasak eşleşmeler ve kameralar ONAYLI, metin birebir) ──
+    HAIL: {
+        "slice_2": {
+            "A1": {"text": "giant hail smashes the windshield of the {vehicle} as it brakes hard",
+                   "terms": [_STORM_HAIL, _STORM_GLASS, _STORM_BRAKE]},
+            "A2": {"text": "hailstones hammer a row of parked cars, shattering their windows one after another",
+                   "terms": [_STORM_HAIL, _STORM_ROW, _STORM_CAR, _STORM_GLASS]},
+            "A3": {"text": "the {vehicle} swerves as hail shatters its rear window and dents the hood",
+                   "terms": [_STORM_SWERVE, _STORM_HAIL, _STORM_GLASS]},
+            "A4": {"text": "a shop awning collapses under a pile of giant hail and crashes onto the sidewalk",
+                   "terms": [_STORM_AWNING, _STORM_COLLAPSE, _STORM_HAIL]},
+            "A5": {"text": "hail tears through a patio umbrella and flips café tables across the terrace",
+                   "terms": [_STORM_HAIL, _STORM_UMBRELLA, _STORM_FURNITURE]},
+            "A6": {"text": "hail strips the branches from a tree and bounces across the street",
+                   "terms": [_STORM_HAIL, _STORM_TREE, _STORM_STRIP]},
+        },
+        "slice_3": {
+            "B1": {"text": "a wall of hail sweeps down the street, shattering shop windows along the row",
+                   "terms": [_STORM_HAIL, _STORM_SHOP, _STORM_SMASH]},
+            "B2": {"text": "hail shatters the glass of a bus shelter and the pieces scatter across the sidewalk",
+                   "terms": [_STORM_HAIL, _STORM_SHELTER, _STORM_SMASH]},
+            "B3": {"text": "the street turns white as hailstones bounce high off the road and the cars",
+                   "terms": [_STORM_HAIL, _STORM_BOUNCE, _STORM_WHITE]},
+            "B4": {"text": "hail smashes through a greenhouse roof and glass rains down",
+                   "terms": [_STORM_HAIL, _STORM_GREENHOUSE, _STORM_SMASH]},
+            "B5": {"text": "hail caves in the roofs of a line of parked cars",
+                   "terms": [_STORM_HAIL, _STORM_CAR, _STORM_CAVE]},
+            "B6": {"text": "hailstones crack a tree trunk and a heavy branch crashes onto the road",
+                   "terms": [_STORM_HAIL, _STORM_TREE, _STORM_FALL]},
+        },
+        "excluded_pairs": {("A2", "B5"), ("A4", "B1"), ("A1", "B5")},
+        "excluded_views": {},
+        "excluded_spots": {},
+    },
+    DOWNBURST: {
+        "slice_2": {
+            "I1": {"text": "a huge tree crashes across the road in front of the {vehicle} as it brakes hard",
+                   "terms": [_STORM_TREE, _STORM_FALL, _STORM_BRAKE]},
+            "I2": {"text": "a tree topples onto a row of parked cars, crushing their roofs",
+                   "terms": [_STORM_TREE, _STORM_CAR, _STORM_CRUSH]},
+            "I3": {"text": "the {vehicle} swerves as a heavy branch slams into the road beside it",
+                   "terms": [_STORM_SWERVE, _STORM_TREE, _STORM_FALL]},
+            "I4": {"text": "a utility pole snaps and falls across the street, wires whipping",
+                   "terms": [_STORM_POLE, _STORM_SNAP, _STORM_WIRE]},
+            "I5": {"text": "a shop sign rips from a wall and flies down the street",
+                   "terms": [_STORM_SIGN, _STORM_RIP + _STORM_FLY]},
+            "I6": {"text": "wind rips the awning off a shop and hurls it down the street",
+                   "terms": [_STORM_AWNING, _STORM_RIP + _STORM_FLY]},
+            "I7": {"text": "the wind lifts the {vehicle} off the road and slams it down on its side",
+                   "terms": [_STORM_LIFT, _STORM_SLAM_DOWN, _STORM_SIDE]},
+        },
+        "slice_3": {
+            "J1": {"text": "a second line of trees bends flat and snaps one after another along the road",
+                   "terms": [_STORM_SECOND + _STORM_ROW, _STORM_TREE, _STORM_BEND + _STORM_SNAP]},
+            "J2": {"text": "a streetlamp bends and collapses onto the sidewalk",
+                   "terms": [_STORM_LAMP, _STORM_BEND + _STORM_SNAP]},
+            "J3": {"text": "a wall of dust and leaves sweeps down the avenue, hurling bins and branches",
+                   "terms": [_STORM_DUST, _STORM_SWEEP, _STORM_BINS]},
+            "J4": {"text": "a fence collapses and its panels tumble across the yards",
+                   "terms": [_STORM_FENCE, _STORM_COLLAPSE + _STORM_FLY]},
+            "J5": {"text": "roof tiles peel off a house and fly across the street",
+                   "terms": [_STORM_TILE, _STORM_PEEL]},
+            "J6": {"text": "the wind shoves a parked car sideways into a fence",
+                   "terms": [_STORM_CAR, _STORM_SHOVE, _STORM_FENCE]},
+        },
+        "excluded_pairs": {("I2", "J1"), ("I4", "J2"), ("I6", "J3")},
+        "excluded_views": {},
+        # Kamera yamaçtaki bir evin balkonunda: "bir evin çatı kiremitleri uçar" kameranın durduğu ev gibi çizilir
+        "excluded_spots": {"J5": {"Balcony of a hillside house over the street"}},
+    },
+    LIGHTNING: {
+        "slice_2": {
+            "O1": {"text": "broken wires drop and whip across the road, spitting sparks in front of the {vehicle}",
+                   "terms": [_STORM_WIRE, _STORM_WHIP + _STORM_FALL, _STORM_SPARK]},
+            "O2": {"text": "the transformer falls onto the road in a burst of fire and sparks",
+                   "terms": [_STORM_TRANSFORMER, _STORM_FALL, _STORM_FIRE]},
+            "O3": {"text": "the {vehicle} brakes hard as sparks rain over its hood",
+                   "terms": [_STORM_BRAKE, _STORM_SPARK]},
+            "O4": {"text": "a second bolt splits a tree beside the road, throwing burning branches onto the street",
+                   "terms": [_STORM_BOLT, _STORM_TREE, _STORM_SPLIT]},
+            "O5": {"text": "the pole snaps and crashes across the road, wires whipping and sparking",
+                   "terms": [_STORM_POLE, _STORM_SNAP, _STORM_WIRE]},
+            "O6": {"text": "the streetlights explode one after another along the road",
+                   "terms": [_STORM_LAMP, _STORM_EXPLODE, _STORM_ROW]},
+        },
+        "slice_3": {
+            "X1": {"text": "the whole block goes dark as sparks keep pouring from the broken lines",
+                   "terms": [_STORM_DARK, _STORM_SPARK]},
+            "X2": {"text": "lightning strikes again, shattering a tree trunk and scattering burning branches",
+                   "terms": [_STORM_BOLT, _STORM_TREE, _STORM_SPLIT]},
+            "X3": {"text": "loose wires whip along the road, throwing sparks",
+                   "terms": [_STORM_WIRE, _STORM_WHIP, _STORM_SPARK]},
+            "X4": {"text": "flames climb the base of a broken pole in the rain",
+                   "terms": [_STORM_FIRE, _STORM_POLE, _STORM_CLIMB]},
+            "X5": {"text": "another transformer blows farther down the street in a flash of fire",
+                   "terms": [_STORM_SECOND, _STORM_TRANSFORMER, _STORM_EXPLODE]},
+            "X6": {"text": "burning branches fall onto a parked car",
+                   "terms": [_STORM_FIRE, _STORM_TREE, _STORM_CAR]},
+        },
+        "excluded_pairs": {("O2", "X5"), ("O4", "X2"), ("O5", "X1")},
+        "excluded_views": {},
+        "excluded_spots": {},
+    },
+    STORM_HIGHWAY: {
+        "slice_2": {
+            "H1": {"text": "the overturned truck grinds across the lanes in a shower of sparks as the {vehicle} swerves "
+                           "to avoid it",
+                   "terms": [_STORM_TRUCK, _STORM_GRIND, _STORM_SWERVE]},
+            "H2": {"text": "the {vehicle} brakes hard and skids sideways as the wind pushes it across the lane",
+                   "terms": [_STORM_BRAKE, _STORM_SIDEWAYS, _STORM_SHOVE]},
+            "H3": {"text": "a trailer breaks loose and slides across the highway, scattering cargo",
+                   "terms": [_STORM_TRUCK, _STORM_GRIND, _STORM_CARGO]},
+            "H4": {"text": "a car clips the fallen truck and spins across the lane",
+                   "terms": [_STORM_CLIP, _STORM_TRUCK, _STORM_SPIN]},
+            "H5": {"text": "a highway sign tears loose and crashes onto the lanes",
+                   "terms": [_STORM_SIGN, _STORM_RIP + _STORM_FALL]},
+            "H6": {"text": "a second truck tips over behind the {vehicle}",
+                   "terms": [_STORM_SECOND, _STORM_TRUCK, _STORM_SIDE]},
+            "H7": {"text": "the wind lifts the {vehicle} off the lane and flips it over the guardrail",
+                   "terms": [_STORM_LIFT, _STORM_SIDE, _STORM_GUARDRAIL]},
+        },
+        "slice_3": {
+            "S1": {"text": "a van tips over and slides along the guardrail in a shower of sparks",
+                   "terms": [_STORM_VAN, _STORM_SIDE, _STORM_GUARDRAIL]},
+            "S2": {"text": "the wind sweeps boxes and debris across all lanes",
+                   "terms": [_STORM_CARGO, _STORM_SCATTER, _STORM_LANE]},
+            "S3": {"text": "cars skid to a stop in a long line as dust and rain sweep over the road",
+                   "terms": [_STORM_CAR, _STORM_BRAKE, _STORM_ROW, _STORM_RAINDUST]},
+            "S4": {"text": "a row of trees along the highway bends flat and scatters branches across the lanes",
+                   "terms": [_STORM_TREE, _STORM_BEND, _STORM_SCATTER]},
+            "S5": {"text": "a car spins around and slams into the guardrail",
+                   "terms": [_STORM_CAR, _STORM_SPIN, _STORM_GUARDRAIL]},
+            "S6": {"text": "a second truck tips over and slides across the lanes",
+                   "terms": [_STORM_SECOND, _STORM_TRUCK, _STORM_SIDE]},
+        },
+        "excluded_pairs": {("H6", "S6"), ("H4", "S5"), ("H3", "S2")},
+        "excluded_views": {},
+        # Kamera üstgeçitte: otoyol tabelaları çoğu zaman üstgeçide asılı, "tabela kopup şeritlere düşer" kameranın
+        # durduğu üstgeçitten kopuyor gibi çizilir
+        "excluded_spots": {"H5": {"Overpass above the highway"}},
+    },
 }
 
 # ── Yangın kapıları (TASLAK, 8 Eki, Bahadır). Sadece FIRE_EVENTS; diğer olayların denetimi değişmez. ─────────────
@@ -910,6 +1156,11 @@ SLICE_RULES = {
     FACADE_FIRE: _people_rules("the flames"),
     FIRE_TORNADO: _people_rules("the fire tornado"),
     HELICOPTER: _people_rules("the flames"),   # 10 Eki: orman gibi
+    # 10 Eki: süper hücre fırtınası, insanlar fırtınadan kaçar (mevcut _FLEE)
+    HAIL: _people_rules("the storm"),
+    DOWNBURST: _people_rules("the storm"),
+    LIGHTNING: _people_rules("the storm"),
+    STORM_HIGHWAY: _people_rules("the storm"),
 }
 
 

@@ -183,14 +183,15 @@ class TestRotationOnlyValidCombos(unittest.TestCase):
         # geçerli domain (cruise) dışlanmaz ve tekrar seçilebilirdi.
         # 2 Eki: 8 domain; 6 geçerli domain dışlanınca kullanılmamış iki domain kalır (plaj, heyelan)
         # 8 Eki: 9 domain; kullanılmamış üç domain (plaj, heyelan, yangın)
+        # 10 Eki: 10 domain; + süper hücre fırtınası
         self.assertEqual(self._choices(self.VALID + [self.TEST_LINE]),
-                         {"open_beach_coastal_events", "landslide_disasters", "fire_disasters"})
+                         {"open_beach_coastal_events", "landslide_disasters", "fire_disasters", "supercell_storms"})
 
     def test_old_format_lines_ignored(self):
         old = ["harbor_pilotage_and_berthing|harbor tugboat|tugboat loses mooring line",
                "arctic_ice_navigation|arctic lng carrier|ice floe collision|frozen pack ice|chase_pov"]
         self.assertEqual(self._choices(self.VALID + old),
-                         {"open_beach_coastal_events", "landslide_disasters", "fire_disasters"})
+                         {"open_beach_coastal_events", "landslide_disasters", "fire_disasters", "supercell_storms"})
 
 
 if __name__ == "__main__":
