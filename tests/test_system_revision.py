@@ -38,7 +38,7 @@ class TestDeepMysterCreativeFreedom(unittest.TestCase):
 
     def test_01_domains_structure(self):
         """8 ilham alanı (kargo temizliği sonrası 7, 2026-09-24; 2 Eki: + heyelan; 8 Eki: + yangın) mevcut ve eksiksiz olmalı."""
-        self.assertEqual(len(MARITIME_INSPIRATION_DOMAINS), 10)   # 10 Eki: + süper hücre fırtınası
+        self.assertEqual(len(MARITIME_INSPIRATION_DOMAINS), 9)
         for domain_key, domain_data in MARITIME_INSPIRATION_DOMAINS.items():
             self.assertIn("title", domain_data)
             self.assertIn("guidance", domain_data)

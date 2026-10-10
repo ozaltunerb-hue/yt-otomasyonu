@@ -208,13 +208,6 @@ MARITIME_INSPIRATION_DOMAINS = {
         "guidance": "A violent, fast-spreading fire in hot, dry, smoky air: a wall of flames sweeping into a hillside neighborhood, flames racing up a tower facade, or a fire tornado tearing across a burning roadside. The flames visibly touch and ignite roofs, trees, vehicles and buildings. NO ships or vessels.",
         "example_elements": ["wall of flames", "burning roofs and trees", "falling burning debris", "glowing embers", "thick smoke"],
         "camera_styles": ["bystander phone from a balcony across the street", "bystander phone from a roadside embankment"],
-    },
-    # 10 Eki, Bahadır (TASLAK): ⛈️ Süper hücre fırtınası. Karanlık yeşilimsi-gri süper hücre, dramatik ışık.
-    "supercell_storms": {
-        "title": "Süper hücre fırtınası (Supercell Storm)",
-        "guidance": "A violent supercell storm under a dark greenish-grey sky with dramatic light: giant hail smashing windshields and windows, a downburst bending trees flat and toppling poles, lightning striking a transformer in a shower of sparks, or a violent gust overturning heavy vehicles on a highway. NO ships or vessels.",
-        "example_elements": ["dark greenish-grey supercell sky", "giant hail bouncing off cars", "trees bending flat in the wind", "lightning striking a transformer", "debris sweeping across highway lanes"],
-        "camera_styles": ["bystander phone from a high balcony across the street", "bystander phone from a highway overpass"],
     }
 }
 
@@ -389,21 +382,6 @@ DOMAIN_ATTRIBUTES = {
             "Fire tornado tears across a burning roadside",
             # 10 Eki, Bahadır: 4. olay
             "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
-        ]
-    },
-    # 10 Eki, Bahadır (TASLAK): ⛈️ Süper hücre fırtınası. Ortamlar kamera noktaları (hepsi yüksek, heyelan deseni)
-    "supercell_storms": {
-        "ships": [],
-        "environments": [
-            "Balcony of a high apartment across the street", "Rooftop terrace across the street",
-            "Balcony of a hillside house over the street",
-            "Overpass above the highway", "Balcony of a house above the highway",
-        ],
-        "events": [
-            "Giant hail pounds a street under a dark supercell",
-            "Downburst slams into a tree-lined street",
-            "Lightning bolt slams into a transformer on a utility pole",
-            "Violent gust slams into a highway",
         ]
     }
 }
@@ -1027,8 +1005,7 @@ def get_realism_guardrails(domain_id: str, vessel_class: str, environment: str =
 # ikinci gemiyi karşılamak için yoktan bir tekne icat ediyordu (2026-09-23 tespit edildi).
 ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open_beach_coastal_events",
                        "landslide_disasters",   # 2 Eki: heyelan (gemisiz, sivil giyim kuralı)
-                       "fire_disasters",        # 8 Eki: yangın (gemisiz, sivil giyim kuralı)
-                       "supercell_storms"]      # 10 Eki: süper hücre fırtınası (gemisiz, sivil giyim kuralı)
+                       "fire_disasters"]        # 8 Eki: yangın (gemisiz, sivil giyim kuralı)
 
 # Gemi domainlerinde ekrandaki gerçekçi kişi aralığı (2026-09-24). "Max 2" sadece
 # kargo gemileri içindi; kargo domain'i artık yok. Env-centric domainler tabloya

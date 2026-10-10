@@ -25,7 +25,30 @@
 
 ---
 
-## 📋 DEVİR: Süper hücre terim kapısı eş anlamlı genişletmesi + terim kapısı kuralı (10 Eki)
+## 📋 DEVİR: ⛈️ Süper hücre fırtınası kategorisi tamamen kaldırıldı + DERS (Ekim 2026)
+
+**Karar (Bahadır):** Süper hücre fırtınası kategorisi komple çıktı (dolu, düz hat rüzgârı/downburst, yıldırım,
+otoyol). Gerekçe: bu kategoride yayınlanabilir tek video çıkmadı; dolu görünmeyen tanelerle, otoyol sebepsiz tır
+devrilmesiyle zayıf çıktı, diğerleri beğenilmedi.
+
+**DERS:** Seedance görünür sebebi ve ağır/hareketli kütlesi olan olayları iyi çiziyor. Görünmeyen sebepli olaylar
+(rüzgâr-only, dolu taneleri) zayıf çıkıyor. Süper hücre kategorisi bu yüzden Ekim 2026'da tamamen kaldırıldı. Yeni
+kategori önerirken önce "sebep ekranda görünüyor mu?" sorusu sorulur.
+
+**Nasıl kaldırıldı:** Kod ve testler (`bot.py`, `dashboard.html`, `core/`, `tests/`), süper hücre eklenmeden önceki
+commit `f5b7998`'deki haline döndürüldü (o tarihten sonra bu dosyalara sadece süper hücre commit'leri dokunmuştu:
+`7e04996`, `80d76f8`, `86e241e`). Böylece menü, olaylar, havuzlar, `_STORM_*` listeleri ve eş anlamlı bloğu,
+`STORM_WEATHER`, kamera noktaları, `supercell_storms` domain'i, EVENT_OUTCOMES/REQUIRED girdileri ve süper hücre
+testleri gitti; marina Z6 kilit testi ilk haline döndü (storm hariç tutması yok). Aşağıdaki üç süper hücre devir
+notu tarihçe olarak duruyor; içlerindeki terim kapısı kuralı ve GENEL İLKE (aksiyon/temas birinci planda) bütün
+kategoriler için geçerli olmaya devam ediyor.
+
+Notion'daki eski `supercell_storms` kayıtları evren dışı sayılır (`is_current_universe_combo`), seçim ve tekrar
+önlemeye girmez; panel bu kayıtlarda kategori adını ham gösterir.
+
+---
+
+## 📋 DEVİR (ESKİ, KATEGORİ KALDIRILDI) — Süper hücre terim kapısı eş anlamlı genişletmesi + terim kapısı kuralı (10 Eki)
 
 **TERİM KAPISI KURALI (Bahadır, 10 Eki):** Eş anlamlılar için sadece EKLEME yapılır, mevcut terim çıkarılmaz. GPT'nin
 doğal anlatımı reddedilmemeli; sadece atmosfer (rüzgâr, gökyüzü, yağmur) anlatan cümleler ret almaya devam eder.
@@ -46,7 +69,7 @@ araç, ağaç, tabela, tel, devrilme, savrulma, takla, zincirleme kaza vb.). Di�
 
 ---
 
-## 📋 DEVİR: Süper hücre havuzlarında zayıf maddeler değişti + GENEL İLKE (10 Eki)
+## 📋 DEVİR (ESKİ, KATEGORİ KALDIRILDI) — Süper hücre havuzlarında zayıf maddeler değişti + GENEL İLKE (10 Eki)
 
 **GENEL İLKE (Bahadır, 10 Eki):** Bütün kategorilerde aksiyon/temas birinci planda; atmosferik veya sakin maddeler
 istenmiyor. Yeni havuz maddesi yazarken ve mevcutları gözden geçirirken bu esas alınır.
@@ -78,7 +101,7 @@ silindi. Diğer kategorilerin listeleri değişmedi. I3'te araç kapısı geçer
 
 ---
 
-## 📋 DEVİR: ⛈️ Süper hücre fırtınası kategorisi (10 Eki)
+## 📋 DEVİR (ESKİ, KATEGORİ KALDIRILDI) — ⛈️ Süper hücre fırtınası kategorisi (10 Eki)
 
 **Durum:** Yeni kategori `supercell_storms` "⛈️ Süper hücre fırtınası", 4 TASLAK olay yapılandırılmış hatta. Havuzlar
 ve kameralar Bahadır onaylı, metin birebir. Henüz video testi yapılmadı. Bölge görünümü yok, araç `EVENT_VEHICLES`

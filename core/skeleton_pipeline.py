@@ -95,13 +95,6 @@ CAMERA_SPOTS = {
     "Rooftop terrace across from a coastal high-rise": "on a rooftop terrace across the street from the tower",
     "Overlook above the burning valley road": "on a roadside overlook above the burning valley road",
     "Balcony of a roadside house": "on a high balcony of a roadside house overlooking the road",
-    # ⛈️ Süper hücre fırtınası (10 Eki, Bahadır; onaylı kamera cümleleri birebir, hepsi yüksek). "Balcony of a
-    # hillside house" adı yangında başka kamera cümlesiyle kayıtlı, fırtına noktası "... over the street"
-    "Balcony of a high apartment across the street": "on a high balcony across the street, overlooking the street",
-    "Rooftop terrace across the street": "on a rooftop terrace across the street",
-    "Balcony of a hillside house over the street": "on a balcony of a hillside house overlooking the street",
-    "Overpass above the highway": "on an overpass above the highway",
-    "Balcony of a house above the highway": "on a high balcony of a house overlooking the highway",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -123,10 +116,6 @@ SHIP_PHRASES = {
 # Heyelan havası (2 Eki): üçü de şiddetli yağmur
 LANDSLIDE_WEATHER = ["driving rain and wind", "heavy downpour under dark storm light", "steady heavy rain, grey low cloud"]
 # Yangın havası (8 Eki, Bahadır): kuru ve dumanlı; yağmur/ıslaklık yok (event_structure yağmur kapısı denetler)
-# Süper hücre fırtınası havası (10 Eki, Bahadır): karanlık yeşilimsi-gri süper hücre bulutu, dramatik ışık
-STORM_WEATHER = ["a dark greenish-grey supercell sky with dramatic storm light",
-                 "towering supercell clouds and violent gusting wind",
-                 "dramatic green-tinted light under a dark supercell"]
 FIRE_WEATHER = ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
                 "heavy smoke and scorching still air"]
 
@@ -448,46 +437,6 @@ EVENT_SKELETONS = {
                 "of water onto the wall of flames racing toward the houses. Thick white steam rolls up as {n} {people} "
                 "run from the flames. The helicopter circles back, still fighting the fire along the slope.",
     },
-    # ── ⛈️ Süper hücre fırtınası (TASLAK, 10 Eki, Bahadır). Yapılandırılmış hatta; metin sadece PROMPT_PIPELINE=skeleton için. Kamera noktalarının hepsi yüksek. ──
-    "Giant hail pounds a street under a dark supercell": {
-        "domain": "supercell_storms", "ships": None,
-        "spots": {"Balcony of a high apartment across the street": "a city street lined with shops and cafés",
-                  "Rooftop terrace across the street": "a city street lined with shops and cafés",
-                  "Balcony of a hillside house over the street": "a city street lined with shops and cafés"},
-        "people": ["pedestrians", "residents"], "weather": STORM_WEATHER, "object": "giant hail",
-        "text": "In {spot} in {weather}, giant hail pounds the street, shattering windshields and tearing through shop "
-                "awnings. Hailstones bounce off the cars as {n} {people} run for cover. The hail keeps pounding "
-                "the street, still smashing windows.",
-    },
-    "Downburst slams into a tree-lined street": {
-        "domain": "supercell_storms", "ships": None,
-        "spots": {"Balcony of a high apartment across the street": "a tree-lined street of houses and shops",
-                  "Rooftop terrace across the street": "a tree-lined street of houses and shops",
-                  "Balcony of a hillside house over the street": "a tree-lined street of houses and shops"},
-        "people": ["pedestrians", "residents"], "weather": STORM_WEATHER, "object": "downburst",
-        "text": "In {spot} in {weather}, a violent downburst slams into the street, bending trees flat and tearing signs "
-                "and branches through the air. Branches crash onto the road as {n} {people} run for cover. The "
-                "wind keeps tearing down the street, still snapping trees.",
-    },
-    "Lightning bolt slams into a transformer on a utility pole": {
-        "domain": "supercell_storms", "ships": None,
-        "spots": {"Balcony of a high apartment across the street": "a residential street lined with utility poles",
-                  "Rooftop terrace across the street": "a residential street lined with utility poles",
-                  "Balcony of a hillside house over the street": "a residential street lined with utility poles"},
-        "people": ["pedestrians", "residents"], "weather": STORM_WEATHER, "object": "sparking transformer",
-        "text": "In {spot} in {weather}, a lightning bolt slams into a transformer on a utility pole, exploding in a "
-                "shower of sparks. Broken wires whip across the road as {n} {people} run for cover. Sparks keep "
-                "pouring from the lines, still lighting up the street.",
-    },
-    "Violent gust slams into a highway": {
-        "domain": "supercell_storms", "ships": None,
-        "spots": {"Overpass above the highway": "a multi-lane highway",
-                  "Balcony of a house above the highway": "a multi-lane highway"},
-        "people": ["drivers", "passengers"], "weather": STORM_WEATHER, "object": "overturned vehicles",
-        "text": "On {spot} in {weather}, a violent gust slams into the highway and flips a heavy vehicle onto its "
-                "side as cars brake hard around it. Debris sweeps across the lanes as {n} {people} run from the "
-                "storm. The gusts keep battering the highway, still pushing cars across the lanes.",
-    },
     # ── Plaj & sahil ──
     "Tornado approaching an open beach": {
         "domain": "open_beach_coastal_events", "ships": None,
@@ -628,9 +577,6 @@ PHENOMENA = {
     "Yangın": ["Wall of flames sweeps into a hillside neighborhood", "Flames race up a tower facade",
                "Fire tornado tears across a burning roadside",
                "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood"],   # 10 Eki
-    # 10 Eki (TASLAK)
-    "Süper hücre": ["Giant hail pounds a street under a dark supercell", "Downburst slams into a tree-lined street",
-                    "Lightning bolt slams into a transformer on a utility pole", "Violent gust slams into a highway"],
     "Dev Dalga": ["Green wave breaks over the rail onto the vehicle deck", "Rogue wave breaks over the rail onto the pool deck",
                   "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon",
                   "Tidal wave surges over a coastal city street"],
@@ -657,16 +603,10 @@ EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
                "Flames race up a tower facade": (3, 6),
                "Fire tornado tears across a burning roadside": (3, 6),
                # 10 Eki, Bahadır: helikopter 3-6 (orman gibi)
-               "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (3, 6),
-               # TASLAK (10 Eki, Bahadır): süper hücre fırtınası 3-6
-               "Giant hail pounds a street under a dark supercell": (3, 6),
-               "Downburst slams into a tree-lined street": (3, 6),
-               "Lightning bolt slams into a transformer on a utility pole": (3, 6),
-               "Violent gust slams into a highway": (3, 6)}
+               "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (3, 6)}
 # "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
 NO_SIGNS_DOMAINS = {"landslide_disasters",
-                    "fire_disasters",   # 8 Eki: yangın (heyelan deseni, toplam 8 kısıt)
-                    "supercell_storms"}   # 10 Eki: süper hücre fırtınası
+                    "fire_disasters"}   # 8 Eki: yangın (heyelan deseni, toplam 8 kısıt)
 
 # Import anında kontrol: iskelet verisi havuzla uyumlu olmalı
 for _e, _s in EVENT_SKELETONS.items():
