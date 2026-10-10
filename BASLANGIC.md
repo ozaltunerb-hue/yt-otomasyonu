@@ -25,6 +25,50 @@
 
 ---
 
+## 📋 DEVİR: 🌋 Volkan kategorisi (10 Eki) + ZAYIF HİKÂYE YOK kuralı
+
+**ZAYIF HİKÂYE YOK (Bahadır, 10 Eki; volkan için ve bundan sonraki her yeni kategori için BAĞLAYICI):** Her madde
+(4-9s ve 9-15s) somut bir temas ya da yıkım içerir: bir şey bir şeye çarpar, kırar, devirir, yırtar, yutar ya da
+tutuşturur. "Sütun büyüyor", "kül yağıyor", "gökyüzü kararıyor", "ışıklar sönüyor" gibi atmosfer maddeleri havuza
+girmez. İki maddenin birlikte kurduğu hikâye de denetlenir: 4-9s ve 9-15s aynı nesneyi tekrar etmez, ikisi farklı
+nesnelere temas eder; çakışan çiftler `excluded_pairs`'e girer. (Genel aksiyon/temas ilkesi aşağıda; bu kural onu
+yeni kategoriler için bağlayıcı yapar.)
+
+**Durum:** `volcano_disasters` "🌋 Volkan", 4 TASLAK olay yapılandırılmış hatta; yangın mimarisi (kilit cümle kodda,
+araç kodda, GPT sadece cümle, 3 deneme, kapalı başarısızlık). Henüz video testi yapılmadı. Sebep ekranda görünür
+(patlama, lav, kül bulutu, düşen taşlar) ve ağır kütle hareket eder (ders: süper hücre notu).
+
+| Menü | Olay sabiti (İngilizce ad) | Havuz |
+|---|---|---|
+| 🌋 Patlama şok dalgası camları kırıyor | ERUPTION (Volcano erupts and a shockwave blows out windows) | S1-S3 / U1-U3 |
+| 🌋 Lav nehri sokağı yutuyor | LAVA_RIVER (Lava river pours down into a village street) | L1-L4 / M1-M4 |
+| 🌋 Kül bulutu köyü sarıyor | PYROCLASTIC (Pyroclastic cloud races down into a village street) | P1-P3 / Q1-Q3 |
+| 🌋 Volkan bombaları çatıları deliyor | VOLCANIC_BOMBS (Volcanic bombs slam into a village street) | R1-R4 / T1-T4 |
+
+- Olay 1 düğmesi ("Yanardağ patlıyor, şok dalgası camları kırıyor", 48 karakter) Telegram 40 karakter sınırı için
+  kısaldı. U2 ve Q3 Bahadır'ın metni birebir (eski U2 "kül yağıyor", eski Q3 "kül gömüyor" atmosfer maddeleriydi).
+- Kameralar (hepsi yüksek, dağa bakıyor): "Hillside terrace facing the erupting volcano", "Rooftop terrace facing the
+  erupting volcano", "Balcony of a village house facing the erupting volcano". Stil ekinde kamera cümlesinin içinde
+  ", the erupting volcano always visible above the rooftops" (CAMERA_MOTION_EXTRA, yeni kısıt sayılmaz); kamera
+  takip nesnesi olaya göre ash column / lava river / pyroclastic cloud / glowing rocks. Hava "ash-grey sky lit orange
+  by a distant eruption plume", kişi 3-6, toplam 40-75, NO_RAIN_EVENTS içinde, preflight danışman.
+- Yasak eşleşmeler (aynı nesne iki kez): (S1,U3) dükkân cephesi, (S2,U2) araç camı; (L1,M1) (L2,M1) (L4,M1) araç,
+  (L3,M2) duvar; (P2,Q2) araç, (P3,Q3) çatı; (R1,T2) (R2,T2) araç, (R3,T3) dükkân yangını.
+- Kamera dışlamaları: çatı/kiremit maddeleri (S3, P3, Q3, T1) ve ev köşesi/çatı kirişi (M2) çatı terasında ve köy evi
+  balkonunda; bahçe duvarı/avlu (L3) köy evi balkonunda seçilmez.
+- Tekrar önleme derinliği: havuzlar küçük (dilim başına 3-4, kamera dışlamasıyla bazı noktalarda 2), genel 3 derinlik
+  adayı bitirirdi. `RECENT_BEAT_BLOCK_BY_EVENT`: patlama 1, lav 1, bombalar 1, piroklastik 0 (sadece LRU); her
+  noktada en kötü durumda aday kalıyor (testli). Diğer olaylar 3. Çeşitlilik için ileride havuzları 6'ya çıkarmak iyi
+  olur.
+- Volkan bombalarında taşlar tek tek ve büyük: "barrage", "shower of rocks", "hail of", "pebble", "gravel" vb.
+  4-9s ve 9-15s'de reddedilir (`VOLC_SINGLE_ROCK_SLICES`, `_VOLC_SMALL_ROCKS`).
+- Terim kapısı baştan geniş `_VOLC_*` listeleri; her madde 5 gerçekçi GPT cümlesiyle geçiyor, 8 atmosfer cümlesi
+  hiçbir maddeden geçmiyor (`TestVolcano`). Marina Z6'ya özel kırma kelimeleri (obliterate, demolish, wreck...)
+  volkan listelerine konmadı, Z6 kilidi aynen. P2 ve L2'ye araç grubu eklendi ("bulut gökyüzünü yutar" geçmesin).
+- Not: P2 metni 8 kelime (10 altı); GPT dilimi 10-24'e tamamlıyor.
+
+---
+
 ## 📋 DEVİR: ⛈️ Süper hücre fırtınası kategorisi tamamen kaldırıldı + DERS (Ekim 2026)
 
 **Karar (Bahadır):** Süper hücre fırtınası kategorisi komple çıktı (dolu, düz hat rüzgârı/downburst, yıldırım,

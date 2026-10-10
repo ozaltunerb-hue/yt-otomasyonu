@@ -116,7 +116,7 @@ class TestLocks(unittest.TestCase):
 
     def test_required_covers_all_22_events_with_budget(self):
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(cp.EVENT_REQUIRED), 28)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter
+        self.assertEqual(len(cp.EVENT_REQUIRED), 32)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan
         for e, groups in cp.EVENT_REQUIRED.items():
             with self.subTest(event=e):
                 # yapılandırılmış olaylarda grup yok (olay terimleri event_structure'da)
@@ -398,7 +398,7 @@ class TestCityEventSwap(unittest.TestCase):
     def test_event_sets_equal(self):
         self.assertEqual(set(cp.EVENT_OUTCOMES), set(sk.EVENT_SKELETONS))
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(sk.EVENT_SKELETONS), 28)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter
+        self.assertEqual(len(sk.EVENT_SKELETONS), 32)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan
         self.assertIn(TIDAL, sk.EVENT_SKELETONS)
         self.assertNotIn(SIGNS, sk.EVENT_SKELETONS)
         self.assertIn(SIGNS, sk.REMOVED_EVENTS)   # kod silinmedi: havuzda, iskelet dışında
@@ -712,9 +712,11 @@ class TestFlashFloodFix(unittest.TestCase):
                     self.assertNotIn("phone", suffix.lower())
 
     def test_other_events_suffix_untouched(self):
-        self.assertEqual(set(sk.CAMERA_MOTION_EXTRA), {FLOOD})
+        # 10 Eki: volkan olaylarında dağ görünürlüğü eki (TestVolcano kilitler); diğer olaylar dokunulmadı
+        import core.event_structure as es
+        self.assertEqual(set(sk.CAMERA_MOTION_EXTRA), {FLOOD} | set(es.VOLCANO_EVENTS))
         for e, s in sk.EVENT_SKELETONS.items():
-            if e == FLOOD:
+            if e == FLOOD or e in es.VOLCANO_EVENTS:
                 continue
             ship = (s["ships"] or [None])[0]
             for spot in s["spots"]:

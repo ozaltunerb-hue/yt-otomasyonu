@@ -208,6 +208,13 @@ MARITIME_INSPIRATION_DOMAINS = {
         "guidance": "A violent, fast-spreading fire in hot, dry, smoky air: a wall of flames sweeping into a hillside neighborhood, flames racing up a tower facade, or a fire tornado tearing across a burning roadside. The flames visibly touch and ignite roofs, trees, vehicles and buildings. NO ships or vessels.",
         "example_elements": ["wall of flames", "burning roofs and trees", "falling burning debris", "glowing embers", "thick smoke"],
         "camera_styles": ["bystander phone from a balcony across the street", "bystander phone from a roadside embankment"],
+    },
+    # 10 Eki, Bahadır (TASLAK): 🌋 Volkan. Görünür sebep (patlama, lav, kül bulutu, düşen taşlar) ve ağır kütle.
+    "volcano_disasters": {
+        "title": "Volkan (Volcanic Eruption)",
+        "guidance": "A violent volcanic eruption above a village under an ash-grey sky lit orange by the eruption plume: a shockwave blowing out windows, a lava river swallowing parked cars, a pyroclastic cloud tearing through a street, or glowing volcanic bombs punching through roofs. The volcano is always visible above the rooftops. NO ships or vessels.",
+        "example_elements": ["erupting volcano above the rooftops", "glowing lava river in a village street", "pyroclastic cloud racing down the flank", "glowing rocks punching through roofs", "shattered shop windows"],
+        "camera_styles": ["bystander phone from a hillside terrace facing the volcano", "bystander phone from a rooftop terrace facing the volcano"],
     }
 }
 
@@ -382,6 +389,20 @@ DOMAIN_ATTRIBUTES = {
             "Fire tornado tears across a burning roadside",
             # 10 Eki, Bahadır: 4. olay
             "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
+        ]
+    },
+    # 10 Eki, Bahadır (TASLAK): 🌋 Volkan. Ortamlar kamera noktaları (hepsi yüksek, dağa bakıyor; heyelan deseni)
+    "volcano_disasters": {
+        "ships": [],
+        "environments": [
+            "Hillside terrace facing the erupting volcano", "Rooftop terrace facing the erupting volcano",
+            "Balcony of a village house facing the erupting volcano",
+        ],
+        "events": [
+            "Volcano erupts and a shockwave blows out windows",
+            "Lava river pours down into a village street",
+            "Pyroclastic cloud races down into a village street",
+            "Volcanic bombs slam into a village street",
         ]
     }
 }
@@ -1005,7 +1026,8 @@ def get_realism_guardrails(domain_id: str, vessel_class: str, environment: str =
 # ikinci gemiyi karşılamak için yoktan bir tekne icat ediyordu (2026-09-23 tespit edildi).
 ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open_beach_coastal_events",
                        "landslide_disasters",   # 2 Eki: heyelan (gemisiz, sivil giyim kuralı)
-                       "fire_disasters"]        # 8 Eki: yangın (gemisiz, sivil giyim kuralı)
+                       "fire_disasters",        # 8 Eki: yangın (gemisiz, sivil giyim kuralı)
+                       "volcano_disasters"]     # 10 Eki: volkan (gemisiz, sivil giyim kuralı)
 
 # Gemi domainlerinde ekrandaki gerçekçi kişi aralığı (2026-09-24). "Max 2" sadece
 # kargo gemileri içindi; kargo domain'i artık yok. Env-centric domainler tabloya

@@ -95,6 +95,10 @@ CAMERA_SPOTS = {
     "Rooftop terrace across from a coastal high-rise": "on a rooftop terrace across the street from the tower",
     "Overlook above the burning valley road": "on a roadside overlook above the burning valley road",
     "Balcony of a roadside house": "on a high balcony of a roadside house overlooking the road",
+    # 🌋 Volkan (10 Eki, Bahadır): hepsi yüksek ve dağa bakıyor
+    "Hillside terrace facing the erupting volcano": "on a hillside terrace above the village, facing the erupting volcano across the street",
+    "Rooftop terrace facing the erupting volcano": "on a rooftop terrace across the street, facing the erupting volcano",
+    "Balcony of a village house facing the erupting volcano": "on the balcony of a village house across the street, facing the erupting volcano",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -116,6 +120,8 @@ SHIP_PHRASES = {
 # Heyelan havası (2 Eki): üçü de şiddetli yağmur
 LANDSLIDE_WEATHER = ["driving rain and wind", "heavy downpour under dark storm light", "steady heavy rain, grey low cloud"]
 # Yangın havası (8 Eki, Bahadır): kuru ve dumanlı; yağmur/ıslaklık yok (event_structure yağmur kapısı denetler)
+# Volkan havası (10 Eki, Bahadır)
+VOLCANO_WEATHER = ["ash-grey sky lit orange by a distant eruption plume"]
 FIRE_WEATHER = ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
                 "heavy smoke and scorching still air"]
 
@@ -437,6 +443,47 @@ EVENT_SKELETONS = {
                 "of water onto the wall of flames racing toward the houses. Thick white steam rolls up as {n} {people} "
                 "run from the flames. The helicopter circles back, still fighting the fire along the slope.",
     },
+    # ── 🌋 Volkan (TASLAK, 10 Eki, Bahadır). Yapılandırılmış hatta; metin sadece PROMPT_PIPELINE=skeleton için. Kamera noktalarının hepsi yüksek ve dağa bakıyor. ──
+    "Volcano erupts and a shockwave blows out windows": {
+        "domain": "volcano_disasters", "ships": None,
+        "spots": {"Hillside terrace facing the erupting volcano": "a village street below the erupting volcano",
+                  "Rooftop terrace facing the erupting volcano": "a village street below the erupting volcano",
+                  "Balcony of a village house facing the erupting volcano": "a village street below the erupting volcano"},
+        "people": ["residents", "villagers"], "weather": VOLCANO_WEATHER, "object": "ash column",
+        "text": "In {spot} under {weather}, the volcano erupts above the village and a shockwave blows out windows "
+                "along the street. Roof tiles and signs tear loose as {n} {people} run from the eruption. The "
+                "ash column keeps towering above the volcano, still hurling glowing rocks.",
+    },
+    "Lava river pours down into a village street": {
+        "domain": "volcano_disasters", "ships": None,
+        "spots": {"Hillside terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
+                  "Rooftop terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
+                  "Balcony of a village house facing the erupting volcano": "a village street on the lower flank of the volcano"},
+        "people": ["residents", "villagers"], "weather": VOLCANO_WEATHER, "object": "lava river",
+        "text": "In {spot} under {weather}, a lava river pours down the volcano's flank and tears through the street, "
+                "swallowing parked cars. Walls and fences catch fire as {n} {people} run from the lava. The lava "
+                "keeps advancing down the street, still swallowing cars.",
+    },
+    "Pyroclastic cloud races down into a village street": {
+        "domain": "volcano_disasters", "ships": None,
+        "spots": {"Hillside terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
+                  "Rooftop terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
+                  "Balcony of a village house facing the erupting volcano": "a village street on the lower flank of the volcano"},
+        "people": ["residents", "villagers"], "weather": VOLCANO_WEATHER, "object": "pyroclastic cloud",
+        "text": "In {spot} under {weather}, a pyroclastic cloud races down the volcano's flank and slams into the "
+                "street, tearing off awnings and roof tiles as {n} {people} run from the cloud. The cloud keeps "
+                "rolling through the village, still ripping roofs apart.",
+    },
+    "Volcanic bombs slam into a village street": {
+        "domain": "volcano_disasters", "ships": None,
+        "spots": {"Hillside terrace facing the erupting volcano": "a village street below the erupting volcano",
+                  "Rooftop terrace facing the erupting volcano": "a village street below the erupting volcano",
+                  "Balcony of a village house facing the erupting volcano": "a village street below the erupting volcano"},
+        "people": ["residents", "villagers"], "weather": VOLCANO_WEATHER, "object": "glowing rocks",
+        "text": "In {spot} under {weather}, glowing volcanic bombs streak down and slam into the street, punching "
+                "through roofs and igniting cars as {n} {people} run from the falling rocks. More rocks keep "
+                "crashing down, still setting the street alight.",
+    },
     # ── Plaj & sahil ──
     "Tornado approaching an open beach": {
         "domain": "open_beach_coastal_events", "ships": None,
@@ -577,6 +624,9 @@ PHENOMENA = {
     "Yangın": ["Wall of flames sweeps into a hillside neighborhood", "Flames race up a tower facade",
                "Fire tornado tears across a burning roadside",
                "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood"],   # 10 Eki
+    # 10 Eki (TASLAK)
+    "Volkan": ["Volcano erupts and a shockwave blows out windows", "Lava river pours down into a village street",
+               "Pyroclastic cloud races down into a village street", "Volcanic bombs slam into a village street"],
     "Dev Dalga": ["Green wave breaks over the rail onto the vehicle deck", "Rogue wave breaks over the rail onto the pool deck",
                   "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon",
                   "Tidal wave surges over a coastal city street"],
@@ -603,10 +653,16 @@ EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
                "Flames race up a tower facade": (3, 6),
                "Fire tornado tears across a burning roadside": (3, 6),
                # 10 Eki, Bahadır: helikopter 3-6 (orman gibi)
-               "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (3, 6)}
+               "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (3, 6),
+               # TASLAK (10 Eki, Bahadır): volkan 3-6
+               "Volcano erupts and a shockwave blows out windows": (3, 6),
+               "Lava river pours down into a village street": (3, 6),
+               "Pyroclastic cloud races down into a village street": (3, 6),
+               "Volcanic bombs slam into a village street": (3, 6)}
 # "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
 NO_SIGNS_DOMAINS = {"landslide_disasters",
-                    "fire_disasters"}   # 8 Eki: yangın (heyelan deseni, toplam 8 kısıt)
+                    "fire_disasters",   # 8 Eki: yangın (heyelan deseni, toplam 8 kısıt)
+                    "volcano_disasters"}   # 10 Eki: volkan
 
 # Import anında kontrol: iskelet verisi havuzla uyumlu olmalı
 for _e, _s in EVENT_SKELETONS.items():
@@ -623,6 +679,11 @@ for _e, _s in EVENT_SKELETONS.items():
 CAMERA_MOTION_EXTRA = {
     "Flash flooding in city streets": " in one slow short arc, never swinging around, people only in the middle and "
                                       "far distance",
+    # 10 Eki, Bahadır: volkan, her videoda dağ görünsün (kamera cümlesinin içinde, yeni kısıt sayılmaz)
+    "Volcano erupts and a shockwave blows out windows": ", the erupting volcano always visible above the rooftops",
+    "Lava river pours down into a village street": ", the erupting volcano always visible above the rooftops",
+    "Pyroclastic cloud races down into a village street": ", the erupting volcano always visible above the rooftops",
+    "Volcanic bombs slam into a village street": ", the erupting volcano always visible above the rooftops",
 }
 
 

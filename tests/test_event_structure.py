@@ -98,6 +98,14 @@ class TestLockedData(unittest.TestCase):
             # 10 Eki, Bahadır onayı: helikopter (TestHelicopter ayrıca kilitler)
             es.HELICOPTER: "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of "
                            "water onto the wall of flames racing toward the houses.",
+            # 10 Eki, Bahadır: volkan (TestVolcano ayrıca kilitler)
+            es.ERUPTION: "The volcano erupts above a village, a shockwave blowing out windows along the street as an ash "
+                         "column towers into the sky.",
+            es.LAVA_RIVER: "A lava river pours down the volcano’s flank and tears through a village street, swallowing "
+                           "parked cars.",
+            es.PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
+            es.VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village "
+                               "street, punching through roofs and igniting cars.",
         })
         self.assertEqual(es.SLICE_LABELS, ("0-4s", "4-9s", "9-15s"))
         self.assertEqual(es.SLICE_FIELDS, ("slice_1_rest", "slice_2", "slice_3"))
@@ -153,7 +161,8 @@ class TestLockedData(unittest.TestCase):
         self.assertEqual(es.structured_events(), (FLOOD, TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE,
                                                   es.LANDFALL, es.MARINA_TORNADO, es.AVENUE,
                                                   es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO,   # 8 Eki
-                                                  es.HELICOPTER))   # 10 Eki
+                                                  es.HELICOPTER,   # 10 Eki
+                                                  es.ERUPTION, es.LAVA_RIVER, es.PYROCLASTIC, es.VOLCANIC_BOMBS))
         self.assertEqual(TIDAL, "Tidal wave surges over a coastal city street")
         self.assertFalse(es.is_structured("Rogue wave breaks over the rail onto the pool deck"))
 
@@ -592,14 +601,17 @@ class TestTidal(unittest.TestCase):
                                           es.LANDFALL: (3, 6), es.MARINA_TORNADO: (3, 6), es.AVENUE: (3, 6),
                                           # 8 Eki (TASLAK): yangın
                                           es.WILDFIRE: (3, 6), es.FACADE_FIRE: (3, 6), es.FIRE_TORNADO: (3, 6),
-                                          es.HELICOPTER: (3, 6)})   # 10 Eki
+                                          es.HELICOPTER: (3, 6),   # 10 Eki
+                                          es.ERUPTION: (3, 6), es.LAVA_RIVER: (3, 6), es.PYROCLASTIC: (3, 6),
+                                          es.VOLCANIC_BOMBS: (3, 6)})
 
     def test_slice_rules_locked(self):
         # selde dilim kapısı yok; heyelan (TASLAK) aynı mekanizma
         self.assertEqual(set(es.SLICE_RULES), {TIDAL, es.MUDSLIDE, es.SLOPE, es.VILLAGE,
                                                es.LANDFALL, es.MARINA_TORNADO, es.AVENUE,
                                                es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO,   # 8 Eki: yangın
-                                               es.HELICOPTER})   # 10 Eki
+                                               es.HELICOPTER,   # 10 Eki
+                                               es.ERUPTION, es.LAVA_RIVER, es.PYROCLASTIC, es.VOLCANIC_BOMBS})
         r = {x["rule"]: x for x in es.SLICE_RULES[TIDAL]}
         self.assertEqual(set(r), {"slice_flee", "slice_count"})
         self.assertEqual(r["slice_flee"]["terms"], ("run", "ran", "running", "flee", "fled", "fleeing", "sprint",
@@ -803,8 +815,9 @@ class TestNeverRunsOutOfCandidates(unittest.TestCase):
 
     def test_every_block_leaves_a_pair(self):
         from itertools import combinations
-        k = es.RECENT_BEAT_BLOCK
         for event in es.structured_events():
+            # 10 Eki: küçük havuzlu olaylarda (volkan) olaya özel derinlik
+            k = es.RECENT_BEAT_BLOCK_BY_EVENT.get(event, es.RECENT_BEAT_BLOCK)
             b = es.EVENT_BEATS[event]
             blocks2 = [set(c) for c in combinations(b["slice_2"], k)]
             blocks3 = [set(c) for c in combinations(b["slice_3"], k)]
@@ -1457,7 +1470,10 @@ class TestMarinaRedesign(unittest.TestCase):
         self.assertEqual(es.TOTAL_WORDS, (40, 70))
         # 10 Eki, Bahadır: orman yangını da 40-75 (TestFireStructure ayrıca kilitler)
         self.assertEqual(es.TOTAL_WORDS_BY_EVENT, {es.MARINA_TORNADO: (40, 75), es.WILDFIRE: (40, 75),
-                                                   es.HELICOPTER: (40, 75)})   # 10 Eki: helikopter
+                                                   es.HELICOPTER: (40, 75),   # 10 Eki: helikopter
+                                                   # 10 Eki: volkan
+                                                   es.ERUPTION: (40, 75), es.LAVA_RIVER: (40, 75),
+                                                   es.PYROCLASTIC: (40, 75), es.VOLCANIC_BOMBS: (40, 75)})
         w = "abcd"
 
         def total_rules(event, spot, b2, b3, vehicle, extra):
@@ -2293,9 +2309,10 @@ class TestHelicopter(unittest.TestCase):
                         self.fail(f"{spot}/{b2}+{b3}/{v}: {issues}")
                     n += 1
         self.assertEqual(n, (19 + 33) * 4)
-        # 4-9s dışlaması diğer olaylarda hiçbir şeyi değiştirmez (mevcut dışlamaların hepsi 9-15s)
+        # 4-9s dışlaması helikopterden önceki olaylarda hiçbir şeyi değiştirmez (onların dışlamalarının hepsi 9-15s).
+        # 10 Eki: volkanda da 4-9s kamera dışlaması var (TestVolcano)
         for e, b in es.EVENT_BEATS.items():
-            if e != self.E:
+            if e != self.E and e not in es.VOLCANO_EVENTS:
                 self.assertFalse(set(b["excluded_spots"]) & set(b["slice_2"]), e)
 
     def test_no_candidates_never(self):
@@ -2326,6 +2343,455 @@ class TestHelicopter(unittest.TestCase):
         self.assertTrue(scene["combo_key"].startswith("fire_disasters|none|firefighting helicopter"))
         spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
         self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
+
+
+VOLC = (es.ERUPTION, es.LAVA_RIVER, es.PYROCLASTIC, es.VOLCANIC_BOMBS)
+
+
+class TestVolcano(unittest.TestCase):
+    """10 Eki, Bahadır: 🌋 Volkan (4 olay, yapılandırılmış hat). Her madde somut temas/yıkım; terim kapısı baştan geniş
+    (GPT'nin doğal anlatımı reddedilmez, sadece atmosfer cümlesi reddedilir). KİLİT."""
+
+    NAMES = {es.ERUPTION: "Volcano erupts and a shockwave blows out windows",
+             es.LAVA_RIVER: "Lava river pours down into a village street",
+             es.PYROCLASTIC: "Pyroclastic cloud races down into a village street",
+             es.VOLCANIC_BOMBS: "Volcanic bombs slam into a village street"}
+    LABELS = {es.ERUPTION: "🌋 Patlama şok dalgası camları kırıyor", es.LAVA_RIVER: "🌋 Lav nehri sokağı yutuyor",
+              es.PYROCLASTIC: "🌋 Kül bulutu köyü sarıyor", es.VOLCANIC_BOMBS: "🌋 Volkan bombaları çatıları deliyor"}
+    KEY = {
+        es.ERUPTION: "The volcano erupts above a village, a shockwave blowing out windows along the street as an ash "
+                     "column towers into the sky.",
+        es.LAVA_RIVER: "A lava river pours down the volcano’s flank and tears through a village street, swallowing parked "
+                       "cars.",
+        es.PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
+        es.VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, "
+                           "punching through roofs and igniting cars.",
+    }
+    HT, RT, VB = ("Hillside terrace facing the erupting volcano", "Rooftop terrace facing the erupting volcano",
+                  "Balcony of a village house facing the erupting volcano")
+    CAMS = {HT: "on a hillside terrace above the village, facing the erupting volcano across the street",
+            RT: "on a rooftop terrace across the street, facing the erupting volcano",
+            VB: "on the balcony of a village house across the street, facing the erupting volcano"}
+    POOLS = {
+        es.ERUPTION: ({
+            "S1": "the shockwave bursts the shop windows along the street one after another",
+            "S2": "the shockwave blows out the windows of the {vehicle}, which brakes hard",
+            "S3": "the shockwave rips roof tiles off a house and hurls them into the street",
+        }, {
+            "U1": "a shop sign and an awning tear loose and slam onto the road",
+            "U2": "a glowing rock from the eruption slams into a parked car and shatters its rear window",
+            "U3": "the shop shutters buckle and burst outward into the street",
+        }, {("S1", "U3"), ("S2", "U2")}, {"S3": {RT, VB}}),
+        es.LAVA_RIVER: ({
+            "L1": "the lava surrounds the {vehicle} and its tires melt and burst into flames",
+            "L2": "the lava front shoves the parked {vehicle} down the street",
+            "L3": "the lava topples a garden wall and pours into the courtyard",
+            "L4": "a wooden fence and a parked car burst into flames as the lava touches them",
+        }, {
+            "M1": "the lava swallows a row of parked cars one after another",
+            "M2": "the lava reaches the corner of a house, the wall catches fire and the roof beams collapse",
+            "M3": "a burning utility pole topples into the street in a shower of sparks",
+            "M4": "the lava crushes a shop window and pours out through the shop",
+        }, {("L2", "M1"), ("L1", "M1"), ("L4", "M1"), ("L3", "M2")}, {"L3": {VB}, "M2": {RT, VB}}),
+        es.PYROCLASTIC: ({
+            "P1": "the cloud tears the awnings off the shops and flings chairs and bins down the street",
+            "P2": "the fleeing {vehicle} is swallowed by the cloud",
+            "P3": "the cloud rips roof tiles off a house and sweeps them into its dark mass",
+        }, {
+            "Q1": "the cloud snaps the trees along the street and hurls the branches through the air",
+            "Q2": "as the cloud front passes, the windows of a parked car burst inward",
+            "Q3": "the cloud front rips a roof off a house and slams it into the street",
+        }, {("P2", "Q2"), ("P3", "Q3")}, {"P3": {RT, VB}, "Q3": {RT, VB}}),
+        es.VOLCANIC_BOMBS: ({
+            "R1": "a glowing rock punches through the roof of the {vehicle}",
+            "R2": "a glowing rock smashes onto the street, bursts apart and sets a parked car on fire",
+            "R3": "a glowing rock tears through a shop awning and sets it ablaze",
+            "R4": "a glowing rock slams into a shop sign, which crashes onto the sidewalk",
+        }, {
+            "T1": "glowing rocks slam into the roofs, sending tiles flying as flames rise",
+            "T2": "a glowing rock bounces along the road and slams into a parked car",
+            "T3": "a glowing rock smashes through a shop window and sets the curtains on fire",
+            "T4": "a glowing rock splits a utility pole and its cable falls into the street spitting sparks",
+        }, {("R2", "T2"), ("R1", "T2"), ("R3", "T3")}, {"T1": {RT, VB}}),
+    }
+    VALID = {
+        "S1": ["The shockwave bursts the shop windows along the street one after another.",
+               "The blast wave shatters every storefront window down the block.",
+               "A pressure wave blows out the shopfronts in sequence, glass spraying into the street.",
+               "The shock wave smashes the display windows of the shops one by one.",
+               "The blast punches out the glass fronts of the cafés along the street."],
+        "S2": ["The shockwave blows out the windows of the SUV, which brakes hard.",
+               "The white van's windshield shatters in the blast and the driver slams on the brakes.",
+               "The pickup truck's windows burst inward as it skids to a halt.",
+               "The blast shatters the small car's windscreen and it screeches to a stop.",
+               "Every window of the SUV explodes and the vehicle jolts to a standstill."],
+        "S3": ["The shockwave rips roof tiles off a house and hurls them into the street.",
+               "The blast strips the shingles from a roof and flings them across the road.",
+               "Roof tiles tear loose from a house and fly into the street.",
+               "The pressure wave peels the tiles off a rooftop and scatters them over the cars.",
+               "The blast wrenches slates from a roof and sends them crashing onto the pavement."],
+        "U1": ["A shop sign and an awning tear loose and slam onto the road.",
+               "A metal shop sign rips from the wall and crashes onto the street.",
+               "A canvas awning breaks free and plunges onto the pavement.",
+               "The café's sign and canopy are torn away and fall onto the road.",
+               "A large billboard comes loose and smashes down onto the asphalt."],
+        "U2": ["A glowing rock from the eruption slams into a parked car and shatters its rear window.",
+               "A red-hot boulder crashes onto a parked sedan, caving in its roof.",
+               "A glowing chunk of rock smashes into a parked car's rear window.",
+               "A burning stone strikes a parked hatchback and its back glass bursts.",
+               "A glowing volcanic rock punches through the rear window of a parked car."],
+        "U3": ["The shop shutters buckle and burst outward into the street.",
+               "The metal roller shutters of the shops bend and blow out across the pavement.",
+               "A shop's security gate warps and tears loose into the street.",
+               "The steel shutters bulge and rip apart, flying onto the sidewalk.",
+               "Shop doors and shutters crumple and explode outward."],
+        "L1": ["The lava surrounds the SUV and its tires melt and burst into flames.",
+               "Molten rock flows around the white van, its tyres sagging and catching fire.",
+               "The lava engulfs the pickup truck's wheels, which melt and smoke.",
+               "Glowing magma encircles the small car and its tires burn.",
+               "The lava closes around the SUV and its rubber tires blister and ignite."],
+        "L2": ["The lava front shoves the parked SUV down the street.",
+               "The advancing lava pushes the parked white van along the road.",
+               "The lava flow drags the parked pickup truck down the street.",
+               "The molten front bulldozes the parked small car across the pavement.",
+               "The lava front rams the parked SUV and carries it down the street."],
+        "L3": ["The lava topples a garden wall and pours into the courtyard.",
+               "Molten rock knocks down a stone wall and floods the yard.",
+               "The lava bursts through a garden wall and spills into the courtyard.",
+               "The lava front crushes a brick wall and fills the garden.",
+               "A low garden wall collapses under the lava, which pours into the patio."],
+        "L4": ["A wooden fence and a parked car burst into flames as the lava touches them.",
+               "The lava reaches a wooden fence and it catches fire along with a parked car.",
+               "As the molten rock meets a picket fence, the fence goes up in flames.",
+               "The lava touches a parked car and it ignites beside a burning fence.",
+               "A garden fence and a parked sedan are set ablaze by the advancing lava."],
+        "M1": ["The lava swallows a row of parked cars one after another.",
+               "The molten river engulfs the parked cars along the street one by one.",
+               "The lava buries each parked vehicle in turn.",
+               "A line of parked cars disappears into the lava, swallowed in succession.",
+               "The lava flow consumes the cars along the curb, one after the other."],
+        "M2": ["The lava reaches the corner of a house, the wall catches fire and the roof beams collapse.",
+               "Molten rock hits a cottage wall, which bursts into flames as the roof caves in.",
+               "The lava presses against a house and the building's timber roof collapses in fire.",
+               "The lava flows into the corner of a home, igniting the wall until the roof gives way.",
+               "The lava front slams into a house, the walls catch fire and the rafters crash down."],
+        "M3": ["A burning utility pole topples into the street in a shower of sparks.",
+               "A blazing power pole crashes across the road, throwing sparks.",
+               "A flaming telephone pole falls into the street, its wires sparking.",
+               "A utility pole catches fire and comes down across the road in a burst of sparks.",
+               "The burning pole keels over onto the street, sparks flying."],
+        "M4": ["The lava crushes a shop window and pours out through the shop.",
+               "Molten rock smashes through a storefront and floods the store.",
+               "The lava bursts through the café's glass front and fills the interior.",
+               "The lava front shatters a display window and pours into the shop.",
+               "The lava pushes in a shopfront, the glass bursting as it flows inside."],
+        "P1": ["The cloud tears the awnings off the shops and flings chairs and bins down the street.",
+               "The pyroclastic surge rips canopies from the storefronts and hurls café tables away.",
+               "The ash cloud strips the awnings and sends chairs and trash cans tumbling.",
+               "The billowing cloud wrenches awnings loose and scatters benches across the road.",
+               "The cloud front blows the café umbrellas and chairs down the street."],
+        "P2": ["The fleeing SUV is swallowed by the cloud.",
+               "The ash cloud engulfs the white van as it races away.",
+               "The pyroclastic flow overtakes the pickup truck and swallows it.",
+               "The grey mass envelops the small car speeding down the street.",
+               "The cloud front overruns the fleeing SUV."],
+        "P3": ["The cloud rips roof tiles off a house and sweeps them into its dark mass.",
+               "The pyroclastic surge strips the shingles from a roof and carries them away.",
+               "The ash cloud tears tiles from the rooftops and whirls them into the air.",
+               "Roof tiles peel off a house as the cloud blasts over it.",
+               "The cloud front blows the slates off a roof and flings them into the street."],
+        "Q1": ["The cloud snaps the trees along the street and hurls the branches through the air.",
+               "Trees along the road break and fly into the grey mass.",
+               "The surge flattens the olive trees and tears off their branches.",
+               "Pine trees split and topple as the cloud hits them.",
+               "The cloud uproots a row of trees and flings them down the street."],
+        "Q2": ["As the cloud front passes, the windows of a parked car burst inward.",
+               "The cloud hits a parked sedan and its windshield implodes.",
+               "The windows of a parked car shatter as the surge sweeps over it.",
+               "A parked van's glass blows in under the force of the cloud.",
+               "The cloud front smashes the windows of the parked cars."],
+        "Q3": ["The cloud front rips a roof off a house and slams it into the street.",
+               "The pyroclastic surge tears the roof from a cottage and hurls it onto the road.",
+               "A whole roof peels off a house and crashes into the street.",
+               "The cloud wrenches the roof off a building and flings it across the street.",
+               "The surge blows the roof off a house, which smashes onto the pavement."],
+        "R1": ["A glowing rock punches through the roof of the SUV.",
+               "A red-hot boulder crashes through the white van's roof.",
+               "A glowing volcanic bomb smashes into the pickup truck's cabin roof.",
+               "A burning chunk of rock pierces the roof of the small car.",
+               "A glowing stone slams down onto the SUV's roof, caving it in."],
+        "R2": ["A glowing rock smashes onto the street, bursts apart and sets a parked car on fire.",
+               "A red-hot boulder shatters on the road and a parked sedan catches fire.",
+               "A glowing bomb explodes against the asphalt, igniting a parked car.",
+               "A burning rock bursts on the street and a parked vehicle goes up in flames.",
+               "A glowing chunk crashes down beside a parked car and sets it ablaze."],
+        "R3": ["A glowing rock tears through a shop awning and sets it ablaze.",
+               "A red-hot boulder rips through a café canopy, which bursts into flames.",
+               "A glowing stone punches through an awning and it catches fire.",
+               "A burning volcanic bomb slashes the shop's awning and it ignites.",
+               "A glowing rock crashes through the canvas awning, leaving it burning."],
+        "R4": ["A glowing rock slams into a shop sign, which crashes onto the sidewalk.",
+               "A red-hot boulder hits a shop sign and it falls onto the pavement.",
+               "A glowing chunk of rock strikes a billboard, which plunges to the street.",
+               "A burning stone smashes a shop sign off its brackets and it drops onto the sidewalk.",
+               "A glowing bomb hits a shop sign, which topples onto the curb."],
+        "T1": ["Glowing rocks slam into the roofs, sending tiles flying as flames rise.",
+               "Red-hot boulders crash onto the rooftops, shattering the tiles.",
+               "Glowing stones punch through the roofs of the houses.",
+               "Burning chunks of rock smash into the roofs and the tiles burst apart.",
+               "Glowing volcanic bombs hit the rooftops one after another, setting them on fire."],
+        "T2": ["A glowing rock bounces along the road and slams into a parked car.",
+               "A red-hot boulder skips across the asphalt and crashes into a parked sedan.",
+               "A glowing chunk of rock rolls down the street and smashes into a parked car.",
+               "A burning stone ricochets off the road and hits a parked vehicle.",
+               "A glowing bomb bounces once and rams into the side of a parked car."],
+        "T3": ["A glowing rock smashes through a shop window and sets the curtains on fire.",
+               "A red-hot boulder crashes through a storefront and the curtains catch fire.",
+               "A glowing stone shatters a shop's display window, igniting the drapes.",
+               "A burning chunk of rock punches through the café's glass front.",
+               "A glowing bomb bursts through a shopfront window and flames rise inside."],
+        "T4": ["A glowing rock splits a utility pole and its cable falls into the street spitting sparks.",
+               "A red-hot boulder slams into a power pole, snapping it in two.",
+               "A glowing chunk of rock strikes a telephone pole and cleaves it apart.",
+               "A burning stone hits a utility pole, which cracks and sheds sparking wires.",
+               "A glowing bomb smashes into a pole and the power lines drop, sparking."],
+    }
+    # Sadece atmosfer (kül sütunu, gökyüzü, duman, sönen ışıklar): hiçbir maddeden geçmemeli
+    ATMOSPHERE = ["The ash column towers into the sky above the volcano.",
+                  "Ash drifts down over the quiet village.",
+                  "The sky turns orange and grey as the eruption glows.",
+                  "Smoke billows from the crater high above the rooftops.",
+                  "The streetlights flicker and go dark under the ash cloud.",
+                  "The ash cloud swallows the sky above the village.",
+                  "A deep orange glow spreads across the clouds over the street.",
+                  "Grey ash keeps falling over the houses as the volcano smokes."]
+    VEHICLES = ["pickup truck", "small car", "white van", "SUV"]
+
+    def setUp(self):
+        es._BEAT_MEMORY.clear()
+
+    def beats(self):
+        for e in VOLC:
+            for slot in ("slice_2", "slice_3"):
+                for bid, beat in es.EVENT_BEATS[e][slot].items():
+                    yield e, slot, bid, beat
+
+    def build(self, e, b2, b3, spot=None, vehicle="SUV", people=5):
+        spot = spot or self.HT
+        spec = es.build_spec(e, None, spot, None, b2, b3, vehicle, people)
+        away = es.SLICE_RULES[e][1]["away_from"]
+        s2, s3 = cap(es.beat_text(e, "slice_2", b2, vehicle)), cap(es.beat_text(e, "slice_3", b3))
+        s2 += " as the volcano glows" if len(s2.split()) < 10 else ""
+        sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from {away}."),
+              "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
+        return spec, sl
+
+    def codes(self, spec, sl):
+        return {i["rule"] for i in es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl))}
+
+    def test_category_and_menu(self):
+        import bot
+        import core.creative_pipeline as cp
+        from core.creative_engine import DOMAIN_ATTRIBUTES, ENV_CENTRIC_DOMAINS, MARITIME_INSPIRATION_DOMAINS
+        self.assertEqual(bot.DOMAIN_LABELS["volcano_disasters"], "🌋 Volkan")
+        self.assertIn('volcano_disasters: "🌋 Volkan",', open(os.path.join(ROOT, "dashboard.html"), encoding="utf-8").read())
+        self.assertEqual(es.VOLCANO_EVENTS, VOLC)
+        self.assertEqual({e: e for e in VOLC}, {self.NAMES[e]: self.NAMES[e] for e in VOLC})
+        self.assertEqual({e: bot.EVENT_LABELS[e] for e in VOLC}, self.LABELS)
+        self.assertEqual(sk.skeleton_events("volcano_disasters"), list(VOLC))
+        self.assertEqual(DOMAIN_ATTRIBUTES["volcano_disasters"]["environments"], list(self.CAMS))
+        self.assertIn("volcano_disasters", MARITIME_INSPIRATION_DOMAINS)
+        self.assertIn("volcano_disasters", ENV_CENTRIC_DOMAINS)
+        self.assertIn("volcano_disasters", sk.NO_SIGNS_DOMAINS)
+        self.assertEqual(sk.PHENOMENA["Volkan"], list(VOLC))
+        for e in VOLC:
+            with self.subTest(event=e):
+                self.assertLessEqual(len(bot.EVENT_LABELS[e]), 40)
+                self.assertEqual(cp.EVENT_REQUIRED[e], [])
+                self.assertIn(e, cp.EVENT_OUTCOMES)
+                self.assertEqual(sk.count_range(e, None), (3, 6))
+                self.assertEqual(es.TOTAL_WORDS_BY_EVENT[e], (40, 75))
+                self.assertEqual([n for n, _ in es.EVENT_VEHICLES[e]], self.VEHICLES)
+                self.assertIn(e, es.NO_RAIN_EVENTS)
+                self.assertNotIn(e, es.FIRE_EVENTS)
+                self.assertNotIn(e, es.NO_LIFT_SLICE)
+                self.assertEqual(es.structure_views(e), [None])
+
+    def test_key_visuals_locked_and_pass(self):
+        import core.creative_pipeline as cp
+        for e in VOLC:
+            with self.subTest(event=e):
+                self.assertEqual(es.EVENT_KEY_VISUAL[e], self.KEY[e])
+                found = {i["rule"] for i in cp.story_rule_issues(e, None, self.KEY[e])}
+                self.assertFalse(found & {"a_trigger_first", "e_event_and_ship_named", "required"})
+                self.assertEqual(es.rain_words(self.KEY[e]), [])
+
+    def test_pools_locked(self):
+        for e, (s2, s3, pairs, spots) in self.POOLS.items():
+            b = es.EVENT_BEATS[e]
+            with self.subTest(event=e):
+                self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, s2)
+                self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, s3)
+                self.assertEqual(b["excluded_pairs"], pairs)
+                self.assertEqual(b["excluded_views"], {})
+                self.assertEqual(b["excluded_spots"], spots)
+                for t in list(s2.values()) + list(s3.values()):
+                    self.assertEqual(es.rain_words(t), [], t)
+
+    def test_cameras_weather_volcano_visible(self):
+        self.assertEqual(sk.VOLCANO_WEATHER, ["ash-grey sky lit orange by a distant eruption plume"])
+        objects = {es.ERUPTION: "ash column", es.LAVA_RIVER: "lava river", es.PYROCLASTIC: "pyroclastic cloud",
+                   es.VOLCANIC_BOMBS: "glowing rocks"}
+        from core.trace_format import count_constraints
+        for e in VOLC:
+            s = sk.EVENT_SKELETONS[e]
+            with self.subTest(event=e):
+                self.assertIs(s["weather"], sk.VOLCANO_WEATHER)
+                self.assertEqual(list(s["spots"]), list(self.CAMS))
+                for spot, cam in self.CAMS.items():
+                    self.assertEqual(sk.CAMERA_SPOTS[spot], cam)
+                    suffix = sk.style_suffix(e, None, spot)
+                    self.assertIn(f"standing {cam}, eye level", suffix)
+                    self.assertIn(f"the camera pans to follow the {objects[e]}, the erupting volcano always visible "
+                                  f"above the rooftops; no zoom, no cuts.", suffix)
+                    self.assertTrue(suffix.endswith(" No readable signs, text or flags."))
+                    self.assertLessEqual(count_constraints(suffix)[0], 8)
+                    self.assertEqual(es.rain_words(suffix), [])
+
+    def test_term_lists_volcano_only(self):
+        import ast
+        import inspect
+        tree = ast.parse(inspect.getsource(es))
+        beats = next(n.value for n in tree.body if isinstance(n, ast.Assign)
+                     and any(getattr(t, "id", None) == "EVENT_BEATS" for t in n.targets))
+        seen = 0
+        for k, node in zip(beats.keys, beats.values):
+            if getattr(k, "id", None) in ("ERUPTION", "LAVA_RIVER", "PYROCLASTIC", "VOLCANIC_BOMBS"):
+                seen += 1
+                names = {n.id for n in ast.walk(node) if isinstance(n, ast.Name)}
+                self.assertTrue(names and all(n.startswith("_VOLC_") for n in names), names)
+        self.assertEqual(seen, 4)
+
+    def test_canonical_and_five_valid_sentences_pass(self):
+        self.assertEqual(set(self.VALID), {bid for _, _, bid, _ in self.beats()})
+        for e, slot, bid, beat in self.beats():
+            for v in self.VEHICLES:
+                self.assertEqual(es.missing_term_groups(beat["terms"], cap(es.beat_text(e, slot, bid, v))), [], bid)
+            self.assertGreaterEqual(len(self.VALID[bid]), 5)
+            for s in self.VALID[bid]:
+                with self.subTest(beat=bid, text=s):
+                    self.assertEqual(es.missing_term_groups(beat["terms"], s), [])
+                    self.assertEqual(es.rain_words(s), [])
+
+    def test_atmosphere_only_rejected(self):
+        for e, slot, bid, beat in self.beats():
+            for s in self.ATMOSPHERE:
+                with self.subTest(beat=bid, text=s):
+                    self.assertTrue(es.missing_term_groups(beat["terms"], s))
+
+    def test_single_large_rocks_gate(self):
+        self.assertEqual(es.VOLC_SINGLE_ROCK_SLICES, {es.VOLCANIC_BOMBS: ("slice_2", "slice_3")})
+        spec, sl = self.build(es.VOLCANIC_BOMBS, "R4", "T4")
+        self.assertNotIn("volcano_single_rock", self.codes(spec, sl))
+        for slot, text in (("slice_2", "A barrage of glowing rocks slams into a shop sign, which crashes onto the "
+                                       "sidewalk."),
+                           ("slice_3", "A shower of rocks splits a utility pole and its cable falls into the street."),
+                           ("slice_3", "Glowing pebbles hit a utility pole and its cable falls into the street."),
+                           ("slice_2", "A hail of glowing rocks slams into a shop sign, which crashes down.")):
+            with self.subTest(text=text):
+                self.assertIn("volcano_single_rock", self.codes(spec, {**sl, slot: es.clean_slice(text)}))
+        # çoğul büyük taşlar (T1) serbest; diğer volkan olaylarında bu kapı yok
+        spec, sl = self.build(es.VOLCANIC_BOMBS, "R1", "T1")
+        self.assertNotIn("volcano_single_rock", self.codes(spec, sl))
+        spec, sl = self.build(es.ERUPTION, "S1", "U2")
+        self.assertNotIn("volcano_single_rock", self.codes(spec, {**sl, "slice_3": "A barrage of glowing rocks slams "
+                                                                                     "into a parked car and shatters "
+                                                                                     "its rear window."}))
+
+    def test_no_rain_gate(self):
+        spec, sl = self.build(es.LAVA_RIVER, "L2", "M3")
+        self.assertNotIn("fire_no_rain", self.codes(spec, sl))
+        self.assertIn("fire_no_rain", self.codes(spec, {**sl, "slice_3": "A burning utility pole topples into the "
+                                                                           "street in the heavy rain."}))
+        # "shower" serbest; kül/taş ile "rain" fiili de serbest (yanan/düşen nesne kuralı)
+        self.assertEqual(es.rain_words("Glowing rocks rain down on the roofs in a shower of sparks."), [])
+
+    def test_vehicle_gate(self):
+        spec, sl = self.build(es.PYROCLASTIC, "P2", "Q1", vehicle="white van")
+        self.assertNotIn("beat_vehicle", self.codes(spec, sl))
+        self.assertIn("beat_vehicle", self.codes(spec, {**sl, "slice_2": "The fleeing bus is swallowed by the dark "
+                                                                         "cloud in seconds."}))
+        spec, sl = self.build(es.LAVA_RIVER, "L3", "M4")
+        self.assertNotIn("beat_vehicle", self.codes(spec, sl))   # L3'te araç yok
+
+    def test_people_rule(self):
+        for e, away in ((es.ERUPTION, "the eruption"), (es.LAVA_RIVER, "the lava"), (es.PYROCLASTIC, "the cloud"),
+                        (es.VOLCANIC_BOMBS, "the falling rocks")):
+            r = {x["rule"]: x for x in es.SLICE_RULES[e]}
+            self.assertIs(r["slice_flee"]["terms"], es._FLEE)
+            self.assertEqual(r["slice_count"]["away_from"], away)
+
+    def test_all_combinations_pass_final_check(self):
+        n = 0
+        for e in VOLC:
+            for spot in sk.view_spots(e, None):
+                for b2, b3 in es.allowed_pairs(e, None, spot):
+                    for v in self.VEHICLES:
+                        spec, sl = self.build(e, b2, b3, spot=spot, vehicle=v, people=3 + n % 4)
+                        issues = es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl),
+                                                        es.assemble_story(spec, sl))
+                        if issues:
+                            self.fail(f"{e}/{spot}/{b2}+{b3}/{v}: {issues}")
+                        n += 1
+        # patlama 7 + 4 + 4; lav 12 + 9 + 6; piroklastik 7 + 3 + 3; bombalar 13 + 9 + 9; × 4 araç
+        self.assertEqual(n, (15 + 27 + 13 + 31) * 4)
+
+    def test_block_depth_and_never_runs_out(self):
+        from itertools import combinations
+        self.assertEqual(es.RECENT_BEAT_BLOCK_BY_EVENT, {es.ERUPTION: 1, es.LAVA_RIVER: 1, es.VOLCANIC_BOMBS: 1,
+                                                         es.PYROCLASTIC: 0})
+        self.assertEqual(es.RECENT_BEAT_BLOCK, 3)                  # diğer olaylar değişmedi
+        for e in VOLC:
+            b, k = es.EVENT_BEATS[e], es.RECENT_BEAT_BLOCK_BY_EVENT[e]
+            for spot in sk.view_spots(e, None):
+                ps_ = es.allowed_pairs(e, None, spot)
+                worst = min(sum(1 for v, d in ps_ if v not in x2 and d not in x3)
+                            for x2 in map(set, combinations(b["slice_2"], k))
+                            for x3 in map(set, combinations(b["slice_3"], k)))
+                with self.subTest(event=e, spot=spot):
+                    self.assertGreater(worst, 0)
+        # gerçek akış: 60 üretim boyunca, nokta değişse de aday hiç tükenmez
+        rng = random.Random(7)
+        for e in VOLC:
+            es._BEAT_MEMORY.clear()
+            for i in range(60):
+                spot = list(self.CAMS)[i % 3]
+                b2, b3 = es.choose_beats(e, None, spot, [], rng)
+                self.assertIn((b2, b3), es.allowed_pairs(e, None, spot))
+                es.remember_beats(e, es.beat_tag(b2, b3))
+
+    def test_scene_build(self):
+        import asyncio
+        import core.creative_pipeline as cp
+
+        async def gpt(system, user, **kw):
+            line = dict(l.split(": ", 1) for l in user.splitlines()
+                        if l.startswith(("4-9s EVENT", "9-15s EVENT", "PEOPLE RUNNING AWAY")))
+            word = line["PEOPLE RUNNING AWAY"].split()[0]
+            away = line["PEOPLE RUNNING AWAY"].split("run away from ")[1].rstrip(")")
+            s2 = cap(line["4-9s EVENT"])
+            s2 += " as the volcano glows" if len(s2.split()) < 10 else ""
+            return {"slice_1_rest": f"{cap(word)} people run from {away}.", "slice_2": s2 + ".",
+                    "slice_3": cap(line["9-15s EVENT"]) + "."}
+        for e in VOLC:
+            with self.subTest(event=e):
+                scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], gpt))
+                t = scene["trace"]
+                self.assertIn(t["spot"], self.CAMS)
+                self.assertIn("the erupting volcano always visible above the rooftops", scene["prompt"])
+                self.assertTrue(scene["combo_key"].startswith("volcano_disasters|none|"))
+                spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
+                self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
 
 if __name__ == "__main__":
     unittest.main()

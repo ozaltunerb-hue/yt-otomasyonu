@@ -150,6 +150,15 @@ EVENT_OUTCOMES = {
     "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood":
         "the helicopter keeps dropping water on the wall of flames, turning sections into white steam as the fire "
         "fights back toward the houses",
+    # Volkan (TASLAK, 10 Eki, Bahadır): yapılandırılmış hatta; trace/rapor için
+    "Volcano erupts and a shockwave blows out windows":
+        "the shockwave and falling rocks keep smashing windows, signs and roofs along the street below the volcano",
+    "Lava river pours down into a village street":
+        "the lava keeps advancing down the street, swallowing cars and setting walls and fences on fire",
+    "Pyroclastic cloud races down into a village street":
+        "the cloud keeps tearing through the street, ripping off roofs and awnings and snapping trees",
+    "Volcanic bombs slam into a village street":
+        "glowing rocks keep slamming into the street, punching through roofs and setting cars on fire",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -306,6 +315,11 @@ EVENT_REQUIRED = {
     "Flames race up a tower facade": [],
     "Fire tornado tears across a burning roadside": [],
     "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": [],   # 10 Eki
+    # ── Volkan (TASLAK, 10 Eki): yapılandırılmış hatta, grupsuz ──
+    "Volcano erupts and a shockwave blows out windows": [],
+    "Lava river pours down into a village street": [],
+    "Pyroclastic cloud races down into a village street": [],
+    "Volcanic bombs slam into a village street": [],
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),
