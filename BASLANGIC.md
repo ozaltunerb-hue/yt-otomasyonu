@@ -25,6 +25,40 @@
 
 ---
 
+## 📋 DEVİR: Akşam kapanışı (10 Eki)
+
+**Volkan canlı** (commit `d617a70`, deploy `0573b803` SUCCESS, bot TEST modunda).
+- Volkan bombaları videosu test edildi, Bahadır beğendi (Bahadır'ın puanı 8,5/10).
+- Lav nehri, patlama/şok dalgası ve kül bulutu henüz denenmedi; yarın denenecek.
+- Gözlem 1: videoda gizli bir kamera kesmesi vardı (kareler arasında başka sokağa atlıyor), "no cuts" kısıtına
+  rağmen. Tekrar ederse stil eki incelensin.
+- Gözlem 2: tabela yazısı okunur gibi çıktı ("No readable signs, text or flags." tam tutmadı). Tekrar ederse not
+  edilecek.
+- Volkan havuzları küçük (dilim başına 3-4, bu yüzden olaya özel tekrar önleme derinliği var); videolar iyi çıkarsa
+  6'ya çıkarılacak.
+
+**Kuzey Denizi kategorisi (HENÜZ KODLANMAYACAK, sadece not):**
+- Onaylı olaylar: balıkçı trawleri ("Dev dalga trawleri süpürüyor") ve açık deniz platformu ("Dev dalga platformu
+  dövüyor"; riskli, denenip olmazsa çıkarılacak).
+- Kesin dışlananlar: kargo gemisi, römorkör, feribot (mevcut feribot kategorisiyle çakışıyor).
+- Karar bekleyen: üçüncü/dördüncü olay (fener ve araştırma gemisi önerildi).
+- Havuz taslağı yarın Bahadır onayından sonra gelecek; talimat o zaman verilecek.
+- Dikkat (kod öncesi karar gerekecek): 24 Eyl kargo temizliğinden beri `tests/test_cargo_free.py`, GPT'ye giden
+  mesajlarda (kategori açıklaması, örnek öğeler, eski hattın senaryo mesajları) "trawler" kelimesini yasaklıyor ve
+  gemi evreni (`VESSEL_UNIVERSE`) balıkçı teknesi içermiyor. Trawler olayı kodlanırken bu kilidin nasıl
+  daraltılacağı (ya da teknenin nasıl adlandırılacağı) Bahadır'a sorulmalı.
+
+**Bahadır'ın onayını bekleyen volkan kararları (d617a70):**
+1. Tekrar önleme derinliği volkana özel (patlama 1, lav 1, bombalar 1, piroklastik 0; diğer olaylar 3): küçük
+   havuzlarda genel 3 derinlik adayı bitirirdi. Alternatif: havuzları 6'ya çıkarmak.
+2. Olay 1 düğmesi "🌋 Patlama şok dalgası camları kırıyor" (orijinal 48 karakter, Telegram sınırı 40).
+3. Volkan bombalarında tek ve büyük taş kapısı: "barrage", "shower of rocks", "hail of", "pebble", "gravel" vb.
+   reddediliyor; T1'deki çoğul büyük taşlar serbest. Yasak kelime listesi benim seçimim.
+
+Railway boşta; bu not dışında kod değişikliği ve push yok.
+
+---
+
 ## 📋 DEVİR: 🌋 Volkan kategorisi (10 Eki) + ZAYIF HİKÂYE YOK kuralı
 
 **ZAYIF HİKÂYE YOK (Bahadır, 10 Eki; volkan için ve bundan sonraki her yeni kategori için BAĞLAYICI):** Her madde
