@@ -25,6 +25,27 @@
 
 ---
 
+## 📋 DEVİR: Süper hücre terim kapısı eş anlamlı genişletmesi + terim kapısı kuralı (10 Eki)
+
+**TERİM KAPISI KURALI (Bahadır, 10 Eki):** Eş anlamlılar için sadece EKLEME yapılır, mevcut terim çıkarılmaz. GPT'nin
+doğal anlatımı reddedilmemeli; sadece atmosfer (rüzgâr, gökyüzü, yağmur) anlatan cümleler ret almaya devam eder.
+Çok kelimeli terimlerde çekim sadece son kelimeye uygulanır ("keel over" → "keels over" eşleşmez), diğer çekimler
+ayrıca yazılır.
+
+**Sebep:** Canlı testte dolu A2+B1 3 denemede reddedildi (para harcanmadı): GPT "obliterating shopfronts", "reducing
+shop windows to shards", "obliterating shop windows" yazdı; B1 "9-15s: seçilen olay görünmüyor".
+
+**Yapılan:** `core/event_structure.py` içinde `_STORM_PILEUP` tanımının hemen altındaki `+=` bloğu, süper hücre
+`_STORM_*` listelerine eş anlamlı ekledi (obliterate, destroy, demolish, pulverize, annihilate, wreck, ravage,
+devastate, rip/tear apart, blow/blast out, shard, rubble, gut, strip; dolu için barrage/onslaught/bombardment/pellet;
+araç, ağaç, tabela, tel, devrilme, savrulma, takla, zincirleme kaza vb.). Diğer kategorilerin listelerine dokunulmadı.
+- Test: `TestSupercellSynonyms`; 51 maddenin her biri 5 gerçekçi GPT cümlesiyle geçiyor (B1'de 6), canlıdaki üç B1
+  cümlesi geçiyor (tam denetim dahil), 8 atmosfer cümlesi 51 maddenin hiçbirinden geçmiyor.
+- `test_z6_break_group_only_marina` kilidi (obliterate, demolish, wreck, splinter... sadece marina Z6'da) süper hücre
+  olaylarını kapsamıyor artık; diğer bütün olaylarda aynen geçerli. Marina listesi değişmedi.
+
+---
+
 ## 📋 DEVİR: Süper hücre havuzlarında zayıf maddeler değişti + GENEL İLKE (10 Eki)
 
 **GENEL İLKE (Bahadır, 10 Eki):** Bütün kategorilerde aksiyon/temas birinci planda; atmosferik veya sakin maddeler

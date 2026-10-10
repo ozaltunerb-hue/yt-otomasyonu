@@ -1565,7 +1565,9 @@ class TestMarinaRedesign(unittest.TestCase):
                   "The tornado wrecks the shop's glass front and tables tumble out."):
             with self.subTest(text=t):
                 self.assertEqual(es.missing_term_groups(z6, t), [])
-        # yeni kelimeler başka hiçbir olayın terimlerinde yok (sadece marina Z6)
+        # yeni kelimeler başka hiçbir olayın terimlerinde yok (sadece marina Z6). 10 Eki (3), Bahadır: süper hücre
+        # fırtınası olayları bu kilidin dışında (kırma/yıkma eş anlamlıları orada açıkça istendi); diğer bütün olaylarda
+        # kilit aynen geçerli
         new = {"annihilate", "splinter", "obliterate", "demolish", "wreck", "wreak", "rupture", "pulverize",
                "tear apart", "tears apart", "tore apart", "torn apart", "tearing apart",
                "blow apart", "blows apart", "blew apart", "blown apart", "blowing apart"}
@@ -1573,7 +1575,7 @@ class TestMarinaRedesign(unittest.TestCase):
         for e, b in es.EVENT_BEATS.items():
             for slot in ("slice_2", "slice_3"):
                 for bid, beat in b[slot].items():
-                    if (e, bid) == (es.MARINA_TORNADO, "Z6"):
+                    if (e, bid) == (es.MARINA_TORNADO, "Z6") or e in es.STORM_EVENTS:
                         continue
                     words = {w for g in beat["terms"] for w in g}
                     self.assertFalse(words & new, (e, bid))
@@ -2696,6 +2698,328 @@ class TestSupercell(unittest.TestCase):
                 self.assertTrue(sk.is_current_universe_combo(scene["combo_key"]))
                 spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
                 self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
+
+
+class TestSupercellSynonyms(unittest.TestCase):
+    """10 Eki (3), Bahadır: terim kapısı GPT'nin doğal anlatımını reddetmemeli (canlı testte dolu A2+B1 "obliterating
+    shopfronts" ile 3 kez reddedildi). Eş anlamlılar SADECE EKLENDİ. Her madde 5 gerçekçi GPT cümlesiyle geçer; sadece
+    atmosfer anlatan cümleler hiçbir maddeden geçmez. KİLİT."""
+
+    VALID = {
+        "A1": ["A giant hailstone punches through the windshield of the SUV as it skids to a halt.",
+               "Baseball-sized hail shatters the white van's windscreen and the driver slams on the brakes.",
+               "A barrage of ice crashes into the pickup truck's windshield, forcing it to a sudden stop.",
+               "Hail pellets crack the windshield of the small car as it screeches to a stop.",
+               "An onslaught of hail obliterates the SUV's front glass as it grinds to a halt."],
+        "A2": ["Hailstones pummel a line of parked cars, blowing out their windows one by one.",
+               "A barrage of hail hammers the parked vehicles along the curb, shattering every windshield in turn.",
+               "Giant hail rips through a row of parked sedans, their windows bursting one after the other.",
+               "Ice chunks batter the cars lining the street, smashing their windscreens in succession.",
+               "The hail bombardment shatters the windows of each parked car along the row."],
+        "A3": ["The SUV veers as hail punches out its rear window and dents the hood.",
+               "The white van swerves wildly while giant hailstones shatter its back window.",
+               "Hail blows out the pickup truck's rear windscreen and the driver jerks the wheel.",
+               "The small car fishtails as a volley of ice smashes its rear glass.",
+               "The SUV careens across the lane as hail caves in its rear window."],
+        "A4": ["A shop awning buckles under a heap of giant hail and crashes onto the sidewalk.",
+               "The weight of the hailstones tears the canvas canopy down onto the pavement.",
+               "A café awning gives way under piled-up hail and slams onto the sidewalk.",
+               "Hail piles onto a striped awning until it sags and collapses onto the curb.",
+               "Under the barrage of ice, the shop's overhang folds and plunges to the sidewalk."],
+        "A5": ["Hail rips through a patio umbrella and sends café tables tumbling across the terrace.",
+               "Giant hailstones shred a parasol and flip the chairs and tables on the terrace.",
+               "A barrage of ice tears the café umbrellas apart and scatters the furniture.",
+               "Hail punches holes through a sunshade and overturns the bistro tables.",
+               "The hail onslaught flattens an umbrella and knocks over every chair on the patio."],
+        "A6": ["A giant hailstone smashes through the roof of a parked car and its windows explode outward.",
+               "Hail punches a hole in a parked sedan's roof and its glass blows out.",
+               "A chunk of ice crashes through the top of a parked vehicle, shattering its windows.",
+               "A hailstone pierces the roof of a parked hatchback and its windows burst.",
+               "Giant hail caves in the roof of a parked car, blasting its windows out."],
+        "B1": ["A wall of hail sweeps down the street, obliterating shopfronts along the row.",
+               "The hail surges along the block, reducing shop windows to shards.",
+               "A torrent of hail advances down the avenue, obliterating shop windows one after another.",
+               "Hail tears through the storefronts, shattering every display window on the row.",
+               "The hailstorm rips down the street, blasting out the glass fronts of the shops.",
+               "A barrage of ice marches along the row, destroying the shop windows."],
+        "B2": ["Hail shatters the glass panels of a bus shelter and shards scatter across the sidewalk.",
+               "Giant hailstones smash the bus stop's glass walls, spraying fragments over the pavement.",
+               "A volley of ice obliterates the bus shelter's panes and the pieces skitter across the curb.",
+               "Hail punches through the bus shelter roof and its glass bursts across the sidewalk.",
+               "The hail bombardment destroys a bus shelter, leaving glass across the pavement."],
+        "B3": ["Hail tears a shop awning loose and it cartwheels down the street over the parked cars.",
+               "The force of the hail rips a canvas canopy free and it tumbles across the parked cars.",
+               "Giant hail wrenches an awning off a storefront and sends it flying down the street.",
+               "A barrage of ice shreds an awning, which breaks loose and sails over the parked cars.",
+               "Hail strips the awning from a café and hurls it down the street."],
+        "B4": ["Hail smashes through a skylight above a shop and glass rains onto the sidewalk below.",
+               "Giant hailstones punch through a glass roof over a store, showering the pavement with shards.",
+               "A barrage of ice shatters the skylight of a boutique and fragments pour onto the sidewalk.",
+               "Hail obliterates a shop's glass dome and glass cascades onto the street below.",
+               "Ice chunks crash through a rooflight above a café, sending glass onto the sidewalk."],
+        "B5": ["Hail caves in the roofs of a line of parked cars.",
+               "Giant hailstones dent and crumple the roofs of the parked cars along the curb.",
+               "A barrage of ice pounds the parked vehicles until their roofs buckle.",
+               "Hail batters a row of parked sedans, leaving their roofs pockmarked and crushed.",
+               "The hail onslaught flattens the roofs of every parked car on the block."],
+        "B6": ["Hail blasts the windows out of a parked bus and glass sprays across the road.",
+               "Giant hailstones shatter the windows of a city bus, showering the street with glass.",
+               "A barrage of ice blows out the windows of a parked coach and shards scatter across the road.",
+               "Hail punches through the side windows of a parked bus, spraying glass onto the street.",
+               "The hail obliterates a bus's windows, glass bursting across the road."],
+        "I1": ["A huge tree crashes across the road in front of the SUV as it brakes hard.",
+               "A towering oak topples onto the road ahead and the white van skids to a stop.",
+               "A massive tree comes down across the street, forcing the pickup truck to halt.",
+               "A tree trunk slams across the lane just ahead of the small car as it screeches to a stop.",
+               "An uprooted elm plunges across the road and the SUV slams on its brakes."],
+        "I2": ["A tree topples onto a row of parked cars, crushing their roofs.",
+               "A huge oak crashes down on the parked vehicles, flattening them.",
+               "A falling tree pancakes the roofs of several parked cars.",
+               "A massive trunk smashes onto a line of parked sedans, caving in their roofs.",
+               "The tree comes down across the parked cars, crumpling them beneath its branches."],
+        "I3": ["A heavy branch crashes onto the hood of the SUV as it swerves.",
+               "A thick limb slams down on the white van's bonnet as it veers away.",
+               "A broken bough plunges onto the pickup truck's windshield as it swerves.",
+               "A large branch smashes into the front of the small car as it jerks aside.",
+               "A falling tree limb lands on the SUV's hood, denting it as the driver swerves."],
+        "I4": ["A utility pole snaps and falls across the street, wires whipping.",
+               "A power pole cracks at its base and topples, dragging its lines across the road.",
+               "A wooden telephone pole breaks in half and crashes down, cables flailing.",
+               "A utility pole gives way and comes down across the street with its power lines lashing.",
+               "A pole shears off and tumbles into the road, its wires whipping wildly."],
+        "I5": ["A shop sign rips from a wall and flies down the street.",
+               "A large storefront sign tears loose and cartwheels along the street.",
+               "The wind wrenches a metal sign off a building and hurls it down the road.",
+               "A billboard panel breaks free and sails down the street.",
+               "A shop's sign is torn off its brackets and tumbles across the road."],
+        "I6": ["The wind rips the awning off a shop and hurls it down the street.",
+               "A canvas awning tears free from a storefront and flies across the road.",
+               "The gust strips a café canopy off its frame and sends it tumbling down the street.",
+               "A shop's awning is wrenched loose and cartwheels away down the avenue.",
+               "The downburst peels an awning off a building and flings it into the street."],
+        "I7": ["The wind lifts the SUV off the road and slams it down on its side.",
+               "A violent gust hoists the white van into the air and drops it onto its side.",
+               "The downburst picks up the pickup truck and hurls it down onto its roof.",
+               "The wind heaves the small car off its wheels and smashes it down on its side.",
+               "A blast of wind tosses the SUV into the air and it crashes down, landing on its side."],
+        "J1": ["A second line of trees bends flat and snaps one after another along the road.",
+               "Another row of trees doubles over and breaks, one by one, down the street.",
+               "More trees along the road bow to the ground and snap in succession.",
+               "Further down, a line of oaks flattens and cracks one after the other.",
+               "The next row of trees buckles under the wind and topples along the road."],
+        "J2": ["A streetlamp bends and collapses onto the sidewalk.",
+               "A street light buckles in the wind and crashes onto the pavement.",
+               "A lamppost folds over and topples across the sidewalk.",
+               "The streetlight snaps at its base and falls onto the curb.",
+               "A light pole bends double and slams onto the footpath."],
+        "J3": ["A sheet of metal roofing slices down the street and slams into a parked car.",
+               "A corrugated metal sheet scythes along the road and smashes into a parked sedan.",
+               "A loose sheet of tin roofing spins through the air and crashes into a parked vehicle.",
+               "A piece of metal roofing cartwheels down the street and slams against a parked car.",
+               "Torn sheet metal hurtles down the road and strikes a parked car."],
+        "J4": ["The wind rips a garage door off its frame and sends it skidding down the street.",
+               "A garage door tears loose and scrapes across the road.",
+               "The gust wrenches a metal roll-up door from its frame and it tumbles down the street.",
+               "A garage door breaks free and slides along the street.",
+               "The downburst peels a garage door away and it cartwheels across the road."],
+        "J5": ["Roof tiles peel off a house and fly across the street.",
+               "Shingles rip from a rooftop and scatter across the road.",
+               "The wind strips slates from a house roof and hurls them into the street.",
+               "Clay tiles break off a roof and rain down onto the street.",
+               "Sections of roofing tear away from a house and tumble across the road."],
+        "J6": ["The wind shoves a parked car sideways into a fence.",
+               "A gust pushes a parked sedan across the curb and into a fence.",
+               "The downburst drives a parked vehicle sideways into a garden wall.",
+               "The wind slides a parked car into a wooden fence, flattening it.",
+               "A blast of wind rams a parked hatchback against a railing."],
+        "O1": ["Broken wires drop and whip across the road, spitting sparks in front of the SUV.",
+               "Severed power lines fall onto the road and thrash about, throwing sparks ahead of the white van.",
+               "Snapped cables lash across the street in a spray of sparks before the pickup truck.",
+               "Live wires come down in front of the small car and writhe on the asphalt, sparking.",
+               "Torn power cables flail across the road, arcing in front of the SUV."],
+        "O2": ["The transformer falls onto the road in a burst of fire and sparks.",
+               "The burning transformer crashes down onto the street in a ball of flame.",
+               "The transformer drops from the pole and slams into the road, bursting into flames.",
+               "The transformer topples onto the asphalt in an explosion of fire.",
+               "The smoking transformer plunges to the road and erupts in a fireball."],
+        "O3": ["The SUV brakes hard as sparks rain over its hood.",
+               "The white van skids to a stop while a shower of sparks pours onto its bonnet.",
+               "The pickup truck screeches to a halt as sparks cascade across its windshield.",
+               "The small car stops short beneath a spray of sparks.",
+               "The SUV slams on the brakes as glowing sparks bounce off its hood."],
+        "O4": ["A second bolt splits a tree beside the road, throwing burning branches onto the street.",
+               "Another lightning strike rips a roadside oak apart, flinging flaming limbs across the road.",
+               "A fresh bolt of lightning shatters a tree by the curb, sending burning branches into the street.",
+               "Lightning hits a tree beside the road and blows it apart in a shower of burning branches.",
+               "A bolt strikes a roadside tree, cleaving its trunk and hurling burning limbs onto the road."],
+        "O5": ["The pole snaps and crashes across the road, wires whipping and sparking.",
+               "The charred utility pole cracks and topples across the street, dragging its cables.",
+               "The power pole breaks at its base and falls across the road, its lines sparking.",
+               "The pole gives way and comes down across the lanes, wires lashing.",
+               "The damaged pole shears off and slams onto the road, power lines arcing."],
+        "O6": ["The streetlights explode one after another along the road.",
+               "One by one, the street lamps burst in showers of sparks down the street.",
+               "The lampposts along the road blow out in succession.",
+               "Each streetlight along the block pops and flashes in turn.",
+               "The street lights shatter one after the other down the avenue."],
+        "X1": ["A burning wire drops onto a parked car and flames leap across its hood.",
+               "A flaming power line falls across a parked sedan and fire spreads over its bonnet.",
+               "A sparking cable lands on a parked car, setting its hood ablaze.",
+               "A blazing wire whips onto a parked vehicle and flames race across its roof.",
+               "A live line falls onto a parked car and it catches fire."],
+        "X2": ["Lightning strikes again, shattering a tree trunk and scattering burning branches.",
+               "Another bolt splits a tree in two, flinging flaming limbs across the street.",
+               "A fresh lightning strike blows a tree apart, burning branches raining down.",
+               "Lightning hits a second tree and rips it apart in a burst of fire.",
+               "A bolt cleaves a tall tree down the middle, scattering burning boughs."],
+        "X3": ["A bolt hits a car roof in a burst of sparks and its windows blow out.",
+               "Lightning strikes a parked sedan and its windows explode outward in a shower of sparks.",
+               "A lightning bolt slams into a car and blasts out its windows.",
+               "A bolt of lightning hits a parked vehicle, shattering all its windows.",
+               "Lightning strikes the roof of a car and its glass bursts outward."],
+        "X4": ["Flames climb the base of a broken pole in the rain.",
+               "Fire creeps up the splintered utility pole, licking at the wood.",
+               "Flames race up the shattered pole, engulfing its base.",
+               "Fire spreads up the broken power pole despite the rain.",
+               "The base of the downed pole catches fire and flames crawl upward."],
+        "X5": ["Another transformer blows farther down the street in a flash of fire.",
+               "A second transformer explodes down the block in a ball of flame.",
+               "Farther along the road, another transformer bursts in a shower of sparks.",
+               "One more transformer erupts down the street in a fireball.",
+               "Further down, a second transformer detonates in a blinding flash."],
+        "X6": ["Burning branches fall onto a parked car.",
+               "Flaming limbs crash down onto a parked sedan.",
+               "A blazing branch drops onto the roof of a parked vehicle.",
+               "Burning boughs rain down onto a parked car, setting it alight.",
+               "Smouldering branches tumble onto a parked hatchback."],
+        "H1": ["The overturned truck grinds across the lanes in a shower of sparks as the SUV swerves to avoid it.",
+               "The toppled lorry scrapes along the highway, sparks flying, while the white van veers around it.",
+               "The capsized semi slides across the lanes and the pickup truck jerks aside to dodge it.",
+               "The fallen big rig skids across the asphalt as the small car swerves past.",
+               "The overturned truck screeches along the road and the SUV careens out of its path."],
+        "H2": ["The SUV brakes hard and skids sideways as the wind pushes it across the lane.",
+               "The white van slams on its brakes as a gust shoves it broadside into the next lane.",
+               "The pickup truck screeches to a stop while the wind drives it across the highway.",
+               "The small car skids to a halt as the gale forces it sideways out of its lane.",
+               "The SUV brakes and slides sideways, pushed across two lanes by the wind."],
+        "H3": ["A trailer breaks loose and slides across the highway, scattering cargo.",
+               "A semi-trailer tears free and skids across the lanes, spilling boxes everywhere.",
+               "A detached trailer slews across the highway, its load tumbling onto the road.",
+               "The lorry's trailer scrapes across the asphalt, dumping crates across the lanes.",
+               "A trailer careens across the lanes and its cargo spills onto the road."],
+        "H4": ["A car clips the fallen truck and spins across the lane.",
+               "A sedan slams into the overturned lorry and spins out across the highway.",
+               "A small car grazes the toppled truck and whirls around across the lane.",
+               "A hatchback hits the fallen semi and spins wildly across the road.",
+               "A car crashes into the downed truck and pirouettes across the lane."],
+        "H5": ["A highway sign tears loose and crashes onto the lanes.",
+               "An overhead sign breaks free and plunges onto the road.",
+               "A large road sign rips from its gantry and slams onto the asphalt.",
+               "A highway sign is torn off its post and falls across the lanes.",
+               "A green highway sign comes loose and smashes down onto the road."],
+        "H6": ["A second truck tips over behind the SUV.",
+               "Another lorry topples onto its side behind the white van.",
+               "A second semi overturns on the highway behind the pickup truck.",
+               "Behind the small car, another truck rolls over onto its side.",
+               "Another big rig keels over behind the SUV."],
+        "H7": ["The wind lifts the SUV off the lane and flips it over the guardrail.",
+               "A gust hoists the white van into the air and flips it over the crash barrier.",
+               "The wind picks up the pickup truck and overturns it across the barrier.",
+               "A violent gust heaves the small car off the road and rolls it over the railing.",
+               "The wind tosses the SUV into the air and it flips over the median."],
+        "S1": ["A van tips over and slides along the guardrail in a shower of sparks.",
+               "A delivery van topples onto its side and scrapes along the crash barrier.",
+               "A minivan overturns and grinds along the railing, throwing sparks.",
+               "A panel van rolls over and skids along the barrier.",
+               "A white van keels over and slides down the guardrail."],
+        "S2": ["A gust flips a car onto its roof and it slides along the asphalt.",
+               "The wind overturns a sedan, which skids upside down along the highway.",
+               "A car rolls over onto its roof and scrapes across the lanes.",
+               "A blast of wind turns a hatchback upside down and it slides across the road.",
+               "A car somersaults and grinds along the asphalt on its roof."],
+        "S3": ["A chain of cars slams into each other in the blowing rain and dust, one after another.",
+               "Car after car crashes into the one ahead, a pile-up spreading down the highway.",
+               "Several cars rear-end each other in a long chain through the rain and dust.",
+               "The cars collide one by one in a growing pile-up.",
+               "A string of vehicles plows into one another, one after the other."],
+        "S4": ["A row of trees along the highway bends flat and scatters branches across the lanes.",
+               "The roadside trees bow to the ground, strewing branches over the highway.",
+               "Trees along the highway double over, flinging limbs across the lanes.",
+               "A line of trees buckles in the wind and showers branches onto the road.",
+               "The trees lining the highway flatten and toss broken branches across all lanes."],
+        "S5": ["A car spins around and slams into the guardrail.",
+               "A sedan spins out and crashes into the crash barrier.",
+               "A hatchback whirls across the lanes and smashes into the median barrier.",
+               "A car pirouettes on the wet asphalt and hits the guardrail.",
+               "A vehicle fishtails, spins and slams against the railing."],
+        "S6": ["A second truck tips over and slides across the lanes.",
+               "Another lorry topples onto its side and skids across the highway.",
+               "A second semi overturns and slides across the road.",
+               "Another big rig keels over and scrapes across the lanes.",
+               "One more truck rolls over and slides along the highway."],
+    }
+    # Sadece atmosfer (rüzgâr, gökyüzü, yağmur, uzak şimşek): hiçbir maddeden geçmemeli
+    ATMOSPHERE = ["Dark green clouds churn overhead as the wind howls down the street.",
+                  "The sky turns black and a cold gust sweeps across the empty road.",
+                  "Lightning flickers inside the towering supercell high above the city.",
+                  "Heavy rain lashes the street under a greenish-grey sky.",
+                  "The wind roars and the clouds swirl in dramatic storm light.",
+                  "Rain and wind sweep across the highway lanes under the dark supercell.",
+                  "Gusts of wind rush along the avenue as the storm builds overhead.",
+                  "Thunderclouds roll in and the light turns an eerie green."]
+    # Canlı test (10 Eki): dolu A2+B1'de GPT bunları yazdı, B1 "9-15s: seçilen olay görünmüyor" ile 3 kez reddedildi
+    LIVE_B1 = ["A wall of hail sweeps down the street, obliterating shopfronts along the row.",
+               "The hail surges along the block, reducing shop windows to shards.",
+               "A torrent of hail advances down the avenue, obliterating shop windows one after another."]
+
+    def beats(self):
+        for e in es.STORM_EVENTS:
+            for slot in ("slice_2", "slice_3"):
+                for bid, beat in es.EVENT_BEATS[e][slot].items():
+                    yield e, slot, bid, beat
+
+    def test_every_beat_has_five_valid_sentences_that_pass(self):
+        ids = {bid for _, _, bid, _ in self.beats()}
+        self.assertEqual(set(self.VALID), ids)                  # 4 olayın bütün maddeleri kapsandı
+        for e, slot, bid, beat in self.beats():
+            self.assertGreaterEqual(len(self.VALID[bid]), 5, bid)
+            for s in self.VALID[bid]:
+                with self.subTest(beat=bid, text=s):
+                    self.assertEqual(es.missing_term_groups(beat["terms"], s), [])
+
+    def test_live_b1_sentences_now_pass(self):
+        b1 = es.EVENT_BEATS[es.HAIL]["slice_3"]["B1"]["terms"]
+        for s in self.LIVE_B1:
+            with self.subTest(text=s):
+                self.assertEqual(es.missing_term_groups(b1, s), [])
+        # dolu A2+B1 tam denetimde de geçer (kaçan kişi, araç, kelime dahil)
+        spec = es.build_spec(es.HAIL, None, "Balcony of a high apartment across the street", None, "A2", "B1", "SUV", 5)
+        for s in self.LIVE_B1:
+            sl = {"slice_1_rest": "Five people run from the storm into the doorways.",
+                  "slice_2": "Hailstones hammer a row of parked cars, shattering their windows one after another.",
+                  "slice_3": es.clean_slice(s)}
+            with self.subTest(text=s):
+                self.assertEqual(es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl)), [])
+
+    def test_atmosphere_only_still_rejected(self):
+        for e, slot, bid, beat in self.beats():
+            for s in self.ATMOSPHERE:
+                with self.subTest(beat=bid, text=s):
+                    self.assertTrue(es.missing_term_groups(beat["terms"], s))
+
+    def test_only_additions(self):
+        # 10 Eki (3): eski terimlerin hepsi duruyor (örnekler); sadece ekleme yapıldı
+        for lst, old in ((es._STORM_SMASH, ("smash", "shatter", "crack", "break", "broke", "burst", "explode",
+                                            "punch through", "punches through", "cave", "crumple", "dent", "pierce")),
+                         (es._STORM_HAIL, ("hail", "hailstone", "ice", "ice ball", "ice chunk")),
+                         (es._STORM_SHOP, ("shop", "store", "storefront", "shopfront", "shop front", "window", "café",
+                                           "cafe", "display")),
+                         (es._STORM_CAR, ("car", "cars", "vehicle", "sedan", "hatchback", "suv", "van", "truck",
+                                          "pickup"))):
+            self.assertEqual(lst[:len(old)], old)
+        for w in ("obliterate", "destroy", "demolish", "pulverize", "annihilate", "wreck", "ravage", "devastate",
+                  "rip apart", "tear apart", "blow out", "blast out", "shard", "rubble", "gut", "strip"):
+            self.assertIn(w, es._STORM_SMASH)
 
 if __name__ == "__main__":
     unittest.main()

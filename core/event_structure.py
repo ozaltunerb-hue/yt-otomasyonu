@@ -418,6 +418,104 @@ _STORM_ROOF_FLIP = ("onto its roof", "on its roof", "on to its roof", "upside do
                     "rolls over", "rolled over")
 _STORM_PILEUP = ("into each other", "pile-up", "pileup", "pile up", "piles up", "chain", "collide", "collision",
                  "rear-end", "rear end", "plow into", "plows into", "plough into", "ploughs into")
+# ── Süper hücre eş anlamlı genişletmesi (10 Eki (3), Bahadır): SADECE EKLEME, mevcut terimlerin hiçbiri çıkmadı.
+# Sebep: canlı testte GPT'nin doğal anlatımı ("obliterating shopfronts", "reducing shop windows to shards")
+# reddedildi. Kural: terim kapısı GPT'nin doğal anlatımını reddetmemeli; eş anlamlılar için sadece ekleme yapılır.
+# Her madde başka gruplar da istediği için (dolu, ağaç, araç, tel...) sadece atmosfer anlatan cümle yine geçmez.
+_STORM_HAIL += ("pellet", "hailball", "icestone", "ice stone", "barrage", "onslaught", "bombardment", "volley",
+                "hailstorm", "frozen")
+_STORM_GLASS += ("windowpane", "sunroof", "glazing", "glass front")
+_STORM_SMASH += ("obliterate", "destroy", "demolish", "pulverize", "pulverise", "annihilate", "wreck", "ravage",
+                 "devastate", "rip apart", "rips apart", "ripped apart", "ripping apart", "tear apart", "tears apart",
+                 "tore apart", "torn apart", "tearing apart", "blow out", "blows out", "blew out", "blown out",
+                 "blowing out", "blast out", "blasts out", "blasted out", "blasting out", "shard", "rubble",
+                 "fragment", "smithereens", "gut", "strip", "shred", "crash through", "crashes through",
+                 "crashed through", "crashing through", "break through", "breaks through", "broke through", "rupture")
+_STORM_BRAKE += ("decelerate", "standstill")
+_STORM_SWERVE += ("weave", "careen", "steer", "slew", "evade", "swing", "swung", "spin out", "spins out", "spun out")
+_STORM_ROW += ("lined", "string", "column", "queue", "both sides", "all along", "each", "every", "several",
+               "succession", "car after car", "vehicle after vehicle", "in a chain")
+_STORM_CAR += ("automobile", "coupe", "minivan", "jeep", "taxi", "wagon", "convertible")
+_STORM_AWNING += ("canvas", "overhang", "marquee", "tarp", "tarpaulin", "sunblind", "blind")
+_STORM_COLLAPSE += ("crumple", "fold", "slump", "topple", "plunge", "come down", "comes down", "came down", "break",
+                    "broke", "snap", "split", "slam", "smash")
+_STORM_UMBRELLA += ("sunshade", "shade")
+_STORM_FURNITURE += ("bench", "seat")
+_STORM_TREE += ("sapling", "maple", "elm", "willow", "birch", "poplar", "cypress", "twig", "log")
+_STORM_SHOP += ("glass front", "boutique", "bakery", "showroom", "kiosk", "frontage", "facade", "façade")
+_STORM_SHELTER += ("tram stop", "bus station")
+_STORM_GREENHOUSE += ("rooflight", "roof light", "glass dome", "atrium", "glass ceiling", "roof window", "dome")
+_STORM_CAVE += ("crater", "pockmark", "dimple", "mangle", "hammer", "pummel", "destroy", "wreck", "obliterate",
+                "demolish", "pulverize", "buckle")
+_STORM_FALL += ("plummet", "hurtle", "keel over", "keels over", "go down", "goes down", "went down", "give way",
+                "gives way", "gave way", "thud")
+_STORM_CRUSH += ("mangle", "pancake", "squash", "destroy", "wreck", "bury", "buried", "buckle", "obliterate",
+                 "demolish")
+_STORM_HOOD += ("front end", "engine", "cab")
+_STORM_POLE += ("telegraph pole", "mast")
+_STORM_SNAP += ("shear", "tumble", "come down", "comes down", "came down", "keel over", "keels over", "go down",
+                "goes down", "went down", "buckle", "crumple", "tip")
+_STORM_WIRE += ("wiring", "conductor", "high-voltage line", "electric line", "power cable")
+_STORM_WHIP += ("flick", "twist", "coil", "bounce", "sway", "swirl")
+_STORM_SIGN += ("placard", "banner", "gantry", "plaque")
+_STORM_RIP += ("wrest", "yank", "break free", "breaks free", "broke free", "come loose", "comes loose", "came loose",
+               "shear", "detach", "dislodge", "unhook")
+_STORM_FLY += ("hurtle", "soar", "skid", "slide", "slid", "rocket", "careen", "bounce", "roll", "launch", "propel",
+               "catapult", "scatter", "skitter")
+_STORM_LIFT += ("into the air", "aloft", "skyward", "pluck", "snatch", "toss", "fling", "flung", "hurl", "launch")
+_STORM_SIDE += ("turn over", "turns over", "turned over", "upend", "upside down", "on its back", "keels over",
+                "keeled over", "keeling over", "roll it over", "rolls it over", "rolled it over", "rolling it over")
+_STORM_SLAM_DOWN += ("thud", "smack", "dump", "bang", "hammer")
+_STORM_SECOND += ("other", "additional", "follow", "also")
+_STORM_BEND += ("arch", "fold", "buckle", "double over", "doubles over", "doubled over", "press", "lie flat",
+                "lies flat", "contort", "heel", "keel")
+_STORM_LAMP += ("light post", "lamp standard", "street lighting", "lamp pole", "lantern")
+_STORM_METAL += ("sheeting", "steel sheet", "tin sheet", "metal panel", "aluminum", "aluminium", "metal roof", "tin")
+_STORM_SLICE += ("carve", "glide", "streak", "shoot", "cartwheel", "tumble", "tear", "tore", "cleave", "hurl",
+                 "fling", "flung", "rip")
+_STORM_GARAGE += ("roll-up door", "rollup door", "gate", "overhead door", "metal door")
+_STORM_SKID_AWAY += ("clatter", "skitter", "careen", "hurtle", "roll", "rattle", "grind", "drag", "slither", "glide",
+                     "sweep", "swept", "carry", "carried", "blow", "blew", "blown", "whirl", "spin", "spun")
+_STORM_TILE += ("pantile", "terracotta", "roof")
+_STORM_PEEL += ("break off", "breaks off", "broke off", "come off", "comes off", "came off", "fly off", "flies off",
+                "flew off", "shear", "whirl", "spin", "cascade", "rain", "shower", "pour", "detach", "dislodge",
+                "hurl", "fling", "flung", "tumble", "sail")
+_STORM_SHOVE += ("thrust", "nudge", "jostle", "ram", "force", "drive", "drove", "propel", "heave", "crash", "smash",
+                 "bang", "hurl", "fling", "flung", "knock")
+_STORM_FENCE += ("railing", "hedge", "wall", "gate", "barrier", "palisade", "post")
+_STORM_SPARK += ("cinder", "sparkle", "glow", "electric arc")
+_STORM_TRANSFORMER += ("junction box", "utility box", "fuse box", "canister", "power unit")
+_STORM_FIRE += ("inferno", "smolder", "smoulder", "charred", "scorch", "glow", "on fire", "ignite", "catch fire",
+                "catches fire", "caught fire", "aflame")
+_STORM_BOLT += ("thunderbolt", "zap", "discharge", "fork")
+_STORM_SPLIT += ("splinter", "rip apart", "rips apart", "ripped apart", "tear apart", "tears apart", "tore apart",
+                 "torn apart", "blow apart", "blows apart", "blew apart", "blown apart", "apart", "smash", "rupture",
+                 "halve", "sever", "obliterate", "destroy", "demolish", "shred")
+_STORM_EXPLODE += ("detonate", "erupt", "flare", "blast", "go up", "goes up", "went up", "short out", "shorts out",
+                   "shorted out")
+_STORM_CLIMB += ("race", "rise", "rose", "wrap", "envelop", "consume", "swallow", "devour", "leap", "jump", "flicker",
+                 "shoot up", "shoots up", "scale")
+_STORM_TRUCK += ("18-wheeler", "eighteen-wheeler", "articulated", "hgv", "tractor", "heavy vehicle")
+_STORM_GRIND += ("hurtle", "barrel", "slither", "glide", "sweep", "swept", "roll", "tumble", "bounce", "rake",
+                 "gouge", "slew")
+_STORM_CARGO += ("contents", "merchandise", "pallet", "barrel", "sack", "bag", "shipment")
+_STORM_SPIN += ("spin out", "spins out", "spun out", "slew", "swivel", "wheel", "gyrate", "cartwheel", "loop",
+                "revolve", "fishtail", "circle")
+_STORM_CLIP += ("sideswipe", "collide", "plow", "plough", "catch", "caught", "knock", "rear-end", "glance", "bash")
+_STORM_GUARDRAIL += ("divider", "rail", "parapet", "fence", "central reservation", "wall")
+_STORM_VAN += ("minibus", "motorhome", "people carrier")
+_STORM_SCATTER += ("carpet", "cover", "spread", "disperse", "toss", "pepper", "shed", "drop", "strip")
+_STORM_SIDEWAYS += ("across the road", "across the highway", "into the next lane", "into the other lane",
+                    "out of its lane", "off course", "laterally", "drift", "slew")
+_STORM_ROOF += ("top", "sunroof")
+_STORM_BUS += ("trolleybus", "minibus", "shuttle", "streetcar", "double-decker", "double decker")
+_STORM_BLAST += ("pop out", "pops out", "popped out", "cave in", "caves in", "caved in", "obliterate", "destroy",
+                 "shard", "fragment", "punch through", "punches through", "blast out", "blasts out", "blasted out",
+                 "spray")
+_STORM_PILEUP += ("into one another", "one another", "each other", "domino", "concertina", "multi-car",
+                  "bumper to bumper", "the car ahead", "the car in front", "the vehicle ahead")
+_STORM_ROOF_FLIP += ("somersault", "tumble", "cartwheel", "barrel roll", "turn over", "turns over", "turned over",
+                     "upend", "belly up", "on its back", "onto its back")
 _FIRE_BURST = ("burst", "shatter", "crack", "explode", "split", "pop", "fly", "flies", "flew", "break",
                "broke")
 
