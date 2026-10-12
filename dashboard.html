@@ -104,6 +104,13 @@
 
   /* Filtreler */
   .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .tab { background: none; border: 0; border-bottom: 2px solid transparent; color: var(--text-2); font: inherit; font-size: 14px; font-weight: 600; padding: 8px 12px; margin-bottom: -1px; cursor: pointer; }
+  .tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--text); }
+  .acard .vbody { padding-top: 12px; }
+  .reason { margin-top: 6px; padding: 6px 10px; border-left: 3px solid var(--warning); background: var(--surface-2); color: var(--text-2); font-size: 13px; border-radius: 4px; }
+  .kpi.link { cursor: pointer; }
+  .kpi.link .l { text-decoration: underline dotted; }
   .chip { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 13px; cursor: pointer; }
   .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
 
@@ -173,6 +180,7 @@
 
   <section>
     <h2>Videolar (Notion kayıtları)</h2>
+    <div class="tabs" id="tabs" role="tablist"></div>
     <div class="filters" id="filters"></div>
     <div class="grid videos" id="videos"></div>
     <div class="meta" id="syncinfo" style="margin-top:10px"></div>
@@ -186,7 +194,11 @@
 
 <script>
 const TZ = "Europe/Istanbul";
-const STATE = { status: null, runs: [], sync: {}, token: null, filter: "all", locals: [], diagramKey: "", backup: {} };
+// Sekme seçimi sayfa yenilenince korunur; localStorage kapalı/erişilemezse varsayılan "videos"
+const TAB_KEY = "deepmyster.panel.tab";
+function loadTab() { try { const t = localStorage.getItem(TAB_KEY); return t === "archive" ? "archive" : "videos"; } catch { return "videos"; } }
+function saveTab(t) { try { localStorage.setItem(TAB_KEY, t); } catch {} }
+const STATE = { status: null, runs: [], sync: {}, token: null, filter: "all", locals: [], diagramKey: "", backup: {}, tab: loadTab() };
 
 // ── yardımcılar ──
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -216,6 +228,7 @@ function classify(r) {
   if (r.youtube_url) return { key: "up", label: "Yüklendi", icon: "✓", cls: "b-up" };
   if (st.includes("Upload Başarısız")) return { key: "err", label: "Yükleme hatası", icon: "✕", cls: "b-err" };
   if (st.includes("Hata")) return { key: "err", label: "Hata", icon: "✕", cls: "b-err" };
+  if (st.includes("İptal")) return { key: "err", label: "İptal", icon: "✕", cls: "b-err" };
   if (st.includes("Tamamlandı") || st === "Video Hazır") return { key: "made", label: "Üretildi", icon: "●", cls: "b-made" };
   const stale = Date.now() - new Date(r.date) > 2 * 3600e3;
   return stale ? { key: "err", label: `Takılı: ${st}`, icon: "!", cls: "b-err" }
@@ -248,6 +261,32 @@ function copyBadge(r) {
   return { label: "Kopya yok", cls: "b-err" };
 }
 // <video> hata verirse sıradaki kaynağa geç; hepsi biterse küçük resme düş
+// Ana liste ("Videolar") sadece yerel kopyası olan, yani gerçekten oynatılabilen kayıtlar (12 Eki 2026)
+const isWatchable = r => backupOf(r).status === "ok";
+const hadVideo = r => !!(r.video_url || r.telegram_file_id || r.youtube_url);
+function reasonOf(r) {
+  const b = backupOf(r), k = classify(r);
+  if (!hadVideo(r)) return k.key === "run" ? "Üretim sürüyor, video henüz yok." : `Üretim tamamlanmadı (${k.label}), video hiç oluşmadı.`;
+  if (b.status === "bozuk_yerel") return "Yerel kopya bozuk: " + (b.error || "");
+  if (b.too_big || b.error === TG_LIMIT) return `Telegram: ${TG_LIMIT}. Kie linki de yoksa video kayıp.`;
+  if (r.telegram_file_id) return "Yerel kopya henüz inmedi; bir sonraki senkronda Telegram'dan indirilecek.";
+  if (r.youtube_url) {
+    const y = b.youtube_check?.status;
+    return `${NO_COPY_YT}${y ? ` (YouTube'da ${y}, giriş yapmadan indirilemiyor)` : ""}. Kie linki ~15 günde öldü, Telegram kopyası yok.`;
+  }
+  if (r.video_url && !kieDead(b)) return "Yerel kopya henüz inmedi; bir sonraki senkronda Kie linkinden indirilecek.";
+  return "Kopya yok, video kayıp: Kie linki ~15 günde öldü, Telegram ve YouTube kopyası yok.";
+}
+const tabRuns = () => STATE.runs.filter(r => (STATE.tab === "videos") === isWatchable(r));
+function renderTabs() {
+  const nv = STATE.runs.filter(isWatchable).length, na = STATE.runs.length - nv;
+  document.getElementById("tabs").innerHTML = [["videos", `Videolar · ${nv}`], ["archive", `Arşiv (video yok) · ${na}`]].map(([t, l]) =>
+    `<button class="tab" role="tab" data-tab="${t}" aria-selected="${STATE.tab === t}">${l}</button>`).join("");
+}
+function setTab(t) {
+  if (t !== "videos" && t !== "archive") return;
+  STATE.tab = t; STATE.filter = "all"; saveTab(t); renderVideos();
+}
 // İki klasörün (yedek + kurtarılan) toplamı; anahtar kayıt id'si olduğu için çakışma kendiliğinden tekilleşir
 function localCount() { return Object.values(STATE.backup).filter(b => b.status === "ok").length; }
 function nextSource(v) {
@@ -286,11 +325,13 @@ function renderKpis() {
     ["Üretildi, yüklenmedi", c.made],
     ["Hata", c.err],
     ["Yerel kopya", localCount()],
-    ["Yedeksiz", STATE.runs.filter(r => (r.video_url || r.telegram_file_id || r.youtube_url) && copyBadge(r).label !== "Yerel kopya").length],
+    ["Yedeksiz (sadece YouTube)", STATE.runs.filter(r => !isWatchable(r) && copyBadge(r).label === NO_COPY_YT).length, "archive"],
+    ["Kayıp (hiç kopya yok)", STATE.runs.filter(r => !isWatchable(r) && hadVideo(r) && copyBadge(r).label === "Kopya yok").length, "archive"],
     ["Lokal .mp4", STATE.locals.length],
   ];
-  document.getElementById("kpis").innerHTML = tiles.map(([l, v]) =>
-    `<div class="card kpi"><div class="v">${v}</div><div class="l">${esc(l)}</div></div>`).join("");
+  document.getElementById("kpis").innerHTML = tiles.map(([l, v, tab]) => tab
+    ? `<div class="card kpi link" role="button" tabindex="0" data-tab="${tab}" title="Arşiv sekmesinde göster"><div class="v">${v}</div><div class="l">${esc(l)} → Arşiv</div></div>`
+    : `<div class="card kpi"><div class="v">${v}</div><div class="l">${esc(l)}</div></div>`).join("");
 }
 
 // ── render: Şu an çalışan ──
@@ -429,21 +470,38 @@ function renderToken() {
 const FILTERS = [["all", "Tümü"], ["up", "Yüklendi"], ["made", "Üretildi"], ["err", "Hata"], ["run", "Sürüyor"]];
 function renderFilters() {
   document.getElementById("filters").innerHTML = FILTERS.map(([k, l]) => {
-    const n = k === "all" ? STATE.runs.length : STATE.runs.filter(r => classify(r).key === k).length;
+    const base = tabRuns();
+    const n = k === "all" ? base.length : base.filter(r => classify(r).key === k).length;
     return `<button class="chip" data-f="${k}" aria-pressed="${STATE.filter === k}">${l} · ${n}</button>`;
   }).join("");
 }
+function archiveCard(r) {
+  const k = classify(r), cb = copyBadge(r);
+  return `<article class="card vcard acard" data-archive="1">
+      <div class="vbody">
+        <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span>${hadVideo(r) ? `<span class="badge ${cb.cls}" data-copy="${esc(cb.label)}">${esc(cb.label)}</span>` : ""}<span>${fmt(r.date)}</span>${domainOf(r) ? `<span>· ${esc(domainOf(r))}</span>` : ""}</div>
+        <div class="vtitle">${esc(r.title || "(başlıksız)")}</div>
+        <div class="reason">${esc(reasonOf(r))}</div>
+        ${r.error ? `<div class="verr">${esc(r.error.slice(0, 300))}</div>` : ""}
+        ${r.prompt ? `<details><summary>Senaryo / prompt</summary><p>${esc(r.prompt)}</p></details>` : ""}
+        <div class="links">
+          ${r.youtube_url ? `<a href="${esc(r.youtube_url)}" target="_blank" rel="noopener">YouTube</a>` : ""}
+          ${r.notion_url ? `<a href="${esc(r.notion_url)}" target="_blank" rel="noopener">Notion</a>` : ""}
+        </div>
+      </div></article>`;
+}
 function renderVideos() {
+  renderTabs();
   renderFilters();
-  const list = STATE.runs.filter(r => STATE.filter === "all" || classify(r).key === STATE.filter);
-  const vkey = STATE.filter + "|" + JSON.stringify(list) + JSON.stringify(STATE.backup);
+  const list = tabRuns().filter(r => STATE.filter === "all" || classify(r).key === STATE.filter);
+  const vkey = STATE.tab + "|" + STATE.filter + "|" + JSON.stringify(list) + JSON.stringify(STATE.backup);
   if (vkey !== STATE.videosKey) {
   STATE.videosKey = vkey;
   document.getElementById("videos").innerHTML = list.length ? list.map(r => {
+    if (STATE.tab === "archive") return archiveCard(r);
     const k = classify(r), id = r.youtube_url && ytId(r.youtube_url);
     // Gizli YouTube videolarının küçük resmi gri yer tutucu döner: onun yerine açık etiket (12 Eki 2026)
-    const hadVideo = !!(r.video_url || r.telegram_file_id || r.youtube_url);
-    const still = id ? `<span class="nocopy">${NO_COPY_YT}</span>` : `<span${hadVideo ? ' class="nocopy"' : ""}>${hadVideo ? "Kopya yok, video kayıp" : "Video yok"}</span>`;
+    const still = id ? `<span class="nocopy">${NO_COPY_YT}</span>` : `<span class="nocopy">Video açılamadı</span>`;
     // Sayfa içi oynatma: kaynaklar sırayla denenir (videoSources). YouTube private videoları gömmeye izin vermez.
     const srcs = videoSources(r), cb = copyBadge(r), bk = backupOf(r);
     const thumb = srcs.length
@@ -453,7 +511,7 @@ function renderVideos() {
     return `<article class="card vcard">
       <div class="thumb${srcs.length ? " play" : ""}">${thumb}</div>
       <div class="vbody">
-        <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span>${hadVideo ? `<span class="badge ${cb.cls}" data-copy="${esc(cb.label)}"${cb.title ? ` title="${esc(cb.title)}"` : ""}>${esc(cb.label)}</span>` : ""}<span>${fmt(r.date)}</span><span>· tetik: ${esc(r.trigger || "?")}</span>${domainOf(r) ? `<span>· ${esc(domainOf(r))}</span>` : ""}</div>
+        <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span><span class="badge ${cb.cls}" data-copy="${esc(cb.label)}"${cb.title ? ` title="${esc(cb.title)}"` : ""}>${esc(cb.label)}</span><span>${fmt(r.date)}</span><span>· tetik: ${esc(r.trigger || "?")}</span>${domainOf(r) ? `<span>· ${esc(domainOf(r))}</span>` : ""}</div>
         <div class="vtitle">${esc(r.title || "(başlıksız)")}</div>
         ${r.topic && r.topic !== r.title ? `<div class="vtext">${esc(r.topic.slice(0, 220))}</div>` : ""}
         ${r.error ? `<div class="verr">${esc(r.error.slice(0, 300))}</div>` : ""}
@@ -466,13 +524,26 @@ function renderVideos() {
           ${r.notion_url ? `<a href="${esc(r.notion_url)}" target="_blank" rel="noopener">Notion</a>` : ""}
         </div>
       </div></article>`;
-  }).join("") : `<div class="empty">Bu filtrede kayıt yok.</div>`;
+  }).join("") : `<div class="empty">${STATE.tab === "archive" ? "Arşivde kayıt yok." : "Bu filtrede izlenebilir video yok."}</div>`;
   }
   const s = STATE.sync;
   document.getElementById("syncinfo").innerHTML = s.synced_at
     ? `Notion'dan son çekim: ${fmt(s.synced_at)} (${ago(s.synced_at)}).${s.sync_error ? ` <span style="color:var(--critical-ink)">Son deneme başarısız: ${esc(s.sync_error)}</span>` : ""}`
     : `Notion verisi yok. <code>python scripts/dashboard_sync.py</code> çalıştır (start_dashboard.bat bunu otomatik yapar).`;
 }
+document.getElementById("tabs").addEventListener("click", e => {
+  const t = e.target.closest("[data-tab]")?.dataset.tab;
+  if (t) setTab(t);
+});
+function openArchive(e) {
+  const el = e.target.closest("[data-tab]");
+  if (!el || (e.type === "keydown" && e.key !== "Enter" && e.key !== " ")) return;
+  e.preventDefault();
+  setTab(el.dataset.tab);
+  document.getElementById("tabs").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+document.getElementById("kpis").addEventListener("click", openArchive);
+document.getElementById("kpis").addEventListener("keydown", openArchive);
 document.getElementById("filters").addEventListener("click", e => {
   const f = e.target.closest("[data-f]")?.dataset.f;
   if (f) { STATE.filter = f; renderVideos(); }

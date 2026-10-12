@@ -292,6 +292,14 @@ class TestPanelHtml(unittest.TestCase):
                       "kieDead(b)", "checkPageVersion"]:
             self.assertIn(label, html)
         fn = html[html.index("function videoSources"):html.index("const TG_LIMIT")]
+        # 12 Eki: ana liste sadece yerel kopyası olanlar; geri kalanı Arşiv sekmesinde, neden yazılı; seçim kalıcı
+        for label in ["Arşiv (video yok)", "Videolar · ", "const isWatchable = r => backupOf(r).status === \"ok\"",
+                      "function reasonOf", "localStorage.getItem(TAB_KEY)", "localStorage.setItem(TAB_KEY, t)"]:
+            self.assertIn(label, html)
+        load = html[html.index("function loadTab"):html.index("function saveTab")]
+        save = html[html.index("function saveTab"):html.index("const STATE")]
+        self.assertIn("try", load)
+        self.assertIn("try", save)
         self.assertLess(fn.index("out.push(`videos/"), fn.index("out.push(`api/tg/"))
         self.assertLess(fn.index("out.push(`api/tg/"), fn.index("out.push(r.video_url)"))
 
