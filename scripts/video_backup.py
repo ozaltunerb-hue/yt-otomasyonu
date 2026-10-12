@@ -6,6 +6,8 @@
 # Kaynak sırası: Telegram File ID -> Kie linki. Her indirme ffprobe ile doğrulanır (video akışı, süre >= 4 sn,
 # indirilen boyut = beklenen boyut); bozuk dosya kopya sayılmaz, tekrar denenir.
 # Sonuç dashboard_data/video_backup.json'a yazılır, panel kaynak rozetini oradan çizer.
+# Ayrıca elle kurtarılan videolar (C:\DeepMyster_videolar_kurtarilan, dizin.json'da notion_id eşleşmesi) yerel kopya
+# sayılır; o klasöre sadece okunur, yazılmaz.
 #
 #   python scripts/video_backup.py            -> eksik videoları indir, özet yaz
 #   (dashboard_sync.py her Notion çekiminden sonra bunu otomatik çağırır)
@@ -25,6 +27,7 @@ ENV_FILES = [os.path.join(REPO_ROOT, "_knowledge", "credentials", "master.env"),
 RUNS_FILE = os.path.join(ROOT, "dashboard_data", "notion_runs.json")
 STATE_FILE = os.path.join(ROOT, "dashboard_data", "video_backup.json")
 VIDEO_DIR = os.environ.get("DEEPMYSTER_VIDEO_DIR", r"C:\DeepMyster_videolar")
+RECOVERED_DIR = os.environ.get("DEEPMYSTER_RECOVERED_DIR", r"C:\DeepMyster_videolar_kurtarilan")
 
 TG_LIMIT = 20 * 1024 * 1024        # Telegram Bot API getFile indirme sınırı
 TG_LIMIT_MSG = "indirilemedi (20 MB sınırı)"
@@ -60,6 +63,33 @@ def record_key(record_id: str) -> str:
 
 def video_path(key: str, video_dir: str = VIDEO_DIR) -> str:
     return os.path.join(video_dir, f"{key}.mp4")
+
+
+def recovered_index(recovered_dir: str = RECOVERED_DIR) -> dict:
+    """Kurtarılanlar klasörünün dizin.json'u -> {kayıt anahtarı: dosya yolu} (sadece var olan dosyalar)."""
+    try:
+        with open(os.path.join(recovered_dir, "dizin.json"), encoding="utf-8") as f:
+            rows = json.load(f)
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for row in rows if isinstance(rows, list) else []:
+        key = record_key(str(row.get("notion_id", "")))
+        name = os.path.basename(str(row.get("file", "")))
+        path = os.path.join(recovered_dir, name)
+        if key and name.lower().endswith(".mp4") and os.path.isfile(path):
+            out.setdefault(key, path)
+    return out
+
+
+def local_copy(key: str, video_dir: str = VIDEO_DIR, recovered_dir: str = RECOVERED_DIR) -> str:
+    """Kaydın yerel kopyası: önce yedek klasörü, sonra kurtarılanlar. Yoksa ''."""
+    if not record_key(key):
+        return ""
+    path = video_path(key, video_dir)
+    if os.path.isfile(path):
+        return path
+    return recovered_index(recovered_dir).get(key, "")
 
 
 class BackupError(Exception):
@@ -164,7 +194,7 @@ def fetch_valid(get_url, dst: str, attempts: int = ATTEMPTS, session=requests, p
 
 
 def backup_one(run: dict, state: dict, token: str, video_dir: str = VIDEO_DIR, session=requests,
-               pause: float = 2.0) -> dict:
+               pause: float = 2.0, recovered: dict | None = None) -> dict:
     """Tek kayıt. Geçerli yerel kopya varsa dokunmaz (üzerine yazmaz). Sonuç state'e yazılır ve döner."""
     key = record_key(run.get("id", ""))
     if not key:
@@ -181,6 +211,19 @@ def backup_one(run: dict, state: dict, token: str, video_dir: str = VIDEO_DIR, s
                      "error": "", "checked_at": now}
         except BackupError as e:
             entry = {**prev, "status": "bozuk_yerel", "path": dst, "error": f"yerel dosya bozuk: {e}",
+                     "checked_at": now}
+        state[key] = entry
+        return entry
+
+    rec_path = (recovered or {}).get(key, "")
+    if rec_path and os.path.isfile(rec_path):   # elle kurtarılan kopya: indirme yok, sadece doğrula
+        if prev.get("status") == "ok" and prev.get("path") == rec_path and prev.get("size") == os.path.getsize(rec_path):
+            return prev
+        try:
+            entry = {"status": "ok", "source": "kurtarilan", "path": rec_path, **probe(rec_path), "error": "",
+                     "checked_at": now}
+        except BackupError as e:
+            entry = {**prev, "status": "bozuk_yerel", "path": rec_path, "error": f"kurtarılan dosya bozuk: {e}",
                      "checked_at": now}
         state[key] = entry
         return entry
@@ -220,18 +263,32 @@ def backup_one(run: dict, state: dict, token: str, video_dir: str = VIDEO_DIR, s
 
 def load_state(path: str = STATE_FILE) -> dict:
     try:
-        return json.load(open(path, encoding="utf-8")).get("videos", {})
+        with open(path, encoding="utf-8") as f:
+            return json.load(f).get("videos", {})
     except (OSError, ValueError):
         return {}
 
 
-def save_state(state: dict, path: str = STATE_FILE, video_dir: str = VIDEO_DIR) -> None:
+def _replace(tmp: str, path: str, tries: int = 5) -> None:
+    """os.replace; dosya OneDrive içinde, eşitleme anında kısa süre kilitlenebilir -> birkaç kez dene."""
+    for i in range(tries):
+        try:
+            os.replace(tmp, path)
+            return
+        except PermissionError:
+            if i + 1 == tries:
+                raise
+            time.sleep(0.5 * (i + 1))
+
+
+def save_state(state: dict, path: str = STATE_FILE, video_dir: str = VIDEO_DIR,
+               recovered_dir: str = RECOVERED_DIR) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump({"updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "video_dir": video_dir,
-                   "videos": state}, f, ensure_ascii=False, indent=1)
-    os.replace(tmp, path)
+                   "recovered_dir": recovered_dir, "videos": state}, f, ensure_ascii=False, indent=1)
+    _replace(tmp, path)
 
 
 def write_index(runs: list[dict], state: dict, video_dir: str = VIDEO_DIR) -> None:
@@ -240,7 +297,7 @@ def write_index(runs: list[dict], state: dict, video_dir: str = VIDEO_DIR) -> No
     for r in runs:
         key = record_key(r.get("id", ""))
         st = state.get(key) or {}
-        if st.get("status") == "ok":
+        if st.get("status") == "ok" and os.path.dirname(st.get("path", "")) == os.path.normpath(video_dir):
             rows.append({"file": f"{key}.mp4", "date": r.get("date", ""), "title": r.get("title", ""),
                          "source": st.get("source", ""), "notion_url": r.get("notion_url", "")})
     if not rows:
@@ -248,7 +305,7 @@ def write_index(runs: list[dict], state: dict, video_dir: str = VIDEO_DIR) -> No
     tmp = os.path.join(video_dir, "dizin.json.tmp")
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(rows, f, ensure_ascii=False, indent=1)
-    os.replace(tmp, os.path.join(video_dir, "dizin.json"))
+    _replace(tmp, os.path.join(video_dir, "dizin.json"))
 
 
 def retry_due(entry: dict) -> bool:
@@ -266,19 +323,24 @@ def retry_due(entry: dict) -> bool:
 
 
 def backup_all(runs: list[dict], video_dir: str = VIDEO_DIR, state_file: str = STATE_FILE,
-               token: str | None = None, force: bool = False, log=print) -> dict:
+               token: str | None = None, force: bool = False, log=print,
+               recovered_dir: str = RECOVERED_DIR) -> dict:
     token = bot_token() if token is None else token
     state = load_state(state_file)
+    before = json.dumps(state, sort_keys=True)
+    recovered = recovered_index(recovered_dir)
     summary = {"ok": 0, "new": [], "failed": [], "too_big": []}
     for r in sorted(runs, key=lambda x: x.get("date") or ""):   # en eski önce: ölmesi en yakın link
         key = record_key(r.get("id", ""))
-        if not key or not (r.get("telegram_file_id") or r.get("video_url") or key in state):
+        if not key or not (r.get("telegram_file_id") or r.get("video_url") or key in state or key in recovered):
             continue
         prev_status = (state.get(key) or {}).get("status")
-        if not force and not retry_due(state.get(key)) and not os.path.exists(video_path(key, video_dir)):
+        if (not force and key not in recovered and not retry_due(state.get(key))
+                and not os.path.exists(video_path(key, video_dir))):
             summary["failed"].append((r, state[key]))
             continue
-        entry = backup_one(r, state, token, video_dir)
+        entry_before = json.dumps(state.get(key), sort_keys=True)
+        entry = backup_one(r, state, token, video_dir, recovered=recovered)
         if not entry:
             continue
         if entry.get("status") == "ok":
@@ -291,8 +353,10 @@ def backup_all(runs: list[dict], video_dir: str = VIDEO_DIR, state_file: str = S
             log(f"❌ {r.get('date', '')[:16]} {r.get('title', '')[:50]}: {entry.get('error', '')[:150]}")
         if entry.get("too_big") or entry.get("error") == TG_LIMIT_MSG:
             summary["too_big"].append((r, entry))
-        save_state(state, state_file, video_dir)   # her kayıttan sonra: yarıda kesilirse ilerleme kalsın
-    save_state(state, state_file, video_dir)
+        if json.dumps(state.get(key), sort_keys=True) != entry_before:
+            save_state(state, state_file, video_dir, recovered_dir)   # yarıda kesilirse ilerleme kalsın
+    if json.dumps(state, sort_keys=True) != before or not os.path.exists(state_file):
+        save_state(state, state_file, video_dir, recovered_dir)   # değişiklik yoksa yazma (OneDrive kilidi)
     try:
         write_index(runs, state, video_dir)
     except OSError:

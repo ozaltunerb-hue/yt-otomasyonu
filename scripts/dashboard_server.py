@@ -4,7 +4,8 @@
 #   /dashboard.html, /status.json, /dashboard_data/<dosya>, proje içindeki *.mp4
 #   /api/local.json -> panel için üretilen özet (mp4 listesi, scratch senaryoları);
 #                      o dosyaların kendisi sunulmaz, sadece gerekli alanlar
-#   /videos/<32 hex>.mp4  -> OneDrive dışındaki yedek klasöründen (video_backup.VIDEO_DIR) tek video
+#   /videos/<32 hex>.mp4  -> OneDrive dışındaki yedek klasöründen (video_backup.VIDEO_DIR) tek video; orada yoksa
+#                            elle kurtarılanlar klasöründen (video_backup.RECOVERED_DIR, dizin.json notion_id eşleşmesi)
 #   /api/tg/<32 hex>.mp4  -> yerel kopya yoksa Telegram File ID ile indirir (ffprobe doğrulamalı), sonra sunar
 # Her zaman 403: nokta ile başlayan her yol parçası (.env, .git, .venv...), .py dosyaları,
 # proje dışına çıkan yollar (../, mutlak yol, symlink), klasör listeleri.
@@ -102,6 +103,7 @@ def local_summary(root: str) -> dict:
 class Handler(BaseHTTPRequestHandler):
     root = ROOT
     video_dir = video_backup.VIDEO_DIR
+    recovered_dir = video_backup.RECOVERED_DIR
     quiet = False
     server_version = "DeepMysterPanel"
 
@@ -154,12 +156,13 @@ class Handler(BaseHTTPRequestHandler):
 
     def _serve_backup(self, route: str, key: str, head: bool):
         """Yedek klasöründen video. /api/tg: yerel kopya yoksa önce Telegram'dan indirir (Notion'a yazmaz)."""
-        full = video_backup.video_path(key, self.video_dir)
-        if not os.path.isfile(full) and route == "api/tg":
+        full = video_backup.local_copy(key, self.video_dir, self.recovered_dir)
+        if not full and route == "api/tg":
             run = self._find_run(key)
             if not run or not run.get("telegram_file_id"):
                 return self._plain(404, "404 Telegram File ID yok", head)
             state_file = os.path.join(self.root, "dashboard_data", "video_backup.json")
+            full = video_backup.video_path(key, self.video_dir)
             with _tg_lock:   # aynı anda iki kart aynı videoyu istemesin
                 if not os.path.isfile(full):
                     state = video_backup.load_state(state_file)
@@ -168,7 +171,7 @@ class Handler(BaseHTTPRequestHandler):
                     video_backup.save_state(state, state_file, self.video_dir)
                     if entry.get("status") != "ok":
                         return self._plain(502, "Telegram'dan indirilemedi: " + entry.get("error", ""), head)
-        if not os.path.isfile(full):
+        if not full or not os.path.isfile(full):
             return self._plain(404, "404 Yerel kopya yok", head)
         self._send_file(full, head)
 
@@ -229,9 +232,10 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def make_server(root: str = ROOT, host: str = HOST, port: int = PORT, quiet: bool = False,
-                video_dir: str | None = None) -> ThreadingHTTPServer:
+                video_dir: str | None = None, recovered_dir: str | None = None) -> ThreadingHTTPServer:
     handler = type("BoundHandler", (Handler,), {"root": root, "quiet": quiet,
-                                                "video_dir": video_dir or video_backup.VIDEO_DIR})
+                                                "video_dir": video_dir or video_backup.VIDEO_DIR,
+                                                "recovered_dir": recovered_dir or video_backup.RECOVERED_DIR})
     return ThreadingHTTPServer((host, port), handler)
 
 
@@ -240,7 +244,12 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=PORT)
     args = ap.parse_args()
-    srv = make_server(port=args.port)
+    try:
+        srv = make_server(port=args.port)
+    except OSError as e:   # 12 Eki: port doluyken pencere sessizce kapanıyordu
+        print(f"❌ Panel sunucusu açılamadı (port {args.port}): {e}\n"
+              f"   Başka bir panel penceresi zaten açık olabilir. Onu kapatıp start_dashboard.bat'ı yeniden çalıştır.")
+        sys.exit(1)
     print(f"Panel: http://{HOST}:{args.port}/dashboard.html  (sadece bu bilgisayar, Ctrl+C ile kapanır)")
     try:
         srv.serve_forever()

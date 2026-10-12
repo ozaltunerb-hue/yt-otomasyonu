@@ -196,19 +196,61 @@ class TestProbeAndDownload(unittest.TestCase):
         self.assertTrue(read(dst).startswith(b"bozuk ama benim"))
 
 
+    def make_recovered(self):
+        rdir = tempfile.mkdtemp(dir=self.tmp)
+        write(os.path.join(rdir, "2026-09-20_0543_Kurtarilan.mp4"), self.good)
+        with open(os.path.join(rdir, "dizin.json"), "w", encoding="utf-8") as f:
+            json.dump([{"file": "2026-09-20_0543_Kurtarilan.mp4", "notion_id": RUN_ID},
+                       {"file": "yok.mp4", "notion_id": "0" * 32}], f)
+        return rdir
+
+    def test_recovered_copy_counts_as_local_without_download(self):
+        rdir = self.make_recovered()
+        rec = vb.recovered_index(rdir)
+        self.assertEqual(list(rec), [KEY])                      # var olmayan dosya sayılmaz
+        self.assertEqual(vb.local_copy(KEY, self.dir, rdir), rec[KEY])
+        self.state[KEY] = {"status": "failed", "permanent": True, "error": "kie: HTTP 404 (link ölü)"}
+        s = FakeSession({})
+        e = vb.backup_one({"id": RUN_ID, "video_url": "https://kie/x.mp4"}, self.state, "TOKEN", self.dir,
+                          session=s, pause=0, recovered=rec)
+        self.assertEqual((e["status"], e["source"], e["path"]), ("ok", "kurtarilan", rec[KEY]))
+        self.assertEqual(s.calls, [])
+        self.assertFalse(os.path.exists(vb.video_path(KEY, self.dir)))   # kurtarılan klasöre/yedeğe yazılmaz
+        self.assertEqual(sorted(os.listdir(rdir)), ["2026-09-20_0543_Kurtarilan.mp4", "dizin.json"])
+
+    def test_backup_all_registers_recovered_even_if_permanent_and_skips_unchanged_write(self):
+        rdir = self.make_recovered()
+        state_file = os.path.join(self.dir, "state.json")
+        vb.save_state({KEY: {"status": "failed", "permanent": True, "attempted_at": "2026-10-12T00:00:00+00:00"}},
+                      state_file, self.dir, rdir)
+        runs = [{"id": RUN_ID, "video_url": "https://kie/x.mp4"}]
+        s = vb.backup_all(runs, self.dir, state_file, token="", log=lambda *_: None, recovered_dir=rdir)
+        self.assertEqual(s["ok"], 1)
+        self.assertEqual(vb.load_state(state_file)[KEY]["source"], "kurtarilan")
+        mtime = os.path.getmtime(state_file)
+        vb.backup_all(runs, self.dir, state_file, token="", log=lambda *_: None, recovered_dir=rdir)
+        self.assertEqual(os.path.getmtime(state_file), mtime)   # değişiklik yoksa yazmaz
+
+
 class TestServerBackupRoutes(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tmp = tempfile.mkdtemp()
         cls.root = os.path.join(cls.tmp, "proj")
         cls.vdir = os.path.join(cls.tmp, "videolar")
+        cls.rdir = os.path.join(cls.tmp, "kurtarilan")
         os.makedirs(os.path.join(cls.root, "dashboard_data"))
         os.makedirs(cls.vdir)
+        os.makedirs(cls.rdir)
+        cls.rkey = "1" * 32
+        write(os.path.join(cls.rdir, "2026-09-20_kurtarilan.mp4"), b"RECOVERED")
+        with open(os.path.join(cls.rdir, "dizin.json"), "w", encoding="utf-8") as f:
+            json.dump([{"file": "2026-09-20_kurtarilan.mp4", "notion_id": cls.rkey}], f)
         with open(os.path.join(cls.root, "dashboard_data", "notion_runs.json"), "w", encoding="utf-8") as f:
             json.dump({"runs": [{"id": RUN_ID, "telegram_file_id": ""}]}, f)
         with open(os.path.join(cls.vdir, f"{KEY}.mp4"), "wb") as f:
             f.write(b"VIDEO")
-        cls.srv = ds.make_server(root=cls.root, port=0, quiet=True, video_dir=cls.vdir)
+        cls.srv = ds.make_server(root=cls.root, port=0, quiet=True, video_dir=cls.vdir, recovered_dir=cls.rdir)
         cls.port = cls.srv.server_address[1]
         threading.Thread(target=cls.srv.serve_forever, daemon=True).start()
 
@@ -230,6 +272,9 @@ class TestServerBackupRoutes(unittest.TestCase):
         self.assertEqual(self.get(f"/videos/{KEY}.mp4"), (200, b"VIDEO"))
         self.assertEqual(self.get(f"/api/tg/{KEY}.mp4"), (200, b"VIDEO"))   # yerel varsa Telegram'a gitmez
 
+    def test_recovered_copy_served(self):
+        self.assertEqual(self.get(f"/videos/{self.rkey}.mp4"), (200, b"RECOVERED"))
+
     def test_bad_keys_forbidden(self):
         for p in ["/videos/../x.mp4", "/videos/ABC.mp4", f"/videos/{KEY}.py", "/videos/%2e%2e/secret.mp4"]:
             self.assertIn(self.get(p)[0], (403, 404), p)
@@ -242,8 +287,9 @@ class TestServerBackupRoutes(unittest.TestCase):
 class TestPanelHtml(unittest.TestCase):
     def test_badges_and_order(self):
         html = open(os.path.join(PROJECT_ROOT, "dashboard.html"), encoding="utf-8").read()
-        for label in ["Yerel kopya", "Telegram", "YouTube", "Kopya yok", "indirilemedi (20 MB sınırı)",
-                      "dashboard_data/video_backup.json"]:
+        for label in ["Yerel kopya", "Telegram", "Yedek yok, sadece YouTube", "Kopya yok", "indirilemedi (20 MB sınırı)",
+                      "dashboard_data/video_backup.json", "Son senkron", 'http-equiv="Cache-Control" content="no-store"',
+                      "kieDead(b)", "checkPageVersion"]:
             self.assertIn(label, html)
         fn = html[html.index("function videoSources"):html.index("const TG_LIMIT")]
         self.assertLess(fn.index("out.push(`videos/"), fn.index("out.push(`api/tg/"))

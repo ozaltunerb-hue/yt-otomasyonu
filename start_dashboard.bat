@@ -11,3 +11,5 @@ echo.
 echo Panel acik: http://127.0.0.1:8771/dashboard.html
 echo Kapatmak icin bu pencereyi kapat.
 python scripts\dashboard_server.py
+rem Sunucu kapanirsa (or. port dolu) sebebi okunabilsin diye pencere acik kalir
+pause

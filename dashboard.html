@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-store">
 <title>DeepMyster Paneli</title>
 <!--
   Yerel yönetim paneli. start_dashboard.bat ile açılır (scripts/dashboard_server.py, port 8771).
@@ -112,6 +113,7 @@
   .thumb.tall { aspect-ratio: 9/12; }
   .thumb.play { aspect-ratio: 9/12; background: #000; }
   .thumb.play video { object-fit: contain; }
+  .thumb .nocopy { padding: 6px 12px; border: 1px dashed var(--border); border-radius: 8px; color: var(--warning); font-size: 13px; font-weight: 600; text-align: center; }
   .thumb img, .thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
   .vbody { padding: 12px 14px 14px; display: grid; gap: 8px; }
   .vtitle { font-weight: 600; line-height: 1.35; }
@@ -129,8 +131,9 @@
 <div class="wrap">
   <header>
     <h1>DeepMyster Paneli</h1>
-    <div class="meta" id="refreshed">Yükleniyor…</div>
+    <div class="meta"><span id="lastsync">Son senkron: —</span> · <span id="refreshed">Yükleniyor…</span></div>
   </header>
+  <div class="warnbox" id="offline" hidden></div>
 
   <section>
     <div class="grid kpis" id="kpis"></div>
@@ -229,19 +232,24 @@ function videoSources(r) {
   if (!/^[0-9a-f]{32}$/.test(key)) return r.video_url ? [r.video_url] : [];
   if (b.status === "ok") out.push(`videos/${key}.mp4`);
   if (r.telegram_file_id && !b.too_big && b.error !== TG_LIMIT) out.push(`api/tg/${key}.mp4`);
-  if (r.video_url) out.push(r.video_url);
+  if (r.video_url && !kieDead(b)) out.push(r.video_url);
   return [...new Set(out)];
 }
 const TG_LIMIT = "indirilemedi (20 MB sınırı)";
+const NO_COPY_YT = "Yedek yok, sadece YouTube";
+// Yedekleyici Kie linkini 404 bulduysa (link ~15 günde ölür) panel onu hiç denemez
+const kieDead = b => !!b.permanent || /kie: HTTP 404/.test(b.error || "");
 // Rozet: kalıcı kopya nerede? Kie linki geçici olduğu için kopya sayılmaz.
 function copyBadge(r) {
   const b = backupOf(r);
-  if (b.status === "ok") return { label: "Yerel kopya", cls: "b-up" };
+  if (b.status === "ok") return { label: "Yerel kopya", cls: "b-up", title: b.source === "kurtarilan" ? "C:\\DeepMyster_videolar_kurtarilan" : "C:\\DeepMyster_videolar" };
   if (r.telegram_file_id && !b.too_big) return { label: "Telegram", cls: "b-made" };
-  if (r.youtube_url) return { label: "YouTube", cls: "b-run" };
+  if (r.youtube_url) return { label: NO_COPY_YT, cls: "b-run" };
   return { label: "Kopya yok", cls: "b-err" };
 }
 // <video> hata verirse sıradaki kaynağa geç; hepsi biterse küçük resme düş
+// İki klasörün (yedek + kurtarılan) toplamı; anahtar kayıt id'si olduğu için çakışma kendiliğinden tekilleşir
+function localCount() { return Object.values(STATE.backup).filter(b => b.status === "ok").length; }
 function nextSource(v) {
   const srcs = JSON.parse(v.dataset.srcs || "[]");
   const i = Number(v.dataset.i || 0) + 1;
@@ -277,7 +285,8 @@ function renderKpis() {
     ["YouTube'da", c.up],
     ["Üretildi, yüklenmedi", c.made],
     ["Hata", c.err],
-    ["Yerel kopya", Object.values(STATE.backup).filter(b => b.status === "ok").length],
+    ["Yerel kopya", localCount()],
+    ["Yedeksiz", STATE.runs.filter(r => (r.video_url || r.telegram_file_id || r.youtube_url) && copyBadge(r).label !== "Yerel kopya").length],
     ["Lokal .mp4", STATE.locals.length],
   ];
   document.getElementById("kpis").innerHTML = tiles.map(([l, v]) =>
@@ -432,7 +441,9 @@ function renderVideos() {
   STATE.videosKey = vkey;
   document.getElementById("videos").innerHTML = list.length ? list.map(r => {
     const k = classify(r), id = r.youtube_url && ytId(r.youtube_url);
-    const still = id ? `<img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy">` : `<span>${r.video_url || r.telegram_file_id ? "Video açılamadı" : "Video yok"}</span>`;
+    // Gizli YouTube videolarının küçük resmi gri yer tutucu döner: onun yerine açık etiket (12 Eki 2026)
+    const hadVideo = !!(r.video_url || r.telegram_file_id || r.youtube_url);
+    const still = id ? `<span class="nocopy">${NO_COPY_YT}</span>` : `<span${hadVideo ? ' class="nocopy"' : ""}>${hadVideo ? "Kopya yok, video kayıp" : "Video yok"}</span>`;
     // Sayfa içi oynatma: kaynaklar sırayla denenir (videoSources). YouTube private videoları gömmeye izin vermez.
     const srcs = videoSources(r), cb = copyBadge(r), bk = backupOf(r);
     const thumb = srcs.length
@@ -442,7 +453,7 @@ function renderVideos() {
     return `<article class="card vcard">
       <div class="thumb${srcs.length ? " play" : ""}">${thumb}</div>
       <div class="vbody">
-        <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span>${srcs.length || r.youtube_url ? `<span class="badge ${cb.cls}">${esc(cb.label)}</span>` : ""}<span>${fmt(r.date)}</span><span>· tetik: ${esc(r.trigger || "?")}</span>${domainOf(r) ? `<span>· ${esc(domainOf(r))}</span>` : ""}</div>
+        <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span>${hadVideo ? `<span class="badge ${cb.cls}" data-copy="${esc(cb.label)}"${cb.title ? ` title="${esc(cb.title)}"` : ""}>${esc(cb.label)}</span>` : ""}<span>${fmt(r.date)}</span><span>· tetik: ${esc(r.trigger || "?")}</span>${domainOf(r) ? `<span>· ${esc(domainOf(r))}</span>` : ""}</div>
         <div class="vtitle">${esc(r.title || "(başlıksız)")}</div>
         ${r.topic && r.topic !== r.title ? `<div class="vtext">${esc(r.topic.slice(0, 220))}</div>` : ""}
         ${r.error ? `<div class="verr">${esc(r.error.slice(0, 300))}</div>` : ""}
@@ -487,7 +498,29 @@ async function loadStatus() {
   renderLive();
   renderPipeline();
 }
+let PAGE_STAMP = null;   // dashboard.html'in Last-Modified'ı: değişirse açık sekme kendini yeniler
+async function checkPageVersion() {
+  try {
+    const r = await fetch("dashboard.html?t=" + Date.now(), { method: "HEAD", cache: "no-store" });
+    const lm = r.headers.get("Last-Modified");
+    if (PAGE_STAMP === null) PAGE_STAMP = lm;
+    else if (lm && lm !== PAGE_STAMP) location.reload();
+    return true;
+  } catch { return false; }
+}
+// GG.AA SS:DD (tarayıcıdan bağımsız; tr-TR bazı tarayıcılarda "12/10" yazıyor)
+function fmtSync(iso) {
+  if (!iso) return "—";
+  const p = Object.fromEntries(new Intl.DateTimeFormat("tr-TR", { timeZone: TZ, day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+    .formatToParts(new Date(iso)).map(x => [x.type, x.value]));
+  return `${p.day}.${p.month} ${p.hour}:${p.minute}`;
+}
 async function loadSlow() {
+  const online = await checkPageVersion();
+  const off = document.getElementById("offline");
+  off.hidden = online;
+  off.textContent = online ? "" : "Panel sunucusuna ulaşılamıyor. Bu sekmedeki bilgiler eski olabilir. start_dashboard.bat ile paneli yeniden aç.";
+  if (!online) return;
   const [runs, token, local, backup] = await Promise.allSettled([
     getJSON("dashboard_data/notion_runs.json"), getJSON("dashboard_data/token_refresh.json"), getJSON("api/local.json"),
     getJSON("dashboard_data/video_backup.json")]);
@@ -496,6 +529,7 @@ async function loadSlow() {
   STATE.token = token.status === "fulfilled" ? token.value : null;
   if (local.status === "fulfilled") setLocal(local.value.videos || []);
   renderKpis(); renderTrigger(); renderToken(); renderVideos();
+  document.getElementById("lastsync").textContent = "Son senkron: " + fmtSync(STATE.sync.synced_at);
   document.getElementById("refreshed").textContent = "Son yenileme: " + new Date().toLocaleTimeString("tr-TR") + " · canlı durum 3 sn, diğerleri 30 sn";
 }
 function setLocal(videos) {
