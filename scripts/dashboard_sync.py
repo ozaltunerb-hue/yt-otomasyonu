@@ -3,6 +3,7 @@
 # Neden: üretim Railway'de (Telegram /uret) çalışıyor; ürettiği video/yükleme/hata kayıtları proje klasörüne
 # düşmüyor, Notion'a düşüyor. Bu betik onları dashboard_data/notion_runs.json'a yazar,
 # dashboard.html oradan okur. start_dashboard.bat açılışta ve 10 dakikada bir çalıştırır.
+# Her çekimden sonra scripts/video_backup.py eksik videoları OneDrive dışına indirir (12 Eki 2026).
 #
 #   python scripts/dashboard_sync.py          -> tek sefer
 #   python scripts/dashboard_sync.py --loop   -> 10 dk'da bir (Ctrl+C ile durur)
@@ -57,6 +58,7 @@ def simplify(page: dict) -> dict:
         "youtube_url": (p.get("YouTube URL") or {}).get("url") or "",
         "video_url": (p.get("Video URL") or {}).get("url") or "",
         "seconds": (p.get("Süre (sn)") or {}).get("number"),
+        "telegram_file_id": _text(p.get("Telegram File ID", {})),
     }
 
 
@@ -110,7 +112,20 @@ def sync_once() -> bool:
         return False
     write({"synced_at": now, "sync_error": "", "runs": rows})
     print(f"✅ {len(rows)} Notion kaydı -> dashboard_data/notion_runs.json")
+    backup_videos(rows)
     return True
+
+
+def backup_videos(rows: list[dict]) -> None:
+    """Kie linki ~15 günde ölür: her çekimden sonra eksik videoları OneDrive dışına (video_backup.VIDEO_DIR) indir."""
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import video_backup
+        s = video_backup.backup_all(rows)
+        print(f"💾 Yerel kopya: {s['ok']} (yeni {len(s['new'])}) · başarısız {len(s['failed'])} · "
+              f"20 MB sınırı {len(s['too_big'])}")
+    except Exception as e:   # yedek hatası Notion senkronunu bozmasın
+        print(f"❌ Video yedeği çalışmadı: {e}")
 
 
 if __name__ == "__main__":

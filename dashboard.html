@@ -183,7 +183,7 @@
 
 <script>
 const TZ = "Europe/Istanbul";
-const STATE = { status: null, runs: [], sync: {}, token: null, filter: "all", locals: [], diagramKey: "" };
+const STATE = { status: null, runs: [], sync: {}, token: null, filter: "all", locals: [], diagramKey: "", backup: {} };
 
 // ── yardımcılar ──
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -220,6 +220,36 @@ function classify(r) {
 }
 const ytId = u => (u.match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{11})/) || [])[1];
 
+// ── Kalıcı kopya (12 Eki 2026): scripts/video_backup.py -> C:\DeepMyster_videolar, dashboard_data/video_backup.json ──
+// Oynatma sırası: yerel kopya -> Telegram File ID ile indirme -> Kie linki (~15 gün) -> YouTube küçük resmi.
+const recKey = r => (r.id || "").replace(/-/g, "").toLowerCase();
+function backupOf(r) { return STATE.backup[recKey(r)] || {}; }
+function videoSources(r) {
+  const b = backupOf(r), key = recKey(r), out = [];
+  if (!/^[0-9a-f]{32}$/.test(key)) return r.video_url ? [r.video_url] : [];
+  if (b.status === "ok") out.push(`videos/${key}.mp4`);
+  if (r.telegram_file_id && !b.too_big && b.error !== TG_LIMIT) out.push(`api/tg/${key}.mp4`);
+  if (r.video_url) out.push(r.video_url);
+  return [...new Set(out)];
+}
+const TG_LIMIT = "indirilemedi (20 MB sınırı)";
+// Rozet: kalıcı kopya nerede? Kie linki geçici olduğu için kopya sayılmaz.
+function copyBadge(r) {
+  const b = backupOf(r);
+  if (b.status === "ok") return { label: "Yerel kopya", cls: "b-up" };
+  if (r.telegram_file_id && !b.too_big) return { label: "Telegram", cls: "b-made" };
+  if (r.youtube_url) return { label: "YouTube", cls: "b-run" };
+  return { label: "Kopya yok", cls: "b-err" };
+}
+// <video> hata verirse sıradaki kaynağa geç; hepsi biterse küçük resme düş
+function nextSource(v) {
+  const srcs = JSON.parse(v.dataset.srcs || "[]");
+  const i = Number(v.dataset.i || 0) + 1;
+  if (i < srcs.length) { v.dataset.i = i; v.src = srcs[i] + "#t=1"; return; }
+  v.parentElement.classList.remove("play");
+  v.outerHTML = v.dataset.fb;
+}
+
 // ── domain: combo_key'in ilk parçası; etiketler bot.py DOMAIN_LABELS ile aynı (test_dashboard_server denetler) ──
 const DOMAIN_LABELS = {
   ferry_operations: "⛴️ Feribot",
@@ -247,6 +277,7 @@ function renderKpis() {
     ["YouTube'da", c.up],
     ["Üretildi, yüklenmedi", c.made],
     ["Hata", c.err],
+    ["Yerel kopya", Object.values(STATE.backup).filter(b => b.status === "ok").length],
     ["Lokal .mp4", STATE.locals.length],
   ];
   document.getElementById("kpis").innerHTML = tiles.map(([l, v]) =>
@@ -396,24 +427,26 @@ function renderFilters() {
 function renderVideos() {
   renderFilters();
   const list = STATE.runs.filter(r => STATE.filter === "all" || classify(r).key === STATE.filter);
-  const vkey = STATE.filter + "|" + JSON.stringify(list);
+  const vkey = STATE.filter + "|" + JSON.stringify(list) + JSON.stringify(STATE.backup);
   if (vkey !== STATE.videosKey) {
   STATE.videosKey = vkey;
   document.getElementById("videos").innerHTML = list.length ? list.map(r => {
     const k = classify(r), id = r.youtube_url && ytId(r.youtube_url);
-    const still = id ? `<img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy">` : `<span>${r.video_url ? "Önizleme yok (Kie linki geçici)" : "Video yok"}</span>`;
-    // Sayfa içi oynatma (2026-09-26): Kie ham linki varsa <video>. YouTube private videoları gömmeye izin vermez.
-    // Kie linki geçicidir; süresi dolunca onerror ile YouTube küçük resmine düşer.
-    const thumb = r.video_url
-      ? `<video src="${esc(r.video_url)}#t=1" preload="metadata" controls playsinline onerror="this.parentElement.classList.remove('play');this.outerHTML=this.dataset.fb" data-fb="${esc(still)}"></video>`
+    const still = id ? `<img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy">` : `<span>${r.video_url || r.telegram_file_id ? "Video açılamadı" : "Video yok"}</span>`;
+    // Sayfa içi oynatma: kaynaklar sırayla denenir (videoSources). YouTube private videoları gömmeye izin vermez.
+    const srcs = videoSources(r), cb = copyBadge(r), bk = backupOf(r);
+    const thumb = srcs.length
+      ? `<video src="${esc(srcs[0])}#t=1" preload="metadata" controls playsinline data-i="0" data-srcs="${esc(JSON.stringify(srcs))}" onerror="nextSource(this)" data-fb="${esc(still)}"></video>`
       : still;
+    const tgNote = bk.too_big || bk.error === TG_LIMIT ? `<div class="verr">Telegram: ${TG_LIMIT}</div>` : "";
     return `<article class="card vcard">
-      <div class="thumb${r.video_url ? " play" : ""}">${thumb}</div>
+      <div class="thumb${srcs.length ? " play" : ""}">${thumb}</div>
       <div class="vbody">
-        <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span><span>${fmt(r.date)}</span><span>· tetik: ${esc(r.trigger || "?")}</span>${domainOf(r) ? `<span>· ${esc(domainOf(r))}</span>` : ""}</div>
+        <div class="vmeta"><span class="badge ${k.cls}">${k.icon} ${esc(k.label)}</span>${srcs.length || r.youtube_url ? `<span class="badge ${cb.cls}">${esc(cb.label)}</span>` : ""}<span>${fmt(r.date)}</span><span>· tetik: ${esc(r.trigger || "?")}</span>${domainOf(r) ? `<span>· ${esc(domainOf(r))}</span>` : ""}</div>
         <div class="vtitle">${esc(r.title || "(başlıksız)")}</div>
         ${r.topic && r.topic !== r.title ? `<div class="vtext">${esc(r.topic.slice(0, 220))}</div>` : ""}
         ${r.error ? `<div class="verr">${esc(r.error.slice(0, 300))}</div>` : ""}
+        ${tgNote}
         ${r.prompt ? `<details><summary>Senaryo / prompt</summary><p>${esc(r.prompt)}</p></details>` : ""}
         ${r.motion ? `<div class="meta">Hareket: ${esc(r.motion)}</div>` : ""}
         <div class="links">
@@ -455,8 +488,10 @@ async function loadStatus() {
   renderPipeline();
 }
 async function loadSlow() {
-  const [runs, token, local] = await Promise.allSettled([
-    getJSON("dashboard_data/notion_runs.json"), getJSON("dashboard_data/token_refresh.json"), getJSON("api/local.json")]);
+  const [runs, token, local, backup] = await Promise.allSettled([
+    getJSON("dashboard_data/notion_runs.json"), getJSON("dashboard_data/token_refresh.json"), getJSON("api/local.json"),
+    getJSON("dashboard_data/video_backup.json")]);
+  if (backup.status === "fulfilled") STATE.backup = backup.value.videos || {};
   if (runs.status === "fulfilled") { STATE.sync = runs.value; STATE.runs = runs.value.runs || []; }
   STATE.token = token.status === "fulfilled" ? token.value : null;
   if (local.status === "fulfilled") setLocal(local.value.videos || []);

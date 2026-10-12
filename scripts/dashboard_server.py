@@ -4,6 +4,8 @@
 #   /dashboard.html, /status.json, /dashboard_data/<dosya>, proje içindeki *.mp4
 #   /api/local.json -> panel için üretilen özet (mp4 listesi, scratch senaryoları);
 #                      o dosyaların kendisi sunulmaz, sadece gerekli alanlar
+#   /videos/<32 hex>.mp4  -> OneDrive dışındaki yedek klasöründen (video_backup.VIDEO_DIR) tek video
+#   /api/tg/<32 hex>.mp4  -> yerel kopya yoksa Telegram File ID ile indirir (ffprobe doğrulamalı), sonra sunar
 # Her zaman 403: nokta ile başlayan her yol parçası (.env, .git, .venv...), .py dosyaları,
 # proje dışına çıkan yollar (../, mutlak yol, symlink), klasör listeleri.
 #
@@ -11,11 +13,14 @@
 #   python scripts/dashboard_server.py --port 9000
 import argparse
 import email.utils
+import importlib.util
 import json
 import mimetypes
 import os
 import posixpath
+import re
 import sys
+import threading
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlsplit
@@ -26,6 +31,13 @@ ALLOWED_FILES = {"dashboard.html", "status.json"}
 ALLOWED_DIRS = ("dashboard_data",)
 MP4_SKIP_DIRS = {"__pycache__", "node_modules"}
 CHUNK = 256 * 1024
+VIDEO_ROUTE = re.compile(r"^/(videos|api/tg)/([0-9a-f]{32})\.mp4$")
+
+_spec = importlib.util.spec_from_file_location("video_backup", os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                                            "video_backup.py"))
+video_backup = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(video_backup)
+_tg_lock = threading.Lock()
 
 
 def resolve(root: str, url_path: str) -> str | None:
@@ -89,6 +101,7 @@ def local_summary(root: str) -> dict:
 
 class Handler(BaseHTTPRequestHandler):
     root = ROOT
+    video_dir = video_backup.VIDEO_DIR
     quiet = False
     server_version = "DeepMysterPanel"
 
@@ -129,12 +142,43 @@ class Handler(BaseHTTPRequestHandler):
             if not head:
                 self.wfile.write(body)
             return
+        m = VIDEO_ROUTE.match(path)
+        if m:
+            return self._serve_backup(m.group(1), m.group(2), head)
         full = resolve(self.root, path)
         if full is None:
             return self._plain(403, "403 Yasak", head)
         if not os.path.isfile(full):
             return self._plain(404, "404 Bulunamadı", head)
         self._send_file(full, head)
+
+    def _serve_backup(self, route: str, key: str, head: bool):
+        """Yedek klasöründen video. /api/tg: yerel kopya yoksa önce Telegram'dan indirir (Notion'a yazmaz)."""
+        full = video_backup.video_path(key, self.video_dir)
+        if not os.path.isfile(full) and route == "api/tg":
+            run = self._find_run(key)
+            if not run or not run.get("telegram_file_id"):
+                return self._plain(404, "404 Telegram File ID yok", head)
+            state_file = os.path.join(self.root, "dashboard_data", "video_backup.json")
+            with _tg_lock:   # aynı anda iki kart aynı videoyu istemesin
+                if not os.path.isfile(full):
+                    state = video_backup.load_state(state_file)
+                    entry = video_backup.backup_one({**run, "video_url": ""}, state, video_backup.bot_token(),
+                                                    self.video_dir)
+                    video_backup.save_state(state, state_file, self.video_dir)
+                    if entry.get("status") != "ok":
+                        return self._plain(502, "Telegram'dan indirilemedi: " + entry.get("error", ""), head)
+        if not os.path.isfile(full):
+            return self._plain(404, "404 Yerel kopya yok", head)
+        self._send_file(full, head)
+
+    def _find_run(self, key: str) -> dict | None:
+        try:
+            with open(os.path.join(self.root, "dashboard_data", "notion_runs.json"), encoding="utf-8") as f:
+                runs = json.load(f).get("runs", [])
+        except (OSError, ValueError):
+            return None
+        return next((r for r in runs if video_backup.record_key(r.get("id", "")) == key), None)
 
     def _send_file(self, full: str, head: bool):
         size = os.path.getsize(full)
@@ -184,8 +228,10 @@ class Handler(BaseHTTPRequestHandler):
             pass   # tarayıcı videoyu ileri sarınca bağlantıyı keser, normal
 
 
-def make_server(root: str = ROOT, host: str = HOST, port: int = PORT, quiet: bool = False) -> ThreadingHTTPServer:
-    handler = type("BoundHandler", (Handler,), {"root": root, "quiet": quiet})
+def make_server(root: str = ROOT, host: str = HOST, port: int = PORT, quiet: bool = False,
+                video_dir: str | None = None) -> ThreadingHTTPServer:
+    handler = type("BoundHandler", (Handler,), {"root": root, "quiet": quiet,
+                                                "video_dir": video_dir or video_backup.VIDEO_DIR})
     return ThreadingHTTPServer((host, port), handler)
 
 
