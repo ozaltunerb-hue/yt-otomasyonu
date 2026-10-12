@@ -67,15 +67,17 @@ class TestMainFlow(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(writes, ["NEWTOKEN"])
         self.assertIn('YOUTUBE_REFRESH_TOKEN="NEWTOKEN"', local)
-        # Dashboard kaydı: tarih + kanal + Production modu var; token değeri ve 7 günlük bitiş tahmini yok
+        # Dashboard kaydı: tarih + kanal + Testing modu (12 Eki düzeltmesi); token değeri yok, panel bitişi hesaplar
         log = open(self.refresh_log, encoding="utf-8").read()
         self.assertIn('"channel": "DeepMyster"', log)
-        self.assertIn('"mode": "production"', log)
+        self.assertIn('"mode": "testing"', log)
+        self.assertNotIn("production", log)
         self.assertNotIn("expires_estimate", log)
         self.assertNotIn("NEWTOKEN", log)
         run_log = open(self.run_log, encoding="utf-8").read()
         self.assertIn("✅ BİTTİ", run_log)
-        self.assertIn("6 ay hiç kullanılmazsa", run_log)
+        self.assertIn("7 gün sonra ölür", run_log)
+        self.assertNotIn("süresiz", run_log)
         self.assertNotIn("NEWTOKEN", run_log)
 
     def test_local_written_before_railway(self):
@@ -122,6 +124,36 @@ class TestBatFile(unittest.TestCase):
         self.assertIn("python scripts\\refresh_youtube_token.py", text)
         self.assertIn("pause", text)          # hatada pencere açık kalır
         self.assertIn("timeout /t 5", text)   # başarıda 5 sn sonra kapanır
+
+
+class TestDashboardTokenCard(unittest.TestCase):
+    """12 Eki 2026: uygulama Testing modunda. Kart 'Production, süresiz' dememeli; son geçerlilik = yenileme + 7 gün."""
+
+    @classmethod
+    def setUpClass(cls):
+        with open(os.path.join(ROOT, "dashboard.html"), encoding="utf-8") as f:
+            html = f.read()
+        cls.card = html[html.index("function renderToken"):html.index("const TOKEN_DAYS")]
+        cls.html = html
+
+    def test_testing_texts(self):
+        for text in ["Testing, 7 günde ölür", "Son geçerlilik:", "gün ${h} saat kaldı", "Bugün yenile",
+                     "SÜRESİ DOLDU, refresh_youtube_token.bat çalıştır",
+                     "Her 7 günde bir <code>refresh_youtube_token.bat</code> çalıştır. Google Cloud'da uygulama "
+                     "Production'a alınırsa bu süre sınırı kalkar."]:
+            self.assertIn(text, self.card)
+        self.assertIn("const TOKEN_DAYS = 7;", self.html)
+
+    def test_no_production_claims(self):
+        low = self.html.lower()
+        for text in ["süresiz", "haftalık yenileme gerekmez", "production, süresiz"]:
+            self.assertNotIn(text, low)
+        self.assertNotIn("t.mode", self.card)   # kayıttaki mode alanına güvenilmez
+
+    def test_expiry_from_refresh_plus_seven_days_and_two_day_red(self):
+        self.assertIn("new Date(t.refreshed_at).getTime() + TOKEN_DAYS * 86400e3", self.card)
+        self.assertIn("leftMs < 2 * 86400e3", self.card)
+        self.assertIn('el.classList.toggle("danger", expired || urgent)', self.card)
 
 
 if __name__ == "__main__":

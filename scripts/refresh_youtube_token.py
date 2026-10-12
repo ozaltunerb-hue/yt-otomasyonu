@@ -1,8 +1,8 @@
 # YouTube OAuth token yenileme ONARIM aracı (TUR 23). refresh_youtube_token.bat çift tıklamayla çağırır.
 #
-# 7 Eki 2026'dan beri Google uygulaması PRODUCTION modunda: refresh token'ın 7 günlük ömrü yok, haftalık yenileme
-# gerekmez. Token yine de şu 3 durumda ölür: 6 ay hiç kullanılmazsa, Google hesabından erişim iptal edilirse,
-# aynı hesap için çok sayıda yeni token alınırsa (en eskiler geçersizleşir). Bu araç sadece o durumlarda çalıştırılır.
+# Google Cloud'daki OAuth uygulaması TESTING modunda: refresh token 7 gün sonra ölür, bu araç her 7 günde bir
+# çalıştırılır. (12 Eki 2026 düzeltmesi: "7 Eki'de Production'a alındı" kaydı yanlıştı, kullanıcı doğruladı.)
+# Uygulama Production'a alınırsa 7 günlük sınır kalkar; o zaman OAUTH_MODE da değiştirilmeli.
 # refresh_token grant'i yeni refresh token DÖNDÜRMEZ (2026-09-25 doğrulandı); tek çare yeniden onay.
 #
 # Akış: mevcut Railway token durumu (bilgi) -> tarayıcıda Google onayı -> yeni token ile kanal DeepMyster mı
@@ -27,9 +27,10 @@ REFRESH_LOG = os.path.join(ROOT, "dashboard_data", "token_refresh.json")
 RUN_LOG = os.path.join(ROOT, "dashboard_data", "token_refresh_runs.log")
 READBACK_ATTEMPTS = 4
 READBACK_WAIT_SEC = 5
-OAUTH_MODE = "production"
-DEATH_CAUSES = ("Token süresiz, ancak 3 durumda ölür: 6 ay hiç kullanılmazsa, Google hesabından erişim iptal "
-                "edilirse, çok sayıda yeni token alınırsa (en eskiler geçersizleşir).")
+OAUTH_MODE = "testing"
+TOKEN_LIFETIME_DAYS = 7
+DEATH_CAUSES = ("Uygulama Testing modunda: refresh token 7 gün sonra ölür. Her 7 günde bir refresh_youtube_token.bat "
+                "çalıştır. Google Cloud'da uygulama Production'a alınırsa bu süre sınırı kalkar.")
 DONT_CLOSE = "⚠️  Bu pencereyi BİTTİ yazısını görmeden KAPATMA (tarayıcı 'Yetkilendirme Başarılı' dese bile)."
 
 PROJECT_ID = "9c2fa508-f546-43f4-b3a8-766ec1054a04"
@@ -80,7 +81,8 @@ def log(msg: str) -> None:
 
 
 def record_refresh(channel: str) -> None:
-    """Son yenilemenin zamanını dashboard için kaydeder (Production: bitiş tahmini yok). Hata olursa yenilemeyi bozmaz."""
+    """Son yenilemenin zamanını dashboard için kaydeder (Testing: panel son geçerliliği yenileme + 7 gün hesaplar).
+    Hata olursa yenilemeyi bozmaz."""
     try:
         os.makedirs(os.path.dirname(REFRESH_LOG), exist_ok=True)
         with open(REFRESH_LOG, "w", encoding="utf-8") as f:
@@ -201,8 +203,7 @@ def main() -> int:
         log("     Railway güncellendi ve doğrulandı ✓")
 
     if railway_ok and local_ok:
-        log("\n✅ BİTTİ — YouTube token yenilendi. Uygulama Production modunda. " + DEATH_CAUSES
-            + " Sadece bot YouTube yetki hatası verirse tekrar çalıştır.")
+        log("\n✅ BİTTİ — YouTube token yenilendi. " + DEATH_CAUSES)
         return 0
     if not railway_ok:
         log("⚠️  Token yenilendi ama Railway geri okunarak doğrulanamadı. Railway panelinden YOUTUBE_REFRESH_TOKEN'ı kontrol et.")

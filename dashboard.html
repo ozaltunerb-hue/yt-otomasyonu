@@ -110,6 +110,7 @@
   .acard .vbody { padding-top: 12px; }
   .reason { margin-top: 6px; padding: 6px 10px; border-left: 3px solid var(--warning); background: var(--surface-2); color: var(--text-2); font-size: 13px; border-radius: 4px; }
   .kpi.link { cursor: pointer; }
+  .card.danger { border-color: var(--critical); background: #2c1212; }
   .kpi.link .l { text-decoration: underline dotted; }
   .chip { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 13px; cursor: pointer; }
   .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
@@ -439,32 +440,31 @@ function renderToken() {
   const t = STATE.token;
   const lastUp = STATE.runs.find(r => r.youtube_url);
   const lastUpLine = lastUp ? `<div class="meta" style="margin-top:8px">Son başarılı YouTube yüklemesi: ${fmt(lastUp.date)} (${ago(lastUp.date)})</div>` : "";
-  const how = `<div class="meta" style="margin-top:8px">Sadece bot YouTube yetki hatası verirse: proje klasöründe <code>refresh_youtube_token.bat</code> dosyasına çift tıkla, BİTTİ yazısını görmeden pencereyi kapatma.</div>`;
+  const how = `<div class="meta" style="margin-top:8px">Her 7 günde bir <code>refresh_youtube_token.bat</code> çalıştır. Google Cloud'da uygulama Production'a alınırsa bu süre sınırı kalkar. BİTTİ yazısını görmeden pencereyi kapatma.</div>`;
+  el.classList.remove("danger");
   if (!t) {
     el.innerHTML = `<span class="badge b-run">! Kayıt yok</span>
       <p class="vtext">Son yenileme tarihi henüz kaydedilmemiş. Bir sonraki <code>refresh_youtube_token.bat</code> çalışmasından sonra burada görünür.</p>${lastUpLine}${how}`;
     return;
   }
-  // 7 Eki 2026'dan beri Google uygulaması Production: 7 günlük bitiş yok, kayıtta expires_estimate yazılmaz
-  if (!t.expires_estimate) {
-    el.innerHTML = `<span class="badge b-up">✓ Production, süresiz</span>
-      <div style="margin-top:10px">Son yenileme: <span class="big">${fmt(t.refreshed_at, { weekday: "short" })}</span> <span class="meta">(${ago(t.refreshed_at)})</span></div>
-      <div class="meta">Kanal: ${esc(t.channel)} · Haftalık yenileme gerekmez.</div>
-      <div class="meta">Token yine de 3 durumda ölür: 6 ay hiç kullanılmazsa, Google hesabından erişim iptal edilirse, çok sayıda yeni token alınırsa (en eskiler geçersizleşir).</div>
-      ${lastUpLine}${how}`;
-    return;
-  }
-  const exp = new Date(t.expires_estimate);
-  const left = (exp - Date.now()) / 86400e3;
-  const badge = left <= 0 ? `<span class="badge b-err">✕ Süresi doldu</span>`
-    : left < 2 ? `<span class="badge b-run">! Yakında bitiyor</span>`
-    : `<span class="badge b-up">✓ Geçerli</span>`;
+  // Google uygulaması TESTING modunda: refresh token yenilemeden 7 gün sonra ölür (12 Eki 2026 düzeltmesi; "7 Eki'de
+  // Production'a alındı" kaydı yanlıştı). Kayıttaki mode alanına bakılmaz, son geçerlilik = son yenileme + 7 gün.
+  const exp = new Date(new Date(t.refreshed_at).getTime() + TOKEN_DAYS * 86400e3);
+  const leftMs = exp - Date.now();
+  const expired = leftMs <= 0, urgent = !expired && leftMs < 2 * 86400e3;
+  const d = Math.floor(Math.max(leftMs, 0) / 86400e3), h = Math.floor((Math.max(leftMs, 0) % 86400e3) / 3600e3);
+  el.classList.toggle("danger", expired || urgent);
+  const badge = expired ? `<span class="badge b-err" data-token-state="expired">✕ SÜRESİ DOLDU</span>`
+    : `<span class="badge ${urgent ? "b-err" : "b-run"}" data-token-state="${urgent ? "urgent" : "ok"}">! Testing, 7 günde ölür</span>`;
   el.innerHTML = `${badge}
-    <div style="margin-top:10px">Son yenileme: <span class="big">${fmt(t.refreshed_at, { weekday: "short" })}</span> <span class="meta">(${ago(t.refreshed_at)})</span></div>
-    <div class="meta">Kanal: ${esc(t.channel)} · Tahmini bitiş: ${fmt(t.expires_estimate, { weekday: "short" })} (${left > 0 ? left.toFixed(1) + " gün kaldı" : "geçti"})</div>
-    ${left > 0 && left < 2 ? `<div class="warnbox">Token yakında bitiyor. Telegram'dan üretim başlatmadan önce yenile, yoksa YouTube yüklemesi başarısız olur.</div>` : ""}
+    <div style="margin-top:10px">Son yenileme: <span class="big">${fmtSync(t.refreshed_at)}</span> <span class="meta">(${ago(t.refreshed_at)})</span></div>
+    <div data-token-expiry>Son geçerlilik: <span class="big">${fmtSync(exp.toISOString())}</span> <span class="meta">(${expired ? "geçti" : `${d} gün ${h} saat kaldı`})</span></div>
+    <div class="meta">Kanal: ${esc(t.channel)}</div>
+    ${expired ? `<div class="errbox">SÜRESİ DOLDU, refresh_youtube_token.bat çalıştır. Yenilenene kadar YouTube yüklemesi başarısız olur.</div>`
+      : urgent ? `<div class="errbox">Bugün yenile: refresh_youtube_token.bat çalıştır. 2 günden az kaldı.</div>` : ""}
     ${lastUpLine}${how}`;
 }
+const TOKEN_DAYS = 7;
 
 // ── render: Notion video kartları ──
 const FILTERS = [["all", "Tümü"], ["up", "Yüklendi"], ["made", "Üretildi"], ["err", "Hata"], ["run", "Sürüyor"]];
