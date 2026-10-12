@@ -25,6 +25,23 @@
 
 ---
 
+## 📋 DEVİR: Panel video yedeği + YouTube token düzeltmesi (12 Eki)
+
+**DURUM (doğrulandı):** Commit'ler `c3c0737`, `60333f8`, `efd7d5f`, `0cf70cf` canlı (Railway `44091d68` SUCCESS). 783 test.
+- Panel videoları artık kalıcı: `scripts/video_backup.py` her Notion senkronunda videoları `C:\DeepMyster_videolar\<notion id>.mp4`
+  olarak indirir (Telegram File ID, sonra Kie; ffprobe doğrulamalı). Elle kurtarılan 8 video `C:\DeepMyster_videolar_kurtarilan\`
+  (dizin.json) de yerel kopya sayılır. 8 herkese açık YouTube videosu yt-dlp ile indi (girişsiz en iyi 480p).
+- Panel iki sekme: Videolar 72 (oynatılabilir), Arşiv 44 (11 sadece YouTube gizli/erişilemez, 8 tamamen kayıp, 25 hata/iptal).
+- Kie linki ~15 günde ölür; Railway'de volume yok. Gerçekten kayıp 8 video: 20 Eyl 07:21/07:35/07:50/07:54, 21 Eyl 14:24/16:42/23:37, 23 Eyl TEST.
+- **YouTube OAuth uygulaması TESTING** ("7 Eki Production" kaydı yanlıştı). Token 7 günde ölür; son yenileme 7 Eki 21:31 ->
+  **son geçerlilik 14 Eki 21:31**. Panel kartı geri sayım gösterir. Yayın açılmadan önce `refresh_youtube_token.bat`.
+
+**TUZAKLAR:** `start_dashboard.bat` iki kez açılınca çift sunucu/döngü oluşur, ikinci sunucu port dolu diye kapanır (artık sebep
+yazıp `pause` ediyor). Panel kodu değişince eski senkron döngüsü eski modülü hafızada tutar: yeniden başlat. Panel "eski görünüyorsa"
+önce port 8771'de sunucu var mı bak.
+
+**AÇIK (kullanıcının kararı):** Google Cloud'da OAuth uygulamasını Production'a almak; `ARBİTİRAJ KAMPI` içinde kalan 5,49 GB zip.
+
 ## 📋 DEVİR: Akşam kapanışı (10 Eki)
 
 **Volkan canlı** (commit `d617a70`, deploy `0573b803` SUCCESS, bot TEST modunda).
