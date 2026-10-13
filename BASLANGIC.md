@@ -25,6 +25,25 @@
 
 ---
 
+## 📋 DEVİR: ❄️ Çığ zayıf madde temizliği + havuz kontrol testi (14 Eki 2026, üçüncü tur)
+
+14 Eki testinde A5 (ince direkler) çıktı. Kural (Bahadır): her madde kameraya yakın, BÜYÜK, KOYU ve kar bulutunda
+kaybolmayan bir nesneye temas eder. 15 madde değişti (kimlikler aynı, metin Bahadır'ın): A1, A5, B1, B2, C1, C2, C3,
+C4, C5, D5, D6, E2, E3, F2, F6. Teleferik maddesi kalmadı.
+- **Kamera dışlamaları:** (*) çatı/kule/balkon sadece köy kenarı terasında: A3, A6, B2 (yeni), B3, D3, E6. C3 (teras
+  döşemesi) teras noktalarında seçilmez, sadece balkonda (kamera kendi terasının söküldüğünü sanmasın). (†)
+  teleferik kuralı `tests/test_pool_lint.py` içinde duruyor: teleferik kelimesi geçen kayak maddesi istasyon
+  terasında dışlanmalı.
+- **Yasak çiftler** (`excluded_pairs` yorumları): köy 10, kayak 11, orman 18. İzinli çift (köy kenarı terası / balkon /
+  istasyon): köy 26/10, kayak 20/20/15, orman 18/12.
+- **Tekrar önleme:** köy 3 -> 2, kayak 2, orman 2 -> 1 (balkonda E1/E2'nin tek eşi F4; daha derinde aday biter).
+- **Havuz kontrolü** (`tests/test_pool_lint.py`): (a) büyük/koyu yapı nesnesi, (b) ilk nesne zayıf değil (direk,
+  kablo, korkuluk, cam, tabela...), (c) gömülme fiili ana fiil değil. Çığda zorunlu; diğer kategorilerde sadece
+  uyarı (14 Eki: 55 madde, değiştirilmedi).
+- A5, B2, B5, E2 18 kelimeyi aşıyor; GPT WORD BUDGET ile kısaltıyor. Testte sahte GPT ret gelince kısa hâli yazar.
+
+---
+
 ## 📋 DEVİR: ❄️ Çığ köy testi 3 denemede reddedildi, düzeltildi (14 Eki 2026, ikinci tur)
 
 14 Eki 01:30 köy testi (A4+B5, balkon) hikâye kapısından 3 denemede de geçmedi. Üç sebep, üçü de düzeltildi:

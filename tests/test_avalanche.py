@@ -30,8 +30,9 @@ CAMERA = ("Handheld footage from {cam}, high vantage looking up the slope as the
           "buildings just below; slight hand shake, the camera stays fixed, tilting slightly and never descending, a "
           "corner of the railing in the foreground; one continuous shot, no zoom, no cuts.")
 GUARD = "Bystanders wear winter civilian clothes; raw natural overcast daylight, no hazmat suits."
-ROOF = {"A3", "A6", "B3", "D3", "E6"}        # (*) sadece köy kenarı terasında
-LIFTB = {"C1", "C5", "D6"}                  # (†) istasyon terasında seçilmez
+ROOF = {"A3", "A6", "B2", "B3", "D3", "E6"}  # (*) sadece köy kenarı terasında (14 Eki (3): + B2 balkon)
+DECK = {"C3"}                               # (‡) teras noktalarında seçilmez, sadece balkonda (14 Eki (3))
+LIFTB = set()                               # (†) 14 Eki (3): teleferik maddesi kalmadı (kural test_pool_lint'te)
 
 
 def cap(s):
@@ -49,24 +50,26 @@ KEY = {
            "cloud rolling over their roofs.",
 }
 POOLS = {
-    KOY: ({"A1": "the snow wall flattens a row of pine trees and hurls the trunks ahead of it",
+    KOY: ({"A1": "the snow blast hurls a stack of heavy timber logs into a chalet wall",
            "A2": "the snow blast tears a wooden chalet off its foundation and sweeps it down the slope",
            "A3": "the snow blast rips the roof off a barn and scatters the planks",
            "A4": "the snow wall rams a stone barn and its dark stones burst out in all directions",
-           "A5": "the snow blast snaps a row of wooden fence posts and power poles",
+           "A5": "the snow wall flattens a long wooden fence and a wooden shed beside the street, the dark boards "
+                 "flying",
            "A6": "the snow cloud smashes the balcony off a chalet facade"},
-          {"B1": "a second wave hits a chalet and its front wall bursts inward",
-           "B2": "the snow wall buries a whole row of houses up to their roofs",
+          {"B1": "the snow blast smashes into a stone chalet and its gable wall collapses",
+           "B2": "the snow wall tears a wooden balcony and its staircase off a chalet and the dark timbers crash into "
+                 "the street",
            "B3": "the snow blast topples a wooden church bell tower across the street",
            "B4": "the snow wall crashes into a hillside retaining wall and the stones tumble out",
            "B5": "the snow blast rips the entire front wall off a long wooden chalet and the dark timber beams fly "
                  "outward",
            "B6": "the snow wall carries a wooden shed off its base and breaks it apart"}),
-    KAYAK: ({"C1": "the avalanche front mows down a row of ski-lift towers, one after another",
-             "C2": "the snow wall shatters a glass-fronted lodge entrance",
-             "C3": "the avalanche rips the wooden terrace railing off the lodge and sweeps it away",
-             "C4": "the snow blast flattens a line of wooden snow barriers and orange safety fences",
-             "C5": "the avalanche hits a stone chairlift station and its upper wall breaks apart",
+    KAYAK: ({"C1": "the avalanche slams into the lodge's wooden ski-storage shed and its dark planks burst outward",
+             "C2": "the snow wall smashes the lodge's wooden entrance porch and its dark beams collapse",
+             "C3": "the avalanche rips the wooden terrace deck off the lodge and the dark planks fly",
+             "C4": "the avalanche smashes a wooden snack cabin by the slope and its dark boards scatter",
+             "C5": "the avalanche hits a stone service building and its wall bursts apart",
              "C6": "the avalanche shoves a stack of dark timber logs down the slope into the lodge wall"},
             {"D1": "a second surge slams into the lodge and its whole wooden front bursts open, beams and planks "
                    "flying",
@@ -74,41 +77,39 @@ POOLS = {
              "D3": "the avalanche lifts the lodge's roof deck and tosses it aside",
              "D4": "the snow blast smashes through a wooden ski-rental cabin beside the slope and its dark planks "
                    "scatter",
-             "D5": "the avalanche sweeps a small wooden hut off its base and breaks it up",
-             "D6": "the snow cloud engulfs the chairlift cables and a cable pylon topples"}),
+             "D5": "the avalanche sweeps a wooden ski-rental cabin off its base and breaks its dark planks apart",
+             "D6": "the snow surge crashes through the lodge's side wall and dark timber beams burst out"}),
     ORMAN: ({"E1": "the avalanche front hurls snapped pine trunks into a row of wooden cabins",
-             "E2": "the snow cloud swallows a stand of tall pines whole, their tops whipping flat",
-             "E3": "the avalanche sweeps a wooden footbridge off its piers",
+             "E2": "the avalanche slams a wall of snapped dark pine trunks into a wooden cabin and its side bursts open",
+             "E3": "the avalanche rams a stone farmhouse's barn door and the dark planks burst inward",
              "E4": "the snow wall tears a woodshed apart and scatters the logs",
              "E5": "the avalanche hits a stone farmhouse wall and the wall cracks open",
              "E6": "the snow blast peels the roof off a cabin"},
             {"F1": "a second surge slams into the cabins and their walls burst outward",
-             "F2": "the snow wall buries a wooden cabin to the roofline",
+             "F2": "the snow blast rips a cabin's wooden porch and front steps off and sends them flying",
              "F3": "the avalanche carries a pile of broken trunks across the valley floor into a stone house",
              "F4": "the snow blast knocks over a wooden water tower",
              "F5": "the snow cloud blows the front off a barn and the hay bursts out",
-             "F6": "the avalanche sweeps a row of fences and a footbridge railing away"}),
+             "F6": "the snow wall flattens a long wooden barn and the dark boards scatter"}),
 }
-# Aynı yapı sınıfı (Bahadır): çatı/kule, duvar, köprü/korkuluk, ağaç, ahşap yapı, cephe, teleferik. Yorumlar: B3 çan
-# kulesi A3 ile çatı/kule sınıfı; B1 (ön duvar) ve B5 (ahşap ön duvar) cephe; E6 kabin çatısı çatı sınıfı. 14 Eki:
-# A4 taş ahır B4 istinat duvarıyla taş sınıfı; C6 kütükler loca duvarına çarpar, D1 loca cephesi (cephe); D4 kulübe
-# ahşap yapı.
+# Aynı yapı sınıfı (14 Eki (3), zayıf madde temizliği sonrası). Etiketler event_structure yorumlarıyla aynı.
 STRUCT = {
-    KOY: {"A1": {"tree"}, "A2": {"wood"}, "A3": {"roof"}, "A4": {"wall"}, "A5": {"rail"}, "A6": {"facade"},
-          "B1": {"facade"}, "B2": {"houses"}, "B3": {"roof"}, "B4": {"wall"}, "B5": {"facade"}, "B6": {"wood"}},
-    KAYAK: {"C1": {"lift"}, "C2": {"facade"}, "C3": {"rail"}, "C4": {"rail"}, "C5": {"lift", "wall"}, "C6": {"facade"},
-            "D1": {"facade"}, "D2": {"wood"}, "D3": {"roof"}, "D4": {"wood"}, "D5": {"wood"}, "D6": {"lift"}},
-    ORMAN: {"E1": {"tree", "wood"}, "E2": {"tree"}, "E3": {"bridge"}, "E4": {"wood"}, "E5": {"wall", "stonehouse"},
-            "E6": {"roof"},
-            "F1": {"wood"}, "F2": {"wood"}, "F3": {"tree", "stonehouse"}, "F4": {"tower"}, "F5": {"wood", "facade"},
-            "F6": {"bridge", "rail"}},
+    KOY: {"A1": {"facade"}, "A2": {"chalet"}, "A3": {"roof"}, "A4": {"stone"}, "A5": {"shed"}, "A6": {"facade", "balcony"},
+          "B1": {"facade", "stone"}, "B2": {"balcony"}, "B3": {"roof"}, "B4": {"stone"}, "B5": {"facade"},
+          "B6": {"shed", "chalet"}},
+    KAYAK: {"C1": {"hut"}, "C2": {"facade"}, "C3": {"deck"}, "C4": {"hut"}, "C5": {"stone"}, "C6": {"facade"},
+            "D1": {"facade"}, "D2": {"hut"}, "D3": {"roof", "deck"}, "D4": {"hut"}, "D5": {"hut"}, "D6": {"facade"}},
+    ORMAN: {"E1": {"tree", "wood"}, "E2": {"tree", "wood"}, "E3": {"stonehouse", "barn"}, "E4": {"wood"},
+            "E5": {"stonehouse"}, "E6": {"roof"},
+            "F1": {"wood"}, "F2": {"wood"}, "F3": {"tree", "stonehouse"}, "F4": {"tower"}, "F5": {"wood", "barn"},
+            "F6": {"wood", "barn"}},
 }
 VALID = {
-    "A1": ["The wall of snow knocks down a line of pines and flings the trunks forward.",
-           "The avalanche snaps a row of fir trees and throws the broken trunks ahead.",
-           "A row of pine trees is flattened as the snow wall hurls their trunks downhill.",
-           "The snow blast uproots the pines and sends the trunks tumbling ahead of it.",
-           "The snow wall flattens a row of pine trees and hurls the trunks ahead of it."],
+    "A1": ["The snow blast flings a pile of heavy logs into the wall of a chalet.",
+           "A stack of timber logs is hurled into a chalet wall by the snow blast.",
+           "The avalanche drives heavy logs straight into the side of a wooden house.",
+           "The snow blast sends a stack of thick logs crashing into a chalet.",
+           "The snow blast hurls a stack of heavy timber logs into a chalet wall."],
     "A2": ["The snow blast rips a wooden chalet from its foundation and carries it down the slope.",
            "The avalanche tears a chalet off its base and drags it downhill.",
            "A wooden house is lifted off its foundation and swept away by the snow.",
@@ -124,26 +125,26 @@ VALID = {
            "The avalanche smashes into a stone stable and the masonry explodes outward.",
            "The snow wall crashes into a stone barn, hurling its dark stones across the street.",
            "The snow wall rams a stone barn and its dark stones burst out in all directions."],
-    "A5": ["The snow blast breaks a row of wooden fence posts and power poles.",
-           "Fence posts and power poles snap one after another in the blast.",
-           "The avalanche flattens a wooden fence and knocks down the power poles.",
-           "A line of utility poles and fencing cracks and topples in the snow blast.",
-           "The snow blast snaps a row of wooden fence posts and power poles."],
+    "A5": ["The snow wall knocks down a long wooden fence and a shed by the street, boards flying.",
+           "A wooden fence and a shed beside the street are flattened, dark boards scattering.",
+           "The avalanche crushes a long fence and a wooden shed, sending the boards flying.",
+           "The snow wall levels a wooden shed and the fence beside the street, its planks flying.",
+           "The snow wall flattens a long wooden fence and a wooden shed beside the street, the dark boards flying."],
     "A6": ["The snow cloud tears the balcony off a chalet's facade.",
            "A chalet balcony is ripped from the facade by the snow cloud.",
            "The blast smashes a wooden balcony and it breaks away from the chalet.",
            "The snow cloud rips the balcony off the front of a chalet.",
            "The snow cloud smashes the balcony off a chalet facade."],
-    "B1": ["A second wave slams into a chalet and its front wall caves in.",
-           "Another surge hits a wooden house and its front wall bursts inward.",
-           "The second wave of snow smashes a chalet's front wall inward.",
-           "A chalet's front wall collapses as a second surge strikes it.",
-           "A second wave hits a chalet and its front wall bursts inward."],
-    "B2": ["The avalanche buries a row of chalets up to the eaves.",
-           "A whole row of houses is engulfed in snow up to their roofs.",
-           "The snow wall swallows a line of cottages up to their rooftops.",
-           "Snow piles up over a row of houses until only their roofs show.",
-           "The snow wall buries a whole row of houses up to their roofs."],
+    "B1": ["The snow blast slams into a stone chalet and its gable wall caves in.",
+           "A stone chalet's gable wall collapses as the snow blast hits it.",
+           "The avalanche crashes into a stone house and the gable end crumbles.",
+           "The snow blast strikes a stone chalet, its gable wall tumbling down.",
+           "The snow blast smashes into a stone chalet and its gable wall collapses."],
+    "B2": ["The snow wall rips a wooden balcony and its stairs off a chalet, the timbers crashing into the street.",
+           "A chalet's balcony and staircase are torn away and the dark timbers fall into the street.",
+           "The avalanche wrenches the wooden balcony and staircase from a chalet and hurls the timbers into the street.",
+           "The snow wall tears the balcony and its steps off a chalet, dark beams crashing down into the street.",
+           "The snow wall tears a wooden balcony and its staircase off a chalet and the dark timbers crash into the street."],
     "B3": ["The snow blast knocks a wooden church bell tower across the street.",
            "A wooden bell tower topples over and crashes across the street.",
            "The church tower collapses in the snow blast and falls into the street.",
@@ -164,31 +165,31 @@ VALID = {
            "The snow wall drags a shed off its base and crushes it.",
            "The snow tears a small shed from its base and it falls apart.",
            "The snow wall carries a wooden shed off its base and breaks it apart."],
-    "C1": ["The avalanche front knocks down a row of ski-lift towers one after another.",
-           "Ski-lift towers snap and topple one by one as the avalanche hits.",
-           "The avalanche mows down the chairlift towers in a row.",
-           "The snow wall brings down a line of lift pylons, one after another.",
-           "The avalanche front mows down a row of ski-lift towers, one after another."],
-    "C2": ["The snow wall smashes the glass front of the lodge entrance.",
-           "The lodge's glass entrance shatters as the snow wall hits.",
-           "The avalanche bursts through a glass-fronted lodge entrance.",
-           "The snow blasts out the glass doors of the lodge entrance.",
-           "The snow wall shatters a glass-fronted lodge entrance."],
-    "C3": ["The avalanche tears the wooden terrace railing off the lodge and carries it away.",
-           "The lodge's terrace railing is ripped off and swept away by the snow.",
-           "The snow wall rips the wooden balustrade from the lodge terrace.",
-           "The avalanche wrenches the terrace railing loose and drags it down the slope.",
-           "The avalanche rips the wooden terrace railing off the lodge and sweeps it away."],
-    "C4": ["The snow blast knocks down a line of wooden snow barriers and orange safety fences.",
-           "The avalanche flattens the orange safety fences and wooden barriers.",
-           "A row of snow fences and safety netting is torn down by the blast.",
-           "The snow wall snaps the wooden barriers and sweeps the orange fences away.",
-           "The snow blast flattens a line of wooden snow barriers and orange safety fences."],
-    "C5": ["The avalanche slams into the stone chairlift station and its upper wall crumbles.",
-           "The upper wall of the chairlift station cracks and caves in as the snow hits.",
-           "The snow wall smashes into the lift station and its top wall collapses.",
-           "The chairlift station's stone wall bursts apart under the avalanche.",
-           "The avalanche hits a stone chairlift station and its upper wall breaks apart."],
+    "C1": ["The avalanche crashes into the lodge's wooden ski-storage shed and its planks burst outward.",
+           "The lodge's ski-storage shed bursts open as the avalanche hits, dark planks flying.",
+           "The snow slams into a wooden storage shed by the lodge and its boards explode outward.",
+           "The avalanche smashes the wooden ski shed beside the lodge, sending dark planks flying.",
+           "The avalanche slams into the lodge's wooden ski-storage shed and its dark planks burst outward."],
+    "C2": ["The snow wall crushes the lodge's wooden entrance porch and its dark beams cave in.",
+           "The lodge's wooden porch collapses as the snow wall smashes into it.",
+           "The avalanche tears the wooden porch off the lodge entrance and its beams break.",
+           "The snow wall smashes the entrance porch of the lodge and its beams give way.",
+           "The snow wall smashes the lodge's wooden entrance porch and its dark beams collapse."],
+    "C3": ["The avalanche tears the wooden terrace deck from the lodge, sending dark planks flying.",
+           "The lodge's terrace deck is ripped away and its planks scatter across the snow.",
+           "The snow wrenches the wooden deck off the lodge and the dark boards fly.",
+           "The avalanche lifts the lodge's wooden deck and flings the planks downhill.",
+           "The avalanche rips the wooden terrace deck off the lodge and the dark planks fly."],
+    "C4": ["The avalanche crushes a wooden snack cabin by the slope and its boards scatter.",
+           "A wooden snack hut beside the slope bursts apart as the avalanche hits it.",
+           "The snow smashes into a wooden snack bar and sends its dark boards flying.",
+           "The avalanche slams into a wooden kiosk by the slope, its boards scattering.",
+           "The avalanche smashes a wooden snack cabin by the slope and its dark boards scatter."],
+    "C5": ["The avalanche slams into a stone service building and its wall bursts apart.",
+           "A stone service building's wall collapses as the avalanche hits it.",
+           "The snow crashes into a stone building and its wall breaks open.",
+           "The avalanche smashes a stone outbuilding and its masonry explodes outward.",
+           "The avalanche hits a stone service building and its wall bursts apart."],
     "C6": ["The avalanche pushes a stack of dark logs down the slope into the lodge wall.",
            "A pile of timber logs is swept down the slope and slams into the lodge.",
            "The snow wall drives a woodpile down the slope and rams it into the side of the lodge.",
@@ -214,31 +215,31 @@ VALID = {
            "The avalanche crushes the wooden rental cabin, sending planks flying.",
            "The snow blast shatters a wooden cabin by the slope and the planks scatter across the snow.",
            "The snow blast smashes through a wooden ski-rental cabin beside the slope and its dark planks scatter."],
-    "D5": ["The avalanche pushes a small hut off its base and smashes it.",
-           "A wooden hut is swept away by the avalanche and breaks apart.",
-           "The snow carries a little wooden shack off its footings and crushes it.",
-           "The avalanche rips a hut from its base and tumbles it down the slope.",
-           "The avalanche sweeps a small wooden hut off its base and breaks it up."],
-    "D6": ["The snow cloud swallows the chairlift cables and a cable pylon topples over.",
-           "The avalanche engulfs the chairlift and one of its pylons crashes down.",
-           "A chairlift pylon falls as the snow cloud buries the cables.",
-           "The snow cloud covers the lift cables and a pylon collapses.",
-           "The snow cloud engulfs the chairlift cables and a cable pylon topples."],
+    "D5": ["The avalanche rips a wooden ski-rental cabin off its base and smashes its planks apart.",
+           "A ski-rental cabin is swept off its base and breaks apart in the snow.",
+           "The snow carries a wooden rental hut off its footings and its dark planks break apart.",
+           "The avalanche pushes a ski-rental cabin off its base and it falls apart.",
+           "The avalanche sweeps a wooden ski-rental cabin off its base and breaks its dark planks apart."],
+    "D6": ["The snow surge smashes through the lodge's side wall and dark beams burst out.",
+           "The lodge's side wall caves in under the snow surge, timber beams flying out.",
+           "The surge crashes through the side of the lodge and its timber beams explode outward.",
+           "A snow surge breaks through the lodge's side wall, sending dark beams flying.",
+           "The snow surge crashes through the lodge's side wall and dark timber beams burst out."],
     "E1": ["The avalanche hurls snapped pine trunks into a row of wooden cabins.",
            "Broken pine trunks are flung into the wooden cabins by the avalanche front.",
            "The avalanche drives snapped trees into a row of cabins.",
            "The snow front throws broken trunks into the wooden huts.",
            "The avalanche front hurls snapped pine trunks into a row of wooden cabins."],
-    "E2": ["The snow cloud swallows a stand of tall pines, their tops whipping flat.",
-           "A stand of tall pines is engulfed by the snow cloud as their tops bend flat.",
-           "The avalanche engulfs a grove of tall firs and flattens their tops.",
-           "Tall pine trees are buried in the snow cloud, their crowns whipping down.",
-           "The snow cloud swallows a stand of tall pines whole, their tops whipping flat."],
-    "E3": ["The avalanche rips a wooden footbridge off its piers.",
-           "A wooden footbridge is swept off its supports by the snow.",
-           "The snow wall tears the footbridge from its piers and carries it away.",
-           "The avalanche smashes a footbridge and the span collapses into the stream.",
-           "The avalanche sweeps a wooden footbridge off its piers."],
+    "E2": ["The avalanche drives a mass of snapped pine trunks into a wooden cabin and its side bursts open.",
+           "A wall of broken dark pine trunks slams into a wooden cabin, blowing its side open.",
+           "The avalanche rams snapped pine trunks into a cabin and its wall caves in.",
+           "Snapped pine trunks smash into a wooden cabin and its side splits open.",
+           "The avalanche slams a wall of snapped dark pine trunks into a wooden cabin and its side bursts open."],
+    "E3": ["The avalanche slams into a stone farmhouse's barn door and the planks burst inward.",
+           "A farmhouse barn door bursts inward as the avalanche rams it.",
+           "The snow crashes into the barn door of a stone farmhouse and its dark planks cave in.",
+           "The avalanche smashes the wooden barn door of a farmhouse and the planks break inward.",
+           "The avalanche rams a stone farmhouse's barn door and the dark planks burst inward."],
     "E4": ["The snow wall rips a woodshed open and scatters the logs.",
            "A woodshed bursts open in the snow and its logs fly everywhere.",
            "The avalanche smashes a woodshed and flings the firewood across the snow.",
@@ -259,11 +260,11 @@ VALID = {
            "A second surge strikes the cabins, blowing their walls out.",
            "The cabins' walls shatter as a second wave of snow hits them.",
            "A second surge slams into the cabins and their walls burst outward."],
-    "F2": ["The snow wall buries a wooden cabin up to its roofline.",
-           "A wooden cabin is buried to the roofline under the snow.",
-           "The avalanche engulfs a cabin until only its roofline shows.",
-           "The snow swallows a small wooden hut up to the roof.",
-           "The snow wall buries a wooden cabin to the roofline."],
+    "F2": ["The snow blast tears a cabin's wooden porch and front steps off and flings them away.",
+           "A cabin's porch and steps are ripped off and sent flying by the snow blast.",
+           "The snow blast wrenches the wooden porch and stairs off a cabin, hurling them through the air.",
+           "The avalanche strips the porch and front steps from a cabin and sends them flying.",
+           "The snow blast rips a cabin's wooden porch and front steps off and sends them flying."],
     "F3": ["The avalanche carries broken trunks across the valley floor and into a stone house.",
            "Broken trunks are swept across the valley floor and slam into a stone house.",
            "The avalanche drives a pile of snapped trees into a stone house on the valley floor.",
@@ -279,11 +280,11 @@ VALID = {
            "The snow blast blows the barn's front open and straw explodes outward.",
            "The front of a barn bursts open and bales of hay spill into the snow.",
            "The snow cloud blows the front off a barn and the hay bursts out."],
-    "F6": ["The avalanche sweeps away a row of fences and a footbridge railing.",
-           "A row of fences and the railing of a footbridge are swept away by the snow.",
-           "The avalanche tears a line of fences and a bridge railing away.",
-           "The snow carries off a row of fences and the footbridge railing.",
-           "The avalanche sweeps a row of fences and a footbridge railing away."],
+    "F6": ["The snow wall knocks down a long wooden barn and its dark boards scatter.",
+           "A long wooden barn is flattened by the snow wall, boards flying everywhere.",
+           "The snow wall crushes a long barn and the dark planks scatter across the snow.",
+           "The avalanche levels a wooden barn and sends its boards flying.",
+           "The snow wall flattens a long wooden barn and the dark boards scatter."],
 }
 # 14 Eki 01:30 köy testi (A4+B5, balkon) 3 denemede reddedildi. GPT'nin gerçek cümleleri; madde kapısından geçmeli.
 FIXTURES = {
@@ -300,40 +301,40 @@ for _b, _l in FIXTURES.items():
 # 14 Eki (2) tarama: deneme 1'deki kalıp ("crashes into X, sending Y flying") her maddede geçmeli. A3, A6, D3, E6
 # reddediliyordu; uçma fiilleri eklendi. A4 ve B5 fixture'ları yukarıda.
 IMPACT = {
- "A1": "The snow mass crashes into a row of pine trees, sending the snapped trunks tumbling ahead of it.",
+ "A1": "The snow blast crashes into a stack of logs, sending them slamming into a chalet wall.",
  "A2": "The avalanche slams into a wooden chalet, ripping it off its foundation and carrying it downhill.",
  "A3": "The snow blast hits a barn, sending its roof and planks flying across the street.",
- "A5": "The snow mass crashes through a row of fence posts and power poles, snapping them one by one.",
+ "A5": "The snow wall crashes into a wooden fence and a shed, sending the boards flying.",
  "A6": "The avalanche slams into a chalet, sending its balcony crashing off the facade.",
- "B1": "A second wave crashes into a chalet, its front wall caving in violently.",
- "B2": "The snow mass crashes over a row of houses, burying them up to their roofs.",
+ "B1": "The snow blast crashes into a stone chalet, its gable wall collapsing.",
+ "B2": "The snow wall crashes into a chalet, sending its balcony and staircase flying into the street.",
  "B3": "The snow blast crashes into the church bell tower, sending it toppling across the street.",
  "B4": "The avalanche collides with a hillside retaining wall, sending its stones tumbling into the street.",
  "B6": "The snow mass slams into a wooden shed, sending it sliding off its base and breaking apart.",
- "C1": "The avalanche crashes through a row of ski-lift towers, sending them crashing down one after another.",
- "C2": "The snow wall crashes into the lodge's glass entrance, sending shards exploding inward.",
- "C3": "The avalanche slams into the lodge terrace, ripping the wooden railing away.",
- "C4": "The snow mass crashes through the wooden snow barriers and orange safety fences, flattening them.",
- "C5": "The avalanche slams into the stone chairlift station, its upper wall crumbling.",
+ "C1": "The avalanche crashes into the lodge's ski-storage shed, sending its planks flying.",
+ "C2": "The snow wall crashes into the lodge's entrance porch, its beams collapsing.",
+ "C3": "The avalanche crashes into the lodge terrace, sending the deck planks flying.",
+ "C4": "The avalanche crashes into a snack cabin, sending its boards scattering.",
+ "C5": "The avalanche crashes into a stone service building, its wall bursting apart.",
  "C6": "The snow mass sends a stack of dark logs crashing down the slope into the lodge wall.",
  "D1": "A second surge crashes into the lodge, its wooden front exploding open with beams and planks flying.",
  "D2": "The snow mass slams into the lodge's wooden annex, ripping it away and carrying it downhill.",
  "D3": "The avalanche crashes over the lodge, sending its roof deck flying aside.",
  "D4": "The snow blast crashes into a wooden ski-rental cabin, sending its dark planks scattering across the snow.",
- "D5": "The avalanche crashes into a small wooden hut, sweeping it off its base as it breaks apart.",
- "D6": "The snow cloud crashes into the chairlift, sending a cable pylon toppling into the snow.",
+ "D5": "The avalanche crashes into a ski-rental cabin, sweeping it off its base as it breaks apart.",
+ "D6": "The snow surge crashes into the lodge, sending its side wall beams bursting out.",
  "E1": "The avalanche sends snapped pine trunks crashing into a row of wooden cabins.",
- "E2": "The snow cloud crashes over a stand of tall pines, swallowing them as their tops whip flat.",
- "E3": "The avalanche slams into a wooden footbridge, ripping it off its piers.",
+ "E2": "The avalanche sends snapped pine trunks crashing into a wooden cabin, its side bursting open.",
+ "E3": "The avalanche crashes into a farmhouse barn door, sending the planks bursting inward.",
  "E4": "The snow wall crashes into a woodshed, sending the logs scattering in all directions.",
  "E5": "The avalanche slams into a stone farmhouse, its wall cracking open.",
  "E6": "The snow blast crashes into a cabin, sending its roof flying off.",
  "F1": "A second surge crashes into the cabins, their walls bursting outward.",
- "F2": "The snow mass crashes over a wooden cabin, burying it to the roofline.",
+ "F2": "The snow blast crashes into a cabin, sending its porch and front steps flying.",
  "F3": "The avalanche sends a pile of broken trunks crashing across the valley floor into a stone house.",
  "F4": "The snow blast slams into a wooden water tower, sending it crashing down.",
  "F5": "The snow cloud crashes into a barn, its front bursting open as hay explodes out.",
- "F6": "The avalanche crashes through a row of fences and a footbridge railing, sweeping them away.",
+ "F6": "The snow wall crashes into a long wooden barn, sending its boards scattering.",
 }
 for _b, _t in IMPACT.items():
     VALID[_b] = VALID[_b] + [_t]
@@ -346,8 +347,23 @@ ATMOSPHERE = ["Snow dust drifts over the valley below the mountain.",
               "A cloud of snow spreads across the sky above the valley."]
 
 
+# 14 Eki (3): 18 kelimeyi aşan maddeler (WORD BUDGET 4-9s/9-15s ≤ 18). GPT bütçeye uyunca bunları kısaltır; sahte GPT
+# ve build() birebir metin toplamı aşınca bu kısa hâlleri yazar (gerçek akışta GPT'nin kapı geri bildirimiyle yaptığı).
+SHORT = {"A5": "The snow wall flattens a wooden fence and a shed by the street, dark boards flying",
+         "B2": "The snow wall tears a wooden balcony and staircase off a chalet, timbers crashing into the street",
+         "B5": "The snow blast rips the front wall off a wooden chalet, dark timber beams flying outward",
+         "E2": "The avalanche slams snapped dark pine trunks into a wooden cabin and its side bursts open"}
+for _b, _t in SHORT.items():   # kısa hâller de madde kapısından geçmeli
+    VALID[_b] = VALID[_b] + [_t + "."]
+
+
+def _short_slice(bid, text):
+    return SHORT[bid] if bid in SHORT else text
+
+
 def ava_gpt(messages=None):
-    """Ağsız sahte GPT: seçilen maddeleri birebir dilim yapar (kod seçimi; ücretli çağrı yok)."""
+    """Ağsız sahte GPT: seçilen maddeleri birebir dilim yapar (kod seçimi; ücretli çağrı yok). Ret geri bildirimi
+    gelirse uzun maddeleri kısa yazar (SHORT)."""
     async def gpt(system, user, **kw):
         if messages is not None:
             messages.append(user)
@@ -356,6 +372,10 @@ def ava_gpt(messages=None):
         word = line["PEOPLE RUNNING AWAY"].split()[0]
         away = line["PEOPLE RUNNING AWAY"].split("run away from ")[1].split(",")[0]
         s2, s3 = cap(line["4-9s EVENT"]), cap(line["9-15s EVENT"])
+        if "REJECTED" in user:
+            inv = {cap(es.beat_text(e, sl, b)): b for e in AVA for sl in ("slice_2", "slice_3")
+                   for b in es.EVENT_BEATS[e][sl]}
+            s2, s3 = _short_slice(inv.get(s2), s2), _short_slice(inv.get(s3), s3)
         s2 += " as the snow roars" if len(s2.split()) < 10 else ""
         s3 += " as the snow roars" if len(s3.split()) < 10 else ""
         return {"slice_1_rest": f"{cap(word)} people run from {away} in the street right below.",
@@ -371,6 +391,8 @@ def build(e, b2, b3, spot=HT, people=5):
     sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from the avalanche in the "
                                          f"street right below."),
           "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
+    if len(es.plain_story(spec, sl).split()) > 75:   # GPT bütçeye uyar: uzun maddeler kısa yazılır
+        sl.update(slice_2=es.clean_slice(_short_slice(b2, s2)), slice_3=es.clean_slice(_short_slice(b3, s3)))
     return spec, sl
 
 
@@ -594,12 +616,12 @@ class TestAvalanche(unittest.TestCase):
                 self.assertEqual(b["excluded_pairs"], {(v, d) for v in b["slice_2"] for d in b["slice_3"]
                                                       if tags[v] & tags[d]})
         self.assertEqual(es.EVENT_BEATS[KOY]["excluded_pairs"],
-                         {("A2", "B6"), ("A3", "B3"), ("A4", "B4"), ("A6", "B1"), ("A6", "B5")})
+                         {("A1", "B1"), ("A1", "B5"), ("A2", "B6"), ("A3", "B3"), ("A4", "B1"), ("A4", "B4"),
+                          ("A5", "B6"), ("A6", "B1"), ("A6", "B2"), ("A6", "B5")})
         self.assertEqual(es.EVENT_BEATS[KAYAK]["excluded_pairs"],
-                         {("C1", "D6"), ("C5", "D6"), ("C2", "D1"), ("C6", "D1")})
-        self.assertEqual(es.EVENT_BEATS[ORMAN]["excluded_pairs"],
-                         {("E1", "F1"), ("E1", "F2"), ("E1", "F3"), ("E1", "F5"), ("E2", "F3"), ("E3", "F6"),
-                          ("E4", "F1"), ("E4", "F2"), ("E4", "F5"), ("E5", "F3")})
+                         {("C1", "D2"), ("C1", "D4"), ("C1", "D5"), ("C2", "D1"), ("C2", "D6"), ("C3", "D3"),
+                          ("C4", "D2"), ("C4", "D4"), ("C4", "D5"), ("C6", "D1"), ("C6", "D6")})
+        self.assertEqual(len(es.EVENT_BEATS[ORMAN]["excluded_pairs"]), 18)
 
     def test_camera_exclusions(self):
         # çatı/baca (*) sadece yamaç terasında; teleferik (†) istasyon terasında yok
@@ -610,19 +632,18 @@ class TestAvalanche(unittest.TestCase):
                 with self.subTest(beat=bid):
                     if bid in ROOF:
                         self.assertEqual(spots, {HT})
-                    elif bid in LIFTB:
-                        self.assertNotIn(LIFT, spots)
-                        self.assertEqual(spots, {HT, BAL})
+                    elif bid in DECK:
+                        self.assertEqual(spots, {BAL})
                     else:
                         self.assertEqual(spots, set(sk.view_spots(e, None)))
         counts = {e: [len(es.allowed_pairs(e, None, s)) for s in sk.view_spots(e, None)] for e in AVA}
-        self.assertEqual(counts, {KOY: [31, 18], KAYAK: [32, 26, 14], ORMAN: [26, 20]})
+        self.assertEqual(counts, {KOY: [26, 10], KAYAK: [20, 20, 15], ORMAN: [18, 12]})
 
     def test_block_depth_never_runs_out(self):
-        # standart 3; aday kalmayan noktası olan olaylarda 2 (kayak: istasyon terası, orman: balkon)
-        self.assertNotIn(KOY, es.RECENT_BEAT_BLOCK_BY_EVENT)
+        # 14 Eki (3): zayıf madde temizliğinden sonra köy 2, kayak 2, orman 1 (yasak çiftler arttı; her noktada en
+        # kötü durumda en az bir aday kalan en büyük derinlik)
         self.assertEqual(es.RECENT_BEAT_BLOCK, 3)
-        self.assertEqual((es.RECENT_BEAT_BLOCK_BY_EVENT[KAYAK], es.RECENT_BEAT_BLOCK_BY_EVENT[ORMAN]), (2, 2))
+        self.assertEqual({e: es.RECENT_BEAT_BLOCK_BY_EVENT[e] for e in AVA}, {KOY: 2, KAYAK: 2, ORMAN: 1})
 
         def worst(e, spot, k):
             b, ps = es.EVENT_BEATS[e], es.allowed_pairs(e, None, spot)
@@ -630,12 +651,13 @@ class TestAvalanche(unittest.TestCase):
                        for x2 in map(set, combinations(b["slice_2"], k))
                        for x3 in map(set, combinations(b["slice_3"], k)))
         for e in AVA:
-            k = es.RECENT_BEAT_BLOCK_BY_EVENT.get(e, es.RECENT_BEAT_BLOCK)
+            k = es.RECENT_BEAT_BLOCK_BY_EVENT[e]
             for spot in sk.view_spots(e, None):
                 with self.subTest(event=e, spot=spot):
                     self.assertGreater(worst(e, spot, k), 0)
-        self.assertEqual(worst(KAYAK, LIFT, 3), 0)    # 2'ye düşürmenin sebebi
-        self.assertEqual(worst(ORMAN, BAL, 3), 0)
+        self.assertEqual(worst(KOY, BAL, 3), 0)       # düşürmenin sebepleri
+        self.assertEqual(worst(KAYAK, LIFT, 3), 0)
+        self.assertEqual(worst(ORMAN, BAL, 2), 0)
 
     def test_all_combinations_pass_final_check(self):
         n = 0
@@ -647,7 +669,7 @@ class TestAvalanche(unittest.TestCase):
                     if issues:
                         self.fail(f"{e}/{spot}/{b2}+{b3}: {issues}")
                     n += 1
-        self.assertEqual(n, 31 + 18 + 32 + 26 + 14 + 26 + 20)
+        self.assertEqual(n, 26 + 10 + 20 + 20 + 15 + 18 + 12)
 
     def test_100_productions_each_event(self):
         import core.creative_pipeline as cp
