@@ -25,6 +25,14 @@
 
 ---
 
+**🌋 Volkan düzeltmesi 3 (13 Eki, üçüncü tur):** lav Onay prompt'u 216 kelimeye uzamıştı. Volkan kamera cümlesi
+tekrarsız şablona indi (eğilme ve "upper third" birer kez), lav hız cümlesi "The lava is thick, black-crusted and
+tar-like, advancing at a slow walking pace." (suya benzetme yok), volkan giyim/ışık satırları kısa ifade (Bahadır
+kararı, kısıt silinmedi), volkan prompt'u en fazla 175 kelime (`VOLC_MAX_PROMPT_WORDS`, aşarsa GPT'ye "kısalt";
+lavda hikâyeye ~60 kelime kalıyor, uzun maddeler L1/L2/M1/M4 kısaltılarak yazılır), lavda crash/slam/smash/hurl/
+blast/ram/plow yasak (`lava_no_impact`) ve insan cümlesinde fade/vanish/disappear gibi süs yasak
+(`lava_people_visible`). 794 test yeşil.
+
 ## 📋 DEVİR: 🌋 Lav düzeltmesi 2: lav fiziği ve kamera (13 Eki 2026, ikinci tur)
 
 **Gerekçe:** 13 Eki lav testinde lav su gibi hızlı yayıldı, sokağı birkaç saniyede kapladı (gerçek lav kalın kabuklu,

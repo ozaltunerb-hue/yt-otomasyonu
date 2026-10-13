@@ -2349,18 +2349,34 @@ class TestHelicopter(unittest.TestCase):
 
 VOLC = (es.ERUPTION, es.LAVA_RIVER, es.PYROCLASTIC, es.VOLCANIC_BOMBS)
 # 13 Eki, Bahadır: volkan kamera cümlesi (4 olay), kamera sabit, takip (pan) yok
+# 13 Eki (3): tekrarsız şablon (eğilme bir kez, üst üçte bir bir kez)
 VOLC_CAMERA = ("Handheld footage shot by a person standing {cam}, high vantage looking down over the village street "
-               "toward the erupting volcano; slight hand shake, the camera stays fixed in place on the {perch} and never "
-               "descends or moves closer to the ground, only tilts slightly, the erupting volcano always visible above "
-               "the rooftops, the erupting volcano stays in the upper third of the frame, the camera tilts down no more "
-               "than slightly, a corner of the {perch} railing stays visible in the foreground; one continuous shot, no "
-               "zoom, no cuts.")   # 13 Eki (2): üst üçte bir, eğilme sınırı, korkuluk
-# 13 Eki (2): sadece lav stil ekinde hız cümlesi; lavda "emergency responders" kısıtı çıktı (Bahadır kararı, sınır 8)
-LAVA_PACE = "The lava is thick and crusted and advances slowly at a walking pace, never fast or fluid like water."
-# Lav L2 metni 25 kelime (dilim sınırı 24): testlerde GPT'nin kısaltacağı gibi kısa hâli
+               "toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, tilting down no "
+               "more than slightly and never descending, the erupting volcano always visible in the upper third of the "
+               "frame, a corner of the {perch} railing in the foreground; one continuous shot, no zoom, no cuts.")
+# 13 Eki (2): sadece lav stil ekinde hız cümlesi; lavda "emergency responders" kısıtı çıktı (Bahadır kararı, sınır 8).
+# 13 Eki (3): suya benzetme yok
+LAVA_PACE = "The lava is thick, black-crusted and tar-like, advancing at a slow walking pace."
+# 13 Eki (3), Bahadır kararı: volkan giyim/ışık satırları kısa ifade (aynı kısıtlar)
+VOLC_GUARD = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light "
+              "matching the weather, never glossy or CGI; no hazmat suits.")
+VOLC_LAVA_GUARD = ("Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never "
+                   "glossy or CGI; no hazmat suits.")
+# Uzun lav maddeleri: dilim sınırı (24) ve 175 kelimelik prompt için GPT kısaltır; testlerde kısaltılmış hâli
 LAVA_SHORT = {"the scorching heat ignites a row of street trees ahead of the lava front and they burn as the crusted "
               "front reaches their roots":
-              "The scorching heat sets the street trees ablaze before the crusted lava front reaches their roots"}
+              "The scorching heat sets the street trees ablaze before the crusted lava front reaches their roots",
+              "the thick lava front shoves a stone wall over and grinds across it, the wall crumbling under it":
+              "The thick lava front shoves a stone wall over, the wall crumbling under it",
+              "the lava front reaches a house, the front door and windows burst from the heat and flames shoot out of "
+              "the upper windows":
+              "The lava front reaches a house, its door and windows burst and flames shoot from upstairs",
+              "the lava piles up against a building and the first floor bursts open, flames and sparks pouring out":
+              "The lava piles against a building and the first floor bursts open, spewing flames and sparks"}
+
+
+def short(text: str) -> str:
+    return cap(LAVA_SHORT.get(text[0].lower() + text[1:], text))
 
 
 class TestVolcano(unittest.TestCase):
@@ -2607,7 +2623,7 @@ class TestVolcano(unittest.TestCase):
         spec = es.build_spec(e, None, spot, None, b2, b3, vehicle, people)
         away = es.SLICE_RULES[e][1]["away_from"]
         s2, s3 = cap(es.beat_text(e, "slice_2", b2, vehicle)), cap(es.beat_text(e, "slice_3", b3))
-        s2 = cap(LAVA_SHORT.get(s2[0].lower() + s2[1:], s2))
+        s2, s3 = short(s2), short(s3)
         s2 += " as the volcano glows" if len(s2.split()) < 10 else ""
         sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from {away}."),
               "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
@@ -2812,16 +2828,16 @@ class TestVolcano(unittest.TestCase):
                         if l.startswith(("4-9s EVENT", "9-15s EVENT", "PEOPLE RUNNING AWAY")))
             word = line["PEOPLE RUNNING AWAY"].split()[0]
             away = line["PEOPLE RUNNING AWAY"].split("run away from ")[1].rstrip(")")
-            s2 = cap(LAVA_SHORT.get(line["4-9s EVENT"], line["4-9s EVENT"]))
+            s2 = short(line["4-9s EVENT"])
             s2 += " as the volcano glows" if len(s2.split()) < 10 else ""
             return {"slice_1_rest": f"{cap(word)} people run from {away}.", "slice_2": s2 + ".",
-                    "slice_3": cap(line["9-15s EVENT"]) + "."}
+                    "slice_3": short(line["9-15s EVENT"]) + "."}
         for e in VOLC:
             with self.subTest(event=e):
                 scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], gpt))
                 t = scene["trace"]
                 self.assertIn(t["spot"], self.CAMS)
-                self.assertIn("the erupting volcano always visible above the rooftops", scene["prompt"])
+                self.assertIn("the erupting volcano always visible in the upper third of the frame", scene["prompt"])
                 self.assertTrue(scene["combo_key"].startswith("volcano_disasters|none|"))
                 spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
                 self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
@@ -2836,10 +2852,10 @@ def _volc_gpt(messages=None):
                     if l.startswith(("4-9s EVENT", "9-15s EVENT", "PEOPLE RUNNING AWAY")))
         word = line["PEOPLE RUNNING AWAY"].split()[0]
         away = line["PEOPLE RUNNING AWAY"].split("run away from ")[1].rstrip(")")
-        s2 = cap(LAVA_SHORT.get(line["4-9s EVENT"], line["4-9s EVENT"]))
+        s2 = short(line["4-9s EVENT"])
         s2 += " as the volcano glows" if len(s2.split()) < 10 else ""
         return {"slice_1_rest": f"{cap(word)} people run from {away}.", "slice_2": s2 + ".",
-                "slice_3": cap(line["9-15s EVENT"]) + "."}
+                "slice_3": short(line["9-15s EVENT"]) + "."}
     return gpt
 
 
@@ -2884,19 +2900,18 @@ class TestVolcanoCameraLava13Oct(unittest.TestCase):
                 suffix = sk.style_suffix(e, None, spot)
                 with self.subTest(event=e, spot=spot):
                     self.assertEqual(count_constraints(suffix)[0], 8)
-                    self.assertIn(f"a corner of the {TestVolcano.PERCH[spot]} railing stays visible in the foreground",
-                                  suffix)
-                    self.assertIn("the erupting volcano stays in the upper third of the frame, the camera tilts down "
-                                  "no more than slightly", suffix)
+                    self.assertIn(f"a corner of the {TestVolcano.PERCH[spot]} railing in the foreground", suffix)
+                    self.assertIn("tilting down no more than slightly and never descending, the erupting volcano always "
+                                  "visible in the upper third of the frame", suffix)
                     self.assertTrue(suffix.startswith("Handheld footage shot by a person standing on "))
                     self.assertIn("slight hand shake", suffix)
                     if e == es.LAVA_RIVER:
-                        self.assertIn(f"no cuts. {LAVA_PACE} Bystanders wear civilian clothes, never hi-vis PPE on "
-                                      f"civilians. Raw natural light", suffix)
-                        self.assertNotIn("emergency responders", suffix)
+                        self.assertTrue(suffix.endswith(f"no cuts. {LAVA_PACE} {VOLC_LAVA_GUARD} No readable signs, "
+                                                        f"text or flags."))
+                        self.assertNotIn("responders", suffix)
                     else:
                         self.assertNotIn(LAVA_PACE, suffix)
-                        self.assertIn("; emergency responders wear service uniforms.", suffix)
+                        self.assertTrue(suffix.endswith(f"no cuts. {VOLC_GUARD} No readable signs, text or flags."))
         # kilit görsel, havuz ve iskelet metninde hız/sıvı kelimesi yok; kilit görsel olay adıyla uyuşuyor
         import core.creative_pipeline as cp
         key = es.EVENT_KEY_VISUAL[es.LAVA_RIVER]
@@ -2909,6 +2924,97 @@ class TestVolcanoCameraLava13Oct(unittest.TestCase):
                 self.assertEqual(es.lava_fast_words(beat["text"]), [], bid)
                 self.assertFalse({"roof", "rooftop", "tile", "rafter", "beam"} & set(re.findall(r"[a-z]+", beat["text"])),
                                  bid)
+
+    def test_camera_sentence_has_no_repetition(self):
+        # 13 Eki (3): aynı anlamda iki ifade yok; volkan "upper third" bir kez, eğilme bir kez, yön bir kez
+        for e in VOLC:
+            for spot in sk.view_spots(e, None):
+                cam = sk.volcano_camera(spot)
+                low = cam.lower()
+                with self.subTest(event=e, spot=spot):
+                    self.assertEqual(low.count("upper third"), 1)
+                    self.assertEqual(len(re.findall(r"\btilt", low)), 1)
+                    self.assertEqual(low.count("toward the erupting volcano"), 1)
+                    self.assertEqual(low.count("visible"), 1)
+                    self.assertEqual(len(re.findall(r"\bdescend", low)), 1)
+                    self.assertEqual(low.count("railing"), 1)
+                    for gone in ("above the rooftops", "only tilts slightly", "stays in the upper third",
+                                 "moves closer to the ground", "stays fixed in place"):
+                        self.assertNotIn(gone, low)
+                    self.assertTrue(cam.startswith("Handheld footage shot by a person standing on "))
+                    self.assertIn("slight hand shake", cam)
+        # diğer kategorilerin ortak giyim/ışık satırı değişmedi
+        self.assertIn("never hi-vis PPE on civilians; emergency responders wear service uniforms",
+                      sk.style_suffix(es.MUDSLIDE, None, list(sk.EVENT_SKELETONS[es.MUDSLIDE]["spots"])[0]))
+
+    def test_lava_no_water_no_impact_and_people_visible(self):
+        # 13 Eki (3): lav prompt'unda (stil eki dahil) "water" ve hızlı çarpma fiili yok
+        bad = re.compile(r"\bwater\b|\b(?:crash|slam|smash|hurl|blast|ram|plow|plough)(?:e?s|ed|ing|med|ming)?\b|"
+                         r"\brush(?:es|ed|ing)?\b", re.IGNORECASE)
+        for spot in sk.view_spots(es.LAVA_RIVER, None):
+            for b2, b3 in es.allowed_pairs(es.LAVA_RIVER, None, spot):
+                spec, sl = TestVolcano.build(TestVolcano(), es.LAVA_RIVER, b2, b3, spot=spot)
+                prompt = es.assemble_prompt(spec, sl)
+                with self.subTest(spot=spot, pair=(b2, b3)):
+                    self.assertIsNone(bad.search(prompt), prompt)
+                    self.assertEqual(es.final_prompt_issues(spec, sl, prompt), [])
+        self.assertEqual(es._LAVA_IMPACT, ("crash", "slam", "smash", "hurl", "blast", "ram", "plow", "plough"))
+        spec, sl = TestVolcano.build(TestVolcano(), es.LAVA_RIVER, "L3", "M3")
+        codes = lambda f, t: TestVolcano.codes(TestVolcano(), spec, {**sl, f: es.clean_slice(t)})
+        for f, t in (("slice_2", "The lava front crashes into the corner of a house, the wall cracks and caves in."),
+                     ("slice_2", "The lava slams against the corner of a house and the wall caves in."),
+                     ("slice_2", "The lava smashes the corner of a house and the wall caves in."),
+                     ("slice_2", "The lava rams the corner of a house and the wall caves in."),
+                     ("slice_2", "The lava plows into the corner of a house and the wall caves in."),
+                     ("slice_3", "The lava hurls the burning awning into a shop front as the facade buckles."),
+                     ("slice_3", "The lava blasts through a shop front, the awning ignites and the facade buckles.")):
+            with self.subTest(text=t):
+                self.assertIn("lava_no_impact", codes(f, t))
+        # serbest fiiller (5 doğal cümle, "pressing" ve "grinding" dahil): ret yok
+        for f, t in (("slice_2", "The lava front keeps pressing against the corner of a house until the wall caves in."),
+                     ("slice_2", "Grinding into the corner of a house, the crusted lava makes the wall bulge and crack."),
+                     ("slice_2", "The thick lava creeps against a cottage corner, the wall bulging and caving in."),
+                     ("slice_3", "Grinding forward, the lava front swallows a shop front as the awning ignites."),
+                     ("slice_3", "The lava keeps pushing into a shop front, the awning ignites and the facade buckles.")):
+            with self.subTest(ok=t):
+                self.assertFalse(codes(f, t) & {"lava_no_impact", "lava_no_fast", "beat_terms"}, t)
+        # insanlar görünür kalır: atmosferik süs reddedilir, kaçış (race/rush dahil) serbest
+        for t in ("Five people run from the lava, fading into the smoke.",
+                  "Five people run from the lava, vanishing against the landscape.",
+                  "Five people run from the lava and disappear into the distance."):
+            with self.subTest(fade=t):
+                self.assertIn("lava_people_visible", codes("slice_1_rest", t))
+        for t in ("Five people scramble away down the street from the lava.",
+                  "Five residents race away from the lava down the street.",
+                  "Five people rush away from the lava, still in view down the street."):
+            with self.subTest(run=t):
+                self.assertFalse(codes("slice_1_rest", t) & {"lava_people_visible", "lava_no_fast", "lava_no_impact"})
+        # çarpma ve süs kapısı sadece lavda
+        spec, sl = TestVolcano.build(TestVolcano(), es.VOLCANIC_BOMBS, "R4", "T2")
+        self.assertFalse(TestVolcano.codes(TestVolcano(), spec, sl) & {"lava_no_impact", "lava_people_visible"})
+
+    def test_volcano_prompt_max_175_words(self):
+        # 13 Eki (3), Bahadır kararı: hikâye + stil eki en fazla 175 kelime; aşarsa GPT'ye kısaltma geri bildirimi
+        import asyncio
+        import core.creative_pipeline as cp
+        self.assertEqual(es.VOLC_MAX_PROMPT_WORDS, 175)
+        spec, sl = TestVolcano.build(TestVolcano(), es.LAVA_RIVER, "L2", "M1")
+        long = {**sl, "slice_2": es.clean_slice(cap(es.beat_text(es.LAVA_RIVER, "slice_2", "L1"))),
+                "slice_3": es.clean_slice(cap(es.beat_text(es.LAVA_RIVER, "slice_3", "M1")))}
+        spec = es.build_spec(es.LAVA_RIVER, None, self.HT, None, "L1", "M1", None, 5)
+        issue = next(i for i in es.final_prompt_issues(spec, long, es.assemble_prompt(spec, long))
+                     if i["rule"] == "volcano_prompt_words")
+        self.assertIn("shorten the three fields", issue["feedback"])
+        for e in VOLC:
+            es._BEAT_MEMORY.clear()
+            most = 0
+            for _ in range(100):
+                scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], _volc_gpt()))
+                n = len(scene["prompt"].split())
+                most = max(most, n)
+                self.assertLessEqual(n, 175, scene["prompt"])
+            with self.subTest(event=e):
+                self.assertLessEqual(most, 175)
 
     def test_other_categories_keep_pan_follow(self):
         # yangın, hortum, heyelan, kıyı dalga stil ekleri değişmedi
@@ -3013,8 +3119,9 @@ class TestVolcanoCameraLava13Oct(unittest.TestCase):
                     with self.subTest(beat=bid):
                         self.assertNotIn("{vehicle}", beat["text"])
                         self.assertEqual(es.missing_term_groups(beat["terms"], text), [])
-                        if e == es.LAVA_RIVER:
-                            self.assertEqual(es.lava_fast_words(text), [])
+                        if e == es.LAVA_RIVER:   # 13 Eki (3): madde ve doğal cümleleri hız/çarpma kapısından geçer
+                            for t in [text] + TestVolcano.VALID[bid]:
+                                self.assertEqual(es.lava_fast_words(t) + es.find_terms(es._LAVA_IMPACT, t), [], t)
                         if e == es.LAVA_RIVER:
                             self.assertEqual([c for c, t, *_ in es.EVENT_BANNED_WORDS[e] if es.find_terms(t, text)], [])
                         # başka maddenin terimleriyle karışmaz: her madde kendi dilimindeki en az bir başka maddeden
@@ -3060,7 +3167,7 @@ class TestVolcanoCameraLava13Oct(unittest.TestCase):
                     for x in pair:
                         self.assertNotIn(t["spot"], b["excluded_spots"].get(x, set()))
                     self.assertNotIn("pans to follow", scene["prompt"])
-                    self.assertIn("the camera stays fixed in place", scene["prompt"])
+                    self.assertIn("the camera stays fixed on the", scene["prompt"])
                     self.assertIsNone(t["vehicle"])
                     self.assertNotIn("VEHICLE:", messages[-1])
                     if e == es.LAVA_RIVER:   # 13 Eki (2): hikâyede hız kelimesi yok, stil ekinde hız kuralı var

@@ -700,19 +700,28 @@ def volcano_camera(spot: str) -> str:
     # 13 Eki (2), Bahadır: lav testinde kamera aşağı eğilip volkanı kadrajdan çıkardı, çekim drone gibi göründü.
     # Volkan üst üçte birde, eğilme sınırı, ön planda korkuluk köşesi eklendi (kamera cümlesinin içinde, virgülle).
     # Korkuluk durulan yerin adıyla: terrace / rooftop / balcony railing.
+    # 13 Eki (3), Bahadır: tekrarsız şablon (prompt 216 kelimeye uzamıştı). "only tilts slightly" + "tilts down no more
+    # than slightly" tek ifade; "always visible above the rooftops" + "stays in the upper third" tek ifade; yön için
+    # "toward the erupting volcano" kaldı.
     perch = VOLCANO_CAMERA_PERCH[spot]
     return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking down over the "
-            f"village street toward the erupting volcano; slight hand shake, the camera stays fixed in place on the "
-            f"{perch} and never descends or moves closer to the ground, only tilts slightly, the "
-            f"erupting volcano always visible above the rooftops, the erupting volcano stays in the upper third of the "
-            f"frame, the camera tilts down no more than slightly, a corner of the {perch} railing stays visible in the "
-            f"foreground; one continuous shot, no zoom, no cuts.")
+            f"village street toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, "
+            f"tilting down no more than slightly and never descending, the erupting volcano always visible in the upper "
+            f"third of the frame, a corner of the {perch} railing in the foreground; one continuous shot, no zoom, "
+            f"no cuts.")
 
 
-# 13 Eki (2), Bahadır: lav testinde lav su gibi hızlı yayıldı. Sadece lav olayının stil ekinde, kamera cümlesinden sonra
-VOLCANO_LAVA_PACE = ("The lava is thick and crusted and advances slowly at a walking pace, never fast or fluid like "
-                     "water.")
-LAVA_DROPPED_GUARDRAIL = "; emergency responders wear service uniforms."
+# 13 Eki (2), Bahadır: lav testinde lav su gibi hızlı yayıldı. Sadece lav olayının stil ekinde, kamera cümlesinden sonra.
+# 13 Eki (3): suya benzetme çıktı. Önceki: "The lava is thick and crusted and advances slowly at a walking pace, never
+# fast or fluid like water."
+VOLCANO_LAVA_PACE = "The lava is thick, black-crusted and tar-like, advancing at a slow walking pace."
+# 13 Eki (3), Bahadır kararı: volkan prompt'u en fazla 175 kelime; kısıt silinmeden giyim/ışık satırları kısa yazıldı
+# (aynı 4 kısıt). Ortak metin (get_realism_guardrails) diğer kategorilerde aynen kalır. Lavda "responders" yok
+# (13 Eki 2 kararı: 8 kısıt sınırı).
+VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "
+                      "light matching the weather, never glossy or CGI; no hazmat suits.")
+VOLCANO_LAVA_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, "
+                           "never glossy or CGI; no hazmat suits.")
 
 
 class SlotFillError(RuntimeError):
@@ -751,11 +760,13 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     if s["domain"] == "volcano_disasters":   # 13 Eki: volkanda takip yok, kamera sabit (VOLCANO_CAMERA_PERCH)
         camera = volcano_camera(spot)
     guardrails = get_realism_guardrails(s['domain'], ship or 'None', spot)
+    if s["domain"] == "volcano_disasters":
+        guardrails = VOLCANO_GUARDRAILS   # 13 Eki (3): kısa ifade, aynı kısıtlar
     if event == "Lava river pours down into a village street":
         # 13 Eki (2), Bahadır kararı: hız cümlesi 9. kısıt olurdu (sınır 8); lav sahnesinde ekip yok, en az önemli
         # kısıt olan "emergency responders wear service uniforms" sadece lavda çıktı
         camera += f" {VOLCANO_LAVA_PACE}"
-        guardrails = guardrails.replace(LAVA_DROPPED_GUARDRAIL, ".")
+        guardrails = VOLCANO_LAVA_GUARDRAILS
     out = f"{camera} {guardrails}"
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)

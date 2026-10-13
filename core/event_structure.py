@@ -465,6 +465,14 @@ _LAVA_PEOPLE = ("people", "residents", "villagers", "they", "families", "everyon
                 "three", "four", "five", "six")
 _LAVA_FIRE_SUBJECT = ("flame", "flames", "spark", "sparks", "smoke", "fire", "ember", "embers")
 _LAVA_FAST_WINDOW = 3
+# 13 Eki (3), Bahadır: GPT "crashing into a house's corner" yazdı. Lavda hızlı çarpma fiilleri yasak (istisnasız;
+# "rush" yukarıda, insan istisnasıyla). Serbest: press, grind, shove, push, crawl, creep, advance, bulge, crack...
+_LAVA_IMPACT = ("crash", "slam", "smash", "hurl", "blast", "ram", "plow", "plough")
+# 13 Eki (3): lavda insan cümlesinde (slice_1_rest) atmosferik süs yok; insanlar kaçar ve görünür kalır
+_LAVA_PEOPLE_FADE = ("fade", "vanish", "disappear", "dissolve", "blur", "melt away", "melts away", "melted away",
+                     "against the landscape", "into the distance", "into the haze", "into the smoke")
+# 13 Eki (3), Bahadır kararı: volkan Kie prompt'u (hikâye + stil eki) en fazla 175 kelime
+VOLC_MAX_PROMPT_WORDS = 175
 # 13 Eki (2), lav L2: sıcaklık ağaçları lav değmeden tutuşturur
 _VOLC_HEAT = ("heat", "scorching", "searing", "radiant heat", "blistering")
 _VOLC_TREE = ("tree", "trunk", "branch", "limb", "bough", "pine", "palm", "oak", "olive", "cypress", "elm", "maple",
@@ -1574,6 +1582,23 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
                               f"Real lava is a thick crusted front that moves slower than walking: remove "
                               f"{', '.join(repr(w) for w in fast)}; use crawls, creeps, grinds, pushes, presses or "
                               f"advances."))
+        impact = find_terms(_LAVA_IMPACT, gpt_text)   # 13 Eki (3)
+        if impact:
+            out.append(_issue("lava_no_impact", f"lavda hızlı çarpma fiili ({', '.join(impact)})",
+                              f"The lava never hits fast: remove {', '.join(repr(w) for w in impact)}; the thick front "
+                              f"presses, grinds, shoves, pushes, crawls or creeps into things."))
+        fade = find_terms(_LAVA_PEOPLE_FADE, slices.get("slice_1_rest", ""))
+        if fade:
+            out.append(_issue("lava_people_visible", f"0-4s: insanlar görünür kalmalı ({', '.join(fade)})",
+                              f"In 'slice_1_rest' the people stay clearly visible as they run: remove "
+                              f"{', '.join(repr(w) for w in fade)}; for example 'scramble away down the street'."))
+    if event in VOLCANO_EVENTS:   # 13 Eki (3): volkan prompt'u en fazla 175 kelime
+        n_words = len(assemble_prompt(spec, slices).split())
+        if n_words > VOLC_MAX_PROMPT_WORDS:
+            budget = VOLC_MAX_PROMPT_WORDS - (n_words - len(" ".join(slices[f] for f in SLICE_FIELDS).split()))
+            out.append(_issue("volcano_prompt_words", f"prompt {n_words} kelime (en fazla {VOLC_MAX_PROMPT_WORDS})",
+                              f"The full prompt is {n_words} words; shorten the three fields to at most {budget} words "
+                              f"in total."))
     for code, terms, missing, feedback in EVENT_BANNED_WORDS.get(event, ()):
         found = find_terms(terms, gpt_text)
         if found:
@@ -1687,8 +1712,8 @@ def _validate_data() -> None:
                 raise StructureError(f"Yasak kelime kod metninde: {event}/{code}")
         if event in LAVA_FAST_EVENTS:   # 13 Eki (2): her kod metni ayrı ayrı (pencere cümle sınırını aşmasın)
             for t in [key] + [beat["text"] for slot in ("slice_2", "slice_3") for beat in b[slot].values()]:
-                if lava_fast_words(t):
-                    raise StructureError(f"Lav hız kelimesi kod metninde: {event}: {lava_fast_words(t)}")
+                if lava_fast_words(t) or find_terms(_LAVA_IMPACT, t):
+                    raise StructureError(f"Lav hız/çarpma kelimesi kod metninde: {event}: {t}")
         for d, spots in b["excluded_spots"].items():
             if spots - set(EVENT_SKELETONS[event]["spots"]):
                 raise StructureError(f"Bilinmeyen spot: {event}/{d}: {spots - set(EVENT_SKELETONS[event]['spots'])}")

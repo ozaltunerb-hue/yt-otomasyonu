@@ -113,7 +113,7 @@ class TestSkeletonOutput(unittest.TestCase):
                 if sk.EVENT_SKELETONS[e]["domain"] == "volcano_disasters":
                     # 13 Eki: volkanda takip yok, kamera sabit (TestVolcano kilitler)
                     self.assertNotIn("pans to follow", suffix)
-                    self.assertIn("the camera stays fixed in place", suffix)
+                    self.assertIn("the camera stays fixed on the", suffix)   # 13 Eki (3) sade şablon
                 else:
                     self.assertIn("the camera pans to follow the", suffix)
                 self.assertNotIn("phone", suffix.lower())   # final turu: telefon/REC ekranı çiziliyordu
