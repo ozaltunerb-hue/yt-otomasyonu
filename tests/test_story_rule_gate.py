@@ -712,9 +712,10 @@ class TestFlashFloodFix(unittest.TestCase):
                     self.assertNotIn("phone", suffix.lower())
 
     def test_other_events_suffix_untouched(self):
-        # 10 Eki: volkan olaylarında dağ görünürlüğü eki (TestVolcano kilitler); diğer olaylar dokunulmadı
+        # 10 Eki: volkan olaylarında dağ görünürlüğü eki; 13 Eki: volkan kendi sabit kamera cümlesine geçti
+        # (TestVolcano kilitler, CAMERA_MOTION_EXTRA'da yok); diğer olaylar dokunulmadı
         import core.event_structure as es
-        self.assertEqual(set(sk.CAMERA_MOTION_EXTRA), {FLOOD} | set(es.VOLCANO_EVENTS))
+        self.assertEqual(set(sk.CAMERA_MOTION_EXTRA), {FLOOD})
         for e, s in sk.EVENT_SKELETONS.items():
             if e == FLOOD or e in es.VOLCANO_EVENTS:
                 continue

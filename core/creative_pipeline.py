@@ -153,10 +153,12 @@ EVENT_OUTCOMES = {
     # Volkan (TASLAK, 10 Eki, Bahadır): yapılandırılmış hatta; trace/rapor için
     "Volcano erupts and a shockwave blows out windows":
         "the shockwave and falling rocks keep smashing windows, signs and roofs along the street below the volcano",
+    # 13 Eki: lav araçsız, kül bulutu büyük yapılar (yukarıdan görünen)
     "Lava river pours down into a village street":
-        "the lava keeps advancing down the street, swallowing cars and setting walls and fences on fire",
+        "the lava keeps surging down the street, toppling walls and fences and setting the houses along it on fire",
     "Pyroclastic cloud races down into a village street":
-        "the cloud keeps tearing through the street, ripping off roofs and awnings and snapping trees",
+        "the cloud keeps tearing through the street, ripping balconies and roof tiles off the houses and snapping trees "
+        "and power poles",
     "Volcanic bombs slam into a village street":
         "glowing rocks keep slamming into the street, punching through roofs and setting cars on fire",
     # Plaj
@@ -548,8 +550,10 @@ Rules: describe only what is visible, never sounds, the camera or the video. Peo
 def _slices_message(spec: dict, place: str, weather: str, lo: int, hi: int, recent: list[str],
                     feedback: list[str] | None) -> str:
     event = spec["event"]
+    # 13 Eki: araçsız olaylarda (lav, kül bulutu) VEHICLE satırı yok
+    vehicle_line = f"VEHICLE: {spec['vehicle']}\n" if spec["vehicle"] is not None else ""
     msg = (f"OPENING SENTENCE (fixed, already written): {spec['key_visual']}\nPLACE: {place}\nWEATHER: {weather}\n"
-           f"PEOPLE VISIBLE: {lo} to {hi}\nVEHICLE: {spec['vehicle']}\n"
+           f"PEOPLE VISIBLE: {lo} to {hi}\n{vehicle_line}"
            # 4 Eki, Bahadır: kişi sayısını kod seçer, GPT cümleye döker (sadece kişi kuralı olan olaylarda)
            + es.people_line(spec)
            + f"4-9s EVENT: {es.beat_text(event, 'slice_2', spec['beat_2'], spec['vehicle'])}\n"
@@ -702,8 +706,12 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     """Yapılandırılmış olay: olay çifti + araç (kod), dilimler (GPT), son denetim (kod). Son denetim tutmazsa
     StructureError: Kie'ye gidilmez."""
     b2, b3 = es.choose_beats(event, view, spot, history)
-    # Görünümü olmayan olayda (heyelan, TASLAK) araç olayın kendi listesinden
-    vehicle = es.choose_vehicle(view) if view is not None else es.choose_event_vehicle(event)
+    # Görünümü olmayan olayda (heyelan, TASLAK) araç olayın kendi listesinden; araçsız olayda (13 Eki: lav, kül
+    # bulutu) araç seçilmez
+    if not es.uses_vehicle(event):
+        vehicle = None
+    else:
+        vehicle = es.choose_vehicle(view) if view is not None else es.choose_event_vehicle(event)
     people =es.choose_people(event, ship)       # kaçan kişi sayısı N (kişi kuralı olan olaylarda); combo_key'e girmez
     tag = es.beat_tag(b2, b3)
     es.remember_beats(event, tag)                # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın

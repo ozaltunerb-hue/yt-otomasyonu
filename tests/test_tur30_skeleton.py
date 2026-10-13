@@ -110,7 +110,12 @@ class TestSkeletonOutput(unittest.TestCase):
                 total, negative = count_constraints(suffix)
                 self.assertLessEqual(total, 8, suffix)
                 self.assertIn("Handheld footage shot by a person standing", suffix)
-                self.assertIn("the camera pans to follow the", suffix)
+                if sk.EVENT_SKELETONS[e]["domain"] == "volcano_disasters":
+                    # 13 Eki: volkanda takip yok, kamera sabit (TestVolcano kilitler)
+                    self.assertNotIn("pans to follow", suffix)
+                    self.assertIn("the camera stays fixed in place", suffix)
+                else:
+                    self.assertIn("the camera pans to follow the", suffix)
                 self.assertNotIn("phone", suffix.lower())   # final turu: telefon/REC ekranı çiziliyordu
                 self.assertIn("no zoom, no cuts", suffix)
                 self.assertIn("Raw natural light matching the weather, never glossy or CGI", suffix)

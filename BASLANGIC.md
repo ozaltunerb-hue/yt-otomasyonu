@@ -25,6 +25,38 @@
 
 ---
 
+## 📋 DEVİR: 🌋 Volkan düzeltmesi (13 Eki 2026)
+
+**Gerekçe:** 3 videoda stil ekindeki "the camera pans to follow the lava river / pyroclastic cloud" yüzünden Kie
+kamerayı terastan sokak seviyesine indirdi; kamera olaydan kaçtı, ikinci yarıda yüksek açı kayboldu, bir videoda gizli
+kesme oluştu. Bahadır yüksek kamera istiyor. Hiçbir Kie/GPT çağrısı yapılmadı; Bahadır Telegram'dan onayla deneyecek.
+
+- **Kamera (4 volkan olayı):** pan-follow kaldırıldı. `skeleton_pipeline.volcano_camera`: "... standing {yer}, high
+  vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed
+  in place on the {terrace/rooftop/balcony} and never descends or moves closer to the ground, only tilts slightly, the
+  erupting volcano always visible above the rooftops; one continuous shot, no zoom, no cuts." "facing the erupting
+  volcano" CAMERA_SPOTS'tan bu cümleye taşındı; volkan artık CAMERA_MOTION_EXTRA'da yok. Kısıt sayısı 8 (aynı).
+  Yangın, hortum, heyelan, kıyı dalga kamera satırları değişmedi (testli).
+- **Lav nehri araçsız, sadece iki teras** (yamaç terası, çatı terası; köy evi balkonu bu olaydan çıktı, diğer volkan
+  olaylarında kalır). Kilit görsel: "A lava river pours down the volcano’s flank and surges through a village street,
+  engulfing the houses along it." Havuz: L1 taş duvar devrilir, L2 çit + kulübe ezilir, L3 ev köşesi çöker, L4 ağaçlar
+  sökülür / M1 kapı ve pencerelerden girer, M2 ev duvarı çöker, M3 dükkân cephesi, M4 bina birinci katı patlar.
+  Yasak çiftler (aynı yapı iki kez yok): (L1,M2) (L1,M4) (L3,M1) (L3,M2) (L3,M4). Kamera dışlaması kalmadı (çatı
+  maddesi yok, balkon yok). GPT dilimlerinde araç, balkon ve "slowly/gradually/steadily" reddedilir
+  (`EVENT_BANNED_WORDS`). Tekrar önleme derinliği 1 (aynı).
+- **Kül bulutu** (kilit görsel aynı): P1 balkonlar sökülür, P2 ağaç + direk devrilir, P3 kiremit / Q1 ev duvarı çöker,
+  Q2 blok pencereleri patlar, Q3 baca çatıyı deler. Tente, sandalye, çöp kutusu, araba camı çıktı (teras kamerasında
+  seçilmiyordu). Yasak çiftler: (P3,Q3) (P1,Q1). P3 ve Q3 sadece yamaç terasında (çatı terası ve balkonda yok).
+- **Araçsız olay (benim kararım):** havuzunda `{vehicle}` olmayan olayda (`uses_vehicle`: lav ve kül bulutu) araç
+  seçilmez, GPT mesajında VEHICLE satırı yok, `EVENT_VEHICLES`'tan çıktılar. Kül bulutunda araç kelimesi yasak değil
+  (sadece lavda istendi).
+- Terimler: yeni `_VOLC_SHED/_DOOR/_FLOOR/_BALCONY/_CHIMNEY/_SLOW`; topple/crush/cave in/uproot/burst/buckle/ignite/
+  swallow/sweep/collapse eklendi. `_VOLC_COLLAPSE` daraltıldı (çıplak fall/drop/burst yok, "kül evlerin üstüne yağıyor"
+  Q1'den geçmesin). Kullanılmayan `_VOLC_FURN/_MELT/_ROW` silindi. Marina Z6 kelimeleri yine volkanda yok.
+- Patlama ve bombalar: sadece kamera cümlesi değişti, havuz ve kilit cümle aynı.
+- Testler: `TestVolcano` güncellendi, yeni `TestVolcanoCameraLava13Oct` (kamera, araçsız lav, yasak kelime kapısı,
+  her madde tek başına + 5 doğal cümle, yasak çift kuralı, 100 üretim simülasyonu). 790 test yeşil.
+
 ## 📋 DEVİR: Panel video yedeği + YouTube token düzeltmesi (12 Eki)
 
 **DURUM (doğrulandı):** Commit'ler `c3c0737`, `60333f8`, `efd7d5f`, `0cf70cf` canlı (Railway `44091d68` SUCCESS). 783 test.
@@ -103,6 +135,7 @@ araç kodda, GPT sadece cümle, 3 deneme, kapalı başarısızlık). Henüz vide
   ", the erupting volcano always visible above the rooftops" (CAMERA_MOTION_EXTRA, yeni kısıt sayılmaz); kamera
   takip nesnesi olaya göre ash column / lava river / pyroclastic cloud / glowing rocks. Hava "ash-grey sky lit orange
   by a distant eruption plume", kişi 3-6, toplam 40-75, NO_RAIN_EVENTS içinde, preflight danışman.
+- 13 Eki: kamera cümlesi, lav ve kül bulutu havuzları değişti (yukarıdaki 13 Eki devri esas). Aşağısı 10 Eki hâli.
 - Yasak eşleşmeler (aynı nesne iki kez): (S1,U3) dükkân cephesi, (S2,U2) araç camı; (L1,M1) (L2,M1) (L4,M1) araç,
   (L3,M2) duvar; (P2,Q2) araç, (P3,Q3) çatı; (R1,T2) (R2,T2) araç, (R3,T3) dükkân yangını.
 - Kamera dışlamaları: çatı/kiremit maddeleri (S3, P3, Q3, T1) ve ev köşesi/çatı kirişi (M2) çatı terasında ve köy evi

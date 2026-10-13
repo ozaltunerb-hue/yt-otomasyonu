@@ -112,7 +112,9 @@ EVENT_KEY_VISUAL = {
     # 10 Eki, Bahadır: volkan kilit cümleleri birebir
     ERUPTION: "The volcano erupts above a village, a shockwave blowing out windows along the street as an ash column "
               "towers into the sky.",
-    LAVA_RIVER: "A lava river pours down the volcano’s flank and tears through a village street, swallowing parked cars.",
+    # 13 Eki, Bahadır: lav araçsız. Önceki: "... and tears through a village street, swallowing parked cars."
+    LAVA_RIVER: "A lava river pours down the volcano’s flank and surges through a village street, engulfing the houses "
+                "along it.",
     PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
     VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, "
                     "punching through roofs and igniting cars.",
@@ -152,10 +154,8 @@ EVENT_VEHICLES = {
     # 10 Eki: helikopter (araç sadece F3/F6'da; havalanmaz, NO_LIFT_SLICE)
     HELICOPTER: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)),
                  ("SUV", ("suv",))],
-    # 10 Eki: volkan
+    # 10 Eki: volkan. 13 Eki: lav ve kül bulutu araçsız (havuzlarında {vehicle} yok, uses_vehicle)
     ERUPTION: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)), ("SUV", ("suv",))],
-    LAVA_RIVER: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)), ("SUV", ("suv",))],
-    PYROCLASTIC: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)), ("SUV", ("suv",))],
     VOLCANIC_BOMBS: [("pickup truck", ("pickup", "truck")), ("small car", ("car",)), ("white van", ("van",)), ("SUV", ("suv",))],
 }
 
@@ -389,29 +389,43 @@ _VOLC_ENGULF = ("engulf", "surround", "swallow", "envelop", "encircle", "consume
                 "swamp", "submerge", "close around", "closes around", "closed around", "flow around", "flows around",
                 "flowed around", "wrap", "inundate", "overrun", "overwhelm", "overtake", "drown", "smother",
                 "gulp", "eat")
-_VOLC_MELT = ("melt", "burn", "smoke", "smolder", "smoulder", "char", "blister", "catch fire", "catches fire",
-              "caught fire", "ignite", "burst into flames", "bursts into flames", "flare", "deform", "sag", "bubble",
-              "liquefy", "pop", "burst", "explode", "ablaze", "alight", "on fire", "sizzle", "scorch")
 _VOLC_PUSH = ("push", "shove", "drag", "carry", "carried", "sweep", "swept", "bulldoze", "plow", "plough", "force",
               "drive", "drove", "nudge", "heave", "slide", "slid", "roll", "propel", "ram", "move", "shunt",
               "bear", "bore")
-_VOLC_WALL = ("wall", "garden wall", "stone wall", "brick wall", "boundary wall", "masonry", "brick")
+_VOLC_WALL = ("wall", "garden wall", "stone wall", "brick wall", "boundary wall", "masonry", "brick",
+              "retaining wall", "stonework")   # 13 Eki
 _VOLC_TOPPLE = ("topple", "collapse", "crumble", "knock down", "knocks down", "knocked down", "flatten",
                 "bulldoze", "burst", "break", "broke", "smash", "crush", "give way", "gives way", "gave way", "cave",
                 "tumble", "fall", "fell", "burst through", "bursts through", "tear down", "tears down",
-                "tore down", "push over", "pushes over", "pushed over", "breach", "overrun", "swallow")
-_VOLC_FENCE = ("fence", "fencing", "picket", "palisade", "railing", "gate", "hedge")
+                "tore down", "push over", "pushes over", "pushed over", "breach", "overrun", "swallow",
+                # 13 Eki (yeni lav L1): sadece kabulü genişletir
+                "cave in", "caves in", "caved in", "uproot", "buckle", "sweep", "swept", "sweep away", "engulf", "bury", "buried", "shatter", "split", "crack", "pour over", "pours over",
+                "poured over", "spill over", "spills over", "spilled over", "flow over", "flows over", "flowed over")
+_VOLC_FENCE = ("fence", "fencing", "picket", "palisade", "railing", "gate", "hedge", "paling")
+# 13 Eki (lav L2): kulübe/baraka
+_VOLC_SHED = ("shed", "woodshed", "toolshed", "hut", "shack", "outbuilding", "outhouse", "barn", "lean-to",
+              "storeroom", "storehouse", "garage", "cabin", "kiosk", "coop", "stable")
 _VOLC_IGNITE = ("ignite", "catch fire", "catches fire", "caught fire", "catching fire", "burst into flames",
                 "bursts into flames", "burst into flame", "bursts into flame", "go up in flames", "goes up in flames",
                 "went up in flames", "set alight", "sets alight", "set ablaze", "sets ablaze", "set on fire",
                 "sets on fire", "set fire", "sets fire", "ablaze", "alight", "on fire", "in flames", "aflame",
-                "flare", "burn", "combust", "kindle", "torch", "blaze", "flame", "fire", "smolder", "smoulder")
-_VOLC_ROW = ("one after another", "one after the other", "one by one", "in turn", "in succession", "in sequence",
-             "row", "line", "each", "every", "all along", "domino", "chain", "string", "several", "car after car")
-_VOLC_HOUSE = ("house", "home", "cottage", "building", "villa", "dwelling", "wall", "corner")
-_VOLC_COLLAPSE = ("collapse", "cave in", "caves in", "caved in", "fall", "fell", "crash", "give way", "gives way",
-                  "gave way", "sag", "buckle", "crumble", "come down", "comes down", "came down", "fold", "snap",
-                  "break", "broke", "tumble", "drop", "plunge", "implode")
+                "flare", "burn", "combust", "kindle", "torch", "blaze", "flame", "fire", "smolder", "smoulder",
+                "inferno", "erupt in flames", "erupts in flames", "erupted in flames")   # 13 Eki
+_VOLC_HOUSE = ("house", "home", "cottage", "building", "villa", "dwelling", "wall", "corner",
+               "townhouse", "farmhouse", "residence")   # 13 Eki ("facade" bilerek yok: dükkân cephesi M3 ayrı kalsın)
+# 13 Eki (lav M1): evin kapısı/pencereleri
+_VOLC_DOOR = ("door", "doorway", "front door", "entrance", "entryway", "window", "porch", "threshold", "ground floor")
+# 13 Eki (lav M4): kat
+_VOLC_FLOOR = ("floor", "storey", "story", "ground floor", "first floor", "lower floor", "level")
+# Çökme (13 Eki, lav L3/M2 ve kül bulutu Q1). Çıplak "fall/fell/drop/crash/snap/break" bilerek yok: "ash keeps falling
+# over the houses" gibi atmosfer cümlesi ev + düşme ile Q1'den geçmesin (önceki listede vardı, sadece eski M2'de).
+# "burst/shatter" da yok: M1/M4'ün "flames bursting" cümlesi M2'den geçmesin (havuz içi ayırt edicilik testi).
+# 13 Eki eklemelerinde de marina Z6 kelimeleri (wreck, demolish, splinter, tear/blow apart) bilerek yok
+_VOLC_COLLAPSE = ("collapse", "cave", "cave in", "caves in", "caved in", "give way", "gives way", "gave way", "sag",
+                  "buckle", "crumble", "come down", "comes down", "came down", "fold", "tumble", "implode", "topple",
+                  "crack", "split", "disintegrate", "slump", "crush", "flatten",
+                  "crash down", "crashes down", "crashed down", "fall in", "falls in", "fell in",
+                  "break apart", "breaks apart", "broke apart", "burst open", "bursts open")
 _VOLC_POLE = ("utility pole", "power pole", "telephone pole", "electricity pole", "telegraph pole", "pole", "pylon",
               "lamppost", "lamp post", "streetlight", "street light", "light pole", "mast")
 _VOLC_SPARK = ("spark", "arc", "flash", "cinder", "fireball", "ember", "electric arc", "glow")
@@ -419,18 +433,29 @@ _VOLC_CRUSH = ("crush", "smash", "shatter", "burst", "break", "broke", "cave", "
                "destroy", "swallow", "engulf", "bulldoze", "plow", "plough", "burst through",
                "bursts through", "tear through", "tears through", "tore through", "punch through", "punches through",
                "crash through", "crashes through", "crashed through", "blow out", "blows out", "blew out", "pour through",
-               "pours through", "poured through", "flood", "fill")
+               "pours through", "poured through", "flood", "fill",
+               # 13 Eki (lav L2/M1): sadece kabulü genişletir
+               "crumple", "topple", "collapse", "cave", "snap", "buckle", "sweep",
+               "swept", "carry", "carried", "bury", "buried", "consume", "devour", "pour into", "pours into",
+               "poured into", "break through", "breaks through", "broke through", "surge through", "surges through",
+               "surged through", "flow through", "flows through", "flowed through", "pour in", "pours in",
+               "poured in")
 _VOLC_CLOUD = ("cloud", "pyroclastic", "ash cloud", "ash flow", "surge", "flow", "avalanche", "wall of ash",
                "ash wall", "billow", "plume", "cloud front", "debris cloud", "grey mass", "gray mass", "ash", "dust",
                "mass", "torrent")
-_VOLC_FURN = ("chair", "table", "bin", "trash can", "dumpster", "furniture", "stool", "bench", "garbage can",
-              "rubbish bin", "umbrella", "crate", "cart", "bicycle", "scooter", "planter", "flowerpot")
+# 13 Eki (kül bulutu P1): balkonlar
+_VOLC_BALCONY = ("balcony", "veranda", "loggia", "railing", "balustrade")
+# 13 Eki (kül bulutu Q3): baca
+_VOLC_CHIMNEY = ("chimney", "chimney stack", "chimneystack", "smokestack", "flue", "chimney pot")
+# 13 Eki (lav): araç, balkon ve yavaşlık kelimeleri GPT hikâyesinde reddedilir (LAVA_BANNED)
+_VOLC_SLOW = ("slowly", "gradually", "steadily")
 _VOLC_TREE = ("tree", "trunk", "branch", "limb", "bough", "pine", "palm", "oak", "olive", "cypress", "elm", "maple",
               "sapling", "twig", "log")
 _VOLC_SNAP = ("snap", "break", "broke", "split", "crack", "shear", "topple", "fall", "fell", "flatten",
               "uproot", "tear", "tore", "torn", "rip", "bend", "bent", "collapse", "crash", "shatter", "fly", "flies",
               "flew", "hurl", "fling", "flung", "whirl", "blow", "blew", "blown", "go down", "goes down", "went down",
-              "snap off", "snaps off", "snapped off")
+              "snap off", "snaps off", "snapped off",
+              "knock down", "knocks down", "knocked down", "crash", "uproot", "sweep", "swept")   # 13 Eki
 # Volkan bombaları (Bahadır): taşlar tek tek ve büyük görünmeli; genel/küçük anlatım (barrage, shower of rocks,
 # pebbles...) kapıdan geçmez (VOLC_SINGLE_ROCK_FORBIDDEN)
 _VOLC_SMALL_ROCKS = ("barrage", "volley", "hail of", "shower of rocks", "shower of stones", "shower of debris",
@@ -989,55 +1014,67 @@ EVENT_BEATS = {
         # Kamera evinin/terasın çatısı: "çatı kiremitleri kopar" çatı terasında ve köy evi balkonunda seçilmez
         "excluded_spots": {"S3": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}},
     },
+    # 13 Eki, Bahadır: lav yeniden kuruldu, ARAÇSIZ; maddeler Bahadır'ın metni birebir. Hepsi temaslı ve yukarıdan
+    # görünen büyük şeyler; çatı/kiremit/çatı kirişi maddesi yok. Önceki havuz (10 Eki): L1 lastik erir, L2 araç itilir,
+    # L3 bahçe duvarı, L4 çit + araba / M1 araba sırası, M2 ev köşesi + çatı kirişi, M3 direk, M4 dükkân camı.
     LAVA_RIVER: {
         "slice_2": {
-            "L1": {"text": "the lava surrounds the {vehicle} and its tires melt and burst into flames",
-                   "terms": [_VOLC_LAVA, _VOLC_ENGULF, _VOLC_MELT]},
-            "L2": {"text": "the lava front shoves the parked {vehicle} down the street",
-                   "terms": [_VOLC_LAVA, _VOLC_PUSH, _VOLC_CAR]},
-            "L3": {"text": "the lava topples a garden wall and pours into the courtyard",
+            "L1": {"text": "the lava front topples a stone wall and pours over it into the street",
                    "terms": [_VOLC_LAVA, _VOLC_WALL, _VOLC_TOPPLE]},
-            "L4": {"text": "a wooden fence and a parked car burst into flames as the lava touches them",
-                   "terms": [_VOLC_LAVA, _VOLC_FENCE + _VOLC_CAR, _VOLC_IGNITE]},
+            "L2": {"text": "the lava crushes a wooden fence and a small shed and sweeps the burning wreckage down the "
+                           "street",
+                   "terms": [_VOLC_LAVA, _VOLC_FENCE + _VOLC_SHED, _VOLC_CRUSH + _VOLC_PUSH]},
+            "L3": {"text": "the lava surges against the corner of a house, the wall cracks and caves in",
+                   "terms": [_VOLC_LAVA, _VOLC_HOUSE, _VOLC_COLLAPSE]},
+            "L4": {"text": "the lava uproots a row of street trees and they burst into flames as they fall",
+                   "terms": [_VOLC_LAVA, _VOLC_TREE, _VOLC_SNAP + _VOLC_IGNITE]},
         },
         "slice_3": {
-            "M1": {"text": "the lava swallows a row of parked cars one after another",
-                   "terms": [_VOLC_LAVA, _VOLC_CAR, _VOLC_ENGULF, _VOLC_ROW]},
-            "M2": {"text": "the lava reaches the corner of a house, the wall catches fire and the roof beams collapse",
-                   "terms": [_VOLC_LAVA, _VOLC_HOUSE, _VOLC_COLLAPSE + _VOLC_IGNITE]},
-            "M3": {"text": "a burning utility pole topples into the street in a shower of sparks",
-                   "terms": [_VOLC_POLE, _VOLC_FALL, _VOLC_SPARK + _VOLC_IGNITE]},
-            "M4": {"text": "the lava crushes a shop window and pours out through the shop",
-                   "terms": [_VOLC_LAVA, _VOLC_SHOP + _VOLC_GLASS, _VOLC_CRUSH]},
+            "M1": {"text": "the lava pours through a house's front door and windows, flames bursting from the upper "
+                           "windows",
+                   "terms": [_VOLC_LAVA, _VOLC_HOUSE + _VOLC_DOOR, _VOLC_IGNITE + _VOLC_CRUSH]},
+            "M2": {"text": "a house wall collapses into the lava as it surges around the building",
+                   "terms": [_VOLC_LAVA, _VOLC_HOUSE, _VOLC_COLLAPSE]},
+            "M3": {"text": "the lava swallows a shop front, the awning ignites and the facade buckles",
+                   "terms": [_VOLC_LAVA, _VOLC_SHOP + _VOLC_AWNING, _VOLC_ENGULF + _VOLC_IGNITE + _VOLC_BUCKLE]},
+            "M4": {"text": "the lava piles up against a building and the first floor bursts open, flames and sparks "
+                           "pouring out",
+                   "terms": [_VOLC_LAVA, _VOLC_HOUSE + _VOLC_FLOOR, _VOLC_BURST + _VOLC_IGNITE + _VOLC_SPARK]},
         },
-        # araç iki kez (L1,M1) (L2,M1) (L4,M1); duvar iki kez (L3,M2)
-        "excluded_pairs": {("L2", "M1"), ("L1", "M1"), ("L4", "M1"), ("L3", "M2")},
+        # Kural (13 Eki, Bahadır): iki dilim aynı yapıyı (duvar/ev) ikinci kez kullanmaz. Duvar iki kez (L1,M2);
+        # duvar ve bina cephesi (L1,M4, Bahadır örneği); ev iki kez (L3,M1) (L3,M2) (L3,M4). Dükkân (M3) ev sayılmaz.
+        "excluded_pairs": {("L1", "M2"), ("L1", "M4"), ("L3", "M1"), ("L3", "M2"), ("L3", "M4")},
         "excluded_views": {},
-        # Kamera evi: bahçe duvarı/avlu (L3) köy evi balkonunda; ev köşesi tutuşur, çatı kirişleri çöker (M2) çatı
-        # terasında ve köy evi balkonunda seçilmez
-        "excluded_spots": {"L3": {"Balcony of a village house facing the erupting volcano"}, "M2": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}},
+        # Kamera noktası dışlaması yok: çatı/kiremit/çatı kirişi maddesi kalmadı, köy evi balkonu bu olaydan çıktı
+        "excluded_spots": {},
     },
+    # 13 Eki, Bahadır: kül bulutu maddeleri yukarıdan görünen büyük şeylere çevrildi (birebir). Gerekçe: tente,
+    # sandalye, çöp kutusu, araba camı teras kamerasında seçilmiyor. Araç hareketi yok. Kilit görsel aynı. Önceki
+    # havuz (10 Eki): P1 tente + sandalye, P2 kaçan araç, P3 kiremit / Q1 ağaçlar, Q2 park halindeki araba camı, Q3 çatı.
     PYROCLASTIC: {
         "slice_2": {
-            "P1": {"text": "the cloud tears the awnings off the shops and flings chairs and bins down the street",
-                   "terms": [_VOLC_CLOUD, _VOLC_AWNING + _VOLC_FURN, _VOLC_RIP + _VOLC_FLING]},
-            "P2": {"text": "the fleeing {vehicle} is swallowed by the cloud",
-                   "terms": [_VOLC_CLOUD, _VOLC_ENGULF, _VOLC_CAR]},
-            "P3": {"text": "the cloud rips roof tiles off a house and sweeps them into its dark mass",
+            "P1": {"text": "the cloud front slams into the houses across the street and tears the balconies off their "
+                           "facades",
+                   "terms": [_VOLC_CLOUD, _VOLC_BALCONY, _VOLC_RIP + _VOLC_FALL]},
+            "P2": {"text": "the cloud snaps a row of street trees and power poles and they crash across the street",
+                   "terms": [_VOLC_TREE + _VOLC_POLE, _VOLC_SNAP]},
+            "P3": {"text": "the cloud rips roof tiles off the rooftops and hurls them down the street",
                    "terms": [_VOLC_CLOUD, _VOLC_TILE, _VOLC_RIP + _VOLC_FLING]},
         },
         "slice_3": {
-            "Q1": {"text": "the cloud snaps the trees along the street and hurls the branches through the air",
-                   "terms": [_VOLC_TREE, _VOLC_SNAP]},
-            "Q2": {"text": "as the cloud front passes, the windows of a parked car burst inward",
-                   "terms": [_VOLC_CAR, _VOLC_GLASS, _VOLC_BURST]},
-            "Q3": {"text": "the cloud front rips a roof off a house and slams it into the street",
-                   "terms": [_VOLC_ROOF, _VOLC_RIP, _VOLC_FALL + _VOLC_FLING]},
+            "Q1": {"text": "a house wall across the street collapses as the cloud engulfs it",
+                   "terms": [_VOLC_HOUSE, _VOLC_COLLAPSE]},
+            "Q2": {"text": "the cloud engulfs a whole block and the upper-floor windows burst outward in a shower of "
+                           "glass",
+                   "terms": [_VOLC_GLASS, _VOLC_BURST]},
+            "Q3": {"text": "a chimney topples and crashes through a roof as the cloud passes over",
+                   "terms": [_VOLC_CHIMNEY, _VOLC_FALL + _VOLC_SMASH]},
         },
-        # araç iki kez (P2,Q2); çatı iki kez (P3,Q3)
-        "excluded_pairs": {("P2", "Q2"), ("P3", "Q3")},
+        # Kural (13 Eki): aynı nesne iki kez yok. Çatı iki kez (P3,Q3); ev cephesi/duvarı iki kez (P1,Q1)
+        "excluded_pairs": {("P3", "Q3"), ("P1", "Q1")},
         "excluded_views": {},
-        # Kamera evinin/terasın çatısı: P3 ve Q3 çatı terasında ve köy evi balkonunda seçilmez
+        # Kamera evinin/terasın çatısı: kiremit (P3) ve baca (Q3) çatı terasında ve köy evi balkonunda seçilmez,
+        # sadece yamaç terasında
         "excluded_spots": {"P3": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}, "Q3": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}},
     },
     VOLCANIC_BOMBS: {
@@ -1082,6 +1119,18 @@ _RAIN_FALLING_OK = ("ember", "spark", "cinder", "ash", "debris", "glass", "shard
 _RAIN_WINDOW = 3
 # Volkan bombaları (10 Eki, Bahadır): bu dilimlerde genel/küçük taş anlatımı (_VOLC_SMALL_ROCKS) reddedilir
 VOLC_SINGLE_ROCK_SLICES = {VOLCANIC_BOMBS: ("slice_2", "slice_3")}
+# Olaya özel yasak kelimeler, GPT'nin yazdığı üç dilimde (13 Eki, Bahadır, lav): araç yok; kamera balkonda değil
+# (sadece iki teras); lav hızlı, "slowly/gradually/steadily" yok. (kod, terimler, Telegram satırı, GPT geri bildirimi)
+EVENT_BANNED_WORDS = {
+    LAVA_RIVER: (
+        ("lava_no_vehicle", _VOLC_CAR, "lavda araç yok",
+         "There are no vehicles in this scene: remove {words}."),
+        ("lava_no_balcony", ("balcony",), "lavda balkon yok",
+         "Do not mention balconies: remove {words}."),
+        ("lava_no_slow", _VOLC_SLOW, "lav yavaş değil",
+         "The lava surges fast and violently: remove {words}."),
+    ),
+}
 # Orman ve cephe yangınında araç havalanmaz (Bahadır onayı, 8 Eki): 4-9s'de kalkma ifadesi reddedilir
 NO_LIFT_SLICE = {WILDFIRE: ("slice_2",), FACADE_FIRE: ("slice_2",),
                  HELICOPTER: ("slice_2",)}   # 10 Eki: helikopterde de araç havalanmaz
@@ -1287,7 +1336,15 @@ def choose_event_vehicle(event: str, rng: random.Random | None = None) -> str:
     return (rng or random).choice([v for v, _ in event_vehicles(event, None)])
 
 
+def uses_vehicle(event: str) -> bool:
+    """Olay havuzunda {vehicle} geçen madde var mı. Yoksa (13 Eki: lav, kül bulutu) araç seçilmez, GPT'ye gitmez."""
+    b = EVENT_BEATS[event]
+    return any("{vehicle}" in beat["text"] for slot in ("slice_2", "slice_3") for beat in b[slot].values())
+
+
 def spec_vehicle_terms(spec: dict) -> tuple[str, ...]:
+    if spec["vehicle"] is None:
+        return ()
     for v, terms in event_vehicles(spec["event"], spec["view"]):
         if v == spec["vehicle"]:
             return terms
@@ -1348,6 +1405,8 @@ def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: st
         raise StructureError(f"Yapılandırılmış olay değil: {event}")
     if has_people_rule(event) != (people is not None):
         raise StructureError(f"Kaçan kişi sayısı uyuşmuyor: {event} / {people}")
+    if uses_vehicle(event) != (vehicle is not None):   # 13 Eki: araçsız olayda araç yok
+        raise StructureError(f"Araç uyuşmuyor: {event} / {vehicle}")
     spec = {"event": event, "ship": ship, "spot": spot, "view": view, "beat_2": b2, "beat_3": b3,
             "vehicle": vehicle, "key_visual": EVENT_KEY_VISUAL[event],
             "suffix": style_suffix(event, ship, spot, view)}
@@ -1464,6 +1523,13 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             out.append(_issue("volcano_single_rock", f"{label}: taşlar tek tek ve büyük olmalı ({', '.join(small)})",
                               f"In '{slot}' show single large glowing rocks, each bigger than a softball: remove "
                               f"{', '.join(repr(w) for w in small)}."))
+    # 13 Eki (lav): GPT'nin yazdığı dilimlerde yasak kelimeler
+    gpt_text = " ".join(slices.get(f, "") for f in SLICE_FIELDS)
+    for code, terms, missing, feedback in EVENT_BANNED_WORDS.get(event, ()):
+        found = find_terms(terms, gpt_text)
+        if found:
+            out.append(_issue(code, f"{missing} ({', '.join(found)})",
+                              feedback.format(words=", ".join(repr(w) for w in found))))
     return out
 
 
@@ -1482,6 +1548,8 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
             out.append(_issue("people", f"kaçan kişi sayısı {lo}-{hi} değil ({spec.get('people')})"))
     elif "people" in spec:
         out.append(_issue("people", "kişi kuralı olmayan olayda kaçan kişi sayısı var"))
+    if uses_vehicle(spec["event"]) != (spec.get("vehicle") is not None):
+        out.append(_issue("vehicle", f"araç uyuşmuyor ({spec.get('vehicle')})"))
     rebuilt_story = assemble_story({**spec, "key_visual": EVENT_KEY_VISUAL.get(spec["event"], "")}, slices)
     rebuilt = assemble_prompt({**spec, "key_visual": EVENT_KEY_VISUAL.get(spec["event"], ""),
                                "suffix": expected_suffix}, slices)
@@ -1557,8 +1625,17 @@ def _validate_data() -> None:
         if event in REGION_VIEW_EVENTS:
             if event in EVENT_VEHICLES or b["excluded_views"] and set().union(*b["excluded_views"].values()) - set(REGION_VIEWS):
                 raise StructureError(f"Görünümlü olayda olay araç listesi ya da bilinmeyen görünüm: {event}")
-        elif not EVENT_VEHICLES.get(event) or any(not t for _, t in EVENT_VEHICLES[event]) or b["excluded_views"]:
-            raise StructureError(f"Görünümsüz olayın araç listesi yok ya da görünüm kısıtı var: {event}")
+        elif b["excluded_views"]:
+            raise StructureError(f"Görünümsüz olayda görünüm kısıtı var: {event}")
+        elif not uses_vehicle(event):   # 13 Eki: araçsız olayın araç listesi olmaz
+            if event in EVENT_VEHICLES:
+                raise StructureError(f"Araçsız olayda araç listesi var: {event}")
+        elif not EVENT_VEHICLES.get(event) or any(not t for _, t in EVENT_VEHICLES[event]):
+            raise StructureError(f"Görünümsüz olayın araç listesi yok: {event}")
+        for code, terms, *_ in EVENT_BANNED_WORDS.get(event, ()):   # 13 Eki: kod metinleri yasak kelime içermez
+            fixed = " ".join([key] + [beat["text"] for slot in ("slice_2", "slice_3") for beat in b[slot].values()])
+            if not terms or find_terms(terms, fixed):
+                raise StructureError(f"Yasak kelime kod metninde: {event}/{code}")
         for d, spots in b["excluded_spots"].items():
             if spots - set(EVENT_SKELETONS[event]["spots"]):
                 raise StructureError(f"Bilinmeyen spot: {event}/{d}: {spots - set(EVENT_SKELETONS[event]['spots'])}")

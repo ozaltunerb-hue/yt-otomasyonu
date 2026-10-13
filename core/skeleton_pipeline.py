@@ -95,10 +95,11 @@ CAMERA_SPOTS = {
     "Rooftop terrace across from a coastal high-rise": "on a rooftop terrace across the street from the tower",
     "Overlook above the burning valley road": "on a roadside overlook above the burning valley road",
     "Balcony of a roadside house": "on a high balcony of a roadside house overlooking the road",
-    # 🌋 Volkan (10 Eki, Bahadır): hepsi yüksek ve dağa bakıyor
-    "Hillside terrace facing the erupting volcano": "on a hillside terrace above the village, facing the erupting volcano across the street",
-    "Rooftop terrace facing the erupting volcano": "on a rooftop terrace across the street, facing the erupting volcano",
-    "Balcony of a village house facing the erupting volcano": "on the balcony of a village house across the street, facing the erupting volcano",
+    # 🌋 Volkan (10 Eki, Bahadır): hepsi yüksek ve dağa bakıyor. 13 Eki: "facing the erupting volcano" volkan kamera
+    # cümlesine taşındı (VOLCANO_CAMERA_PERCH); önceki metinler "..., facing the erupting volcano (across the street)"
+    "Hillside terrace facing the erupting volcano": "on a hillside terrace above the village",
+    "Rooftop terrace facing the erupting volcano": "on a rooftop terrace across the street",
+    "Balcony of a village house facing the erupting volcano": "on the balcony of a village house across the street",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -454,15 +455,15 @@ EVENT_SKELETONS = {
                 "along the street. Roof tiles and signs tear loose as {n} {people} run from the eruption. The "
                 "ash column keeps towering above the volcano, still hurling glowing rocks.",
     },
+    # 13 Eki, Bahadır: lav araçsız; kamera sadece iki terasta (köy evi balkonu bu olaydan çıktı)
     "Lava river pours down into a village street": {
         "domain": "volcano_disasters", "ships": None,
         "spots": {"Hillside terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
-                  "Rooftop terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
-                  "Balcony of a village house facing the erupting volcano": "a village street on the lower flank of the volcano"},
+                  "Rooftop terrace facing the erupting volcano": "a village street on the lower flank of the volcano"},
         "people": ["residents", "villagers"], "weather": VOLCANO_WEATHER, "object": "lava river",
-        "text": "In {spot} under {weather}, a lava river pours down the volcano's flank and tears through the street, "
-                "swallowing parked cars. Walls and fences catch fire as {n} {people} run from the lava. The lava "
-                "keeps advancing down the street, still swallowing cars.",
+        "text": "In {spot} under {weather}, a lava river pours down the volcano's flank and surges through the street, "
+                "engulfing the houses along it. Walls and fences collapse as {n} {people} run from the lava. The lava "
+                "keeps surging down the street, still setting houses on fire.",
     },
     "Pyroclastic cloud races down into a village street": {
         "domain": "volcano_disasters", "ships": None,
@@ -471,8 +472,8 @@ EVENT_SKELETONS = {
                   "Balcony of a village house facing the erupting volcano": "a village street on the lower flank of the volcano"},
         "people": ["residents", "villagers"], "weather": VOLCANO_WEATHER, "object": "pyroclastic cloud",
         "text": "In {spot} under {weather}, a pyroclastic cloud races down the volcano's flank and slams into the "
-                "street, tearing off awnings and roof tiles as {n} {people} run from the cloud. The cloud keeps "
-                "rolling through the village, still ripping roofs apart.",
+                "street, tearing balconies off the houses and roof tiles off the rooftops as {n} {people} run from the "
+                "cloud. The cloud keeps rolling through the village, still ripping roofs apart.",
     },
     "Volcanic bombs slam into a village street": {
         "domain": "volcano_disasters", "ships": None,
@@ -679,12 +680,26 @@ for _e, _s in EVENT_SKELETONS.items():
 CAMERA_MOTION_EXTRA = {
     "Flash flooding in city streets": " in one slow short arc, never swinging around, people only in the middle and "
                                       "far distance",
-    # 10 Eki, Bahadır: volkan, her videoda dağ görünsün (kamera cümlesinin içinde, yeni kısıt sayılmaz)
-    "Volcano erupts and a shockwave blows out windows": ", the erupting volcano always visible above the rooftops",
-    "Lava river pours down into a village street": ", the erupting volcano always visible above the rooftops",
-    "Pyroclastic cloud races down into a village street": ", the erupting volcano always visible above the rooftops",
-    "Volcanic bombs slam into a village street": ", the erupting volcano always visible above the rooftops",
+    # 10 Eki volkan eki ("the erupting volcano always visible above the rooftops") 13 Eki'de volkan kamera cümlesine
+    # taşındı (VOLCANO_CAMERA_PERCH)
 }
+
+# 🌋 Volkan kamera sabitleme (13 Eki 2026, Bahadır). Sebep: "the camera pans to follow the lava river / pyroclastic
+# cloud" ile 3 videoda Kie kamerayı terastan sokak seviyesine indirdi, kamera olaydan kaçtı, ikinci yarıda yüksek açı
+# kayboldu, bir videoda gizli kesme oldu. Volkanın 4 olayında takip (pan) yok: kamera durduğu yerde sabit, sadece
+# hafif eğilir. Değer: kameranın durduğu yerin kısa adı ("stays fixed in place on the ..."). Kısıt sayısı değişmedi (3).
+VOLCANO_CAMERA_PERCH = {
+    "Hillside terrace facing the erupting volcano": "terrace",
+    "Rooftop terrace facing the erupting volcano": "rooftop",
+    "Balcony of a village house facing the erupting volcano": "balcony",
+}
+
+
+def volcano_camera(spot: str) -> str:
+    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking down over the "
+            f"village street toward the erupting volcano; slight hand shake, the camera stays fixed in place on the "
+            f"{VOLCANO_CAMERA_PERCH[spot]} and never descends or moves closer to the ground, only tilts slightly, the "
+            f"erupting volcano always visible above the rooftops; one continuous shot, no zoom, no cuts.")
 
 
 class SlotFillError(RuntimeError):
@@ -720,6 +735,8 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     # Final turu: "phone" kelimesi çıktı; model elde tutulan telefonu ve kayıt (REC) ekranını çiziyordu
     camera = (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, eye level, normal lens; slight hand "
               f"shake, the camera pans to follow the {s['object']}{CAMERA_MOTION_EXTRA.get(event, '')}; no zoom, no cuts.")
+    if s["domain"] == "volcano_disasters":   # 13 Eki: volkanda takip yok, kamera sabit (VOLCANO_CAMERA_PERCH)
+        camera = volcano_camera(spot)
     out = f"{camera} {get_realism_guardrails(s['domain'], ship or 'None', spot)}"
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)
