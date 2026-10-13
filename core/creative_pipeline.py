@@ -676,6 +676,8 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
         view_source = "Python, LRU" if view else None
     remember_view(event, view)                   # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
     spot, weather = pick_setting(event, view=view)
+    if event in es.ENV_EVENTS:   # 14 Eki (4): çığda kamera noktası da ortam ekseni (kategori LRU)
+        spot = es.choose_env_spot(event, view_spots(event, view))
     place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
     recent = recent_stories(history_texts)
     if es.is_structured(event):
@@ -718,7 +720,14 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     people =es.choose_people(event, ship)       # kaçan kişi sayısı N (kişi kuralı olan olaylarda); combo_key'e girmez
     tag = es.beat_tag(b2, b3)
     es.remember_beats(event, tag)                # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
-    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people)
+    # 14 Eki (4): çığda ortam (dağ, yerleşim, ışık) koddan; GPT'ye WEATHER satırı olarak, Kie'ye stil ekinde gider
+    env = setting = None
+    if event in es.ENV_EVENTS:
+        env = es.choose_environment(event, spot, b2, b3)
+        es.remember_environment(env)             # seçim anında (beat hafızası gibi)
+        setting = es.setting_line(env)
+        weather = f"{env['mountain']}, {env['village']}, {env['light']}"
+    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting)
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "structured": True, "domain": domain, "event": event, "ship": ship or "None",
              "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place,
@@ -726,6 +735,8 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
              "vehicle": vehicle, "people_running": people, "beat_2_text": es.beat_text(event, "slice_2", b2, vehicle),
              "beat_3_text": es.beat_text(event, "slice_3", b3), "outcome": EVENT_OUTCOMES[event],
              "recent_count": len(recent), "attempts": [], "story": "", "story_words": 0}
+    if env:
+        trace["environment"] = env
     try:
         slices, attempts = await write_slices(spec, place, weather, recent, call_gpt)
     except CreativeStoryError as e:
@@ -745,4 +756,5 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
              f"araç={vehicle} | {len(plain.split())} kelime")
     return {"domain": domain, "event": event, "ship": ship, "spot": spot, "story": story, "plain_story": plain,
             "style_suffix": spec["suffix"], "prompt": prompt, "combo_key": combo_key, "trace": trace,
-            "structure": {"spec": spec, "slices": slices, "place": place, "weather": weather, "recent": recent}}
+            "structure": {"spec": spec, "slices": slices, "place": place, "weather": weather, "recent": recent,
+                          "environment": es.environment_label(env) if env else None}}

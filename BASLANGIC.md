@@ -25,6 +25,32 @@
 
 ---
 
+## 📋 DEVİR: ❄️ Çığ: aksiyon ilk saniyeden + her üretimde farklı ortam (14 Eki 2026, dördüncü tur)
+
+**Ders (14 Eki testleri):** köy (A5+B3) iyi çıktı ama kayak (C5+D6) ve köy videoları birbirinin aynısıydı (aynı balkon
+korkuluğu, aynı yaklaşan bulut, aynı koşan insanlar). Çığ ilk ~10 sn yavaş yaklaştı, ilk temas 11. sn'de oldu.
+**Şartlar:** aksiyon 0. saniyeden 15. saniyeye kesintisiz; her üretimde ortam farklı.
+
+- **Kilit cümleler** "is already ..." (çığ ilk karede evlerin içinde): köy "...is already crashing into the first
+  chalets of a village...", kayak "...is already slamming into a mountain lodge...", orman "...is already ripping
+  through a pine forest and hitting the cabins at its edge...". Olay adı kapısı kendi başına geçiyor. İnsan yakınlık
+  kapısı (`slice_near_camera`) aynen.
+- **Kamera:** "high vantage looking at the avalanche crashing through the buildings just below" (yaklaşma yok).
+  Giyim/ışık satırı "raw natural light" oldu (ışık artık ortamdan; "overcast daylight" güneşli günle çelişirdi).
+- **Ortam havuzu** (`es.ENV_AXES`, `choose_environment`, `choose_env_spot`): dağ (4), yerleşim (5), ışık (5) ve kamera
+  noktası. Her eksende son 2 üretimin değeri elenir (aday kalmazsa 1). LRU **kategori bazında** (köy, kayak, orman
+  ortak) ve süreç hafızasında (Railway yeniden başlarsa sıfırlanır). Stil ekinde "Setting: dağ, yerleşim, ışık."
+  (en fazla 15 kelime; daha uzun üçlüler seçilmez). GPT'ye WEATHER satırı olarak gider. Telegram onay mesajında ve
+  Notion'da "Ortam: dağ = ... · yerleşim = ... · ışık = ... · kamera = ..." satırı.
+- **Beat uyumu:** taş bina maddeleri (B1, C5, E3, E5, F3) seçilince "log cabins and a large lodge" elenir. Taş ahır (A4)
+  ve istinat duvarı (B4) her yerleşimde olur.
+- Stil eki en fazla 78 kelime, prompt en fazla 156 kelime. Ülke, şehir, bayrak, yazı sızıntısı testle yasak.
+- **Yayılma planı** (aynı mekanizma, sırayla, her biri ayrı tur ve video testiyle): 1) heyelan, 2) yangın, 3) hortum,
+  4) sel ve dev dalga (şehir görünümleriyle çakışmasın diye görünümlü olaylarda sadece ışık ekseni), 5) volkan en son.
+  Her kategoride önce eksen değerleri Bahadır'dan, sonra beat uyumu ve kelime bütçesi kontrolü.
+
+---
+
 ## 📋 DEVİR: ❄️ Çığ zayıf madde temizliği + havuz kontrol testi (14 Eki 2026, üçüncü tur)
 
 14 Eki testinde A5 (ince direkler) çıktı. Kural (Bahadır): her madde kameraya yakın, BÜYÜK, KOYU ve kar bulutunda

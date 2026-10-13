@@ -122,7 +122,7 @@ class TestSkeletonOutput(unittest.TestCase):
                 self.assertNotIn("phone", suffix.lower())   # final turu: telefon/REC ekranı çiziliyordu
                 self.assertIn("no zoom, no cuts", suffix)
                 if sk.EVENT_SKELETONS[e]["domain"] == "avalanche_disasters":   # 13 Eki: Bahadır'ın kısa çığ satırı
-                    self.assertIn("raw natural overcast daylight, no hazmat suits", suffix)
+                    self.assertIn("raw natural light, no hazmat suits", suffix)   # 14 Eki (4): ışık ortamdan
                 else:
                     self.assertIn("Raw natural light matching the weather, never glossy or CGI", suffix)
                 self.assertTrue("wear" in suffix)   # kıyafet satırı korunur

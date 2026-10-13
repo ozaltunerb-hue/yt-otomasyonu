@@ -749,8 +749,10 @@ def volcano_camera(spot: str) -> str:
 # ve "responders"sız satır 13 Eki 4'te lavla birlikte çıktı; arşiv: event_structure ARŞİV notu.)
 # ❄️ Çığ kamerası (13 Eki, Bahadır): volkanla aynı yapı, tek şablon; takip (pan) yok. 14 Eki (2): durulan yerin adı
 # (AVALANCHE_CAMERA_PERCH) şablondan çıktı, sözlük kaldırıldı.
-# Çığ giyim/ışık (Bahadır'ın metni birebir, 175 kelime kapısı için kısa; 2 kısıt)
-AVALANCHE_GUARDRAILS = "Bystanders wear winter civilian clothes; raw natural overcast daylight, no hazmat suits."
+# Çığ giyim/ışık (Bahadır'ın metni birebir, 175 kelime kapısı için kısa; 2 kısıt). 14 Eki (4): ışık artık ortam
+# satırından geliyor (güneşli gün, kar yağışı...); "overcast daylight" ile çelişmesin diye "raw natural light". Önceki:
+# "Bystanders wear winter civilian clothes; raw natural overcast daylight, no hazmat suits."
+AVALANCHE_GUARDRAILS = "Bystanders wear winter civilian clothes; raw natural light, no hazmat suits."
 
 
 def avalanche_camera(spot: str) -> str:
@@ -765,9 +767,12 @@ def avalanche_camera(spot: str) -> str:
     # as the avalanche rushes down toward the buildings just below and beside the camera; the nearest buildings fill
     # the middle of the frame, slight hand shake, the camera stays fixed on the {perch}, tilting no more than
     # slightly and never descending, a corner of the railing in the foreground; one continuous shot, no zoom, no cuts."
-    return (f"Handheld footage from {CAMERA_SPOTS[spot]}, high vantage looking up the slope as the avalanche rushes "
-            f"down onto the buildings just below; slight hand shake, the camera stays fixed, tilting slightly and never "
-            f"descending, a corner of the railing in the foreground; one continuous shot, no zoom, no cuts.")
+    # 14 Eki (4), Bahadır: çığ ilk ~10 sn yavaş yaklaştı, ilk temas 11. sn'de. Yaklaşma hissi veren "looking up the
+    # slope as the avalanche rushes down onto the buildings just below" yerine "looking at the avalanche crashing
+    # through the buildings just below"; kalan şablon aynı.
+    return (f"Handheld footage from {CAMERA_SPOTS[spot]}, high vantage looking at the avalanche crashing through the "
+            f"buildings just below; slight hand shake, the camera stays fixed, tilting slightly and never descending, a "
+            f"corner of the railing in the foreground; one continuous shot, no zoom, no cuts.")
 
 
 VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "
@@ -800,9 +805,9 @@ def fill_skeleton(event: str, ship: str | None, slots: dict) -> str:
                             weather=slots["weather"], n=n, N=n.capitalize(), people=slots["people"])
 
 
-def style_suffix(event: str, ship: str | None, spot: str, view: str | None = None) -> str:
+def style_suffix(event: str, ship: str | None, spot: str, view: str | None = None, setting: str | None = None) -> str:
     """Tek kamera satırı + kıyafet + ışık (+ şehirde görünüm satırı; en fazla 8 kısıt). Eski ekten kaldırılanlar:
-    TUR 30 notu."""
+    TUR 30 notu. setting: 14 Eki (4), çığ ortam satırı ("Setting: dağ, yerleşim, ışık."), kamera cümlesinden sonra."""
     s = EVENT_SKELETONS[event]
     # Final turu: "phone" kelimesi çıktı; model elde tutulan telefonu ve kayıt (REC) ekranını çiziyordu
     camera = (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, eye level, normal lens; slight hand "
@@ -815,7 +820,7 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     if s["domain"] == "avalanche_disasters":   # 13 Eki: çığ, volkan yapısı (sabit kamera, kısa giyim/ışık)
         camera = avalanche_camera(spot)
         guardrails = AVALANCHE_GUARDRAILS
-    out = f"{camera} {guardrails}"
+    out = f"{camera} {setting} {guardrails}" if setting else f"{camera} {guardrails}"
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)
         out += f" Setting: {view_district(event, view)}, {REGION_VIEW_CLOTHING}, {NO_SIGNS}."

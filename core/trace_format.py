@@ -205,7 +205,9 @@ def format_final_prompt(info: dict) -> tuple[str, str]:
     total, negative = count_constraints(info.get("style_suffix", ""))
     text = (f"{len(prompt.split())} kelime (hikaye {len((info.get('story') or '').split())} + stil eki "
             f"{len((info.get('style_suffix') or '').split())}) · stil ekinde {total} kısıt, {negative} olumsuz\n"
-            f"Kie denemesi: {info.get('attempt', 1)}\n\n{prompt}")
+            f"Kie denemesi: {info.get('attempt', 1)}\n"
+            + (f"{info['environment']}\n" if info.get("environment") else "")   # 14 Eki (4): çığ ortam satırı
+            + f"\n{prompt}")
     warning = preflight_warning(info.get("preflight"))
     if warning:
         text += f"\n\n{warning}"

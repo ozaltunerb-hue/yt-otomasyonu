@@ -138,12 +138,18 @@ EVENT_KEY_VISUAL = {
     # terrace."; orman: "...rips through a pine forest above a valley and hits the houses below, a white cloud rolling
     # over them."
     # 14 Eki (2), Bahadır: köyde "village" eklendi (olay adı kapısı en az 2 kök ister; GPT ipucu kaldırıldı)
-    AVALANCHE_VILLAGE: "A powder avalanche thunders down the slope and smashes into the village chalets right below the "
-                       "railing, snow bursting over their roofs and through the street.",
-    AVALANCHE_SKI: "An avalanche crashes down the ski slope and slams into the lodge right below the railing, a cloud of "
-                   "snow bursting over its terrace.",
-    AVALANCHE_FOREST: "A huge avalanche rips through the pine forest above and hits the cabins right below the railing, a "
-                      "white cloud rolling over their roofs.",
+    # 14 Eki (4), Bahadır: çığ ilk ~10 sn yavaş yaklaştı (ilk temas 11. sn). Çığ ilk karede evlerin içinde ("is
+    # already crashing"); "right below the railing" çıktı (insanların yakınlığı kodda aynen: slice_near_camera).
+    # Önceki köy: "A powder avalanche thunders down the slope and smashes into the village chalets right below the
+    # railing, snow bursting over their roofs and through the street."; kayak: "An avalanche crashes down the ski
+    # slope and slams into the lodge right below the railing, a cloud of snow bursting over its terrace."; orman:
+    # "A huge avalanche rips through the pine forest above and hits the cabins right below the railing, a white cloud
+    # rolling over their roofs."
+    AVALANCHE_VILLAGE: "A powder avalanche is already crashing into the first chalets of a village, a wall of snow "
+                       "bursting over their roofs and through the street.",
+    AVALANCHE_SKI: "An avalanche is already slamming into a mountain lodge, snow bursting over its terrace and walls.",
+    AVALANCHE_FOREST: "An avalanche is already ripping through a pine forest and hitting the cabins at its edge, a white "
+                      "cloud rolling over their roofs.",
 }
 
 # ── Bölge araçları (4-9s'deki {vehicle}). Görünüm tariflerindeki araçlardan. terms: dilimde aranan ad. ──────
@@ -1434,6 +1440,83 @@ EVENT_BANNED_WORDS = {e: (("avalanche_banned", _AVA_BANNED, "çığda yasak keli
                       for e in AVALANCHE_EVENTS}
 # 175 kelime kapısı olan olaylar (13 Eki: volkan + çığ)
 WORD_CAP_EVENTS = VOLCANO_EVENTS + AVALANCHE_EVENTS
+
+# ── Ortam havuzu (14 Eki (4), Bahadır; şimdilik sadece çığ) ──────────────────────────────────────────────────────────
+# Ders: köy ve kayak videoları birbirinin aynısıydı (aynı balkon korkuluğu, aynı bulut, aynı koşan insanlar). Her
+# üretimde dağ, yerleşim, ışık ve kamera noktası koddan seçilir; menüde ek ekran yok, GPT'ye yeni kural yok. Ortam
+# satırı stil ekine girer ("Setting: dağ, yerleşim, ışık."). LRU kategori bazında (köy, kayak, orman ortak): her
+# eksende son ENV_BLOCK üretimin değerleri elenir, aday kalmazsa 1'e düşer. Ülke, şehir, bayrak, yazı yok (testli).
+ENV_EVENTS = AVALANCHE_EVENTS
+ENV_AXES = {
+    "mountain": ("jagged rocky peaks", "wide rounded snowy highlands", "steep forested slopes",
+                 "sheer cliffs above a narrow valley"),
+    "village": ("dark timber chalets", "red timber houses", "log cabins and a large lodge", "stone-and-timber houses",
+                "tall narrow wooden houses with heavy roofs"),
+    "light": ("heavy overcast sky", "falling snow and low cloud", "pale low winter sun",
+              "late-afternoon blue-grey light", "bright cold sunny day"),
+}
+ENV_BLOCK = 2
+SETTING_MAX_WORDS = 15
+# Beat uyumu: taş BİNA maddeleri (taş dağ evi, taş servis binası, taş çiftlik evi ve ahır kapısı, taş ev) tamamen
+# kütük yerleşimde anlamsız; bu maddeler seçilince o yerleşim elenir. Taş ahır (A4) ve istinat duvarı (B4) her
+# yerleşimde olur (ahşap köylerde de taş ahır ve duvar bulunur).
+STONE_BUILDING_BEATS = {AVALANCHE_VILLAGE: {"B1"}, AVALANCHE_SKI: {"C5"}, AVALANCHE_FOREST: {"E3", "E5", "F3"}}
+WOOD_ONLY_VILLAGES = ("log cabins and a large lodge",)
+_ENV_MEMORY: list[dict] = []
+_ENV_MEMORY_LIMIT = 12
+_ENV_LOCK = threading.Lock()
+
+
+def setting_line(env: dict) -> str:
+    return f"Setting: {env['mountain']}, {env['village']}, {env['light']}."
+
+
+def environment_label(env: dict) -> str:
+    """Telegram onay/Notion satırı (Bahadır okusun diye; değerler prompttaki İngilizce metin)."""
+    return (f"Ortam: dağ = {env['mountain']} · yerleşim = {env['village']} · ışık = {env['light']} · "
+            f"kamera = {env['spot']}")
+
+
+def _lru_candidates(values, used: list) -> list:
+    for depth in (ENV_BLOCK, 1, 0):
+        blocked = set(used[-depth:]) if depth else set()
+        left = [v for v in values if v not in blocked]
+        if left:
+            return left
+    return list(values)
+
+
+def choose_env_spot(event: str, spots: list[str], rng: random.Random | None = None) -> str:
+    """Kamera noktası ekseni: kategoride son ENV_BLOCK üretimin noktaları elenir (aday kalmazsa 1)."""
+    rng = rng or random
+    with _ENV_LOCK:
+        used = [m["spot"] for m in _ENV_MEMORY]
+    return rng.choice(_lru_candidates(spots, used))
+
+
+def choose_environment(event: str, spot: str, b2: str, b3: str, rng: random.Random | None = None) -> dict:
+    """Dağ, yerleşim, ışık: LRU + beat uyumu + satır en fazla SETTING_MAX_WORDS kelime. Aday kalmazsa StructureError."""
+    rng = rng or random
+    with _ENV_LOCK:
+        mem = list(_ENV_MEMORY)
+    villages = ENV_AXES["village"]
+    if {b2, b3} & STONE_BUILDING_BEATS.get(event, set()):
+        villages = tuple(v for v in villages if v not in WOOD_ONLY_VILLAGES)
+    cands = {"mountain": _lru_candidates(ENV_AXES["mountain"], [m["mountain"] for m in mem]),
+             "village": _lru_candidates(villages, [m["village"] for m in mem]),
+             "light": _lru_candidates(ENV_AXES["light"], [m["light"] for m in mem])}
+    combos = [{"mountain": m, "village": v, "light": li} for m in cands["mountain"] for v in cands["village"]
+              for li in cands["light"]
+              if len(setting_line({"mountain": m, "village": v, "light": li}).split()) <= SETTING_MAX_WORDS]
+    if not combos:
+        raise StructureError(f"{event}: ortam adayı kalmadı ({cands})")
+    return {**rng.choice(combos), "spot": spot}
+
+
+def remember_environment(env: dict) -> None:
+    with _ENV_LOCK:
+        _ENV_MEMORY.append(dict(env))
+        del _ENV_MEMORY[:-_ENV_MEMORY_LIMIT]
 # Orman ve cephe yangınında araç havalanmaz (Bahadır onayı, 8 Eki): 4-9s'de kalkma ifadesi reddedilir
 NO_LIFT_SLICE = {WILDFIRE: ("slice_2",), FACADE_FIRE: ("slice_2",),
                  HELICOPTER: ("slice_2",)}   # 10 Eki: helikopterde de araç havalanmaz
@@ -1719,7 +1802,7 @@ def clean_slice(text: str) -> str:
 
 # ── Birleştirme ve spec ─────────────────────────────────────────────────────────────────────────────────────
 def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: str, b3: str, vehicle: str,
-               people: int | None = None) -> dict:
+               people: int | None = None, setting: str | None = None) -> dict:
     """Kie'ye gidecek prompt'u kuran ve denetleyen her şey (slices hariç). people: kaçan kişi sayısı N (sadece
     kişi kuralı olan olaylarda, zorunlu)."""
     if not is_structured(event):
@@ -1728,11 +1811,15 @@ def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: st
         raise StructureError(f"Kaçan kişi sayısı uyuşmuyor: {event} / {people}")
     if uses_vehicle(event) != (vehicle is not None):   # 13 Eki: araçsız olayda araç yok
         raise StructureError(f"Araç uyuşmuyor: {event} / {vehicle}")
+    if setting is not None and (event not in ENV_EVENTS or len(setting.split()) > SETTING_MAX_WORDS):
+        raise StructureError(f"Ortam satırı bu olayda kullanılamaz ya da uzun: {event} / {setting}")
     spec = {"event": event, "ship": ship, "spot": spot, "view": view, "beat_2": b2, "beat_3": b3,
             "vehicle": vehicle, "key_visual": EVENT_KEY_VISUAL[event],
-            "suffix": style_suffix(event, ship, spot, view)}
+            "suffix": style_suffix(event, ship, spot, view, setting)}
     if people is not None:
         spec["people"] = people
+    if setting is not None:
+        spec["setting"] = setting   # 14 Eki (4): çığ ortam satırı (stil ekinde)
     return spec
 
 
@@ -1891,7 +1978,7 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
     """Kie'ye gidecek son prompt'un tam denetimi. Boş liste = gönderilebilir. Her madde kapalı başarısızlık."""
     from core.creative_pipeline import STORY_RULES, story_rule_issues
     out = []
-    expected_suffix = style_suffix(spec["event"], spec["ship"], spec["spot"], spec["view"])
+    expected_suffix = style_suffix(spec["event"], spec["ship"], spec["spot"], spec["view"], spec.get("setting"))
     if spec.get("key_visual") != EVENT_KEY_VISUAL.get(spec["event"]):
         out.append(_issue("key_visual", "kilit görsel spec'te değişmiş"))
     if spec.get("suffix") != expected_suffix:

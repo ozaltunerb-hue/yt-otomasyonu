@@ -26,10 +26,12 @@ HT, BAL, LIFT = ("Terrace at the edge of the village", "Balcony of a chalet at t
                  "Terrace of the lift station")
 # 14 Eki (2): kısa adlar ve kısa kamera şablonu (175 kelime sınırı)
 CAMS = {HT: "a village-edge terrace", BAL: "a village-edge chalet balcony", LIFT: "the lift station terrace"}
-CAMERA = ("Handheld footage from {cam}, high vantage looking up the slope as the avalanche rushes down onto the "
-          "buildings just below; slight hand shake, the camera stays fixed, tilting slightly and never descending, a "
-          "corner of the railing in the foreground; one continuous shot, no zoom, no cuts.")
-GUARD = "Bystanders wear winter civilian clothes; raw natural overcast daylight, no hazmat suits."
+# 14 Eki (4): yaklaşma hissi veren "looking up the slope as the avalanche rushes down onto" çıktı
+CAMERA = ("Handheld footage from {cam}, high vantage looking at the avalanche crashing through the buildings just "
+          "below; slight hand shake, the camera stays fixed, tilting slightly and never descending, a corner of the "
+          "railing in the foreground; one continuous shot, no zoom, no cuts.")
+# 14 Eki (4): "overcast daylight" ortamın ışığıyla çelişmesin diye "raw natural light"
+GUARD = "Bystanders wear winter civilian clothes; raw natural light, no hazmat suits."
 ROOF = {"A3", "A6", "B2", "B3", "D3", "E6"}  # (*) sadece köy kenarı terasında (14 Eki (3): + B2 balkon)
 DECK = {"C3"}                               # (‡) teras noktalarında seçilmez, sadece balkonda (14 Eki (3))
 LIFTB = set()                               # (†) 14 Eki (3): teleferik maddesi kalmadı (kural test_pool_lint'te)
@@ -40,15 +42,29 @@ def cap(s):
 
 
 KEY = {
-    # 14 Eki: Bahadır'ın metni, "right below the camera" -> "right below the railing" (b kuralı korunur, Bahadır kararı)
-    # 14 Eki (2): köyde "village" (olay adı kapısı)
-    KOY: "A powder avalanche thunders down the slope and smashes into the village chalets right below the railing, snow "
-         "bursting over their roofs and through the street.",
-    KAYAK: "An avalanche crashes down the ski slope and slams into the lodge right below the railing, a cloud of snow "
-           "bursting over its terrace.",
-    ORMAN: "A huge avalanche rips through the pine forest above and hits the cabins right below the railing, a white "
-           "cloud rolling over their roofs.",
+    # 14 Eki (4), Bahadır: çığ ilk karede evlerin içinde ("is already ..."); "right below the railing" çıktı
+    KOY: "A powder avalanche is already crashing into the first chalets of a village, a wall of snow bursting over their "
+         "roofs and through the street.",
+    KAYAK: "An avalanche is already slamming into a mountain lodge, snow bursting over its terrace and walls.",
+    ORMAN: "An avalanche is already ripping through a pine forest and hitting the cabins at its edge, a white cloud "
+           "rolling over their roofs.",
 }
+# 14 Eki (4): ortam havuzu (her üretimde koddan; kategori LRU)
+AXES = {"mountain": ("jagged rocky peaks", "wide rounded snowy highlands", "steep forested slopes",
+                     "sheer cliffs above a narrow valley"),
+        "village": ("dark timber chalets", "red timber houses", "log cabins and a large lodge",
+                    "stone-and-timber houses", "tall narrow wooden houses with heavy roofs"),
+        "light": ("heavy overcast sky", "falling snow and low cloud", "pale low winter sun",
+                  "late-afternoon blue-grey light", "bright cold sunny day")}
+STONE = {"B1", "C5", "E3", "E5", "F3"}
+# En uzun izinli ortam satırı (kelime sınırı testleri en kötü durumla çalışsın)
+LONG_SETTING = "Setting: sheer cliffs above a narrow valley, dark timber chalets, falling snow and low cloud."
+# Ülke, şehir, bölge, bayrak, yazı sızıntısı: ortam satırında ve promptta hiç geçmemeli ("No readable signs, text or
+# flags." stil ekindeki yasak cümlesi hariç)
+LEAK = ("swiss", "switzerland", "alps", "alpine", "austria", "tyrol", "norway", "norwegian", "japan", "japanese",
+        "canada", "canadian", "colorado", "chamonix", "zermatt", "himalaya", "nepal", "italy", "italian", "france",
+        "french", "germany", "bavaria", "sweden", "finland", "iceland", "russia", "usa", "american", "city", "town",
+        "flag", "sign", "text", "logo", "banner", "billboard", "letter")
 POOLS = {
     KOY: ({"A1": "the snow blast hurls a stack of heavy timber logs into a chalet wall",
            "A2": "the snow blast tears a wooden chalet off its foundation and sweeps it down the slope",
@@ -383,8 +399,8 @@ def ava_gpt(messages=None):
     return gpt
 
 
-def build(e, b2, b3, spot=HT, people=5):
-    spec = es.build_spec(e, None, spot, None, b2, b3, None, people)
+def build(e, b2, b3, spot=HT, people=5, setting=LONG_SETTING):
+    spec = es.build_spec(e, None, spot, None, b2, b3, None, people, setting)
     s2, s3 = cap(es.beat_text(e, "slice_2", b2)), cap(es.beat_text(e, "slice_3", b3))
     s2 += " as the snow roars" if len(s2.split()) < 10 else ""
     s3 += " as the snow roars" if len(s3.split()) < 10 else ""
@@ -456,7 +472,9 @@ class TestAvalanche(unittest.TestCase):
                 self.assertEqual(es.EVENT_KEY_VISUAL[e], KEY[e])
                 found = {i["rule"] for i in cp.story_rule_issues(e, None, KEY[e])}
                 self.assertFalse(found & {"a_trigger_first", "b_no_camera_words", "required"})
-                self.assertIn("right below the railing", KEY[e])   # ilk temas kameranın hemen altında
+                self.assertIn(" is already ", KEY[e])   # 14 Eki (4): çığ ilk karede çarpıyor
+                self.assertNotIn("right below the railing", KEY[e])
+                self.assertNotIn("thunders down", KEY[e])
                 # 14 Eki (2): olay adı kapısı kilit cümlenin kendisiyle geçer (GPT ipucu yok)
                 self.assertNotIn("e_event_and_ship_named", found)
                 b = es.EVENT_BEATS[e]
@@ -675,9 +693,10 @@ class TestAvalanche(unittest.TestCase):
         import core.creative_pipeline as cp
         for e in AVA:
             es._BEAT_MEMORY.clear()
+            es._ENV_MEMORY.clear()
             b = es.EVENT_BEATS[e]
             depth = es.RECENT_BEAT_BLOCK_BY_EVENT.get(e, es.RECENT_BEAT_BLOCK)
-            msgs, tags, spots, most = [], [], set(), 0
+            msgs, tags, spots, most, envs = [], [], set(), 0, []
             with self.subTest(event=e):
                 for _ in range(100):
                     scene = asyncio.run(cp.build_creative_scene("avalanche_disasters", e, [], [], ava_gpt(msgs)))
@@ -690,6 +709,26 @@ class TestAvalanche(unittest.TestCase):
                             self.assertEqual(t["spot"], HT)
                         if x in LIFTB:
                             self.assertNotEqual(t["spot"], LIFT)
+                        if x in DECK:
+                            self.assertEqual(t["spot"], BAL)
+                    # 14 Eki (4): ortam koddan, prompta ve GPT'ye gidiyor; art arda aynı eksen değeri yok
+                    env = t["environment"]
+                    self.assertEqual(env["spot"], t["spot"])
+                    self.assertIn(es.setting_line(env), scene["prompt"])
+                    self.assertEqual(spec["setting"], es.setting_line(env))
+                    self.assertLessEqual(len(spec["setting"].split()), 15)
+                    self.assertIn(f"WEATHER: {env['mountain']}, {env['village']}, {env['light']}", msgs[-1])
+                    self.assertEqual(scene["structure"]["environment"], es.environment_label(env))
+                    if set(pair) & STONE:
+                        self.assertNotEqual(env["village"], "log cabins and a large lodge")
+                    if envs:
+                        for axis in ("mountain", "village", "light", "spot"):
+                            self.assertNotEqual(env[axis], envs[-1][axis], axis)
+                    for axis in ("mountain", "village", "light"):
+                        self.assertIn(env[axis], AXES[axis])
+                    no_neg = scene["prompt"].lower().replace("no readable signs, text or flags", "")
+                    self.assertEqual(es.find_terms(LEAK, no_neg), [])
+                    envs.append(env)
                     for prev in tags[-depth:]:
                         self.assertNotEqual(pair[0], prev[0])
                         self.assertNotEqual(pair[1], prev[1])
@@ -706,6 +745,86 @@ class TestAvalanche(unittest.TestCase):
                 self.assertEqual(spots, set(sk.view_spots(e, None)))
                 self.assertGreaterEqual(len(set(tags)), 15)
                 self.assertLessEqual(most, 175)
+                for axis in ("mountain", "village", "light"):   # her değer kullanılıyor
+                    self.assertEqual({x[axis] for x in envs}, set(AXES[axis]), axis)
+
+    def test_environment_mixed_events_lru(self):
+        # 14 Eki (4): LRU kategori bazında (köy ve kayak aynı görünmesin): karışık sırayla 150 üretim
+        import core.creative_pipeline as cp
+        es._BEAT_MEMORY.clear()
+        es._ENV_MEMORY.clear()
+        rng = random.Random(7)
+        envs = []
+        for i in range(150):
+            e = rng.choice(AVA)
+            scene = asyncio.run(cp.build_creative_scene("avalanche_disasters", e, [], [], ava_gpt()))
+            env = scene["trace"]["environment"]
+            self.assertEqual(es.final_prompt_issues(scene["structure"]["spec"], scene["structure"]["slices"],
+                                                    scene["prompt"], scene["story"]), [])
+            if envs:
+                for axis in ("mountain", "village", "light", "spot"):
+                    self.assertNotEqual(env[axis], envs[-1][axis], (i, axis))
+            for axis in ("mountain", "village", "light"):
+                self.assertNotIn(env[axis], [x[axis] for x in envs[-2:]], (i, axis))   # son 2 elenir
+            envs.append(env)
+
+    def test_environment_pool_and_line(self):
+        self.assertEqual({k: tuple(v) for k, v in es.ENV_AXES.items()}, AXES)
+        self.assertEqual(es.ENV_EVENTS, AVA)
+        self.assertEqual(es.ENV_BLOCK, 2)
+        for vals in AXES.values():
+            for v in vals:
+                self.assertEqual(es.find_terms(LEAK, v), [], v)
+        lines = [es.setting_line({"mountain": m, "village": v, "light": li}) for m in AXES["mountain"]
+                 for v in AXES["village"] for li in AXES["light"]]
+        ok = [x for x in lines if len(x.split()) <= 15]
+        self.assertIn(LONG_SETTING, ok)
+        self.assertEqual(max(len(x.split()) for x in ok), len(LONG_SETTING.split()))
+        # her blok durumunda aday kalır: son 2 değer her eksende elenir, en kötü durum
+        from itertools import permutations
+        for used_m in permutations(AXES["mountain"], 2):
+            for used_v in permutations(AXES["village"], 2):
+                for used_l in permutations(AXES["light"], 2):
+                    es._ENV_MEMORY[:] = [{"mountain": m, "village": v, "light": li, "spot": HT}
+                                         for m, v, li in zip(used_m, used_v, used_l)]
+                    for b2, b3 in (("A1", "B1"), ("C5", "D1"), ("E5", "F3")):   # taş bina: kütük köyü elenir
+                        e = KOY if b2[0] == "A" else KAYAK if b2[0] == "C" else ORMAN
+                        env = es.choose_environment(e, HT, b2, b3, random.Random(1))
+                        self.assertNotIn(env["mountain"], used_m)
+                        self.assertNotIn(env["village"], used_v)
+                        self.assertNotIn(env["light"], used_l)
+                        self.assertNotEqual(env["village"], "log cabins and a large lodge")
+        es._ENV_MEMORY.clear()
+        # tek kamera noktası kaldıysa 1'e düşer: köyde iki nokta, ikisi de son 2'de
+        es._ENV_MEMORY[:] = [{"mountain": "x", "village": "y", "light": "z", "spot": s} for s in (HT, BAL)]
+        self.assertEqual(es.choose_env_spot(KOY, [HT, BAL], random.Random(1)), HT)
+        es._ENV_MEMORY.clear()
+        # taş ahır / istinat duvarı her yerleşimde
+        seen = {es.choose_environment(KOY, HT, "A4", "B4", random.Random(i))["village"] for i in range(200)}
+        self.assertIn("log cabins and a large lodge", seen)
+        # stil eki ≤ 95 kelime, ortam satırı kamera cümlesinden sonra
+        for e in AVA:
+            for spot in sk.view_spots(e, None):
+                suf = sk.style_suffix(e, None, spot, None, LONG_SETTING)
+                self.assertLessEqual(len(suf.split()), 95)
+                self.assertLessEqual(75 + 3 + len(suf.split()), 175)
+                self.assertTrue(suf.startswith(CAMERA.format(cam=CAMS[spot]) + " " + LONG_SETTING + " " + GUARD))
+        with self.assertRaises(es.StructureError):   # volkanda ortam satırı yok
+            es.build_spec(es.ERUPTION, None, "Hillside terrace facing the erupting volcano", None, "S1", "U1",
+                          None, 5, LONG_SETTING)
+
+    def test_environment_line_in_approval_message(self):
+        from core.trace_format import format_final_prompt
+        env = {"mountain": "jagged rocky peaks", "village": "red timber houses", "light": "bright cold sunny day",
+               "spot": BAL}
+        label = es.environment_label(env)
+        self.assertEqual(label, f"Ortam: dağ = jagged rocky peaks · yerleşim = red timber houses · ışık = bright "
+                                f"cold sunny day · kamera = {BAL}")
+        title, body = format_final_prompt({"prompt": "p q", "story": "p", "style_suffix": "q", "environment": label})
+        self.assertIn(label, body)
+        self.assertNotIn("Ortam:", format_final_prompt({"prompt": "p q", "story": "p", "style_suffix": "q"})[1])
+        src = open(os.path.join(ROOT, "main.py"), encoding="utf-8").read()
+        self.assertIn('info["environment"] = structure["environment"]', src)
 
     def test_skeleton_texts(self):
         import core.prompt_generator as pg
