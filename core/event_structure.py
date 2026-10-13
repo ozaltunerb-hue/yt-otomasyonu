@@ -128,13 +128,18 @@ EVENT_KEY_VISUAL = {
     PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
     VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, "
                     "punching through roofs and igniting cars.",
-    # 13 Eki, Bahadır: çığ kilit cümleleri birebir
-    AVALANCHE_VILLAGE: "A powder avalanche thunders down the mountainside and slams into a mountain village, a wall of "
-                       "snow engulfing the first chalets.",
-    AVALANCHE_SKI: "An avalanche crashes down the ski slope and hits a mountain lodge, a cloud of snow bursting over its "
-                   "terrace.",
-    AVALANCHE_FOREST: "A huge avalanche rips through a pine forest above a valley and hits the houses below, a white "
-                      "cloud rolling over them.",
+    # 13 Eki, Bahadır: çığ kilit cümleleri birebir. 14 Eki (ilk test dersi): ilk temas ilk 2 saniyede, kameranın hemen
+    # altındaki yapıya (köy testinde ilk ev ~5. sn'de vuruldu). Bahadır kararı (14 Eki): b kuralı (hikâyede "camera"
+    # yok) korunur, metindeki "right below the camera" yerine "right below the railing". Önceki köy: "...slams into a mountain village, a wall
+    # of snow engulfing the first chalets."; kayak: "...hits a mountain lodge, a cloud of snow bursting over its
+    # terrace."; orman: "...rips through a pine forest above a valley and hits the houses below, a white cloud rolling
+    # over them."
+    AVALANCHE_VILLAGE: "A powder avalanche thunders down the slope and smashes into the chalets right below the railing, "
+                       "snow bursting over their roofs and through the street.",
+    AVALANCHE_SKI: "An avalanche crashes down the ski slope and slams into the lodge right below the railing, a cloud of "
+                   "snow bursting over its terrace.",
+    AVALANCHE_FOREST: "A huge avalanche rips through the pine forest above and hits the cabins right below the railing, a "
+                      "white cloud rolling over their roofs.",
 }
 
 # ── Bölge araçları (4-9s'deki {vehicle}). Görünüm tariflerindeki araçlardan. terms: dilimde aranan ad. ──────
@@ -519,6 +524,16 @@ _AVA_FLOODLIGHT = ("floodlight", "flood light", "light tower", "light mast", "li
 _AVA_BRIDGE = ("footbridge", "bridge", "walkway", "span", "pier", "crossing")
 _AVA_LOGS = ("log", "firewood", "woodpile", "wood pile", "timber", "plank", "board", "trunk")
 _AVA_WATERTOWER = ("water tower", "water tank", "tank", "tower", "cistern")
+# 14 Eki, Bahadır (ilk test dersi): zayıf maddeler büyük ve koyu ahşap/taş nesneyle değişti. Yeni terimler: ahşap
+# cephe (B5, D1), taş ahır (A4), kütük yığını (C6), kulübe (D4). "wall" tek başına yine yok ("snow wall").
+_AVA_FACADE = ("front wall", "facade", "façade", "front", "side wall", "timber wall", "wooden wall", "outer wall",
+               "beam", "timber", "plank", "board")
+_AVA_STONEBARN = ("barn", "stable", "stone", "stones", "masonry", "stonework", "boulder", "rocks")
+_AVA_LOGPILE = ("log", "timber", "woodpile", "wood pile", "log pile", "firewood", "trunk", "lumber")
+_AVA_LODGE_TARGET = ("lodge", "building", "hotel", "chalet")
+_AVA_HUT = ("ski-rental", "rental", "cabin", "hut", "shack", "shed", "kiosk", "booth")
+_AVA_FLY = ("fly", "flies", "flew", "flying", "scatter", "spray", "explode", "spill", "hurl", "fling", "flung",
+            "launch", "shoot", "shot")
 _AVA_FLATTEN = ("flatten", "level", "mow down", "mows down", "mowed down", "knock down", "knocks down", "knocked down",
                 "snap", "break", "broke", "topple", "uproot", "bend", "bent", "crush", "sweep", "swept", "tear", "tore",
                 "torn", "rip", "whip", "swallow", "engulf", "bury", "buried", "fell", "lay flat", "lays flat",
@@ -1237,8 +1252,10 @@ EVENT_BEATS = {
                    "terms": [_AVA_CHALET, _AVA_SWEEP]},
             "A3": {"text": "the snow blast rips the roof off a barn and scatters the planks",
                    "terms": [_AVA_ROOF, _AVA_RIP + _AVA_LIFT_UP]},
-            "A4": {"text": "the snow wall shoves a stone wall over and rolls on through the village street",
-                   "terms": [_AVA_STONEWALL, _AVA_TOPPLE + ("shove", "push")]},
+            # 14 Eki, Bahadır: A4 taş duvar (küçük) yerine taş ahır. Önceki: "the snow wall shoves a stone wall over
+            # and rolls on through the village street"
+            "A4": {"text": "the snow wall rams a stone barn and its dark stones burst out in all directions",
+                   "terms": [_AVA_STONEBARN, _AVA_COLLAPSE + _AVA_BLOWOUT + _AVA_FLY]},
             "A5": {"text": "the snow blast snaps a row of wooden fence posts and power poles",
                    "terms": [_AVA_FENCE + _AVA_POLE, _AVA_SNAP]},
             "A6": {"text": "the snow cloud smashes the balcony off a chalet facade",
@@ -1253,16 +1270,19 @@ EVENT_BEATS = {
                    "terms": [_AVA_TOWER, _AVA_TOPPLE]},
             "B4": {"text": "the snow wall crashes into a hillside retaining wall and the stones tumble out",
                    "terms": [_AVA_STONEWALL, _AVA_COLLAPSE + _AVA_TOPPLE]},
-            "B5": {"text": "the snow cloud blows the windows out of a long wooden building",
-                   "terms": [_AVA_WINDOW, _AVA_BLOWOUT]},
+            # 14 Eki, Bahadır: pencere yerine büyük ahşap cephe. Önceki: "the snow cloud blows the windows out of a
+            # long wooden building"
+            "B5": {"text": "the snow blast rips the entire front wall off a long wooden chalet and the dark timber "
+                           "beams fly outward",
+                   "terms": [_AVA_FACADE, _AVA_RIP + _AVA_BLOWOUT + _AVA_FLY]},
             "B6": {"text": "the snow wall carries a wooden shed off its base and breaks it apart",
                    "terms": [_AVA_SHED, _AVA_SWEEP + _AVA_COLLAPSE]},
         },
-        # ahşap yapı sökülür (A2,B6); çatı/kule (A3,B3); taş duvar (A4,B4); cephe: balkon ve ön duvar/pencereler
-        # (A6,B1) (A6,B5)
+        # ahşap yapı sökülür (A2,B6); çatı/kule (A3,B3); taş (A4 taş ahır, B4 istinat duvarı: taşlar fırlar);
+        # cephe: balkon ve ön duvar (A6,B1) (A6,B5). 14 Eki: çiftler aynı kaldı (B5 ahşap cephe B1 gibi cephe sınıfı)
         "excluded_pairs": {("A2", "B6"), ("A3", "B3"), ("A4", "B4"), ("A6", "B1"), ("A6", "B5")},
         "excluded_views": {},
-        "excluded_spots": {"A3": {"Balcony of a mountain chalet"}, "A6": {"Balcony of a mountain chalet"}, "B3": {"Balcony of a mountain chalet"}},
+        "excluded_spots": {"A3": {"Balcony of a chalet at the edge of the village"}, "A6": {"Balcony of a chalet at the edge of the village"}, "B3": {"Balcony of a chalet at the edge of the village"}},
     },
     AVALANCHE_SKI: {
         "slice_2": {
@@ -1276,27 +1296,36 @@ EVENT_BEATS = {
                    "terms": [_AVA_FENCE, _AVA_FLATTEN]},
             "C5": {"text": "the avalanche hits a stone chairlift station and its upper wall breaks apart",
                    "terms": [_AVA_LIFT, _AVA_COLLAPSE]},
-            "C6": {"text": "the avalanche rolls through a grove of pines and snaps them like matchsticks",
-                   "terms": [_AVA_TREE, _AVA_SNAP]},
+            # 14 Eki, Bahadır: çam ormanı (beyaz üstüne beyaz) yerine koyu kütük yığını. Önceki: "the avalanche
+            # rolls through a grove of pines and snaps them like matchsticks"
+            "C6": {"text": "the avalanche shoves a stack of dark timber logs down the slope into the lodge wall",
+                   "terms": [_AVA_LOGPILE, _AVA_HURL + _AVA_SWEEP, _AVA_LODGE_TARGET]},
         },
         "slice_3": {
-            "D1": {"text": "a second surge buries the lodge's ground floor, snow bursting through the windows",
-                   "terms": [_AVA_LODGE, _AVA_BURY + _AVA_BLOWOUT]},
+            # 14 Eki, Bahadır: pencere yerine büyük ahşap cephe. Önceki: "a second surge buries the lodge's ground
+            # floor, snow bursting through the windows"
+            "D1": {"text": "a second surge slams into the lodge and its whole wooden front bursts open, beams and "
+                           "planks flying",
+                   "terms": [_AVA_FACADE, _AVA_BLOWOUT + _AVA_COLLAPSE + _AVA_RIP + _AVA_FLY]},
             "D2": {"text": "the snow wall tears a wooden annex off the lodge and carries it downhill",
                    "terms": [_AVA_SHED, _AVA_SWEEP]},
             "D3": {"text": "the avalanche lifts the lodge's roof deck and tosses it aside",
                    "terms": [_AVA_ROOF, _AVA_LIFT_UP]},
-            "D4": {"text": "the snow blast knocks over a floodlight tower and its steel frame crashes down",
-                   "terms": [_AVA_FLOODLIGHT, _AVA_TOPPLE]},
+            # 14 Eki, Bahadır: ince çelik ışık kulesi yerine ahşap kiralama kulübesi. Önceki: "the snow blast knocks
+            # over a floodlight tower and its steel frame crashes down"
+            "D4": {"text": "the snow blast smashes through a wooden ski-rental cabin beside the slope and its dark "
+                           "planks scatter",
+                   "terms": [_AVA_HUT, _AVA_SHATTER + _AVA_COLLAPSE + _AVA_FLY]},
             "D5": {"text": "the avalanche sweeps a small wooden hut off its base and breaks it up",
                    "terms": [_AVA_SHED, _AVA_SWEEP + _AVA_COLLAPSE]},
             "D6": {"text": "the snow cloud engulfs the chairlift cables and a cable pylon topples",
                    "terms": [_AVA_LIFT, _AVA_TOPPLE + _AVA_BURY]},
         },
-        # teleferik (C1,D6) (C5,D6); cephe: cam giriş ve pencereler (C2,D1)
-        "excluded_pairs": {("C1", "D6"), ("C5", "D6"), ("C2", "D1")},
+        # teleferik (C1,D6) (C5,D6); cephe: cam giriş ve ahşap ön cephe (C2,D1). 14 Eki: kütükler loca duvarına
+        # çarpar, D1'de loca cephesi patlar (C6,D1); D4 kulübe ahşap yapı sınıfı ama 4-9s'de ahşap yapı yok
+        "excluded_pairs": {("C1", "D6"), ("C5", "D6"), ("C2", "D1"), ("C6", "D1")},
         "excluded_views": {},
-        "excluded_spots": {"C1": {"Terrace of the lift station"}, "C5": {"Terrace of the lift station"}, "D6": {"Terrace of the lift station"}, "D3": {"Balcony of a mountain chalet", "Terrace of the lift station"}},
+        "excluded_spots": {"C1": {"Terrace of the lift station"}, "C5": {"Terrace of the lift station"}, "D6": {"Terrace of the lift station"}, "D3": {"Balcony of a chalet at the edge of the village", "Terrace of the lift station"}},
     },
     AVALANCHE_FOREST: {
         "slice_2": {
@@ -1332,7 +1361,7 @@ EVENT_BEATS = {
         "excluded_pairs": {("E1", "F1"), ("E1", "F2"), ("E1", "F3"), ("E1", "F5"), ("E2", "F3"), ("E3", "F6"),
                            ("E4", "F1"), ("E4", "F2"), ("E4", "F5"), ("E5", "F3")},
         "excluded_views": {},
-        "excluded_spots": {"E6": {"Balcony of a mountain chalet"}},
+        "excluded_spots": {"E6": {"Balcony of a chalet at the edge of the village"}},
     },
 }
 
@@ -1406,6 +1435,20 @@ def _people_rules(away_from: str) -> list[dict]:
     ]
 
 
+# ❄️ Çığ (14 Eki, Bahadır, ilk test dersi): 0-4s'deki insan cümlesi kameraya yakın yeri söyler ("near the railing",
+# "in the street below"). Bahadır kararı: b kuralı korunur, "camera" kelimesi hikâyede yine yasak; yakınlık
+# korkuluk/sokak/teras ile söylenir. Eş anlamlılar ekleme; yakınlık bildirmeyen cümle reddedilir.
+_AVA_NEAR = ("near the railing", "by the railing", "along the railing", "below the railing", "under the railing",
+             "past the railing", "below the terrace", "below the balcony", "under the balcony", "under the terrace",
+             "right below", "just below", "in the street below", "on the street below", "in the foreground",
+             "close to the railing", "next to the railing", "beside the railing",
+             "close to the terrace", "close to the balcony", "beneath the terrace", "beneath the balcony",
+             "right beneath", "just beneath")
+_AVA_NEAR_RULE = {"rule": "slice_near_camera", "field": "slice_1_rest", "terms": _AVA_NEAR,
+                  "missing": "0-4s: insanlar kameraya yakın değil",
+                  "feedback": "'slice_1_rest' must place the running people close to the viewer, e.g. 'near "
+                              "the railing' or 'in the street right below' (never use the word camera)."}
+
 SLICE_RULES = {
     TIDAL: _people_rules("the wave"),
     # TASLAK (4 Eki, heyelan)
@@ -1426,9 +1469,10 @@ SLICE_RULES = {
     PYROCLASTIC: _people_rules("the cloud"),
     VOLCANIC_BOMBS: _people_rules("the falling rocks"),
     # 13 Eki: çığ, insanlar çığdan kaçar (mevcut _FLEE); kurtarma yok
-    AVALANCHE_VILLAGE: _people_rules("the avalanche"),
-    AVALANCHE_SKI: _people_rules("the avalanche"),
-    AVALANCHE_FOREST: _people_rules("the avalanche"),
+    # 14 Eki, Bahadır: insanlar ön planda, kameraya yakın (_AVA_NEAR_RULE)
+    AVALANCHE_VILLAGE: _people_rules("the avalanche") + [_AVA_NEAR_RULE],
+    AVALANCHE_SKI: _people_rules("the avalanche") + [_AVA_NEAR_RULE],
+    AVALANCHE_FOREST: _people_rules("the avalanche") + [_AVA_NEAR_RULE],
 }
 
 
@@ -1656,8 +1700,13 @@ def people_line(spec: dict) -> str:
     if not rule:
         return ""
     w = people_word(spec)
+    # 14 Eki: çığda insanlar ön planda. Köyde "village street": yeni kilit cümlede "village" yok, olay adı kapısı
+    # (en az 2 kök) aksi hâlde GPT'yi boşuna bir tur daha döndürür.
+    street = "the village street" if spec["event"] == AVALANCHE_VILLAGE else "the street"
+    near = (f", close by: near the railing or in {street} right below"
+            if spec["event"] in AVALANCHE_EVENTS else "")
     return (f"PEOPLE RUNNING AWAY: {w} (slice_1_rest must say that {w} people run away from "
-            f"{rule['away_from']})\n")
+            f"{rule['away_from']}{near})\n")
 
 
 def assemble_story(spec: dict, slices: dict[str, str]) -> str:

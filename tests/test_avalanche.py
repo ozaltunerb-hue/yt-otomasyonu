@@ -3,6 +3,7 @@
 ❄️ Çığ kategorisi (13 Eki 2026, Bahadır; TASLAK): 3 olay yapılandırılmış hatta, volkan yapısı (sabit yüksek kamera,
 kod havuzu, araçsız, 175 kelime kapısı, olaya özel yasak kelimeler). KİLİT: havuz/kilit cümle/kamera Bahadır'ın
 onayıyla değişir. Ağ yok, Kie/GPT çağrısı yok.
+14 Eki (ilk test dersi): kamera aksiyona yakın, ilk temas 0-2 sn'de, nesneler büyük ve koyu; insanlar kameraya yakın.
 """
 import asyncio
 import os
@@ -21,16 +22,17 @@ import core.skeleton_pipeline as sk
 
 KOY, KAYAK, ORMAN = es.AVALANCHE_VILLAGE, es.AVALANCHE_SKI, es.AVALANCHE_FOREST
 AVA = (KOY, KAYAK, ORMAN)
-HT, BAL, LIFT = "Hillside terrace", "Balcony of a mountain chalet", "Terrace of the lift station"
-CAMS = {HT: "on a hillside terrace above the valley", BAL: "on the balcony of a mountain chalet",
+HT, BAL, LIFT = ("Terrace at the edge of the village", "Balcony of a chalet at the edge of the village",
+                 "Terrace of the lift station")
+CAMS = {HT: "on a terrace at the edge of the village", BAL: "on the balcony of a chalet at the edge of the village",
         LIFT: "on the terrace of the ski-lift station"}
 PERCH = {HT: "terrace", BAL: "balcony", LIFT: "terrace"}
-CAMERA = ("Handheld footage shot by a person standing {cam}, high vantage looking across the valley toward the "
-          "avalanche on the mountain slope; slight hand shake, the camera stays fixed on the {perch}, tilting down no "
-          "more than slightly and never descending, the avalanche always visible in the upper part of the frame, a "
-          "corner of the railing in the foreground; one continuous shot, no zoom, no cuts.")
+CAMERA = ("Handheld footage shot by a person standing {cam}, high vantage looking up the slope as the avalanche "
+          "rushes down toward the buildings just below and beside the camera; the nearest buildings fill the middle "
+          "of the frame, slight hand shake, the camera stays fixed on the {perch}, tilting no more than slightly and "
+          "never descending, a corner of the railing in the foreground; one continuous shot, no zoom, no cuts.")
 GUARD = "Bystanders wear winter civilian clothes; raw natural overcast daylight, no hazmat suits."
-ROOF = {"A3", "A6", "B3", "D3", "E6"}        # (*) sadece yamaç terasında
+ROOF = {"A3", "A6", "B3", "D3", "E6"}        # (*) sadece köy kenarı terasında
 LIFTB = {"C1", "C5", "D6"}                  # (†) istasyon terasında seçilmez
 
 
@@ -39,36 +41,40 @@ def cap(s):
 
 
 KEY = {
-    KOY: "A powder avalanche thunders down the mountainside and slams into a mountain village, a wall of snow engulfing "
-         "the first chalets.",
-    KAYAK: "An avalanche crashes down the ski slope and hits a mountain lodge, a cloud of snow bursting over its "
-           "terrace.",
-    ORMAN: "A huge avalanche rips through a pine forest above a valley and hits the houses below, a white cloud rolling "
-           "over them.",
+    # 14 Eki: Bahadır'ın metni, "right below the camera" -> "right below the railing" (b kuralı korunur, Bahadır kararı)
+    KOY: "A powder avalanche thunders down the slope and smashes into the chalets right below the railing, snow bursting "
+         "over their roofs and through the street.",
+    KAYAK: "An avalanche crashes down the ski slope and slams into the lodge right below the railing, a cloud of snow "
+           "bursting over its terrace.",
+    ORMAN: "A huge avalanche rips through the pine forest above and hits the cabins right below the railing, a white "
+           "cloud rolling over their roofs.",
 }
 POOLS = {
     KOY: ({"A1": "the snow wall flattens a row of pine trees and hurls the trunks ahead of it",
            "A2": "the snow blast tears a wooden chalet off its foundation and sweeps it down the slope",
            "A3": "the snow blast rips the roof off a barn and scatters the planks",
-           "A4": "the snow wall shoves a stone wall over and rolls on through the village street",
+           "A4": "the snow wall rams a stone barn and its dark stones burst out in all directions",
            "A5": "the snow blast snaps a row of wooden fence posts and power poles",
            "A6": "the snow cloud smashes the balcony off a chalet facade"},
           {"B1": "a second wave hits a chalet and its front wall bursts inward",
            "B2": "the snow wall buries a whole row of houses up to their roofs",
            "B3": "the snow blast topples a wooden church bell tower across the street",
            "B4": "the snow wall crashes into a hillside retaining wall and the stones tumble out",
-           "B5": "the snow cloud blows the windows out of a long wooden building",
+           "B5": "the snow blast rips the entire front wall off a long wooden chalet and the dark timber beams fly "
+                 "outward",
            "B6": "the snow wall carries a wooden shed off its base and breaks it apart"}),
     KAYAK: ({"C1": "the avalanche front mows down a row of ski-lift towers, one after another",
              "C2": "the snow wall shatters a glass-fronted lodge entrance",
              "C3": "the avalanche rips the wooden terrace railing off the lodge and sweeps it away",
              "C4": "the snow blast flattens a line of wooden snow barriers and orange safety fences",
              "C5": "the avalanche hits a stone chairlift station and its upper wall breaks apart",
-             "C6": "the avalanche rolls through a grove of pines and snaps them like matchsticks"},
-            {"D1": "a second surge buries the lodge's ground floor, snow bursting through the windows",
+             "C6": "the avalanche shoves a stack of dark timber logs down the slope into the lodge wall"},
+            {"D1": "a second surge slams into the lodge and its whole wooden front bursts open, beams and planks "
+                   "flying",
              "D2": "the snow wall tears a wooden annex off the lodge and carries it downhill",
              "D3": "the avalanche lifts the lodge's roof deck and tosses it aside",
-             "D4": "the snow blast knocks over a floodlight tower and its steel frame crashes down",
+             "D4": "the snow blast smashes through a wooden ski-rental cabin beside the slope and its dark planks "
+                   "scatter",
              "D5": "the avalanche sweeps a small wooden hut off its base and breaks it up",
              "D6": "the snow cloud engulfs the chairlift cables and a cable pylon topples"}),
     ORMAN: ({"E1": "the avalanche front hurls snapped pine trunks into a row of wooden cabins",
@@ -85,12 +91,14 @@ POOLS = {
              "F6": "the avalanche sweeps a row of fences and a footbridge railing away"}),
 }
 # Aynı yapı sınıfı (Bahadır): çatı/kule, duvar, köprü/korkuluk, ağaç, ahşap yapı, cephe, teleferik. Yorumlar: B3 çan
-# kulesi A3 ile çatı/kule sınıfı; B1 (ön duvar) ve B5 (pencereler) cephe; E6 kabin çatısı çatı sınıfı.
+# kulesi A3 ile çatı/kule sınıfı; B1 (ön duvar) ve B5 (ahşap ön duvar) cephe; E6 kabin çatısı çatı sınıfı. 14 Eki:
+# A4 taş ahır B4 istinat duvarıyla taş sınıfı; C6 kütükler loca duvarına çarpar, D1 loca cephesi (cephe); D4 kulübe
+# ahşap yapı.
 STRUCT = {
     KOY: {"A1": {"tree"}, "A2": {"wood"}, "A3": {"roof"}, "A4": {"wall"}, "A5": {"rail"}, "A6": {"facade"},
           "B1": {"facade"}, "B2": {"houses"}, "B3": {"roof"}, "B4": {"wall"}, "B5": {"facade"}, "B6": {"wood"}},
-    KAYAK: {"C1": {"lift"}, "C2": {"facade"}, "C3": {"rail"}, "C4": {"rail"}, "C5": {"lift", "wall"}, "C6": {"tree"},
-            "D1": {"facade"}, "D2": {"wood"}, "D3": {"roof"}, "D4": {"tower"}, "D5": {"wood"}, "D6": {"lift"}},
+    KAYAK: {"C1": {"lift"}, "C2": {"facade"}, "C3": {"rail"}, "C4": {"rail"}, "C5": {"lift", "wall"}, "C6": {"facade"},
+            "D1": {"facade"}, "D2": {"wood"}, "D3": {"roof"}, "D4": {"wood"}, "D5": {"wood"}, "D6": {"lift"}},
     ORMAN: {"E1": {"tree", "wood"}, "E2": {"tree"}, "E3": {"bridge"}, "E4": {"wood"}, "E5": {"wall", "stonehouse"},
             "E6": {"roof"},
             "F1": {"wood"}, "F2": {"wood"}, "F3": {"tree", "stonehouse"}, "F4": {"tower"}, "F5": {"wood", "facade"},
@@ -112,11 +120,11 @@ VALID = {
            "The snow blast lifts the roof off a wooden barn and hurls the boards away.",
            "The avalanche strips the roof from a barn, scattering planks everywhere.",
            "The snow blast rips the roof off a barn and scatters the planks."],
-    "A4": ["The snow wall pushes over a stone wall and keeps rolling down the village street.",
-           "A low stone wall topples under the snow and the avalanche rolls on through the street.",
-           "The avalanche knocks down a garden wall and surges through the village.",
-           "The snow shoves a dry-stone wall over and pours down the street.",
-           "The snow wall shoves a stone wall over and rolls on through the village street."],
+    "A4": ["The snow wall slams into a stone barn and its dark stones fly in every direction.",
+           "A stone barn bursts apart as the avalanche rams it, stones scattering everywhere.",
+           "The avalanche smashes into a stone stable and the masonry explodes outward.",
+           "The snow wall crashes into a stone barn, hurling its dark stones across the street.",
+           "The snow wall rams a stone barn and its dark stones burst out in all directions."],
     "A5": ["The snow blast breaks a row of wooden fence posts and power poles.",
            "Fence posts and power poles snap one after another in the blast.",
            "The avalanche flattens a wooden fence and knocks down the power poles.",
@@ -147,11 +155,11 @@ VALID = {
            "The avalanche smashes a retaining wall and the stones fall into the street.",
            "The retaining wall cracks open and its stones tumble down the slope.",
            "The snow wall crashes into a hillside retaining wall and the stones tumble out."],
-    "B5": ["The snow cloud blows out the windows of a long wooden building.",
-           "Every window of a long wooden building shatters in the snow cloud.",
-           "The blast bursts the windows of a long timber hall.",
-           "The windows of a wooden building explode as the snow cloud hits.",
-           "The snow cloud blows the windows out of a long wooden building."],
+    "B5": ["The snow blast tears the whole front wall off a long wooden chalet and dark beams fly outward.",
+           "The front of a long wooden chalet is ripped away, its timber beams flying.",
+           "The avalanche blows out the facade of a wooden chalet and the dark planks scatter.",
+           "A long chalet's wooden front wall bursts outward, beams spinning through the air.",
+           "The snow blast rips the entire front wall off a long wooden chalet and the dark timber beams fly outward."],
     "B6": ["The avalanche lifts a wooden shed off its base and smashes it to pieces.",
            "A wooden shed is swept off its foundation and breaks apart in the snow.",
            "The snow wall drags a shed off its base and crushes it.",
@@ -182,16 +190,16 @@ VALID = {
            "The snow wall smashes into the lift station and its top wall collapses.",
            "The chairlift station's stone wall bursts apart under the avalanche.",
            "The avalanche hits a stone chairlift station and its upper wall breaks apart."],
-    "C6": ["The avalanche rolls through a stand of pines and snaps them like twigs.",
-           "The snow wall breaks a grove of pine trees like matchsticks.",
-           "Pine trees crack and topple as the avalanche tears through the grove.",
-           "The avalanche flattens a grove of firs, snapping every trunk.",
-           "The avalanche rolls through a grove of pines and snaps them like matchsticks."],
-    "D1": ["A second surge buries the lodge's ground floor and snow bursts through the windows.",
-           "Another wave of snow swamps the lodge's ground floor, smashing the windows.",
-           "The lodge's ground floor is buried as snow blows in through the windows.",
-           "A second surge fills the lodge's lower floor and the windows burst.",
-           "A second surge buries the lodge's ground floor, snow bursting through the windows."],
+    "C6": ["The avalanche pushes a stack of dark logs down the slope into the lodge wall.",
+           "A pile of timber logs is swept down the slope and slams into the lodge.",
+           "The snow wall drives a woodpile down the slope and rams it into the side of the lodge.",
+           "The avalanche hurls a stack of logs down into the wall of the lodge building.",
+           "The avalanche shoves a stack of dark timber logs down the slope into the lodge wall."],
+    "D1": ["A second surge hits the lodge and its whole wooden front bursts open, planks flying.",
+           "Another wave slams into the lodge, blowing out its wooden facade in a spray of beams.",
+           "The lodge's wooden front wall caves in and beams and boards scatter.",
+           "A second surge smashes the front of the lodge open and timber flies everywhere.",
+           "A second surge slams into the lodge and its whole wooden front bursts open, beams and planks flying."],
     "D2": ["The snow wall rips a wooden annex off the lodge and carries it downhill.",
            "The avalanche tears the lodge's wooden extension away and sweeps it down the slope.",
            "A wooden annex is torn from the lodge and dragged downhill by the snow.",
@@ -202,11 +210,11 @@ VALID = {
            "The snow blast tears off the lodge roof and throws it away.",
            "The avalanche peels the lodge's roof deck up and hurls it to the side.",
            "The avalanche lifts the lodge's roof deck and tosses it aside."],
-    "D4": ["The snow blast knocks down a floodlight tower and its steel frame crashes to the ground.",
-           "A floodlight tower topples over and its steel frame crashes down.",
-           "The avalanche brings down a tall light mast, its frame crashing into the snow.",
-           "The floodlight tower buckles and falls as the snow blast hits.",
-           "The snow blast knocks over a floodlight tower and its steel frame crashes down."],
+    "D4": ["The snow blast smashes a wooden ski-rental cabin and its dark planks fly.",
+           "A ski-rental hut beside the slope bursts apart and its boards scatter.",
+           "The avalanche crushes the wooden rental cabin, sending planks flying.",
+           "The snow blast shatters a wooden cabin by the slope and the planks scatter across the snow.",
+           "The snow blast smashes through a wooden ski-rental cabin beside the slope and its dark planks scatter."],
     "D5": ["The avalanche pushes a small hut off its base and smashes it.",
            "A wooden hut is swept away by the avalanche and breaks apart.",
            "The snow carries a little wooden shack off its footings and crushes it.",
@@ -295,11 +303,13 @@ def ava_gpt(messages=None):
         line = dict(l.split(": ", 1) for l in user.splitlines()
                     if l.startswith(("4-9s EVENT", "9-15s EVENT", "PEOPLE RUNNING AWAY")))
         word = line["PEOPLE RUNNING AWAY"].split()[0]
-        away = line["PEOPLE RUNNING AWAY"].split("run away from ")[1].rstrip(")")
+        away = line["PEOPLE RUNNING AWAY"].split("run away from ")[1].split(",")[0]
+        street = "the village street" if "village street" in line["PEOPLE RUNNING AWAY"] else "the street"
         s2, s3 = cap(line["4-9s EVENT"]), cap(line["9-15s EVENT"])
         s2 += " as the snow roars" if len(s2.split()) < 10 else ""
         s3 += " as the snow roars" if len(s3.split()) < 10 else ""
-        return {"slice_1_rest": f"{cap(word)} people run from {away}.", "slice_2": s2 + ".", "slice_3": s3 + "."}
+        return {"slice_1_rest": f"{cap(word)} people run from {away} in {street} right below.",
+                "slice_2": s2 + ".", "slice_3": s3 + "."}
     return gpt
 
 
@@ -308,7 +318,9 @@ def build(e, b2, b3, spot=HT, people=5):
     s2, s3 = cap(es.beat_text(e, "slice_2", b2)), cap(es.beat_text(e, "slice_3", b3))
     s2 += " as the snow roars" if len(s2.split()) < 10 else ""
     s3 += " as the snow roars" if len(s3.split()) < 10 else ""
-    sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from the avalanche."),
+    street = "the village street" if e == KOY else "the street"
+    sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from the avalanche in {street} "
+                                         f"right below."),
           "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
     return spec, sl
 
@@ -372,7 +384,11 @@ class TestAvalanche(unittest.TestCase):
             with self.subTest(event=e):
                 self.assertEqual(es.EVENT_KEY_VISUAL[e], KEY[e])
                 found = {i["rule"] for i in cp.story_rule_issues(e, None, KEY[e])}
-                self.assertFalse(found & {"a_trigger_first", "e_event_and_ship_named", "required"})
+                self.assertFalse(found & {"a_trigger_first", "b_no_camera_words", "required"})
+                self.assertIn("right below the railing", KEY[e])   # ilk temas kameranın hemen altında
+                with_people = KEY[e] + " Five villagers run from the avalanche in the village street right below."
+                self.assertNotIn("e_event_and_ship_named",
+                                 {i["rule"] for i in cp.story_rule_issues(e, None, with_people)})
                 b = es.EVENT_BEATS[e]
                 self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, POOLS[e][0])
                 self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, POOLS[e][1])
@@ -394,6 +410,9 @@ class TestAvalanche(unittest.TestCase):
                                              f"signs, text or flags.")
                     self.assertNotIn("pans to follow", suffix)
                     self.assertNotIn("follow", suffix)
+                    self.assertNotIn("across the valley", suffix)
+                    self.assertNotIn("upper part of the frame", suffix)
+                    self.assertIn("never descending", suffix)
                     self.assertLessEqual(count_constraints(suffix)[0], 8)
         # volkan ve diğer kategorilerin kamera satırı değişmedi
         self.assertTrue(sk.style_suffix(es.ERUPTION, None, "Hillside terrace facing the erupting volcano")
@@ -456,6 +475,32 @@ class TestAvalanche(unittest.TestCase):
         self.assertNotIn(es.ERUPTION, es.EVENT_BANNED_WORDS)
         self.assertEqual(set(es.EVENT_BANNED_WORDS), set(AVA))
 
+    def test_people_close_to_camera(self):
+        # 14 Eki: 0-4s insan cümlesi kameraya yakın yeri söyler; "camera" kelimesi yine yasak (b kuralı)
+        import core.creative_pipeline as cp
+        spec, sl = build(KOY, "A1", "B2")
+        self.assertEqual(codes(spec, sl) & {"slice_near_camera", "b_no_camera_words"}, set())
+        self.assertIn("close by: near the railing or in the village street right below", es.people_line(spec))
+        self.assertIn("in the street right below", es.people_line(build(KAYAK, "C2", "D2")[0]))
+        ok = ["Five villagers run from the avalanche near the railing.",
+              "Five people run from the avalanche in the street right below.",
+              "Five residents run from the avalanche just below the terrace.",
+              "Five people run from the avalanche along the railing of the terrace.",
+              "Five villagers run from the avalanche in the village street below the balcony.",
+              "Five guests run from the avalanche beneath the balcony, screaming."]
+        for t in ok:
+            with self.subTest(text=t):
+                self.assertFalse(codes(spec, {**sl, "slice_1_rest": t}) & {"slice_near_camera", "b_no_camera_words"})
+        for t in ("Five villagers run from the avalanche down the street.",
+                  "Five people run from the avalanche across the village."):
+            with self.subTest(text=t):
+                self.assertIn("slice_near_camera", {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": t})})
+        bad = "Five villagers run from the avalanche close to the camera."
+        self.assertIn("b_no_camera_words", codes(spec, {**sl, "slice_1_rest": bad}))
+        self.assertIn("b_no_camera_words", {i["rule"] for i in cp.structured_issues(spec, {**sl, "slice_1_rest": bad}, [])})
+        # volkan insan kuralı değişmedi
+        self.assertNotIn("slice_near_camera", {r["rule"] for r in es.SLICE_RULES[es.ERUPTION]})
+
     def test_forbidden_pairs_follow_same_structure_rule(self):
         for e, tags in STRUCT.items():
             b = es.EVENT_BEATS[e]
@@ -465,7 +510,8 @@ class TestAvalanche(unittest.TestCase):
                                                       if tags[v] & tags[d]})
         self.assertEqual(es.EVENT_BEATS[KOY]["excluded_pairs"],
                          {("A2", "B6"), ("A3", "B3"), ("A4", "B4"), ("A6", "B1"), ("A6", "B5")})
-        self.assertEqual(es.EVENT_BEATS[KAYAK]["excluded_pairs"], {("C1", "D6"), ("C5", "D6"), ("C2", "D1")})
+        self.assertEqual(es.EVENT_BEATS[KAYAK]["excluded_pairs"],
+                         {("C1", "D6"), ("C5", "D6"), ("C2", "D1"), ("C6", "D1")})
         self.assertEqual(es.EVENT_BEATS[ORMAN]["excluded_pairs"],
                          {("E1", "F1"), ("E1", "F2"), ("E1", "F3"), ("E1", "F5"), ("E2", "F3"), ("E3", "F6"),
                           ("E4", "F1"), ("E4", "F2"), ("E4", "F5"), ("E5", "F3")})
@@ -485,7 +531,7 @@ class TestAvalanche(unittest.TestCase):
                     else:
                         self.assertEqual(spots, set(sk.view_spots(e, None)))
         counts = {e: [len(es.allowed_pairs(e, None, s)) for s in sk.view_spots(e, None)] for e in AVA}
-        self.assertEqual(counts, {KOY: [31, 18], KAYAK: [33, 27, 15], ORMAN: [26, 20]})
+        self.assertEqual(counts, {KOY: [31, 18], KAYAK: [32, 26, 14], ORMAN: [26, 20]})
 
     def test_block_depth_never_runs_out(self):
         # standart 3; aday kalmayan noktası olan olaylarda 2 (kayak: istasyon terası, orman: balkon)
@@ -516,7 +562,7 @@ class TestAvalanche(unittest.TestCase):
                     if issues:
                         self.fail(f"{e}/{spot}/{b2}+{b3}: {issues}")
                     n += 1
-        self.assertEqual(n, 31 + 18 + 33 + 27 + 15 + 26 + 20)
+        self.assertEqual(n, 31 + 18 + 32 + 26 + 14 + 26 + 20)
 
     def test_100_productions_each_event(self):
         import core.creative_pipeline as cp
@@ -546,6 +592,7 @@ class TestAvalanche(unittest.TestCase):
                     self.assertNotIn("pans to follow", scene["prompt"])
                     self.assertIsNone(t["vehicle"])
                     self.assertNotIn("VEHICLE:", msgs[-1])
+                    self.assertIn("close by: near the railing", msgs[-1])
                     self.assertTrue(scene["combo_key"].startswith("avalanche_disasters|none|"))
                     tags.append(pair)
                     spots.add(t["spot"])

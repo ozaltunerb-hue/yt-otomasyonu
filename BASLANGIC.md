@@ -25,6 +25,31 @@
 
 ---
 
+## 📋 DEVİR: ❄️ Çığ ilk test dersi ve düzeltme (14 Eki 2026)
+
+**Ders (13 Eki çığ köyü testi):** kamera aksiyona yakın olsun, ilk temas 0-2 sn'de olsun, nesneler büyük ve koyu olsun
+(beyaz üstüne beyaz görünmez). Testte kamera vadinin karşısındaydı; çığ ve evler küçük kaldı, ilk ev ~5. sn'de
+vuruldu, aksiyon beyaz bulutta kayboldu. Volkan bombalarında kamera yakındı, insanlar ve koyu nesneler ön plandaydı,
+işe yaradı.
+
+- **Kamera noktaları** köyün/tesisin kenarına taşındı: "Terrace at the edge of the village", "Balcony of a chalet at
+  the edge of the village", "Terrace of the lift station" (aynı). Yeni tek şablon (Bahadır'ın metni): "...high vantage
+  looking up the slope as the avalanche rushes down toward the buildings just below and beside the camera; the
+  nearest buildings fill the middle of the frame, ... never descending, a corner of the railing in the foreground;
+  ...". "across the valley" ve "avalanche always visible in the upper part of the frame" çıktı. Çatı/kule ve
+  teleferik dışlamaları aynı.
+- **Kilit cümleler** ilk teması içeriyor ("...smashes into the chalets right below the railing..."). Bahadır kararı:
+  b kuralı (hikâyede "camera" yok) korunur; Bahadır'ın metnindeki "right below the camera" yerine "right below the
+  railing".
+- **Maddeler:** A4 taş ahır, B5 ve D1 büyük ahşap cephe, C6 koyu kütük yığını, D4 ahşap kiralama kulübesi. Yeni yasak
+  çift (C6,D1). İzinli çift: köy 31/18, kayak 32/26/14, orman 26/20. Tekrar önleme aynı (köy 3, kayak ve orman 2).
+- **İnsanlar ön planda:** 0-4s insan cümlesi yakın yer söyler (`slice_near_camera`: "near the railing", "in the street
+  right below"...). GPT satırı: "...run away from the avalanche, close by: near the railing or in the street right
+  below". Köyde "the village street" (yeni kilit cümlede "village" yok, olay adı kapısı için).
+- En uzun prompt 175 kelime (köy, balkon, B5 ile).
+
+---
+
 ## 📋 DEVİR: ❄️ Çığ kategorisi eklendi (13 Eki 2026, TASLAK, henüz video testi yok)
 
 `avalanche_disasters` "❄️ Çığ", 3 olay yapılandırılmış hatta, volkan yapısı birebir (kod havuzu, sabit yüksek kamera,

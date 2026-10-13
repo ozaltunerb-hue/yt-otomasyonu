@@ -411,11 +411,12 @@ DOMAIN_ATTRIBUTES = {
             "Volcanic bombs slam into a village street",
         ]
     },
-    # 13 Eki, Bahadır (TASLAK): ❄️ Çığ. Kamera noktaları yüksek, vadinin karşısından çığa bakıyor. İstasyon terası
-    # sadece kayak olayında (EVENT_SKELETONS spots)
+    # 13 Eki, Bahadır (TASLAK): ❄️ Çığ. İstasyon terası sadece kayak olayında (EVENT_SKELETONS spots). 14 Eki: ilk
+    # testte kamera vadinin karşısındaydı, çığ ve evler küçük kaldı; noktalar köyün/tesisin kenarına, çığın yoluna
+    # taşındı (eski adlar "Terrace at the edge of the village", "Balcony of a chalet at the edge of the village")
     "avalanche_disasters": {
         "ships": [],
-        "environments": ["Hillside terrace", "Balcony of a mountain chalet", "Terrace of the lift station"],
+        "environments": ["Terrace at the edge of the village", "Balcony of a chalet at the edge of the village", "Terrace of the lift station"],
         "events": [
             "Avalanche slams into a mountain village",
             "Avalanche crashes down onto a ski lodge",

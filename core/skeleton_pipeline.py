@@ -100,9 +100,10 @@ CAMERA_SPOTS = {
     "Hillside terrace facing the erupting volcano": "on a hillside terrace above the village",
     "Rooftop terrace facing the erupting volcano": "on a rooftop terrace across the street",
     "Balcony of a village house facing the erupting volcano": "on the balcony of a village house across the street",
-    # ❄️ Çığ (13 Eki, Bahadır): hepsi yüksek, vadinin karşısından çığa bakıyor; yön kamera cümlesinde
-    "Hillside terrace": "on a hillside terrace above the valley",
-    "Balcony of a mountain chalet": "on the balcony of a mountain chalet",
+    # ❄️ Çığ (13 Eki, Bahadır): hepsi yüksek; yön kamera cümlesinde. 14 Eki: köyün/tesisin kenarına, çığın yoluna
+    # taşındı (eski: "on a hillside terrace above the valley", "on the balcony of a mountain chalet")
+    "Terrace at the edge of the village": "on a terrace at the edge of the village",
+    "Balcony of a chalet at the edge of the village": "on the balcony of a chalet at the edge of the village",
     "Terrace of the lift station": "on the terrace of the ski-lift station",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
@@ -485,8 +486,8 @@ EVENT_SKELETONS = {
     # noktaları yüksek; teleferik istasyonu terası sadece kayak olayında. ──
     "Avalanche slams into a mountain village": {
         "domain": "avalanche_disasters", "ships": None,
-        "spots": {"Hillside terrace": "a mountain village below a steep snowy slope",
-                  "Balcony of a mountain chalet": "a mountain village below a steep snowy slope"},
+        "spots": {"Terrace at the edge of the village": "a mountain village below a steep snowy slope",
+                  "Balcony of a chalet at the edge of the village": "a mountain village below a steep snowy slope"},
         "people": ["residents", "villagers"], "weather": AVALANCHE_WEATHER, "object": "avalanche",
         "text": "In {spot} under {weather}, a powder avalanche thunders down the mountainside and slams into the "
                 "village, a wall of snow engulfing the first chalets. Roofs and fences tear loose as {n} {people} run from "
@@ -494,8 +495,8 @@ EVENT_SKELETONS = {
     },
     "Avalanche crashes down onto a ski lodge": {
         "domain": "avalanche_disasters", "ships": None,
-        "spots": {"Hillside terrace": "a ski resort at the foot of a steep ski slope",
-                  "Balcony of a mountain chalet": "a ski resort at the foot of a steep ski slope",
+        "spots": {"Terrace at the edge of the village": "a ski resort at the foot of a steep ski slope",
+                  "Balcony of a chalet at the edge of the village": "a ski resort at the foot of a steep ski slope",
                   "Terrace of the lift station": "a ski resort at the foot of a steep ski slope"},
         "people": ["guests", "residents"], "weather": AVALANCHE_WEATHER, "object": "avalanche",
         "text": "In {spot} under {weather}, an avalanche crashes down the ski slope onto the lodge, a cloud of snow "
@@ -504,8 +505,8 @@ EVENT_SKELETONS = {
     },
     "Avalanche rips through a pine forest into a valley": {
         "domain": "avalanche_disasters", "ships": None,
-        "spots": {"Hillside terrace": "a valley below a steep pine forest",
-                  "Balcony of a mountain chalet": "a valley below a steep pine forest"},
+        "spots": {"Terrace at the edge of the village": "a valley below a steep pine forest",
+                  "Balcony of a chalet at the edge of the village": "a valley below a steep pine forest"},
         "people": ["residents", "villagers"], "weather": AVALANCHE_WEATHER, "object": "avalanche",
         "text": "In {spot} under {weather}, a huge avalanche rips through the pine forest above the valley and hits the "
                 "houses below. Snapped trunks fly as {n} {people} run from the avalanche. The white cloud keeps rolling "
@@ -745,17 +746,25 @@ def volcano_camera(spot: str) -> str:
 # (aynı 4 kısıt). Ortak metin (get_realism_guardrails) diğer kategorilerde aynen kalır. (Lav nehrine özel hız cümlesi
 # ve "responders"sız satır 13 Eki 4'te lavla birlikte çıktı; arşiv: event_structure ARŞİV notu.)
 # ❄️ Çığ kamerası (13 Eki, Bahadır): volkanla aynı yapı, tek şablon; takip (pan) yok. Değer: durulan yerin kısa adı.
-AVALANCHE_CAMERA_PERCH = {"Hillside terrace": "terrace", "Balcony of a mountain chalet": "balcony", "Terrace of the lift station": "terrace"}
+AVALANCHE_CAMERA_PERCH = {"Terrace at the edge of the village": "terrace",
+                          "Balcony of a chalet at the edge of the village": "balcony",
+                          "Terrace of the lift station": "terrace"}
 # Çığ giyim/ışık (Bahadır'ın metni birebir, 175 kelime kapısı için kısa; 2 kısıt)
 AVALANCHE_GUARDRAILS = "Bystanders wear winter civilian clothes; raw natural overcast daylight, no hazmat suits."
 
 
 def avalanche_camera(spot: str) -> str:
-    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking across the valley "
-            f"toward the avalanche on the mountain slope; slight hand shake, the camera stays fixed on the "
-            f"{AVALANCHE_CAMERA_PERCH[spot]}, tilting down no more than slightly and never descending, the avalanche "
-            f"always visible in the upper part of the frame, a corner of the railing in the foreground; one continuous "
-            f"shot, no zoom, no cuts.")
+    # 14 Eki, Bahadır (ilk test dersi): kamera vadinin karşısından uzaktan bakınca çığ ve evler küçük kaldı, aksiyon
+    # beyaz bulutta kayboldu. Yeni şablon birebir: kamera aksiyona yakın, en yakın binalar kadrajın ortasında.
+    # "across the valley" ve "avalanche always visible in the upper part of the frame" çıktı; sabit kamera kuralları
+    # aynı. Önceki: "...high vantage looking across the valley toward the avalanche on the mountain slope; slight
+    # hand shake, the camera stays fixed on the {perch}, tilting down no more than slightly and never descending, the
+    # avalanche always visible in the upper part of the frame, a corner of the railing in the foreground; ..."
+    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking up the slope as "
+            f"the avalanche rushes down toward the buildings just below and beside the camera; the nearest buildings "
+            f"fill the middle of the frame, slight hand shake, the camera stays fixed on the "
+            f"{AVALANCHE_CAMERA_PERCH[spot]}, tilting no more than slightly and never descending, a corner of the "
+            f"railing in the foreground; one continuous shot, no zoom, no cuts.")
 
 
 VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "
