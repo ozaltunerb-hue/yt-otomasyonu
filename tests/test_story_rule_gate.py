@@ -116,7 +116,7 @@ class TestLocks(unittest.TestCase):
 
     def test_required_covers_all_22_events_with_budget(self):
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(cp.EVENT_REQUIRED), 31)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı
+        self.assertEqual(len(cp.EVENT_REQUIRED), 34)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
         for e, groups in cp.EVENT_REQUIRED.items():
             with self.subTest(event=e):
                 # yapılandırılmış olaylarda grup yok (olay terimleri event_structure'da)
@@ -398,7 +398,7 @@ class TestCityEventSwap(unittest.TestCase):
     def test_event_sets_equal(self):
         self.assertEqual(set(cp.EVENT_OUTCOMES), set(sk.EVENT_SKELETONS))
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(sk.EVENT_SKELETONS), 31)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı
+        self.assertEqual(len(sk.EVENT_SKELETONS), 34)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
         self.assertIn(TIDAL, sk.EVENT_SKELETONS)
         self.assertNotIn(SIGNS, sk.EVENT_SKELETONS)
         self.assertIn(SIGNS, sk.REMOVED_EVENTS)   # kod silinmedi: havuzda, iskelet dışında
@@ -717,7 +717,7 @@ class TestFlashFloodFix(unittest.TestCase):
         import core.event_structure as es
         self.assertEqual(set(sk.CAMERA_MOTION_EXTRA), {FLOOD})
         for e, s in sk.EVENT_SKELETONS.items():
-            if e == FLOOD or e in es.VOLCANO_EVENTS:
+            if e == FLOOD or e in es.VOLCANO_EVENTS or e in es.AVALANCHE_EVENTS:   # 13 Eki: çığ da sabit kamera
                 continue
             ship = (s["ships"] or [None])[0]
             for spot in s["spots"]:

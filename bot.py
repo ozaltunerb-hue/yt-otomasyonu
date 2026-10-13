@@ -57,6 +57,7 @@ DOMAIN_LABELS = {
     "landslide_disasters": "⛰️ Heyelan",   # 2 Eki, Bahadır (TASLAK olaylar)
     "fire_disasters": "🔥 Yangın",          # 8 Eki, Bahadır (TASLAK olaylar)
     "volcano_disasters": "🌋 Volkan",       # 10 Eki, Bahadır (TASLAK olaylar)
+    "avalanche_disasters": "❄️ Çığ",         # 13 Eki, Bahadır (TASLAK olaylar)
 }
 
 # Olay butonları; anahtarlar DOMAIN_ATTRIBUTES "events" ile birebir (test_telegram_bot denetler)
@@ -125,6 +126,10 @@ EVENT_LABELS = {
     "Volcano erupts and a shockwave blows out windows": "🌋 Patlama şok dalgası camları kırıyor",
     "Pyroclastic cloud races down into a village street": "🌋 Kül bulutu köyü sarıyor",
     "Volcanic bombs slam into a village street": "🌋 Volkan bombaları çatıları deliyor",
+    # Çığ (13 Eki, Bahadır; TASLAK). Bahadır'ın kısa adları: koy, kayak, orman
+    "Avalanche slams into a mountain village": "🏔️ Çığ köyü yutuyor",
+    "Avalanche crashes down onto a ski lodge": "⛷️ Çığ kayak merkezine iniyor",
+    "Avalanche rips through a pine forest into a valley": "🌲 Çığ ormandan vadiye iniyor",
 }
 RANDOM_LABEL = "🎲 Rastgele"
 # Bölge görünümü menüsü (1 Eki, Bahadır): sadece REGION_VIEW_EVENTS (sel, kıyı dalga). Bayrak emojisi yok.

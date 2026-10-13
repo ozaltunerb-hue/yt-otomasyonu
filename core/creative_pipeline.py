@@ -159,6 +159,10 @@ EVENT_OUTCOMES = {
         "and power poles",
     "Volcanic bombs slam into a village street":
         "glowing rocks keep slamming into the street, punching through roofs and setting cars on fire",
+    # Çığ (TASLAK, 13 Eki, Bahadır): yapılandırılmış hatta; trace/rapor için
+    "Avalanche slams into a mountain village": "the snow wall keeps tearing through the village, flattening chalets, fences and trees",
+    "Avalanche crashes down onto a ski lodge": "the avalanche keeps crashing into the ski resort, snapping lift towers and burying the lodge",
+    "Avalanche rips through a pine forest into a valley": "the avalanche keeps tearing through the forest into the valley, hurling trunks into the houses",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -319,6 +323,7 @@ EVENT_REQUIRED = {
     "Volcano erupts and a shockwave blows out windows": [],
     "Pyroclastic cloud races down into a village street": [],
     "Volcanic bombs slam into a village street": [],
+    "Avalanche slams into a mountain village": [], "Avalanche crashes down onto a ski lodge": [], "Avalanche rips through a pine forest into a valley": [],   # 13 Eki: çığ (yapılandırılmış hat kapıları)
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),

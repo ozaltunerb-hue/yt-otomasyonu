@@ -66,8 +66,9 @@ class TestEventPool(unittest.TestCase):
                                   "coastal_tornado_landfall": 3, "urban_city_disasters": 2,
                                   "open_beach_coastal_events": 3, "landslide_disasters": 3,   # 2 Eki: heyelan
                                   "fire_disasters": 4,   # 8 Eki: yangın; 10 Eki: + helikopter
-                                  "volcano_disasters": 3})   # 10 Eki: volkan; 13 Eki: lav nehri çıktı
-        self.assertEqual(sum(counts.values()), 31)
+                                  "volcano_disasters": 3,   # 10 Eki: volkan; 13 Eki: lav nehri çıktı; + 3 çığ
+                                  "avalanche_disasters": 3})   # 13 Eki: çığ
+        self.assertEqual(sum(counts.values()), 34)
 
     def test_removed_events(self):
         # 30 Eyl: + tabela/iskele (aksiyonsuz video); 1 Eki: + halat, kontrolsüz yat; 4 Eki (TASLAK): + hortum kıyıya
@@ -86,7 +87,7 @@ class TestEventPool(unittest.TestCase):
 
     def test_phenomena(self):
         self.assertEqual({k: len(v) for k, v in sk.PHENOMENA.items()},
-                         {"Hortum": 4, "Tsunami": 0, "Sel": 1, "Heyelan": 3, "Yangın": 4, "Volkan": 3,
+                         {"Hortum": 4, "Tsunami": 0, "Sel": 1, "Heyelan": 3, "Yangın": 4, "Volkan": 3, "Çığ": 3,
                           "Dev Dalga": 5})   # 8 Eki: + yangın; 10 Eki: + helikopter, + volkan
         for events in sk.PHENOMENA.values():
             self.assertTrue(set(events) <= set(sk.EVENT_SKELETONS))
@@ -110,7 +111,7 @@ class TestSkeletonOutput(unittest.TestCase):
                 total, negative = count_constraints(suffix)
                 self.assertLessEqual(total, 8, suffix)
                 self.assertIn("Handheld footage shot by a person standing", suffix)
-                if sk.EVENT_SKELETONS[e]["domain"] == "volcano_disasters":
+                if sk.EVENT_SKELETONS[e]["domain"] in ("volcano_disasters", "avalanche_disasters"):   # 13 Eki: çığ
                     # 13 Eki: volkanda takip yok, kamera sabit (TestVolcano kilitler)
                     self.assertNotIn("pans to follow", suffix)
                     self.assertIn("the camera stays fixed on the", suffix)   # 13 Eki (3) sade şablon
@@ -118,7 +119,10 @@ class TestSkeletonOutput(unittest.TestCase):
                     self.assertIn("the camera pans to follow the", suffix)
                 self.assertNotIn("phone", suffix.lower())   # final turu: telefon/REC ekranı çiziliyordu
                 self.assertIn("no zoom, no cuts", suffix)
-                self.assertIn("Raw natural light matching the weather, never glossy or CGI", suffix)
+                if sk.EVENT_SKELETONS[e]["domain"] == "avalanche_disasters":   # 13 Eki: Bahadır'ın kısa çığ satırı
+                    self.assertIn("raw natural overcast daylight, no hazmat suits", suffix)
+                else:
+                    self.assertIn("Raw natural light matching the weather, never glossy or CGI", suffix)
                 self.assertTrue("wear" in suffix)   # kıyafet satırı korunur
                 for removed in ("fully in frame", "fisheye", "hands or fingers", "bow-first", "fixed position",
                                 "Already moving in the first frame", "Nobody pushes", "second ship"):
@@ -297,12 +301,12 @@ class TestRecoveryQuery(unittest.TestCase):
 class TestMenu(unittest.TestCase):
     def test_menu_follows_pipeline(self):
         with patch.object(settings, "PROMPT_PIPELINE", "skeleton"):
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 31)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 34)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
         with patch.object(settings, "PROMPT_PIPELINE", "legacy"):
             # 30 Eyl: dev dalga baskını havuza eklendi (tabela/iskele havuzda kaldı, sadece iskeletten çıktı)
             # 1 Eki: kontrolsüz yat havuza eklendi (halat havuzda kaldı, sadece iskeletten çıktı)
             # 2 Eki: + 3 heyelan; 4 Eki (TASLAK): + hortum marina, sahil caddesi; 8 Eki: + 3 yangın
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 53)   # 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 56)   # 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
 
 
 if __name__ == "__main__":

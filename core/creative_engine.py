@@ -215,6 +215,13 @@ MARITIME_INSPIRATION_DOMAINS = {
         "guidance": "A violent volcanic eruption above a village under an ash-grey sky lit orange by the eruption plume: a shockwave blowing out windows, a pyroclastic cloud tearing through a street, or glowing volcanic bombs punching through roofs. The volcano is always visible above the rooftops. NO ships or vessels.",
         "example_elements": ["erupting volcano above the rooftops", "pyroclastic cloud racing down the flank", "glowing rocks punching through roofs", "shattered shop windows"],
         "camera_styles": ["bystander phone from a hillside terrace facing the volcano", "bystander phone from a rooftop terrace facing the volcano"],
+    },
+    # 13 Eki, Bahadır (TASLAK): ❄️ Çığ. Görünür sebep (toz çığı, kar duvarı) ve ağır kütle; araç ve kurtarma yok.
+    "avalanche_disasters": {
+        "title": "Çığ (Avalanche)",
+        "guidance": "A violent powder avalanche on a steep snowy mountain under overcast winter daylight: a wall of snow slamming into a mountain village, crashing onto a ski lodge, or ripping through a pine forest into a valley. The snow visibly hits and breaks chalets, trees, walls and lift towers. NO ships or vessels.",
+        "example_elements": ["powder avalanche on a steep mountain slope", "wall of snow", "billowing snow cloud", "wooden chalets", "snapped pine trunks", "ski-lift towers"],
+        "camera_styles": ["bystander phone from a hillside terrace across the valley", "bystander phone from a mountain chalet balcony"],
     }
 }
 
@@ -402,6 +409,17 @@ DOMAIN_ATTRIBUTES = {
             "Volcano erupts and a shockwave blows out windows",
             "Pyroclastic cloud races down into a village street",
             "Volcanic bombs slam into a village street",
+        ]
+    },
+    # 13 Eki, Bahadır (TASLAK): ❄️ Çığ. Kamera noktaları yüksek, vadinin karşısından çığa bakıyor. İstasyon terası
+    # sadece kayak olayında (EVENT_SKELETONS spots)
+    "avalanche_disasters": {
+        "ships": [],
+        "environments": ["Hillside terrace", "Balcony of a mountain chalet", "Terrace of the lift station"],
+        "events": [
+            "Avalanche slams into a mountain village",
+            "Avalanche crashes down onto a ski lodge",
+            "Avalanche rips through a pine forest into a valley",
         ]
     }
 }
@@ -1026,7 +1044,8 @@ def get_realism_guardrails(domain_id: str, vessel_class: str, environment: str =
 ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open_beach_coastal_events",
                        "landslide_disasters",   # 2 Eki: heyelan (gemisiz, sivil giyim kuralı)
                        "fire_disasters",        # 8 Eki: yangın (gemisiz, sivil giyim kuralı)
-                       "volcano_disasters"]     # 10 Eki: volkan (gemisiz, sivil giyim kuralı)
+                       "volcano_disasters",     # 10 Eki: volkan (gemisiz, sivil giyim kuralı)
+                       "avalanche_disasters"]   # 13 Eki: çığ (gemisiz, sivil giyim kuralı)
 
 # Gemi domainlerinde ekrandaki gerçekçi kişi aralığı (2026-09-24). "Max 2" sadece
 # kargo gemileri içindi; kargo domain'i artık yok. Env-centric domainler tabloya

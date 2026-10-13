@@ -106,6 +106,10 @@ class TestLockedData(unittest.TestCase):
             es.PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
             es.VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village "
                                "street, punching through roofs and igniting cars.",
+            # 13 Eki, Bahadır: çığ (tests/test_avalanche.py ayrıca kilitler)
+            es.AVALANCHE_VILLAGE: es.EVENT_KEY_VISUAL[es.AVALANCHE_VILLAGE],
+            es.AVALANCHE_SKI: es.EVENT_KEY_VISUAL[es.AVALANCHE_SKI],
+            es.AVALANCHE_FOREST: es.EVENT_KEY_VISUAL[es.AVALANCHE_FOREST],
         })
         self.assertEqual(es.SLICE_LABELS, ("0-4s", "4-9s", "9-15s"))
         self.assertEqual(es.SLICE_FIELDS, ("slice_1_rest", "slice_2", "slice_3"))
@@ -162,7 +166,8 @@ class TestLockedData(unittest.TestCase):
                                                   es.LANDFALL, es.MARINA_TORNADO, es.AVENUE,
                                                   es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO,   # 8 Eki
                                                   es.HELICOPTER,   # 10 Eki
-                                                  es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS))   # 13 Eki: lav çıktı
+                                                  es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS,   # 13 Eki: lav çıktı
+                                                  *es.AVALANCHE_EVENTS))   # 13 Eki: çığ
         self.assertEqual(TIDAL, "Tidal wave surges over a coastal city street")
         self.assertFalse(es.is_structured("Rogue wave breaks over the rail onto the pool deck"))
 
@@ -603,7 +608,8 @@ class TestTidal(unittest.TestCase):
                                           es.WILDFIRE: (3, 6), es.FACADE_FIRE: (3, 6), es.FIRE_TORNADO: (3, 6),
                                           es.HELICOPTER: (3, 6),   # 10 Eki
                                           es.ERUPTION: (3, 6), es.PYROCLASTIC: (3, 6),
-                                          es.VOLCANIC_BOMBS: (3, 6)})
+                                          es.VOLCANIC_BOMBS: (3, 6),
+                                          **{e: (3, 6) for e in es.AVALANCHE_EVENTS}})   # 13 Eki: çığ
 
     def test_slice_rules_locked(self):
         # selde dilim kapısı yok; heyelan (TASLAK) aynı mekanizma
@@ -611,7 +617,8 @@ class TestTidal(unittest.TestCase):
                                                es.LANDFALL, es.MARINA_TORNADO, es.AVENUE,
                                                es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO,   # 8 Eki: yangın
                                                es.HELICOPTER,   # 10 Eki
-                                               es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS})
+                                               es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS,
+                                               *es.AVALANCHE_EVENTS})   # 13 Eki: çığ
         r = {x["rule"]: x for x in es.SLICE_RULES[TIDAL]}
         self.assertEqual(set(r), {"slice_flee", "slice_count"})
         self.assertEqual(r["slice_flee"]["terms"], ("run", "ran", "running", "flee", "fled", "fleeing", "sprint",
@@ -1473,7 +1480,8 @@ class TestMarinaRedesign(unittest.TestCase):
                                                    es.HELICOPTER: (40, 75),   # 10 Eki: helikopter
                                                    # 10 Eki: volkan
                                                    es.ERUPTION: (40, 75),
-                                                   es.PYROCLASTIC: (40, 75), es.VOLCANIC_BOMBS: (40, 75)})
+                                                   es.PYROCLASTIC: (40, 75), es.VOLCANIC_BOMBS: (40, 75),
+                                                   **{e: (40, 75) for e in es.AVALANCHE_EVENTS}})   # 13 Eki: çığ
         w = "abcd"
 
         def total_rules(event, spot, b2, b3, vehicle, extra):
@@ -2312,7 +2320,7 @@ class TestHelicopter(unittest.TestCase):
         # 4-9s dışlaması helikopterden önceki olaylarda hiçbir şeyi değiştirmez (onların dışlamalarının hepsi 9-15s).
         # 10 Eki: volkanda da 4-9s kamera dışlaması var (TestVolcano)
         for e, b in es.EVENT_BEATS.items():
-            if e != self.E and e not in es.VOLCANO_EVENTS:
+            if e != self.E and e not in es.VOLCANO_EVENTS and e not in es.AVALANCHE_EVENTS:   # 13 Eki: çığ da
                 self.assertFalse(set(b["excluded_spots"]) & set(b["slice_2"]), e)
 
     def test_no_candidates_never(self):
@@ -2827,7 +2835,7 @@ class TestVolcano(unittest.TestCase):
     def test_block_depth_and_never_runs_out(self):
         from itertools import combinations
         # 13 Eki (4), Bahadır: patlama ve bombalar standart 3, kül bulutu 2 (Bahadır kararı)
-        self.assertEqual(es.RECENT_BEAT_BLOCK_BY_EVENT, {es.PYROCLASTIC: 2})
+        self.assertEqual({e: k for e, k in es.RECENT_BEAT_BLOCK_BY_EVENT.items() if e in VOLC}, {es.PYROCLASTIC: 2})
         self.assertEqual(es.RECENT_BEAT_BLOCK, 3)                  # diğer olaylar değişmedi
         for e in VOLC:
             b, k = es.EVENT_BEATS[e], es.RECENT_BEAT_BLOCK_BY_EVENT.get(e, es.RECENT_BEAT_BLOCK)
@@ -2954,7 +2962,7 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         self.assertIn("never hi-vis PPE on civilians; emergency responders wear service uniforms",
                       sk.style_suffix(es.MUDSLIDE, None, list(sk.EVENT_SKELETONS[es.MUDSLIDE]["spots"])[0]))
         self.assertFalse(hasattr(sk, "VOLCANO_LAVA_PACE") or hasattr(sk, "VOLCANO_LAVA_GUARDRAILS"))
-        self.assertFalse(hasattr(es, "lava_fast_words") or hasattr(es, "EVENT_BANNED_WORDS"))
+        self.assertFalse(hasattr(es, "lava_fast_words") or set(es.EVENT_BANNED_WORDS) & set(VOLC))   # 13 Eki: sadece çığ
 
     def test_other_categories_keep_pan_follow(self):
         for e in (es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO, es.HELICOPTER, es.LANDFALL, es.MARINA_TORNADO,

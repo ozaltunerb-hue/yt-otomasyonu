@@ -100,6 +100,10 @@ CAMERA_SPOTS = {
     "Hillside terrace facing the erupting volcano": "on a hillside terrace above the village",
     "Rooftop terrace facing the erupting volcano": "on a rooftop terrace across the street",
     "Balcony of a village house facing the erupting volcano": "on the balcony of a village house across the street",
+    # ❄️ Çığ (13 Eki, Bahadır): hepsi yüksek, vadinin karşısından çığa bakıyor; yön kamera cümlesinde
+    "Hillside terrace": "on a hillside terrace above the valley",
+    "Balcony of a mountain chalet": "on the balcony of a mountain chalet",
+    "Terrace of the lift station": "on the terrace of the ski-lift station",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -123,6 +127,8 @@ LANDSLIDE_WEATHER = ["driving rain and wind", "heavy downpour under dark storm l
 # Yangın havası (8 Eki, Bahadır): kuru ve dumanlı; yağmur/ıslaklık yok (event_structure yağmur kapısı denetler)
 # Volkan havası (10 Eki, Bahadır)
 VOLCANO_WEATHER = ["ash-grey sky lit orange by a distant eruption plume"]
+# Çığ havası (13 Eki, Bahadır): kapalı kış günü (giyim/ışık satırıyla aynı: "raw natural overcast daylight")
+AVALANCHE_WEATHER = ["overcast winter daylight over snowy mountains"]
 FIRE_WEATHER = ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
                 "heavy smoke and scorching still air"]
 
@@ -475,6 +481,36 @@ EVENT_SKELETONS = {
                 "through roofs and igniting cars as {n} {people} run from the falling rocks. More rocks keep "
                 "crashing down, still setting the street alight.",
     },
+    # ── ❄️ Çığ (TASLAK, 13 Eki, Bahadır). Yapılandırılmış hatta; metin sadece PROMPT_PIPELINE=skeleton için. Kamera
+    # noktaları yüksek; teleferik istasyonu terası sadece kayak olayında. ──
+    "Avalanche slams into a mountain village": {
+        "domain": "avalanche_disasters", "ships": None,
+        "spots": {"Hillside terrace": "a mountain village below a steep snowy slope",
+                  "Balcony of a mountain chalet": "a mountain village below a steep snowy slope"},
+        "people": ["residents", "villagers"], "weather": AVALANCHE_WEATHER, "object": "avalanche",
+        "text": "In {spot} under {weather}, a powder avalanche thunders down the mountainside and slams into the "
+                "village, a wall of snow engulfing the first chalets. Roofs and fences tear loose as {n} {people} run from "
+                "the avalanche. The snow wall keeps tearing between the houses, still flattening chalets.",
+    },
+    "Avalanche crashes down onto a ski lodge": {
+        "domain": "avalanche_disasters", "ships": None,
+        "spots": {"Hillside terrace": "a ski resort at the foot of a steep ski slope",
+                  "Balcony of a mountain chalet": "a ski resort at the foot of a steep ski slope",
+                  "Terrace of the lift station": "a ski resort at the foot of a steep ski slope"},
+        "people": ["guests", "residents"], "weather": AVALANCHE_WEATHER, "object": "avalanche",
+        "text": "In {spot} under {weather}, an avalanche crashes down the ski slope onto the lodge, a cloud of snow "
+                "bursting over its terrace. Lift towers snap as {n} {people} run from the avalanche. The snow keeps "
+                "crashing down the slope, still burying the lodge.",
+    },
+    "Avalanche rips through a pine forest into a valley": {
+        "domain": "avalanche_disasters", "ships": None,
+        "spots": {"Hillside terrace": "a valley below a steep pine forest",
+                  "Balcony of a mountain chalet": "a valley below a steep pine forest"},
+        "people": ["residents", "villagers"], "weather": AVALANCHE_WEATHER, "object": "avalanche",
+        "text": "In {spot} under {weather}, a huge avalanche rips through the pine forest above the valley and hits the "
+                "houses below. Snapped trunks fly as {n} {people} run from the avalanche. The white cloud keeps rolling "
+                "down into the valley, still burying the houses.",
+    },
     # ── Plaj & sahil ──
     "Tornado approaching an open beach": {
         "domain": "open_beach_coastal_events", "ships": None,
@@ -619,6 +655,8 @@ PHENOMENA = {
     # 13 Eki (4): lav nehri çıkarıldı
     "Volkan": ["Volcano erupts and a shockwave blows out windows",
                "Pyroclastic cloud races down into a village street", "Volcanic bombs slam into a village street"],
+    # 13 Eki (TASLAK)
+    "Çığ": ["Avalanche slams into a mountain village", "Avalanche crashes down onto a ski lodge", "Avalanche rips through a pine forest into a valley"],
     "Dev Dalga": ["Green wave breaks over the rail onto the vehicle deck", "Rogue wave breaks over the rail onto the pool deck",
                   "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon",
                   "Tidal wave surges over a coastal city street"],
@@ -649,11 +687,14 @@ EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
                # TASLAK (10 Eki, Bahadır): volkan 3-6
                "Volcano erupts and a shockwave blows out windows": (3, 6),
                "Pyroclastic cloud races down into a village street": (3, 6),
-               "Volcanic bombs slam into a village street": (3, 6)}
+               "Volcanic bombs slam into a village street": (3, 6),
+               # TASLAK (13 Eki, Bahadır): çığ 3-6
+               "Avalanche slams into a mountain village": (3, 6), "Avalanche crashes down onto a ski lodge": (3, 6), "Avalanche rips through a pine forest into a valley": (3, 6)}
 # "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
 NO_SIGNS_DOMAINS = {"landslide_disasters",
                     "fire_disasters",   # 8 Eki: yangın (heyelan deseni, toplam 8 kısıt)
-                    "volcano_disasters"}   # 10 Eki: volkan
+                    "volcano_disasters",   # 10 Eki: volkan
+                    "avalanche_disasters"}   # 13 Eki: çığ (yazı/tabela yok)
 
 # Import anında kontrol: iskelet verisi havuzla uyumlu olmalı
 for _e, _s in EVENT_SKELETONS.items():
@@ -703,6 +744,20 @@ def volcano_camera(spot: str) -> str:
 # 13 Eki (3), Bahadır kararı: volkan prompt'u en fazla 175 kelime; kısıt silinmeden giyim/ışık satırları kısa yazıldı
 # (aynı 4 kısıt). Ortak metin (get_realism_guardrails) diğer kategorilerde aynen kalır. (Lav nehrine özel hız cümlesi
 # ve "responders"sız satır 13 Eki 4'te lavla birlikte çıktı; arşiv: event_structure ARŞİV notu.)
+# ❄️ Çığ kamerası (13 Eki, Bahadır): volkanla aynı yapı, tek şablon; takip (pan) yok. Değer: durulan yerin kısa adı.
+AVALANCHE_CAMERA_PERCH = {"Hillside terrace": "terrace", "Balcony of a mountain chalet": "balcony", "Terrace of the lift station": "terrace"}
+# Çığ giyim/ışık (Bahadır'ın metni birebir, 175 kelime kapısı için kısa; 2 kısıt)
+AVALANCHE_GUARDRAILS = "Bystanders wear winter civilian clothes; raw natural overcast daylight, no hazmat suits."
+
+
+def avalanche_camera(spot: str) -> str:
+    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking across the valley "
+            f"toward the avalanche on the mountain slope; slight hand shake, the camera stays fixed on the "
+            f"{AVALANCHE_CAMERA_PERCH[spot]}, tilting down no more than slightly and never descending, the avalanche "
+            f"always visible in the upper part of the frame, a corner of the railing in the foreground; one continuous "
+            f"shot, no zoom, no cuts.")
+
+
 VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "
                       "light matching the weather, never glossy or CGI; no hazmat suits.")
 
@@ -745,6 +800,9 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     guardrails = get_realism_guardrails(s['domain'], ship or 'None', spot)
     if s["domain"] == "volcano_disasters":
         guardrails = VOLCANO_GUARDRAILS   # 13 Eki (3): kısa ifade, aynı kısıtlar
+    if s["domain"] == "avalanche_disasters":   # 13 Eki: çığ, volkan yapısı (sabit kamera, kısa giyim/ışık)
+        camera = avalanche_camera(spot)
+        guardrails = AVALANCHE_GUARDRAILS
     out = f"{camera} {guardrails}"
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)

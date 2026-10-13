@@ -25,6 +25,34 @@
 
 ---
 
+## 📋 DEVİR: ❄️ Çığ kategorisi eklendi (13 Eki 2026, TASLAK, henüz video testi yok)
+
+`avalanche_disasters` "❄️ Çığ", 3 olay yapılandırılmış hatta, volkan yapısı birebir (kod havuzu, sabit yüksek kamera,
+araçsız, 175 kelime kapısı, olaya özel yasak kelimeler, danışman preflight):
+🏔️ Çığ köyü yutuyor (`AVALANCHE_VILLAGE`, A1-A6 / B1-B6), ⛷️ Çığ kayak merkezine iniyor (`AVALANCHE_SKI`, C1-C6 /
+D1-D6), 🌲 Çığ ormandan vadiye iniyor (`AVALANCHE_FOREST`, E1-E6 / F1-F6). Kilit cümleler ve maddeler Bahadır'ın metni
+birebir. Lav dersi uygulandı: maddeler "gerçekte bunu yapar mı" kontrolünden geçmiş sayıldı (toz çığı 100+ km/sa,
+ahşap yapıları söker).
+
+- **Kamera:** "Hillside terrace", "Balcony of a mountain chalet", "Terrace of the lift station" (istasyon terası sadece
+  kayakta). Çatı/kule maddeleri (A3, A6, B3, D3, E6) sadece yamaç terasında; teleferik maddeleri (C1, C5, D6) istasyon
+  terasında seçilmez. Kamera cümlesi: "...high vantage looking across the valley toward the avalanche on the mountain
+  slope; ... the camera stays fixed on the {terrace/balcony}, tilting down no more than slightly and never
+  descending, the avalanche always visible in the upper part of the frame, a corner of the railing in the foreground;
+  one continuous shot, no zoom, no cuts." Giyim/ışık: "Bystanders wear winter civilian clothes; raw natural overcast
+  daylight, no hazmat suits." + "No readable signs, text or flags." (6 kısıt, stil eki 90 kelime).
+- **Yasak çiftler** (aynı yapı sınıfı iki dilimde yok): köy (A2,B6) (A3,B3) (A4,B4) (A6,B1) (A6,B5); kayak (C1,D6)
+  (C5,D6) (C2,D1); orman (E1,F1) (E1,F2) (E1,F3) (E1,F5) (E2,F3) (E3,F6) (E4,F1) (E4,F2) (E4,F5) (E5,F3). Yorumlarım:
+  B3 çan kulesi A3 çatısıyla aynı sınıf (çatı/kule); B1 ön duvar ve B5 pencereler cephe; E6 kabin çatısı çatı sınıfı.
+- **İzinli çift** (yamaç / balkon / istasyon): köy 31/18, kayak 33/27/15, orman 26/20.
+- **Tekrar önleme:** köy standart 3; kayak ve orman 2 (talimat: aday kalmazsa 2). Sebep: kayakta istasyon terası
+  (4 × 4 madde) ve ormanda balkon (10 yasak çift) 3 derinlikte en kötü durumda adaysız kalıyor (testli).
+- **Yasak kelimeler** (GPT dilimleri, `EVENT_BANNED_WORDS`): rescue, helicopter, skier, snowmobile, vehicle, truck,
+  car, cargo, tugboat, ship, boat, siren, text, sign, logo; yavaşlatıcılar slowly, gently, calm (+ calmly, gradually,
+  softly, peacefully, benim eklemem).
+- Testler: `tests/test_avalanche.py` (her madde tek başına + 5 doğal cümle, atmosfer reddi, yasak çift kuralı, kamera
+  dışlamaları, 100 üretim simülasyonu, Telegram menüsü). 803 test yeşil.
+
 ## 📋 DEVİR: 🌋 Volkan kapandı (13 Eki 2026, dördüncü tur)
 
 **Volkan 3 olay:** patlama şok dalgası, kül bulutu (piroklastik), volkan bombaları. **Lav nehri çıkarıldı.**
