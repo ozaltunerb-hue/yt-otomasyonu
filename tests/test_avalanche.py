@@ -24,13 +24,11 @@ KOY, KAYAK, ORMAN = es.AVALANCHE_VILLAGE, es.AVALANCHE_SKI, es.AVALANCHE_FOREST
 AVA = (KOY, KAYAK, ORMAN)
 HT, BAL, LIFT = ("Terrace at the edge of the village", "Balcony of a chalet at the edge of the village",
                  "Terrace of the lift station")
-CAMS = {HT: "on a terrace at the edge of the village", BAL: "on the balcony of a chalet at the edge of the village",
-        LIFT: "on the terrace of the ski-lift station"}
-PERCH = {HT: "terrace", BAL: "balcony", LIFT: "terrace"}
-CAMERA = ("Handheld footage shot by a person standing {cam}, high vantage looking up the slope as the avalanche "
-          "rushes down toward the buildings just below and beside the camera; the nearest buildings fill the middle "
-          "of the frame, slight hand shake, the camera stays fixed on the {perch}, tilting no more than slightly and "
-          "never descending, a corner of the railing in the foreground; one continuous shot, no zoom, no cuts.")
+# 14 Eki (2): kısa adlar ve kısa kamera şablonu (175 kelime sınırı)
+CAMS = {HT: "a village-edge terrace", BAL: "a village-edge chalet balcony", LIFT: "the lift station terrace"}
+CAMERA = ("Handheld footage from {cam}, high vantage looking up the slope as the avalanche rushes down onto the "
+          "buildings just below; slight hand shake, the camera stays fixed, tilting slightly and never descending, a "
+          "corner of the railing in the foreground; one continuous shot, no zoom, no cuts.")
 GUARD = "Bystanders wear winter civilian clothes; raw natural overcast daylight, no hazmat suits."
 ROOF = {"A3", "A6", "B3", "D3", "E6"}        # (*) sadece köy kenarı terasında
 LIFTB = {"C1", "C5", "D6"}                  # (†) istasyon terasında seçilmez
@@ -42,8 +40,9 @@ def cap(s):
 
 KEY = {
     # 14 Eki: Bahadır'ın metni, "right below the camera" -> "right below the railing" (b kuralı korunur, Bahadır kararı)
-    KOY: "A powder avalanche thunders down the slope and smashes into the chalets right below the railing, snow bursting "
-         "over their roofs and through the street.",
+    # 14 Eki (2): köyde "village" (olay adı kapısı)
+    KOY: "A powder avalanche thunders down the slope and smashes into the village chalets right below the railing, snow "
+         "bursting over their roofs and through the street.",
     KAYAK: "An avalanche crashes down the ski slope and slams into the lodge right below the railing, a cloud of snow "
            "bursting over its terrace.",
     ORMAN: "A huge avalanche rips through the pine forest above and hits the cabins right below the railing, a white "
@@ -286,6 +285,58 @@ VALID = {
            "The snow carries off a row of fences and the footbridge railing.",
            "The avalanche sweeps a row of fences and a footbridge railing away."],
 }
+# 14 Eki 01:30 köy testi (A4+B5, balkon) 3 denemede reddedildi. GPT'nin gerçek cümleleri; madde kapısından geçmeli.
+FIXTURES = {
+    "A4": ["The raging snow mass crashes into a sturdy stone barn, sending its dark stones ricocheting violently across "
+           "the snowy landscape.",
+           "The avalanche crashes into a stone barn, sending dark stones exploding outward across the snowy street.",
+           "The avalanche collides with a stone barn, dark stones bursting and scattering across the snowy expanse."],
+    "B5": ["The force of the snow rips away a chalet's front wall, launching timber beams through the air.",
+           "The snow's force tears away a chalet's front wall, sending timber beams and debris flying outward "
+           "relentlessly."],
+}
+for _b, _l in FIXTURES.items():
+    VALID[_b] = VALID[_b] + _l
+# 14 Eki (2) tarama: deneme 1'deki kalıp ("crashes into X, sending Y flying") her maddede geçmeli. A3, A6, D3, E6
+# reddediliyordu; uçma fiilleri eklendi. A4 ve B5 fixture'ları yukarıda.
+IMPACT = {
+ "A1": "The snow mass crashes into a row of pine trees, sending the snapped trunks tumbling ahead of it.",
+ "A2": "The avalanche slams into a wooden chalet, ripping it off its foundation and carrying it downhill.",
+ "A3": "The snow blast hits a barn, sending its roof and planks flying across the street.",
+ "A5": "The snow mass crashes through a row of fence posts and power poles, snapping them one by one.",
+ "A6": "The avalanche slams into a chalet, sending its balcony crashing off the facade.",
+ "B1": "A second wave crashes into a chalet, its front wall caving in violently.",
+ "B2": "The snow mass crashes over a row of houses, burying them up to their roofs.",
+ "B3": "The snow blast crashes into the church bell tower, sending it toppling across the street.",
+ "B4": "The avalanche collides with a hillside retaining wall, sending its stones tumbling into the street.",
+ "B6": "The snow mass slams into a wooden shed, sending it sliding off its base and breaking apart.",
+ "C1": "The avalanche crashes through a row of ski-lift towers, sending them crashing down one after another.",
+ "C2": "The snow wall crashes into the lodge's glass entrance, sending shards exploding inward.",
+ "C3": "The avalanche slams into the lodge terrace, ripping the wooden railing away.",
+ "C4": "The snow mass crashes through the wooden snow barriers and orange safety fences, flattening them.",
+ "C5": "The avalanche slams into the stone chairlift station, its upper wall crumbling.",
+ "C6": "The snow mass sends a stack of dark logs crashing down the slope into the lodge wall.",
+ "D1": "A second surge crashes into the lodge, its wooden front exploding open with beams and planks flying.",
+ "D2": "The snow mass slams into the lodge's wooden annex, ripping it away and carrying it downhill.",
+ "D3": "The avalanche crashes over the lodge, sending its roof deck flying aside.",
+ "D4": "The snow blast crashes into a wooden ski-rental cabin, sending its dark planks scattering across the snow.",
+ "D5": "The avalanche crashes into a small wooden hut, sweeping it off its base as it breaks apart.",
+ "D6": "The snow cloud crashes into the chairlift, sending a cable pylon toppling into the snow.",
+ "E1": "The avalanche sends snapped pine trunks crashing into a row of wooden cabins.",
+ "E2": "The snow cloud crashes over a stand of tall pines, swallowing them as their tops whip flat.",
+ "E3": "The avalanche slams into a wooden footbridge, ripping it off its piers.",
+ "E4": "The snow wall crashes into a woodshed, sending the logs scattering in all directions.",
+ "E5": "The avalanche slams into a stone farmhouse, its wall cracking open.",
+ "E6": "The snow blast crashes into a cabin, sending its roof flying off.",
+ "F1": "A second surge crashes into the cabins, their walls bursting outward.",
+ "F2": "The snow mass crashes over a wooden cabin, burying it to the roofline.",
+ "F3": "The avalanche sends a pile of broken trunks crashing across the valley floor into a stone house.",
+ "F4": "The snow blast slams into a wooden water tower, sending it crashing down.",
+ "F5": "The snow cloud crashes into a barn, its front bursting open as hay explodes out.",
+ "F6": "The avalanche crashes through a row of fences and a footbridge railing, sweeping them away.",
+}
+for _b, _t in IMPACT.items():
+    VALID[_b] = VALID[_b] + [_t]
 # Sadece atmosfer (kar tozu, gökyüzü, uzaktan çığ): hiçbir maddeden geçmemeli
 ATMOSPHERE = ["Snow dust drifts over the valley below the mountain.",
               "The avalanche roars down the slope under a grey sky.",
@@ -304,11 +355,10 @@ def ava_gpt(messages=None):
                     if l.startswith(("4-9s EVENT", "9-15s EVENT", "PEOPLE RUNNING AWAY")))
         word = line["PEOPLE RUNNING AWAY"].split()[0]
         away = line["PEOPLE RUNNING AWAY"].split("run away from ")[1].split(",")[0]
-        street = "the village street" if "village street" in line["PEOPLE RUNNING AWAY"] else "the street"
         s2, s3 = cap(line["4-9s EVENT"]), cap(line["9-15s EVENT"])
         s2 += " as the snow roars" if len(s2.split()) < 10 else ""
         s3 += " as the snow roars" if len(s3.split()) < 10 else ""
-        return {"slice_1_rest": f"{cap(word)} people run from {away} in {street} right below.",
+        return {"slice_1_rest": f"{cap(word)} people run from {away} in the street right below.",
                 "slice_2": s2 + ".", "slice_3": s3 + "."}
     return gpt
 
@@ -318,9 +368,8 @@ def build(e, b2, b3, spot=HT, people=5):
     s2, s3 = cap(es.beat_text(e, "slice_2", b2)), cap(es.beat_text(e, "slice_3", b3))
     s2 += " as the snow roars" if len(s2.split()) < 10 else ""
     s3 += " as the snow roars" if len(s3.split()) < 10 else ""
-    street = "the village street" if e == KOY else "the street"
-    sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from the avalanche in {street} "
-                                         f"right below."),
+    sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from the avalanche in the "
+                                         f"street right below."),
           "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
     return spec, sl
 
@@ -386,9 +435,8 @@ class TestAvalanche(unittest.TestCase):
                 found = {i["rule"] for i in cp.story_rule_issues(e, None, KEY[e])}
                 self.assertFalse(found & {"a_trigger_first", "b_no_camera_words", "required"})
                 self.assertIn("right below the railing", KEY[e])   # ilk temas kameranın hemen altında
-                with_people = KEY[e] + " Five villagers run from the avalanche in the village street right below."
-                self.assertNotIn("e_event_and_ship_named",
-                                 {i["rule"] for i in cp.story_rule_issues(e, None, with_people)})
+                # 14 Eki (2): olay adı kapısı kilit cümlenin kendisiyle geçer (GPT ipucu yok)
+                self.assertNotIn("e_event_and_ship_named", found)
                 b = es.EVENT_BEATS[e]
                 self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, POOLS[e][0])
                 self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, POOLS[e][1])
@@ -406,13 +454,16 @@ class TestAvalanche(unittest.TestCase):
                 suffix = sk.style_suffix(e, None, spot)
                 with self.subTest(event=e, spot=spot):
                     self.assertEqual(sk.CAMERA_SPOTS[spot], CAMS[spot])
-                    self.assertEqual(suffix, f"{CAMERA.format(cam=CAMS[spot], perch=PERCH[spot])} {GUARD} No readable "
+                    self.assertEqual(suffix, f"{CAMERA.format(cam=CAMS[spot])} {GUARD} No readable "
                                              f"signs, text or flags.")
                     self.assertNotIn("pans to follow", suffix)
                     self.assertNotIn("follow", suffix)
                     self.assertNotIn("across the valley", suffix)
                     self.assertNotIn("upper part of the frame", suffix)
                     self.assertIn("never descending", suffix)
+                    # 14 Eki (2): stil eki ≤ 95 kelime; 75 kelimelik hikâye + 3 etiket + stil eki ≤ 175
+                    self.assertLessEqual(len(suffix.split()), 95)
+                    self.assertLessEqual(75 + 3 + len(suffix.split()), 175)
                     self.assertLessEqual(count_constraints(suffix)[0], 8)
         # volkan ve diğer kategorilerin kamera satırı değişmedi
         self.assertTrue(sk.style_suffix(es.ERUPTION, None, "Hillside terrace facing the erupting volcano")
@@ -475,12 +526,46 @@ class TestAvalanche(unittest.TestCase):
         self.assertNotIn(es.ERUPTION, es.EVENT_BANNED_WORDS)
         self.assertEqual(set(es.EVENT_BANNED_WORDS), set(AVA))
 
+    def test_failed_village_run_fixtures(self):
+        # 14 Eki 01:30: A4 deneme 1 "crashes into ... ricocheting" reddedilmişti; şimdi hepsi geçer
+        for bid, slot in (("A4", "slice_2"), ("B5", "slice_3")):
+            for t in FIXTURES[bid]:
+                with self.subTest(text=t):
+                    self.assertEqual(es.missing_term_groups(es.EVENT_BEATS[KOY][slot][bid]["terms"], t), [])
+                    for code, terms, *_ in es.EVENT_BANNED_WORDS[KOY]:
+                        self.assertEqual(es.find_terms(terms, t), [])
+        # Fixture'larla kurulan tam hikâye bütçe içinde son denetimden geçer
+        spec = es.build_spec(KOY, None, BAL, None, "A4", "B5", None, 5)
+        sl = {"slice_1_rest": es.clean_slice("Five villagers run from the avalanche near the railing"),
+              "slice_2": es.clean_slice(FIXTURES["A4"][0]), "slice_3": es.clean_slice(FIXTURES["B5"][0])}
+        self.assertEqual(es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl), es.assemble_story(spec, sl)), [])
+        self.assertLessEqual(len(es.assemble_prompt(spec, sl).split()), 175)
+
+    def test_word_budget_line(self):
+        # 14 Eki (2): GPT'ye dilim bütçesi; çığ dışında satır yok
+        import core.creative_pipeline as cp
+        for e in AVA:
+            spot = sk.view_spots(e, None)[0]
+            spec = es.build_spec(e, None, spot, None, *sorted(es.allowed_pairs(e, None, spot))[0], None, 5)
+            line = es.word_budget_line(spec)
+            k = len(KEY[e].split())
+            s1 = min(18, 75 - k - 36)
+            with self.subTest(event=e):
+                self.assertEqual(line, f"WORD BUDGET: the opening sentence has {k} words; slice_1_rest 6 to {s1} words, "
+                                       f"slice_2 10 to 18 words, slice_3 10 to 18 words; the opening plus the three "
+                                       f"fields must total at most 75 words.\n")
+                self.assertLessEqual(k + s1 + 18 + 18, 75)
+                self.assertGreaterEqual(s1, 6)
+                self.assertIn(line, cp._slices_message(spec, "p", "w", 3, 6, [], None))
+        self.assertEqual(es.word_budget_line({"event": es.ERUPTION, "key_visual": "x"}), "")
+
     def test_people_close_to_camera(self):
         # 14 Eki: 0-4s insan cümlesi kameraya yakın yeri söyler; "camera" kelimesi yine yasak (b kuralı)
         import core.creative_pipeline as cp
         spec, sl = build(KOY, "A1", "B2")
         self.assertEqual(codes(spec, sl) & {"slice_near_camera", "b_no_camera_words"}, set())
-        self.assertIn("close by: near the railing or in the village street right below", es.people_line(spec))
+        self.assertIn("close by: near the railing or in the street right below", es.people_line(spec))
+        self.assertNotIn("village street", es.people_line(spec))
         self.assertIn("in the street right below", es.people_line(build(KAYAK, "C2", "D2")[0]))
         ok = ["Five villagers run from the avalanche near the railing.",
               "Five people run from the avalanche in the street right below.",

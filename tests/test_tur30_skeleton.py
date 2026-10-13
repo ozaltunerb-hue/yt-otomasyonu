@@ -110,11 +110,13 @@ class TestSkeletonOutput(unittest.TestCase):
                 suffix = sk.style_suffix(e, ship, slots["spot"])
                 total, negative = count_constraints(suffix)
                 self.assertLessEqual(total, 8, suffix)
-                self.assertIn("Handheld footage shot by a person standing", suffix)
+                # 14 Eki (2): çığda kısa şablon "Handheld footage from ..." (175 kelime sınırı; TestAvalanche kilitler)
+                self.assertIn("Handheld footage from " if sk.EVENT_SKELETONS[e]["domain"] == "avalanche_disasters"
+                              else "Handheld footage shot by a person standing", suffix)
                 if sk.EVENT_SKELETONS[e]["domain"] in ("volcano_disasters", "avalanche_disasters"):   # 13 Eki: çığ
                     # 13 Eki: volkanda takip yok, kamera sabit (TestVolcano kilitler)
                     self.assertNotIn("pans to follow", suffix)
-                    self.assertIn("the camera stays fixed on the", suffix)   # 13 Eki (3) sade şablon
+                    self.assertIn("the camera stays fixed", suffix)   # 13 Eki (3) sade şablon; 14 Eki (2): çığda yer adı yok
                 else:
                     self.assertIn("the camera pans to follow the", suffix)
                 self.assertNotIn("phone", suffix.lower())   # final turu: telefon/REC ekranı çiziliyordu

@@ -25,6 +25,24 @@
 
 ---
 
+## 📋 DEVİR: ❄️ Çığ köy testi 3 denemede reddedildi, düzeltildi (14 Eki 2026, ikinci tur)
+
+14 Eki 01:30 köy testi (A4+B5, balkon) hikâye kapısından 3 denemede de geçmedi. Üç sebep, üçü de düzeltildi:
+- **Uzunluk:** GPT her denemede 40-75 toplamını aştı. Kamera cümlesi kısaldı (Bahadır'ın şablonu: "Handheld footage
+  from {kısa yer}, high vantage looking up the slope as the avalanche rushes down onto the buildings just below; ...").
+  Kısa yer adları: "a village-edge terrace", "a village-edge chalet balcony", "the lift station terrace". Stil eki en
+  fazla 68 kelime; 75 kelimelik hikâye + 3 etiket + stil eki en fazla 146. GPT'ye `WORD BUDGET` satırı gidiyor
+  (`es.word_budget_line`): 4-9s ve 9-15s en fazla 18 kelime, 0-4s kalan bütçe.
+- **Olay adı kapısı:** köy kilit cümlesinde "village" yoktu. Cümleye eklendi ("...smashes into the village chalets
+  right below the railing..."); GPT'deki "village street" ipucu kaldırıldı. Kayak ve orman kilit cümleleri kapıdan
+  kendi başına geçiyor.
+- **A4 false reject:** "crashes into a sturdy stone barn, sending its dark stones ricocheting" reddediliyordu. A4'e
+  temas fiilleri eklendi (`_AVA_IMPACT`). 36 maddenin tamamı aynı kalıpla ("crashes into X, sending Y flying")
+  tarandı; A3, A6, D3, E6 da reddediyordu, uçma fiilleri eklendi. GPT'nin 5 gerçek cümlesi ve tarama cümleleri
+  `tests/test_avalanche.py` içinde sabit örnek.
+
+---
+
 ## 📋 DEVİR: ❄️ Çığ ilk test dersi ve düzeltme (14 Eki 2026)
 
 **Ders (13 Eki çığ köyü testi):** kamera aksiyona yakın olsun, ilk temas 0-2 sn'de olsun, nesneler büyük ve koyu olsun

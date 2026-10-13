@@ -101,10 +101,12 @@ CAMERA_SPOTS = {
     "Rooftop terrace facing the erupting volcano": "on a rooftop terrace across the street",
     "Balcony of a village house facing the erupting volcano": "on the balcony of a village house across the street",
     # ❄️ Çığ (13 Eki, Bahadır): hepsi yüksek; yön kamera cümlesinde. 14 Eki: köyün/tesisin kenarına, çığın yoluna
-    # taşındı (eski: "on a hillside terrace above the valley", "on the balcony of a mountain chalet")
-    "Terrace at the edge of the village": "on a terrace at the edge of the village",
-    "Balcony of a chalet at the edge of the village": "on the balcony of a chalet at the edge of the village",
-    "Terrace of the lift station": "on the terrace of the ski-lift station",
+    # taşındı. 14 Eki (2): kısa adlar, kamera cümlesi "Handheld footage from ..." (175 kelime sınırı). Önceki: "on a
+    # terrace at the edge of the village", "on the balcony of a chalet at the edge of the village", "on the terrace
+    # of the ski-lift station"
+    "Terrace at the edge of the village": "a village-edge terrace",
+    "Balcony of a chalet at the edge of the village": "a village-edge chalet balcony",
+    "Terrace of the lift station": "the lift station terrace",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -745,10 +747,8 @@ def volcano_camera(spot: str) -> str:
 # 13 Eki (3), Bahadır kararı: volkan prompt'u en fazla 175 kelime; kısıt silinmeden giyim/ışık satırları kısa yazıldı
 # (aynı 4 kısıt). Ortak metin (get_realism_guardrails) diğer kategorilerde aynen kalır. (Lav nehrine özel hız cümlesi
 # ve "responders"sız satır 13 Eki 4'te lavla birlikte çıktı; arşiv: event_structure ARŞİV notu.)
-# ❄️ Çığ kamerası (13 Eki, Bahadır): volkanla aynı yapı, tek şablon; takip (pan) yok. Değer: durulan yerin kısa adı.
-AVALANCHE_CAMERA_PERCH = {"Terrace at the edge of the village": "terrace",
-                          "Balcony of a chalet at the edge of the village": "balcony",
-                          "Terrace of the lift station": "terrace"}
+# ❄️ Çığ kamerası (13 Eki, Bahadır): volkanla aynı yapı, tek şablon; takip (pan) yok. 14 Eki (2): durulan yerin adı
+# (AVALANCHE_CAMERA_PERCH) şablondan çıktı, sözlük kaldırıldı.
 # Çığ giyim/ışık (Bahadır'ın metni birebir, 175 kelime kapısı için kısa; 2 kısıt)
 AVALANCHE_GUARDRAILS = "Bystanders wear winter civilian clothes; raw natural overcast daylight, no hazmat suits."
 
@@ -760,11 +760,14 @@ def avalanche_camera(spot: str) -> str:
     # aynı. Önceki: "...high vantage looking across the valley toward the avalanche on the mountain slope; slight
     # hand shake, the camera stays fixed on the {perch}, tilting down no more than slightly and never descending, the
     # avalanche always visible in the upper part of the frame, a corner of the railing in the foreground; ..."
-    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking up the slope as "
-            f"the avalanche rushes down toward the buildings just below and beside the camera; the nearest buildings "
-            f"fill the middle of the frame, slight hand shake, the camera stays fixed on the "
-            f"{AVALANCHE_CAMERA_PERCH[spot]}, tilting no more than slightly and never descending, a corner of the "
-            f"railing in the foreground; one continuous shot, no zoom, no cuts.")
+    # 14 Eki (2), Bahadır: köy testi 3 denemede reddedildi, prompt 175 kelimeyi aşıyordu. Kısa şablon birebir (stil
+    # eki ≤ 95 kelime). Önceki: "Handheld footage shot by a person standing {spot}, high vantage looking up the slope
+    # as the avalanche rushes down toward the buildings just below and beside the camera; the nearest buildings fill
+    # the middle of the frame, slight hand shake, the camera stays fixed on the {perch}, tilting no more than
+    # slightly and never descending, a corner of the railing in the foreground; one continuous shot, no zoom, no cuts."
+    return (f"Handheld footage from {CAMERA_SPOTS[spot]}, high vantage looking up the slope as the avalanche rushes "
+            f"down onto the buildings just below; slight hand shake, the camera stays fixed, tilting slightly and never "
+            f"descending, a corner of the railing in the foreground; one continuous shot, no zoom, no cuts.")
 
 
 VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "

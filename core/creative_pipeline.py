@@ -558,6 +558,7 @@ def _slices_message(spec: dict, place: str, weather: str, lo: int, hi: int, rece
            f"PEOPLE VISIBLE: {lo} to {hi}\n{vehicle_line}"
            # 4 Eki, Bahadır: kişi sayısını kod seçer, GPT cümleye döker (sadece kişi kuralı olan olaylarda)
            + es.people_line(spec)
+           + es.word_budget_line(spec)   # 14 Eki (2): çığda dilim kelime bütçesi
            + f"4-9s EVENT: {es.beat_text(event, 'slice_2', spec['beat_2'], spec['vehicle'])}\n"
            f"9-15s EVENT: {es.beat_text(event, 'slice_3', spec['beat_3'])}\n"
            "RECENT STORIES:\n" + ("\n".join(f"- {s}" for s in recent) or "- (none)"))

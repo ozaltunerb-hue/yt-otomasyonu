@@ -134,8 +134,9 @@ EVENT_KEY_VISUAL = {
     # of snow engulfing the first chalets."; kayak: "...hits a mountain lodge, a cloud of snow bursting over its
     # terrace."; orman: "...rips through a pine forest above a valley and hits the houses below, a white cloud rolling
     # over them."
-    AVALANCHE_VILLAGE: "A powder avalanche thunders down the slope and smashes into the chalets right below the railing, "
-                       "snow bursting over their roofs and through the street.",
+    # 14 Eki (2), Bahadır: köyde "village" eklendi (olay adı kapısı en az 2 kök ister; GPT ipucu kaldırıldı)
+    AVALANCHE_VILLAGE: "A powder avalanche thunders down the slope and smashes into the village chalets right below the "
+                       "railing, snow bursting over their roofs and through the street.",
     AVALANCHE_SKI: "An avalanche crashes down the ski slope and slams into the lodge right below the railing, a cloud of "
                    "snow bursting over its terrace.",
     AVALANCHE_FOREST: "A huge avalanche rips through the pine forest above and hits the cabins right below the railing, a "
@@ -534,6 +535,10 @@ _AVA_LODGE_TARGET = ("lodge", "building", "hotel", "chalet")
 _AVA_HUT = ("ski-rental", "rental", "cabin", "hut", "shack", "shed", "kiosk", "booth")
 _AVA_FLY = ("fly", "flies", "flew", "flying", "scatter", "spray", "explode", "spill", "hurl", "fling", "flung",
             "launch", "shoot", "shot")
+# 14 Eki (2), Bahadır: A4 false reject ("crashes into a sturdy stone barn, sending its dark stones ricocheting").
+# Temas fiilleri: nesne (taş ahır) ayrıca aranır, fiil tek başına yetmez.
+_AVA_IMPACT = ("crash", "collide", "slam", "hit", "ram", "smash", "strike", "struck", "plow", "plough", "ricochet",
+               "send", "sent", "scatter", "burst", "explode")
 _AVA_FLATTEN = ("flatten", "level", "mow down", "mows down", "mowed down", "knock down", "knocks down", "knocked down",
                 "snap", "break", "broke", "topple", "uproot", "bend", "bent", "crush", "sweep", "swept", "tear", "tore",
                 "torn", "rip", "whip", "swallow", "engulf", "bury", "buried", "fell", "lay flat", "lays flat",
@@ -1250,16 +1255,18 @@ EVENT_BEATS = {
                    "terms": [_AVA_TREE, _AVA_FLATTEN + _AVA_HURL]},
             "A2": {"text": "the snow blast tears a wooden chalet off its foundation and sweeps it down the slope",
                    "terms": [_AVA_CHALET, _AVA_SWEEP]},
+            # 14 Eki (2), false reject taraması: "sending its roof flying"
             "A3": {"text": "the snow blast rips the roof off a barn and scatters the planks",
-                   "terms": [_AVA_ROOF, _AVA_RIP + _AVA_LIFT_UP]},
+                   "terms": [_AVA_ROOF, _AVA_RIP + _AVA_LIFT_UP + _AVA_FLY]},
             # 14 Eki, Bahadır: A4 taş duvar (küçük) yerine taş ahır. Önceki: "the snow wall shoves a stone wall over
             # and rolls on through the village street"
             "A4": {"text": "the snow wall rams a stone barn and its dark stones burst out in all directions",
-                   "terms": [_AVA_STONEBARN, _AVA_COLLAPSE + _AVA_BLOWOUT + _AVA_FLY]},
+                   "terms": [_AVA_STONEBARN, _AVA_COLLAPSE + _AVA_BLOWOUT + _AVA_FLY + _AVA_IMPACT]},
             "A5": {"text": "the snow blast snaps a row of wooden fence posts and power poles",
                    "terms": [_AVA_FENCE + _AVA_POLE, _AVA_SNAP]},
+            # 14 Eki (2), false reject taraması: "balcony crashing off"
             "A6": {"text": "the snow cloud smashes the balcony off a chalet facade",
-                   "terms": [_AVA_BALCONY, _AVA_RIP + _AVA_COLLAPSE]},
+                   "terms": [_AVA_BALCONY, _AVA_RIP + _AVA_COLLAPSE + _AVA_FLY + ("crash",)]},
         },
         "slice_3": {
             "B1": {"text": "a second wave hits a chalet and its front wall bursts inward",
@@ -1309,8 +1316,9 @@ EVENT_BEATS = {
                    "terms": [_AVA_FACADE, _AVA_BLOWOUT + _AVA_COLLAPSE + _AVA_RIP + _AVA_FLY]},
             "D2": {"text": "the snow wall tears a wooden annex off the lodge and carries it downhill",
                    "terms": [_AVA_SHED, _AVA_SWEEP]},
+            # 14 Eki (2), false reject taraması: "roof deck flying aside"
             "D3": {"text": "the avalanche lifts the lodge's roof deck and tosses it aside",
-                   "terms": [_AVA_ROOF, _AVA_LIFT_UP]},
+                   "terms": [_AVA_ROOF, _AVA_LIFT_UP + _AVA_FLY]},
             # 14 Eki, Bahadır: ince çelik ışık kulesi yerine ahşap kiralama kulübesi. Önceki: "the snow blast knocks
             # over a floodlight tower and its steel frame crashes down"
             "D4": {"text": "the snow blast smashes through a wooden ski-rental cabin beside the slope and its dark "
@@ -1339,8 +1347,9 @@ EVENT_BEATS = {
                    "terms": [_AVA_SHED + _AVA_LOGS, _AVA_RIP + _AVA_COLLAPSE + _AVA_HURL]},
             "E5": {"text": "the avalanche hits a stone farmhouse wall and the wall cracks open",
                    "terms": [_AVA_FARMHOUSE, _AVA_COLLAPSE]},
+            # 14 Eki (2), false reject taraması: "sending its roof flying off"
             "E6": {"text": "the snow blast peels the roof off a cabin",
-                   "terms": [_AVA_ROOF, _AVA_RIP + _AVA_LIFT_UP]},
+                   "terms": [_AVA_ROOF, _AVA_RIP + _AVA_LIFT_UP + _AVA_FLY]},
         },
         "slice_3": {
             "F1": {"text": "a second surge slams into the cabins and their walls burst outward",
@@ -1700,13 +1709,34 @@ def people_line(spec: dict) -> str:
     if not rule:
         return ""
     w = people_word(spec)
-    # 14 Eki: çığda insanlar ön planda. Köyde "village street": yeni kilit cümlede "village" yok, olay adı kapısı
-    # (en az 2 kök) aksi hâlde GPT'yi boşuna bir tur daha döndürür.
-    street = "the village street" if spec["event"] == AVALANCHE_VILLAGE else "the street"
-    near = (f", close by: near the railing or in {street} right below"
+    # 14 Eki: çığda insanlar ön planda. (14 Eki (2): köydeki "village street" ipucu kaldırıldı, "village" kilit
+    # cümlede)
+    near = (", close by: near the railing or in the street right below"
             if spec["event"] in AVALANCHE_EVENTS else "")
     return (f"PEOPLE RUNNING AWAY: {w} (slice_1_rest must say that {w} people run away from "
             f"{rule['away_from']}{near})\n")
+
+
+# ❄️ Çığ (14 Eki (2), Bahadır): köy testi 3 denemede de 40-75 toplamını aştı. GPT'ye dilim bütçesi açıkça yazılır:
+# 4-9s ve 9-15s en fazla 18 kelime, 0-4s kalan bütçe (kilit cümle + üç alan ≤ 75). Kapı aralıkları (SLICE_WORDS,
+# TOTAL_WORDS_BY_EVENT) aynı; sadece GPT satırı.
+BUDGET_EVENTS = AVALANCHE_EVENTS
+BUDGET_SLICE_MAX = 18
+
+
+def word_budget_line(spec: dict) -> str:
+    """GPT'ye giden dilim kelime bütçesi satırı (BUDGET_EVENTS), yoksa boş."""
+    event = spec["event"]
+    if event not in BUDGET_EVENTS:
+        return ""
+    lo1, hi1 = SLICE_WORDS["slice_1_rest"]
+    lo2 = SLICE_WORDS["slice_2"][0]
+    key = len(spec["key_visual"].split())
+    total = TOTAL_WORDS_BY_EVENT.get(event, TOTAL_WORDS)[1]
+    s1 = max(lo1, min(hi1, total - key - 2 * BUDGET_SLICE_MAX))
+    return (f"WORD BUDGET: the opening sentence has {key} words; slice_1_rest {lo1} to {s1} words, slice_2 {lo2} to "
+            f"{BUDGET_SLICE_MAX} words, slice_3 {lo2} to {BUDGET_SLICE_MAX} words; the opening plus the three fields "
+            f"must total at most {total} words.\n")
 
 
 def assemble_story(spec: dict, slices: dict[str, str]) -> str:
