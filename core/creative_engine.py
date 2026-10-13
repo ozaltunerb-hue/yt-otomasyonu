@@ -212,8 +212,8 @@ MARITIME_INSPIRATION_DOMAINS = {
     # 10 Eki, Bahadır (TASLAK): 🌋 Volkan. Görünür sebep (patlama, lav, kül bulutu, düşen taşlar) ve ağır kütle.
     "volcano_disasters": {
         "title": "Volkan (Volcanic Eruption)",
-        "guidance": "A violent volcanic eruption above a village under an ash-grey sky lit orange by the eruption plume: a shockwave blowing out windows, a lava river swallowing parked cars, a pyroclastic cloud tearing through a street, or glowing volcanic bombs punching through roofs. The volcano is always visible above the rooftops. NO ships or vessels.",
-        "example_elements": ["erupting volcano above the rooftops", "glowing lava river in a village street", "pyroclastic cloud racing down the flank", "glowing rocks punching through roofs", "shattered shop windows"],
+        "guidance": "A violent volcanic eruption above a village under an ash-grey sky lit orange by the eruption plume: a shockwave blowing out windows, a pyroclastic cloud tearing through a street, or glowing volcanic bombs punching through roofs. The volcano is always visible above the rooftops. NO ships or vessels.",
+        "example_elements": ["erupting volcano above the rooftops", "pyroclastic cloud racing down the flank", "glowing rocks punching through roofs", "shattered shop windows"],
         "camera_styles": ["bystander phone from a hillside terrace facing the volcano", "bystander phone from a rooftop terrace facing the volcano"],
     }
 }
@@ -400,7 +400,6 @@ DOMAIN_ATTRIBUTES = {
         ],
         "events": [
             "Volcano erupts and a shockwave blows out windows",
-            "Lava river pours down into a village street",
             "Pyroclastic cloud races down into a village street",
             "Volcanic bombs slam into a village street",
         ]

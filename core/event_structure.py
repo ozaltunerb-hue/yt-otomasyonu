@@ -39,10 +39,10 @@ HELICOPTER = "Firefighting helicopter drops water on the flames racing toward a 
 FIRE_EVENTS = (WILDFIRE, FACADE_FIRE, FIRE_TORNADO, HELICOPTER)
 # 🌋 Volkan (TASLAK, 10 Eki, Bahadır)
 ERUPTION = "Volcano erupts and a shockwave blows out windows"
-LAVA_RIVER = "Lava river pours down into a village street"
 PYROCLASTIC = "Pyroclastic cloud races down into a village street"
 VOLCANIC_BOMBS = "Volcanic bombs slam into a village street"
-VOLCANO_EVENTS = (ERUPTION, LAVA_RIVER, PYROCLASTIC, VOLCANIC_BOMBS)
+# 13 Eki (4), Bahadır: lav nehri çıkarıldı (4 testte de kabul edilmedi; arşiv: EVENT_BEATS üstündeki ARŞİV notu)
+VOLCANO_EVENTS = (ERUPTION, PYROCLASTIC, VOLCANIC_BOMBS)
 
 SLICE_LABELS = ("0-4s", "4-9s", "9-15s")
 SLICE_FIELDS = ("slice_1_rest", "slice_2", "slice_3")
@@ -59,7 +59,6 @@ TOTAL_WORDS_BY_EVENT = {"Tornado crosses a marina quay": (40, 75),
                         "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (40, 75),
                         # 10 Eki, Bahadır: volkanın 4 olayı 40-75
                         "Volcano erupts and a shockwave blows out windows": (40, 75),
-                        "Lava river pours down into a village street": (40, 75),
                         "Pyroclastic cloud races down into a village street": (40, 75),
                         "Volcanic bombs slam into a village street": (40, 75)}
 # Kie seedance-2-fast prompt sınırı 20000 karakter (docs.kie.ai/market/bytedance/seedance-2-fast, 4 Eki doğrulandı).
@@ -73,8 +72,11 @@ RECENT_BEAT_BLOCK = 3          # son N üretimde geçen 4-9s / 9-15s olayı tekr
 # Olaya özel engelleme derinliği (10 Eki, volkan): havuzu küçük (dilim başına 3-4 madde) olaylarda 3 derinlik, kamera
 # dışlamalarıyla birlikte adayı bitirir. Değerler her kamera noktasında en kötü durumda en az bir çift kalacak şekilde
 # seçildi (TestVolcano.test_no_candidates_never); 0 = engelleme yok, sadece LRU. Diğer olaylar RECENT_BEAT_BLOCK.
-RECENT_BEAT_BLOCK_BY_EVENT = {ERUPTION: 1, LAVA_RIVER: 1, VOLCANIC_BOMBS: 1,
-                              PYROCLASTIC: 0}   # çatı terası/köy evinde dilim başına 2 madde kalıyor
+# 13 Eki (4), Bahadır: volkan havuzları 5-6 maddeye çıktı; patlama ve bombalar standart 3 (önceki geçici değerler
+# patlama 1, lav 1, bombalar 1, piroklastik 0). Kül bulutu 2 (Bahadır kararı): çatı maddeleri (P3, P6, Q3, Q6) çatı
+# terası ve balkonda seçilmediği için orada 4 × 4 madde ve 8 yasak çift kalıyor, 3 derinlik en kötü durumda adayı
+# bitirir.
+RECENT_BEAT_BLOCK_BY_EVENT = {PYROCLASTIC: 2}
 
 # ── Kilit görsel (0-4s'nin ilk cümlesi, kod yazar) ──────────────────────────────────────────────────────────
 EVENT_KEY_VISUAL = {
@@ -112,11 +114,6 @@ EVENT_KEY_VISUAL = {
     # 10 Eki, Bahadır: volkan kilit cümleleri birebir
     ERUPTION: "The volcano erupts above a village, a shockwave blowing out windows along the street as an ash column "
               "towers into the sky.",
-    # 13 Eki, Bahadır: lav araçsız. Önceki: "... and tears through a village street, swallowing parked cars."
-    # 13 Eki (2): lav yavaş ve kalın (testte su gibi hızlı yayıldı). Önceki: "A lava river pours down the volcano’s flank
-    # and surges through a village street, engulfing the houses along it."
-    LAVA_RIVER: "A thick lava front crawls down the volcano’s flank into a village street, setting the houses ahead of it "
-                "alight.",
     PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
     VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, "
                     "punching through roofs and igniting cars.",
@@ -340,9 +337,6 @@ _FIRE_SECOND = ("second", "another", "other", "new", "two", "pair")
 # 🌋 Volkan (10 Eki, Bahadır): yeni _VOLC_* listeleri, baştan geniş eş anlamlılarla (terim kapısı kuralı: GPT'nin
 # doğal anlatımı reddedilmemeli). Mevcut listeler değişmez ve kullanılmaz. Çok kelimeli terimde çekim sadece son
 # kelimede; diğer çekimler ayrıca yazıldı.
-_VOLC_LAVA = ("lava", "magma", "molten rock", "molten", "lava flow", "lava river", "lava front", "lava stream",
-              "crusted front", "crust",   # 13 Eki (2)
-              "glowing river", "glowing flow")
 _VOLC_ROCK = ("rock", "boulder", "stone", "bomb", "chunk", "block", "lump", "fragment", "ejecta", "projectile",
               "fireball", "hunk", "slab")
 _VOLC_SMASH = ("smash", "slam", "crash", "hit", "strike", "struck", "punch", "pierce", "puncture", "tear", "tore",
@@ -420,9 +414,7 @@ _VOLC_IGNITE = ("ignite", "catch fire", "catches fire", "caught fire", "catching
                 "inferno", "erupt in flames", "erupts in flames", "erupted in flames")   # 13 Eki
 _VOLC_HOUSE = ("house", "home", "cottage", "building", "villa", "dwelling", "wall", "corner",
                "townhouse", "farmhouse", "residence")   # 13 Eki ("facade" bilerek yok: dükkân cephesi M3 ayrı kalsın)
-# 13 Eki (lav M1): evin kapısı/pencereleri
-_VOLC_DOOR = ("door", "doorway", "front door", "entrance", "entryway", "window", "porch", "threshold", "ground floor")
-# 13 Eki (lav M4): kat
+# 13 Eki (lav M4; 13 Eki 4: bombalar T6): kat
 _VOLC_FLOOR = ("floor", "storey", "story", "ground floor", "first floor", "lower floor", "level")
 # Çökme (13 Eki, lav L3/M2 ve kül bulutu Q1). Çıplak "fall/fell/drop/crash/snap/break" bilerek yok: "ash keeps falling
 # over the houses" gibi atmosfer cümlesi ev + düşme ile Q1'den geçmesin (önceki listede vardı, sadece eski M2'de).
@@ -455,27 +447,18 @@ _VOLC_CLOUD = ("cloud", "pyroclastic", "ash cloud", "ash flow", "surge", "flow",
 _VOLC_BALCONY = ("balcony", "veranda", "loggia", "railing", "balustrade")
 # 13 Eki (kül bulutu Q3): baca
 _VOLC_CHIMNEY = ("chimney", "chimney stack", "chimneystack", "smokestack", "flue", "chimney pot")
-# 13 Eki (lav): araç, balkon ve yavaşlık kelimeleri GPT hikâyesinde reddedilir (LAVA_BANNED)
-# 13 Eki (2): "slowly/gradually/steadily" yasağı KALDIRILDI (lav yavaş). Yerine hız/sıvı kelimeleri yasak
-# (lava_fast_words). Kaçan insanlar için "race/rush", alev/kıvılcım/duman için "pour/stream/gush/surge" serbest.
-_LAVA_FAST = ("race", "rush", "surge", "torrent", "gush", "flood", "rapids", "like water", "wave", "pour", "stream")
-_LAVA_FAST_PEOPLE_OK = ("race", "rush")
-_LAVA_FAST_FIRE_OK = ("pour", "stream", "gush", "surge")
-_LAVA_PEOPLE = ("people", "residents", "villagers", "they", "families", "everyone", "men", "women", "children",
-                "three", "four", "five", "six")
-_LAVA_FIRE_SUBJECT = ("flame", "flames", "spark", "sparks", "smoke", "fire", "ember", "embers")
-_LAVA_FAST_WINDOW = 3
-# 13 Eki (3), Bahadır: GPT "crashing into a house's corner" yazdı. Lavda hızlı çarpma fiilleri yasak (istisnasız;
-# "rush" yukarıda, insan istisnasıyla). Serbest: press, grind, shove, push, crawl, creep, advance, bulge, crack...
-_LAVA_IMPACT = ("crash", "slam", "smash", "hurl", "blast", "ram", "plow", "plough")
-# 13 Eki (3): lavda insan cümlesinde (slice_1_rest) atmosferik süs yok; insanlar kaçar ve görünür kalır
-_LAVA_PEOPLE_FADE = ("fade", "vanish", "disappear", "dissolve", "blur", "melt away", "melts away", "melted away",
-                     "against the landscape", "into the distance", "into the haze", "into the smoke")
+# 13 Eki (4): lav nehri çıktı; lava özel listeler (_LAVA_FAST, _LAVA_IMPACT, _LAVA_PEOPLE_FADE, _VOLC_HEAT, _VOLC_DOOR,
+# _VOLC_LAVA) silindi, içerikleri EVENT_BEATS üstündeki ARŞİV notunda.
 # 13 Eki (3), Bahadır kararı: volkan Kie prompt'u (hikâye + stil eki) en fazla 175 kelime
 VOLC_MAX_PROMPT_WORDS = 175
-# 13 Eki (2), lav L2: sıcaklık ağaçları lav değmeden tutuşturur
-_VOLC_HEAT = ("heat", "scorching", "searing", "radiant heat", "blistering")
+# 13 Eki (4) yeni volkan maddeleri: çan kulesi (U5), oluklu sac çatı (P6), yol/krater (T5)
+_VOLC_TOWER = ("bell tower", "belfry", "church tower", "clock tower", "steeple", "campanile", "spire", "tower")
+_VOLC_METAL_ROOF = ("corrugated", "sheet metal", "metal sheet", "tin roof", "metal roof", "roofing sheet", "roof")
+_VOLC_ROAD = ("road", "street", "asphalt", "pavement", "tarmac", "cobble", "cobblestone", "roadway")
+_VOLC_CRATER = ("crater", "hole", "pit", "blast", "explode", "shatter", "crack", "burst", "split open", "splits open",
+                "rip open", "rips open", "tear open", "tears open", "erupt", "heave", "buckle", "gouge")
 _VOLC_TREE = ("tree", "trunk", "branch", "limb", "bough", "pine", "palm", "oak", "olive", "cypress", "elm", "maple",
+              "frond",   # 13 Eki (4), P4
               "sapling", "twig", "log")
 _VOLC_SNAP = ("snap", "break", "broke", "split", "crack", "shear", "topple", "fall", "fell", "flatten",
               "uproot", "tear", "tore", "torn", "rip", "bend", "bent", "collapse", "crash", "shatter", "fly", "flies",
@@ -1017,6 +1000,18 @@ EVENT_BEATS = {
     },
     # ── 🌋 Volkan (TASLAK, 10 Eki, Bahadır). Her madde somut temas/yıkım (atmosfer maddesi yok); U2 ve Q3 Bahadır'ın
     # metni birebir, diğerleri Bahadır'ın Türkçe tarifinden. Yasak eşleşmeler: aynı nesne iki kez. ──
+    # ── ARŞİV: 🌋 Lav nehri (10-13 Eki 2026, ÇIKARILDI 13 Eki, Bahadır). 4 testte de kabul edilmedi: gerçek lav yürüme
+    # hızından yavaş ilerler ve evi saniyeler içinde yıkmaz; Seedance lavı hızlandırıyor, ev yıkımı gerçek dışı çıkıyor.
+    # Ders: olay/madde yazarken "gerçekte bunu yapar mı" kontrolü. Son hâli (kod silindi, geri almak için commit d58330a):
+    # olay "Lava river pours down into a village street", menü "🌋 Lav nehri sokağı yutuyor", sadece yamaç ve çatı terası,
+    # araçsız. Kilit görsel: "A thick lava front crawls down the volcano’s flank into a village street, setting the
+    # houses ahead of it alight." Stil eki ek cümlesi: "The lava is thick, black-crusted and tar-like, advancing at a
+    # slow walking pace." (lavda "emergency responders" kısıtı yoktu, 8 kısıt). Havuz: L1 lav taş duvarı itip üstünden
+    # geçer, L2 sıcaklık ağaçları tutuşturur, L3 ev köşesi şişip çöker, L4 çit + kulübe / M1 kapı ve pencereler patlar,
+    # M2 ev duvarı çöker, M3 dükkân cephesi, M4 bina birinci katı. Yasak çiftler (L1,M2) (L1,M4) (L3,M1) (L3,M2)
+    # (L3,M4). Kapılar: hız/sıvı kelimeleri (race, rush, surge, torrent, gush, flood, rapids, like water, wave, pour,
+    # stream; insan kaçışı ve alev öznesi serbest), çarpma fiilleri (crash, slam, smash, hurl, blast, ram, plow),
+    # araç ve balkon kelimeleri, insan cümlesinde fade/vanish süsü.
     ERUPTION: {
         "slice_2": {
             "S1": {"text": "the shockwave bursts the shop windows along the street one after another",
@@ -1025,6 +1020,11 @@ EVENT_BEATS = {
                    "terms": [_VOLC_GLASS, _VOLC_BURST, _VOLC_BRAKE]},
             "S3": {"text": "the shockwave rips roof tiles off a house and hurls them into the street",
                    "terms": [_VOLC_TILE, _VOLC_RIP, _VOLC_FLING]},
+            # 13 Eki (4), Bahadır: S4-S5 birebir (S6 "roof tiles off the houses" S3 ile aynı nesne, Bahadır kararıyla yok)
+            "S4": {"text": "the shockwave bends a row of street trees flat and snaps power poles in two",
+                   "terms": [_VOLC_TREE + _VOLC_POLE, _VOLC_SNAP]},
+            "S5": {"text": "the shockwave topples a stone wall along the street and the stones scatter across the road",
+                   "terms": [_VOLC_WALL, _VOLC_TOPPLE]},
         },
         "slice_3": {
             "U1": {"text": "a shop sign and an awning tear loose and slam onto the road",
@@ -1033,52 +1033,22 @@ EVENT_BEATS = {
                    "terms": [_VOLC_ROCK, _VOLC_CAR, _VOLC_SMASH]},
             "U3": {"text": "the shop shutters buckle and burst outward into the street",
                    "terms": [_VOLC_SHUTTER, _VOLC_BUCKLE]},
+            # 13 Eki (4), Bahadır: U5-U6 birebir. U4 Bahadır'ın metninin temaslı hâli (Bahadır kararı; önerilen metin
+            # "a second blast sends a wave of dust and rubble through the village street" bir şeye çarpmıyordu)
+            "U4": {"text": "a second blast tears the front off a house across the street and the rubble spills into the "
+                           "road",
+                   "terms": [_VOLC_HOUSE, _VOLC_RIP + _VOLC_COLLAPSE]},
+            "U5": {"text": "a bell tower cracks and its top section topples across the street",
+                   "terms": [_VOLC_TOWER, _VOLC_COLLAPSE + _VOLC_FALL]},
+            "U6": {"text": "the shockwave collapses a row of garden walls and a tin-roofed shed",
+                   "terms": [_VOLC_WALL + _VOLC_SHED, _VOLC_COLLAPSE + _VOLC_TOPPLE]},
         },
-        # vitrin/kepenk aynı dükkân cephesi (S1,U3); araç camı iki kez (S2,U2)
-        "excluded_pairs": {("S1", "U3"), ("S2", "U2")},
+        # Aynı yapı iki dilimde yok: vitrin/kepenk aynı dükkân cephesi (S1,U3); araç camı iki kez (S2,U2); duvar iki
+        # kez (S5,U6, 13 Eki 4). Ev cephesi (U4) S3'ün çatısı ve S5'in sokak duvarıyla aynı yapı sayılmadı.
+        "excluded_pairs": {("S1", "U3"), ("S2", "U2"), ("S5", "U6")},
         "excluded_views": {},
         # Kamera evinin/terasın çatısı: "çatı kiremitleri kopar" çatı terasında ve köy evi balkonunda seçilmez
         "excluded_spots": {"S3": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}},
-    },
-    # 13 Eki (2), Bahadır: lav yavaş, kalın, temas dramı (testte su gibi hızlı yayıldı). Maddeler Bahadır'ın metni
-    # birebir, araçsız, çatı maddesi yok. 13 Eki (1) havuzu: L1 taş duvar devrilip üstünden akar, L2 çit + kulübe
-    # süpürülür, L3 ev köşesi, L4 ağaçlar sökülür / M1 kapıdan akar, M2 ev duvarı, M3 dükkân, M4 bina katı (M2-M4 aynı
-    # kaldı, M2 "grinds around"). Önceki havuz (10 Eki): L1 lastik erir, L2 araç itilir, L3 bahçe duvarı, L4 çit + araba
-    # / M1 araba sırası, M2 ev köşesi + çatı kirişi, M3 direk, M4 dükkân camı.
-    LAVA_RIVER: {
-        "slice_2": {
-            "L1": {"text": "the thick lava front shoves a stone wall over and grinds across it, the wall crumbling "
-                           "under it",
-                   "terms": [_VOLC_LAVA, _VOLC_WALL, _VOLC_TOPPLE]},
-            "L2": {"text": "the scorching heat ignites a row of street trees ahead of the lava front and they burn as the "
-                           "crusted front reaches their roots",
-                   "terms": [_VOLC_LAVA + _VOLC_HEAT, _VOLC_TREE, _VOLC_IGNITE]},
-            "L3": {"text": "the lava front presses against the corner of a house, the wall bulges, cracks and caves in",
-                   "terms": [_VOLC_LAVA, _VOLC_HOUSE, _VOLC_COLLAPSE]},
-            "L4": {"text": "the lava front grinds over a wooden fence and a small shed, which burst into flames",
-                   "terms": [_VOLC_LAVA, _VOLC_FENCE + _VOLC_SHED, _VOLC_IGNITE + _VOLC_CRUSH]},
-        },
-        "slice_3": {
-            "M1": {"text": "the lava front reaches a house, the front door and windows burst from the heat and flames "
-                           "shoot out of the upper windows",
-                   "terms": [_VOLC_LAVA, _VOLC_HOUSE + _VOLC_DOOR, _VOLC_IGNITE + _VOLC_BURST]},
-            "M2": {"text": "a house wall collapses into the lava as the front grinds around the building",
-                   "terms": [_VOLC_LAVA, _VOLC_HOUSE, _VOLC_COLLAPSE]},
-            # Bahadır metninde "lava" yok ("the front"): lav grubu aranmaz, dükkân + tutuşma/bükülme yeter
-            "M3": {"text": "the front swallows a shop front, the awning ignites and the facade buckles",
-                   "terms": [_VOLC_SHOP + _VOLC_AWNING, _VOLC_ENGULF + _VOLC_IGNITE + _VOLC_BUCKLE]},
-            # "pouring" alev ve kıvılcım için (lava_fast_words alev öznesini serbest bırakır)
-            "M4": {"text": "the lava piles up against a building and the first floor bursts open, flames and sparks "
-                           "pouring out",
-                   "terms": [_VOLC_LAVA, _VOLC_HOUSE + _VOLC_FLOOR, _VOLC_BURST + _VOLC_IGNITE + _VOLC_SPARK]},
-        },
-        # Kural (Bahadır): iki dilim aynı yapıyı (duvar/ev/ağaç/çit) ikinci kez kullanmaz. Duvar iki kez (L1,M2);
-        # duvar ve bina cephesi (L1,M4); ev iki kez (L3,M1) (L3,M2) (L3,M4). Ağaç (L2) ve çit (L4) M'de yok; dükkân (M3)
-        # ev sayılmaz.
-        "excluded_pairs": {("L1", "M2"), ("L1", "M4"), ("L3", "M1"), ("L3", "M2"), ("L3", "M4")},
-        "excluded_views": {},
-        # Kamera noktası dışlaması yok: çatı/kiremit/çatı kirişi maddesi yok, köy evi balkonu bu olayda yok
-        "excluded_spots": {},
     },
     # 13 Eki, Bahadır: kül bulutu maddeleri yukarıdan görünen büyük şeylere çevrildi (birebir). Gerekçe: tente,
     # sandalye, çöp kutusu, araba camı teras kamerasında seçilmiyor. Araç hareketi yok. Kilit görsel aynı. Önceki
@@ -1092,6 +1062,13 @@ EVENT_BEATS = {
                    "terms": [_VOLC_TREE + _VOLC_POLE, _VOLC_SNAP]},
             "P3": {"text": "the cloud rips roof tiles off the rooftops and hurls them down the street",
                    "terms": [_VOLC_CLOUD, _VOLC_TILE, _VOLC_RIP + _VOLC_FLING]},
+            # 13 Eki (4), Bahadır: P4-P6 birebir. P4 P2 ile aynı nesne (ağaç) ama aynı dilimde, Bahadır kararıyla var
+            "P4": {"text": "the cloud front flattens a row of palm trees and hurls their fronds ahead of it",
+                   "terms": [_VOLC_TREE, _VOLC_SNAP]},
+            "P5": {"text": "the cloud front shoves a stone garden wall over and rolls on across the street",
+                   "terms": [_VOLC_WALL, _VOLC_TOPPLE + ("shove", "push")]},   # "shoves a wall over" (ayrık)
+            "P6": {"text": "the cloud front rips the corrugated roofs off a row of low sheds and sends them flying",
+                   "terms": [_VOLC_SHED + _VOLC_METAL_ROOF, _VOLC_RIP + _VOLC_FLING]},
         },
         "slice_3": {
             "Q1": {"text": "a house wall across the street collapses as the cloud engulfs it",
@@ -1101,13 +1078,24 @@ EVENT_BEATS = {
                    "terms": [_VOLC_GLASS, _VOLC_BURST]},
             "Q3": {"text": "a chimney topples and crashes through a roof as the cloud passes over",
                    "terms": [_VOLC_CHIMNEY, _VOLC_FALL + _VOLC_SMASH]},
+            # 13 Eki (4), Bahadır: Q4-Q6 birebir
+            "Q4": {"text": "the cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the "
+                           "street",
+                   "terms": [_VOLC_WALL + _VOLC_ROCK, _VOLC_COLLAPSE + _VOLC_FALL]},
+            "Q5": {"text": "the cloud blasts the front off a shop building and the brickwork falls into the street",
+                   "terms": [_VOLC_SHOP + _VOLC_WALL, _VOLC_RIP + _VOLC_COLLAPSE + _VOLC_FALL]},
+            "Q6": {"text": "the cloud engulfs a house and its balcony and flat roof slab tear away",
+                   "terms": [_VOLC_BALCONY + _VOLC_ROOF + ("slab",), _VOLC_RIP + _VOLC_COLLAPSE]},
         },
-        # Kural (13 Eki): aynı nesne iki kez yok. Çatı iki kez (P3,Q3); ev cephesi/duvarı iki kez (P1,Q1)
-        "excluded_pairs": {("P3", "Q3"), ("P1", "Q1")},
+        # Kural (13 Eki): aynı yapı iki dilimde yok. Çatı (P3,Q3) (P3,Q6) (P6,Q3) (P6,Q6); ev cephesi/duvarı (P1,Q1);
+        # balkon (P1,Q6); duvar (P5,Q1) (P5,Q4). Dükkân binası (Q5) ev sayılmaz.
+        "excluded_pairs": {("P3", "Q3"), ("P1", "Q1"), ("P3", "Q6"), ("P6", "Q3"), ("P6", "Q6"), ("P1", "Q6"),
+                           ("P5", "Q1"), ("P5", "Q4")},
         "excluded_views": {},
-        # Kamera evinin/terasın çatısı: kiremit (P3) ve baca (Q3) çatı terasında ve köy evi balkonunda seçilmez,
-        # sadece yamaç terasında
-        "excluded_spots": {"P3": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}, "Q3": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}},
+        # Kamera evinin/terasın çatısı: çatı maddeleri (P3 kiremit, P6 sac çatı, Q3 baca, Q6 çatı döşemesi) çatı
+        # terasında ve köy evi balkonunda seçilmez, sadece yamaç terasında
+        "excluded_spots": {"P3": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}, "Q3": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"},
+                           "P6": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}, "Q6": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}},
     },
     VOLCANIC_BOMBS: {
         "slice_2": {
@@ -1119,6 +1107,11 @@ EVENT_BEATS = {
                    "terms": [_VOLC_ROCK, _VOLC_AWNING, _VOLC_IGNITE + _VOLC_SMASH]},
             "R4": {"text": "a glowing rock slams into a shop sign, which crashes onto the sidewalk",
                    "terms": [_VOLC_ROCK, _VOLC_SIGN, _VOLC_FALL]},
+            # 13 Eki (4), Bahadır: R5-R6 birebir
+            "R5": {"text": "a volcanic bomb punches through a stone wall and the wall bursts apart",
+                   "terms": [_VOLC_ROCK, _VOLC_WALL, _VOLC_SMASH]},
+            "R6": {"text": "a volcanic bomb hits a row of street trees and splits one in two as it falls in flames",
+                   "terms": [_VOLC_ROCK, _VOLC_TREE, _VOLC_SMASH + _VOLC_SNAP + _VOLC_IGNITE]},
         },
         "slice_3": {
             "T1": {"text": "glowing rocks slam into the roofs, sending tiles flying as flames rise",
@@ -1129,9 +1122,16 @@ EVENT_BEATS = {
                    "terms": [_VOLC_ROCK, _VOLC_SHOP + _VOLC_GLASS, _VOLC_SMASH]},
             "T4": {"text": "a glowing rock splits a utility pole and its cable falls into the street spitting sparks",
                    "terms": [_VOLC_ROCK, _VOLC_POLE, _VOLC_SMASH]},
+            # 13 Eki (4), Bahadır: T5-T6 birebir
+            "T5": {"text": "a volcanic bomb lands in the middle of the street and the road blasts apart in a crater of "
+                           "sparks and rock",
+                   "terms": [_VOLC_ROCK, _VOLC_ROAD, _VOLC_CRATER]},
+            "T6": {"text": "a volcanic bomb hits a house's upper floor and a section of the wall bursts outward in flames",
+                   "terms": [_VOLC_ROCK, _VOLC_HOUSE + _VOLC_FLOOR, _VOLC_BURST + _VOLC_IGNITE + _VOLC_SMASH]},
         },
-        # araç iki kez (R2,T2) (R1,T2); dükkân yangını iki kez (R3,T3)
-        "excluded_pairs": {("R2", "T2"), ("R1", "T2"), ("R3", "T3")},
+        # araç iki kez (R2,T2) (R1,T2); dükkân yangını iki kez (R3,T3); 13 Eki (4): duvar iki kez (R5,T6), ağaç/direk
+        # iki kez (R6,T4)
+        "excluded_pairs": {("R2", "T2"), ("R1", "T2"), ("R3", "T3"), ("R5", "T6"), ("R6", "T4")},
         "excluded_views": {},
         # Kamera evinin/terasın çatısı: "taşlar çatılara çarpar" çatı terasında ve köy evi balkonunda seçilmez
         "excluded_spots": {"T1": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}},
@@ -1151,36 +1151,6 @@ _RAIN_FALLING_OK = ("ember", "spark", "cinder", "ash", "debris", "glass", "shard
 _RAIN_WINDOW = 3
 # Volkan bombaları (10 Eki, Bahadır): bu dilimlerde genel/küçük taş anlatımı (_VOLC_SMALL_ROCKS) reddedilir
 VOLC_SINGLE_ROCK_SLICES = {VOLCANIC_BOMBS: ("slice_2", "slice_3")}
-# Olaya özel yasak kelimeler, GPT'nin yazdığı üç dilimde (13 Eki, Bahadır, lav): araç yok; kamera balkonda değil
-# (sadece iki teras). (kod, terimler, Telegram satırı, GPT geri bildirimi). Lav hız/sıvı kelimeleri ayrı:
-# lava_fast_words (13 Eki 2; "slowly" yasağı kaldırıldı)
-EVENT_BANNED_WORDS = {
-    LAVA_RIVER: (
-        ("lava_no_vehicle", _VOLC_CAR, "lavda araç yok",
-         "There are no vehicles in this scene: remove {words}."),
-        ("lava_no_balcony", ("balcony",), "lavda balkon yok",
-         "Do not mention balconies: remove {words}."),
-    ),
-}
-LAVA_FAST_EVENTS = (LAVA_RIVER,)
-
-
-def lava_fast_words(text: str) -> list[str]:
-    """Lavın hızlı/sıvı anlatımı (13 Eki 2, Bahadır). Önceki 3 kelimede lav geçmiyorsa: kaçan insanlar için "race/rush",
-    alev/kıvılcım/duman için "pour/stream/gush/surge" serbest ("five people race away", "flames pouring out")."""
-    from core.creative_pipeline import _term_re
-    low = (text or "").lower()
-    found = []
-    for term in _LAVA_FAST:
-        for m in re.finditer(_term_re(term), low):
-            before = re.findall(r"[a-z]+", low[:m.start()])[-_LAVA_FAST_WINDOW:]
-            lava = any(w in ("lava", "magma", "molten", "front", "crust", "it") for w in before)
-            if not lava and term in _LAVA_FAST_PEOPLE_OK and any(w in _LAVA_PEOPLE for w in before):
-                continue
-            if not lava and term in _LAVA_FAST_FIRE_OK and any(w in _LAVA_FIRE_SUBJECT for w in before):
-                continue
-            found.append(m.group(0))
-    return list(dict.fromkeys(found))
 # Orman ve cephe yangınında araç havalanmaz (Bahadır onayı, 8 Eki): 4-9s'de kalkma ifadesi reddedilir
 NO_LIFT_SLICE = {WILDFIRE: ("slice_2",), FACADE_FIRE: ("slice_2",),
                  HELICOPTER: ("slice_2",)}   # 10 Eki: helikopterde de araç havalanmaz
@@ -1245,7 +1215,6 @@ SLICE_RULES = {
     HELICOPTER: _people_rules("the flames"),   # 10 Eki: orman gibi
     # 10 Eki: volkan, insanlar kaçar (mevcut _FLEE); kimse lav/taşla temas etmez
     ERUPTION: _people_rules("the eruption"),
-    LAVA_RIVER: _people_rules("the lava"),
     PYROCLASTIC: _people_rules("the cloud"),
     VOLCANIC_BOMBS: _people_rules("the falling rocks"),
 }
@@ -1573,25 +1542,6 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             out.append(_issue("volcano_single_rock", f"{label}: taşlar tek tek ve büyük olmalı ({', '.join(small)})",
                               f"In '{slot}' show single large glowing rocks, each bigger than a softball: remove "
                               f"{', '.join(repr(w) for w in small)}."))
-    # 13 Eki (lav): GPT'nin yazdığı dilimlerde yasak kelimeler
-    gpt_text = " ".join(slices.get(f, "") for f in SLICE_FIELDS)
-    if event in LAVA_FAST_EVENTS:   # 13 Eki (2): lav yavaş ve kalın
-        fast = lava_fast_words(gpt_text)
-        if fast:
-            out.append(_issue("lava_no_fast", f"lav hızlı/sıvı anlatılmış ({', '.join(fast)})",
-                              f"Real lava is a thick crusted front that moves slower than walking: remove "
-                              f"{', '.join(repr(w) for w in fast)}; use crawls, creeps, grinds, pushes, presses or "
-                              f"advances."))
-        impact = find_terms(_LAVA_IMPACT, gpt_text)   # 13 Eki (3)
-        if impact:
-            out.append(_issue("lava_no_impact", f"lavda hızlı çarpma fiili ({', '.join(impact)})",
-                              f"The lava never hits fast: remove {', '.join(repr(w) for w in impact)}; the thick front "
-                              f"presses, grinds, shoves, pushes, crawls or creeps into things."))
-        fade = find_terms(_LAVA_PEOPLE_FADE, slices.get("slice_1_rest", ""))
-        if fade:
-            out.append(_issue("lava_people_visible", f"0-4s: insanlar görünür kalmalı ({', '.join(fade)})",
-                              f"In 'slice_1_rest' the people stay clearly visible as they run: remove "
-                              f"{', '.join(repr(w) for w in fade)}; for example 'scramble away down the street'."))
     if event in VOLCANO_EVENTS:   # 13 Eki (3): volkan prompt'u en fazla 175 kelime
         n_words = len(assemble_prompt(spec, slices).split())
         if n_words > VOLC_MAX_PROMPT_WORDS:
@@ -1599,11 +1549,6 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             out.append(_issue("volcano_prompt_words", f"prompt {n_words} kelime (en fazla {VOLC_MAX_PROMPT_WORDS})",
                               f"The full prompt is {n_words} words; shorten the three fields to at most {budget} words "
                               f"in total."))
-    for code, terms, missing, feedback in EVENT_BANNED_WORDS.get(event, ()):
-        found = find_terms(terms, gpt_text)
-        if found:
-            out.append(_issue(code, f"{missing} ({', '.join(found)})",
-                              feedback.format(words=", ".join(repr(w) for w in found))))
     return out
 
 
@@ -1706,14 +1651,6 @@ def _validate_data() -> None:
                 raise StructureError(f"Araçsız olayda araç listesi var: {event}")
         elif not EVENT_VEHICLES.get(event) or any(not t for _, t in EVENT_VEHICLES[event]):
             raise StructureError(f"Görünümsüz olayın araç listesi yok: {event}")
-        fixed = " ".join([key] + [beat["text"] for slot in ("slice_2", "slice_3") for beat in b[slot].values()])
-        for code, terms, *_ in EVENT_BANNED_WORDS.get(event, ()):   # 13 Eki: kod metinleri yasak kelime içermez
-            if not terms or find_terms(terms, fixed):
-                raise StructureError(f"Yasak kelime kod metninde: {event}/{code}")
-        if event in LAVA_FAST_EVENTS:   # 13 Eki (2): her kod metni ayrı ayrı (pencere cümle sınırını aşmasın)
-            for t in [key] + [beat["text"] for slot in ("slice_2", "slice_3") for beat in b[slot].values()]:
-                if lava_fast_words(t) or find_terms(_LAVA_IMPACT, t):
-                    raise StructureError(f"Lav hız/çarpma kelimesi kod metninde: {event}: {t}")
         for d, spots in b["excluded_spots"].items():
             if spots - set(EVENT_SKELETONS[event]["spots"]):
                 raise StructureError(f"Bilinmeyen spot: {event}/{d}: {spots - set(EVENT_SKELETONS[event]['spots'])}")

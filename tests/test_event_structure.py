@@ -103,8 +103,6 @@ class TestLockedData(unittest.TestCase):
             # 10 Eki, Bahadır: volkan (TestVolcano ayrıca kilitler)
             es.ERUPTION: "The volcano erupts above a village, a shockwave blowing out windows along the street as an ash "
                          "column towers into the sky.",
-            es.LAVA_RIVER: "A thick lava front crawls down the volcano’s flank into a village street, setting the houses ahead of it "
-                           "alight.",   # 13 Eki (2): yavaş, kalın lav
             es.PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
             es.VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village "
                                "street, punching through roofs and igniting cars.",
@@ -164,7 +162,7 @@ class TestLockedData(unittest.TestCase):
                                                   es.LANDFALL, es.MARINA_TORNADO, es.AVENUE,
                                                   es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO,   # 8 Eki
                                                   es.HELICOPTER,   # 10 Eki
-                                                  es.ERUPTION, es.LAVA_RIVER, es.PYROCLASTIC, es.VOLCANIC_BOMBS))
+                                                  es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS))   # 13 Eki: lav çıktı
         self.assertEqual(TIDAL, "Tidal wave surges over a coastal city street")
         self.assertFalse(es.is_structured("Rogue wave breaks over the rail onto the pool deck"))
 
@@ -604,7 +602,7 @@ class TestTidal(unittest.TestCase):
                                           # 8 Eki (TASLAK): yangın
                                           es.WILDFIRE: (3, 6), es.FACADE_FIRE: (3, 6), es.FIRE_TORNADO: (3, 6),
                                           es.HELICOPTER: (3, 6),   # 10 Eki
-                                          es.ERUPTION: (3, 6), es.LAVA_RIVER: (3, 6), es.PYROCLASTIC: (3, 6),
+                                          es.ERUPTION: (3, 6), es.PYROCLASTIC: (3, 6),
                                           es.VOLCANIC_BOMBS: (3, 6)})
 
     def test_slice_rules_locked(self):
@@ -613,7 +611,7 @@ class TestTidal(unittest.TestCase):
                                                es.LANDFALL, es.MARINA_TORNADO, es.AVENUE,
                                                es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO,   # 8 Eki: yangın
                                                es.HELICOPTER,   # 10 Eki
-                                               es.ERUPTION, es.LAVA_RIVER, es.PYROCLASTIC, es.VOLCANIC_BOMBS})
+                                               es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS})
         r = {x["rule"]: x for x in es.SLICE_RULES[TIDAL]}
         self.assertEqual(set(r), {"slice_flee", "slice_count"})
         self.assertEqual(r["slice_flee"]["terms"], ("run", "ran", "running", "flee", "fled", "fleeing", "sprint",
@@ -1474,7 +1472,7 @@ class TestMarinaRedesign(unittest.TestCase):
         self.assertEqual(es.TOTAL_WORDS_BY_EVENT, {es.MARINA_TORNADO: (40, 75), es.WILDFIRE: (40, 75),
                                                    es.HELICOPTER: (40, 75),   # 10 Eki: helikopter
                                                    # 10 Eki: volkan
-                                                   es.ERUPTION: (40, 75), es.LAVA_RIVER: (40, 75),
+                                                   es.ERUPTION: (40, 75),
                                                    es.PYROCLASTIC: (40, 75), es.VOLCANIC_BOMBS: (40, 75)})
         w = "abcd"
 
@@ -2347,53 +2345,40 @@ class TestHelicopter(unittest.TestCase):
         self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
 
 
-VOLC = (es.ERUPTION, es.LAVA_RIVER, es.PYROCLASTIC, es.VOLCANIC_BOMBS)
-# 13 Eki, Bahadır: volkan kamera cümlesi (4 olay), kamera sabit, takip (pan) yok
-# 13 Eki (3): tekrarsız şablon (eğilme bir kez, üst üçte bir bir kez)
+# 13 Eki (4), Bahadır: lav nehri çıkarıldı, volkan 3 olay
+VOLC = (es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS)
+# 13 Eki, Bahadır: volkan kamera cümlesi, kamera sabit, takip (pan) yok. 13 Eki (3): tekrarsız şablon
 VOLC_CAMERA = ("Handheld footage shot by a person standing {cam}, high vantage looking down over the village street "
                "toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, tilting down no "
                "more than slightly and never descending, the erupting volcano always visible in the upper third of the "
                "frame, a corner of the {perch} railing in the foreground; one continuous shot, no zoom, no cuts.")
-# 13 Eki (2): sadece lav stil ekinde hız cümlesi; lavda "emergency responders" kısıtı çıktı (Bahadır kararı, sınır 8).
-# 13 Eki (3): suya benzetme yok
-LAVA_PACE = "The lava is thick, black-crusted and tar-like, advancing at a slow walking pace."
 # 13 Eki (3), Bahadır kararı: volkan giyim/ışık satırları kısa ifade (aynı kısıtlar)
 VOLC_GUARD = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light "
               "matching the weather, never glossy or CGI; no hazmat suits.")
-VOLC_LAVA_GUARD = ("Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never "
-                   "glossy or CGI; no hazmat suits.")
-# Uzun lav maddeleri: dilim sınırı (24) ve 175 kelimelik prompt için GPT kısaltır; testlerde kısaltılmış hâli
-LAVA_SHORT = {"the scorching heat ignites a row of street trees ahead of the lava front and they burn as the crusted "
-              "front reaches their roots":
-              "The scorching heat sets the street trees ablaze before the crusted lava front reaches their roots",
-              "the thick lava front shoves a stone wall over and grinds across it, the wall crumbling under it":
-              "The thick lava front shoves a stone wall over, the wall crumbling under it",
-              "the lava front reaches a house, the front door and windows burst from the heat and flames shoot out of "
-              "the upper windows":
-              "The lava front reaches a house, its door and windows burst and flames shoot from upstairs",
-              "the lava piles up against a building and the first floor bursts open, flames and sparks pouring out":
-              "The lava piles against a building and the first floor bursts open, spewing flames and sparks"}
+# 13 Eki (4): bombalarda R6 ve T5 birlikte kelimesi kelimesine 175 kelimeyi aşıyor (balkon noktasında 178); gerçek akışta
+# GPT kapının "kısalt" geri bildirimiyle kısaltır. Testlerdeki sahte GPT de kısa hâli yazar.
+SHORT = {"a volcanic bomb hits a row of street trees and splits one in two as it falls in flames":
+         "a volcanic bomb splits a street tree in two and it falls in flames",
+         "a volcanic bomb lands in the middle of the street and the road blasts apart in a crater of sparks and rock":
+         "a volcanic bomb lands mid-street and the road blasts apart in a crater"}
 
 
 def short(text: str) -> str:
-    return cap(LAVA_SHORT.get(text[0].lower() + text[1:], text))
+    return cap(SHORT.get(text[0].lower() + text[1:], text))
 
 
 class TestVolcano(unittest.TestCase):
-    """10 Eki, Bahadır: 🌋 Volkan (4 olay, yapılandırılmış hat). Her madde somut temas/yıkım; terim kapısı baştan geniş
+    """10 Eki, Bahadır: 🌋 Volkan (13 Eki 4: 3 olay, yapılandırılmış hat). Her madde somut temas/yıkım; terim kapısı baştan geniş
     (GPT'nin doğal anlatımı reddedilmez, sadece atmosfer cümlesi reddedilir). KİLİT."""
 
     NAMES = {es.ERUPTION: "Volcano erupts and a shockwave blows out windows",
-             es.LAVA_RIVER: "Lava river pours down into a village street",
              es.PYROCLASTIC: "Pyroclastic cloud races down into a village street",
              es.VOLCANIC_BOMBS: "Volcanic bombs slam into a village street"}
-    LABELS = {es.ERUPTION: "🌋 Patlama şok dalgası camları kırıyor", es.LAVA_RIVER: "🌋 Lav nehri sokağı yutuyor",
+    LABELS = {es.ERUPTION: "🌋 Patlama şok dalgası camları kırıyor",
               es.PYROCLASTIC: "🌋 Kül bulutu köyü sarıyor", es.VOLCANIC_BOMBS: "🌋 Volkan bombaları çatıları deliyor"}
     KEY = {
         es.ERUPTION: "The volcano erupts above a village, a shockwave blowing out windows along the street as an ash "
                      "column towers into the sky.",
-        es.LAVA_RIVER: "A thick lava front crawls down the volcano’s flank into a village street, setting the houses "
-                       "ahead of it alight.",
         es.PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
         es.VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, "
                            "punching through roofs and igniting cars.",
@@ -2410,44 +2395,49 @@ class TestVolcano(unittest.TestCase):
             "S1": "the shockwave bursts the shop windows along the street one after another",
             "S2": "the shockwave blows out the windows of the {vehicle}, which brakes hard",
             "S3": "the shockwave rips roof tiles off a house and hurls them into the street",
+            "S4": "the shockwave bends a row of street trees flat and snaps power poles in two",
+            "S5": "the shockwave topples a stone wall along the street and the stones scatter across the road",
         }, {
             "U1": "a shop sign and an awning tear loose and slam onto the road",
             "U2": "a glowing rock from the eruption slams into a parked car and shatters its rear window",
             "U3": "the shop shutters buckle and burst outward into the street",
-        }, {("S1", "U3"), ("S2", "U2")}, {"S3": {RT, VB}}),
-        es.LAVA_RIVER: ({   # 13 Eki (2): yavaş, kalın lav, araçsız
-            "L1": "the thick lava front shoves a stone wall over and grinds across it, the wall crumbling under it",
-            "L2": "the scorching heat ignites a row of street trees ahead of the lava front and they burn as the crusted "
-                  "front reaches their roots",
-            "L3": "the lava front presses against the corner of a house, the wall bulges, cracks and caves in",
-            "L4": "the lava front grinds over a wooden fence and a small shed, which burst into flames",
-        }, {
-            "M1": "the lava front reaches a house, the front door and windows burst from the heat and flames shoot out of "
-                  "the upper windows",
-            "M2": "a house wall collapses into the lava as the front grinds around the building",
-            "M3": "the front swallows a shop front, the awning ignites and the facade buckles",
-            "M4": "the lava piles up against a building and the first floor bursts open, flames and sparks pouring out",
-        }, {("L1", "M2"), ("L1", "M4"), ("L3", "M1"), ("L3", "M2"), ("L3", "M4")}, {}),
-        es.PYROCLASTIC: ({   # 13 Eki: yukarıdan görünen büyük şeyler
+            "U4": "a second blast tears the front off a house across the street and the rubble spills into the road",
+            "U5": "a bell tower cracks and its top section topples across the street",
+            "U6": "the shockwave collapses a row of garden walls and a tin-roofed shed",
+        }, {("S1", "U3"), ("S2", "U2"), ("S5", "U6")}, {"S3": {RT, VB}}),
+        es.PYROCLASTIC: ({   # 13 Eki: yukarıdan görünen büyük şeyler; 13 Eki (4): 6'şar madde
             "P1": "the cloud front slams into the houses across the street and tears the balconies off their facades",
             "P2": "the cloud snaps a row of street trees and power poles and they crash across the street",
             "P3": "the cloud rips roof tiles off the rooftops and hurls them down the street",
+            "P4": "the cloud front flattens a row of palm trees and hurls their fronds ahead of it",
+            "P5": "the cloud front shoves a stone garden wall over and rolls on across the street",
+            "P6": "the cloud front rips the corrugated roofs off a row of low sheds and sends them flying",
         }, {
             "Q1": "a house wall across the street collapses as the cloud engulfs it",
             "Q2": "the cloud engulfs a whole block and the upper-floor windows burst outward in a shower of glass",
             "Q3": "a chimney topples and crashes through a roof as the cloud passes over",
-        }, {("P3", "Q3"), ("P1", "Q1")}, {"P3": {RT, VB}, "Q3": {RT, VB}}),
+            "Q4": "the cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street",
+            "Q5": "the cloud blasts the front off a shop building and the brickwork falls into the street",
+            "Q6": "the cloud engulfs a house and its balcony and flat roof slab tear away",
+        }, {("P3", "Q3"), ("P1", "Q1"), ("P3", "Q6"), ("P6", "Q3"), ("P6", "Q6"), ("P1", "Q6"), ("P5", "Q1"),
+            ("P5", "Q4")},
+           {"P3": {RT, VB}, "Q3": {RT, VB}, "P6": {RT, VB}, "Q6": {RT, VB}}),
         es.VOLCANIC_BOMBS: ({
             "R1": "a glowing rock punches through the roof of the {vehicle}",
             "R2": "a glowing rock smashes onto the street, bursts apart and sets a parked car on fire",
             "R3": "a glowing rock tears through a shop awning and sets it ablaze",
             "R4": "a glowing rock slams into a shop sign, which crashes onto the sidewalk",
+            "R5": "a volcanic bomb punches through a stone wall and the wall bursts apart",
+            "R6": "a volcanic bomb hits a row of street trees and splits one in two as it falls in flames",
         }, {
             "T1": "glowing rocks slam into the roofs, sending tiles flying as flames rise",
             "T2": "a glowing rock bounces along the road and slams into a parked car",
             "T3": "a glowing rock smashes through a shop window and sets the curtains on fire",
             "T4": "a glowing rock splits a utility pole and its cable falls into the street spitting sparks",
-        }, {("R2", "T2"), ("R1", "T2"), ("R3", "T3")}, {"T1": {RT, VB}}),
+            "T5": "a volcanic bomb lands in the middle of the street and the road blasts apart in a crater of sparks and "
+                  "rock",
+            "T6": "a volcanic bomb hits a house's upper floor and a section of the wall bursts outward in flames",
+        }, {("R2", "T2"), ("R1", "T2"), ("R3", "T3"), ("R5", "T6"), ("R6", "T4")}, {"T1": {RT, VB}}),
     }
     VALID = {
         "S1": ["The shockwave bursts the shop windows along the street one after another.",
@@ -2481,51 +2471,6 @@ class TestVolcano(unittest.TestCase):
                "The steel shutters bulge and rip apart, flying onto the sidewalk.",
                "Shop doors and shutters crumple and explode outward."],
         # 13 Eki: yeni lav ve kül bulutu maddeleri, her biri 5 doğal GPT cümlesi (yanlış ret kontrolü)
-        # 13 Eki (2): yavaş lav maddeleri, her biri 5 doğal GPT cümlesi (yanlış ret kontrolü, hız kelimesi yok)
-        "L1": ["The thick lava front shoves a stone wall over and grinds across it, the wall crumbling under it.",
-               "The crusted lava front pushes a garden wall over and crawls across the rubble.",
-               "Molten rock presses against a stone wall until it topples and the lava grinds over it.",
-               "A low stone wall crumbles under the thick lava as it creeps across.",
-               "The lava front slowly knocks down a boundary wall and grinds over the stones."],
-        "L2": ["The scorching heat ignites a row of street trees ahead of the lava front and they burn as the crusted "
-               "front reaches their roots.",
-               "The scorching heat sets the street trees ablaze before the crusted lava front reaches their roots.",
-               "Ahead of the creeping lava, a row of trees catches fire from the heat.",
-               "The lava's searing heat ignites the roadside trees, which burn as the front grinds into them.",
-               "Street trees burst into flames in the heat as the thick lava crawls toward them.",
-               "The olive trees along the street start burning as the lava front presses against their trunks."],
-        "L3": ["The lava front presses against the corner of a house, the wall bulges, cracks and caves in.",
-               "The lava front presses into the corner of a house until the wall cracks and caves in.",
-               "Thick molten rock pushes against a cottage, its wall bulging and then collapsing.",
-               "The crusted lava grinds into a house corner and the stone wall crumbles.",
-               "The lava shoves against a home and its corner wall gives way."],
-        "L4": ["The lava front grinds over a wooden fence and a small shed, which burst into flames.",
-               "The lava front crawls over a wooden fence and a garden shed, and both go up in flames.",
-               "Thick lava grinds across a picket fence and a tool shed, setting them ablaze.",
-               "The crusted front of molten rock crushes a fence and a small hut, which catch fire.",
-               "A wooden fence and a shed burst into flames as the lava front pushes over them."],
-        "M1": ["The lava front reaches a house, the front door and windows burst from the heat and flames shoot out of "
-               "the upper windows.",
-               "The lava front reaches a house and its door and windows blow out from the heat, flames shooting from "
-               "the upper floor.",
-               "As the molten rock presses against a home, the windows shatter and fire bursts from the top floor.",
-               "The thick lava creeps up to a cottage, the front door bursts and flames leap from the upstairs windows.",
-               "The lava front grinds against a house until its windows explode and the upper rooms go up in flames."],
-        "M2": ["A house wall collapses into the lava as the front grinds around the building.",
-               "The lava front grinds around a house and its wall caves in.",
-               "A cottage wall crumbles into the thick lava creeping around the building.",
-               "As the molten rock presses around the house, a whole wall gives way.",
-               "The crusted lava wraps around a home and its front wall topples into it."],
-        "M3": ["The front swallows a shop front, the awning ignites and the facade buckles.",
-               "The lava front swallows a shopfront, its awning catches fire and the facade bends.",
-               "Molten rock engulfs a café front as the canopy bursts into flames.",
-               "The thick lava buries a store front and the awning goes up in flames as the walls warp.",
-               "The crawling lava reaches a bakery, setting the awning ablaze while the shop front buckles."],
-        "M4": ["The lava piles up against a building and the first floor bursts open, flames and sparks pouring out.",
-               "The lava piles up against a building until the ground floor bursts open and flames pour out.",
-               "Molten rock heaps against a house and its first floor blows open in fire and sparks.",
-               "The lava banks up against a building and the lower floor explodes in flames.",
-               "The thick lava presses into a house and the first storey bursts apart, spraying sparks."],
         "P1": ["The cloud front slams into the houses across the street and tears the balconies off their facades.",
                "The pyroclastic surge slams into the houses across the street and rips the balconies off their walls.",
                "The ash cloud hits the facades opposite and tears their balconies away.",
@@ -2596,6 +2541,84 @@ class TestVolcano(unittest.TestCase):
                "A glowing chunk of rock strikes a telephone pole and cleaves it apart.",
                "A burning stone hits a utility pole, which cracks and sheds sparking wires.",
                "A glowing bomb smashes into a pole and the power lines drop, sparking."],
+        # 13 Eki (4): yeni maddeler, her biri 5 doğal GPT cümlesi (yanlış ret kontrolü)
+        "S4": ["The shockwave bends a row of street trees flat and snaps power poles in two.",
+               "The blast flattens the trees along the street and breaks the power poles.",
+               "The pressure wave knocks the roadside trees over and snaps a utility pole.",
+               "Street trees bend to the ground and power poles crack in the blast.",
+               "The shock wave topples a line of olive trees and splits the telephone poles."],
+        "S5": ["The shockwave topples a stone wall along the street and the stones scatter across the road.",
+               "The blast knocks down a stone wall and its stones tumble across the road.",
+               "The shock wave flattens a garden wall along the street.",
+               "A long stone wall collapses in the blast, scattering rocks over the street.",
+               "The pressure wave pushes over a brick wall beside the road."],
+        "U4": ["A second blast tears the front off a house across the street and the rubble spills into the road.",
+               "A second blast rips the front wall off a house and rubble pours into the street.",
+               "Another blast caves in the front of a house across the road.",
+               "A second shockwave strips the facade from a house, its rubble spilling into the street.",
+               "A further blast makes the front of a house collapse into the road."],
+        "U5": ["A bell tower cracks and its top section topples across the street.",
+               "The church bell tower cracks and its upper section crashes into the street.",
+               "A bell tower splits and the top of it falls across the road.",
+               "The village belfry gives way and its top tumbles onto the street.",
+               "The steeple cracks in the blast and its tip topples over the houses."],
+        "U6": ["The shockwave collapses a row of garden walls and a tin-roofed shed.",
+               "The blast knocks down a row of garden walls and a tin-roofed shed.",
+               "Garden walls crumble and a metal shed collapses in the shockwave.",
+               "The shock wave flattens a line of low walls and a small shed.",
+               "A row of stone walls and a tin shed cave in under the blast."],
+        "P4": ["The cloud front flattens a row of palm trees and hurls their fronds ahead of it.",
+               "The ash cloud flattens a line of palms and flings their fronds ahead.",
+               "The surge snaps the palm trees along the street and hurls the fronds forward.",
+               "A row of palm trees bends flat as the cloud front tears through.",
+               "The cloud knocks down the palms and their fronds fly ahead of it."],
+        "P5": ["The cloud front shoves a stone garden wall over and rolls on across the street.",
+               "The pyroclastic surge pushes over a stone garden wall and rolls across the street.",
+               "The ash cloud knocks down a garden wall and keeps rolling.",
+               "A stone wall crumbles as the cloud front shoves through it.",
+               "The cloud flattens a low garden wall on its way across the street."],
+        "P6": ["The cloud front rips the corrugated roofs off a row of low sheds and sends them flying.",
+               "The surge tears the tin roofs off a row of sheds and flings them away.",
+               "The ash cloud strips the metal roofs from the low sheds and sends them spinning.",
+               "Corrugated roofs peel off the sheds and fly through the air in the cloud.",
+               "The cloud front rips the sheet metal roofing off the huts and hurls it down the street."],
+        "Q4": ["The cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street.",
+               "The cloud slams into a retaining wall on the hillside and it collapses, boulders rolling into the "
+               "street.",
+               "A hillside retaining wall gives way and big rocks tumble onto the road.",
+               "The surge breaks a retaining wall and boulders crash down into the street.",
+               "The retaining wall crumbles as the cloud hits, sending boulders into the street."],
+        "Q5": ["The cloud blasts the front off a shop building and the brickwork falls into the street.",
+               "The surge rips the front off a shop and the bricks crash into the street.",
+               "The ash cloud tears away a store's facade and the brickwork tumbles down.",
+               "A shop building's front wall collapses into the street as the cloud hits.",
+               "The cloud front strips the storefront off a building and masonry falls onto the road."],
+        "Q6": ["The cloud engulfs a house and its balcony and flat roof slab tear away.",
+               "The cloud engulfs a house, tearing away its balcony and flat roof.",
+               "The surge swallows a house and rips off its balcony and roof slab.",
+               "As the ash cloud wraps a house, the balcony and concrete roof slab break loose.",
+               "The cloud front peels the balcony and the flat roof off a house."],
+        "R5": ["A volcanic bomb punches through a stone wall and the wall bursts apart.",
+               "A glowing boulder smashes through a stone wall, which bursts apart.",
+               "A volcanic bomb slams into a garden wall and blasts it to pieces.",
+               "A red-hot rock punches a hole in a stone wall and the wall crumbles.",
+               "A glowing bomb crashes into a brick wall and shatters it."],
+        "R6": ["A volcanic bomb hits a row of street trees and splits one in two as it falls in flames.",
+               "A glowing rock strikes a street tree, splitting it in two as it falls burning.",
+               "A volcanic bomb smashes into a row of trees and one splits and topples in flames.",
+               "A red-hot boulder hits a roadside pine, which cracks and falls ablaze.",
+               "A glowing bomb tears through a tree along the street and it crashes down burning."],
+        "T5": ["A volcanic bomb lands in the middle of the street and the road blasts apart in a crater of sparks and "
+               "rock.",
+               "A volcanic bomb lands in the middle of the road and blasts a crater into the asphalt.",
+               "A glowing boulder slams into the street, which bursts open in a shower of sparks.",
+               "A red-hot rock hits the street and gouges a smoking crater.",
+               "A glowing bomb crashes onto the road and the asphalt cracks open around it."],
+        "T6": ["A volcanic bomb hits a house's upper floor and a section of the wall bursts outward in flames.",
+               "A volcanic bomb slams into the upper floor of a house and the wall bursts outward in flames.",
+               "A glowing rock hits a house's top floor, blowing out a section of wall in fire.",
+               "A red-hot boulder punches into the second storey of a home and flames burst out.",
+               "A glowing bomb crashes into a house's upper storey, setting it ablaze."],
     }
     # Sadece atmosfer (kül sütunu, gökyüzü, duman, sönen ışıklar): hiçbir maddeden geçmemeli
     ATMOSPHERE = ["The ash column towers into the sky above the volcano.",
@@ -2619,11 +2642,10 @@ class TestVolcano(unittest.TestCase):
 
     def build(self, e, b2, b3, spot=None, vehicle="SUV", people=5):
         spot = spot or self.HT
-        vehicle = vehicle if es.uses_vehicle(e) else None   # 13 Eki: lav ve kül bulutu araçsız
+        vehicle = vehicle if es.uses_vehicle(e) else None   # 13 Eki: kül bulutu araçsız
         spec = es.build_spec(e, None, spot, None, b2, b3, vehicle, people)
         away = es.SLICE_RULES[e][1]["away_from"]
-        s2, s3 = cap(es.beat_text(e, "slice_2", b2, vehicle)), cap(es.beat_text(e, "slice_3", b3))
-        s2, s3 = short(s2), short(s3)
+        s2, s3 = short(es.beat_text(e, "slice_2", b2, vehicle)), short(es.beat_text(e, "slice_3", b3))
         s2 += " as the volcano glows" if len(s2.split()) < 10 else ""
         sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from {away}."),
               "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
@@ -2647,6 +2669,14 @@ class TestVolcano(unittest.TestCase):
         self.assertIn("volcano_disasters", ENV_CENTRIC_DOMAINS)
         self.assertIn("volcano_disasters", sk.NO_SIGNS_DOMAINS)
         self.assertEqual(sk.PHENOMENA["Volkan"], list(VOLC))
+        # 13 Eki (4): lav nehri hiçbir listede yok (menü, olay havuzu, iskelet, kilit görsel, tekrar önleme)
+        lava = "Lava river pours down into a village street"
+        self.assertFalse(hasattr(es, "LAVA_RIVER"))
+        for where in (bot.EVENT_LABELS, DOMAIN_ATTRIBUTES["volcano_disasters"]["events"], sk.EVENT_SKELETONS,
+                      sk.EVENT_COUNT, es.EVENT_KEY_VISUAL, es.EVENT_BEATS, es.TOTAL_WORDS_BY_EVENT, es.SLICE_RULES,
+                      es.RECENT_BEAT_BLOCK_BY_EVENT, cp.EVENT_OUTCOMES, cp.EVENT_REQUIRED):
+            self.assertNotIn(lava, where)
+        self.assertEqual(len(sk.skeleton_events("volcano_disasters")), 3)
         for e in VOLC:
             with self.subTest(event=e):
                 self.assertLessEqual(len(bot.EVENT_LABELS[e]), 40)
@@ -2655,7 +2685,7 @@ class TestVolcano(unittest.TestCase):
                 self.assertEqual(sk.count_range(e, None), (3, 6))
                 self.assertEqual(es.TOTAL_WORDS_BY_EVENT[e], (40, 75))
                 self.assertIn(e, es.NO_RAIN_EVENTS)
-                if e in (es.LAVA_RIVER, es.PYROCLASTIC):   # 13 Eki: araçsız
+                if e == es.PYROCLASTIC:   # 13 Eki: araçsız
                     self.assertFalse(es.uses_vehicle(e))
                     self.assertNotIn(e, es.EVENT_VEHICLES)
                 else:
@@ -2692,7 +2722,7 @@ class TestVolcano(unittest.TestCase):
         from core.trace_format import count_constraints
         for e in VOLC:
             s = sk.EVENT_SKELETONS[e]
-            cams = [self.HT, self.RT] if e == es.LAVA_RIVER else list(self.CAMS)
+            cams = list(self.CAMS)
             with self.subTest(event=e):
                 self.assertIs(s["weather"], sk.VOLCANO_WEATHER)
                 self.assertEqual(list(s["spots"]), cams)
@@ -2712,11 +2742,11 @@ class TestVolcano(unittest.TestCase):
                      and any(getattr(t, "id", None) == "EVENT_BEATS" for t in n.targets))
         seen = 0
         for k, node in zip(beats.keys, beats.values):
-            if getattr(k, "id", None) in ("ERUPTION", "LAVA_RIVER", "PYROCLASTIC", "VOLCANIC_BOMBS"):
+            if getattr(k, "id", None) in ("ERUPTION", "PYROCLASTIC", "VOLCANIC_BOMBS"):
                 seen += 1
                 names = {n.id for n in ast.walk(node) if isinstance(n, ast.Name)}
                 self.assertTrue(names and all(n.startswith("_VOLC_") for n in names), names)
-        self.assertEqual(seen, 4)
+        self.assertEqual(seen, 3)
 
     def test_canonical_and_five_valid_sentences_pass(self):
         self.assertEqual(set(self.VALID), {bid for _, _, bid, _ in self.beats()})
@@ -2755,10 +2785,10 @@ class TestVolcano(unittest.TestCase):
                                                                                      "its rear window."}))
 
     def test_no_rain_gate(self):
-        spec, sl = self.build(es.LAVA_RIVER, "L2", "M3")
+        spec, sl = self.build(es.PYROCLASTIC, "P2", "Q2")
         self.assertNotIn("fire_no_rain", self.codes(spec, sl))
-        self.assertIn("fire_no_rain", self.codes(spec, {**sl, "slice_3": "A burning utility pole topples into the "
-                                                                           "street in the heavy rain."}))
+        self.assertIn("fire_no_rain", self.codes(spec, {**sl, "slice_3": "The cloud engulfs a whole block and the "
+                                                                           "windows burst in the heavy rain."}))
         # "shower" serbest; kül/taş ile "rain" fiili de serbest (yanan/düşen nesne kuralı)
         self.assertEqual(es.rain_words("Glowing rocks rain down on the roofs in a shower of sparks."), [])
 
@@ -2771,7 +2801,7 @@ class TestVolcano(unittest.TestCase):
         self.assertNotIn("beat_vehicle", self.codes(spec, sl))   # S1'de araç yok
 
     def test_people_rule(self):
-        for e, away in ((es.ERUPTION, "the eruption"), (es.LAVA_RIVER, "the lava"), (es.PYROCLASTIC, "the cloud"),
+        for e, away in ((es.ERUPTION, "the eruption"), (es.PYROCLASTIC, "the cloud"),
                         (es.VOLCANIC_BOMBS, "the falling rocks")):
             r = {x["rule"]: x for x in es.SLICE_RULES[e]}
             self.assertIs(r["slice_flee"]["terms"], es._FLEE)
@@ -2790,17 +2820,17 @@ class TestVolcano(unittest.TestCase):
                             self.fail(f"{e}/{spot}/{b2}+{b3}/{v}: {issues}")
                         n += 1
                         if not es.uses_vehicle(e):
-                            break   # 13 Eki: lav ve kül bulutu araçsız (tek tur)
-        # patlama 7 + 4 + 4 ve bombalar 13 + 9 + 9 (× 4 araç); lav 11 + 11 (2 teras); piroklastik 7 + 3 + 3
-        self.assertEqual(n, (15 + 31) * 4 + 22 + 13)
+                            break   # 13 Eki: kül bulutu araçsız (tek tur)
+        # 13 Eki (4): patlama 27 + 21 + 21 ve bombalar 31 + 25 + 25 (× 4 araç); kül bulutu 28 + 13 + 13
+        self.assertEqual(n, (69 + 81) * 4 + 54)
 
     def test_block_depth_and_never_runs_out(self):
         from itertools import combinations
-        self.assertEqual(es.RECENT_BEAT_BLOCK_BY_EVENT, {es.ERUPTION: 1, es.LAVA_RIVER: 1, es.VOLCANIC_BOMBS: 1,
-                                                         es.PYROCLASTIC: 0})
+        # 13 Eki (4), Bahadır: patlama ve bombalar standart 3, kül bulutu 2 (Bahadır kararı)
+        self.assertEqual(es.RECENT_BEAT_BLOCK_BY_EVENT, {es.PYROCLASTIC: 2})
         self.assertEqual(es.RECENT_BEAT_BLOCK, 3)                  # diğer olaylar değişmedi
         for e in VOLC:
-            b, k = es.EVENT_BEATS[e], es.RECENT_BEAT_BLOCK_BY_EVENT[e]
+            b, k = es.EVENT_BEATS[e], es.RECENT_BEAT_BLOCK_BY_EVENT.get(e, es.RECENT_BEAT_BLOCK)
             for spot in sk.view_spots(e, None):
                 ps_ = es.allowed_pairs(e, None, spot)
                 worst = min(sum(1 for v, d in ps_ if v not in x2 and d not in x3)
@@ -2859,18 +2889,28 @@ def _volc_gpt(messages=None):
     return gpt
 
 
-class TestVolcanoCameraLava13Oct(unittest.TestCase):
-    """13 Eki 2026, Bahadır: 3 videoda "pans to follow" kamerayı terastan sokağa indirdi. Volkan kamerası sabit; lav
-    araçsız ve sadece iki terasta; kül bulutu maddeleri yukarıdan görünen büyük şeyler. Ağ yok, ücretli çağrı yok."""
+class TestVolcanoClose13Oct(unittest.TestCase):
+    """13 Eki 2026, Bahadır: volkan kapandı. Kamera sabit ve tekrarsız (pan-follow yok), lav nehri çıkarıldı, 3 olayın
+    havuzları 5-6 madde, aynı yapı iki dilimde yok, prompt en fazla 175 kelime. Ağ yok, ücretli çağrı yok."""
 
     HT, RT, VB = TestVolcano.HT, TestVolcano.RT, TestVolcano.VB
-    # Aynı yapı kuralı: iki dilim aynı yapıyı (duvar/ev) ikinci kez kullanmaz. M4 "bina cephesine yığılır" duvar
-    # sayılır (Bahadır örneği L1+M4); dükkân (M3) ev sayılmaz.
-    STRUCT = {es.LAVA_RIVER: {"L1": {"wall"}, "L2": {"fence", "shed"}, "L3": {"house", "wall"}, "L4": {"tree"},
-                              "M1": {"house"}, "M2": {"house", "wall"}, "M3": {"shop"}, "M4": {"house", "wall"}},
-              es.PYROCLASTIC: {"P1": {"house", "balcony"}, "P2": {"tree", "pole"}, "P3": {"roof"},
-                               "Q1": {"house", "wall"}, "Q2": {"window"}, "Q3": {"roof", "chimney"}}}
-    LAVA_BAD = re.compile(r"\{vehicle\}|\bsuv\b|\bcars?\b|\btrucks?\b|\bbalcon(?:y|ies)\b", re.IGNORECASE)
+    # Aynı yapı kuralı (Bahadır): iki dilim aynı yapıyı (duvar, ağaç/direk, çatı, balkon, bina) kullanmaz. Dükkân ev
+    # sayılmaz; U1 tabela/tente (S1 vitriniyle önceden serbest), R4 tabela (T3 vitriniyle önceden serbest).
+    STRUCT = {
+        es.ERUPTION: {"S1": {"shop"}, "S2": {"vehicle"}, "S3": {"roof"}, "S4": {"treepole"}, "S5": {"wall"},
+                      "U1": {"sign"}, "U2": {"vehicle"}, "U3": {"shop"}, "U4": {"house"}, "U5": {"tower"},
+                      "U6": {"wall", "shed"}},
+        es.PYROCLASTIC: {"P1": {"house", "balcony"}, "P2": {"treepole"}, "P3": {"roof"}, "P4": {"treepole"},
+                         "P5": {"wall"}, "P6": {"roof", "shed"},
+                         "Q1": {"house", "wall"}, "Q2": {"window"}, "Q3": {"roof", "chimney"}, "Q4": {"wall"},
+                         "Q5": {"shop"}, "Q6": {"house", "balcony", "roof"}},
+        es.VOLCANIC_BOMBS: {"R1": {"vehicle"}, "R2": {"vehicle"}, "R3": {"shop"}, "R4": {"sign"}, "R5": {"wall"},
+                            "R6": {"treepole"},
+                            "T1": {"roof"}, "T2": {"vehicle"}, "T3": {"shop"}, "T4": {"treepole"}, "T5": {"road"},
+                            "T6": {"house", "wall"}},
+    }
+    NEW = {es.ERUPTION: ("S4", "S5", "U4", "U5", "U6"), es.PYROCLASTIC: ("P4", "P5", "P6", "Q4", "Q5", "Q6"),
+           es.VOLCANIC_BOMBS: ("R5", "R6", "T5", "T6")}
 
     def setUp(self):
         es._BEAT_MEMORY.clear()
@@ -2885,48 +2925,15 @@ class TestVolcanoCameraLava13Oct(unittest.TestCase):
                     suffix = sk.style_suffix(e, None, spot)
                     self.assertNotIn("pans to follow", suffix)
                     self.assertNotIn("eye level", suffix)
-                    self.assertTrue(suffix.startswith(camera))
+                    self.assertEqual(suffix, f"{camera} {VOLC_GUARD} No readable signs, text or flags.")
                     with patch.object(cp, "pick_setting", lambda ev, view=None, s=spot: (s, sk.VOLCANO_WEATHER[0])):
                         scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], _volc_gpt()))
                     self.assertNotIn("pans to follow", scene["prompt"])
                     self.assertIn(camera, scene["prompt"])
                     self.assertEqual(scene["style_suffix"], suffix)
 
-    def test_lava_pace_rule_and_eight_constraints(self):
-        # 13 Eki (2), Bahadır kararı: hız cümlesi sadece lavda; 9. kısıt olmasın diye lavda "emergency responders" çıktı
-        from core.trace_format import count_constraints
-        for e in VOLC:
-            for spot in sk.view_spots(e, None):
-                suffix = sk.style_suffix(e, None, spot)
-                with self.subTest(event=e, spot=spot):
-                    self.assertEqual(count_constraints(suffix)[0], 8)
-                    self.assertIn(f"a corner of the {TestVolcano.PERCH[spot]} railing in the foreground", suffix)
-                    self.assertIn("tilting down no more than slightly and never descending, the erupting volcano always "
-                                  "visible in the upper third of the frame", suffix)
-                    self.assertTrue(suffix.startswith("Handheld footage shot by a person standing on "))
-                    self.assertIn("slight hand shake", suffix)
-                    if e == es.LAVA_RIVER:
-                        self.assertTrue(suffix.endswith(f"no cuts. {LAVA_PACE} {VOLC_LAVA_GUARD} No readable signs, "
-                                                        f"text or flags."))
-                        self.assertNotIn("responders", suffix)
-                    else:
-                        self.assertNotIn(LAVA_PACE, suffix)
-                        self.assertTrue(suffix.endswith(f"no cuts. {VOLC_GUARD} No readable signs, text or flags."))
-        # kilit görsel, havuz ve iskelet metninde hız/sıvı kelimesi yok; kilit görsel olay adıyla uyuşuyor
-        import core.creative_pipeline as cp
-        key = es.EVENT_KEY_VISUAL[es.LAVA_RIVER]
-        self.assertEqual(es.lava_fast_words(key), [])
-        self.assertFalse({i["rule"] for i in cp.story_rule_issues(es.LAVA_RIVER, None, key)}
-                         & {"a_trigger_first", "e_event_and_ship_named", "required"})
-        self.assertEqual(es.lava_fast_words(sk.EVENT_SKELETONS[es.LAVA_RIVER]["text"]), [])
-        for slot in ("slice_2", "slice_3"):
-            for bid, beat in es.EVENT_BEATS[es.LAVA_RIVER][slot].items():
-                self.assertEqual(es.lava_fast_words(beat["text"]), [], bid)
-                self.assertFalse({"roof", "rooftop", "tile", "rafter", "beam"} & set(re.findall(r"[a-z]+", beat["text"])),
-                                 bid)
-
     def test_camera_sentence_has_no_repetition(self):
-        # 13 Eki (3): aynı anlamda iki ifade yok; volkan "upper third" bir kez, eğilme bir kez, yön bir kez
+        from core.trace_format import count_constraints
         for e in VOLC:
             for spot in sk.view_spots(e, None):
                 cam = sk.volcano_camera(spot)
@@ -2941,83 +2948,15 @@ class TestVolcanoCameraLava13Oct(unittest.TestCase):
                     for gone in ("above the rooftops", "only tilts slightly", "stays in the upper third",
                                  "moves closer to the ground", "stays fixed in place"):
                         self.assertNotIn(gone, low)
-                    self.assertTrue(cam.startswith("Handheld footage shot by a person standing on "))
                     self.assertIn("slight hand shake", cam)
-        # diğer kategorilerin ortak giyim/ışık satırı değişmedi
+                    self.assertEqual(count_constraints(sk.style_suffix(e, None, spot))[0], 8)
+        # diğer kategorilerin ortak giyim/ışık satırı değişmedi; lav hız cümlesi kalmadı
         self.assertIn("never hi-vis PPE on civilians; emergency responders wear service uniforms",
                       sk.style_suffix(es.MUDSLIDE, None, list(sk.EVENT_SKELETONS[es.MUDSLIDE]["spots"])[0]))
-
-    def test_lava_no_water_no_impact_and_people_visible(self):
-        # 13 Eki (3): lav prompt'unda (stil eki dahil) "water" ve hızlı çarpma fiili yok
-        bad = re.compile(r"\bwater\b|\b(?:crash|slam|smash|hurl|blast|ram|plow|plough)(?:e?s|ed|ing|med|ming)?\b|"
-                         r"\brush(?:es|ed|ing)?\b", re.IGNORECASE)
-        for spot in sk.view_spots(es.LAVA_RIVER, None):
-            for b2, b3 in es.allowed_pairs(es.LAVA_RIVER, None, spot):
-                spec, sl = TestVolcano.build(TestVolcano(), es.LAVA_RIVER, b2, b3, spot=spot)
-                prompt = es.assemble_prompt(spec, sl)
-                with self.subTest(spot=spot, pair=(b2, b3)):
-                    self.assertIsNone(bad.search(prompt), prompt)
-                    self.assertEqual(es.final_prompt_issues(spec, sl, prompt), [])
-        self.assertEqual(es._LAVA_IMPACT, ("crash", "slam", "smash", "hurl", "blast", "ram", "plow", "plough"))
-        spec, sl = TestVolcano.build(TestVolcano(), es.LAVA_RIVER, "L3", "M3")
-        codes = lambda f, t: TestVolcano.codes(TestVolcano(), spec, {**sl, f: es.clean_slice(t)})
-        for f, t in (("slice_2", "The lava front crashes into the corner of a house, the wall cracks and caves in."),
-                     ("slice_2", "The lava slams against the corner of a house and the wall caves in."),
-                     ("slice_2", "The lava smashes the corner of a house and the wall caves in."),
-                     ("slice_2", "The lava rams the corner of a house and the wall caves in."),
-                     ("slice_2", "The lava plows into the corner of a house and the wall caves in."),
-                     ("slice_3", "The lava hurls the burning awning into a shop front as the facade buckles."),
-                     ("slice_3", "The lava blasts through a shop front, the awning ignites and the facade buckles.")):
-            with self.subTest(text=t):
-                self.assertIn("lava_no_impact", codes(f, t))
-        # serbest fiiller (5 doğal cümle, "pressing" ve "grinding" dahil): ret yok
-        for f, t in (("slice_2", "The lava front keeps pressing against the corner of a house until the wall caves in."),
-                     ("slice_2", "Grinding into the corner of a house, the crusted lava makes the wall bulge and crack."),
-                     ("slice_2", "The thick lava creeps against a cottage corner, the wall bulging and caving in."),
-                     ("slice_3", "Grinding forward, the lava front swallows a shop front as the awning ignites."),
-                     ("slice_3", "The lava keeps pushing into a shop front, the awning ignites and the facade buckles.")):
-            with self.subTest(ok=t):
-                self.assertFalse(codes(f, t) & {"lava_no_impact", "lava_no_fast", "beat_terms"}, t)
-        # insanlar görünür kalır: atmosferik süs reddedilir, kaçış (race/rush dahil) serbest
-        for t in ("Five people run from the lava, fading into the smoke.",
-                  "Five people run from the lava, vanishing against the landscape.",
-                  "Five people run from the lava and disappear into the distance."):
-            with self.subTest(fade=t):
-                self.assertIn("lava_people_visible", codes("slice_1_rest", t))
-        for t in ("Five people scramble away down the street from the lava.",
-                  "Five residents race away from the lava down the street.",
-                  "Five people rush away from the lava, still in view down the street."):
-            with self.subTest(run=t):
-                self.assertFalse(codes("slice_1_rest", t) & {"lava_people_visible", "lava_no_fast", "lava_no_impact"})
-        # çarpma ve süs kapısı sadece lavda
-        spec, sl = TestVolcano.build(TestVolcano(), es.VOLCANIC_BOMBS, "R4", "T2")
-        self.assertFalse(TestVolcano.codes(TestVolcano(), spec, sl) & {"lava_no_impact", "lava_people_visible"})
-
-    def test_volcano_prompt_max_175_words(self):
-        # 13 Eki (3), Bahadır kararı: hikâye + stil eki en fazla 175 kelime; aşarsa GPT'ye kısaltma geri bildirimi
-        import asyncio
-        import core.creative_pipeline as cp
-        self.assertEqual(es.VOLC_MAX_PROMPT_WORDS, 175)
-        spec, sl = TestVolcano.build(TestVolcano(), es.LAVA_RIVER, "L2", "M1")
-        long = {**sl, "slice_2": es.clean_slice(cap(es.beat_text(es.LAVA_RIVER, "slice_2", "L1"))),
-                "slice_3": es.clean_slice(cap(es.beat_text(es.LAVA_RIVER, "slice_3", "M1")))}
-        spec = es.build_spec(es.LAVA_RIVER, None, self.HT, None, "L1", "M1", None, 5)
-        issue = next(i for i in es.final_prompt_issues(spec, long, es.assemble_prompt(spec, long))
-                     if i["rule"] == "volcano_prompt_words")
-        self.assertIn("shorten the three fields", issue["feedback"])
-        for e in VOLC:
-            es._BEAT_MEMORY.clear()
-            most = 0
-            for _ in range(100):
-                scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], _volc_gpt()))
-                n = len(scene["prompt"].split())
-                most = max(most, n)
-                self.assertLessEqual(n, 175, scene["prompt"])
-            with self.subTest(event=e):
-                self.assertLessEqual(most, 175)
+        self.assertFalse(hasattr(sk, "VOLCANO_LAVA_PACE") or hasattr(sk, "VOLCANO_LAVA_GUARDRAILS"))
+        self.assertFalse(hasattr(es, "lava_fast_words") or hasattr(es, "EVENT_BANNED_WORDS"))
 
     def test_other_categories_keep_pan_follow(self):
-        # yangın, hortum, heyelan, kıyı dalga stil ekleri değişmedi
         for e in (es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO, es.HELICOPTER, es.LANDFALL, es.MARINA_TORNADO,
                   es.AVENUE, es.MUDSLIDE, es.SLOPE, es.VILLAGE, es.TIDAL):
             s = sk.EVENT_SKELETONS[e]
@@ -3027,169 +2966,98 @@ class TestVolcanoCameraLava13Oct(unittest.TestCase):
                                   f"{s['object']}", sk.style_suffix(e, None, spot))
         self.assertEqual(set(sk.CAMERA_MOTION_EXTRA), {es.FLOOD})
 
-    def test_lava_vehicle_free_two_terraces(self):
-        self.assertEqual(sk.view_spots(es.LAVA_RIVER, None), [self.HT, self.RT])
-        self.assertNotIn(self.VB, sk.EVENT_SKELETONS[es.LAVA_RIVER]["spots"])
-        for e in (es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS):   # balkon diğer volkan olaylarında kalır
-            self.assertIn(self.VB, sk.EVENT_SKELETONS[e]["spots"])
-        self.assertFalse(es.uses_vehicle(es.LAVA_RIVER))
-        self.assertNotIn(es.LAVA_RIVER, es.EVENT_VEHICLES)
-        self.assertIsNone(self.LAVA_BAD.search(es.EVENT_KEY_VISUAL[es.LAVA_RIVER]))
-        self.assertIsNone(self.LAVA_BAD.search(sk.EVENT_SKELETONS[es.LAVA_RIVER]["text"]))
-        for slot in ("slice_2", "slice_3"):
-            for bid, beat in es.EVENT_BEATS[es.LAVA_RIVER][slot].items():
-                self.assertIsNone(self.LAVA_BAD.search(beat["text"]), bid)
-                self.assertFalse(any(_VOLC_CAR_GROUP_HIT(g) for g in beat["terms"]), bid)
-        with self.assertRaises(es.StructureError):   # araçsız olaya araç verilemez
-            es.build_spec(es.LAVA_RIVER, None, self.HT, None, "L1", "M1", "SUV", 4)
-        for spot in sk.view_spots(es.LAVA_RIVER, None):
-            for b2, b3 in es.allowed_pairs(es.LAVA_RIVER, None, spot):
-                spec, sl = TestVolcano.build(TestVolcano(), es.LAVA_RIVER, b2, b3, spot=spot)
-                prompt = es.assemble_prompt(spec, sl)
-                with self.subTest(spot=spot, pair=(b2, b3)):
-                    self.assertIsNone(spec["vehicle"])
-                    self.assertIsNone(self.LAVA_BAD.search(prompt), prompt)
-                    self.assertEqual(es.final_prompt_issues(spec, sl, prompt), [])
-        # GPT'ye araç satırı gitmez; araç kullanan volkan olayında gider
-        import core.creative_pipeline as cp
-        spec, _ = TestVolcano.build(TestVolcano(), es.LAVA_RIVER, "L2", "M3")
-        self.assertNotIn("VEHICLE", cp._slices_message(spec, "P", "W", 3, 6, [], None))
-        spec, _ = TestVolcano.build(TestVolcano(), es.ERUPTION, "S2", "U1")
-        self.assertIn("\nVEHICLE: SUV\n", cp._slices_message(spec, "P", "W", 3, 6, [], None))
-
-    def test_lava_banned_words_gate(self):
-        spec, sl = TestVolcano.build(TestVolcano(), es.LAVA_RIVER, "L2", "M3")
-        codes = TestVolcano.codes(TestVolcano(), spec, sl)
-        self.assertFalse(codes & {"lava_no_vehicle", "lava_no_balcony", "lava_no_fast"})
-        for field, text, code in (
-                ("slice_2", "The lava crushes a fence and a shed and buries a parked car down the street.",
-                 "lava_no_vehicle"),
-                ("slice_3", "The lava swallows a shop front and an SUV, the awning ignites and the facade buckles.",
-                 "lava_no_vehicle"),
-                ("slice_3", "The lava swallows a shop front and a pickup truck as the awning ignites.", "lava_no_vehicle"),
-                ("slice_3", "The lava swallows a shop front, flames leap to a balcony and the facade buckles.",
-                 "lava_no_balcony"),
-                # 13 Eki (2): hız/sıvı kelimeleri
-                ("slice_2", "The lava races down the street and buries a wooden fence and a small shed.", "lava_no_fast"),
-                ("slice_2", "The lava rushes over a wooden fence and a small shed, which burst into flames.",
-                 "lava_no_fast"),
-                ("slice_2", "A torrent of lava surges over a wooden fence and a small shed.", "lava_no_fast"),
-                ("slice_2", "The lava gushes over a fence and floods a small shed, which burst into flames.",
-                 "lava_no_fast"),
-                ("slice_3", "The lava pours through the front door as flames shoot from the upper windows.",
-                 "lava_no_fast"),
-                ("slice_3", "Lava streams into a shop front like water, the awning ignites.", "lava_no_fast"),
-                ("slice_3", "A wave of lava swallows a shop front and the awning ignites.", "lava_no_fast"),
-                ("slice_3", "The lava rapids swallow a shop front and the awning ignites.", "lava_no_fast"),
-                ("slice_1_rest", "Five people run as the lava races after them.", "lava_no_fast")):
-            with self.subTest(text=text):
-                self.assertIn(code, TestVolcano.codes(TestVolcano(), spec, {**sl, field: es.clean_slice(text)}))
-        # 13 Eki (2): "slowly/gradually/steadily" artık serbest; insanlar koşarak kaçar ("race/rush"); alev ve kıvılcım
-        # "pour/stream" edebilir
-        for field, text in (("slice_2", "The lava slowly grinds over a wooden fence and a small shed, which burst into "
-                                        "flames."),
-                            ("slice_2", "The lava front gradually grinds over a wooden fence and a small shed, which "
-                                        "burst into flames."),
-                            ("slice_1_rest", "Five people race away from the lava as it steadily advances."),
-                            ("slice_1_rest", "Five residents rush away, leaving the crawling lava behind."),
-                            ("slice_3", "The front swallows a shop front, the awning ignites and flames pour out as "
-                                        "the facade buckles.")):
-            with self.subTest(ok=text):
-                self.assertNotIn("lava_no_fast", TestVolcano.codes(TestVolcano(), spec,
-                                                                    {**sl, field: es.clean_slice(text)}))
-        # "carry/carried", "cartwheel" araç sayılmaz; kapı sadece lavda
-        self.assertEqual(es.find_terms(es._VOLC_CAR, "The lava carries the burning wreckage, a cartwheel spins."), [])
-        spec, sl = TestVolcano.build(TestVolcano(), es.ERUPTION, "S1", "U2")
-        self.assertFalse(TestVolcano.codes(TestVolcano(), spec, sl) & {"lava_no_vehicle", "lava_no_fast"})
-        self.assertIn("lava_no_fast", TestVolcano.codes(TestVolcano(), *TestVolcano.build(
-            TestVolcano(), es.LAVA_RIVER, "L4", "M2")[:1], {**TestVolcano.build(TestVolcano(), es.LAVA_RIVER, "L4",
-                                                                              "M2")[1],
-                                                           "slice_3": "The lava surges around a house and its wall "
-                                                                      "caves in."}))
-        spec, sl = TestVolcano.build(TestVolcano(), es.PYROCLASTIC, "P1", "Q2")   # hız kapısı sadece lavda
-        self.assertNotIn("lava_no_fast", TestVolcano.codes(TestVolcano(), spec, {**sl, "slice_2": "The cloud races "
-                         "into the houses across the street and tears the balconies off their facades."}))
-        self.assertEqual(set(es.EVENT_BANNED_WORDS), {es.LAVA_RIVER})
-
-    def test_each_new_beat_passes_alone(self):
-        for e in (es.LAVA_RIVER, es.PYROCLASTIC):
+    def test_pool_sizes_and_pair_counts(self):
+        # 13 Eki (4): dilim başına madde sayısı ve kamera noktası başına izinli çift sayısı (rapor)
+        sizes = {e: (len(es.EVENT_BEATS[e]["slice_2"]), len(es.EVENT_BEATS[e]["slice_3"])) for e in VOLC}
+        self.assertEqual(sizes, {es.ERUPTION: (5, 6), es.PYROCLASTIC: (6, 6), es.VOLCANIC_BOMBS: (6, 6)})
+        pairs = {e: [len(es.allowed_pairs(e, None, s)) for s in (self.HT, self.RT, self.VB)] for e in VOLC}
+        self.assertEqual(pairs, {es.ERUPTION: [27, 21, 21], es.PYROCLASTIC: [28, 13, 13],
+                                 es.VOLCANIC_BOMBS: [31, 25, 25]})
+        for e in VOLC:   # araçsız kül bulutu; patlama ve bombalarda araç sadece eski maddelerde
             for slot in ("slice_2", "slice_3"):
-                for bid, beat in es.EVENT_BEATS[e][slot].items():
-                    text = es.clean_slice(cap(es.beat_text(e, slot, bid)))
-                    with self.subTest(beat=bid):
-                        self.assertNotIn("{vehicle}", beat["text"])
-                        self.assertEqual(es.missing_term_groups(beat["terms"], text), [])
-                        if e == es.LAVA_RIVER:   # 13 Eki (3): madde ve doğal cümleleri hız/çarpma kapısından geçer
-                            for t in [text] + TestVolcano.VALID[bid]:
-                                self.assertEqual(es.lava_fast_words(t) + es.find_terms(es._LAVA_IMPACT, t), [], t)
-                        if e == es.LAVA_RIVER:
-                            self.assertEqual([c for c, t, *_ in es.EVENT_BANNED_WORDS[e] if es.find_terms(t, text)], [])
-                        # başka maddenin terimleriyle karışmaz: her madde kendi dilimindeki en az bir başka maddeden
-                        # kalır (havuz içi ayırt edicilik)
-                        others = [o for o, ob in es.EVENT_BEATS[e][slot].items()
-                                  if o != bid and es.missing_term_groups(ob["terms"], text)]
-                        self.assertTrue(others, bid)
+                for bid in self.NEW[e]:
+                    if bid in es.EVENT_BEATS[e][slot]:
+                        self.assertNotIn("{vehicle}", es.EVENT_BEATS[e][slot][bid]["text"])
+        self.assertFalse(es.uses_vehicle(es.PYROCLASTIC))
+
+    def test_new_beats_pass_alone_and_distinct(self):
+        for e, ids in self.NEW.items():
+            for bid in ids:
+                slot = "slice_2" if bid in es.EVENT_BEATS[e]["slice_2"] else "slice_3"
+                beat = es.EVENT_BEATS[e][slot][bid]
+                text = es.clean_slice(cap(es.beat_text(e, slot, bid)))
+                with self.subTest(beat=bid):
+                    self.assertEqual(es.missing_term_groups(beat["terms"], text), [])
+                    for v in TestVolcano.VALID[bid]:
+                        self.assertEqual(es.missing_term_groups(beat["terms"], v), [], v)
+                    for a in TestVolcano.ATMOSPHERE:
+                        self.assertTrue(es.missing_term_groups(beat["terms"], a), a)
+                    # kendi dilimindeki en az bir başka maddeden kalır (havuz içi ayırt edicilik)
+                    others = [o for o, ob in es.EVENT_BEATS[e][slot].items()
+                              if o != bid and es.missing_term_groups(ob["terms"], text)]
+                    self.assertTrue(others, bid)
+                    # Z6 (marina) kelimeleri volkanda yok
+                    words = {w for g in beat["terms"] for w in g}
+                    self.assertFalse(words & {"wreck", "demolish", "splinter", "obliterate", "tear apart",
+                                              "blow apart", "rupture", "pulverize"})
 
     def test_forbidden_pairs_follow_same_structure_rule(self):
         for e, tags in self.STRUCT.items():
             b = es.EVENT_BEATS[e]
+            self.assertEqual(set(tags), set(b["slice_2"]) | set(b["slice_3"]))
             expected = {(v, d) for v in b["slice_2"] for d in b["slice_3"] if tags[v] & tags[d]}
             with self.subTest(event=e):
                 self.assertEqual(b["excluded_pairs"], expected)
-        self.assertEqual(es.EVENT_BEATS[es.LAVA_RIVER]["excluded_pairs"],
-                         {("L1", "M2"), ("L1", "M4"), ("L3", "M1"), ("L3", "M2"), ("L3", "M4")})
-        self.assertEqual(es.EVENT_BEATS[es.PYROCLASTIC]["excluded_pairs"], {("P3", "Q3"), ("P1", "Q1")})
-        self.assertEqual(es.EVENT_BEATS[es.LAVA_RIVER]["excluded_spots"], {})
+        roof_rt_vb = {self.RT, self.VB}
+        self.assertEqual(es.EVENT_BEATS[es.ERUPTION]["excluded_spots"], {"S3": roof_rt_vb})
         self.assertEqual(es.EVENT_BEATS[es.PYROCLASTIC]["excluded_spots"],
-                         {"P3": {self.RT, self.VB}, "Q3": {self.RT, self.VB}})
-        for spot in sk.view_spots(es.PYROCLASTIC, None):
-            pairs = es.allowed_pairs(es.PYROCLASTIC, None, spot)
-            self.assertFalse(set(pairs) & es.EVENT_BEATS[es.PYROCLASTIC]["excluded_pairs"])
-            if spot != self.HT:   # kiremit ve baca sadece yamaç terasında
-                self.assertFalse({x for p in pairs for x in p} & {"P3", "Q3"}, spot)
+                         {"P3": roof_rt_vb, "Q3": roof_rt_vb, "P6": roof_rt_vb, "Q6": roof_rt_vb})
+        self.assertEqual(es.EVENT_BEATS[es.VOLCANIC_BOMBS]["excluded_spots"], {"T1": roof_rt_vb})
 
-    def test_100_productions_no_rule_violation(self):
+    def test_volcano_prompt_max_175_words(self):
+        self.assertEqual(es.VOLC_MAX_PROMPT_WORDS, 175)
+        # bombalar R6+T5 kelimesi kelimesine, balkon noktasında: 178 kelime -> kısaltma geri bildirimi
+        spec, sl = TestVolcano.build(TestVolcano(), es.VOLCANIC_BOMBS, "R6", "T5", spot=self.VB, people=4)
+        long = {**sl, "slice_2": es.clean_slice(cap(es.beat_text(es.VOLCANIC_BOMBS, "slice_2", "R6"))),
+                "slice_3": es.clean_slice(cap(es.beat_text(es.VOLCANIC_BOMBS, "slice_3", "T5")))}
+        self.assertEqual(len(es.assemble_prompt(spec, long).split()), 178)
+        issue = next(i for i in es.final_prompt_issues(spec, long, es.assemble_prompt(spec, long))
+                     if i["rule"] == "volcano_prompt_words")
+        self.assertIn("shorten the three fields to at most 45 words", issue["feedback"])
+        self.assertNotIn("volcano_prompt_words", TestVolcano.codes(TestVolcano(), spec, sl))   # kısa hâli geçer
+
+    def test_100_productions_each_event(self):
+        # her volkan olayı için 100 üretim (GPT'siz, kod seçimi): kural ihlali yok, prompt <= 175 kelime, standart
+        # tekrar önleme (patlama ve bombalar 3, kül bulutu 2) korunur, her kamera noktası ve çok sayıda çift görülür
         import asyncio
         import core.creative_pipeline as cp
-        for e in (es.LAVA_RIVER, es.PYROCLASTIC):
+        for e in VOLC:
             es._BEAT_MEMORY.clear()
             b = es.EVENT_BEATS[e]
-            messages, seen_pairs, seen_spots, prev = [], set(), set(), None
+            depth = es.RECENT_BEAT_BLOCK_BY_EVENT.get(e, es.RECENT_BEAT_BLOCK)
+            tags, spots, most = [], set(), 0
             with self.subTest(event=e):
                 for _ in range(100):
-                    scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], _volc_gpt(messages)))
+                    scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], _volc_gpt()))
                     t, spec = scene["trace"], scene["structure"]["spec"]
                     sl = scene["structure"]["slices"]
                     pair = (spec["beat_2"], spec["beat_3"])
                     self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
                     self.assertNotIn(pair, b["excluded_pairs"])
-                    self.assertIn(pair, es.allowed_pairs(e, None, t["spot"]))
                     for x in pair:
                         self.assertNotIn(t["spot"], b["excluded_spots"].get(x, set()))
+                    for prev in tags[-depth:]:
+                        self.assertNotEqual(pair[0], prev[0])
+                        self.assertNotEqual(pair[1], prev[1])
+                    n = len(scene["prompt"].split())
+                    most = max(most, n)
+                    self.assertLessEqual(n, 175)
                     self.assertNotIn("pans to follow", scene["prompt"])
-                    self.assertIn("the camera stays fixed on the", scene["prompt"])
-                    self.assertIsNone(t["vehicle"])
-                    self.assertNotIn("VEHICLE:", messages[-1])
-                    if e == es.LAVA_RIVER:   # 13 Eki (2): hikâyede hız kelimesi yok, stil ekinde hız kuralı var
-                        self.assertEqual(es.lava_fast_words(scene["story"]), [])
-                        self.assertIn(LAVA_PACE, scene["prompt"])
-                        self.assertNotIn("emergency responders", scene["prompt"])
-                    if e == es.LAVA_RIVER:
-                        self.assertIsNone(self.LAVA_BAD.search(scene["prompt"]), scene["prompt"])
-                        self.assertIn(t["spot"], (self.HT, self.RT))
-                    if prev is not None:   # derinlik 1: bir önceki üretimin maddeleri tekrar gelmez (lav)
-                        if es.RECENT_BEAT_BLOCK_BY_EVENT[e]:
-                            self.assertNotEqual(pair[0], prev[0])
-                            self.assertNotEqual(pair[1], prev[1])
-                    prev = pair
-                    seen_pairs.add(pair)
-                    seen_spots.add(t["spot"])
-                self.assertEqual(seen_spots, set(sk.view_spots(e, None)))
-                self.assertGreaterEqual(len(seen_pairs), 6)
-
-
-def _VOLC_CAR_GROUP_HIT(group) -> bool:
-    return bool(set(group) & {"car", "cars", "suv", "truck", "van", "vehicle"})
+                    tags.append(pair)
+                    spots.add(t["spot"])
+                self.assertEqual(spots, set(sk.view_spots(e, None)))
+                self.assertGreaterEqual(len(set(tags)), 20)
+                self.assertLessEqual(most, 175)
 
 
 if __name__ == "__main__":

@@ -25,6 +25,32 @@
 
 ---
 
+## 📋 DEVİR: 🌋 Volkan kapandı (13 Eki 2026, dördüncü tur)
+
+**Volkan 3 olay:** patlama şok dalgası, kül bulutu (piroklastik), volkan bombaları. **Lav nehri çıkarıldı.**
+Gerekçe: 13 Eki'de lav nehri 4 testte de kabul edilmedi. Gerçek lav yürüme hızından yavaş ilerler ve evi saniyeler
+içinde yıkmaz; Seedance lavı hızlandırıyor, ev yıkımı gerçek dışı çıkıyor. **Ders:** olay/madde yazarken "gerçekte
+bunu yapar mı" kontrolü. Lav kodu silindi (menü, olay havuzu, kilit görsel, hız/çarpma kapıları, lav stil eki);
+son hâli `event_structure.py` EVENT_BEATS üstündeki ARŞİV notunda, kod commit `d58330a`'da. Ortak kazanımlar
+kaldı: sabit yüksek kamera (upper third, korkuluk), araçsız olay (`uses_vehicle`), 175 kelime kapısı, kısa giyim/ışık.
+
+- **Havuzlar** (Bahadır'ın metni birebir; yeni maddeler büyük, yüksekten görünen, gerçekçi temas):
+  patlama S1-S5 / U1-U6 (S4 ağaç+direk, S5 taş duvar; U4 ev cephesi, U5 çan kulesi, U6 bahçe duvarları + sac kulübe),
+  kül bulutu P1-P6 / Q1-Q6 (P4 palmiyeler, P5 bahçe duvarı, P6 sac çatılar; Q4 istinat duvarı, Q5 dükkân binası
+  cephesi, Q6 balkon + çatı döşemesi), bombalar R1-R6 / T1-T6 (R5 taş duvar, R6 ağaç; T5 yolda krater, T6 evin üst
+  katı).
+- **Bahadır kararları:** S6 ("roof tiles off the houses") S3 ile aynı nesne, eklenmedi. P4 P2 ile aynı nesne (ağaç)
+  ama aynı dilimde, eklendi (çatı terası/balkonda seçeneği 3'ten 4'e çıkarır). U4 önerisi ("a wave of dust and
+  rubble") atmosferikti; temaslı hâli girdi: "a second blast tears the front off a house across the street and the
+  rubble spills into the road". Tekrar önleme: patlama ve bombalar standart 3; kül bulutu 2 (çatı maddeleri P3/P6/Q3/Q6
+  çatı terası ve balkonda yok, orada 4 × 4 madde ve 8 yasak çift kalıyor, 3 derinlik adayı bitirir).
+- **Yasak çiftler** (aynı yapı iki dilimde yok): patlama (S1,U3) (S2,U2) (S5,U6); kül bulutu (P1,Q1) (P1,Q6)
+  (P3,Q3) (P3,Q6) (P6,Q3) (P6,Q6) (P5,Q1) (P5,Q4); bombalar (R1,T2) (R2,T2) (R3,T3) (R5,T6) (R6,T4).
+- **Sayılar:** dilim başına madde patlama 5/6, kül bulutu 6/6, bombalar 6/6. İzinli çift (yamaç terası / çatı terası /
+  balkon): patlama 27/21/21, kül bulutu 28/13/13, bombalar 31/25/25.
+- Not: bombalarda R6+T5 kelimesi kelimesine yazılırsa balkon noktasında 178 kelime; GPT kapının geri bildirimiyle
+  kısaltır. 791 test yeşil.
+
 **🌋 Volkan düzeltmesi 3 (13 Eki, üçüncü tur):** lav Onay prompt'u 216 kelimeye uzamıştı. Volkan kamera cümlesi
 tekrarsız şablona indi (eğilme ve "upper third" birer kez), lav hız cümlesi "The lava is thick, black-crusted and
 tar-like, advancing at a slow walking pace." (suya benzetme yok), volkan giyim/ışık satırları kısa ifade (Bahadır

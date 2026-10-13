@@ -455,17 +455,6 @@ EVENT_SKELETONS = {
                 "along the street. Roof tiles and signs tear loose as {n} {people} run from the eruption. The "
                 "ash column keeps towering above the volcano, still hurling glowing rocks.",
     },
-    # 13 Eki, Bahadır: lav araçsız; kamera sadece iki terasta (köy evi balkonu bu olaydan çıktı)
-    "Lava river pours down into a village street": {
-        "domain": "volcano_disasters", "ships": None,
-        "spots": {"Hillside terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
-                  "Rooftop terrace facing the erupting volcano": "a village street on the lower flank of the volcano"},
-        "people": ["residents", "villagers"], "weather": VOLCANO_WEATHER, "object": "lava river",
-        # 13 Eki (2): yavaş, kalın lav (hız/sıvı kelimesi yok)
-        "text": "In {spot} under {weather}, a thick lava front crawls down the volcano's flank into the street, setting "
-                "the houses ahead of it alight. Walls and fences crumble as {n} {people} run from the lava. The lava "
-                "front keeps grinding down the street, still setting more houses on fire.",
-    },
     "Pyroclastic cloud races down into a village street": {
         "domain": "volcano_disasters", "ships": None,
         "spots": {"Hillside terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
@@ -627,7 +616,8 @@ PHENOMENA = {
                "Fire tornado tears across a burning roadside",
                "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood"],   # 10 Eki
     # 10 Eki (TASLAK)
-    "Volkan": ["Volcano erupts and a shockwave blows out windows", "Lava river pours down into a village street",
+    # 13 Eki (4): lav nehri çıkarıldı
+    "Volkan": ["Volcano erupts and a shockwave blows out windows",
                "Pyroclastic cloud races down into a village street", "Volcanic bombs slam into a village street"],
     "Dev Dalga": ["Green wave breaks over the rail onto the vehicle deck", "Rogue wave breaks over the rail onto the pool deck",
                   "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon",
@@ -658,7 +648,6 @@ EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
                "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (3, 6),
                # TASLAK (10 Eki, Bahadır): volkan 3-6
                "Volcano erupts and a shockwave blows out windows": (3, 6),
-               "Lava river pours down into a village street": (3, 6),
                "Pyroclastic cloud races down into a village street": (3, 6),
                "Volcanic bombs slam into a village street": (3, 6)}
 # "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
@@ -711,17 +700,11 @@ def volcano_camera(spot: str) -> str:
             f"no cuts.")
 
 
-# 13 Eki (2), Bahadır: lav testinde lav su gibi hızlı yayıldı. Sadece lav olayının stil ekinde, kamera cümlesinden sonra.
-# 13 Eki (3): suya benzetme çıktı. Önceki: "The lava is thick and crusted and advances slowly at a walking pace, never
-# fast or fluid like water."
-VOLCANO_LAVA_PACE = "The lava is thick, black-crusted and tar-like, advancing at a slow walking pace."
 # 13 Eki (3), Bahadır kararı: volkan prompt'u en fazla 175 kelime; kısıt silinmeden giyim/ışık satırları kısa yazıldı
-# (aynı 4 kısıt). Ortak metin (get_realism_guardrails) diğer kategorilerde aynen kalır. Lavda "responders" yok
-# (13 Eki 2 kararı: 8 kısıt sınırı).
+# (aynı 4 kısıt). Ortak metin (get_realism_guardrails) diğer kategorilerde aynen kalır. (Lav nehrine özel hız cümlesi
+# ve "responders"sız satır 13 Eki 4'te lavla birlikte çıktı; arşiv: event_structure ARŞİV notu.)
 VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "
                       "light matching the weather, never glossy or CGI; no hazmat suits.")
-VOLCANO_LAVA_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, "
-                           "never glossy or CGI; no hazmat suits.")
 
 
 class SlotFillError(RuntimeError):
@@ -762,11 +745,6 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     guardrails = get_realism_guardrails(s['domain'], ship or 'None', spot)
     if s["domain"] == "volcano_disasters":
         guardrails = VOLCANO_GUARDRAILS   # 13 Eki (3): kısa ifade, aynı kısıtlar
-    if event == "Lava river pours down into a village street":
-        # 13 Eki (2), Bahadır kararı: hız cümlesi 9. kısıt olurdu (sınır 8); lav sahnesinde ekip yok, en az önemli
-        # kısıt olan "emergency responders wear service uniforms" sadece lavda çıktı
-        camera += f" {VOLCANO_LAVA_PACE}"
-        guardrails = VOLCANO_LAVA_GUARDRAILS
     out = f"{camera} {guardrails}"
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)

@@ -154,9 +154,6 @@ EVENT_OUTCOMES = {
     "Volcano erupts and a shockwave blows out windows":
         "the shockwave and falling rocks keep smashing windows, signs and roofs along the street below the volcano",
     # 13 Eki: lav araçsız, kül bulutu büyük yapılar (yukarıdan görünen)
-    "Lava river pours down into a village street":
-        "the lava front keeps grinding down the street, toppling walls and fences and setting the houses ahead of it on "
-        "fire",   # 13 Eki (2): yavaş lav
     "Pyroclastic cloud races down into a village street":
         "the cloud keeps tearing through the street, ripping balconies and roof tiles off the houses and snapping trees "
         "and power poles",
@@ -320,7 +317,6 @@ EVENT_REQUIRED = {
     "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": [],   # 10 Eki
     # ── Volkan (TASLAK, 10 Eki): yapılandırılmış hatta, grupsuz ──
     "Volcano erupts and a shockwave blows out windows": [],
-    "Lava river pours down into a village street": [],
     "Pyroclastic cloud races down into a village street": [],
     "Volcanic bombs slam into a village street": [],
     # ── Plaj (TASLAK) ──

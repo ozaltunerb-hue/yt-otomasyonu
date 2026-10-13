@@ -123,7 +123,6 @@ EVENT_LABELS = {
     "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": "🔥 Yangın söndürme helikopteri",   # 10 Eki
     # Volkan (10 Eki, Bahadır; TASLAK). Olay 1 düğmesi 40 karakter sınırı için kısaldı
     "Volcano erupts and a shockwave blows out windows": "🌋 Patlama şok dalgası camları kırıyor",
-    "Lava river pours down into a village street": "🌋 Lav nehri sokağı yutuyor",
     "Pyroclastic cloud races down into a village street": "🌋 Kül bulutu köyü sarıyor",
     "Volcanic bombs slam into a village street": "🌋 Volkan bombaları çatıları deliyor",
 }
