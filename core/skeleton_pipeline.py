@@ -461,9 +461,10 @@ EVENT_SKELETONS = {
         "spots": {"Hillside terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
                   "Rooftop terrace facing the erupting volcano": "a village street on the lower flank of the volcano"},
         "people": ["residents", "villagers"], "weather": VOLCANO_WEATHER, "object": "lava river",
-        "text": "In {spot} under {weather}, a lava river pours down the volcano's flank and surges through the street, "
-                "engulfing the houses along it. Walls and fences collapse as {n} {people} run from the lava. The lava "
-                "keeps surging down the street, still setting houses on fire.",
+        # 13 Eki (2): yavaş, kalın lav (hız/sıvı kelimesi yok)
+        "text": "In {spot} under {weather}, a thick lava front crawls down the volcano's flank into the street, setting "
+                "the houses ahead of it alight. Walls and fences crumble as {n} {people} run from the lava. The lava "
+                "front keeps grinding down the street, still setting more houses on fire.",
     },
     "Pyroclastic cloud races down into a village street": {
         "domain": "volcano_disasters", "ships": None,
@@ -696,10 +697,22 @@ VOLCANO_CAMERA_PERCH = {
 
 
 def volcano_camera(spot: str) -> str:
+    # 13 Eki (2), Bahadır: lav testinde kamera aşağı eğilip volkanı kadrajdan çıkardı, çekim drone gibi göründü.
+    # Volkan üst üçte birde, eğilme sınırı, ön planda korkuluk köşesi eklendi (kamera cümlesinin içinde, virgülle).
+    # Korkuluk durulan yerin adıyla: terrace / rooftop / balcony railing.
+    perch = VOLCANO_CAMERA_PERCH[spot]
     return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking down over the "
             f"village street toward the erupting volcano; slight hand shake, the camera stays fixed in place on the "
-            f"{VOLCANO_CAMERA_PERCH[spot]} and never descends or moves closer to the ground, only tilts slightly, the "
-            f"erupting volcano always visible above the rooftops; one continuous shot, no zoom, no cuts.")
+            f"{perch} and never descends or moves closer to the ground, only tilts slightly, the "
+            f"erupting volcano always visible above the rooftops, the erupting volcano stays in the upper third of the "
+            f"frame, the camera tilts down no more than slightly, a corner of the {perch} railing stays visible in the "
+            f"foreground; one continuous shot, no zoom, no cuts.")
+
+
+# 13 Eki (2), Bahadır: lav testinde lav su gibi hızlı yayıldı. Sadece lav olayının stil ekinde, kamera cümlesinden sonra
+VOLCANO_LAVA_PACE = ("The lava is thick and crusted and advances slowly at a walking pace, never fast or fluid like "
+                     "water.")
+LAVA_DROPPED_GUARDRAIL = "; emergency responders wear service uniforms."
 
 
 class SlotFillError(RuntimeError):
@@ -737,7 +750,13 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
               f"shake, the camera pans to follow the {s['object']}{CAMERA_MOTION_EXTRA.get(event, '')}; no zoom, no cuts.")
     if s["domain"] == "volcano_disasters":   # 13 Eki: volkanda takip yok, kamera sabit (VOLCANO_CAMERA_PERCH)
         camera = volcano_camera(spot)
-    out = f"{camera} {get_realism_guardrails(s['domain'], ship or 'None', spot)}"
+    guardrails = get_realism_guardrails(s['domain'], ship or 'None', spot)
+    if event == "Lava river pours down into a village street":
+        # 13 Eki (2), Bahadır kararı: hız cümlesi 9. kısıt olurdu (sınır 8); lav sahnesinde ekip yok, en az önemli
+        # kısıt olan "emergency responders wear service uniforms" sadece lavda çıktı
+        camera += f" {VOLCANO_LAVA_PACE}"
+        guardrails = guardrails.replace(LAVA_DROPPED_GUARDRAIL, ".")
+    out = f"{camera} {guardrails}"
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)
         out += f" Setting: {view_district(event, view)}, {REGION_VIEW_CLOTHING}, {NO_SIGNS}."

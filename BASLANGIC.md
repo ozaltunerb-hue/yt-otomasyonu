@@ -25,6 +25,28 @@
 
 ---
 
+## 📋 DEVİR: 🌋 Lav düzeltmesi 2: lav fiziği ve kamera (13 Eki 2026, ikinci tur)
+
+**Gerekçe:** 13 Eki lav testinde lav su gibi hızlı yayıldı, sokağı birkaç saniyede kapladı (gerçek lav kalın kabuklu,
+yürüme hızından yavaş). Kamera aşağı eğilip volkanı kadrajdan çıkardı, çekim drone gibi göründü. Ücretli çağrı yok.
+
+- **Lav fiziği:** yavaş, kalın, temas dramı. Kilit görsel: "A thick lava front crawls down the volcano’s flank into a
+  village street, setting the houses ahead of it alight." Havuz Bahadır'ın metni birebir: L1 taş duvarı itip üstünden
+  geçer, L2 sıcaklık ağaçları tutuşturur, L3 ev köşesi şişip çöker, L4 çit + kulübe / M1 kapı ve pencereler patlar,
+  M2 ev duvarı çöker, M3 dükkân, M4 bina katı. Yasak çiftler aynı: (L1,M2) (L1,M4) (L3,M1) (L3,M2) (L3,M4).
+- **Hız kelimeleri yasak** (sadece lav, kilit görsel + havuz + GPT dilimleri, `lava_fast_words`): race, rush, surge,
+  torrent, gush, flood, rapids, like water, wave, pour, stream (çekimleriyle). Önceki 3 kelimede lav yoksa insanlar
+  için "race/rush" ("five people race away") ve alev/kıvılcım/duman için "pour/stream/gush/surge" ("flames and sparks
+  pouring out", M4 metni) serbest. "slowly/gradually/steadily" yasağı kaldırıldı.
+- **Lav stil eki:** kamera cümlesinden sonra "The lava is thick and crusted and advances slowly at a walking pace,
+  never fast or fluid like water." 9. kısıt olurdu; Bahadır kararıyla sadece lavda "emergency responders wear service
+  uniforms" çıktı (sahnede ekip yok). Lav eki 8 kısıt, en uzun prompt ~1340 karakter (sınır 1400).
+- **Kamera ince ayarı (4 volkan olayı):** kamera cümlesine "the erupting volcano stays in the upper third of the frame,
+  the camera tilts down no more than slightly, a corner of the {terrace/rooftop/balcony} railing stays visible in the
+  foreground" eklendi (virgülle, kısıt sayısı değişmez). Diğer kategoriler aynı.
+- Not: L2 metni 25 kelime (dilim sınırı 24); GPT kısaltıyor. M3 metninde "lava" yok ("the front"), M3 kapısı lav
+  grubu aramıyor. Testler: `TestVolcanoCameraLava13Oct` genişledi; 791 test yeşil.
+
 ## 📋 DEVİR: 🌋 Volkan düzeltmesi (13 Eki 2026)
 
 **Gerekçe:** 3 videoda stil ekindeki "the camera pans to follow the lava river / pyroclastic cloud" yüzünden Kie

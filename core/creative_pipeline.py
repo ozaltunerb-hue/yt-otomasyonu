@@ -155,7 +155,8 @@ EVENT_OUTCOMES = {
         "the shockwave and falling rocks keep smashing windows, signs and roofs along the street below the volcano",
     # 13 Eki: lav araçsız, kül bulutu büyük yapılar (yukarıdan görünen)
     "Lava river pours down into a village street":
-        "the lava keeps surging down the street, toppling walls and fences and setting the houses along it on fire",
+        "the lava front keeps grinding down the street, toppling walls and fences and setting the houses ahead of it on "
+        "fire",   # 13 Eki (2): yavaş lav
     "Pyroclastic cloud races down into a village street":
         "the cloud keeps tearing through the street, ripping balconies and roof tiles off the houses and snapping trees "
         "and power poles",
