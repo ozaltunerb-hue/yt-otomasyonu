@@ -7,6 +7,7 @@ Inline database property'leriyle uyumlu.
 
 NOT: Notion DB erişimi hazır olmadığında sessizce log'a yazar, pipeline'ı durdurmaz.
 """
+import re
 import time
 import logging
 import requests
@@ -51,6 +52,13 @@ EXTRA_PROPERTIES = {
     "Telegram File ID": {"rich_text": {}},
 }
 
+# 14 Eki (Bahadır, acil): "Durum" select'inde olması gereken seçenekler (ad -> renk). Yeni bir durum eklendiğinde
+# BURAYA da eklenmeli: Notion'da hiç olmayan seçenekle filtre kuran sorgu 400 validation_error verir. 83b0d71'de
+# "⚠️ Teslim edilemedi" sadece koda eklenmişti, get_used_combos 400 verdi ve hiçbir üretim başlamadı.
+# ensure_schema eksik olanı ekler; mevcut seçenekleri silmez ve değiştirmez.
+REQUIRED_STATUS_OPTIONS = {STATUS_UNDELIVERED: "red"}
+_MISSING_OPTION_RE = re.compile(r'select option "(.+?)" not found')
+
 _TEXT_LIMIT = 2000   # Notion rich_text içerik sınırı; gövde blokları bu boyda parçalanır
 
 # Tarihçe sorguları (2026-09-24). used_combos = "elde video var" sayımı (olay/gemi/görünüm LRU'su);
@@ -93,10 +101,34 @@ class NotionTracker:
                 log.info(f"📋 Notion şemasına eklendi: {sorted(missing)}")
                 have |= set(missing)
             cls._schema = have
-            return have
         except Exception as e:
             log.warning(f"⚠️ Notion şema kontrolü başarısız (yeni alanlar yazılamayabilir): {e}")
             return None
+        cls.ensure_status_options(db)
+        return have
+
+    @staticmethod
+    def ensure_status_options(db: dict | None = None) -> list[str]:
+        """14 Eki: REQUIRED_STATUS_OPTIONS'ta olup "Durum" select'inde olmayan seçenekleri ekler (eklenenlerin adı).
+        Mevcut seçenekler id/ad/renkleriyle aynen gönderilir (Notion listede olmayanı siler), sadece yenisi eklenir."""
+        if not settings.NOTION_ENABLED or settings.IS_DRY_RUN:
+            return []
+        try:
+            db = db or _notion_request("GET", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}")
+            options = db.get("properties", {}).get("Durum", {}).get("select", {}).get("options", [])
+            names = {o.get("name") for o in options}
+            new = [{"name": n, "color": c} for n, c in REQUIRED_STATUS_OPTIONS.items() if n not in names]
+            if not new:
+                return []
+            keep = [{k: o[k] for k in ("id", "name", "color") if k in o} for o in options]
+            _notion_request("PATCH", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}",
+                            json={"properties": {"Durum": {"select": {"options": keep + new}}}})
+            added = [o["name"] for o in new]
+            log.info(f"📋 Notion Durum seçeneği eklendi: {added}")
+            return added
+        except Exception as e:
+            log.warning(f"⚠️ Notion Durum seçenekleri eklenemedi: {e}")
+            return []
 
     def _filter(self, properties: dict) -> dict:
         """Şema biliniyorsa veritabanında olmayan alanları atar (Notion tüm isteği reddetmesin)."""
@@ -377,34 +409,32 @@ class NotionTracker:
         since = datetime.now(timezone.utc) - timedelta(days=days)
         since_iso = since.isoformat()
 
-        payload = {
-            "filter": {
-                "and": [
-                    {
-                        "property": "Tarih",
-                        "date": {"on_or_after": since_iso}
-                    },
-                    {
-                        "or": [
-                            {"property": "Durum", "select": {"equals": s}}
-                            for s in USED_COMBO_STATUSES
-                        ]
-                    }
-                ]
-            },
-            "sorts": [{"property": "Tarih", "direction": "descending"}],
-            "page_size": 100,
-        }
+        def payload(statuses):
+            return {
+                "filter": {
+                    "and": [
+                        {
+                            "property": "Tarih",
+                            "date": {"on_or_after": since_iso}
+                        },
+                        {
+                            "or": [
+                                {"property": "Durum", "select": {"equals": s}}
+                                for s in statuses
+                            ]
+                        }
+                    ]
+                },
+                "sorts": [{"property": "Tarih", "direction": "descending"}],
+                "page_size": 100,
+            }
 
         max_attempts = 3
         last_exc = None
         for attempt in range(1, max_attempts + 1):
             try:
-                response = _notion_request(
-                    "POST",
-                    f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query",
-                    json=payload,
-                )
+                # 14 Eki: seçenek yok hatası üretimi düşürmez (_query_status_filtered); ağ/5xx eskisi gibi
+                response = _query_status_filtered(payload, USED_COMBO_STATUSES, "get_used_combos", required=True)
 
                 combos = []  # Notion en yeni önce döner
                 for page in response.get("results", []):
@@ -449,29 +479,26 @@ class NotionTracker:
         since = datetime.now(timezone.utc) - timedelta(days=days)
         since_iso = since.isoformat()
 
-        payload = {
-            "filter": {
-                "and": [
-                    {
-                        "property": "Tarih",
-                        "date": {"on_or_after": since_iso}
-                    },
-                    *[
-                        {"property": "Durum", "select": {"does_not_equal": s}}
-                        for s in RECENT_HISTORY_EXCLUDE_STATUSES
-                    ],
-                ]
-            },
-            "sorts": [{"property": "Tarih", "direction": "descending"}],
-            "page_size": 100,
-        }
+        def payload(statuses):
+            return {
+                "filter": {
+                    "and": [
+                        {
+                            "property": "Tarih",
+                            "date": {"on_or_after": since_iso}
+                        },
+                        *[
+                            {"property": "Durum", "select": {"does_not_equal": s}}
+                            for s in statuses
+                        ],
+                    ]
+                },
+                "sorts": [{"property": "Tarih", "direction": "descending"}],
+                "page_size": 100,
+            }
 
         try:
-            response = _notion_request(
-                "POST",
-                f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query",
-                json=payload,
-            )
+            response = _query_status_filtered(payload, RECENT_HISTORY_EXCLUDE_STATUSES, "get_recent_history")
             history = []  # en yeni önce toplanır, sonda kronolojiğe çevrilir
             for page in response.get("results", []):
                 if not is_current_universe_combo(_page_combo_key(page)):
@@ -500,16 +527,17 @@ class NotionTracker:
         ipucu olarak gider (TUR 17). Hata olursa boş liste: ipucu, kapı değil."""
         if not self.enabled or settings.IS_DRY_RUN:
             return []
-        payload = {
-            "filter": {"and": [
-                {"property": "Beat1 Fiil", "rich_text": {"is_not_empty": True}},
-                *[{"property": "Durum", "select": {"does_not_equal": s}} for s in RECENT_HISTORY_EXCLUDE_STATUSES],
-            ]},
-            "sorts": [{"property": "Tarih", "direction": "descending"}],
-            "page_size": limit,
-        }
+        def payload(statuses):
+            return {
+                "filter": {"and": [
+                    {"property": "Beat1 Fiil", "rich_text": {"is_not_empty": True}},
+                    *[{"property": "Durum", "select": {"does_not_equal": s}} for s in statuses],
+                ]},
+                "sorts": [{"property": "Tarih", "direction": "descending"}],
+                "page_size": limit,
+            }
         try:
-            response = _notion_request("POST", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query", json=payload)
+            response = _query_status_filtered(payload, RECENT_HISTORY_EXCLUDE_STATUSES, "get_recent_beat1_verbs")
             verbs = []
             for page in response.get("results", []):
                 rt = page.get("properties", {}).get("Beat1 Fiil", {}).get("rich_text", [])
@@ -581,6 +609,35 @@ def _page_combo_key(page: dict) -> str:
     """Notion sayfasından Combo Key metnini çıkarır; yoksa boş string."""
     combo_rt = page.get("properties", {}).get("Combo Key", {}).get("rich_text", [])
     return combo_rt[0].get("text", {}).get("content", "") if combo_rt else ""
+
+
+def _query_status_filtered(build_payload, statuses, what: str, required: bool = False) -> dict:
+    """Durum filtreli veritabanı sorgusu (14 Eki). Notion "select option ... not found" (400) derse üretim düşmez:
+    önce ensure_schema bir kez çalışır ve sorgu tekrarlanır; yine olmazsa o durum filtreden çıkarılır, uyarı loglanır
+    ve eldeki geçerli durumlarla devam edilir. Diğer hatalar (ağ, 5xx, başka 400) aynen yükselir.
+    required: durum listesi boşalırsa sorgu yapılmaz, boş sonuç döner (equals/or filtresi boş olamaz)."""
+    statuses = list(statuses)
+    schema_fixed = False
+    while True:
+        if required and not statuses:
+            log.warning(f"⚠️ Notion {what}: geçerli durum kalmadı, boş sonuçla devam")
+            return {"results": []}
+        try:
+            return _notion_request("POST", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query",
+                                   json=build_payload(statuses))
+        except Exception as e:
+            m = _MISSING_OPTION_RE.search(str(e))
+            if not m:
+                raise
+            if not schema_fixed:
+                schema_fixed = True
+                log.warning(f"⚠️ Notion {what}: Durum seçeneği yok ({m.group(1)}); şema tamamlanıp yeniden deneniyor")
+                NotionTracker.ensure_schema()
+                continue
+            if m.group(1) not in statuses:
+                raise
+            statuses.remove(m.group(1))
+            log.warning(f"⚠️ Notion {what}: '{m.group(1)}' seçeneği hâlâ yok; filtreden çıkarıldı, kalan durumlarla devam")
 
 
 def _page_record(page: dict) -> dict:

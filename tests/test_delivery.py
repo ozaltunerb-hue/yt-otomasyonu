@@ -268,5 +268,104 @@ class TestTeslimCommand(_Base):
         self.assertIn("teslim", [c for h in app.handlers[0] for c in getattr(h, "commands", ())])
 
 
+class TestStatusOptionSchema(unittest.TestCase):
+    """14 Eki (acil): "⚠️ Teslim edilemedi" Notion Durum seçeneklerinde yoktu; get_used_combos 400 verdi ve hiçbir
+    üretim başlamadı. Şema seçeneği eklenir; seçenek yok hatası üretimi düşürmez."""
+    MISSING = ('Notion API hatası: 400 validation_error: select option "⚠️ Teslim edilemedi" not found for property '
+               '"Durum".')
+    OPTIONS = [{"id": "a1", "name": "Başlatıldı", "color": "gray"},
+               {"id": "b2", "name": "✅ Tamamlandı", "color": "green"},
+               {"id": "c3", "name": "❌ İptal", "color": "pink"}]
+
+    def setUp(self):
+        for name, value in (("NOTION_ENABLED", True), ("IS_DRY_RUN", False), ("NOTION_DB_ID", "db")):
+            p = patch.object(nl.settings, name, value)
+            p.start()
+            self.addCleanup(p.stop)
+        p = patch.object(nl.time, "sleep")
+        p.start()
+        self.addCleanup(p.stop)
+
+    def test_option_added_existing_kept(self):
+        calls = []
+
+        def fake(method, url, json=None):
+            calls.append((method, json))
+            return {"properties": {"Durum": {"select": {"options": self.OPTIONS}}}}
+        with patch.object(nl, "_notion_request", fake):
+            self.assertEqual(nl.NotionTracker.ensure_status_options(), [nl.STATUS_UNDELIVERED])
+        patch_body = [j for m, j in calls if m == "PATCH"][0]
+        options = patch_body["properties"]["Durum"]["select"]["options"]
+        self.assertEqual(options[:3], self.OPTIONS)   # mevcutlar id/ad/renkleriyle aynen
+        self.assertEqual(options[3], {"name": nl.STATUS_UNDELIVERED, "color": "red"})
+        self.assertEqual(nl.REQUIRED_STATUS_OPTIONS, {nl.STATUS_UNDELIVERED: "red"})
+
+    def test_no_patch_when_option_exists(self):
+        calls = []
+        have = self.OPTIONS + [{"id": "d4", "name": nl.STATUS_UNDELIVERED, "color": "red"}]
+
+        def fake(method, url, json=None):
+            calls.append(method)
+            return {"properties": {"Durum": {"select": {"options": have}}}}
+        with patch.object(nl, "_notion_request", fake):
+            self.assertEqual(nl.NotionTracker.ensure_status_options(), [])
+        self.assertNotIn("PATCH", calls)
+
+    def test_ensure_schema_adds_option(self):
+        with patch.object(nl, "_notion_request", return_value={"properties": {k: {} for k in nl.EXTRA_PROPERTIES}}), \
+                patch.object(nl.NotionTracker, "ensure_status_options") as opt:
+            nl.NotionTracker.ensure_schema()
+        opt.assert_called_once()
+
+    def _used_combos(self, fail_always):
+        payloads = []
+
+        def fake(method, url, json=None):
+            payloads.append(json)
+            statuses = [c["select"]["equals"] for c in json["filter"]["and"][1]["or"]]
+            if nl.STATUS_UNDELIVERED in statuses and (fail_always or len(payloads) == 1):
+                raise RuntimeError(self.MISSING)
+            return {"results": []}
+        with patch.object(nl, "_notion_request", fake), patch.object(nl.NotionTracker, "ensure_schema") as schema:
+            out = nl.NotionTracker().get_used_combos()
+        return out, payloads, schema
+
+    def test_missing_option_schema_then_retry(self):
+        out, payloads, schema = self._used_combos(fail_always=False)
+        self.assertEqual(out, [])
+        schema.assert_called_once()   # (a) şema tamamlanır
+        self.assertEqual(len(payloads), 2)   # (b) aynı sorgu yeniden
+        self.assertIn(nl.STATUS_UNDELIVERED, [c["select"]["equals"] for c in payloads[1]["filter"]["and"][1]["or"]])
+
+    def test_missing_option_dropped_and_continue(self):
+        out, payloads, schema = self._used_combos(fail_always=True)
+        self.assertEqual(out, [])   # üretim düşmez
+        schema.assert_called_once()
+        last = [c["select"]["equals"] for c in payloads[-1]["filter"]["and"][1]["or"]]
+        self.assertNotIn(nl.STATUS_UNDELIVERED, last)   # (c) o seçenek çıkarıldı
+        self.assertEqual(last, [s for s in nl.USED_COMBO_STATUSES if s != nl.STATUS_UNDELIVERED])
+
+    def test_other_errors_still_stop(self):
+        with patch.object(nl, "_notion_request", side_effect=RuntimeError("Notion API hatası: 502 bad gateway")), \
+                patch.object(nl.NotionTracker, "ensure_schema") as schema:
+            with self.assertRaises(RuntimeError):
+                nl.NotionTracker().get_used_combos()
+        schema.assert_not_called()
+
+    def test_recent_history_also_protected(self):
+        n = []
+
+        def fake(method, url, json=None):
+            n.append(json)
+            if len(n) in (1, 3):   # iki sorgunun ilk denemesi
+                raise RuntimeError('Notion API hatası: 400 validation_error: select option "❌ Hata" not found for '
+                                   'property "Durum".')
+            return {"results": []}
+        with patch.object(nl, "_notion_request", fake), patch.object(nl.NotionTracker, "ensure_schema") as schema:
+            self.assertEqual(nl.NotionTracker().get_recent_history(), [])
+            self.assertEqual(nl.NotionTracker().get_recent_beat1_verbs(), [])
+        self.assertEqual(schema.call_count, 2)
+
+
 if __name__ == "__main__":
     unittest.main()

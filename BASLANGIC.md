@@ -25,6 +25,19 @@
 
 ---
 
+## 📋 DEVİR: ACİL: Notion Durum seçeneği eksikti, hiçbir üretim başlamadı (14 Eki 2026)
+
+83b0d71'de "⚠️ Teslim edilemedi" koda (`USED_COMBO_STATUSES`) eklendi ama Notion "Durum" select'ine eklenmedi;
+`get_used_combos` 400 validation_error ("select option ... not found") verdi, 10:12 çığ kayak üretimi başlamadan
+durdu. Testler Notion'u sahte kullandığı için yakalamadı.
+- **Ders:** yeni bir durum eklendiğinde `notion_logger.REQUIRED_STATUS_OPTIONS`'a da eklenmeli (ad -> renk).
+  `ensure_schema` (bot açılışında) eksik seçeneği ekler; mevcut seçenekleri id/ad/renkleriyle aynen korur.
+- **Savunma:** Durum filtreli sorgular (`_query_status_filtered`: get_used_combos, get_recent_history,
+  get_recent_beat1_verbs) "seçenek yok" hatasında önce şemayı tamamlayıp yeniden dener, yine olmazsa o durumu
+  filtreden çıkarıp uyarıyla devam eder. Ağ ve 5xx hatalarında davranış aynı (3 deneme, sonra durur).
+
+---
+
 ## 📋 DEVİR: Telegram teslim güvencesi (14 Eki 2026)
 
 **Olay:** 14 Eki 09:28 çığ köyü (A2+B5) Kie'de üretildi (task 4a81a741), Notion "✅ Tamamlandı" oldu ama video Telegram'a
