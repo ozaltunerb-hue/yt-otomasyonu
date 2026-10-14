@@ -230,6 +230,8 @@ function classify(r) {
   if (st.includes("Upload Başarısız")) return { key: "err", label: "Yükleme hatası", icon: "✕", cls: "b-err" };
   if (st.includes("Hata")) return { key: "err", label: "Hata", icon: "✕", cls: "b-err" };
   if (st.includes("İptal")) return { key: "err", label: "İptal", icon: "✕", cls: "b-err" };
+  // 14 Eki: video var ama Telegram'a gönderilemedi (/teslim ile yeniden gönderilir)
+  if (st.includes("Teslim edilemedi")) return { key: "err", label: "Teslim edilemedi", icon: "!", cls: "b-err" };
   if (st.includes("Tamamlandı") || st === "Video Hazır") return { key: "made", label: "Üretildi", icon: "●", cls: "b-made" };
   const stale = Date.now() - new Date(r.date) > 2 * 3600e3;
   return stale ? { key: "err", label: `Takılı: ${st}`, icon: "!", cls: "b-err" }

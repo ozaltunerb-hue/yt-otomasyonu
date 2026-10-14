@@ -10,6 +10,9 @@ DeepMyster Telegram tetikleyici (python-telegram-bot, polling).
   🔍 Ayrıntı: seçim, 5 aday, seçilen, simplifier, Kie'ye giden TAM prompt (4096'yı aşan mesaj bölünür).
   ✋ Onay: Kie'ye göndermeden önce "✅ Kie'ye gönder / ❌ İptal". Onaysız ücretli çağrı yok.
   Video altında 👍/👎 → Notion "Puan". Açılışta restart'tan kalan task'lar kurtarılır.
+  Teslim güvencesi (14 Eki): Telegram gönderimleri ağ hatasında yeniden denenir; video teslim edilemezse Notion
+        "⚠️ Teslim edilemedi" olur, "🔁 Yeniden gönder" düğmesi ve /teslim komutu Kie'ye çağrı yapmadan arşivden ya
+        da Kie linkinden yeniden gönderir; açılışta son 24 saatin teslim edilmemiş kayıtları kurtarılır.
 
 Kurallar:
   - Sadece TELEGRAM_CHAT_ID'deki sohbete cevap verir; diğerleri sessizce yok sayılır.
@@ -24,13 +27,17 @@ from __future__ import annotations
 
 import asyncio
 import concurrent.futures
+import json
 import os
 import secrets
 import sys
+from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import httpx
 from telegram import BotCommand, InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.error import BadRequest, NetworkError
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
 import main as pipeline
@@ -39,7 +46,9 @@ from core.creative_engine import DOMAIN_ATTRIBUTES, SIDE_LAUNCH_EVENT
 from core.skeleton_pipeline import REGION_VIEW_EVENTS, REGION_VIEWS, skeleton_events
 from core.trace_format import format_final_prompt, format_generation, sections_to_text, split_message
 from infrastructure.archive import update_meta
-from infrastructure.notion_logger import NotionTracker
+from infrastructure.notion_logger import (NotionTracker, STATUS_COMPLETED, STATUS_TEST_DONE, STATUS_UNDELIVERED,
+                                          STATUS_UPLOAD_FAILED, _rt)
+from infrastructure.video_downloader import cleanup_video, download_video
 from infrastructure.run_status import status
 from logger import get_logger
 
@@ -168,7 +177,23 @@ BOT_COMMANDS = [
     BotCommand("uret", "Kategori ve olay seçip video üret"),
     BotCommand("test", "🧪 TEST moduna geç (YouTube'a yüklenmez)"),
     BotCommand("yayin", "📢 Yayın moduna geç (onaylı; şu an kilitli)"),
+    BotCommand("teslim", "🔁 Teslim edilemeyen videoları yeniden gönder"),
 ]
+
+# ── Teslim güvencesi (14 Eki 2026, Bahadır) ────────────────────────────────────────────────────────────────────────
+# Olay: 14 Eki 09:31 çığ köyü videosu Kie'de üretildi ama Telegram'a gelmedi. "🧪 TEST üretimi tamamlandı" mesajı
+# Telegram'a bağlanırken httpx.ConnectError ile düştü, hata yakalanmadığı için deliver_video hiç çalışmadı.
+# Telegram çağrıları ağ hatasında (NetworkError, TimedOut, httpx bağlantı hatası) ilk denemeden sonra bu aralıklarla
+# yeniden denenir; BadRequest (geçersiz istek) yeniden denenmez. Her gönderim ayrı korunur, biri diğerini kesmez.
+SEND_RETRY_DELAYS = (2, 5, 10)
+# Bağlantı bekleme süresi 5 sn -> 20 sn (ConnectError TLS el sıkışmasında çıktı); okuma/yazma makul sınırda
+CONNECT_TIMEOUT = 20.0
+READ_TIMEOUT = 20.0
+WRITE_TIMEOUT = 30.0
+POOL_TIMEOUT = 10.0
+RECOVERY_WINDOW = timedelta(hours=24)   # açılış kurtarması: son 24 saat
+RESEND_WINDOW = timedelta(days=15)      # /teslim: Kie linkinin ömrü (~15 gün)
+NO_UNDELIVERED_TEXT = "✅ Teslim edilemeyen kayıt yok."
 
 _production_lock = asyncio.Lock()
 
@@ -278,6 +303,11 @@ def publish_keyboard() -> InlineKeyboardMarkup:
     ]])
 
 
+def resend_keyboard(page_id: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[InlineKeyboardButton(
+        "🔁 Yeniden gönder", callback_data=f"{CALLBACK_PREFIX}rs:{page_id.replace('-', '')}")]])
+
+
 def rating_keyboard(page_id: str) -> InlineKeyboardMarkup:
     page = page_id.replace("-", "")
     return InlineKeyboardMarkup([[
@@ -335,11 +365,15 @@ class TelegramReporter(pipeline.PipelineReporter):
     async def _on_bot_loop(self, coro):
         return await asyncio.wrap_future(asyncio.run_coroutine_threadsafe(coro, self.loop))
 
-    async def _send_sections(self, sections: list[tuple[str, str]], reply_markup=None) -> None:
+    async def _send_sections(self, sections: list[tuple[str, str]], reply_markup=None) -> bool:
+        """14 Eki: her parça ağ hatasında yeniden denenir; gitmeyen parça pipeline'ı düşürmez (False döner)."""
         parts = split_message(sections_to_text(sections))
+        ok = True
         for i, part in enumerate(parts):
             markup = reply_markup if i == len(parts) - 1 else None
-            await self._on_bot_loop(self.bot.send_message(self.chat_id, part, reply_markup=markup))
+            msg = await self._on_bot_loop(safe_send(self.bot, self.chat_id, part, reply_markup=markup))
+            ok = ok and msg is not None
+        return ok
 
     async def generation(self, trace: dict, prompt_data: dict | None = None) -> None:
         if self.detail and trace:
@@ -355,14 +389,19 @@ class TelegramReporter(pipeline.PipelineReporter):
         fut: concurrent.futures.Future = concurrent.futures.Future()
         self.approvals[token] = fut
         title, body = format_final_prompt(info)
-        await self._send_sections(
+        sent = await self._send_sections(
             [(title, body + "\n\n✋ Kie'ye gönderilsin mi? Onay gelmeden ücretli çağrı yapılmaz.")],
             approval_keyboard(token))
+        if not sent:   # 14 Eki: onay mesajı gitmediyse görünmeyen onayı 30 dk beklemek yerine iptal (Kie çağrılmaz)
+            self.approvals.pop(token, None)
+            log.error("❌ Onay mesajı Telegram'a gönderilemedi; Kie'ye gönderilmedi.")
+            return False
         try:
             return bool(await asyncio.wait_for(asyncio.wrap_future(fut), self.timeout))
         except asyncio.TimeoutError:
             self.approvals.pop(token, None)
-            await self._on_bot_loop(self.bot.send_message(self.chat_id, "⌛ Onay süresi doldu. Kie'ye gönderilmedi, kredi harcanmadı."))
+            await self._on_bot_loop(safe_send(self.bot, self.chat_id,
+                                              "⌛ Onay süresi doldu. Kie'ye gönderilmedi, kredi harcanmadı."))
             return False
 
 
@@ -382,6 +421,28 @@ async def cmd_uret(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return
     cfg = _cfg(context)
     await update.effective_message.reply_text(menu_text(cfg), reply_markup=domain_keyboard(cfg))
+
+
+async def cmd_teslim(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """/teslim (14 Eki): son 15 günde videosu olup Telegram'a teslim edilmemiş kayıtlar, her biri "🔁 Yeniden
+    gönder" düğmesiyle. Kie'ye çağrı yok."""
+    if not is_authorized(update, _allowed_chat(context)):
+        return
+    chat_id = _allowed_chat(context)
+    try:
+        since = (datetime.now(timezone.utc) - RESEND_WINDOW).isoformat()
+        records = await asyncio.to_thread(NotionTracker.find_undelivered, since)
+    except Exception as e:
+        log.warning(f"⚠️ /teslim: Notion sorgusu başarısız: {e}")
+        await safe_send(context.bot, chat_id, f"⚠️ Teslim listesi okunamadı: {str(e)[:200]}")
+        return
+    if not records:
+        await safe_send(context.bot, chat_id, NO_UNDELIVERED_TEXT)
+        return
+    await safe_send(context.bot, chat_id, f"📦 Teslim edilemeyen {len(records)} kayıt:")
+    for rec in records:
+        await safe_send(context.bot, chat_id, f"{rec['date'][:16].replace('T', ' ')} UTC | {rec['title'][:80]}",
+                        reply_markup=resend_keyboard(rec["page_id"]))
 
 
 async def cmd_test(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -420,6 +481,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         return
     if action == "r" and len(args) == 2 and args[1] in RATINGS:
         await _on_rating(query, context, *args)
+        return
+    if action == "rs" and len(args) == 1 and len(args[0]) == 32:   # 14 Eki: 🔁 Yeniden gönder
+        await _on_resend(query, context, args[0])
         return
     if action == "t" and args in (["d"], ["o"]):
         key = "detail" if args[0] == "d" else "approval"
@@ -472,13 +536,15 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     else:
         run_cfg = dict(cfg)   # üretim başlarken mod sabitlenir; sonradan değişiklik bu üretimi etkilemez
         async with _production_lock:
-            await query.edit_message_text(
-                f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)}"
-                + (f" / {view_label(view)}" if event in REGION_VIEW_EVENTS else "") + "\n"
-                f"Mod: {mode_label(run_cfg['mode'])}\n"
-                + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
-                   else "Senaryo → video → YouTube.") + " Birkaç dakika sürer."
-            )
+            started = (f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)}"
+                       + (f" / {view_label(view)}" if event in REGION_VIEW_EVENTS else "") + "\n"
+                       f"Mod: {mode_label(run_cfg['mode'])}\n"
+                       + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                          else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+            try:   # 14 Eki: bilgi mesajı gitmese de üretim başlar (kullanıcı ✅ Üret'e bastı)
+                await tg_retry(lambda: query.edit_message_text(started))
+            except Exception as e:
+                log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
             await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
                           view=view)
 
@@ -487,12 +553,13 @@ async def _on_approval(query, context, token: str, answer: str) -> None:
     fut = context.bot_data.setdefault("approvals", {}).pop(token, None)
     await query.edit_message_reply_markup(reply_markup=None)
     if fut is None or fut.done():
-        await context.bot.send_message(_allowed_chat(context), "Bu onay artık geçerli değil (süresi doldu veya bot yeniden başladı).")
+        await safe_send(context.bot, _allowed_chat(context),
+                        "Bu onay artık geçerli değil (süresi doldu veya bot yeniden başladı).")
         return
     approved = answer == "y"
     fut.set_result(approved)
-    await context.bot.send_message(_allowed_chat(context), "✅ Onaylandı, Kie'ye gönderiliyor." if approved
-                                   else "❌ İptal edildi. Kie'ye gönderilmeyecek, kredi harcanmayacak.")
+    await safe_send(context.bot, _allowed_chat(context), "✅ Onaylandı, Kie'ye gönderiliyor." if approved
+                    else "❌ İptal edildi. Kie'ye gönderilmeyecek, kredi harcanmayacak.")
 
 
 async def _on_rating(query, context, page: str, code: str) -> None:
@@ -505,7 +572,28 @@ async def _on_rating(query, context, page: str, code: str) -> None:
         except OSError as e:
             log.warning(f"⚠️ Puan meta.json'a yazılamadı: {e}")
     await query.edit_message_reply_markup(reply_markup=None)
-    await context.bot.send_message(_allowed_chat(context), f"{icon} Puan kaydedildi: {value}")
+    await safe_send(context.bot, _allowed_chat(context), f"{icon} Puan kaydedildi: {value}")
+
+
+async def _on_resend(query, context, page: str) -> None:
+    """🔁 Yeniden gönder (14 Eki): kaydı Notion'dan okur, Kie'ye çağrı yapmadan arşivden ya da Kie linkinden gönderir."""
+    chat_id = _allowed_chat(context)
+    try:
+        rec = await asyncio.to_thread(NotionTracker.get_record, page)
+    except Exception as e:
+        await safe_send(context.bot, chat_id, f"⚠️ Kayıt okunamadı: {str(e)[:200]}")
+        return
+    if not rec:
+        await safe_send(context.bot, chat_id, "⚠️ Kayıt bulunamadı (Notion kapalı ya da kayıt silinmiş).")
+        return
+    if rec["telegram_file_id"]:
+        await safe_send(context.bot, chat_id, f"✅ Bu video zaten teslim edildi: {rec['title'][:80]}")
+        return
+    try:
+        await query.edit_message_reply_markup(reply_markup=None)
+    except Exception as e:
+        log.warning(f"⚠️ Düğme kaldırılamadı: {e}")
+    await redeliver(context.bot, chat_id, context.bot_data, rec)
 
 
 def _run_pipeline_blocking(kwargs: dict) -> dict:
@@ -516,7 +604,8 @@ def _run_pipeline_blocking(kwargs: dict) -> dict:
 async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg: dict | None = None,
                   bot_data: dict | None = None, view: str | None = None) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
-    TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı."""
+    TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
+    14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
     cfg = cfg or default_cfg(MODE_TEST)
     bot_data = bot_data if bot_data is not None else {}
     reporter = TelegramReporter(bot, chat_id, asyncio.get_running_loop(), bot_data.setdefault("approvals", {}),
@@ -529,7 +618,7 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
     except Exception as e:
         log.error(f"❌ Telegram üretimi çöktü: {e}", exc_info=True)
         status.fail(f"Telegram üretimi çöktü: {e}")
-        await bot.send_message(chat_id, f"❌ Hata: {type(e).__name__}: {str(e)[:500]}")
+        await safe_send(bot, chat_id, f"❌ Hata: {type(e).__name__}: {str(e)[:500]}")
         return
 
     if not result or not result.get("success"):
@@ -539,17 +628,17 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         if status.data.get("state") == "running":
             status.fail(error)
         if reason == "cancelled":
-            await bot.send_message(chat_id, "❌ İptal edildi. Kie'ye gönderilmedi, kredi harcanmadı.")
+            await safe_send(bot, chat_id, "❌ İptal edildi. Kie'ye gönderilmedi, kredi harcanmadı.")
             return
         if reason == "kie_timeout":
-            await bot.send_message(chat_id, f"⏳ Kie zaman aşımı. Task {result.get('task_id')} Kie'de sürüyor olabilir; "
-                                            "takip ediliyor, bitince video gelir.")
+            await safe_send(bot, chat_id, f"⏳ Kie zaman aşımı. Task {result.get('task_id')} Kie'de sürüyor olabilir; "
+                                          "takip ediliyor, bitince video gelir.")
             asyncio.get_running_loop().create_task(follow_task(bot, chat_id, result.get("notion_page_id", ""), bot_data))
             return
         # Kalite kapısı retlerinde deneme başına tek satır özet (TUR 25): ham JSON 500 karakterde kesiliyordu
         summary = result.get("error_summary") or str(error)[:500]
         for part in split_message(f"❌ Üretim başarısız: {summary}"):
-            await bot.send_message(chat_id, part)
+            await safe_send(bot, chat_id, part)
         return
 
     title = result.get("title", "")
@@ -558,54 +647,192 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
     # 10 Eki, Bahadır: yapılandırılmış hatta danışman preflight riskli dediyse sonuç mesajında da (YAYIN dahil)
     warning = f"\n{result['preflight_warning']}" if result.get("preflight_warning") else ""
     if youtube_url:
-        await bot.send_message(chat_id, f"✅ Yüklendi: {title}\n{youtube_url}{warning}")
+        text = f"✅ Yüklendi: {title}\n{youtube_url}{warning}"
     elif is_test:
-        await bot.send_message(chat_id, f"🧪 TEST üretimi tamamlandı (YouTube'a yüklenmedi): {title}{warning}")
+        text = f"🧪 TEST üretimi tamamlandı (YouTube'a yüklenmedi): {title}{warning}"
     else:
-        await bot.send_message(chat_id, f"⚠️ Video üretildi ama YouTube'a yüklenmedi: {title}{warning}")
+        text = f"⚠️ Video üretildi ama YouTube'a yüklenmedi: {title}{warning}"
+    await safe_send(bot, chat_id, text)   # 14 Eki: düşse bile video aşağıda ayrıca gönderilir
     await deliver_video(bot, chat_id, result.get("video_path", ""), title, result.get("mode", ""),
-                        result.get("notion_page_id", ""), result.get("archive_dir", ""), bot_data)
+                        result.get("notion_page_id", ""), result.get("archive_dir", ""), bot_data,
+                        video_url=result.get("video_cdn_url", ""))   # 14 Eki: dosya yoksa Kie linki
+
+
+def _is_network_error(e: Exception) -> bool:
+    """Yeniden denenecek hata: ağ/zaman aşımı (TimedOut NetworkError'ın alt sınıfı). BadRequest de NetworkError'dan
+    türer ama geçersiz istektir, yeniden denenmez."""
+    return (isinstance(e, NetworkError) and not isinstance(e, BadRequest)) or isinstance(e, httpx.TransportError)
+
+
+async def tg_retry(make_call, delays=None):
+    """Telegram çağrısı; ağ hatasında SEND_RETRY_DELAYS aralıklarıyla yeniden (ilk deneme + her aralık için bir
+    deneme). make_call her denemede yeni coroutine üretir. Son hata yükselir."""
+    delays = SEND_RETRY_DELAYS if delays is None else delays
+    for attempt, delay in enumerate((0, *delays)):
+        if delay:
+            await asyncio.sleep(delay)
+        try:
+            return await make_call()
+        except Exception as e:
+            if not _is_network_error(e) or attempt == len(delays):
+                raise
+            log.warning(f"⚠️ Telegram ağ hatası (deneme {attempt + 1}/{len(delays) + 1}): {e}; {delays[attempt]} sn "
+                        f"sonra tekrar")
+
+
+async def safe_send(bot, chat_id: int, text: str, **kwargs):
+    """send_message, ağ hatasında yeniden denenir; tüm denemeler düşerse None (hata dışarı sızmaz)."""
+    try:
+        return await tg_retry(lambda: bot.send_message(chat_id, text, **kwargs))
+    except Exception as e:
+        log.error(f"❌ Telegram mesajı gönderilemedi: {type(e).__name__}: {e} | {text[:80]}")
+        return None
+
+
+def done_status(rec: dict) -> str:
+    """Teslim sonradan olursa dönülecek tamamlandı durumu (mod ve YouTube'a göre)."""
+    if rec.get("mode") == MODE_TEST:
+        return STATUS_TEST_DONE
+    return STATUS_COMPLETED if rec.get("youtube_url") else STATUS_UPLOAD_FAILED
 
 
 async def deliver_video(bot, chat_id: int, path: str, title: str, mode: str, page_id: str, archive_dir: str,
-                        bot_data: dict, prefix: str = "") -> None:
-    """Videoyu 👍/👎 ile gönderir; Telegram file_id'yi Notion'a ve meta.json'a yazar (kalıcı kopya)."""
+                        bot_data: dict, prefix: str = "", video_url: str = "", restore_status: str = "") -> bool:
+    """Videoyu 👍/👎 ile gönderir; Telegram file_id'yi Notion'a ve meta.json'a yazar (kalıcı kopya). True = teslim.
+    14 Eki: teslim edilemezse Notion "⚠️ Teslim edilemedi" ve "🔁 Yeniden gönder" düğmeli bildirim; restore_status
+    verilirse (sonradan teslim) Notion durumu ona döner."""
     caption = ("🧪 TEST | " if mode == MODE_TEST else "") + prefix + title
-    msg = await send_video_file(bot, chat_id, path, caption, reply_markup=rating_keyboard(page_id) if page_id else None)
+    msg = await send_video_file(bot, chat_id, path, caption, reply_markup=rating_keyboard(page_id) if page_id else None,
+                                video_url=video_url)
     if page_id and archive_dir:
         bot_data.setdefault("archives", {})[page_id.replace("-", "")] = archive_dir
     file_id = getattr(getattr(msg, "video", None), "file_id", None) if msg else None
     if not isinstance(file_id, str):
-        return
+        await _mark_undelivered(bot, chat_id, bot_data, page_id, title)
+        return False
     if page_id:
+        key = page_id.replace("-", "")
+        bot_data.setdefault("delivered", set()).add(key)
+        bot_data.setdefault("undelivered", {}).pop(key, None)
         await asyncio.to_thread(NotionTracker(page_id=page_id).set_telegram_file_id, file_id)
+        if restore_status:
+            await asyncio.to_thread(NotionTracker(page_id=page_id).update_status, restore_status)
     if archive_dir:
         try:
             update_meta(archive_dir, telegram_file_id=file_id)
         except OSError as e:
             log.warning(f"⚠️ file_id meta.json'a yazılamadı: {e}")
+    return True
 
 
-async def send_video_file(bot, chat_id: int, path: str, caption: str, reply_markup=None):
-    if not path or not os.path.exists(path):
-        await bot.send_message(chat_id, "⚠️ Video dosyası bulunamadı, Telegram'a gönderilemedi.")
-        return None
-    if os.path.getsize(path) > TELEGRAM_VIDEO_LIMIT:
-        await bot.send_message(chat_id, "⚠️ Video 50 MB'tan büyük, Telegram'a gönderilemedi.")
-        return None
+async def _mark_undelivered(bot, chat_id: int, bot_data: dict, page_id: str, title: str) -> None:
+    if not page_id:
+        return
+    key = page_id.replace("-", "")
+    bot_data.setdefault("undelivered", {})[key] = title
     try:
-        with open(path, "rb") as f:
-            return await bot.send_video(chat_id, video=f, caption=caption[:1024], supports_streaming=True,
-                                        read_timeout=180, write_timeout=180, reply_markup=reply_markup)
+        await asyncio.to_thread(NotionTracker(page_id=page_id).update_status, STATUS_UNDELIVERED,
+                                {"Hata": _rt("Video üretildi ama Telegram'a gönderilemedi (ağ hatası). /teslim ya da "
+                                             "🔁 Yeniden gönder ile Kie'ye çağrı yapmadan yeniden gönderilir.")})
     except Exception as e:
-        log.error(f"❌ Video Telegram'a gönderilemedi: {e}", exc_info=True)
-        await bot.send_message(chat_id, f"⚠️ Video Telegram'a gönderilemedi: {str(e)[:300]}")
-        return None
+        log.warning(f"⚠️ Teslim edilemedi durumu Notion'a yazılamadı: {e}")
+    await safe_send(bot, chat_id, f"⚠️ Video teslim edilemedi: {title[:80]}\nKie'ye yeni çağrı yapmadan yeniden "
+                                  "göndermek için düğmeye bas ya da /teslim yaz.", reply_markup=resend_keyboard(page_id))
+
+
+async def send_video_file(bot, chat_id: int, path: str, caption: str, reply_markup=None, video_url: str = ""):
+    """Kaynak: yerel/arşiv dosyası, yoksa Kie linki (indirilir; Kie API çağrısı değil, ücretsiz). 14 Eki: gönderim ağ
+    hatasında yeniden denenir. None = gönderilemedi (sebep sohbete yazılır)."""
+    tmp = ""
+    if (not path or not os.path.exists(path)) and video_url:
+        try:
+            tmp = path = await asyncio.to_thread(download_video, video_url)
+        except Exception as e:
+            log.warning(f"⚠️ Kie linkinden indirilemedi: {e}")
+            path = ""
+    try:
+        if not path or not os.path.exists(path):
+            await safe_send(bot, chat_id, "⚠️ Video dosyası bulunamadı, Telegram'a gönderilemedi.")
+            return None
+        if os.path.getsize(path) > TELEGRAM_VIDEO_LIMIT:
+            await safe_send(bot, chat_id, "⚠️ Video 50 MB'tan büyük, Telegram'a gönderilemedi.")
+            return None
+
+        async def send():
+            with open(path, "rb") as f:
+                return await bot.send_video(chat_id, video=f, caption=caption[:1024], supports_streaming=True,
+                                            read_timeout=180, write_timeout=180, reply_markup=reply_markup)
+        try:
+            return await tg_retry(send)
+        except Exception as e:
+            log.error(f"❌ Video Telegram'a gönderilemedi: {e}", exc_info=True)
+            await safe_send(bot, chat_id, f"⚠️ Video Telegram'a gönderilemedi: {str(e)[:300]}")
+            return None
+    finally:
+        if tmp:
+            cleanup_video(tmp)
+
+
+def _archive_for(page_id: str, bot_data: dict) -> str:
+    """Kaydın bu konteynerdeki arşiv klasörü (bot_data ya da meta.json'daki notion_page_id), yoksa ''."""
+    key = page_id.replace("-", "")
+    if bot_data.get("archives", {}).get(key):
+        return bot_data["archives"][key]
+    root = settings.ARCHIVE_DIR
+    try:
+        names = sorted(os.listdir(root), reverse=True)
+    except OSError:
+        return ""
+    for name in names:
+        try:
+            with open(os.path.join(root, name, "meta.json"), encoding="utf-8") as f:
+                if str(json.load(f).get("notion_page_id", "")).replace("-", "") == key:
+                    return os.path.join(root, name)
+        except (OSError, ValueError):
+            continue
+    return ""
+
+
+async def redeliver(bot, chat_id: int, bot_data: dict, rec: dict) -> bool:
+    """Teslim edilmemiş kaydı Kie'ye çağrı yapmadan gönderir (arşiv, yoksa Kie linki). Aynı kayıt iki kez gitmez:
+    teslim edilenler bot_data["delivered"] ve Notion Telegram File ID ile, sürmekte olanlar "redelivering" ile."""
+    key = rec["page_id"].replace("-", "")
+    busy = bot_data.setdefault("redelivering", set())
+    if key in busy or key in bot_data.setdefault("delivered", set()) or rec.get("telegram_file_id"):
+        return False
+    busy.add(key)
+    try:
+        archive_dir = _archive_for(rec["page_id"], bot_data)
+        path = os.path.join(archive_dir, "video.mp4") if archive_dir else ""
+        return await deliver_video(bot, chat_id, path, rec.get("title", ""), rec.get("mode", ""), rec["page_id"],
+                                   archive_dir, bot_data, prefix="♻️ Kurtarıldı: ", video_url=rec.get("video_url", ""),
+                                   restore_status=done_status(rec))
+    finally:
+        busy.discard(key)
+
+
+async def redeliver_missing(bot, chat_id: int, bot_data: dict, started_at: datetime) -> list[str]:
+    """Açılış kurtarması (14 Eki): bot açılmadan önceki 24 saatte videosu olup Telegram File ID'si boş kalan
+    kayıtlar. Açılıştan sonra başlayan üretimler alınmaz (kendi teslimleriyle çakışmasın). Teslim edilenlerin id'si."""
+    since = (started_at - RECOVERY_WINDOW).isoformat()
+    try:
+        records = await asyncio.to_thread(NotionTracker.find_undelivered, since)
+    except Exception as e:
+        log.warning(f"⚠️ Teslim kurtarması: Notion sorgusu başarısız: {e}")
+        return []
+    done = []
+    for rec in records:
+        if rec["date"] and rec["date"] >= started_at.isoformat():
+            continue
+        if await redeliver(bot, chat_id, bot_data, rec):
+            done.append(rec["page_id"])
+    return done
 
 
 async def _recovered_video(bot, chat_id: int, bot_data: dict, item: dict) -> None:
     await deliver_video(bot, chat_id, item["video_path"], item.get("title", ""), item.get("mode", ""),
-                        item.get("page_id", ""), item.get("archive_dir", ""), bot_data, prefix="♻️ Kurtarıldı: ")
+                        item.get("page_id", ""), item.get("archive_dir", ""), bot_data, prefix="♻️ Kurtarıldı: ",
+                        video_url=item.get("video_url", ""))
 
 
 async def follow_task(bot, chat_id: int, page_id: str, bot_data: dict) -> None:
@@ -615,10 +842,10 @@ async def follow_task(bot, chat_id: int, page_id: str, bot_data: dict) -> None:
     results = await pipeline.recover_pending_tasks(
         on_video=lambda item: _recovered_video(bot, chat_id, bot_data, item), only_page_id=page_id)
     if any(r["action"] == "still_running" for r in results):
-        await bot.send_message(chat_id, "⏳ Task hâlâ bitmedi; bir sonraki bot açılışında tekrar denenecek.")
+        await safe_send(bot, chat_id, "⏳ Task hâlâ bitmedi; bir sonraki bot açılışında tekrar denenecek.")
     for r in results:
         if r["action"] == "failed":
-            await bot.send_message(chat_id, f"❌ Kie task başarısız: {r.get('error', '')[:300]}")
+            await safe_send(bot, chat_id, f"❌ Kie task başarısız: {r.get('error', '')[:300]}")
 
 
 async def post_init(app: Application) -> None:
@@ -630,10 +857,15 @@ async def post_init(app: Application) -> None:
     await asyncio.to_thread(NotionTracker.ensure_schema)
     chat_id = app.bot_data["allowed_chat_id"]
 
+    started_at = datetime.now(timezone.utc)
+
     async def recover() -> None:
         results = await pipeline.recover_pending_tasks(
             on_video=lambda item: _recovered_video(app.bot, chat_id, app.bot_data, item))
         log.info(f"♻️ Açılış kurtarması: {[(r['action'], r['page_id'][:8]) for r in results]}")
+        # 14 Eki: son 24 saatte üretilip Telegram'a teslim edilmemiş videolar (Kie'ye yeni çağrı yok)
+        sent = await redeliver_missing(app.bot, chat_id, app.bot_data, started_at)
+        log.info(f"♻️ Teslim kurtarması: {[p[:8] for p in sent]}")
 
     app.create_task(recover())
 
@@ -644,13 +876,17 @@ async def on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 def build_application(token: str, allowed_chat_id: int) -> Application:
     # concurrent_updates: üretim sürerken yeni /uret, onay ve puan butonları cevap alabilsin
-    app = Application.builder().token(token).concurrent_updates(True).post_init(post_init).build()
+    # 14 Eki: bağlantı bekleme 5 sn -> 20 sn (gönderimler ve long polling)
+    app = (Application.builder().token(token).concurrent_updates(True).post_init(post_init)
+           .connect_timeout(CONNECT_TIMEOUT).read_timeout(READ_TIMEOUT).write_timeout(WRITE_TIMEOUT)
+           .pool_timeout(POOL_TIMEOUT).get_updates_connect_timeout(CONNECT_TIMEOUT).build())
     app.bot_data["allowed_chat_id"] = allowed_chat_id
     app.bot_data["cfg"] = default_cfg(MODE_TEST)   # her açılışta TEST (yayın modu hafızada tutulmaz)
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("uret", cmd_uret))
     app.add_handler(CommandHandler("test", cmd_test))
     app.add_handler(CommandHandler("yayin", cmd_yayin))
+    app.add_handler(CommandHandler("teslim", cmd_teslim))
     app.add_handler(CallbackQueryHandler(on_callback, pattern=f"^{CALLBACK_PREFIX}"))
     app.add_error_handler(on_error)
     return app

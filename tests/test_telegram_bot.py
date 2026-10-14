@@ -266,7 +266,7 @@ class TestKeyboard(unittest.TestCase):
     def test_application_builds_with_handlers(self):
         app = bot.build_application("123:ABC", CHAT)
         self.assertEqual(app.bot_data["allowed_chat_id"], CHAT)
-        self.assertEqual(len(app.handlers[0]), 5)   # start, uret, test, yayin, callback (TUR 29)
+        self.assertEqual(len(app.handlers[0]), 6)   # start, uret, test, yayin, callback (TUR 29); 14 Eki: teslim
         self.assertEqual(app.bot_data["cfg"], {"mode": "TEST", "detail": True, "approval": True})
 
 

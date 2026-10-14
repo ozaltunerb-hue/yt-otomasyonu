@@ -25,6 +25,26 @@
 
 ---
 
+## 📋 DEVİR: Telegram teslim güvencesi (14 Eki 2026)
+
+**Olay:** 14 Eki 09:28 çığ köyü (A2+B5) Kie'de üretildi (task 4a81a741), Notion "✅ Tamamlandı" oldu ama video Telegram'a
+gelmedi. **Kök neden (Railway logu):** `produce` sonundaki "🧪 TEST üretimi tamamlandı" mesajı Telegram'a bağlanırken
+`httpx.ConnectError` ile düştü; hata yakalanmadığı için `deliver_video` hiç çalışmadı. Son 30 üretimde tek vaka. Video
+kurtarıldı (mesaj 702), Notion'a File ID yazıldı.
+- **1) Yeniden deneme:** `bot.tg_retry` / `safe_send`: ağ hatasında ilk denemeden sonra 2, 5, 10 sn arayla (BadRequest
+  yeniden denenmez). Sonuç mesajı ve video ayrı korunur, biri diğerini kesmez. Üretim yolundaki tüm gönderimler
+  (sonuç, hata, onay, iptal, puan, takip) bu yoldan. Onay mesajı gitmezse üretim iptal (görünmeyen onay beklenmez).
+- **2) Kayıt ve açılış kurtarması:** video gitmezse Notion `⚠️ Teslim edilemedi` (`STATUS_UNDELIVERED`, LRU'da sayılır,
+  panelde "Teslim edilemedi"). Açılışta son 24 saatin (açılıştan önce) videosu olup File ID'si boş kayıtları
+  `redeliver_missing` arşivden ya da Kie linkinden "♻️ Kurtarıldı" notuyla gönderir; teslimde File ID yazılır, durum
+  mod'a göre tamamlandıya döner. Tekilleştirme: File ID + `bot_data["delivered"]` + `redelivering`.
+- **3) `/teslim` ve "🔁 Yeniden gönder":** son 15 günün teslim edilmemiş kayıtları; Kie'ye çağrı yok.
+- **4) Zaman aşımı:** bağlantı 5 -> 20 sn (gönderim ve long polling), okuma 20, yazma 30, havuz 10.
+- Not: Railway'de arşiv diski geçici; deploy sonrası kaynak Kie linki. `C:\DeepMyster_videolar` Railway'den görünmez.
+- Bilinen risk: video yüklemesi TimedOut verip aslında gitmişse yeniden deneme aynı videoyu ikinci kez gönderebilir.
+
+---
+
 ## 📋 DEVİR: ❄️ Çığ: yamaç kadraja girdi (14 Eki 2026, beşinci tur)
 
 **Ders (14 Eki kayak testi):** yamaç kadrajda olmayınca çığ görünmedi; model çatıdan kayan kar çizdi. Kamera şablonu

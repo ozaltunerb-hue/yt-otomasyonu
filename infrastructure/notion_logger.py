@@ -33,6 +33,12 @@ STATUS_AWAITING_APPROVAL = "✋ Onay Bekliyor"      # Kie çağrısı yok; resta
 STATUS_CANCELLED = "❌ İptal"                       # Kullanıcı iptali / onay süresi; kredi harcanmadı
 STATUS_RECOVERED = "✅ Tamamlandı (Kurtarıldı)"     # Restart/zaman aşımı sonrası task ID ile tamamlandı
 STATUS_TEST_DONE = "✅ Tamamlandı (Test Modu / YouTube Atlandı)"
+# 14 Eki (Bahadır): video üretildi ama Telegram'a gönderilemedi (ağ hatası). Teslim sonradan olursa durum mod'a göre
+# tamamlandıya döner ve Telegram File ID yazılır (bot.redeliver).
+STATUS_UNDELIVERED = "⚠️ Teslim edilemedi"
+STATUS_UPLOAD_FAILED = "✅ Tamamlandı (Upload Başarısız)"
+# Teslim adayı: videosu olan bitmiş kayıtlar (Telegram File ID boşsa teslim edilmemiş sayılır)
+DELIVERABLE_STATUSES = [STATUS_COMPLETED, STATUS_UPLOAD_FAILED, STATUS_TEST_DONE, STATUS_RECOVERED, STATUS_UNDELIVERED]
 
 # TUR 29'da eklenen alanlar. ensure_schema() eksik olanları veritabanına ekler (idempotent).
 EXTRA_PROPERTIES = {
@@ -51,7 +57,8 @@ _TEXT_LIMIT = 2000   # Notion rich_text içerik sınırı; gövde blokları bu b
 # recent_history = "yazıldı" sayımı, sadece hata kayıtları hariç.
 # 1 Eki (Bahadır): TEST modunda biten kayıtlar da sayılır. Sebep: 15:34 ve 15:45 kıyı dalga üretimleri aynı
 # görünümü aldı, ilk üretim TEST modunda bittiği için geçmişe girmemişti.
-USED_COMBO_STATUSES = [STATUS_COMPLETED, "✅ Tamamlandı (Upload Başarısız)", STATUS_TEST_DONE]
+# 14 Eki: "⚠️ Teslim edilemedi" kayıtlarında da video var (LRU'da sayılır)
+USED_COMBO_STATUSES = [STATUS_COMPLETED, STATUS_UPLOAD_FAILED, STATUS_TEST_DONE, STATUS_UNDELIVERED]
 RECENT_HISTORY_EXCLUDE_STATUSES = [STATUS_ERROR]
 
 
@@ -147,6 +154,37 @@ class NotionTracker:
 
     def set_telegram_file_id(self, file_id: str) -> None:
         self._patch({"Telegram File ID": _rt(file_id)})
+
+    @staticmethod
+    def find_undelivered(since_iso: str) -> list[dict]:
+        """14 Eki: since_iso'dan beri videosu (Video URL) olup Telegram File ID'si boş kalan bitmiş kayıtlar, eskiden
+        yeniye. Durum başına ayrı sorgu (hiç kullanılmamış select seçeneği 400 verir, boş sayılır)."""
+        if not settings.NOTION_ENABLED or settings.IS_DRY_RUN:
+            return []
+        pages = []
+        for s in DELIVERABLE_STATUSES:
+            payload = {"filter": {"and": [
+                {"property": "Tarih", "date": {"on_or_after": since_iso}},
+                {"property": "Durum", "select": {"equals": s}},
+                {"property": "Telegram File ID", "rich_text": {"is_empty": True}},
+                {"property": "Video URL", "url": {"is_not_empty": True}},
+            ]}, "page_size": 100}
+            try:
+                response = _notion_request("POST", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query",
+                                           json=payload)
+            except RuntimeError as e:
+                if "not found" in str(e):
+                    continue
+                raise
+            pages += response.get("results", [])
+        return sorted((_page_record(p) for p in pages), key=lambda r: r["date"])
+
+    @staticmethod
+    def get_record(page_id: str) -> dict | None:
+        """14 Eki: tek kaydın teslim için gereken alanları (/teslim düğmesi). Notion kapalıysa None."""
+        if not settings.NOTION_ENABLED or settings.IS_DRY_RUN or not page_id:
+            return None
+        return _page_record(_notion_request("GET", f"{NOTION_API_URL}/pages/{page_id}"))
 
     @staticmethod
     def find_by_status(statuses: list[str]) -> list[dict]:
@@ -543,6 +581,22 @@ def _page_combo_key(page: dict) -> str:
     """Notion sayfasından Combo Key metnini çıkarır; yoksa boş string."""
     combo_rt = page.get("properties", {}).get("Combo Key", {}).get("rich_text", [])
     return combo_rt[0].get("text", {}).get("content", "") if combo_rt else ""
+
+
+def _page_record(page: dict) -> dict:
+    """Notion sayfası -> teslim kaydı (14 Eki)."""
+    props = page.get("properties", {})
+
+    def text(name, kind="rich_text"):
+        return "".join(x.get("plain_text") or x.get("text", {}).get("content", "")
+                       for x in props.get(name, {}).get(kind, []) or [])
+    return {"page_id": page.get("id", ""), "status": (props.get("Durum", {}).get("select") or {}).get("name", ""),
+            "mode": (props.get("Mod", {}).get("select") or {}).get("name", ""), "title": text("Video Adı", "title"),
+            "combo_key": text("Combo Key"), "task_id": text("Kie Task ID").strip(),
+            "telegram_file_id": text("Telegram File ID").strip(),
+            "video_url": props.get("Video URL", {}).get("url") or "",
+            "youtube_url": props.get("YouTube URL", {}).get("url") or "",
+            "date": (props.get("Tarih", {}).get("date") or {}).get("start") or ""}
 
 
 def _notion_request(method: str, url: str, **kwargs) -> dict:

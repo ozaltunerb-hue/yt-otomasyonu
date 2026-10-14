@@ -768,7 +768,7 @@ class TestPostInit(unittest.TestCase):
         with patch.object(bot.NotionTracker, "ensure_schema") as schema:
             asyncio.run(bot.post_init(app))
         cmds = [c.command for c in app.bot.set_my_commands.await_args.args[0]]
-        self.assertEqual(cmds, ["uret", "test", "yayin"])
+        self.assertEqual(cmds, ["uret", "test", "yayin", "teslim"])   # 14 Eki: /teslim
         schema.assert_called_once()
         self.assertEqual(len(scheduled), 1)
 
