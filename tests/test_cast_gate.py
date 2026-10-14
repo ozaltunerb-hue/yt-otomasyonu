@@ -186,14 +186,14 @@ class TestRotationOnlyValidCombos(unittest.TestCase):
         # 10 Eki: 10 domain; + volkan
         self.assertEqual(self._choices(self.VALID + [self.TEST_LINE]),
                          {"open_beach_coastal_events", "landslide_disasters", "fire_disasters", "volcano_disasters",
-                          "avalanche_disasters"})   # 13 Eki: + çığ
+                          "avalanche_disasters", "earthquake_disasters"})   # 13 Eki: + çığ; 14 Eki: + deprem
 
     def test_old_format_lines_ignored(self):
         old = ["harbor_pilotage_and_berthing|harbor tugboat|tugboat loses mooring line",
                "arctic_ice_navigation|arctic lng carrier|ice floe collision|frozen pack ice|chase_pov"]
         self.assertEqual(self._choices(self.VALID + old),
                          {"open_beach_coastal_events", "landslide_disasters", "fire_disasters", "volcano_disasters",
-                          "avalanche_disasters"})   # 13 Eki: + çığ
+                          "avalanche_disasters", "earthquake_disasters"})   # 13 Eki: + çığ; 14 Eki: + deprem
 
 
 if __name__ == "__main__":

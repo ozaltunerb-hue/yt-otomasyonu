@@ -48,6 +48,10 @@ AVALANCHE_VILLAGE = "Avalanche slams into a mountain village"
 AVALANCHE_SKI = "Avalanche crashes down onto a ski lodge"
 AVALANCHE_FOREST = "Avalanche rips through a pine forest into a valley"
 AVALANCHE_EVENTS = (AVALANCHE_VILLAGE, AVALANCHE_SKI, AVALANCHE_FOREST)
+# 🏚️ Deprem (TASLAK, 14 Eki, Bahadır). Bahadır'ın anahtarları: apartment, old stone
+EARTHQUAKE_APARTMENT = "Earthquake collapses an apartment block"
+EARTHQUAKE_OLD_STREET = "Earthquake collapses a row of old stone houses"
+EARTHQUAKE_EVENTS = (EARTHQUAKE_APARTMENT, EARTHQUAKE_OLD_STREET)
 
 SLICE_LABELS = ("0-4s", "4-9s", "9-15s")
 SLICE_FIELDS = ("slice_1_rest", "slice_2", "slice_3")
@@ -68,7 +72,9 @@ TOTAL_WORDS_BY_EVENT = {"Tornado crosses a marina quay": (40, 75),
                         "Volcanic bombs slam into a village street": (40, 75),
                         # 13 Eki, Bahadır: çığ 40-75 (volkan gibi). 14 Eki (5), Bahadır kararı: 40-70 (yamaçlı
                         # kamera şablonuyla stil eki en fazla 101 kelime; 70 + 3 etiket + 101 = 174 ≤ 175)
-                        "Avalanche slams into a mountain village": (40, 70), "Avalanche crashes down onto a ski lodge": (40, 70), "Avalanche rips through a pine forest into a valley": (40, 70)}
+                        "Avalanche slams into a mountain village": (40, 70), "Avalanche crashes down onto a ski lodge": (40, 70), "Avalanche rips through a pine forest into a valley": (40, 70),
+                        # 14 Eki, Bahadır: deprem 40-70 (çığ gibi)
+                        "Earthquake collapses an apartment block": (40, 70), "Earthquake collapses a row of old stone houses": (40, 70)}
 # Kie seedance-2-fast prompt sınırı 20000 karakter (docs.kie.ai/market/bytedance/seedance-2-fast, 4 Eki doğrulandı).
 # Bizim sınırımız onun çok altında: en uzun stil eki 742 + 60 kelimelik hikâye (kelime başına 8 karakterle ~480)
 # ≈ 1224; 1200 bu hikâyeyi haksız reddederdi. Tam kapsam testinde ölçülen en uzun prompt 1062. 70 kelimelik
@@ -91,7 +97,13 @@ RECENT_BEAT_BLOCK_BY_EVENT = {PYROCLASTIC: 2,
                               # 14 Eki (3), zayıf madde temizliği: yasak çiftler arttı (köy 10, kayak 11, orman 18).
                               # Köy 2 (balkonda 4 × 4 madde, 3 derinlikte aday biter); kayak 2 (istasyon terası);
                               # orman 1 (balkonda E1/E2'nin tek eşi F4, 2 derinlikte aday biter). Testli.
-                              AVALANCHE_VILLAGE: 2, AVALANCHE_SKI: 2, AVALANCHE_FOREST: 1}
+                              AVALANCHE_VILLAGE: 2, AVALANCHE_SKI: 2, AVALANCHE_FOREST: 1,
+                              # 14 Eki, Bahadır: deprem havuzları 4 + 4, son 2 üretimin maddeleri elenir. Apartmanda
+                              # balkon noktası (*) maddeleri elediği için 3 × 3 kalır; 2 derinlikte kalan tek çift yasak
+                              # çifte denk gelebilir: o durumda 1'e düşer (BEAT_BLOCK_FALLBACK_EVENTS, testli)
+                              EARTHQUAKE_APARTMENT: 2, EARTHQUAKE_OLD_STREET: 2}
+# Aday kalmazsa derinliği 1'e düşen olaylar (14 Eki, deprem). Diğer olaylarda davranış aynı (aday bitince hata).
+BEAT_BLOCK_FALLBACK_EVENTS = (EARTHQUAKE_APARTMENT, EARTHQUAKE_OLD_STREET)
 
 # ── Kilit görsel (0-4s'nin ilk cümlesi, kod yazar) ──────────────────────────────────────────────────────────
 EVENT_KEY_VISUAL = {
@@ -156,6 +168,11 @@ EVENT_KEY_VISUAL = {
                    "terrace and walls.",
     AVALANCHE_FOREST: "An avalanche is already roaring down through a pine forest into the cabins at its edge, a white "
                       "cloud rolling over their roofs.",
+    # 14 Eki, Bahadır: deprem kilit cümleleri birebir (aksiyon ilk karede: "is already shaking")
+    EARTHQUAKE_APARTMENT: "The ground is already shaking violently and a six-storey apartment block across the street "
+                          "collapses floor by floor, a huge dust cloud bursting out of it.",
+    EARTHQUAKE_OLD_STREET: "The ground is already shaking violently and a row of old stone houses along the street "
+                           "collapses one after another, dust and rubble bursting into the street.",
 }
 
 # ── Bölge araçları (4-9s'deki {vehicle}). Görünüm tariflerindeki araçlardan. terms: dilimde aranan ad. ──────
@@ -594,6 +611,48 @@ _AVA_LIFT_UP = ("lift", "toss", "fling", "flung", "hurl", "throw", "threw", "thr
 _AVA_BANNED = ("rescue", "helicopter", "skier", "snowmobile", "vehicle", "truck", "car", "cargo", "tugboat", "ship",
                "boat", "siren", "text", "sign", "logo")
 _AVA_SLOW = ("slowly", "gently", "calm", "calmly", "gradually", "softly", "peacefully")
+# 🏚️ Deprem (14 Eki, Bahadır): _EQ_* listeleri. Nesne + fiil aranır. "wall" tek başına yok ("wall of dust" tozun
+# kendisi). Yasak: ölü/yaralı/gömülme/kurtarma, araç ve gemi, ülke/şehir adı, yavaşlatıcılar.
+_EQ_BLOCK = ("apartment block", "block", "apartment building", "apartments", "tower block", "building", "high-rise",
+             "mid-rise", "flats")
+_EQ_FLOORS = ("floor", "storey", "story", "level", "upper floors")
+_EQ_FALL = ("pancake", "collapse", "cave in", "caves in", "caved in", "crash", "slam", "fall", "fell", "drop",
+            "give way", "gives way", "gave way", "crumble", "flatten", "crush", "fold", "smash", "come down",
+            "comes down", "came down", "coming down", "tumble", "implode", "sink", "sank", "buckle", "topple")
+_EQ_DUST = ("dust", "dust cloud", "cloud of dust", "dust wave")
+_EQ_FRONTWALL = ("front wall", "facade", "façade", "front", "outer wall", "side wall", "face")
+_EQ_PEEL = ("peel", "tear", "tore", "torn", "rip", "strip", "shear", "slide", "slid", "come away", "comes away",
+            "came away", "break away", "breaks away", "broke away", "break off", "breaks off", "broke off", "split off")
+_EQ_NEIGHBOR = ("neighboring", "neighbouring", "neighbor", "neighbour", "next", "next-door", "next door", "adjacent",
+                "nearby", "beside", "second", "another", "other", "opposite", "across")
+_EQ_LEAN = ("lean", "tilt", "sway", "list", "keel", "topple", "buckle", "sag", "bend", "bent", "tip")
+_EQ_SLAB = ("slab", "concrete", "chunk", "section", "piece", "panel")
+_EQ_ROAD = ("road", "street", "asphalt", "pavement", "roadway", "tarmac", "junction", "intersection", "square")
+_EQ_BREAK = ("break", "broke", "crack", "split", "shatter", "smash", "burst", "tear", "rip", "gouge", "punch",
+             "crater")
+_EQ_HOUSES = ("house", "home", "cottage", "dwelling", "townhouse", "row of houses")
+_EQ_FLATTEN = ("flatten", "crush", "smash", "level", "collapse", "cave in", "caves in", "caved in", "bury", "pancake")
+_EQ_ROOF = ("roof", "rooftop", "tiles", "rafters")
+_EQ_WALLS = ("stone wall", "walls", "masonry", "brickwork", "stonework", "brick wall")
+_EQ_FOLD = ("fold", "cave", "collapse", "buckle", "crumble", "give way", "gives way", "gave way", "fall in", "falls in",
+            "fell in", "implode", "crumple", "sag", "bow")
+_EQ_RUBBLE = ("rubble", "debris", "stones", "masonry", "bricks", "heap", "pile")
+_EQ_SPREAD = ("spread", "spill", "pour", "slide", "slid", "fan out", "fans out", "scatter", "tumble", "sweep", "swept",
+              "flow", "roll", "surge")
+_EQ_CORNER = ("corner", "junction", "intersection", "crossroads", "end of the row", "end house")
+_EQ_CHAIN = ("one after another", "house after house", "one by one", "in turn", "domino", "chain", "row",
+             "down the street", "along the street")
+_EQ_TOWARD = ("toward us", "towards us", "toward the railing", "towards the railing", "toward the viewer",
+              "towards the viewer", "our way", "closer", "nearer", "at us")
+_EQ_BANNED = ("dead", "death", "bodies", "body", "victim", "injured", "injury", "blood", "trapped", "buried", "burial",
+              "rescue", "rescuer", "casualty", "corpse", "killed",
+              "vehicle", "truck", "car", "trailer", "ship", "boat", "cargo", "tugboat", "siren", "text", "sign", "logo",
+              # ülke ve şehir adları (Bahadır: ülke adı yok)
+              "turkey", "türkiye", "turkish", "syria", "syrian", "japan", "japanese", "italy", "italian", "greece",
+              "greek", "iran", "iranian", "nepal", "mexico", "mexican", "chile", "haiti", "china", "chinese", "india",
+              "indian", "pakistan", "afghanistan", "morocco", "ecuador", "peru", "indonesia", "philippines", "istanbul",
+              "ankara", "izmir", "antakya", "hatay", "tokyo", "kobe", "rome", "athens", "tehran", "kathmandu")
+_EQ_SLOW = ("slowly", "gently", "calm", "calmly", "gradually", "softly", "peacefully")
 _FIRE_BURST = ("burst", "shatter", "crack", "explode", "split", "pop", "fly", "flies", "flew", "break",
                "broke")
 
@@ -1421,6 +1480,62 @@ EVENT_BEATS = {
         "excluded_views": {},
         "excluded_spots": {"E6": {"Balcony of a chalet at the edge of the village"}},
     },
+    # ── 🏚️ Deprem (TASLAK, 14 Eki, Bahadır). Maddeler Bahadır'ın metni birebir (onaylı düzeltmeler: Q2 yıkım fiili, R3
+    # yapı teması, T2 "toward us"). Çöken bina her zaman konut. (*) yüksek açı gerektirir: sadece çatı terasında, yüksek
+    # kat balkonunda seçilmez. Yasak çiftler: aynı yapı/görüntü iki dilimde yok.
+    EARTHQUAKE_APARTMENT: {
+        "slice_2": {
+            "P1": {"text": "the upper floors pancake down onto the lower ones and a wall of dust surges across the street",
+                   "terms": [_EQ_FLOORS, _EQ_FALL]},
+            "P2": {"text": "the whole front wall of the block peels off and crashes onto the street",
+                   "terms": [_EQ_FRONTWALL, _EQ_PEEL + _EQ_FALL]},
+            "P3": {"text": "the neighboring apartment block leans and its side wall collapses",
+                   "terms": [_EQ_NEIGHBOR, _EQ_BLOCK, _EQ_LEAN + _EQ_FALL]},
+            "P4": {"text": "a huge concrete slab from the collapsing block slams into the road and breaks it apart",
+                   "terms": [_EQ_SLAB, _EQ_ROAD, _EQ_FALL + _EQ_BREAK]},
+        },
+        "slice_3": {
+            "Q1": {"text": "the building next door crumbles floor by floor into the same dust cloud",
+                   "terms": [_EQ_BLOCK + _EQ_HOUSES, _EQ_NEIGHBOR, _EQ_FALL]},
+            "Q2": {"text": "the dust wave rolls down the street and the upper floors of the apartment blocks opposite "
+                           "cave in",
+                   "terms": [_EQ_DUST, _EQ_FLOORS + _EQ_BLOCK, _EQ_FALL]},
+            "Q3": {"text": "a row of low houses beside the block is flattened under falling concrete",
+                   "terms": [_EQ_HOUSES, _EQ_FLATTEN + _EQ_FALL]},
+            "Q4": {"text": "a second apartment block across the street tilts and falls into the dust",
+                   "terms": [_EQ_NEIGHBOR, _EQ_BLOCK, _EQ_LEAN + _EQ_FALL]},
+        },
+        # komşu blok (P3 eğilir, yan duvarı çöker: Q1 yan bina, Q4 eğilip düşen ikinci blok); toz dalgası (P1,Q2)
+        "excluded_pairs": {("P3", "Q1"), ("P3", "Q4"), ("P1", "Q2")},
+        "excluded_views": {},
+        "excluded_spots": {"P2": {"High-floor balcony across the street"}, "Q4": {"High-floor balcony across the street"}},
+    },
+    EARTHQUAKE_OLD_STREET: {
+        "slice_2": {
+            "R1": {"text": "the facade of the nearest old stone house slides off in one piece and crashes down",
+                   "terms": [_EQ_FRONTWALL, _EQ_PEEL + _EQ_FALL]},
+            "R2": {"text": "the stone walls of two houses fold inward and their roofs fall in",
+                   "terms": [_EQ_WALLS + _EQ_HOUSES, _EQ_FOLD + _EQ_FALL, _EQ_ROOF]},
+            "R3": {"text": "a thick dust cloud pours down the narrow street as the stone houses keep falling",
+                   "terms": [_EQ_DUST, _EQ_HOUSES, _EQ_FALL]},
+            "R4": {"text": "a corner stone house crumbles and its rubble spreads across the junction",
+                   "terms": [_EQ_CORNER, _EQ_HOUSES + _EQ_RUBBLE, _EQ_FALL + _EQ_SPREAD]},
+        },
+        "slice_3": {
+            "T1": {"text": "the next house in the row caves in and the dust cloud grows",
+                   "terms": [_EQ_NEIGHBOR + ("row",), _EQ_HOUSES, _EQ_FALL]},
+            "T2": {"text": "the collapse runs down the street, house after house, toward us",
+                   "terms": [_EQ_HOUSES, _EQ_CHAIN, _EQ_TOWARD]},
+            "T3": {"text": "the rubble heap of a fallen house slides out into the street",
+                   "terms": [_EQ_RUBBLE, _EQ_SPREAD, _EQ_ROAD]},
+            "T4": {"text": "the roof of a stone house falls in and its walls collapse into the street",
+                   "terms": [_EQ_ROOF, _EQ_WALLS + _EQ_HOUSES, _EQ_FALL]},
+        },
+        # çatı içe göçer (R2,T4); toz bulutu (R3,T1); moloz sokağa yayılır (R4,T3)
+        "excluded_pairs": {("R2", "T4"), ("R3", "T1"), ("R4", "T3")},
+        "excluded_views": {},
+        "excluded_spots": {"R1": {"High-floor balcony across the street"}},
+    },
 }
 
 # ── Yangın kapıları (TASLAK, 8 Eki, Bahadır). Sadece FIRE_EVENTS; diğer olayların denetimi değişmez. ─────────────
@@ -1444,15 +1559,25 @@ EVENT_BANNED_WORDS = {e: (("avalanche_banned", _AVA_BANNED, "çığda yasak keli
                           ("avalanche_no_slow", _AVA_SLOW, "çığ yavaş/sakin değil",
                            "A powder avalanche moves at over 100 km/h and is violent: remove {words}."))
                       for e in AVALANCHE_EVENTS}
-# 175 kelime kapısı olan olaylar (13 Eki: volkan + çığ)
-WORD_CAP_EVENTS = VOLCANO_EVENTS + AVALANCHE_EVENTS
+# 14 Eki, Bahadır: deprem yasakları (ölü/yaralı/gömülme/kurtarma, araç ve gemi, ülke/şehir adı, yazı) ve yavaşlatıcılar
+# (bina ani ve hızlı çöker)
+EVENT_BANNED_WORDS.update({e: (("earthquake_banned", _EQ_BANNED, "depremde yasak kelime",
+                                "Remove {words}: show only the buildings collapsing; no dead, injured or trapped "
+                                "people, no rescue, no vehicles or boats, no country or city names, no readable text."),
+                               ("earthquake_no_slow", _EQ_SLOW, "deprem yavaş/sakin değil",
+                                "The buildings collapse suddenly and fast: remove {words}."))
+                           for e in EARTHQUAKE_EVENTS})
+# 175 kelime kapısı olan olaylar (13 Eki: volkan + çığ; 14 Eki: deprem)
+WORD_CAP_EVENTS = VOLCANO_EVENTS + AVALANCHE_EVENTS + EARTHQUAKE_EVENTS
 
 # ── Ortam havuzu (14 Eki (4), Bahadır; şimdilik sadece çığ) ──────────────────────────────────────────────────────────
 # Ders: köy ve kayak videoları birbirinin aynısıydı (aynı balkon korkuluğu, aynı bulut, aynı koşan insanlar). Her
 # üretimde dağ, yerleşim, ışık ve kamera noktası koddan seçilir; menüde ek ekran yok, GPT'ye yeni kural yok. Ortam
 # satırı stil ekine girer ("Setting: dağ, yerleşim, ışık."). LRU kategori bazında (köy, kayak, orman ortak): her
 # eksende son ENV_BLOCK üretimin değerleri elenir, aday kalmazsa 1'e düşer. Ülke, şehir, bayrak, yazı yok (testli).
-ENV_EVENTS = AVALANCHE_EVENTS
+# 14 Eki, Bahadır: deprem de ortam havuzunda (şehir, sokak, ışık + kamera noktası; EQ_ENV_AXES). LRU her kategoride
+# ayrı (çığ ve deprem birbirini elemez).
+ENV_EVENTS = AVALANCHE_EVENTS + EARTHQUAKE_EVENTS
 ENV_AXES = {
     # 14 Eki (5), Bahadır kararı: "wide rounded snowy highlands" yamaç dik görünmeyebilir; "wide snowy highlands
     # below a steep slope" (Bahadır'ın 10 kelimelik metni 15 kelime sınırına sığmıyordu, kısaltıldı)
@@ -1474,15 +1599,75 @@ _ENV_MEMORY: list[dict] = []
 _ENV_MEMORY_LIMIT = 12
 _ENV_LOCK = threading.Lock()
 
+# ── 🏚️ Deprem ortamı (14 Eki, Bahadır). Eksenler: şehir (yerleşim), sokak, ışık; LRU son 2 (aday kalmazsa 1, sonra 0),
+# satır en fazla 15 kelime. Uyum (kodda):
+# - Apartman olayı: beton/yamaç/cadde apartmanları; "narrow residential street" yok.
+# - Eski sokak: tuğla-taş konutlar ve yamaçta eski taş evler (Bahadır: "taş evlerle uyumlu ifade"); "wide avenue" yok.
+# - "apartment blocks lining a wide avenue" sadece meydan kenarıyla (sakin sokakla çelişir, "wide avenue" tekrar olur).
+# - Beyaz üstüne beyaz: "hazy dusty morning" seçilince şehir koyu tonlu ifadesiyle yazılır (EQ_DARK_CITY).
+EQ_ENV_AXES = {
+    "city": ("concrete mid-rise apartment blocks", "old brick-and-stone residential buildings",
+             "a dense hillside neighbourhood of apartment blocks", "apartment blocks lining a wide avenue",
+             "a dense hillside neighbourhood of old stone houses"),
+    "light": ("hazy dusty morning", "heavy grey overcast sky", "late-afternoon low sun", "blue dawn light"),
+    "street": ("wide avenue", "narrow residential street", "tree-lined square edge", "quiet residential street"),
+}
+EQ_EVENT_CITIES = {
+    EARTHQUAKE_APARTMENT: ("concrete mid-rise apartment blocks", "a dense hillside neighbourhood of apartment blocks",
+                           "apartment blocks lining a wide avenue"),
+    EARTHQUAKE_OLD_STREET: ("old brick-and-stone residential buildings",
+                            "a dense hillside neighbourhood of old stone houses"),
+}
+EQ_EVENT_STREETS = {
+    EARTHQUAKE_APARTMENT: ("wide avenue", "tree-lined square edge", "quiet residential street"),
+    EARTHQUAKE_OLD_STREET: ("narrow residential street", "tree-lined square edge", "quiet residential street"),
+}
+EQ_AVENUE_CITY = "apartment blocks lining a wide avenue"
+EQ_AVENUE_STREETS = ("tree-lined square edge",)   # "wide avenue" sokağı şehirde zaten var (tekrar olmasın)
+EQ_HAZY_LIGHT = "hazy dusty morning"
+EQ_DARK_CITY = {
+    "concrete mid-rise apartment blocks": "dark grey concrete mid-rise apartment blocks",
+    "a dense hillside neighbourhood of apartment blocks": "a dense hillside neighbourhood of dark apartment blocks",
+    "apartment blocks lining a wide avenue": "dark-toned apartment blocks lining a wide avenue",
+    "old brick-and-stone residential buildings": "dark old brick-and-stone residential buildings",
+    "a dense hillside neighbourhood of old stone houses": "a dense hillside neighbourhood of dark stone houses",
+}
+_EQ_ENV_MEMORY: list[dict] = []
+
+
+def _is_eq_env(env: dict) -> bool:
+    return "city" in env
+
+
+def eq_city_text(env: dict) -> str:
+    """Prompta giden şehir ifadesi (pus/toz ışığında koyu tonlu)."""
+    return EQ_DARK_CITY[env["city"]] if env["light"] == EQ_HAZY_LIGHT else env["city"]
+
 
 def setting_line(env: dict) -> str:
+    if _is_eq_env(env):   # 14 Eki: deprem
+        return f"Setting: {eq_city_text(env)}, {env['street']}, {env['light']}."
     return f"Setting: {env['mountain']}, {env['village']}, {env['light']}."
+
+
+def env_weather(env: dict) -> str:
+    """GPT'ye giden WEATHER satırı (ortamın kendisi)."""
+    if _is_eq_env(env):
+        return f"{eq_city_text(env)}, {env['street']}, {env['light']}"
+    return f"{env['mountain']}, {env['village']}, {env['light']}"
 
 
 def environment_label(env: dict) -> str:
     """Telegram onay/Notion satırı (Bahadır okusun diye; değerler prompttaki İngilizce metin)."""
+    if _is_eq_env(env):
+        return (f"Ortam: şehir = {eq_city_text(env)} · sokak = {env['street']} · ışık = {env['light']} · "
+                f"kamera = {env['spot']}")
     return (f"Ortam: dağ = {env['mountain']} · yerleşim = {env['village']} · ışık = {env['light']} · "
             f"kamera = {env['spot']}")
+
+
+def _env_memory(event: str) -> list[dict]:
+    return _EQ_ENV_MEMORY if event in EARTHQUAKE_EVENTS else _ENV_MEMORY
 
 
 def _lru_candidates(values, used: list) -> list:
@@ -1498,13 +1683,15 @@ def choose_env_spot(event: str, spots: list[str], rng: random.Random | None = No
     """Kamera noktası ekseni: kategoride son ENV_BLOCK üretimin noktaları elenir (aday kalmazsa 1)."""
     rng = rng or random
     with _ENV_LOCK:
-        used = [m["spot"] for m in _ENV_MEMORY]
+        used = [m["spot"] for m in _env_memory(event)]
     return rng.choice(_lru_candidates(spots, used))
 
 
 def choose_environment(event: str, spot: str, b2: str, b3: str, rng: random.Random | None = None) -> dict:
     """Dağ, yerleşim, ışık: LRU + beat uyumu + satır en fazla SETTING_MAX_WORDS kelime. Aday kalmazsa StructureError."""
     rng = rng or random
+    if event in EARTHQUAKE_EVENTS:
+        return _choose_eq_environment(event, spot, rng)
     with _ENV_LOCK:
         mem = list(_ENV_MEMORY)
     villages = ENV_AXES["village"]
@@ -1521,10 +1708,35 @@ def choose_environment(event: str, spot: str, b2: str, b3: str, rng: random.Rand
     return {**rng.choice(combos), "spot": spot}
 
 
-def remember_environment(env: dict) -> None:
+def _choose_eq_environment(event: str, spot: str, rng) -> dict:
+    """Deprem: şehir, sokak, ışık. Her eksende son ENV_BLOCK üretimin değeri elenir; uyumlu ve en fazla 15 kelimelik
+    üçlü kalmazsa derinlik birlikte 1'e, sonra 0'a düşer."""
     with _ENV_LOCK:
-        _ENV_MEMORY.append(dict(env))
-        del _ENV_MEMORY[:-_ENV_MEMORY_LIMIT]
+        mem = list(_EQ_ENV_MEMORY)
+    for depth in (ENV_BLOCK, 1, 0):
+        recent = mem[-depth:] if depth else []
+        blocked = {a: {m[a] for m in recent} for a in ("city", "street", "light")}
+        combos = []
+        for c in EQ_EVENT_CITIES[event]:
+            for st in EQ_EVENT_STREETS[event]:
+                for li in EQ_ENV_AXES["light"]:
+                    if c in blocked["city"] or st in blocked["street"] or li in blocked["light"]:
+                        continue
+                    if c == EQ_AVENUE_CITY and st not in EQ_AVENUE_STREETS:
+                        continue
+                    env = {"city": c, "street": st, "light": li}
+                    if len(setting_line(env).split()) <= SETTING_MAX_WORDS:
+                        combos.append(env)
+        if combos:
+            return {**rng.choice(combos), "spot": spot}
+    raise StructureError(f"{event}: deprem ortam adayı kalmadı")
+
+
+def remember_environment(env: dict) -> None:
+    mem = _EQ_ENV_MEMORY if _is_eq_env(env) else _ENV_MEMORY
+    with _ENV_LOCK:
+        mem.append(dict(env))
+        del mem[:-_ENV_MEMORY_LIMIT]
 # Orman ve cephe yangınında araç havalanmaz (Bahadır onayı, 8 Eki): 4-9s'de kalkma ifadesi reddedilir
 NO_LIFT_SLICE = {WILDFIRE: ("slice_2",), FACADE_FIRE: ("slice_2",),
                  HELICOPTER: ("slice_2",)}   # 10 Eki: helikopterde de araç havalanmaz
@@ -1610,6 +1822,9 @@ SLICE_RULES = {
     AVALANCHE_VILLAGE: _people_rules("the avalanche") + [_AVA_NEAR_RULE],
     AVALANCHE_SKI: _people_rules("the avalanche") + [_AVA_NEAR_RULE],
     AVALANCHE_FOREST: _people_rules("the avalanche") + [_AVA_NEAR_RULE],
+    # 14 Eki: deprem, insanlar kameraya yakın (çığdaki yakınlık kapısının aynısı)
+    EARTHQUAKE_APARTMENT: _people_rules("the collapsing buildings") + [_AVA_NEAR_RULE],
+    EARTHQUAKE_OLD_STREET: _people_rules("the collapsing buildings") + [_AVA_NEAR_RULE],
 }
 
 
@@ -1706,10 +1921,15 @@ def choose_beats(event: str, view: str | None, spot: str, history: list[str],
     rng = rng or random
     seen = beat_history(event, history)
     depth = RECENT_BEAT_BLOCK_BY_EVENT.get(event, RECENT_BEAT_BLOCK)
-    recent = seen[-depth:] if depth else []
-    blocked2 = {t.split("+")[0] for t in recent}
-    blocked3 = {t.split("+")[1] for t in recent}
-    pairs = [p for p in allowed_pairs(event, view, spot) if p[0] not in blocked2 and p[1] not in blocked3]
+    # 14 Eki: deprem olaylarında aday kalmazsa derinlik 1'e düşer; diğer olaylarda tek deneme (davranış aynı)
+    depths = [depth] + ([1] if event in BEAT_BLOCK_FALLBACK_EVENTS and depth > 1 else [])
+    for d in depths:
+        recent = seen[-d:] if d else []
+        blocked2 = {t.split("+")[0] for t in recent}
+        blocked3 = {t.split("+")[1] for t in recent}
+        pairs = [p for p in allowed_pairs(event, view, spot) if p[0] not in blocked2 and p[1] not in blocked3]
+        if pairs:
+            break
     if not pairs:
         raise StructureError(f"{event}: seçilebilir olay çifti kalmadı (görünüm={view}, yer={spot}, son={recent})")
 
@@ -1844,7 +2064,7 @@ def people_line(spec: dict) -> str:
     # 14 Eki: çığda insanlar ön planda. (14 Eki (2): köydeki "village street" ipucu kaldırıldı, "village" kilit
     # cümlede)
     near = (", close by: near the railing or in the street right below"
-            if spec["event"] in AVALANCHE_EVENTS else "")
+            if spec["event"] in AVALANCHE_EVENTS + EARTHQUAKE_EVENTS else "")   # 14 Eki: deprem de
     return (f"PEOPLE RUNNING AWAY: {w} (slice_1_rest must say that {w} people run away from "
             f"{rule['away_from']}{near})\n")
 
@@ -1853,7 +2073,7 @@ def people_line(spec: dict) -> str:
 # Kapı aralıkları (SLICE_WORDS, TOTAL_WORDS_BY_EVENT) aynı; sadece GPT satırı. 14 Eki (5): toplam 70 ve köy kilit
 # cümlesi 28 kelime; 0-4s insan cümlesine sabit 10 kelime (sayı + kaçış + yakın yer), 4-9s ve 9-15s kalanı eşit
 # paylaşır (en fazla 18). Önceki: 4-9s/9-15s 18, 0-4s kalan.
-BUDGET_EVENTS = AVALANCHE_EVENTS
+BUDGET_EVENTS = AVALANCHE_EVENTS + EARTHQUAKE_EVENTS   # 14 Eki: deprem de
 BUDGET_SLICE_MAX = 18
 BUDGET_SLICE_1 = 10
 

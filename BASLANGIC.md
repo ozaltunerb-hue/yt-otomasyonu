@@ -25,6 +25,39 @@
 
 ---
 
+## 📋 DEVİR: 🏚️ Deprem kategorisi eklendi (14 Eki 2026, TASLAK, henüz video testi yok)
+
+`earthquake_disasters` "🏚️ Deprem", 2 olay yapılandırılmış hatta, çığ yapısı birebir (kod havuzu, sabit yüksek kamera,
+araçsız, 175 kelime kapısı, yasak kelimeler, ortam havuzu, yakınlık kapısı, havuz kontrolü):
+🏢 Apartman bloğu çöküyor (`EARTHQUAKE_APARTMENT`, P1-P4 / Q1-Q4), 🧱 Eski sokak çöküyor (`EARTHQUAKE_OLD_STREET`, R1-R4 /
+T1-T4). Kilit cümleler ve maddeler Bahadır'ın metni. Onaylı düzeltmeler: Q2 "...the upper floors of the apartment blocks
+opposite cave in" (gömme fiili çıktı), R3 "...as the stone houses keep falling" (yapı teması), T2 "...toward us"
+("camera" kelimesi hikâyede yasak).
+- **Kurallar:** çöken bina her zaman konut; dükkan, kapı, kemer, ofis, cam/pencere, balkon düşmesi yok. Yasak
+  (`earthquake_banned`): dead, bodies, victims, injured, blood, trapped, buried, rescue, casualties, araç/gemi, ülke ve
+  şehir adları, yazı. Yavaşlatıcılar da yasak (bina ani ve hızlı çöker). İnsanlar 3-6, kameraya yakın (yakınlık kapısı).
+  Giyim/ışık: "Bystanders wear everyday clothes; raw natural light, no hazmat suits." + "No readable signs, text or flags."
+- **Kamera:** "Rooftop terrace of a building across the street" ("a rooftop terrace"), "High-floor balcony across the
+  street" ("a high-floor balcony"). Bahadır'ın şablonu birebir (`earthquake_camera`). (*) maddeler P2, Q4, R1 sadece çatı
+  terasında. Stil eki en fazla 95 kelime, prompt en fazla 167 (ölçülen), sınır 175. Hikâye 40-70.
+- **Ortam** (`EQ_ENV_AXES`, deprem LRU'su çığdan ayrı): şehir, sokak, ışık + kamera noktası, son 2 elenir (aday kalmazsa
+  birlikte 1, sonra 0). Uyum: apartman olayında beton/yamaç/cadde apartmanları, "narrow residential street" yok; eski
+  sokakta tuğla-taş konutlar ve "a dense hillside neighbourhood of old stone houses" (benim ifadem: yamaç değerinin taş
+  evlerle uyumlu hâli), "wide avenue" yok. "apartment blocks lining a wide avenue" sadece "tree-lined square edge" ile.
+  "hazy dusty morning" seçilince şehir koyu tonlu yazılır (beyaz üstüne beyaz olmasın, `EQ_DARK_CITY`).
+- **Yasak çiftler:** apartman (P3,Q1) (P3,Q4) komşu blok, (P1,Q2) toz dalgası; eski sokak (R2,T4) çatı, (R3,T1) toz,
+  (R4,T3) moloz. İzinli çift (çatı / balkon): apartman 13/7, eski sokak 13/9.
+- **Tekrar önleme 2**; apartmanda balkon noktasında 3 × 3 kalır ve kalan tek çift yasak çifte denk gelebilir, o durumda 1'e
+  düşer (`BEAT_BLOCK_FALLBACK_EVENTS`, sadece deprem; diğer olaylarda davranış aynı).
+- **Havuz kontrolü** depremde zorunlu; "floor", "storey", "slab", "block" sadece deprem için büyük nesne sayılır.
+- **Simülasyon** (Kie/GPT yok, sahte GPT her maddenin 5 doğal cümlesinden rastgele yazar): 2 × 100 üretimin hepsi tamamlandı;
+  175 aşımı 0, (*) ihlali 0, boş havuz 0, art arda aynı ortam 0, art arda aynı madde 0. Apartman 100/100 ilk denemede;
+  eski sokak 94/100 (6 ret: örnek cümle 10 kelimenin altında, ikinci denemede geçti). Yedek derinlik (1) apartmanda 4 kez.
+- **Notion:** kategori ya da olay için select alanı yok (olay metin, kombinasyon anahtarı metin); yeni şema seçeneği
+  gerekmedi. Deprem kombinasyonları geçmişe sayılıyor (`MARITIME_INSPIRATION_DOMAINS`).
+
+---
+
 ## 📋 DEVİR: ACİL: Notion Durum seçeneği eksikti, hiçbir üretim başlamadı (14 Eki 2026)
 
 83b0d71'de "⚠️ Teslim edilemedi" koda (`USED_COMBO_STATUSES`) eklendi ama Notion "Durum" select'ine eklenmedi;

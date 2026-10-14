@@ -30,6 +30,8 @@ STRONG = ("chalet", "lodge", "barn", "cabin", "shed", "woodshed", "hut", "annex"
           "cafe")
 WEAK = ("fence post", "power pole", "utility pole", "pole", "railing", "cable", "wire", "window", "glass", "pane",
         "bench", "sign", "lamp", "awning")
+# 14 Eki, Bahadır: SADECE deprem için ek büyük nesneler (kat, beton döşeme, blok). Diğer kategorilerin uyarıları değişmez.
+EQ_STRONG_EXTRA = ("floor", "storey", "slab", "block")
 BURY = ("bury", "buried", "engulf", "cover", "disappear", "swallow", "smother", "submerge", "vanish")
 DESTROY = ("smash", "crash", "slam", "burst", "tear", "tore", "torn", "rip", "collapse", "topple", "hurl", "fling",
            "flung", "snap", "break", "broke", "shatter", "crush", "flatten", "sweep", "swept", "carry", "carried", "ram",
@@ -47,11 +49,11 @@ def _first(terms, text):
     return min(hits) if hits else None
 
 
-def lint_beat(text: str) -> list[str]:
-    """Bir maddenin ihlalleri (boş liste = temiz)."""
+def lint_beat(text: str, extra_strong: tuple = ()) -> list[str]:
+    """Bir maddenin ihlalleri (boş liste = temiz). extra_strong: kategoriye özel ek büyük nesneler (14 Eki: deprem)."""
     low = _SUBJECT.sub(" ", (text or "").lower().replace(_VEHICLE, " vehicle "))
     out = []
-    strong = _first(STRONG + ("vehicle",), low)
+    strong = _first(STRONG + ("vehicle",) + tuple(extra_strong), low)
     weak = _first(WEAK, low)
     if strong is None:
         out.append("(a) büyük/koyu yapı nesnesi yok")
@@ -62,12 +64,12 @@ def lint_beat(text: str) -> list[str]:
     return out
 
 
-def pool_violations(events) -> dict[str, list[str]]:
+def pool_violations(events, extra_strong: tuple = ()) -> dict[str, list[str]]:
     out = {}
     for e in events:
         for slot in ("slice_2", "slice_3"):
             for bid, beat in es.EVENT_BEATS[e][slot].items():
-                v = lint_beat(beat["text"])
+                v = lint_beat(beat["text"], extra_strong)
                 if v:
                     out[f"{e} / {bid}: {beat['text']}"] = v
     return out
@@ -95,6 +97,17 @@ class TestPoolLint(unittest.TestCase):
         v = pool_violations(es.AVALANCHE_EVENTS)
         self.assertEqual(v, {}, "\n".join(f"{k}: {x}" for k, x in v.items()))
 
+    def test_earthquake_pools_mandatory(self):
+        # 14 Eki, Bahadır: deprem de zorunlu; kat/döşeme/blok sadece burada büyük nesne sayılır
+        v = pool_violations(es.EARTHQUAKE_EVENTS, EQ_STRONG_EXTRA)
+        self.assertEqual(v, {}, "\n".join(f"{k}: {x}" for k, x in v.items()))
+        # onaydan önceki metinler yakalanırdı (Q2 gömme fiili, R3 yapı yok)
+        self.assertTrue(lint_beat("the dust wave rolls down the street and engulfs the buildings opposite",
+                                  EQ_STRONG_EXTRA))
+        self.assertTrue(lint_beat("a thick dust cloud pours down the narrow street from the collapse", EQ_STRONG_EXTRA))
+        # ek liste diğer kategorilere uygulanmaz
+        self.assertIn("(a) büyük/koyu yapı nesnesi yok", lint_beat("the upper floors give way"))
+
     def test_avalanche_lift_beats_excluded_at_lift_station(self):
         # (†) teleferik maddesi istasyon terasında seçilmez. 14 Eki (3) itibarıyla teleferik maddesi yok; kural,
         # madde geri gelirse dışlamanın unutulmaması için duruyor.
@@ -108,11 +121,11 @@ class TestPoolLint(unittest.TestCase):
 
     def test_other_categories_warning_only(self):
         # Volkan, kıyı, sel, heyelan, hortum, yangın: sadece rapor (Bahadır: değiştirme)
-        others = [e for e in es.EVENT_BEATS if e not in es.AVALANCHE_EVENTS]
+        others = [e for e in es.EVENT_BEATS if e not in es.AVALANCHE_EVENTS + es.EARTHQUAKE_EVENTS]
         self.assertTrue(others)
         v = pool_violations(others)
         if v:
-            sys.stderr.write(f"\n⚠️ HAVUZ KONTROLÜ UYARI ({len(v)} madde, çığ dışı, değiştirilmedi):\n")
+            sys.stderr.write(f"\n⚠️ HAVUZ KONTROLÜ UYARI ({len(v)} madde, çığ ve deprem dışı, değiştirilmedi):\n")
             for k, x in v.items():
                 sys.stderr.write(f"  - {k} -> {', '.join(x)}\n")
 

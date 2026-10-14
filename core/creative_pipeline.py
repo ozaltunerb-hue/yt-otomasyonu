@@ -163,6 +163,9 @@ EVENT_OUTCOMES = {
     "Avalanche slams into a mountain village": "the snow wall keeps tearing through the village, flattening chalets, fences and trees",
     "Avalanche crashes down onto a ski lodge": "the avalanche keeps crashing into the ski resort, snapping lift towers and burying the lodge",
     "Avalanche rips through a pine forest into a valley": "the avalanche keeps tearing through the forest into the valley, hurling trunks into the houses",
+    # Deprem (TASLAK, 14 Eki, Bahadır): yapılandırılmış hatta; trace/rapor için
+    "Earthquake collapses an apartment block": "the ground keeps shaking and the apartment blocks keep collapsing floor by floor into the dust",
+    "Earthquake collapses a row of old stone houses": "the collapse keeps running down the street, old stone houses caving in one after another",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -324,6 +327,7 @@ EVENT_REQUIRED = {
     "Pyroclastic cloud races down into a village street": [],
     "Volcanic bombs slam into a village street": [],
     "Avalanche slams into a mountain village": [], "Avalanche crashes down onto a ski lodge": [], "Avalanche rips through a pine forest into a valley": [],   # 13 Eki: çığ (yapılandırılmış hat kapıları)
+    "Earthquake collapses an apartment block": [], "Earthquake collapses a row of old stone houses": [],   # 14 Eki: deprem (yapılandırılmış hat kapıları)
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),
@@ -726,7 +730,7 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
         env = es.choose_environment(event, spot, b2, b3)
         es.remember_environment(env)             # seçim anında (beat hafızası gibi)
         setting = es.setting_line(env)
-        weather = f"{env['mountain']}, {env['village']}, {env['light']}"
+        weather = es.env_weather(env)   # 14 Eki: çığ ve deprem
     spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting)
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "structured": True, "domain": domain, "event": event, "ship": ship or "None",

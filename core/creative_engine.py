@@ -222,6 +222,14 @@ MARITIME_INSPIRATION_DOMAINS = {
         "guidance": "A violent powder avalanche on a steep snowy mountain under overcast winter daylight: a wall of snow slamming into a mountain village, crashing onto a ski lodge, or ripping through a pine forest into a valley. The snow visibly hits and breaks chalets, trees, walls and lift towers. NO ships or vessels.",
         "example_elements": ["powder avalanche on a steep mountain slope", "wall of snow", "billowing snow cloud", "wooden chalets", "snapped pine trunks", "ski-lift towers"],
         "camera_styles": ["bystander phone from a hillside terrace across the valley", "bystander phone from a mountain chalet balcony"],
+    },
+    # 14 Eki, Bahadır (TASLAK): 🏚️ Deprem. Çöken bina her zaman konut (apartman bloğu ya da taş evler); ölü/yaralı,
+    # kurtarma, araç, ülke/şehir adı yok.
+    "earthquake_disasters": {
+        "title": "Deprem (Earthquake)",
+        "guidance": "A violent earthquake in a residential street: an apartment block or a row of old stone houses across the street collapsing floor by floor in a huge dust cloud. The ground shakes, concrete slabs and stone walls fall into the street. Only residential buildings collapse. NO ships or vessels, no vehicles, no casualties.",
+        "example_elements": ["six-storey apartment block collapsing floor by floor", "huge dust cloud", "concrete slabs falling into the street", "old stone houses caving in"],
+        "camera_styles": ["bystander phone from a rooftop terrace across the street", "bystander phone from a high-floor balcony across the street"],
     }
 }
 
@@ -421,6 +429,15 @@ DOMAIN_ATTRIBUTES = {
             "Avalanche slams into a mountain village",
             "Avalanche crashes down onto a ski lodge",
             "Avalanche rips through a pine forest into a valley",
+        ]
+    },
+    # 14 Eki, Bahadır (TASLAK): 🏚️ Deprem. Kamera karşı binada yüksekte (çatı terası / yüksek kat balkonu)
+    "earthquake_disasters": {
+        "ships": [],
+        "environments": ["Rooftop terrace of a building across the street", "High-floor balcony across the street"],
+        "events": [
+            "Earthquake collapses an apartment block",
+            "Earthquake collapses a row of old stone houses",
         ]
     }
 }
@@ -1046,7 +1063,8 @@ ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open
                        "landslide_disasters",   # 2 Eki: heyelan (gemisiz, sivil giyim kuralı)
                        "fire_disasters",        # 8 Eki: yangın (gemisiz, sivil giyim kuralı)
                        "volcano_disasters",     # 10 Eki: volkan (gemisiz, sivil giyim kuralı)
-                       "avalanche_disasters"]   # 13 Eki: çığ (gemisiz, sivil giyim kuralı)
+                       "avalanche_disasters",   # 13 Eki: çığ (gemisiz, sivil giyim kuralı)
+                       "earthquake_disasters"]  # 14 Eki: deprem (gemisiz, sivil giyim kuralı)
 
 # Gemi domainlerinde ekrandaki gerçekçi kişi aralığı (2026-09-24). "Max 2" sadece
 # kargo gemileri içindi; kargo domain'i artık yok. Env-centric domainler tabloya

@@ -107,6 +107,9 @@ CAMERA_SPOTS = {
     "Terrace at the edge of the village": "a village-edge terrace",
     "Balcony of a chalet at the edge of the village": "a village-edge chalet balcony",
     "Terrace of the lift station": "the lift station terrace",
+    # 🏚️ Deprem (14 Eki, Bahadır): karşı binada yüksekte; kamera cümlesi "Handheld footage from ..." (kısa adlar)
+    "Rooftop terrace of a building across the street": "a rooftop terrace",
+    "High-floor balcony across the street": "a high-floor balcony",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -132,6 +135,8 @@ LANDSLIDE_WEATHER = ["driving rain and wind", "heavy downpour under dark storm l
 VOLCANO_WEATHER = ["ash-grey sky lit orange by a distant eruption plume"]
 # Çığ havası (13 Eki, Bahadır): kapalı kış günü (giyim/ışık satırıyla aynı: "raw natural overcast daylight")
 AVALANCHE_WEATHER = ["overcast winter daylight over snowy mountains"]
+# Deprem havası (14 Eki): sadece iskelet hattı ve pick_setting için; yapılandırılmış hatta ortam havuzundan gelir
+EARTHQUAKE_WEATHER = ["hazy dusty morning light"]
 FIRE_WEATHER = ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
                 "heavy smoke and scorching still air"]
 
@@ -514,6 +519,27 @@ EVENT_SKELETONS = {
                 "houses below. Snapped trunks fly as {n} {people} run from the avalanche. The white cloud keeps rolling "
                 "down into the valley, still burying the houses.",
     },
+    # ── 🏚️ Deprem (TASLAK, 14 Eki, Bahadır). Yapılandırılmış hatta; metin sadece PROMPT_PIPELINE=skeleton için. Kamera
+    # karşı binada yüksekte. ──
+    "Earthquake collapses an apartment block": {
+        "domain": "earthquake_disasters", "ships": None,
+        "spots": {"Rooftop terrace of a building across the street": "a residential street lined with apartment blocks",
+                  "High-floor balcony across the street": "a residential street lined with apartment blocks"},
+        "people": ["residents", "neighbours"], "weather": EARTHQUAKE_WEATHER, "object": "collapse",
+        "text": "In {spot} under {weather}, the ground shakes violently and a six-storey apartment block collapses "
+                "floor by floor, a huge dust cloud bursting out. Concrete slabs crash onto the road as {n} {people} run "
+                "from the collapsing buildings. The dust keeps rolling down the street as the block next door starts "
+                "to fall.",
+    },
+    "Earthquake collapses a row of old stone houses": {
+        "domain": "earthquake_disasters", "ships": None,
+        "spots": {"Rooftop terrace of a building across the street": "a narrow residential street of old stone houses",
+                  "High-floor balcony across the street": "a narrow residential street of old stone houses"},
+        "people": ["residents", "neighbours"], "weather": EARTHQUAKE_WEATHER, "object": "collapse",
+        "text": "In {spot} under {weather}, the ground shakes violently and a row of old stone houses collapses one "
+                "after another, dust and rubble bursting into the street. Roofs fall in as {n} {people} run from the "
+                "collapsing buildings. The collapse keeps running down the street, house after house.",
+    },
     # ── Plaj & sahil ──
     "Tornado approaching an open beach": {
         "domain": "open_beach_coastal_events", "ships": None,
@@ -660,6 +686,8 @@ PHENOMENA = {
                "Pyroclastic cloud races down into a village street", "Volcanic bombs slam into a village street"],
     # 13 Eki (TASLAK)
     "Çığ": ["Avalanche slams into a mountain village", "Avalanche crashes down onto a ski lodge", "Avalanche rips through a pine forest into a valley"],
+    # 14 Eki (TASLAK)
+    "Deprem": ["Earthquake collapses an apartment block", "Earthquake collapses a row of old stone houses"],
     "Dev Dalga": ["Green wave breaks over the rail onto the vehicle deck", "Rogue wave breaks over the rail onto the pool deck",
                   "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon",
                   "Tidal wave surges over a coastal city street"],
@@ -692,12 +720,15 @@ EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
                "Pyroclastic cloud races down into a village street": (3, 6),
                "Volcanic bombs slam into a village street": (3, 6),
                # TASLAK (13 Eki, Bahadır): çığ 3-6
-               "Avalanche slams into a mountain village": (3, 6), "Avalanche crashes down onto a ski lodge": (3, 6), "Avalanche rips through a pine forest into a valley": (3, 6)}
+               "Avalanche slams into a mountain village": (3, 6), "Avalanche crashes down onto a ski lodge": (3, 6), "Avalanche rips through a pine forest into a valley": (3, 6),
+               # TASLAK (14 Eki, Bahadır): deprem 3-6
+               "Earthquake collapses an apartment block": (3, 6), "Earthquake collapses a row of old stone houses": (3, 6)}
 # "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
 NO_SIGNS_DOMAINS = {"landslide_disasters",
                     "fire_disasters",   # 8 Eki: yangın (heyelan deseni, toplam 8 kısıt)
                     "volcano_disasters",   # 10 Eki: volkan
-                    "avalanche_disasters"}   # 13 Eki: çığ (yazı/tabela yok)
+                    "avalanche_disasters",   # 13 Eki: çığ (yazı/tabela yok)
+                    "earthquake_disasters"}   # 14 Eki: deprem (yazı/tabela/bayrak yok)
 
 # Import anında kontrol: iskelet verisi havuzla uyumlu olmalı
 for _e, _s in EVENT_SKELETONS.items():
@@ -778,6 +809,18 @@ def avalanche_camera(spot: str) -> str:
             f"the camera stays fixed, tilting slightly and never descending; one continuous shot, no zoom, no cuts.")
 
 
+# 🏚️ Deprem kamerası (14 Eki, Bahadır; metin birebir): karşı binadan sabit, yüksek açı; çöken binalar ve toz üst üçte
+# ikide, sokak ve korkuluk köşesi altta. Yer sarsıntısıyla güçlü el titremesi; kamera sabit, inmez.
+EARTHQUAKE_GUARDRAILS = "Bystanders wear everyday clothes; raw natural light, no hazmat suits."
+
+
+def earthquake_camera(spot: str) -> str:
+    return (f"Handheld footage from {CAMERA_SPOTS[spot]}, high vantage looking across the street at the buildings "
+            f"collapsing opposite; the collapsing buildings and the dust fill the upper two thirds of the frame, the "
+            f"street and a corner of the railing fill the lower part; strong hand shake from the ground tremor, the "
+            f"camera stays fixed and never descends; one continuous shot, no zoom, no cuts.")
+
+
 VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "
                       "light matching the weather, never glossy or CGI; no hazmat suits.")
 
@@ -823,6 +866,9 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     if s["domain"] == "avalanche_disasters":   # 13 Eki: çığ, volkan yapısı (sabit kamera, kısa giyim/ışık)
         camera = avalanche_camera(spot)
         guardrails = AVALANCHE_GUARDRAILS
+    if s["domain"] == "earthquake_disasters":   # 14 Eki: deprem, çığ yapısı (sabit kamera, günlük sivil giyim)
+        camera = earthquake_camera(spot)
+        guardrails = EARTHQUAKE_GUARDRAILS
     out = f"{camera} {setting} {guardrails}" if setting else f"{camera} {guardrails}"
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)
