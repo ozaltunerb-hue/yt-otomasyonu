@@ -25,6 +25,24 @@
 
 ---
 
+## 📋 DEVİR: 🏚️ Deprem kapısı anlam bazlı (14 Eki 2026, ikinci tur)
+
+**Ders:** simülasyon cümleleri madde metnine yakın olunca kapı fazla sıkı kalmıştı; gerçek GPT paraphrase'iyle test
+edilmeli. 11:19 testinde 🧱 Eski sokak 3 denemede de "seçilen olay görünmüyor" kapısına takıldı (Kie'ye gitmedi). R3 ve
+T2 için GPT'nin doğru ama serbest cümleleri reddedildi ("cascades down the street", "each house succumbing", "advances
+... toward us").
+- Deprem madde terimleri NESNE + EYLEM gruplarına çevrildi (`_EQ_FALLV`, `_EQ_MOVE`, `_EQ_DUST`, `_EQ_CHAIN`,
+  `_EQ_PROGRESS`...); kelimesi kelimesine eşleşme yok. Örn. R3 = toz + akış eylemi; T2 = ev ev zincir + ilerleme.
+  Sadece deprem; diğer kategorilerin kapıları ve 55 uyarı aynı.
+- Testler: 6 reddedilen gerçek cümle (`REJECTED_REAL`) geçer; 16 maddenin her biri için madde metninden farklı 5 serbest
+  cümle (`FREE`) geçer; bir maddenin cümlesi başka maddeden geçmez (yasak çiftler hariç: aynı görüntü bilerek iki
+  dilimde yok); insan yakınlık kapısı aynı.
+- Yanlış eşleşme düzeltmeleri: "face" tek başına yok ("facing" cephe sanılıyordu), "piece" yok ("in one piece" beton
+  parçası sanılıyordu), "ripple" yok (genel ölçek küçültücü kuralına takılır).
+- Serbest üsluplu simülasyon (5 farklı üslup, Kie/GPT yok): apartman 100/100, eski sokak 100/100 ilk denemede.
+
+---
+
 ## 📋 DEVİR: 🏚️ Deprem kategorisi eklendi (14 Eki 2026, TASLAK, henüz video testi yok)
 
 `earthquake_disasters` "🏚️ Deprem", 2 olay yapılandırılmış hatta, çığ yapısı birebir (kod havuzu, sabit yüksek kamera,

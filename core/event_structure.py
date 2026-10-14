@@ -613,37 +613,53 @@ _AVA_BANNED = ("rescue", "helicopter", "skier", "snowmobile", "vehicle", "truck"
 _AVA_SLOW = ("slowly", "gently", "calm", "calmly", "gradually", "softly", "peacefully")
 # 🏚️ Deprem (14 Eki, Bahadır): _EQ_* listeleri. Nesne + fiil aranır. "wall" tek başına yok ("wall of dust" tozun
 # kendisi). Yasak: ölü/yaralı/gömülme/kurtarma, araç ve gemi, ülke/şehir adı, yavaşlatıcılar.
-_EQ_BLOCK = ("apartment block", "block", "apartment building", "apartments", "tower block", "building", "high-rise",
-             "mid-rise", "flats")
+# 14 Eki (2), Bahadır: 11:19 testinde eski sokak 3 denemede de "seçilen olay görünmüyor" kapısına takıldı; GPT'nin doğru
+# ama serbest cümleleri reddedildi (simülasyon cümleleri madde metnine yakın yazılmıştı). Deprem kapısı anlam bazlı:
+# her maddede NESNE (toz, kat, cephe, ev, moloz...) + EYLEM (çöker, akar, ilerler...) grupları; eş anlamlılar geniş.
+# Gruplar maddeleri birbirinden ayıracak şekilde seçildi (yanlış pozitif testi: tests/test_earthquake.py).
+_EQ_FALLV = ("collapse", "crumble", "cave", "cave in", "caves in", "caved in", "fall", "fell", "fallen", "topple",
+             "tumble", "succumb", "fold", "give way", "gives way", "gave way", "come down", "comes down", "came down",
+             "coming down", "pancake", "crash", "slam", "drop", "plunge", "implode", "buckle", "disintegrate", "crush",
+             "flatten", "level", "reduce", "sink", "sank", "sag", "break apart", "breaks apart", "broke apart",
+             "fall apart", "falls apart", "fell apart", "go down", "goes down", "went down", "smash", "crumple",
+             "shatter", "rubble", "stack", "squash")
+_EQ_MOVE = ("pour", "rush", "surge", "roll", "race", "sweep", "swept", "advance", "speed", "sped", "run", "ran", "flood",
+            "cascade", "billow", "spread", "stream", "fill", "engulf", "swallow", "charge", "spill", "flow", "travel",
+            "barrel", "tear through", "tears through", "tore through", "blast", "boil", "gush", "sweep through")
+_EQ_DUST = ("dust", "dust cloud", "cloud", "smoke", "plume", "haze")
+_EQ_UPPER = ("upper", "top", "higher", "high", "lower", "beneath", "underneath", "below them", "on top of")
 _EQ_FLOORS = ("floor", "storey", "story", "level", "upper floors")
-_EQ_FALL = ("pancake", "collapse", "cave in", "caves in", "caved in", "crash", "slam", "fall", "fell", "drop",
-            "give way", "gives way", "gave way", "crumble", "flatten", "crush", "fold", "smash", "come down",
-            "comes down", "came down", "coming down", "tumble", "implode", "sink", "sank", "buckle", "topple")
-_EQ_DUST = ("dust", "dust cloud", "cloud of dust", "dust wave")
-_EQ_FRONTWALL = ("front wall", "facade", "façade", "front", "outer wall", "side wall", "face")
+# "face" tek başına "facing" ile karışır (Q2 "facing blocks" P2 sanılıyordu)
+_EQ_FRONT = ("front wall", "facade", "façade", "front", "face of", "outer wall", "exterior wall", "exterior")
 _EQ_PEEL = ("peel", "tear", "tore", "torn", "rip", "strip", "shear", "slide", "slid", "come away", "comes away",
-            "came away", "break away", "breaks away", "broke away", "break off", "breaks off", "broke off", "split off")
-_EQ_NEIGHBOR = ("neighboring", "neighbouring", "neighbor", "neighbour", "next", "next-door", "next door", "adjacent",
-                "nearby", "beside", "second", "another", "other", "opposite", "across")
-_EQ_LEAN = ("lean", "tilt", "sway", "list", "keel", "topple", "buckle", "sag", "bend", "bent", "tip")
-_EQ_SLAB = ("slab", "concrete", "chunk", "section", "piece", "panel")
-_EQ_ROAD = ("road", "street", "asphalt", "pavement", "roadway", "tarmac", "junction", "intersection", "square")
-_EQ_BREAK = ("break", "broke", "crack", "split", "shatter", "smash", "burst", "tear", "rip", "gouge", "punch",
-             "crater")
-_EQ_HOUSES = ("house", "home", "cottage", "dwelling", "townhouse", "row of houses")
-_EQ_FLATTEN = ("flatten", "crush", "smash", "level", "collapse", "cave in", "caves in", "caved in", "bury", "pancake")
-_EQ_ROOF = ("roof", "rooftop", "tiles", "rafters")
+            "came away", "break away", "breaks away", "broke away", "break off", "breaks off", "broke off", "split off",
+            "detach", "fall away", "falls away", "fell away", "drop away", "tear loose", "tears loose", "tore loose",
+            "come loose", "comes loose", "came loose", "break loose", "breaks loose", "broke loose", "shed", "slough")
+_EQ_NEXTDOOR = ("next door", "next-door", "neighbouring", "neighboring", "neighbor", "neighbour", "adjacent",
+                "next to it", "alongside", "beside it", "nearby")
+_EQ_OTHER = ("second", "another", "across", "opposite", "other", "far side")
+_EQ_LEAN = ("lean", "tilt", "sway", "list", "keel", "tip", "tip over", "topple", "buckle", "sag", "bend", "bent", "slump",
+            "slant", "pitch")
+_EQ_BUILDING = ("building", "block", "apartment", "apartments", "tower", "high-rise", "mid-rise", "flats", "structure")
+# "piece" yok: "in one piece" cepheyi (P2) beton parçası (P4) sandırıyordu
+_EQ_SLAB = ("slab", "concrete", "chunk", "section", "panel")
+_EQ_ROAD = ("road", "street", "asphalt", "pavement", "roadway", "tarmac", "lane", "alley")
+_EQ_IMPACT = ("slam", "crash", "smash", "break", "broke", "crack", "split", "shatter", "hit", "punch", "gouge", "land",
+              "fall", "fell", "drop", "plunge", "strike", "struck", "smack", "pierce", "tear", "rip", "crater")
+_EQ_HOUSES = ("house", "home", "cottage", "dwelling", "townhouse", "bungalow")
 _EQ_WALLS = ("stone wall", "walls", "masonry", "brickwork", "stonework", "brick wall")
-_EQ_FOLD = ("fold", "cave", "collapse", "buckle", "crumble", "give way", "gives way", "gave way", "fall in", "falls in",
-            "fell in", "implode", "crumple", "sag", "bow")
-_EQ_RUBBLE = ("rubble", "debris", "stones", "masonry", "bricks", "heap", "pile")
-_EQ_SPREAD = ("spread", "spill", "pour", "slide", "slid", "fan out", "fans out", "scatter", "tumble", "sweep", "swept",
-              "flow", "roll", "surge")
+_EQ_ROOF = ("roof", "rooftop", "tiles", "rafters")
+_EQ_RUBBLE = ("rubble", "debris", "stones", "masonry", "bricks", "heap", "pile", "ruins")
+_EQ_SPREAD = ("slide", "slid", "spill", "pour", "spread", "tumble", "scatter", "fan out", "fans out", "fanned out", "flow",
+              "roll", "surge", "sweep", "swept", "slump", "stream", "cascade", "shift")
 _EQ_CORNER = ("corner", "junction", "intersection", "crossroads", "end of the row", "end house")
-_EQ_CHAIN = ("one after another", "house after house", "one by one", "in turn", "domino", "chain", "row",
-             "down the street", "along the street")
-_EQ_TOWARD = ("toward us", "towards us", "toward the railing", "towards the railing", "toward the viewer",
-              "towards the viewer", "our way", "closer", "nearer", "at us")
+_EQ_NEXTONE = ("next", "neighbouring", "neighboring", "adjacent", "another house", "following", "neighbour house",
+               "one more house")
+_EQ_CHAIN = ("house after house", "each house", "every house", "one after another", "one by one", "house by house",
+             "building after building", "in turn", "domino", "one house after another", "each of the houses")
+_EQ_PROGRESS = ("down the street", "along the street", "along the row", "toward us", "towards us", "our way", "closer",
+                "nearer", "advance", "progress", "race", "speed", "sped", "run", "ran", "sweep", "swept", "rush",
+                "spread", "move", "march", "roll", "travel", "chase", "accelerate", "charge", "near us")
 _EQ_BANNED = ("dead", "death", "bodies", "body", "victim", "injured", "injury", "blood", "trapped", "buried", "burial",
               "rescue", "rescuer", "casualty", "corpse", "killed",
               "vehicle", "truck", "car", "trailer", "ship", "boat", "cargo", "tugboat", "siren", "text", "sign", "logo",
@@ -1486,24 +1502,24 @@ EVENT_BEATS = {
     EARTHQUAKE_APARTMENT: {
         "slice_2": {
             "P1": {"text": "the upper floors pancake down onto the lower ones and a wall of dust surges across the street",
-                   "terms": [_EQ_FLOORS, _EQ_FALL]},
+                   "terms": [_EQ_UPPER, _EQ_FLOORS, _EQ_FALLV]},
             "P2": {"text": "the whole front wall of the block peels off and crashes onto the street",
-                   "terms": [_EQ_FRONTWALL, _EQ_PEEL + _EQ_FALL]},
+                   "terms": [_EQ_FRONT, _EQ_PEEL + _EQ_FALLV]},
             "P3": {"text": "the neighboring apartment block leans and its side wall collapses",
-                   "terms": [_EQ_NEIGHBOR, _EQ_BLOCK, _EQ_LEAN + _EQ_FALL]},
+                   "terms": [_EQ_NEXTDOOR, _EQ_BUILDING, _EQ_LEAN]},
             "P4": {"text": "a huge concrete slab from the collapsing block slams into the road and breaks it apart",
-                   "terms": [_EQ_SLAB, _EQ_ROAD, _EQ_FALL + _EQ_BREAK]},
+                   "terms": [_EQ_SLAB, _EQ_ROAD, _EQ_IMPACT]},
         },
         "slice_3": {
             "Q1": {"text": "the building next door crumbles floor by floor into the same dust cloud",
-                   "terms": [_EQ_BLOCK + _EQ_HOUSES, _EQ_NEIGHBOR, _EQ_FALL]},
+                   "terms": [_EQ_NEXTDOOR, _EQ_BUILDING, _EQ_FALLV]},
             "Q2": {"text": "the dust wave rolls down the street and the upper floors of the apartment blocks opposite "
                            "cave in",
-                   "terms": [_EQ_DUST, _EQ_FLOORS + _EQ_BLOCK, _EQ_FALL]},
+                   "terms": [_EQ_DUST, _EQ_MOVE, _EQ_FALLV]},
             "Q3": {"text": "a row of low houses beside the block is flattened under falling concrete",
-                   "terms": [_EQ_HOUSES, _EQ_FLATTEN + _EQ_FALL]},
+                   "terms": [_EQ_HOUSES, _EQ_FALLV]},
             "Q4": {"text": "a second apartment block across the street tilts and falls into the dust",
-                   "terms": [_EQ_NEIGHBOR, _EQ_BLOCK, _EQ_LEAN + _EQ_FALL]},
+                   "terms": [_EQ_OTHER, _EQ_BUILDING, _EQ_LEAN]},
         },
         # komşu blok (P3 eğilir, yan duvarı çöker: Q1 yan bina, Q4 eğilip düşen ikinci blok); toz dalgası (P1,Q2)
         "excluded_pairs": {("P3", "Q1"), ("P3", "Q4"), ("P1", "Q2")},
@@ -1513,23 +1529,23 @@ EVENT_BEATS = {
     EARTHQUAKE_OLD_STREET: {
         "slice_2": {
             "R1": {"text": "the facade of the nearest old stone house slides off in one piece and crashes down",
-                   "terms": [_EQ_FRONTWALL, _EQ_PEEL + _EQ_FALL]},
+                   "terms": [_EQ_FRONT, _EQ_PEEL + _EQ_FALLV]},
             "R2": {"text": "the stone walls of two houses fold inward and their roofs fall in",
-                   "terms": [_EQ_WALLS + _EQ_HOUSES, _EQ_FOLD + _EQ_FALL, _EQ_ROOF]},
+                   "terms": [_EQ_WALLS + _EQ_HOUSES, _EQ_FALLV, _EQ_ROOF]},
             "R3": {"text": "a thick dust cloud pours down the narrow street as the stone houses keep falling",
-                   "terms": [_EQ_DUST, _EQ_HOUSES, _EQ_FALL]},
+                   "terms": [_EQ_DUST, _EQ_MOVE]},
             "R4": {"text": "a corner stone house crumbles and its rubble spreads across the junction",
-                   "terms": [_EQ_CORNER, _EQ_HOUSES + _EQ_RUBBLE, _EQ_FALL + _EQ_SPREAD]},
+                   "terms": [_EQ_CORNER, _EQ_HOUSES + _EQ_RUBBLE, _EQ_FALLV + _EQ_SPREAD]},
         },
         "slice_3": {
             "T1": {"text": "the next house in the row caves in and the dust cloud grows",
-                   "terms": [_EQ_NEIGHBOR + ("row",), _EQ_HOUSES, _EQ_FALL]},
+                   "terms": [_EQ_NEXTONE, _EQ_HOUSES, _EQ_FALLV]},
             "T2": {"text": "the collapse runs down the street, house after house, toward us",
-                   "terms": [_EQ_HOUSES, _EQ_CHAIN, _EQ_TOWARD]},
+                   "terms": [_EQ_CHAIN, _EQ_PROGRESS]},
             "T3": {"text": "the rubble heap of a fallen house slides out into the street",
                    "terms": [_EQ_RUBBLE, _EQ_SPREAD, _EQ_ROAD]},
             "T4": {"text": "the roof of a stone house falls in and its walls collapse into the street",
-                   "terms": [_EQ_ROOF, _EQ_WALLS + _EQ_HOUSES, _EQ_FALL]},
+                   "terms": [_EQ_ROOF, _EQ_FALLV, _EQ_HOUSES + _EQ_WALLS]},
         },
         # çatı içe göçer (R2,T4); toz bulutu (R3,T1); moloz sokağa yayılır (R4,T3)
         "excluded_pairs": {("R2", "T4"), ("R3", "T1"), ("R4", "T3")},

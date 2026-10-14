@@ -142,6 +142,99 @@ VALID = {
            "A house's roof collapses and its stone walls fall into the street.",
            "The roof of a stone house falls in and its walls collapse into the street."],
 }
+# 14 Eki (2): madde metninden FARKLI yazılmış serbest cümleler (gerçek GPT üslubu: eş anlamlı ve yeniden kurulmuş).
+# Simülasyon cümleleri madde metnine yakın olunca kapı fazla sıkı kalmıştı.
+FREE = {
+    "P1": ["The top storeys drop onto the levels beneath them, sending a wall of dust across the road.",
+           "Its higher floors slam down onto those below as thick dust rolls over the street.",
+           "Storey upon storey, the top of the block crushes the floors underneath it in seconds.",
+           "The upper levels give way and stack onto the lower floors in a burst of dust.",
+           "The block's top floors plunge onto the ones beneath, grey dust billowing out over the road."],
+    "P2": ["The entire facade detaches from the block and smashes down onto the road below.",
+           "Its outer wall comes away in one huge sheet and slams into the street.",
+           "The face of the building shears off and drops heavily onto the pavement below.",
+           "The front of the block tears loose and crashes across the road in one piece.",
+           "The whole exterior wall falls away from the apartments and hits the street hard."],
+    "P3": ["The adjacent tower tilts sideways and its flank gives way under the strain.",
+           "Next door, the apartment building sags to one side as its wall crumbles away.",
+           "The neighbouring block lists heavily before one whole side of it caves in.",
+           "The block alongside slumps over to one side and its side wall comes down.",
+           "The nearby apartment building leans out over the street and its side wall falls away."],
+    "P4": ["A massive chunk of concrete plunges onto the road and splits the asphalt open.",
+           "A broken concrete panel crashes into the street, cracking the pavement into pieces.",
+           "A giant slab drops from the block and smashes the roadway apart below it.",
+           "A heavy section of concrete hits the road and tears a deep crater into it.",
+           "A huge piece of the building's concrete lands on the street and shatters it."],
+    "Q1": ["The adjacent building comes down storey by storey into the same grey cloud.",
+           "Next door, the apartment block collapses one level at a time into the dust.",
+           "The neighbouring tower crumbles floor after floor into the thick grey haze.",
+           "The building alongside folds downward, storey after storey, into the thick dust.",
+           "The structure next door gives way level by level into the dense dust."],
+    "Q2": ["A wave of dust surges along the street as the top storeys opposite give way.",
+           "Dust sweeps down the road as the upper levels of the blocks across the street crumble.",
+           "The cloud of dust races down the street and the apartments opposite collapse from the top.",
+           "A dust blast rolls through the street, caving in the upper storeys of the buildings across.",
+           "Billowing dust floods the street as the high floors of the facing blocks cave in."],
+    "Q3": ["Falling chunks of concrete crush the small homes standing next to the block.",
+           "The low houses at the foot of the block are smashed flat by the falling debris.",
+           "Concrete rains onto the row of cottages beside the block and levels them completely.",
+           "A line of single-storey houses collapses under the weight of the falling concrete.",
+           "The little homes beside the tower are flattened by tumbling slabs of concrete."],
+    "Q4": ["Another apartment block opposite leans over and crashes down into the dust.",
+           "Across the street a second tower tips over and goes down in one piece.",
+           "The block on the far side of the road tilts and topples into the cloud.",
+           "A second building opposite sways violently, then keels over into the dust.",
+           "Another high-rise across the street slants dangerously and falls over into the haze."],
+    "R1": ["The front of the closest stone house breaks away whole and drops to the ground.",
+           "The nearest old house sheds its entire facade, which crashes down in one slab.",
+           "The face of the nearest house slides away in a single piece and collapses below.",
+           "The closest stone house loses its whole front wall, which falls in one block.",
+           "The outer wall of the nearest stone house detaches intact and tumbles down into the street."],
+    "R2": ["Two houses buckle inward and their heavy roofs drop down into them.",
+           "The masonry of two homes caves in and the roofs come down inside them.",
+           "Two stone houses implode, their roofs crashing down through the broken walls.",
+           "The walls of two cottages fold in on themselves and their roofs give way.",
+           "Two old houses crumple inward as their roofs collapse into the rooms below."],
+    "R3": ["A thick cloud of dust surges along the narrow street as more houses fall.",
+           "Dense dust floods the lane while the old stone houses keep collapsing nearby.",
+           "A heavy plume of dust rolls through the narrow street toward the junction.",
+           "A choking cloud races down the alley as the old houses keep crumbling.",
+           "Thick dust billows down the street, swallowing the collapsing houses one after the other."],
+    "R4": ["The house on the corner caves in and its stones spill over the junction.",
+           "A corner house collapses, scattering rubble across the whole intersection.",
+           "The old stone house at the crossroads crumbles and debris fans out across it.",
+           "The end house of the row comes down, its rubble spreading into the junction.",
+           "The corner building falls apart and its stones tumble across the intersection."],
+    "T1": ["The neighbouring house collapses and the dust in the street grows thicker.",
+           "Another house in the row gives way, adding to the swelling dust cloud.",
+           "The adjacent house crumbles and the cloud of dust grows even larger.",
+           "The following house in the row falls in as the dust keeps swelling.",
+           "The next home along caves in, throwing up even more dust into the air."],
+    "T2": ["House by house, the collapse moves down the street toward us.",
+           "The destruction sweeps along the street, one house after another giving way.",
+           "Each house in turn gives way as the collapse races ever closer.",
+           "One by one the houses fall, the wave of collapse heading our way.",
+           "The collapse spreads along the row, every house crumbling as it nears us."],
+    "T3": ["The pile of rubble from a fallen house spills out across the street.",
+           "A heap of debris slides off the ruined house into the middle of the road.",
+           "Broken stones from a collapsed house pour out into the narrow lane.",
+           "The debris of a fallen house slumps forward into the street below.",
+           "Masonry from a destroyed house tumbles out across the road in a heap."],
+    "T4": ["A stone house's roof drops in and its walls crumble onto the street.",
+           "The roof of an old house caves in and the walls fall into the road.",
+           "A house loses its roof inward and its stone walls topple into the street.",
+           "A cottage's roof collapses and its walls tumble outward into the street.",
+           "An old house's roof gives way and its walls come down in the street."],
+}
+# 14 Eki 11:19 testinde reddedilen gerçek GPT cümleleri (geçmeli)
+REJECTED_REAL = {
+    "R3": ["A dense cloud of dust rushes along the narrow street as the houses continue collapsing.",
+           "A thick dust cloud engulfs the narrow street as stones continue to crumble.",
+           "A dense dust cloud cascades down the street, engulfing everything in its path."],
+    "T2": ["The destruction speeds down the street, each house succumbing, debris filling the air as it progresses.",
+           "The collapse advances relentlessly, reducing each house to rubble as it races toward us.",
+           "The destruction advances, each house crumbling, stones hurtling toward us as the collapse accelerates."],
+}
 # Sadece atmosfer: hiçbir maddeden geçmemeli
 ATMOSPHERE = ["The ground shakes under a hazy sky.",
               "Dust drifts across the quiet street.",
@@ -526,6 +619,96 @@ class TestEarthquake(unittest.TestCase):
                 self.assertEqual({x["spot"] for x in envs}, {ROOF, BAL})
                 self.assertGreaterEqual(len(set(tags)), 12)
                 self.assertEqual(first_pass, 100)
+
+    def _terms(self, bid):
+        e = APT if bid[0] in "PQ" else OLD
+        return es.EVENT_BEATS[e]["slice_2" if bid[0] in "PR" else "slice_3"][bid]["terms"]
+
+    def test_rejected_real_gpt_sentences_pass(self):
+        # 14 Eki 11:19, eski sokak: 3 denemede de "seçilen olay görünmüyor" diye reddedilen gerçek GPT cümleleri
+        for bid, sents in REJECTED_REAL.items():
+            for t in sents:
+                with self.subTest(beat=bid, text=t):
+                    self.assertEqual(es.missing_term_groups(self._terms(bid), t), [])
+                    for code, terms, *_ in es.EVENT_BANNED_WORDS[OLD]:
+                        self.assertEqual(es.find_terms(terms, t), [])
+
+    def test_free_paraphrases_pass(self):
+        self.assertEqual(set(FREE), set(VALID))
+        for bid, sents in FREE.items():
+            e = APT if bid[0] in "PQ" else OLD
+            beat = es.beat_text(e, "slice_2" if bid[0] in "PR" else "slice_3", bid).lower()
+            self.assertGreaterEqual(len(sents), 5)
+            for t in sents:
+                with self.subTest(beat=bid, text=t):
+                    self.assertEqual(es.missing_term_groups(self._terms(bid), t), [])
+                    self.assertNotEqual(t.lower().rstrip("."), beat)
+                    self.assertNotEqual(t.lower().split()[:4], beat.split()[:4])   # farklı kurulmuş
+                    self.assertTrue(10 <= len(t.split()) <= 17)
+                    for code, terms, *_ in es.EVENT_BANNED_WORDS[e]:
+                        self.assertEqual(es.find_terms(terms, t), [])
+                    self.assertEqual(es.find_terms(("camera", "video", "footage", "phone"), t), [])
+
+    def test_no_false_positive_between_beats(self):
+        # Bir maddenin cümlesi başka maddenin kapısından geçmez (örn. R3 cümlesi T2 sayılmaz, P1 cümlesi P4 sayılmaz).
+        # İstisna: yasak çiftler (aynı görüntü bilerek iki dilimde yok: toz P1/Q2, R3/T1; komşu blok P3/Q1, P3/Q4;
+        # çatı R2/T4; moloz R4/T3); bunlar aynı videoda hiç birlikte seçilmez.
+        for e in EQ:
+            ex = es.EVENT_BEATS[e]["excluded_pairs"]
+            ex = ex | {(d, v) for v, d in ex}
+            ids = [b for sl in ("slice_2", "slice_3") for b in es.EVENT_BEATS[e][sl]]
+            for b in ids:
+                for o in ids:
+                    if o == b or (b, o) in ex:
+                        continue
+                    for t in FREE[o] + VALID[o] + REJECTED_REAL.get(o, []):
+                        with self.subTest(beat=b, other=o, text=t):
+                            self.assertTrue(es.missing_term_groups(self._terms(b), t))
+        self.assertTrue(es.missing_term_groups(self._terms("T2"), FREE["R3"][0]))
+        self.assertTrue(es.missing_term_groups(self._terms("P4"), FREE["P1"][0]))
+
+    def test_people_gate_unchanged(self):
+        spec, sl = build(OLD, "R3", "T2")
+        far = "Three people sprint away from the crumbling buildings, seeking safety."
+        self.assertIn("slice_near_camera", {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": far})})
+        for t in ("Three people run from the collapsing buildings in the street right below.",
+                  "Three people run from the collapsing buildings just below in the street."):
+            with self.subTest(text=t):
+                self.assertNotIn("slice_near_camera",
+                                 {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": t})})
+
+    def test_100_productions_free_paraphrase(self):
+        # 14 Eki (2): sahte GPT madde metnini değil 5 farklı serbest cümleden birini yazar; ilk denemede en az %90
+        import core.creative_pipeline as cp
+        rng = random.Random(11)
+        people = ["{w} people run from the collapsing buildings near the railing.",
+                  "{w} residents flee in the street right below.",
+                  "{w} people sprint away just below in the street.",
+                  "{w} neighbours run past the railing as the ground shakes.",
+                  "{w} people flee from the collapse close to the railing."]
+        inv = {es.beat_text(e, sl, b): b for e in EQ for sl in ("slice_2", "slice_3") for b in es.EVENT_BEATS[e][sl]}
+
+        def gpt_factory():
+            async def gpt(system, user, **kw):
+                line = dict(l.split(": ", 1) for l in user.splitlines()
+                            if l.startswith(("4-9s EVENT", "9-15s EVENT", "PEOPLE RUNNING AWAY")))
+                w = line["PEOPLE RUNNING AWAY"].split()[0].capitalize()
+                return {"slice_1_rest": rng.choice(people).format(w=w),
+                        "slice_2": rng.choice(FREE[inv[line["4-9s EVENT"]]]),
+                        "slice_3": rng.choice(FREE[inv[line["9-15s EVENT"]]])}
+            return gpt
+        for e in EQ:
+            es._BEAT_MEMORY.clear()
+            es._EQ_ENV_MEMORY.clear()
+            first = 0
+            with self.subTest(event=e):
+                for _ in range(100):
+                    scene = asyncio.run(cp.build_creative_scene("earthquake_disasters", e, [], [], gpt_factory()))
+                    spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
+                    self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
+                    self.assertLessEqual(len(scene["prompt"].split()), 175)
+                    first += len(scene["trace"]["attempts"]) == 1
+                self.assertGreaterEqual(first, 90)
 
     def test_skeleton_texts(self):
         import core.prompt_generator as pg
