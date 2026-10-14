@@ -66,8 +66,9 @@ TOTAL_WORDS_BY_EVENT = {"Tornado crosses a marina quay": (40, 75),
                         "Volcano erupts and a shockwave blows out windows": (40, 75),
                         "Pyroclastic cloud races down into a village street": (40, 75),
                         "Volcanic bombs slam into a village street": (40, 75),
-                        # 13 Eki, Bahadır: çığ 40-75 (volkan gibi)
-                        "Avalanche slams into a mountain village": (40, 75), "Avalanche crashes down onto a ski lodge": (40, 75), "Avalanche rips through a pine forest into a valley": (40, 75)}
+                        # 13 Eki, Bahadır: çığ 40-75 (volkan gibi). 14 Eki (5), Bahadır kararı: 40-70 (yamaçlı
+                        # kamera şablonuyla stil eki en fazla 101 kelime; 70 + 3 etiket + 101 = 174 ≤ 175)
+                        "Avalanche slams into a mountain village": (40, 70), "Avalanche crashes down onto a ski lodge": (40, 70), "Avalanche rips through a pine forest into a valley": (40, 70)}
 # Kie seedance-2-fast prompt sınırı 20000 karakter (docs.kie.ai/market/bytedance/seedance-2-fast, 4 Eki doğrulandı).
 # Bizim sınırımız onun çok altında: en uzun stil eki 742 + 60 kelimelik hikâye (kelime başına 8 karakterle ~480)
 # ≈ 1224; 1200 bu hikâyeyi haksız reddederdi. Tam kapsam testinde ölçülen en uzun prompt 1062. 70 kelimelik
@@ -145,10 +146,15 @@ EVENT_KEY_VISUAL = {
     # slope and slams into the lodge right below the railing, a cloud of snow bursting over its terrace."; orman:
     # "A huge avalanche rips through the pine forest above and hits the cabins right below the railing, a white cloud
     # rolling over their roofs."
-    AVALANCHE_VILLAGE: "A powder avalanche is already crashing into the first chalets of a village, a wall of snow "
-                       "bursting over their roofs and through the street.",
-    AVALANCHE_SKI: "An avalanche is already slamming into a mountain lodge, snow bursting over its terrace and walls.",
-    AVALANCHE_FOREST: "An avalanche is already ripping through a pine forest and hitting the cabins at its edge, a white "
+    # 14 Eki (5), Bahadır: yamaç açıkça anılır ("roaring down the steep slope / ski slope / through a pine forest").
+    # Önceki (4): köy "...is already crashing into the first chalets of a village..."; kayak "...is already slamming
+    # into a mountain lodge, snow bursting over its terrace and walls."; orman "...is already ripping through a pine
+    # forest and hitting the cabins at its edge, a white cloud rolling over their roofs."
+    AVALANCHE_VILLAGE: "A powder avalanche is already roaring down the steep slope into the first chalets of a village, a "
+                       "wall of snow bursting over their roofs and through the street.",
+    AVALANCHE_SKI: "An avalanche is already roaring down the ski slope into a mountain lodge, snow bursting over its "
+                   "terrace and walls.",
+    AVALANCHE_FOREST: "An avalanche is already roaring down through a pine forest into the cabins at its edge, a white "
                       "cloud rolling over their roofs.",
 }
 
@@ -1448,7 +1454,9 @@ WORD_CAP_EVENTS = VOLCANO_EVENTS + AVALANCHE_EVENTS
 # eksende son ENV_BLOCK üretimin değerleri elenir, aday kalmazsa 1'e düşer. Ülke, şehir, bayrak, yazı yok (testli).
 ENV_EVENTS = AVALANCHE_EVENTS
 ENV_AXES = {
-    "mountain": ("jagged rocky peaks", "wide rounded snowy highlands", "steep forested slopes",
+    # 14 Eki (5), Bahadır kararı: "wide rounded snowy highlands" yamaç dik görünmeyebilir; "wide snowy highlands
+    # below a steep slope" (Bahadır'ın 10 kelimelik metni 15 kelime sınırına sığmıyordu, kısaltıldı)
+    "mountain": ("jagged rocky peaks", "wide snowy highlands below a steep slope", "steep forested slopes",
                  "sheer cliffs above a narrow valley"),
     "village": ("dark timber chalets", "red timber houses", "log cabins and a large lodge", "stone-and-timber houses",
                 "tall narrow wooden houses with heavy roofs"),
@@ -1841,11 +1849,13 @@ def people_line(spec: dict) -> str:
             f"{rule['away_from']}{near})\n")
 
 
-# ❄️ Çığ (14 Eki (2), Bahadır): köy testi 3 denemede de 40-75 toplamını aştı. GPT'ye dilim bütçesi açıkça yazılır:
-# 4-9s ve 9-15s en fazla 18 kelime, 0-4s kalan bütçe (kilit cümle + üç alan ≤ 75). Kapı aralıkları (SLICE_WORDS,
-# TOTAL_WORDS_BY_EVENT) aynı; sadece GPT satırı.
+# ❄️ Çığ (14 Eki (2), Bahadır): köy testi 3 denemede de 40-75 toplamını aştı. GPT'ye dilim bütçesi açıkça yazılır.
+# Kapı aralıkları (SLICE_WORDS, TOTAL_WORDS_BY_EVENT) aynı; sadece GPT satırı. 14 Eki (5): toplam 70 ve köy kilit
+# cümlesi 28 kelime; 0-4s insan cümlesine sabit 10 kelime (sayı + kaçış + yakın yer), 4-9s ve 9-15s kalanı eşit
+# paylaşır (en fazla 18). Önceki: 4-9s/9-15s 18, 0-4s kalan.
 BUDGET_EVENTS = AVALANCHE_EVENTS
 BUDGET_SLICE_MAX = 18
+BUDGET_SLICE_1 = 10
 
 
 def word_budget_line(spec: dict) -> str:
@@ -1857,10 +1867,11 @@ def word_budget_line(spec: dict) -> str:
     lo2 = SLICE_WORDS["slice_2"][0]
     key = len(spec["key_visual"].split())
     total = TOTAL_WORDS_BY_EVENT.get(event, TOTAL_WORDS)[1]
-    s1 = max(lo1, min(hi1, total - key - 2 * BUDGET_SLICE_MAX))
+    s1 = min(hi1, BUDGET_SLICE_1)
+    s23 = max(lo2, min(BUDGET_SLICE_MAX, (total - key - s1) // 2))
     return (f"WORD BUDGET: the opening sentence has {key} words; slice_1_rest {lo1} to {s1} words, slice_2 {lo2} to "
-            f"{BUDGET_SLICE_MAX} words, slice_3 {lo2} to {BUDGET_SLICE_MAX} words; the opening plus the three fields "
-            f"must total at most {total} words.\n")
+            f"{s23} words, slice_3 {lo2} to {s23} words; the opening plus the three fields must total at most {total} "
+            f"words.\n")
 
 
 def assemble_story(spec: dict, slices: dict[str, str]) -> str:

@@ -26,10 +26,11 @@ HT, BAL, LIFT = ("Terrace at the edge of the village", "Balcony of a chalet at t
                  "Terrace of the lift station")
 # 14 Eki (2): kısa adlar ve kısa kamera şablonu (175 kelime sınırı)
 CAMS = {HT: "a village-edge terrace", BAL: "a village-edge chalet balcony", LIFT: "the lift station terrace"}
-# 14 Eki (4): yaklaşma hissi veren "looking up the slope as the avalanche rushes down onto" çıktı
-CAMERA = ("Handheld footage from {cam}, high vantage looking at the avalanche crashing through the buildings just "
-          "below; slight hand shake, the camera stays fixed, tilting slightly and never descending, a corner of the "
-          "railing in the foreground; one continuous shot, no zoom, no cuts.")
+# 14 Eki (5): yamaç ve çığ kadrajın üst yarısında, binalar ve korkuluk alt yarısında (kayakta yamaç kadrajda yoktu)
+CAMERA = ("Handheld footage from {cam}, high vantage looking up a steep snowy slope where the avalanche is descending "
+          "into the buildings just below it; the slope and the avalanche fill the upper half of the frame, the nearest "
+          "buildings and a corner of the railing fill the lower half; slight hand shake, the camera stays fixed, "
+          "tilting slightly and never descending; one continuous shot, no zoom, no cuts.")
 # 14 Eki (4): "overcast daylight" ortamın ışığıyla çelişmesin diye "raw natural light"
 GUARD = "Bystanders wear winter civilian clothes; raw natural light, no hazmat suits."
 ROOF = {"A3", "A6", "B2", "B3", "D3", "E6"}  # (*) sadece köy kenarı terasında (14 Eki (3): + B2 balkon)
@@ -42,15 +43,16 @@ def cap(s):
 
 
 KEY = {
-    # 14 Eki (4), Bahadır: çığ ilk karede evlerin içinde ("is already ..."); "right below the railing" çıktı
-    KOY: "A powder avalanche is already crashing into the first chalets of a village, a wall of snow bursting over their "
-         "roofs and through the street.",
-    KAYAK: "An avalanche is already slamming into a mountain lodge, snow bursting over its terrace and walls.",
-    ORMAN: "An avalanche is already ripping through a pine forest and hitting the cabins at its edge, a white cloud "
-           "rolling over their roofs.",
+    # 14 Eki (4), Bahadır: çığ ilk karede evlerin içinde ("is already ..."). 14 Eki (5): yamaç açıkça anılır
+    KOY: "A powder avalanche is already roaring down the steep slope into the first chalets of a village, a wall of snow "
+         "bursting over their roofs and through the street.",
+    KAYAK: "An avalanche is already roaring down the ski slope into a mountain lodge, snow bursting over its terrace and "
+           "walls.",
+    ORMAN: "An avalanche is already roaring down through a pine forest into the cabins at its edge, a white cloud rolling "
+           "over their roofs.",
 }
 # 14 Eki (4): ortam havuzu (her üretimde koddan; kategori LRU)
-AXES = {"mountain": ("jagged rocky peaks", "wide rounded snowy highlands", "steep forested slopes",
+AXES = {"mountain": ("jagged rocky peaks", "wide snowy highlands below a steep slope", "steep forested slopes",
                      "sheer cliffs above a narrow valley"),
         "village": ("dark timber chalets", "red timber houses", "log cabins and a large lodge",
                     "stone-and-timber houses", "tall narrow wooden houses with heavy roofs"),
@@ -363,11 +365,14 @@ ATMOSPHERE = ["Snow dust drifts over the valley below the mountain.",
               "A cloud of snow spreads across the sky above the valley."]
 
 
-# 14 Eki (3): 18 kelimeyi aşan maddeler (WORD BUDGET 4-9s/9-15s ≤ 18). GPT bütçeye uyunca bunları kısaltır; sahte GPT
-# ve build() birebir metin toplamı aşınca bu kısa hâlleri yazar (gerçek akışta GPT'nin kapı geri bildirimiyle yaptığı).
-SHORT = {"A5": "The snow wall flattens a wooden fence and a shed by the street, dark boards flying",
-         "B2": "The snow wall tears a wooden balcony and staircase off a chalet, timbers crashing into the street",
-         "B5": "The snow blast rips the front wall off a wooden chalet, dark timber beams flying outward",
+# 14 Eki (3): bütçeyi aşan maddelerin kısa hâlleri. GPT WORD BUDGET'a uyunca bunları kısaltır; sahte GPT ve build()
+# birebir metin toplamı aşınca bu kısa hâlleri yazar (gerçek akışta GPT'nin kapı geri bildirimiyle yaptığı). 14 Eki (5):
+# toplam 70, köy kilit cümlesi 29 kelime: köyde 4-9s ve 9-15s en fazla 15 kelime.
+SHORT = {"A2": "The blast tears a wooden chalet off its foundation, sweeping it downhill",
+         "A4": "The snow wall rams a stone barn and its dark stones burst out",
+         "A5": "The snow wall flattens a wooden fence and shed, boards flying",
+         "B2": "The snow wall tears a balcony and staircase off a chalet, timbers crashing down",
+         "B5": "The snow blast rips the front wall off a wooden chalet, dark beams flying",
          "E2": "The avalanche slams snapped dark pine trunks into a wooden cabin and its side bursts open"}
 for _b, _t in SHORT.items():   # kısa hâller de madde kapısından geçmeli
     VALID[_b] = VALID[_b] + [_t + "."]
@@ -394,7 +399,7 @@ def ava_gpt(messages=None):
             s2, s3 = _short_slice(inv.get(s2), s2), _short_slice(inv.get(s3), s3)
         s2 += " as the snow roars" if len(s2.split()) < 10 else ""
         s3 += " as the snow roars" if len(s3.split()) < 10 else ""
-        return {"slice_1_rest": f"{cap(word)} people run from {away} in the street right below.",
+        return {"slice_1_rest": f"{cap(word)} people run from {away} near the railing.",
                 "slice_2": s2 + ".", "slice_3": s3 + "."}
     return gpt
 
@@ -404,10 +409,10 @@ def build(e, b2, b3, spot=HT, people=5, setting=LONG_SETTING):
     s2, s3 = cap(es.beat_text(e, "slice_2", b2)), cap(es.beat_text(e, "slice_3", b3))
     s2 += " as the snow roars" if len(s2.split()) < 10 else ""
     s3 += " as the snow roars" if len(s3.split()) < 10 else ""
-    sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from the avalanche in the "
-                                         f"street right below."),
+    sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from the avalanche near the "
+                                         f"railing."),
           "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
-    if len(es.plain_story(spec, sl).split()) > 75:   # GPT bütçeye uyar: uzun maddeler kısa yazılır
+    if len(es.plain_story(spec, sl).split()) > 70:   # GPT bütçeye uyar: uzun maddeler kısa yazılır
         sl.update(slice_2=es.clean_slice(_short_slice(b2, s2)), slice_3=es.clean_slice(_short_slice(b3, s3)))
     return spec, sl
 
@@ -451,7 +456,7 @@ class TestAvalanche(unittest.TestCase):
                 self.assertEqual(cp.EVENT_REQUIRED[e], [])
                 self.assertIn(e, cp.EVENT_OUTCOMES)
                 self.assertEqual(sk.count_range(e, None), (3, 6))
-                self.assertEqual(es.TOTAL_WORDS_BY_EVENT[e], (40, 75))
+                self.assertEqual(es.TOTAL_WORDS_BY_EVENT[e], (40, 70))   # 14 Eki (5), Bahadır kararı
                 self.assertFalse(es.uses_vehicle(e))
                 self.assertNotIn(e, es.EVENT_VEHICLES)
                 self.assertEqual(es.structure_views(e), [None])
@@ -475,6 +480,7 @@ class TestAvalanche(unittest.TestCase):
                 self.assertIn(" is already ", KEY[e])   # 14 Eki (4): çığ ilk karede çarpıyor
                 self.assertNotIn("right below the railing", KEY[e])
                 self.assertNotIn("thunders down", KEY[e])
+                self.assertIn("roaring down", KEY[e])   # 14 Eki (5): yamaç açıkça
                 # 14 Eki (2): olay adı kapısı kilit cümlenin kendisiyle geçer (GPT ipucu yok)
                 self.assertNotIn("e_event_and_ship_named", found)
                 b = es.EVENT_BEATS[e]
@@ -502,8 +508,8 @@ class TestAvalanche(unittest.TestCase):
                     self.assertNotIn("upper part of the frame", suffix)
                     self.assertIn("never descending", suffix)
                     # 14 Eki (2): stil eki ≤ 95 kelime; 75 kelimelik hikâye + 3 etiket + stil eki ≤ 175
-                    self.assertLessEqual(len(suffix.split()), 95)
-                    self.assertLessEqual(75 + 3 + len(suffix.split()), 175)
+                    # 14 Eki (5): yamaçlı şablonla stil eki en fazla 102 kelime; 70 kelimelik hikâye + 3 etiket ≤ 175
+                    self.assertLessEqual(70 + 3 + len(suffix.split()), 175)
                     self.assertLessEqual(count_constraints(suffix)[0], 8)
         # volkan ve diğer kategorilerin kamera satırı değişmedi
         self.assertTrue(sk.style_suffix(es.ERUPTION, None, "Hillside terrace facing the erupting volcano")
@@ -576,8 +582,9 @@ class TestAvalanche(unittest.TestCase):
                         self.assertEqual(es.find_terms(terms, t), [])
         # Fixture'larla kurulan tam hikâye bütçe içinde son denetimden geçer
         spec = es.build_spec(KOY, None, BAL, None, "A4", "B5", None, 5)
-        sl = {"slice_1_rest": es.clean_slice("Five villagers run from the avalanche near the railing"),
-              "slice_2": es.clean_slice(FIXTURES["A4"][0]), "slice_3": es.clean_slice(FIXTURES["B5"][0])}
+        # 14 Eki (5): toplam 70; kısa insan cümlesiyle (WORD BUDGET 0-4s 6-10) fixture'lar sığar
+        sl = {"slice_1_rest": es.clean_slice("Five villagers flee near the railing"),
+              "slice_2": es.clean_slice(FIXTURES["A4"][2]), "slice_3": es.clean_slice(FIXTURES["B5"][0])}
         self.assertEqual(es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl), es.assemble_story(spec, sl)), [])
         self.assertLessEqual(len(es.assemble_prompt(spec, sl).split()), 175)
 
@@ -589,13 +596,13 @@ class TestAvalanche(unittest.TestCase):
             spec = es.build_spec(e, None, spot, None, *sorted(es.allowed_pairs(e, None, spot))[0], None, 5)
             line = es.word_budget_line(spec)
             k = len(KEY[e].split())
-            s1 = min(18, 75 - k - 36)
+            s23 = min(18, (70 - k - 10) // 2)   # 14 Eki (5): 0-4s 10, kalan eşit
             with self.subTest(event=e):
-                self.assertEqual(line, f"WORD BUDGET: the opening sentence has {k} words; slice_1_rest 6 to {s1} words, "
-                                       f"slice_2 10 to 18 words, slice_3 10 to 18 words; the opening plus the three "
-                                       f"fields must total at most 75 words.\n")
-                self.assertLessEqual(k + s1 + 18 + 18, 75)
-                self.assertGreaterEqual(s1, 6)
+                self.assertEqual(line, f"WORD BUDGET: the opening sentence has {k} words; slice_1_rest 6 to 10 words, "
+                                       f"slice_2 10 to {s23} words, slice_3 10 to {s23} words; the opening plus the "
+                                       f"three fields must total at most 70 words.\n")
+                self.assertLessEqual(k + 10 + 2 * s23, 70)
+                self.assertGreaterEqual(s23, 10)
                 self.assertIn(line, cp._slices_message(spec, "p", "w", 3, 6, [], None))
         self.assertEqual(es.word_budget_line({"event": es.ERUPTION, "key_visual": "x"}), "")
 
@@ -806,8 +813,8 @@ class TestAvalanche(unittest.TestCase):
         for e in AVA:
             for spot in sk.view_spots(e, None):
                 suf = sk.style_suffix(e, None, spot, None, LONG_SETTING)
-                self.assertLessEqual(len(suf.split()), 95)
-                self.assertLessEqual(75 + 3 + len(suf.split()), 175)
+                self.assertLessEqual(len(suf.split()), 102)
+                self.assertLessEqual(70 + 3 + len(suf.split()), 175)
                 self.assertTrue(suf.startswith(CAMERA.format(cam=CAMS[spot]) + " " + LONG_SETTING + " " + GUARD))
         with self.assertRaises(es.StructureError):   # volkanda ortam satırı yok
             es.build_spec(es.ERUPTION, None, "Hillside terrace facing the erupting volcano", None, "S1", "U1",

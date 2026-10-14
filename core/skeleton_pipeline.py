@@ -767,12 +767,15 @@ def avalanche_camera(spot: str) -> str:
     # as the avalanche rushes down toward the buildings just below and beside the camera; the nearest buildings fill
     # the middle of the frame, slight hand shake, the camera stays fixed on the {perch}, tilting no more than
     # slightly and never descending, a corner of the railing in the foreground; one continuous shot, no zoom, no cuts."
-    # 14 Eki (4), Bahadır: çığ ilk ~10 sn yavaş yaklaştı, ilk temas 11. sn'de. Yaklaşma hissi veren "looking up the
-    # slope as the avalanche rushes down onto the buildings just below" yerine "looking at the avalanche crashing
-    # through the buildings just below"; kalan şablon aynı.
-    return (f"Handheld footage from {CAMERA_SPOTS[spot]}, high vantage looking at the avalanche crashing through the "
-            f"buildings just below; slight hand shake, the camera stays fixed, tilting slightly and never descending, a "
-            f"corner of the railing in the foreground; one continuous shot, no zoom, no cuts.")
+    # 14 Eki (4), Bahadır: çığ ilk ~10 sn yavaş yaklaştı, ilk temas 11. sn'de; yaklaşma ifadesi çıkmıştı.
+    # 14 Eki (5), Bahadır: kayak testinde yamaç kadrajda yoktu, çığ görünmedi, model çatıdan kayan kar çizdi. Yamaç ve
+    # çığ kadrajın üst yarısında, binalar ve korkuluk alt yarısında (Bahadır'ın metni birebir). Önceki: "...high
+    # vantage looking at the avalanche crashing through the buildings just below; slight hand shake, the camera stays
+    # fixed, tilting slightly and never descending, a corner of the railing in the foreground; ..."
+    return (f"Handheld footage from {CAMERA_SPOTS[spot]}, high vantage looking up a steep snowy slope where the "
+            f"avalanche is descending into the buildings just below it; the slope and the avalanche fill the upper half "
+            f"of the frame, the nearest buildings and a corner of the railing fill the lower half; slight hand shake, "
+            f"the camera stays fixed, tilting slightly and never descending; one continuous shot, no zoom, no cuts.")
 
 
 VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "

@@ -1481,7 +1481,7 @@ class TestMarinaRedesign(unittest.TestCase):
                                                    # 10 Eki: volkan
                                                    es.ERUPTION: (40, 75),
                                                    es.PYROCLASTIC: (40, 75), es.VOLCANIC_BOMBS: (40, 75),
-                                                   **{e: (40, 75) for e in es.AVALANCHE_EVENTS}})   # 13 Eki: çığ
+                                                   **{e: (40, 70) for e in es.AVALANCHE_EVENTS}})   # 13 Eki: çığ; 14 Eki (5): 40-70
         w = "abcd"
 
         def total_rules(event, spot, b2, b3, vehicle, extra):

@@ -25,6 +25,20 @@
 
 ---
 
+## 📋 DEVİR: ❄️ Çığ: yamaç kadraja girdi (14 Eki 2026, beşinci tur)
+
+**Ders (14 Eki kayak testi):** yamaç kadrajda olmayınca çığ görünmedi; model çatıdan kayan kar çizdi. Kamera şablonu
+düzeltildi: "...high vantage looking up a steep snowy slope where the avalanche is descending into the buildings just
+below it; the slope and the avalanche fill the upper half of the frame, the nearest buildings and a corner of the
+railing fill the lower half; ...". Kilit cümleler yamacı açıkça anıyor ("is already roaring down the steep slope / the
+ski slope / through a pine forest into ..."), olay adı kapısı kendi başına geçiyor.
+- Dağ ekseni: "wide rounded snowy highlands" -> "wide snowy highlands below a steep slope" (Bahadır'ın 10 kelimelik
+  metni Setting 15 kelime sınırına hiç sığmıyordu; Bahadır kararıyla kısaltıldı).
+- Stil eki en fazla 102 kelime. Bahadır kararı: çığ hikâye toplamı 40-75 -> 40-70 (70 + 3 etiket + 102 = 175).
+  WORD BUDGET: 0-4s 6-10 kelime, 4-9s ve 9-15s kalanı eşit paylaşır (köy 15, kayak/orman 18).
+
+---
+
 ## 📋 DEVİR: ❄️ Çığ: aksiyon ilk saniyeden + her üretimde farklı ortam (14 Eki 2026, dördüncü tur)
 
 **Ders (14 Eki testleri):** köy (A5+B3) iyi çıktı ama kayak (C5+D6) ve köy videoları birbirinin aynısıydı (aynı balkon
