@@ -10,10 +10,14 @@ uyuşması ve kelime sayısı; kalırsa 1 kez geri bildirimle yeniden istenir. T
 """
 from __future__ import annotations
 
+import functools
 import json
 import logging
+import os
 import random
 import re
+import sys
+from datetime import datetime, timezone
 
 import core.event_structure as es
 from core.prompt_generator import NoValidScenarioError
@@ -398,10 +402,16 @@ def _term_re(term: str) -> str:
     return rf"\b{prefix}(?:{words})\b"
 
 
+@functools.lru_cache(maxsize=None)
+def term_pattern(term: str) -> re.Pattern:
+    """Terimin derlenmiş deseni (16 Eki: önbellek; eşleşme aynı, sadece hız)."""
+    return re.compile(_term_re(term))
+
+
 def find_terms(terms, text: str) -> list[str]:
     """Metinde geçen terimler (çekimleriyle)."""
     low = (text or "").lower()
-    return [t for t in terms if re.search(_term_re(t), low)]
+    return [t for t in terms if term_pattern(t).search(low)]
 
 
 def _first_sentence(text: str) -> str:
@@ -620,6 +630,54 @@ async def write_slices(spec: dict, place: str, weather: str, recent: list[str], 
                              attempts)
 
 
+# ── HİBRİT HİKÂYE (16 Eki 2026, Bahadır) ────────────────────────────────────────────────────────────────────
+# Yapılandırılmış hatta GPT en fazla 2 deneme; geçemezse kod yedeği (es.build_fallback). Eski hat MAX_ATTEMPTS (3)
+# ile aynı kalır; Kie reddi sonrası yeniden yazım (rewrite_structured) da MAX_ATTEMPTS kullanır (değişmedi).
+STRUCTURED_MAX_ATTEMPTS = 2
+# Her yapılandırılmış üretimin hikâye kaynağı bir satır JSON olarak eklenir (tools/fallback_report.py okur). Yol:
+# STORY_SOURCE_LOG ortam değişkeni, yoksa data/story_source_log.jsonl. Testler (unittest yüklüyken) ortam değişkeni
+# verilmedikçe yazmaz: gerçek istatistik test üretimleriyle kirlenmesin.
+STORY_SOURCE_LOG_DEFAULT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data",
+                                        "story_source_log.jsonl")
+
+
+def story_source_log_path() -> str | None:
+    path = os.environ.get("STORY_SOURCE_LOG")
+    if path:
+        return path
+    if "unittest" in sys.modules:
+        return None
+    return STORY_SOURCE_LOG_DEFAULT
+
+
+def record_story_source(entry: dict) -> None:
+    """data/story_source_log.jsonl'e bir satır (zaman damgalı). Yazılamazsa üretimi düşürmez."""
+    path = story_source_log_path()
+    if not path:
+        return
+    row = {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"), **entry}
+    try:
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+    except OSError as e:
+        log.warning(f"⚠️ Hikâye kaynağı kaydı yazılamadı: {e}")
+
+
+def fallback_reason(attempts: list[dict]) -> str:
+    """Yedeğe düşme nedeni: her denemenin eksikleri (kısa)."""
+    parts = [f"deneme {a.get('attempt')}: " + "; ".join(a.get("missing") or ["?"]) for a in attempts]
+    text = " | ".join(parts) or "GPT denemesi yok"
+    return text if len(text) <= 300 else text[:297] + "..."
+
+
+def story_source_label(source: dict) -> str:
+    """Onay mesajı satırı: "Hikâye: GPT (deneme N)" ya da "Hikâye: kod yedeği (neden: ...)"."""
+    if source["kind"] == "gpt":
+        return f"Hikâye: GPT (deneme {source['attempt']})"
+    return f"Hikâye: kod yedeği (neden: {source['reason']})"
+
+
 REWRITE_FEEDBACK = ("The video safety check rejected the previous text ({reason}). Rewrite the three fields to show "
                     "the same events with no graphic injury, blood or death.")
 
@@ -751,24 +809,37 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     if env_label:
         trace["fire_env"] = spec["fire_env"]
         trace["fire_env_label_short"] = es.FIRE_TOR_ENVS[spec["fire_env"]]["label"]
+    # 16 Eki, Bahadır (hibrit hikâye): GPT en fazla STRUCTURED_MAX_ATTEMPTS deneme; ikisi de kapıdan geçemezse kod
+    # yedeği (üretim durmaz). GPT/JSON/şema hatası yine akışı durdurur (yedek sadece kapı retleri için).
     try:
-        slices, attempts = await write_slices(spec, place, weather, recent, call_gpt)
+        slices, attempts = await write_slices(spec, place, weather, recent, call_gpt,
+                                              max_attempts=STRUCTURED_MAX_ATTEMPTS)
+        source = {"kind": "gpt", "attempt": len(attempts), "reason": ""}
     except CreativeStoryError as e:
-        e.trace = {**trace, "attempts": e.attempts}
-        raise
+        attempts = e.attempts
+        slices = es.build_fallback(spec)
+        source = {"kind": "fallback", "attempt": len(attempts), "reason": fallback_reason(attempts)}
+        log.warning(f"🧩 Kod yedeği: {event} | {tag} | {source['reason']}")
+    source["label"] = story_source_label(source)
     story = es.assemble_story(spec, slices)
     prompt = es.assemble_prompt(spec, slices)
     final = es.final_prompt_issues(spec, slices, prompt, story)
     if final:
         raise es.StructureError("Son denetim geçmedi, Kie'ye gönderilmedi: " + "; ".join(i["missing"] for i in final))
+    record_story_source({"event": event, "environment": (spec.get("fire_env") or (es.setting_line(env) if env else None)),
+                         "spot": spot, "view": view, "beats": tag, "vehicle": vehicle, "source": source["kind"],
+                         "gpt_attempts": len(attempts), "fallback_reason": source["reason"] or None,
+                         "attempt_missing": [a.get("missing") for a in attempts]})
     # Görünüm yoksa boş bırakılır ("spot##H1+M1"): view_of_combo None döner, olay çifti 3. parçada kalır
     combo_key = (f"{domain}|{(ship or 'none').lower()}|{event.lower()}|{spot.lower()}#{view or ''}#{tag}|"
                  f"{SKELETON_CAMERA}")
     plain = es.plain_story(spec, slices)
-    trace.update(attempts=attempts, story=story, story_words=len(plain.split()), slices=slices)
+    trace.update(attempts=attempts, story=story, story_words=len(plain.split()), slices=slices,
+                 story_source=source["label"])
     log.info(f"✍️ Creative (yapılandırılmış): [{domain}] {event} | yer={spot} | görünüm={view} | olaylar={tag} | "
              f"araç={vehicle} | {len(plain.split())} kelime")
     return {"domain": domain, "event": event, "ship": ship, "spot": spot, "story": story, "plain_story": plain,
             "style_suffix": spec["suffix"], "prompt": prompt, "combo_key": combo_key, "trace": trace,
             "structure": {"spec": spec, "slices": slices, "place": place, "weather": weather, "recent": recent,
-                          "environment": es.environment_label(env) if env else env_label}}
+                          "environment": es.environment_label(env) if env else env_label,
+                          "story_source": source["label"], "story_source_kind": source["kind"]}}

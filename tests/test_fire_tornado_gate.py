@@ -42,7 +42,8 @@ VEHICLES = ("pickup truck", "small car", "white van", "SUV")
 with open(os.path.join(os.path.dirname(__file__), "fixtures", "rejected_real.json"), encoding="utf-8") as _f:
     REJECTED_REAL = {}
     for _r in json.load(_f)["false_rejections"]:
-        if _r["event"] == "Fire tornado tears across a burning roadside":
+        # 16 Eki: sadece 15 Eki canlı retleri (eski sıkı kapı testleri); "source" alanlı 2i kayıtları test_rejected_real'de
+        if _r["event"] == "Fire tornado tears across a burning roadside" and "source" not in _r:
             REJECTED_REAL.setdefault(_r["beat"], []).append(_r["text"])
 FREE = {
     "T1": [

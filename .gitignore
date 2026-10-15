@@ -49,3 +49,6 @@ dashboard_data/
 
 # TUR 29: kalıcı video arşivi (video.mp4 + meta.json), repoya girmez
 arsiv/
+
+# Hibrit hikâye kaynağı istatistiği (16 Eki, runtime; tools/fallback_report.py okur)
+data/story_source_log.jsonl

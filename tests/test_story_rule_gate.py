@@ -884,14 +884,29 @@ class TestStructuredScene(unittest.TestCase):
         self.assertIn("YOUR PREVIOUS ANSWER WAS REJECTED: 'slice_3' must clearly show this event: a lamppost topples "
                       "into the current.", calls[1]["user"])
         self.assertEqual(len(scene["trace"]["attempts"]), 2)
-        self.assertIn("9-15s: seçilen olay (D2) görünmüyor", scene["trace"]["attempts"][0]["missing"])
+        # 16 Eki (hibrit hikâye): yumuşak kapı, D2'nin nesnesi (direk) yok
+        self.assertIn("9-15s: seçilen olayın nesnesi (D2: lamppost) yok", scene["trace"]["attempts"][0]["missing"])
+        self.assertEqual(scene["trace"]["story_source"], "Hikâye: GPT (deneme 2)")
 
-    def test_three_failures_raise(self):
+    def test_two_failures_fall_back_to_code(self):
+        # 16 Eki, Bahadır (hibrit hikâye): yapılandırılmış hatta GPT en fazla 2 deneme; ikisi de kapıdan geçemezse hata
+        # yok, kod yedeği (onaylı metinler) devreye girer ve üretim ilerler. Eski hat MAX_ATTEMPTS (3) aynı.
         bad = self.slices("pickup truck", s2="The sedan rocks gently in the water as it rises around the wheels.")
-        with self.assertRaises(cp.CreativeStoryError) as ctx:
-            self.run_scene([bad])
-        self.assertEqual(len(ctx.exception.attempts), cp.MAX_ATTEMPTS)
-        self.assertEqual(ctx.exception.trace["beats"], "V1+D2")
+        scene, calls = self.run_scene([bad])
+        self.assertEqual(len(calls), cp.STRUCTURED_MAX_ATTEMPTS)
+        self.assertEqual(cp.STRUCTURED_MAX_ATTEMPTS, 2)
+        self.assertEqual(cp.MAX_ATTEMPTS, 3)
+        self.assertEqual(len(scene["trace"]["attempts"]), 2)
+        self.assertEqual(scene["trace"]["beats"], "V1+D2")
+        self.assertTrue(scene["trace"]["story_source"].startswith("Hikâye: kod yedeği (neden: deneme 1: "))
+        st = scene["structure"]
+        self.assertEqual(st["story_source_kind"], "fallback")
+        self.assertEqual(st["slices"]["slice_2"], "The pickup truck is caught by the current, turns sideways and is "
+                                                  "dragged down the street.")
+        self.assertEqual(st["slices"]["slice_3"], "Seconds later, in full view, a lamppost topples into the current.")
+        self.assertIn(st["slices"]["slice_1_rest"], es.FALLBACK_PEOPLE[FLOOD])
+        self.assertEqual(es.final_prompt_issues(st["spec"], st["slices"], scene["prompt"], scene["story"]), [])
+        self.assertNotIn("gently", scene["prompt"])
 
     def test_diversity_ignores_shared_key_visual(self):
         spec = es.build_spec(FLOOD, None, "Downtown city center", "us_coastal_town", "V1", "D2", "pickup truck")

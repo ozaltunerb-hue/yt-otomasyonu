@@ -493,7 +493,8 @@ class TestFinalCheckNegatives(unittest.TestCase):
         sl = {**slices, "slice_2": "The sedan is pushed onto the sidewalk and slams into a lamppost in the water."}
         self.assertIn("beat_vehicle", self.codes(spec, sl, es.assemble_prompt(spec, sl)))
         sl = {**slices, "slice_3": "A low wall collapses into the water as the street fills with debris."}
-        self.assertIn("beat_terms", self.codes(spec, sl, es.assemble_prompt(spec, sl)))
+        # 16 Eki (hibrit hikâye): yumuşak kapı; D3'ün nesnesi (ağaç) yok
+        self.assertIn("beat_object", self.codes(spec, sl, es.assemble_prompt(spec, sl)))
 
     def test_forbidden_words(self):
         spec, slices, _ = build()
@@ -762,7 +763,8 @@ class TestTidal(unittest.TestCase):
             "RECENT STORIES:\n- (none)\n\nYOUR PREVIOUS ANSWER WAS REJECTED: Fix A. Fix B."))
         # sel yeniden denemesi birikmez: 3. mesajda sadece 2. denemenin nedeni var
         spec, good, _ = build("V1", "D2", "riviera", "Downtown city center", "small car")
-        bad_v1 = {**good, "slice_2": es.clean_slice("The small car sits in the churning brown water on the street.")}
+        # 16 Eki: yumuşak kapıda araç adı yetiyor; ret için araç adı hiç yok
+        bad_v1 = {**good, "slice_2": es.clean_slice("The churning brown water spins across the empty street past the curb.")}
         bad_d2 = {**good, "slice_3": es.clean_slice("A low wall collapses into the churning brown water nearby.")}
         answers, users = [bad_v1, bad_d2, good], []
 
@@ -772,7 +774,7 @@ class TestTidal(unittest.TestCase):
         asyncio.run(cp.write_slices(spec, "P", "W", [], gpt))
         self.assertIn("YOUR PREVIOUS ANSWER WAS REJECTED: ", users[2])
         self.assertNotIn("WERE REJECTED", users[2])
-        self.assertNotIn("'slice_2' must clearly show", users[2])
+        self.assertNotIn("'slice_2' must name", users[2])
         self.assertIn("'slice_3' must clearly show", users[2])
         self.assertNotIn("PEOPLE RUNNING AWAY", users[0])
 

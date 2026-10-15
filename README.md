@@ -192,6 +192,28 @@ Veri gömülü değil, dosyalardan okunur:
 | M | Uzunluk 40-65 kelime (hedef 45-60); rewrite sonrası uygulanmaz |
 | N | Tersane side launch: "slipway", "bow-first", "stern-first" yok; ilk cümle yan düşüşü anlatır (sideways/broadside/long side) |
 
+### 🧩 Hibrit hikâye (yapılandırılmış hat, 16 Eki 2026)
+
+Yapılandırılmış olaylarda (sel, kıyı dalga, heyelan, kıyı hortumu, yangın, volkan, çığ, deprem) GPT üç dilimi en fazla
+**2 denemede** yazar. Kapı ikiye ayrılır:
+
+- **Sert kurallar** (ihlal = deneme geçersiz): kamera/video/telefon/footage ve çekim kelimeleri (filming, recording...),
+  ülke/bölge adı, can kaybı ifadesi, toplam kelime aralığı, 175 kelime, olay adı (e kuralı) ve mevcut diğer kurallar
+  (dilim aralıkları, kaçış/sayı, yağmur, olaya özel yasak kelimeler, çeşitlilik).
+- **Yumuşak beat kontrolü**: her beat için sadece ana nesne (araçlı beat'te seçilen araç; diğerlerinde
+  `OBJECT_GROUPS`'un gösterdiği nesne grubu: ahır, çatı, ağaç...) ve "cümle aynı dilimdeki başka bir beat'e daha çok
+  benziyor mu". Fiil zinciri (kaldırma + çarpma vb.) artık ret sebebi değil. İnsan yakınlığı kapısı aynen durur.
+
+İki deneme de geçemezse üretim durmaz: **kod yedeği** (`es.build_fallback`) üç dilimi koddaki onaylı metinlerden kurar
+(kilit cümle + olayın/ortamın 6+ insan cümlesinden biri + beat'lerin kod metni; beat 10 kelimeden kısaysa başına "Seconds
+later, in full view,"). Yedek de son denetimden geçer. Onay mesajında `Hikâye: GPT (deneme N)` ya da
+`Hikâye: kod yedeği (neden: ...)` satırı görünür.
+
+**İstatistik:** her yapılandırılmış üretim `data/story_source_log.jsonl`'e bir satır yazar (olay, ortam, kaynak, deneme
+sayısı, yedek nedeni). Özet: `.venv\Scripts\python.exe tools\fallback_report.py` → olay başına "yedek 3/20 (%15) · GPT ilk
+denemede 12/20" ve en sık 5 yedek nedeni. Railway'de dosya her deploy'da sıfırlanır (kalıcı değil); yerel üretimlerde
+birikir. Gerçek GPT ile kuru deneme (Kie yok): `scripts\dry_run_hybrid.py --per-event 20 --max-calls 600 --max-usd 3`.
+
 ## 🛡️ Güvenlik Katmanları
 
 1. **Prompt Sanitizer** — Tehlikeli kelimeleri otomatik değiştirir (regex)

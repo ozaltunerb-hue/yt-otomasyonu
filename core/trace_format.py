@@ -177,8 +177,9 @@ def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
          f"9-15s olayı ({b3 or '-'}): {trace.get('beat_3_text', '-')}\n"
          f"Tekrar önleme: olay çifti {beats} (son 3 üretimin olayları elendi, LRU) · son "
          f"{trace.get('recent_count', 0)} hikâye GPT'ye verildi"),
-        ("🔍 2. GPT-4o dilimleri (strict şema; kalite kapısı + son denetim, en fazla 3 deneme)",
-         "\n\n".join(lines) or "-"),
+        # 16 Eki: hibrit hikâye (en fazla 2 GPT denemesi, geçemezse kod yedeği)
+        ("🔍 2. GPT-4o dilimleri (strict şema; kalite kapısı + son denetim, en fazla 2 deneme, sonra kod yedeği)",
+         "\n\n".join(lines + ([trace["story_source"]] if trace.get("story_source") else [])) or "-"),
         ("🔍 3. Hikâye", f"{trace.get('story_words')} kelime (etiketsiz)\n{trace.get('story')}"),
     ]
 
@@ -209,7 +210,8 @@ def format_final_prompt(info: dict) -> tuple[str, str]:
     text = (f"{len(prompt.split())} kelime (hikaye {len((info.get('story') or '').split())} + stil eki "
             f"{len((info.get('style_suffix') or '').split())}) · stil ekinde {total} kısıt, {negative} olumsuz\n"
             f"Kie denemesi: {info.get('attempt', 1)}\n"
-            + (f"{info['environment']}\n" if info.get("environment") else "")   # 14 Eki (4): çığ ortam satırı
+            + (f"{info['environment']}\n" if info.get("environment") else "")   # 14 Eki (4): çığ ortam satırı (16 Eki: ateş hortumu da)
+            + (f"{info['story_source']}\n" if info.get("story_source") else "")   # 16 Eki: GPT ya da kod yedeği
             + f"\n{prompt}")
     warning = preflight_warning(info.get("preflight"))
     if warning:

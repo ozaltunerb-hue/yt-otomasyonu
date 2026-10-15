@@ -172,18 +172,27 @@ class TestNothingReachesKie(unittest.TestCase):
                 self.assertEqual(len(h.gpt_calls), 1)          # deneme yemez, ikinci yanıt istenmez
                 self.assertEqual(h.gen_calls, 1)               # yeni senaryo denenmez
 
-    def test_label_or_camera_inside_slice_three_times(self):
+    # 16 Eki, Bahadır (hibrit hikâye): GPT iki denemede de kapıdan geçemezse üretim durmaz; Kie'ye GPT metni değil,
+    # koddaki onaylı yedek gider (son denetimden geçmiş). Sızıntı yok: reddedilen GPT metni prompt'ta yok.
+    def test_label_or_camera_inside_slice_twice_falls_back(self):
         bad = slices(s3="At 9-15s the camera shows a lamppost topple into the current and crash down.")
         h = Harness(gpt=[bad]).run()
-        self.assertNoKie(h)
-        self.assertEqual(h.result["reason"], "no_valid_scenario")
-        self.assertEqual(len(h.gpt_calls), cp.MAX_ATTEMPTS)
+        self.assertTrue(h.result.get("success"), h.result)
+        self.assertEqual(len(h.gpt_calls), cp.STRUCTURED_MAX_ATTEMPTS)
+        self.assertEqual(len(h.sent_prompts), 1)
+        p = h.sent_prompts[0]
+        self.assertTrue(p.startswith(f"0-4s: {KEY} "))
+        self.assertNotIn("camera", p.split(" Handheld footage")[0].lower())
+        self.assertIn(" 9-15s: Seconds later, in full view, a lamppost topples into the current.", p)
+        h.free_rewriter.assert_not_called()
 
-    def test_beat_missing_three_times(self):
+    def test_beat_missing_twice_falls_back(self):
         h = Harness(gpt=[slices(s3="A low wall collapses into the water as the street fills with debris.")]).run()
-        self.assertNoKie(h)
-        self.assertEqual(h.result["reason"], "no_valid_scenario")
-        self.assertIn("9-15s: seçilen olay (D2) görünmüyor", h.result["error_summary"])
+        self.assertTrue(h.result.get("success"), h.result)
+        self.assertEqual(len(h.sent_prompts), 1)
+        self.assertNotIn("low wall", h.sent_prompts[0])
+        bodies = "\n".join(str(c) for c in h.trackers[-1].append_body.call_args_list)
+        self.assertIn("Hikâye: kod yedeği (neden: deneme 1: 9-15s: seçilen olayın nesnesi (D2: lamppost) yok", bodies)
 
     # 10 Eki, Bahadır: yapılandırılmış hatta preflight danışmandır. Riskli dese de senaryo kodun ürettiği
     # haliyle Kie'ye gider (onaydan sonra), yeniden yazılmaz, akış durmaz; puan + sebep onay mesajına, Notion

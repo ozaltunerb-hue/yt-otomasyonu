@@ -1688,6 +1688,162 @@ EVENT_BEATS = {
     },
 }
 
+# ── HİBRİT HİKÂYE (16 Eki 2026, Bahadır): yumuşak beat kontrolü ────────────────────────────────────────────────────
+# Ders: doğru GPT cümleleri fiil/kelime-grubu zincirine (kaldırma + çarpma...) takılıp 3 denemede reddediliyordu, üretim
+# boşa gidiyordu. Yeni kapı her beat için SADECE ana nesneye bakar: (i) seçilen beat'in nesne grubu cümlede var mı,
+# (ii) cümle aynı dilimdeki seçilmeyen başka bir beat'in nesne grubunu daha çok anıyor mu (yanlış beat). Araçlı
+# beat'lerde ana nesne seçilen araçtır (araç adı terimleri); diğerlerinde aşağıdaki tablo, mevcut terim gruplarından
+# nesne grubunun sırasını verir (eylem grupları artık kapı değil, sadece eski kapı raporunda: strict_beat_issues).
+OBJECT_GROUPS = {
+    FLOOD: {"D1": 1, "D2": 0, "D3": 0, "D4": 0, "D5": 0, "D6": 0, "D7": 0, "D8": 0},
+    TIDAL: {"W1": 1, "W2": 0, "W3": 0, "W4": 0, "W5": 0, "W6": 0, "W7": 0, "W8": 0},
+    MUDSLIDE: {"M1": 1, "M2": 0, "M3": 0, "M4": 0, "M5": 0, "M6": 0},
+    SLOPE: {"S1": 0, "S2": 0, "S3": 0, "S4": 0, "S5": 1, "S6": 1},
+    VILLAGE: {"L1": 0, "L2": 0, "L3": 0, "L4": 0, "L5": 0, "L6": 0},
+    LANDFALL: {"E1": 0, "E2": 0, "E3": 0, "E4": 0, "E5": 0, "E6": 0},
+    MARINA_TORNADO: {"Z1": 0, "Z2": 0, "Z3": 0, "Z4": 0, "Z5": 0, "Z6": 0},
+    AVENUE: {"Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q5": 0, "Q6": 0},
+    WILDFIRE: {"L1": 1, "L2": 1, "L3": 1, "L4": 1, "L5": 0, "L6": 1},
+    FACADE_FIRE: {"N1": 2, "N2": 0, "N3": 1, "N4": 0, "N5": 0, "N6": 1},
+    FIRE_TORNADO: {"U1": 0, "U2": 0, "U3": 0, "U4": 0, "U5": 0, "U6": 0},
+    HELICOPTER: {"F1": 0, "F2": 1, "F4": 0, "F5": 1, "G1": 2, "G2": 0, "G3": 0, "G4": 1, "G5": 0, "G6": 1},
+    ERUPTION: {"S1": 1, "S3": 0, "S4": 0, "S5": 0, "U1": 0, "U2": 1, "U3": 0, "U4": 0, "U5": 0, "U6": 0},
+    PYROCLASTIC: {"P1": 1, "P2": 0, "P3": 1, "P4": 0, "P5": 0, "P6": 0, "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q5": 0,
+                  "Q6": 0},
+    VOLCANIC_BOMBS: {"R2": 1, "R3": 1, "R4": 1, "R5": 1, "R6": 1, "T1": 1, "T2": 1, "T3": 1, "T4": 1, "T5": 1, "T6": 1},
+    AVALANCHE_VILLAGE: {"A1": 0, "A2": 0, "A3": 0, "A4": 0, "A5": 0, "A6": 0, "B1": 0, "B2": 0, "B3": 0, "B4": 0,
+                        "B5": 0, "B6": 0},
+    AVALANCHE_SKI: {"C1": 0, "C2": 0, "C3": 0, "C4": 0, "C5": 0, "C6": 0, "D1": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0,
+                    "D6": 0},
+    AVALANCHE_FOREST: {"E1": 0, "E2": 0, "E3": 0, "E4": 0, "E5": 0, "E6": 0, "F1": 0, "F2": 0, "F3": 0, "F4": 0,
+                       "F5": 0, "F6": 0},
+    EARTHQUAKE_APARTMENT: {"P1": 1, "P2": 0, "P3": 1, "P4": 0, "Q1": 1, "Q2": 0, "Q3": 0, "Q4": 1},
+    EARTHQUAKE_OLD_STREET: {"R1": 0, "R2": 0, "R3": 0, "R4": 1, "T1": 1, "T2": 0, "T3": 0, "T4": 0},
+}
+
+# Sert kurallara 16 Eki eklemeleri (yapılandırılmış hat, sadece GPT'nin yazdığı üç dilim; mevcut kurallar aynen durur):
+# çekim/kayıt kelimeleri (b kuralının "camera/video/phone/footage" listesine ek), ülke/bölge adı, can kaybı. Eski hat
+# (story_rule_issues) değişmez. "die/dies" yok ("the flames die down"), "kill" yok ("kill the flames"), "bodies" yok
+# ("car bodies"), "alpine" yok (sıfat).
+HARD_CAMERA_EXTRA = ("filming", "filmed", "recording", "recorded", "camcorder", "smartphone", "cellphone")
+HARD_PLACE_NAMES = ("turkey", "türkiye", "turkish", "syria", "syrian", "japan", "japanese", "italy", "italian", "greece",
+                    "greek", "iran", "iranian", "nepal", "mexico", "mexican", "chile", "haiti", "china", "chinese",
+                    "india", "indian", "pakistan", "afghanistan", "morocco", "moroccan", "ecuador", "peru", "indonesia",
+                    "philippines", "istanbul", "ankara", "izmir", "antakya", "hatay", "tokyo", "kobe", "rome", "athens",
+                    "tehran", "kathmandu", "usa", "u.s.", "america", "american", "united states", "california",
+                    "florida", "texas", "carolina", "europe", "european", "asia", "asian", "africa", "african",
+                    "australia", "australian", "canada", "canadian", "brazil", "spain", "spanish", "france", "french",
+                    "germany", "german", "britain", "british", "england", "portugal", "norway", "norwegian",
+                    "switzerland", "swiss", "austria", "austrian", "alps", "himalaya", "himalayas", "sahara",
+                    "mediterranean", "riviera", "caribbean", "hawaii", "scandinavia", "scandinavian", "middle east",
+                    "tunisia", "tunisian", "dubai", "qatar", "taiwan", "holland", "dutch", "netherlands", "iceland")
+HARD_DEATH = ("dead", "death", "deaths", "died", "killed", "corpse", "corpses", "victim", "victims", "casualty",
+              "casualties", "blood", "bloody", "bloodied", "injured", "injury", "injuries", "wounded", "lifeless",
+              "fatal", "fatally", "perish", "perished")
+HARD_EXTRA_RULES = (
+    ("hard_camera", HARD_CAMERA_EXTRA, "çekim/kayıt kelimesi",
+     "Remove {words}: describe only the scene itself, never filming or recording."),
+    ("hard_place_name", HARD_PLACE_NAMES, "ülke/bölge adı",
+     "Remove {words}: never name a country, city or region."),
+    ("hard_death", HARD_DEATH, "can kaybı ifadesi",
+     "Remove {words}: no dead, injured or bleeding people."),
+)
+
+
+def beat_object_terms(spec: dict, slot: str, bid: str) -> tuple[str, ...]:
+    """Beat'in ana nesne grubu: araçlı beat'te seçilen aracın terimleri, diğerlerinde OBJECT_GROUPS'un gösterdiği
+    mevcut terim grubu."""
+    beat = EVENT_BEATS[spec["event"]][slot][bid]
+    if "{vehicle}" in beat["text"]:
+        return spec_vehicle_terms(spec)
+    return tuple(beat["terms"][OBJECT_GROUPS[spec["event"]][bid]])
+
+
+def _object_spans(terms, text: str) -> list[tuple[int, int]]:
+    """Nesnenin metindeki anılma yerleri; iç içe eşleşmeler birleşir ("palm tree" = 1 yer)."""
+    from core.creative_pipeline import term_pattern
+    low = (text or "").lower()
+    merged: list[list[int]] = []
+    for s, e in sorted((m.start(), m.end()) for t in terms for m in term_pattern(t).finditer(low)):
+        if merged and s < merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], e)
+        else:
+            merged.append([s, e])
+    return [tuple(x) for x in merged]
+
+
+def object_mentions(terms, text: str, exclude: list[tuple[int, int]] = ()) -> int:
+    """Nesnenin kaç ayrı yerde anıldığı; exclude ile çakışan yerler sayılmaz (seçilen beat'in kendi nesnesi)."""
+    return sum(1 for s, e in _object_spans(terms, text) if not any(s < xe and xs < e for xs, xe in exclude))
+
+
+def _group_match_ratio(beat: dict, text: str) -> float:
+    return sum(1 for g in beat["terms"] if find_terms(g, text)) / len(beat["terms"])
+
+
+def soft_beat_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
+    """Yumuşak beat kontrolü (16 Eki): (i) seçilen beat'in nesnesi dilimde var mı; (ii) aynı dilimde seçilmeyen ve
+    nesnesi farklı bir beat cümleye daha çok benziyor mu: o beat'in nesnesi (seçilen nesneyle çakışmayan yerlerde)
+    daha çok anılıyor VE o beat'in terim gruplarından en az seçilen kadarı cümlede var. Terim grupları sadece bu
+    karşılaştırmada kullanılır, tek başına kapı değil (fiil zinciri ret sebebi olmaz)."""
+    event, out = spec["event"], []
+    beats = EVENT_BEATS[event]
+    for slot, bid in (("slice_2", spec["beat_2"]), ("slice_3", spec["beat_3"])):
+        text = slices.get(slot, "")
+        label = "4-9s" if slot == "slice_2" else "9-15s"
+        own = beat_object_terms(spec, slot, bid)
+        own_spans = _object_spans(own, text)
+        event_text = beat_text(event, slot, bid, spec["vehicle"])
+        if not own_spans:
+            if "{vehicle}" in beats[slot][bid]["text"]:   # araçlı beat'in nesnesi araç: eski araç kuralının metni
+                out.append(_issue("beat_vehicle", f"{label}: araç ({spec['vehicle']})",
+                                  f"'{slot}' must name the {spec['vehicle']}."))
+            else:
+                out.append(_issue("beat_object", f"{label}: seçilen olayın nesnesi ({bid}: {own[0]}) yok",
+                                  f"'{slot}' must clearly show this event: {event_text}."))
+            continue
+        own_ratio = _group_match_ratio(beats[slot][bid], text)
+        for other in beats[slot]:
+            terms = beat_object_terms(spec, slot, other)
+            if other == bid or set(terms) == set(own):
+                continue
+            if (object_mentions(terms, text, own_spans) > len(own_spans)
+                    and _group_match_ratio(beats[slot][other], text) >= own_ratio):
+                out.append(_issue("beat_other_object", f"{label}: cümle başka olaya ({other}) daha çok benziyor",
+                                  f"'{slot}' must show this event, not another one: {event_text}."))
+                break
+    return out
+
+
+def strict_beat_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
+    """ESKİ (16 Eki öncesi) beat kapısı: araç adı + tüm terim grupları (fiil zinciri dahil). Artık kapı değil; sadece
+    kuru prova raporunda "eski kapıda geçer miydi" ölçümü için."""
+    event, out = spec["event"], []
+    beats = EVENT_BEATS[event]
+    s2, s3 = slices.get("slice_2", ""), slices.get("slice_3", "")
+    if "{vehicle}" in beats["slice_2"][spec["beat_2"]]["text"] and not find_terms(spec_vehicle_terms(spec), s2):
+        out.append(_issue("beat_vehicle", f"4-9s: araç ({spec['vehicle']})",
+                          f"'slice_2' must name the {spec['vehicle']}."))
+    for slot, bid, text in (("slice_2", spec["beat_2"], s2), ("slice_3", spec["beat_3"], s3)):
+        if beat_missing(beats[slot][bid], text):
+            label = "4-9s" if slot == "slice_2" else "9-15s"
+            out.append(_issue("beat_terms", f"{label}: seçilen olay ({bid}) görünmüyor",
+                              f"'{slot}' must clearly show this event: {beat_text(event, slot, bid, spec['vehicle'])}."))
+    return out
+
+
+def hard_extra_issues(slices: dict[str, str]) -> list[dict]:
+    """16 Eki sert eklemeleri (çekim kelimesi, ülke/bölge adı, can kaybı), GPT'nin yazdığı üç dilimde."""
+    text = " ".join(slices.get(f, "") for f in SLICE_FIELDS)
+    out = []
+    for code, terms, missing, feedback in HARD_EXTRA_RULES:
+        found = find_terms(terms, text)
+        if found:
+            out.append(_issue(code, f"{missing} ({', '.join(found)})",
+                              feedback.format(words=", ".join(repr(w) for w in found))))
+    return out
+
+
 # ── Yangın kapıları (TASLAK, 8 Eki, Bahadır). Sadece FIRE_EVENTS; diğer olayların denetimi değişmez. ─────────────
 # Yağmur/ıslaklık yasağı: kilit cümle, havuz, hava, yer metni, stil eki ve GPT hikâyesinde. "rain" fiili sadece
 # yanan/düşen bir şeyle birlikte geçerse serbest ("embers rain onto", "raining burning debris": Bahadır'ın kendi
@@ -2404,21 +2560,10 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
         terms = (word,) if r.get("people") else r["terms"]
         if not (all(terms) and find_terms(terms, slices.get(r["field"], ""))):
             out.append(_issue(r["rule"], r["missing"].format(word=word), r["feedback"].format(word=word)))
-    beats = EVENT_BEATS[event]
-    s2, s3 = slices.get("slice_2", ""), slices.get("slice_3", "")
-    vterms = spec_vehicle_terms(spec)
-    # 10 Eki: araç sadece seçilen 4-9s maddesinin metninde {vehicle} varsa zorunlu (mevcut tüm olaylarda hepsinde var;
-    # helikopterin F1/F2/F4/F5 maddeleri araçsız)
-    if "{vehicle}" in beats["slice_2"][spec["beat_2"]]["text"] and not find_terms(vterms, s2):
-        out.append(_issue("beat_vehicle", f"4-9s: araç ({spec['vehicle']})",
-                          f"'slice_2' must name the {spec['vehicle']}."))
-    for slot, bid, text in (("slice_2", spec["beat_2"], s2), ("slice_3", spec["beat_3"], s3)):
-        miss = beat_missing(beats[slot][bid], text)
-        if miss:
-            label = "4-9s" if slot == "slice_2" else "9-15s"
-            event_text = beat_text(event, slot, bid, spec["vehicle"])
-            out.append(_issue("beat_terms", f"{label}: seçilen olay ({bid}) görünmüyor",
-                              f"'{slot}' must clearly show this event: {event_text}."))
+    # 16 Eki, Bahadır (hibrit hikâye): beat kapısı yumuşak (sadece ana nesne; araçlı beat'te araç adı). Eski kapı
+    # (araç adı + tüm terim grupları) strict_beat_issues'ta, sadece raporda.
+    out += soft_beat_issues(spec, slices)
+    out += hard_extra_issues(slices)   # 16 Eki: çekim kelimesi, ülke/bölge adı, can kaybı
     # Yangın (8 Eki): yağmur/ıslaklık yasağı (kilit cümle dahil tüm hikâye) ve 4-9s'de araç havalanmaz
     if event in NO_RAIN_EVENTS:
         wet = rain_words(plain_story(spec, slices), event in WATER_DROP_EVENTS)
@@ -2506,6 +2651,131 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
     return out
 
 
+# ── KOD YEDEĞİ (16 Eki 2026, Bahadır: hibrit hikâye) ─────────────────────────────────────────────────────────
+# GPT iki denemede de kapıdan geçemezse üretim durmaz: üç dilim koddaki onaylı metinlerden kurulur. 0-4s: kilit cümle
+# (zaten kodda) + olayın/ortamın insan cümlesi havuzundan biri (rastgele, kelime sınırlarına sığanlar arasından);
+# 4-9s ve 9-15s: seçilen beat'in kod metni olduğu gibi. Beat metni dilim alt sınırından (10 kelime) kısaysa tek sabit
+# geçiş kalıbı (FALLBACK_TRANSITION) başa eklenir. Yedek de son denetimden (final_prompt_issues) geçer; hiçbir uygun
+# insan cümlesi sığmazsa StructureError (Kie'ye gidilmez). Hangi kombinasyonların sığmadığı
+# tests/test_story_fallback.py'de tek tek sayılır (havuzdan çıkarılmaz, Bahadır karar verir).
+FALLBACK_TRANSITION = "Seconds later, in full view, "
+# {N}: kaçan kişi sayısı (büyük harfle). Kişi kuralı olmayan olayda (sel) sayı yok.
+_FB_TORNADO = ("{N} people sprint for cover from the tornado.", "{N} onlookers run inland away from the tornado.",
+               "{N} residents flee from the tornado toward the buildings.",
+               "{N} pedestrians scramble for cover as the tornado hits.", "{N} people run from the tornado.",
+               "{N} onlookers dash away from the swirling debris.")
+_FB_FLAMES = ("{N} residents run from the flames down the street.", "{N} villagers flee from the fire toward the road.",
+              "{N} people sprint away from the flames.", "{N} residents scramble downhill away from the fire.",
+              "{N} people run from the flames.", "{N} villagers dash away from the burning slope.")
+_FB_AVA_NEAR = ("{N} villagers run away right below.", "{N} people flee near the railing.",
+                "{N} villagers sprint off right below.", "{N} residents run from it just below.",
+                "{N} people scatter in the street below.", "{N} villagers dash away just beneath.")
+_FB_EQ_NEAR = ("{N} residents run away in the street below.", "{N} neighbours flee right below the railing.",
+               "{N} people sprint off right below.", "{N} residents scatter in the street below.",
+               "{N} people run away near the railing.", "{N} neighbours dash away just below.")
+FALLBACK_PEOPLE = {
+    FLOOD: ("Pedestrians scramble onto steps and ledges as it hits.", "People run for the doorways as the water hits.",
+            "Pedestrians flee up the steps of the nearest buildings.",
+            "Residents climb onto high ledges as the water spreads.",
+            "People scramble away from the curb toward higher steps.",
+            "Pedestrians dash for the doorways as the street floods."),
+    TIDAL: ("{N} pedestrians run from the wave toward the buildings.", "{N} residents sprint away from the wave up the street.",
+            "{N} people flee from the wave toward higher steps.", "{N} pedestrians scramble up the steps away from the wave.",
+            "{N} people run inland as the wave hits.", "{N} residents dash away from the wave."),
+    MUDSLIDE: ("{N} residents run uphill away from the mud.", "{N} people flee from the mud up the street.",
+               "{N} pedestrians scramble uphill as the mud hits.", "{N} residents sprint away from the mud.",
+               "{N} people run for higher ground.", "{N} pedestrians dash uphill away from the flow."),
+    SLOPE: ("{N} drivers scramble out and run from the mud.", "{N} drivers flee from the mud along the road.",
+            "{N} residents run away from the mud.", "{N} drivers sprint for the far side of the road.",
+            "{N} people run for higher ground.", "{N} drivers dash away as the mud hits."),
+    VILLAGE: ("{N} villagers run uphill away from the mud.", "{N} residents flee from the torrent to higher ground.",
+              "{N} villagers scramble up the stone steps.", "{N} villagers sprint away from the mud.",
+              "{N} people run for higher ground.", "{N} residents dash uphill between the houses."),
+    LANDFALL: _FB_TORNADO, MARINA_TORNADO: _FB_TORNADO, AVENUE: _FB_TORNADO,
+    WILDFIRE: _FB_FLAMES, HELICOPTER: _FB_FLAMES,
+    FACADE_FIRE: ("{N} pedestrians run from the burning tower.", "{N} people flee from the flames across the street.",
+                  "{N} pedestrians sprint away from the tower.", "{N} residents scramble away from the falling debris.",
+                  "{N} people run from the flames.", "{N} pedestrians dash across the street away from the tower."),
+    ERUPTION: ("{N} villagers run from the eruption down the street.", "{N} residents flee from the eruption toward the houses.",
+               "{N} people sprint away from the eruption.", "{N} villagers scramble down the street away from it.",
+               "{N} people run from the eruption.", "{N} residents dash away along the village street."),
+    PYROCLASTIC: ("{N} villagers run from the cloud down the street.", "{N} residents flee from the cloud between the houses.",
+                  "{N} people sprint away from the cloud.", "{N} villagers scramble away from the cloud.",
+                  "{N} people run from the cloud.", "{N} residents dash down the street away from it."),
+    VOLCANIC_BOMBS: ("{N} villagers run from the falling rocks.", "{N} residents flee down the street from the rocks.",
+                     "{N} people sprint away from the falling rocks.", "{N} villagers scramble for cover from the rocks.",
+                     "{N} people run for cover from it.", "{N} residents dash away between the houses."),
+    AVALANCHE_VILLAGE: _FB_AVA_NEAR, AVALANCHE_FOREST: _FB_AVA_NEAR,
+    AVALANCHE_SKI: ("{N} guests run away right below.", "{N} guests flee near the railing.",
+                    "{N} people sprint off right below.", "{N} guests run from it just below.",
+                    "{N} people scatter in the street below.", "{N} guests dash away just beneath."),
+    EARTHQUAKE_APARTMENT: _FB_EQ_NEAR, EARTHQUAKE_OLD_STREET: _FB_EQ_NEAR,
+}
+# 🔥 Ateş hortumu: ortama göre (kilit cümle 28-29 kelime, en uzun beat çifti 39: insan cümlesi 6-7 kelime)
+FALLBACK_PEOPLE_FIRE_ENV = {
+    "forest_edge": ("{N} people run between the houses below.", "{N} neighbors flee in the yard below.",
+                    "{N} people sprint away right below.", "{N} residents run away near the railing.",
+                    "{N} people dash between the houses below.", "{N} neighbors run through the yard below."),
+    "tree_street": ("{N} people run down the street below.", "{N} residents flee in the street below.",
+                    "{N} people sprint away right below.", "{N} neighbors run along the street below.",
+                    "{N} people dash away near the railing.", "{N} residents run across the street below."),
+    "village_woods": ("{N} villagers run between the houses below.", "{N} villagers flee down the street below.",
+                      "{N} people sprint away right below.", "{N} villagers run through the yard below.",
+                      "{N} people run away near the railing.", "{N} villagers dash in the gardens below."),
+}
+
+
+def fallback_people_pool(spec: dict) -> tuple[str, ...]:
+    if spec["event"] == FIRE_TORNADO:
+        return FALLBACK_PEOPLE_FIRE_ENV[spec["fire_env"]]
+    return FALLBACK_PEOPLE[spec["event"]]
+
+
+def fallback_beat_slice(spec: dict, slot: str) -> str:
+    """Seçilen beat'in kod metni; dilim alt sınırından kısaysa sabit geçiş kalıbıyla."""
+    bid = spec["beat_2"] if slot == "slice_2" else spec["beat_3"]
+    text = beat_text(spec["event"], slot, bid, spec["vehicle"])
+    if len(text.split()) < SLICE_WORDS[slot][0]:
+        text = FALLBACK_TRANSITION + text
+    return clean_slice(text[0].upper() + text[1:])
+
+
+def _fallback_fits(spec: dict, slices: dict[str, str]) -> bool:
+    """Kelime/karakter sınırları (dilim aralıkları, toplam aralık, 175 kelime, karakter)."""
+    for f in SLICE_FIELDS:
+        lo, hi = SLICE_WORDS[f]
+        if not lo <= len(slices[f].split()) <= hi:
+            return False
+    lo, hi = TOTAL_WORDS_BY_EVENT.get(spec["event"], TOTAL_WORDS)
+    if not lo <= len(plain_story(spec, slices).split()) <= hi:
+        return False
+    prompt = assemble_prompt(spec, slices)
+    if len(prompt.split()) > VOLC_MAX_PROMPT_WORDS:   # yedekte 175 kelime her olayda (Bahadır, 16 Eki)
+        return False
+    return len(prompt) <= MAX_PROMPT_CHARS
+
+
+def fallback_candidates(spec: dict) -> list[dict[str, str]]:
+    """Kelime sınırlarına sığan yedek dilim takımları (her biri havuzdan bir insan cümlesiyle)."""
+    word = people_word(spec).capitalize()
+    s2, s3 = fallback_beat_slice(spec, "slice_2"), fallback_beat_slice(spec, "slice_3")
+    out = []
+    for t in fallback_people_pool(spec):
+        sl = {"slice_1_rest": clean_slice(t.format(N=word)), "slice_2": s2, "slice_3": s3}
+        if _fallback_fits(spec, sl):
+            out.append(sl)
+    return out
+
+
+def build_fallback(spec: dict, rng: random.Random | None = None) -> dict[str, str]:
+    """Kod yedeği dilimleri. Sığan insan cümlesi yoksa StructureError (kelime sınırı; kombinasyon raporda)."""
+    cands = fallback_candidates(spec)
+    if not cands:
+        raise StructureError(f"Kod yedeği kelime sınırına sığmadı: {spec['event']} / {spec['spot']} / "
+                             f"{spec['beat_2']}+{spec['beat_3']} / {spec['vehicle']}")
+    return (rng or random).choice(cands)
+
+
 # ── Import anı tutarlılık denetimi: eksik/yanlış veri üretimde değil, açılışta patlasın ──────────────────────
 def _validate_data() -> None:
     end = int(SLICE_LABELS[-1].split("-")[1].rstrip("s"))
@@ -2577,6 +2847,19 @@ def _validate_data() -> None:
     for name, env in FIRE_TOR_ENVS.items():
         if not env["key"].endswith(".") or "\n" in env["key"] or not env["label"]:
             raise StructureError(f"Ateş hortumu ortam verisi hatalı: {name}")
+    # 16 Eki (hibrit hikâye): her araçsız beat'in nesne grubu var; her olayın (ateş hortumunda her ortamın) en az 6
+    # insan cümlesi var
+    for event, b in EVENT_BEATS.items():
+        for slot in ("slice_2", "slice_3"):
+            for bid, beat in b[slot].items():
+                if "{vehicle}" in beat["text"]:
+                    if bid in OBJECT_GROUPS.get(event, {}):
+                        raise StructureError(f"Araçlı beat'te nesne grubu sırası olmaz: {event}/{bid}")
+                elif not 0 <= OBJECT_GROUPS.get(event, {}).get(bid, -1) < len(beat["terms"]):
+                    raise StructureError(f"Nesne grubu eksik/hatalı: {event}/{bid}")
+        pools = (FALLBACK_PEOPLE_FIRE_ENV.values() if event == FIRE_TORNADO else [FALLBACK_PEOPLE.get(event, ())])
+        if any(len(p) < 6 for p in pools):
+            raise StructureError(f"Yedek insan cümlesi havuzu 6'dan az: {event}")
 
 
 _validate_data()

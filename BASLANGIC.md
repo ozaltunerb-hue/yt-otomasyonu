@@ -25,6 +25,34 @@
 
 ---
 
+## 📋 DEVİR: 🔥 Ateş hortumu ortam ekseni + 🧩 hibrit hikâye modu (16 Eki 2026)
+
+**1) Ateş hortumu ortam ekseni** (commit "ateş hortumu: ortam ekseni"): hortum boş tarlada ilerliyordu. 3 ortam
+(`es.FIRE_TOR_ENVS`: orman kenarı yerleşim, ağaçlık mahalle sokağı, köy kenarı), ortam başına kilit cümle (28-29 kelime,
+ev + ağaç) ve 2 yüksek nokta; LRU son 2 (art arda aynı ortam yok). Açık arazi sözcüğü yok (testli). Yakınlık listesi
+`_FIRE_TOR_NEAR` ("between the houses", "in the yard below"...; "road below" tek başına yakın değil). Stil eki 175 için
+kısaldı (kurallar aynı), en uzun prompt 175. U1 (ev çatısı) kamera bir evin üstündeyken seçilmez (sadece köy yamaç
+terası). Onayda "Ortam: ..." satırı. Beat'ler DEĞİŞMEDİ: U3 ahır, U4 çalı yığını, U5 "field" ortamla uyumsuz (karar bekliyor).
+
+**2) Hibrit hikâye** (commit "hibrit hikâye modu"): yapılandırılmış hatta GPT en fazla 2 deneme
+(`cp.STRUCTURED_MAX_ATTEMPTS`), geçemezse kod yedeği (`es.build_fallback`), üretim durmaz. Beat kapısı yumuşak:
+ana nesne (`es.OBJECT_GROUPS`, araçlı beat'te araç adı) + "başka beat'e daha çok benziyor mu". Eski sıkı kapı sadece
+raporda (`strict_beat_issues`). Yeni sert kurallar: çekim kelimesi, ülke/bölge adı, can kaybı. Onayda
+"Hikâye: GPT (deneme N)" / "Hikâye: kod yedeği (neden: ...)". İstatistik `data/story_source_log.jsonl` →
+`tools/fallback_report.py`. Eski hat (MAX_ATTEMPTS 3) ve Kie reddi sonrası yeniden yazım (3 deneme) değişmedi.
+- Kalite garantisi `tests/test_story_fallback.py`: 30.254 kombinasyon (hava/ortam dahil 139.634) yedek prompt son
+  denetimden geçer. Sığmayan 7 beat çifti `FALLBACK_GAPS`'te (bombalar R6+T5: 175 aşımı; çığ köy A2/A4/A5 × B2/B5: 70
+  aşımı). Havuzdan çıkarılmadı; bu çiftlerde GPT de 2 kez kalırsa üretim durur. Karar Bahadır'da.
+- 2i gerçek GPT kuru deneme (`scripts/dry_run_hybrid.py`): 3 $ sınırında durdu, 543 çağrı, 344 üretim (olay başına
+  16-18). İlk denemede geçme eski kapı 119/344, yeni kapı 148/344. Yedeğe düşme 57/344 (%16,6). Baskın neden uzunluk
+  (toplam kelime, 175 kelime), yakınlık; yumuşak kapı tek başına hiç yedeğe düşürmedi. %10 üstü olaylar ve gözlenen
+  yumuşak kapı yanlış retleri (helikopter F5↔F1, deprem T2 "house after house") onay bekliyor; kapı gevşetilmedi.
+  133 eski-kapı yanlış reddi `tests/fixtures/rejected_real.json`'a eklendi ("source" alanlı).
+- Not: tek test dosyası başına koşunca `core.creative_pipeline` önce import edilirse döngüsel import hatası (HEAD'de de
+  var); tam paket sırası yüzünden görünmüyor.
+
+---
+
 ## 📋 DEVİR: 🔥 Ateş hortumu T3 kapısı + canlı ret dosyası (15 Eki 2026, dördüncü tur)
 
 Canlıda 3 doğru T3 cümlesi reddedildi. Hepsi "yere iniş" grubuna takıldı: "crashes" tek başına sayılmıyordu, "crashing

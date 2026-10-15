@@ -326,6 +326,8 @@ async def _execute_pipeline(
                                              + "; ".join(i["missing"] for i in rule_issues))
             if structure and structure.get("environment"):   # 14 Eki (4): çığ ortamı onay mesajında ve Notion'da
                 info["environment"] = structure["environment"]
+            if structure and structure.get("story_source"):   # 16 Eki: hikâye kaynağı (GPT / kod yedeği)
+                info["story_source"] = structure["story_source"]
             meta.update({"final_prompt": info["prompt"], "story": info.get("story", ""),
                          "style_suffix": info.get("style_suffix", ""), "preflight": info.get("preflight") or {}})
             await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)
