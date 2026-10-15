@@ -197,6 +197,49 @@ SHORT = {
            "The towering fire whirl swallows burning undergrowth and hurls it over the road in sparks."],
 }
 
+# 15 Eki (3): denetim boşlukları; kaldırma ve yana itme zaten geçiyordu (kilit), devirme (knock over/down) eklendi
+GAP = {
+    "T1": [
+        'The giant fire tornado picks up the SUV and hurls it into a blazing pine.',
+        'The van rises into the air inside the towering vortex and slams into a burning tree.',
+        'Carried aloft by the colossal fire whirl, the pickup truck smashes into a flaming oak.',
+        'The small car is torn off the road by the huge fire column and flung into a burning tree.',
+        'The towering vortex lifts the SUV and throws it against a blazing pine.',
+    ],
+    "T3": [
+        'The huge fire whirl picks up the van, spins it, and drops it onto the road in sparks.',
+        'The SUV rises into the air in the giant vortex, whirls, and crashes back onto the road.',
+        'Carried aloft by the fire tornado, the pickup truck twirls and slams down onto the asphalt.',
+        'The small car is torn off the road, spins high in the fire column, and plunges onto the road.',
+    ],
+    "T4": [
+        'The giant fire tornado drives the SUV sideways as its huge base roars past right behind it.',
+        'The towering vortex forces the van sideways across the lane while its base sweeps past behind.',
+        'The pickup truck is driven sideways by the colossal fire whirl passing just behind it.',
+        'The huge fire column forces the small car sideways as it tears past close behind.',
+    ],
+    "T5": [
+        'The giant fire tornado knocks the SUV over onto its roof and it bursts into flames.',
+        'The towering vortex knocks over the van, which lands upside down and erupts in flames.',
+        'The pickup truck is knocked over by the huge fire whirl and goes up in flames.',
+    ],
+    "U2": [
+        'The giant vortex knocks down a cluster of burning trees and flings the trunks down the road.',
+        'A stand of blazing trees is knocked over by the giant vortex, their trunks hurled along the road.',
+        'The towering fire whirl knocks down burning trees and sends their trunks flying down the road.',
+    ],
+    "U3": [
+        'The giant fire tornado knocks down a wooden barn, its burning planks whirling into the column.',
+        'A roadside barn is knocked over by the towering vortex and its blazing boards fly upward.',
+        'The huge fire whirl knocks the barn down and sucks the burning planks into its column.',
+    ],
+    "U6": [
+        'The colossal fire whirl knocks over a parked trailer in a cloud of fire and smoke.',
+        'A parked caravan is knocked over by the giant vortex amid flames and smoke.',
+        'The huge fire whirl knocks the trailer onto its side in a burst of fire and smoke.',
+    ],
+}
+
 
 def slot(bid):
     return "slice_2" if bid[0] == "T" else "slice_3"
@@ -316,6 +359,44 @@ class TestFireTornadoGate(unittest.TestCase):
         # "spinning/whirling" hortumun sıfatı: T1 cümlesi T3 (iniş yok), U1 cümlesi T6 (araç yok) sayılmaz
         self.assertTrue(es.missing_term_groups(terms("T3"), FREE["T1"][3]))
         self.assertTrue(es.missing_term_groups(terms("T6"), FREE["U1"][4]))
+
+    def test_audit_gap_phrases(self):
+        # 15 Eki (3): kaldırma (picks up, rises into the air, carried aloft, torn off the road, lifts), yana itme
+        # (drives/forces sideways), devirme (knocks down/over); her grup en az 3 serbest cümle
+        groups = {"lift": ("picks up", "rises into the air", "carried aloft", "torn off the road", "lifts"),
+                  "sideways": ("drives the", "forces the", "driven sideways", "forces the small car"),
+                  "knock": ("knock",)}
+        for name, keys in groups.items():
+            hits = [t for ts in GAP.values() for t in ts if any(k in t for k in keys)]
+            self.assertGreaterEqual(len(hits), 3, name)
+        b = es.EVENT_BEATS[E]
+        ex = b["excluded_pairs"] | {(d, v) for v, d in b["excluded_pairs"]}
+        ids = list(b["slice_2"]) + list(b["slice_3"])
+        for bid, sents in GAP.items():
+            beat = es.beat_text(E, slot(bid), bid, "SUV").lower()
+            for t in sents:
+                with self.subTest(beat=bid, text=t):
+                    self.assertEqual(es.missing_term_groups(terms(bid), t), [])
+                    self.assertNotEqual(t.lower().split()[:4], beat.split()[:4])
+                    for o in ids:   # başka madde sayılmaz (yasak çiftler hariç)
+                        if o != bid and (o, bid) not in ex:
+                            self.assertTrue(es.missing_term_groups(terms(o), t), (o, t))
+
+    def test_audit_gap_words_without_tornado_event_rejected(self):
+        # Aynı fiiller, ama hortumun yaptığı bir olay yok: hiçbir maddeden geçmez
+        texts = ["A crane lifts the SUV onto a flatbed parked beside the road.",
+                 "The pickup truck rises over the hill and drives past the parked trailer.",
+                 "A driver picks up a branch from the road next to his van.",
+                 "The wind drives the van sideways on the empty road.",
+                 "Strong gusts force the small car sideways near the field.",
+                 "A gust knocks over a plastic chair beside the barn.",
+                 "Workers knock down an old wooden fence by the road.",
+                 "The van is carried aloft on a car transporter along the highway.",
+                 "A tow truck pulls the SUV off the road into the field."]
+        for bid in [x for sl in ("slice_2", "slice_3") for x in es.EVENT_BEATS[E][sl]]:
+            for t in texts:
+                with self.subTest(beat=bid, text=t):
+                    self.assertTrue(es.missing_term_groups(terms(bid), t))
 
     def test_unrelated_sentences_rejected(self):
         # Hortumsuz, olaysız ya da alakasız cümleler hiçbir maddeden geçmez

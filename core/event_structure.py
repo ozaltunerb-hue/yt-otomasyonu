@@ -396,7 +396,9 @@ _FIRE_TOR_PASS = ("behind", "past", "passes", "passed", "passing", "alongside", 
 _FIRE_TOR_FLIP = ("roll over", "rolls over", "rolled over", "rolling over", "roll", "flip", "overturn", "tip over",
                   "tips over", "tipped over", "onto its roof", "on its roof", "onto its side", "upside down",
                   "capsize", "turn over", "turns over", "turned over", "topple", "keel over", "keels over",
-                  "keeled over", "somersault", "cartwheel", "belly up", "wheels up", "upend")
+                  "keeled over", "somersault", "cartwheel", "belly up", "wheels up", "upend",
+                  # 15 Eki (3): "is knocked over" (denetim boşluğu)
+                  "knock over", "knocks over", "knocked over", "knocking over")
 # T5 tutuşma: "catch/caught/lick/spread" yok ("caught in the vortex" T3 cümlesini T5 sayıyordu)
 _FIRE_TOR_IGNITE = _FIRE_IGNITE + ("take hold", "takes hold", "took hold", "taking hold", "flare up", "flares up",
                                    "flared up", "light up", "lights up", "lit up", "erupt in flame", "erupts in flame",
@@ -434,7 +436,10 @@ _FIRE_TOR_BARN = ("barn", "shed", "stable", "outbuilding", "farm building", "sto
                   "toolshed")
 _FIRE_TOR_WRECK = _FIRE_TOR_RIP + ("swallow", "engulf", "consume", "devour", "apart", "to pieces", "shred", "explode",
                                    "burst", "collapse", "flatten", "smash", "crush", "cave", "crumple", "level", "raze",
-                                   "gut")
+                                   "gut",
+                                   # 15 Eki (3): "knocks down/over the barn" (denetim boşluğu)
+                                   "knock down", "knocks down", "knocked down", "knocking down", "knock over",
+                                   "knocks over", "knocked over", "knocking over")
 # U5 (15 Eki (2)): çit yerine odun yığını. "plank/beam/timber" yok (U3 ahırının tahtaları)
 _FIRE_TOR_LOGS = ("log", "woodpile", "wood pile", "firewood", "lumber", "log pile", "cordwood", "woodstack",
                   "wood stack")

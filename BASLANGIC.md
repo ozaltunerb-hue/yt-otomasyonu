@@ -25,6 +25,16 @@
 
 ---
 
+## 📋 DEVİR: 🔥 Ateş hortumu terim boşlukları (15 Eki 2026, üçüncü tur)
+
+Denetimdeki boşluklar ateş hortumunda ölçüldü. Kaldırma ("picks up", "rises into the air", "carried aloft", "torn off the
+road", "lifts") ve yana itme ("drives/forces sideways") zaten geçiyordu; testle kilitlendi. Eksik olan devirmeydi:
+T5'e "knock(s/ed) over", U3'e "knock(s/ed) down/over" eklendi (`_FIRE_TOR_FLIP`, `_FIRE_TOR_WRECK`). Testler: 25 boşluk
+cümlesi, maddeler arası yanlış pozitif, aynı fiillerle hortumsuz 9 cümle reddedilir. Diğer olaylar HEAD ile aynı. En uzun
+prompt 174. Not: kapı olayı yapanı denetlemez (hortum olmadan "residents knock over ... burning shed" U3 sayılır).
+
+---
+
 ## 📋 DEVİR: 🔥 Ateş hortumu büyüdü: dev hortum, yakın kamera, ön planda 2-3 kişi (15 Eki 2026, ikinci tur)
 
 Sadece ateş hortumu; diğer olaylar aynı. Henüz video testi yok.
