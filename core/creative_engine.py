@@ -396,7 +396,11 @@ DOMAIN_ATTRIBUTES = {
             # 8 Eki (2), Bahadır: cephe yangınında kameralar yüksek; kaldırım noktaları çıktı, çatı terasları girdi
             "Balcony across from a downtown tower", "Rooftop terrace across from a downtown tower",
             "Balcony across from a coastal high-rise", "Rooftop terrace across from a coastal high-rise",
-            "Overlook above the burning valley road", "Balcony of a roadside house",
+            # 16 Eki, Bahadır: ateş hortumu ortam ekseni (ağaçlık yerleşim; önceki: "Overlook above the burning valley
+            # road", "Balcony of a roadside house")
+            "High balcony at the edge of a wooded neighborhood", "Rooftop terrace above a wooded residential area",
+            "High balcony over a tree-lined residential street", "Upper-floor terrace above a street of houses",
+            "Hillside terrace above a village", "High balcony of a village house",
         ],
         "events": [
             "Wall of flames sweeps into a hillside neighborhood",

@@ -682,6 +682,10 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
     spot, weather = pick_setting(event, view=view)
     if event in es.ENV_EVENTS:   # 14 Eki (4): çığda kamera noktası da ortam ekseni (kategori LRU)
         spot = es.choose_env_spot(event, view_spots(event, view))
+    elif event == es.FIRE_TORNADO:   # 16 Eki: ateş hortumu ortam ekseni (LRU), nokta ortamın iki noktasından
+        fire_env = es.choose_fire_env()
+        es.remember_fire_env(fire_env)           # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
+        spot = random.choice(es.FIRE_TOR_ENVS[fire_env]["spots"])
     place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
     recent = recent_stories(history_texts)
     if es.is_structured(event):
@@ -726,6 +730,9 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     es.remember_beats(event, tag)                # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
     # 14 Eki (4): çığda ortam (dağ, yerleşim, ışık) koddan; GPT'ye WEATHER satırı olarak, Kie'ye stil ekinde gider
     env = setting = None
+    env_label = None
+    if event == es.FIRE_TORNADO:   # 16 Eki: ortam kamera noktasından (spec["fire_env"]); onay mesajında "Ortam:" satırı
+        env_label = es.fire_env_label(es.fire_env_of_spot(spot), spot)
     if event in es.ENV_EVENTS:
         env = es.choose_environment(event, spot, b2, b3)
         es.remember_environment(env)             # seçim anında (beat hafızası gibi)
@@ -741,6 +748,9 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
              "recent_count": len(recent), "attempts": [], "story": "", "story_words": 0}
     if env:
         trace["environment"] = env
+    if env_label:
+        trace["fire_env"] = spec["fire_env"]
+        trace["fire_env_label_short"] = es.FIRE_TOR_ENVS[spec["fire_env"]]["label"]
     try:
         slices, attempts = await write_slices(spec, place, weather, recent, call_gpt)
     except CreativeStoryError as e:
@@ -761,4 +771,4 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     return {"domain": domain, "event": event, "ship": ship, "spot": spot, "story": story, "plain_story": plain,
             "style_suffix": spec["suffix"], "prompt": prompt, "combo_key": combo_key, "trace": trace,
             "structure": {"spec": spec, "slices": slices, "place": place, "weather": weather, "recent": recent,
-                          "environment": es.environment_label(env) if env else None}}
+                          "environment": es.environment_label(env) if env else env_label}}

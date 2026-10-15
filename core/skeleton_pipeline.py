@@ -93,8 +93,16 @@ CAMERA_SPOTS = {
     "Rooftop terrace across from a downtown tower": "on a rooftop terrace across the street from the tower",
     "Balcony across from a coastal high-rise": "on a high balcony across the street from the tower",
     "Rooftop terrace across from a coastal high-rise": "on a rooftop terrace across the street from the tower",
-    "Overlook above the burning valley road": "on a roadside overlook above the burning valley road",
-    "Balcony of a roadside house": "on a high balcony of a roadside house overlooking the road",
+    # 16 Eki, Bahadır: ateş hortumu ortam ekseni (event_structure.FIRE_TOR_ENVS). Sahne her zaman ağaçlık bir yerleşim;
+    # açık arazi yok. Önceki iki nokta: "Overlook above the burning valley road" ("on a roadside overlook above the
+    # burning valley road"), "Balcony of a roadside house" ("on a high balcony of a roadside house overlooking the road")
+    "High balcony at the edge of a wooded neighborhood": "on a high balcony of a house at the edge of the wooded "
+                                                         "neighborhood, looking down at the houses and trees",
+    "Rooftop terrace above a wooded residential area": "on a rooftop terrace above a wooded residential area",
+    "High balcony over a tree-lined residential street": "on a high balcony overlooking a tree-lined residential street",
+    "Upper-floor terrace above a street of houses": "on an upper-floor terrace above a street of houses",
+    "Hillside terrace above a village": "on a hillside terrace above the village houses",
+    "High balcony of a village house": "on a high balcony of a village house looking down the street",
     # 🌋 Volkan (10 Eki, Bahadır): hepsi yüksek ve dağa bakıyor. 13 Eki: "facing the erupting volcano" volkan kamera
     # cümlesine taşındı (VOLCANO_CAMERA_PERCH); önceki metinler "..., facing the erupting volcano (across the street)"
     "Hillside terrace facing the erupting volcano": "on a hillside terrace above the village",
@@ -441,8 +449,14 @@ EVENT_SKELETONS = {
     },
     "Fire tornado tears across a burning roadside": {
         "domain": "fire_disasters", "ships": None,
-        "spots": {"Overlook above the burning valley road": "a burning valley road",
-                  "Balcony of a roadside house": "a burning valley road"},
+        # 16 Eki, Bahadır: ortam ekseni, ortam başına 2 nokta (yer metni GPT'ye PLACE olarak gider). Önceki: iki nokta,
+        # yer metni "a burning valley road"
+        "spots": {"High balcony at the edge of a wooded neighborhood": "a residential area at the edge of a burning forest",
+                  "Rooftop terrace above a wooded residential area": "a residential area at the edge of a burning forest",
+                  "High balcony over a tree-lined residential street": "a burning tree-lined residential street",
+                  "Upper-floor terrace above a street of houses": "a burning tree-lined residential street",
+                  "Hillside terrace above a village": "a village of houses at the edge of the burning woods",
+                  "High balcony of a village house": "a village of houses at the edge of the burning woods"},
         "people": ["drivers", "residents"], "weather": FIRE_WEATHER, "object": "fire tornado",
         "text": "On {spot} in {weather}, a violent fire tornado tears across the burning roadside, hurling flames "
                 "and burning branches across the road. Embers whirl around its base as {n} {people} run from it. "
@@ -827,15 +841,20 @@ def earthquake_camera(spot: str) -> str:
 # normal lens" çıktı (yüksek bakışla çelişiyordu). 175 kelime için giyim/ışık kısa (aynı kısıtlar, görevli satırı yok:
 # havuzda görevli yok). Kısıt sayısı 8 -> 7. Önceki kamera: "Handheld footage shot by a person standing {spot}, eye
 # level, normal lens; slight hand shake, the camera pans to follow the fire tornado; no zoom, no cuts."
-FIRE_TORNADO_GUARDRAILS = ("Bystanders wear civilian clothes, never hi-vis PPE; raw natural light matching the weather, "
-                           "never glossy or CGI; no white hazmat suits.")
+# 16 Eki, Bahadır (ortam ekseni): yeni kamera noktaları uzun (en uzunu 21 kelime), 175 kelime kapısı için stil eki
+# kısaldı; kurallar aynı (yüksek bakış, hortum karenin en az yarısı, tepesi ve dumanı kesilmez, önde 2-3 kişi kaçar,
+# takip, tek çekim). Önceki giyim/ışık: "...raw natural light matching the weather, never glossy or CGI; no white hazmat
+# suits." Önceki kamera: "...filling at least half of the frame, its top and smoke cloud never cut off, two or three
+# people fleeing it in the near foreground; slight hand shake, the camera pans to follow the fire tornado; ..." (ölçek
+# kilit cümlede: "towering" kamera cümlesinden çıktı)
+FIRE_TORNADO_GUARDRAILS = "Bystanders wear civilian clothes, never hi-vis PPE; raw natural light, never glossy or CGI; no hazmat suits."
 
 
 def fire_tornado_camera(spot: str) -> str:
-    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage close to the towering fire "
-            f"tornado filling at least half of the frame, its top and smoke cloud never cut off, two or three people "
-            f"fleeing it in the near foreground; slight hand shake, the camera pans to follow the fire tornado; one "
-            f"continuous shot, no zoom, no cuts.")
+    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage close to the fire tornado "
+            f"filling at least half the frame, its top and smoke never cut off, two or three people fleeing in the near "
+            f"foreground; slight hand shake, the camera pans to follow the tornado; one continuous shot, no zoom, no "
+            f"cuts.")
 
 
 VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "

@@ -137,8 +137,11 @@ EVENT_KEY_VISUAL = {
                  "street.",
     # 15 Eki (2), Bahadır: hortum dev ve karenin ana unsuru, ölçek kıyası. Önceki: "A violent fire tornado tears across
     # a burning roadside, hurling flames, burning branches and embers across the road."
-    FIRE_TORNADO: "A colossal fire tornado, several times taller than the tallest buildings and trees, tears across the "
-                  "burning roadside, its wide base engulfing a field of flames.",
+    # 16 Eki, Bahadır: ortam ekseni (FIRE_TOR_ENVS). Gerçek kilit cümle seçilen ortamınkidir (event_key_visual); bu
+    # değer ilk ortamın cümlesi (varsayılan). Önceki (15 Eki 2): "A colossal fire tornado, several times taller than the
+    # tallest buildings and trees, tears across the burning roadside, its wide base engulfing a field of flames."
+    FIRE_TORNADO: "A colossal fire tornado, several times taller than the houses and trees, tears out of a burning forest "
+                  "into a residential area, its wide base engulfing the houses.",
     # 10 Eki, Bahadır onayı: helikopter kilit cümlesi birebir
     HELICOPTER: "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the "
                 "wall of flames racing toward the houses.",
@@ -1276,8 +1279,14 @@ EVENT_BEATS = {
         # 15 Eki (2): T2 ağaç gövdesi / U5 yanan kütükler aynı görüntü (yanan odun fırlar)
         "excluded_pairs": {("T1", "U2"), ("T2", "U2"), ("T4", "U4"), ("T2", "U5")},
         "excluded_views": {},
-        # Kamera bir yol kenarı evinin balkonunda (Bahadır onayı, 8 Eki): "evin çatısı kopar" o noktada seçilmez
-        "excluded_spots": {"U1": {"Balcony of a roadside house"}},
+        # Kamera bir evin balkonunda (Bahadır onayı, 8 Eki): "evin çatısı kopar" o noktada seçilmez. 16 Eki (ortam
+        # ekseni): aynı kural, kameranın bir evin/binanın üstünde durduğu her noktada (balkonlar, çatı ve üst kat
+        # terası); U1 sadece köy yamaç terasında. Önceki: {"U1": {"Balcony of a roadside house"}}
+        "excluded_spots": {"U1": {"High balcony at the edge of a wooded neighborhood",
+                                  "Rooftop terrace above a wooded residential area",
+                                  "High balcony over a tree-lined residential street",
+                                  "Upper-floor terrace above a street of houses",
+                                  "High balcony of a village house"}},
     },
     # ── Helikopter (10 Eki, Bahadır: havuzlar ve yasak eşleşmeler ONAYLI, metin birebir) ──
     HELICOPTER: {
@@ -1878,6 +1887,84 @@ def remember_environment(env: dict) -> None:
     with _ENV_LOCK:
         mem.append(dict(env))
         del mem[:-_ENV_MEMORY_LIMIT]
+
+
+# ── 🔥 Ateş hortumu ortam ekseni (16 Eki, Bahadır) ────────────────────────────────────────────────────────────────
+# Ders: canlı üretimlerde hortum ilk 10 sn boş yanan tarlada ilerledi, ev en sonda göründü (kilit cümle "burning
+# roadside ... a field of flames", noktalar "valley road"). Sahne her zaman içinde ev olan, ağaçlık bir yerleşim; açık
+# arazi yok. Her ortamın kendi kilit cümlesi ve iki kamera noktası var. LRU: son FIRE_TOR_ENV_BLOCK ortam elenir (3
+# ortamda art arda aynı ortam gelmez). Süreç hafızası (çığ gibi). Kilit cümlelerde ve noktalarda açık arazi sözcüğü yok,
+# her kilit cümlede ev ve ağaç birlikte (testli). Stil ekinde "Setting:" satırı yok: ortam kilit cümle + yer metni +
+# kamera noktasıyla söylenir.
+FIRE_TOR_ENVS = {
+    "forest_edge": {"label": "orman kenarı yerleşim",
+                    "key": EVENT_KEY_VISUAL[FIRE_TORNADO],
+                    "spots": ("High balcony at the edge of a wooded neighborhood",
+                              "Rooftop terrace above a wooded residential area")},
+    "tree_street": {"label": "ağaçlık mahalle sokağı",
+                    "key": "A colossal fire tornado, several times taller than the houses and trees, tears down a "
+                           "burning tree-lined street, its wide base engulfing the houses and cars along it.",
+                    "spots": ("High balcony over a tree-lined residential street",
+                              "Upper-floor terrace above a street of houses")},
+    "village_woods": {"label": "köy kenarı, çevresi orman",
+                      "key": "A colossal fire tornado, several times taller than the houses and trees, tears from the "
+                             "burning woods into a village, its wide base engulfing the first houses and trees.",
+                      "spots": ("Hillside terrace above a village", "High balcony of a village house")},
+}
+FIRE_TOR_ENV_BLOCK = 2
+# Kilit cümlede, yer metninde ve kamera noktasında olmaması gereken açık arazi sözcükleri (testli)
+FIRE_TOR_OPEN_LAND = ("field", "roadside", "meadow", "farm", "farmland", "open land", "valley road", "pasture",
+                      "prairie", "grassland", "empty lot", "vacant lot", "wasteland")
+_FIRE_TOR_ENV_MEMORY: list[str] = []
+
+
+def fire_env_of_spot(spot: str) -> str:
+    for name, env in FIRE_TOR_ENVS.items():
+        if spot in env["spots"]:
+            return name
+    raise StructureError(f"Ateş hortumu kamera noktası hiçbir ortamda yok: {spot}")
+
+
+def choose_fire_env(rng: random.Random | None = None) -> str:
+    """Ortam: son FIRE_TOR_ENV_BLOCK üretimin ortamları elenir (aday kalmazsa 1, sonra 0)."""
+    with _ENV_LOCK:
+        used = list(_FIRE_TOR_ENV_MEMORY)
+    return (rng or random).choice(_lru_candidates_depth(list(FIRE_TOR_ENVS), used, FIRE_TOR_ENV_BLOCK))
+
+
+def _lru_candidates_depth(values, used: list, block: int) -> list:
+    for depth in (block, 1, 0):
+        blocked = set(used[-depth:]) if depth else set()
+        left = [v for v in values if v not in blocked]
+        if left:
+            return left
+    return list(values)
+
+
+def remember_fire_env(name: str) -> None:
+    with _ENV_LOCK:
+        _FIRE_TOR_ENV_MEMORY.append(name)
+        del _FIRE_TOR_ENV_MEMORY[:-_ENV_MEMORY_LIMIT]
+
+
+def fire_env_label(name: str, spot: str) -> str:
+    """Telegram onay/Notion satırı (çığ/deprem biçimi)."""
+    return f"Ortam: {FIRE_TOR_ENVS[name]['label']} ({name}) · kamera = {spot}"
+
+
+def expected_key_visual(event: str, spot: str) -> str:
+    """Spec'in kilit cümlesi: ateş hortumunda kamera noktasının ortamından (16 Eki), diğer olaylarda sabit. Bilinmeyen
+    olayda boş metin (son denetim tutmaz)."""
+    if event == FIRE_TORNADO:
+        return FIRE_TOR_ENVS[fire_env_of_spot(spot)]["key"]
+    return EVENT_KEY_VISUAL.get(event, "")
+
+
+def event_key_visual(event: str, fire_env: str | None = None) -> str:
+    """Olayın kilit cümlesi. Ateş hortumunda seçilen ortamınki (16 Eki), diğer olaylarda EVENT_KEY_VISUAL."""
+    if event == FIRE_TORNADO and fire_env is not None:
+        return FIRE_TOR_ENVS[fire_env]["key"]
+    return EVENT_KEY_VISUAL[event]
 # Orman ve cephe yangınında araç havalanmaz (Bahadır onayı, 8 Eki): 4-9s'de kalkma ifadesi reddedilir
 NO_LIFT_SLICE = {WILDFIRE: ("slice_2",), FACADE_FIRE: ("slice_2",),
                  HELICOPTER: ("slice_2",)}   # 10 Eki: helikopterde de araç havalanmaz
@@ -1938,6 +2025,15 @@ _AVA_NEAR_RULE = {"rule": "slice_near_camera", "field": "slice_1_rest", "terms":
                   "missing": "0-4s: insanlar kameraya yakın değil",
                   "feedback": "'slice_1_rest' must place the running people close to the viewer, e.g. 'near "
                               "the railing' or 'in the street right below' (never use the word camera)."}
+# 🔥 Ateş hortumu (16 Eki, ortam ekseni): yakınlık yeni mekânlara göre (evlerin arası, aşağıdaki bahçe/avlu, balkonun/
+# terasın hemen altı, aşağıdaki sokak). Çığ/deprem listesi değişmez; "road below" tek başına yakın sayılmaz.
+_FIRE_TOR_NEAR = _AVA_NEAR + ("between the houses", "between the nearby houses", "among the houses below",
+                              "in the yard below", "in the yards below", "across the yard below", "through the yard below",
+                              "in the garden below", "in the gardens below", "through the garden below",
+                              "across the garden below", "along the street below", "down the street below",
+                              "across the street below", "through the street below", "street right below",
+                              "street just below")
+_FIRE_TOR_NEAR_RULE = {**_AVA_NEAR_RULE, "terms": _FIRE_TOR_NEAR}
 
 SLICE_RULES = {
     TIDAL: _people_rules("the wave"),
@@ -1953,7 +2049,8 @@ SLICE_RULES = {
     WILDFIRE: _people_rules("the flames"),
     FACADE_FIRE: _people_rules("the flames"),
     # 15 Eki (2), Bahadır: ateş hortumunda 2-3 kişi ön planda kaçar (çığdaki yakınlık kapısının aynısı)
-    FIRE_TORNADO: _people_rules("the fire tornado") + [_AVA_NEAR_RULE],
+    # 16 Eki: yakınlık listesi yerleşim mekânlarına göre (_FIRE_TOR_NEAR_RULE)
+    FIRE_TORNADO: _people_rules("the fire tornado") + [_FIRE_TOR_NEAR_RULE],
     HELICOPTER: _people_rules("the flames"),   # 10 Eki: orman gibi
     # 10 Eki: volkan, insanlar kaçar (mevcut _FLEE); kimse lav/taşla temas etmez
     ERUPTION: _people_rules("the eruption"),
@@ -2192,12 +2289,14 @@ def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: st
     if setting is not None and (event not in ENV_EVENTS or len(setting.split()) > SETTING_MAX_WORDS):
         raise StructureError(f"Ortam satırı bu olayda kullanılamaz ya da uzun: {event} / {setting}")
     spec = {"event": event, "ship": ship, "spot": spot, "view": view, "beat_2": b2, "beat_3": b3,
-            "vehicle": vehicle, "key_visual": EVENT_KEY_VISUAL[event],
+            "vehicle": vehicle, "key_visual": expected_key_visual(event, spot),
             "suffix": style_suffix(event, ship, spot, view, setting)}
     if people is not None:
         spec["people"] = people
     if setting is not None:
         spec["setting"] = setting   # 14 Eki (4): çığ ortam satırı (stil ekinde)
+    if event == FIRE_TORNADO:
+        spec["fire_env"] = fire_env_of_spot(spot)   # 16 Eki: ortam kamera noktasından (kilit cümle onun)
     return spec
 
 
@@ -2216,7 +2315,8 @@ def people_line(spec: dict) -> str:
     near = (", close by: near the railing or in the street right below"
             if spec["event"] in AVALANCHE_EVENTS + EARTHQUAKE_EVENTS else "")   # 14 Eki: deprem de
     if spec["event"] == FIRE_TORNADO:   # 15 Eki (2): ateş hortumu, insanlar ön planda
-        near = ", close by: near the railing or on the road right below"
+        # 16 Eki (ortam ekseni): önceki ipucu "near the railing or on the road right below"
+        near = ", close by: near the railing or in the street right below"
     return (f"PEOPLE RUNNING AWAY: {w} (slice_1_rest must say that {w} people run away from "
             f"{rule['away_from']}{near})\n")
 
@@ -2363,7 +2463,8 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
     from core.creative_pipeline import STORY_RULES, story_rule_issues
     out = []
     expected_suffix = style_suffix(spec["event"], spec["ship"], spec["spot"], spec["view"], spec.get("setting"))
-    if spec.get("key_visual") != EVENT_KEY_VISUAL.get(spec["event"]):
+    expected_key = expected_key_visual(spec["event"], spec["spot"])
+    if spec.get("key_visual") != expected_key:
         out.append(_issue("key_visual", "kilit görsel spec'te değişmiş"))
     if spec.get("suffix") != expected_suffix:
         out.append(_issue("suffix", "stil eki beklenenle aynı değil"))
@@ -2375,14 +2476,14 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
         out.append(_issue("people", "kişi kuralı olmayan olayda kaçan kişi sayısı var"))
     if uses_vehicle(spec["event"]) != (spec.get("vehicle") is not None):
         out.append(_issue("vehicle", f"araç uyuşmuyor ({spec.get('vehicle')})"))
-    rebuilt_story = assemble_story({**spec, "key_visual": EVENT_KEY_VISUAL.get(spec["event"], "")}, slices)
-    rebuilt = assemble_prompt({**spec, "key_visual": EVENT_KEY_VISUAL.get(spec["event"], ""),
+    rebuilt_story = assemble_story({**spec, "key_visual": expected_key}, slices)
+    rebuilt = assemble_prompt({**spec, "key_visual": expected_key,
                                "suffix": expected_suffix}, slices)
     if prompt != rebuilt:
         out.append(_issue("rebuild", "prompt koddan yeniden kurulan metinle birebir aynı değil"))
     if story is not None and story != rebuilt_story:
         out.append(_issue("rebuild_story", "hikâye koddan yeniden kurulan metinle birebir aynı değil"))
-    head = f"{SLICE_LABELS[0]}: {EVENT_KEY_VISUAL.get(spec['event'], '')} "
+    head = f"{SLICE_LABELS[0]}: {expected_key} "
     if not prompt.startswith(head):
         out.append(_issue("key_visual", "0-4s kilit görselle başlamıyor"))
     positions = [prompt.find(f"{l}: ") for l in SLICE_LABELS]
@@ -2468,6 +2569,14 @@ def _validate_data() -> None:
             for spot in view_spots(event, view):
                 if not allowed_pairs(event, view, spot):
                     raise StructureError(f"İzinli olay çifti yok: {event} / {view} / {spot}")
+    # 16 Eki: ateş hortumu ortam ekseni. Her nokta tam bir ortamda; ortam noktaları iskeletle aynı; kilit cümleler tek
+    # satır ve noktayla biter
+    tor_spots = [s for env in FIRE_TOR_ENVS.values() for s in env["spots"]]
+    if sorted(tor_spots) != sorted(EVENT_SKELETONS[FIRE_TORNADO]["spots"]) or len(tor_spots) != len(set(tor_spots)):
+        raise StructureError("Ateş hortumu ortam noktaları iskeletle uyuşmuyor")
+    for name, env in FIRE_TOR_ENVS.items():
+        if not env["key"].endswith(".") or "\n" in env["key"] or not env["label"]:
+            raise StructureError(f"Ateş hortumu ortam verisi hatalı: {name}")
 
 
 _validate_data()

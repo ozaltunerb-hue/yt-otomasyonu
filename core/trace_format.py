@@ -165,7 +165,10 @@ def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
          f"Hat: yapılandırılmış (kilit görsel + olay havuzu kodda, GPT sadece cümle yazar)\n"
          f"Kategori: {labels.get('domain') or trace.get('domain')}\n"
          f"Olay: {labels.get('event') or trace.get('event')}\n"
-         f"Yer: {trace.get('spot')} · hava: {trace.get('weather')} · kişi aralığı: {lo}-{hi}\n"
+         f"Yer: {trace.get('spot')}"
+         # 16 Eki: ateş hortumunda ortam Yer satırının yanında
+         + (f" · ortam: {trace['fire_env_label_short']}" if trace.get("fire_env_label_short") else "")
+         + f" · hava: {trace.get('weather')} · kişi aralığı: {lo}-{hi}\n"
          + (f"Görünüm: {trace['view']}" + (f" ({trace['view_source']})" if trace.get("view_source") else "")
             + "\n" if trace.get("view") else "") +
          f"Kilit görsel (0-4s): {trace.get('key_visual')}\n"

@@ -22,7 +22,20 @@ import core.event_structure as es
 import core.skeleton_pipeline as sk
 
 E = es.FIRE_TORNADO
-SPOTS = ("Overlook above the burning valley road", "Balcony of a roadside house")
+# 16 Eki, Bahadır: ortam ekseni, 3 ortam × 2 nokta (ağaçlık yerleşim; önceki: "Overlook above the burning valley road",
+# "Balcony of a roadside house")
+ENVS = {
+    "forest_edge": ("A colossal fire tornado, several times taller than the houses and trees, tears out of a burning "
+                    "forest into a residential area, its wide base engulfing the houses.",
+                    ("High balcony at the edge of a wooded neighborhood", "Rooftop terrace above a wooded residential area")),
+    "tree_street": ("A colossal fire tornado, several times taller than the houses and trees, tears down a burning "
+                    "tree-lined street, its wide base engulfing the houses and cars along it.",
+                    ("High balcony over a tree-lined residential street", "Upper-floor terrace above a street of houses")),
+    "village_woods": ("A colossal fire tornado, several times taller than the houses and trees, tears from the burning "
+                      "woods into a village, its wide base engulfing the first houses and trees.",
+                      ("Hillside terrace above a village", "High balcony of a village house")),
+}
+SPOTS = tuple(sp for _, spots in ENVS.values() for sp in spots)
 VEHICLES = ("pickup truck", "small car", "white van", "SUV")
 
 # Gerçek GPT retleri tek dosyada (tests/fixtures/rejected_real.json, test_rejected_real.py da okur)
@@ -347,7 +360,7 @@ def with_vehicle(text, vehicle):
     return text
 
 
-def build(b2, b3, vehicle="SUV", spot=SPOTS[0], s2=None, s3=None, s1=None, people=3):
+def build(b2, b3, vehicle="SUV", spot=SPOTS[4], s2=None, s3=None, s1=None, people=3):   # 16 Eki: en kısa stil eki (yamaç terası)
     spec = es.build_spec(E, None, spot, None, b2, b3, vehicle, people)
     word = es.NUMBER_WORDS[people].capitalize()
     sl = {"slice_1_rest": s1 or f"{word} people run from the fire tornado on the road right below.",
@@ -355,12 +368,13 @@ def build(b2, b3, vehicle="SUV", spot=SPOTS[0], s2=None, s3=None, s1=None, peopl
     return spec, sl
 
 
-KEY = ("A colossal fire tornado, several times taller than the tallest buildings and trees, tears across the burning "
-       "roadside, its wide base engulfing a field of flames.")
-CAMERA = ("Handheld footage shot by a person standing {spot}, high vantage close to the towering fire tornado filling "
-          "at least half of the frame, its top and smoke cloud never cut off, two or three people fleeing it in the "
-          "near foreground; slight hand shake, the camera pans to follow the fire tornado; one continuous shot, no "
-          "zoom, no cuts.")
+KEY = ENVS["forest_edge"][0]   # EVENT_KEY_VISUAL'daki varsayılan (ilk ortam)
+# 16 Eki: 175 kelime için kısaldı, kurallar aynı. Önceki: "...high vantage close to the towering fire tornado filling at
+# least half of the frame, its top and smoke cloud never cut off, two or three people fleeing it in the near foreground;
+# slight hand shake, the camera pans to follow the fire tornado; ..."
+CAMERA = ("Handheld footage shot by a person standing {spot}, high vantage close to the fire tornado filling at least "
+          "half the frame, its top and smoke never cut off, two or three people fleeing in the near foreground; slight "
+          "hand shake, the camera pans to follow the tornado; one continuous shot, no zoom, no cuts.")
 POOL = ({"T1": "the towering fire tornado lifts the {vehicle} off the road and flings it into a burning tree",
          "T2": "the huge fire tornado hurls a whole burning tree trunk onto the {vehicle}, crushing its roof",
          "T3": "the {vehicle} is sucked up into the towering fire tornado, spins, and crashes down onto the road in "
@@ -382,7 +396,10 @@ class TestFireTornadoGate(unittest.TestCase):
     def test_key_camera_pool_locked(self):
         # 15 Eki (2), Bahadır: dev hortum (ölçek kıyası), yüksek ve yakın kamera, ön planda 2-3 kaçan kişi
         self.assertEqual(es.EVENT_KEY_VISUAL[E], KEY)
-        self.assertLessEqual(len(KEY.split()), 26)
+        self.assertEqual({k: (v["key"], v["spots"]) for k, v in es.FIRE_TOR_ENVS.items()}, ENVS)
+        for key, _ in ENVS.values():   # 16 Eki: ~29-30 kelime (önceki 26), ölçek ifadesi duruyor
+            self.assertLessEqual(len(key.split()), 30)
+            self.assertIn("several times taller than the houses and trees", key)
         for spot in SPOTS:
             with self.subTest(spot=spot):
                 self.assertTrue(es.style_suffix(E, None, spot, None, None).startswith(
@@ -391,7 +408,8 @@ class TestFireTornadoGate(unittest.TestCase):
         self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, POOL[0])
         self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, POOL[1])
         self.assertEqual(b["excluded_pairs"], {("T1", "U2"), ("T2", "U2"), ("T4", "U4"), ("T2", "U5")})
-        self.assertEqual(b["excluded_spots"], {"U1": {"Balcony of a roadside house"}})
+        # 16 Eki: kamera bir evin/binanın üstündeyse "evin çatısı kopar" (U1) yok; sadece köy yamaç terasında
+        self.assertEqual(b["excluded_spots"], {"U1": set(SPOTS) - {"Hillside terrace above a village"}})
         self.assertEqual(sk.count_range(E, None), (2, 3))
 
     def test_beats_big_targets_and_size(self):
@@ -610,7 +628,7 @@ class TestFireTornadoGate(unittest.TestCase):
         # En uzun stil eki + 75 + 3 etiket ≤ 175; kapı da ateş hortumunda 175'i denetler (WORD_CAP_EVENTS)
         self.assertEqual(sorted(sk.EVENT_SKELETONS[E]["spots"]), sorted(SPOTS))
         longest = max(len(es.style_suffix(E, None, s, None, None).split()) for s in SPOTS)
-        self.assertEqual(longest + 75 + 3, 174)
+        self.assertEqual(longest + 75 + 3, 175)   # 16 Eki: en uzun nokta 21 kelime, stil eki kısaldı (önceki 174)
         self.assertEqual(es.VOLC_MAX_PROMPT_WORDS, 175)
         self.assertIn(E, es.WORD_CAP_EVENTS)
         from core.trace_format import count_constraints
@@ -618,12 +636,19 @@ class TestFireTornadoGate(unittest.TestCase):
             self.assertLessEqual(count_constraints(es.style_suffix(E, None, s, None, None))[0], 8)
 
     def test_word_budget_line(self):
-        # Kilit cümle 26 kelime: GPT'ye dilim bütçesi (0-4s 10, 4-9s/9-15s 18, toplam 75)
+        # 16 Eki: kilit cümle ortama göre 28-29 kelime; dilim bütçesi aynı (0-4s 10, 4-9s/9-15s 18, toplam 75)
         self.assertIn(E, es.BUDGET_EVENTS)
-        line = es.word_budget_line({"event": E, "key_visual": es.EVENT_KEY_VISUAL[E]})
-        self.assertEqual(line, "WORD BUDGET: the opening sentence has 26 words; slice_1_rest 6 to 10 words, slice_2 10 "
-                               "to 18 words, slice_3 10 to 18 words; the opening plus the three fields must total at "
-                               "most 75 words.\n")
+        for name, (key, spots) in ENVS.items():
+            spec = es.build_spec(E, None, spots[0], None, "T1", "U3", "SUV", 3)
+            self.assertEqual(spec["key_visual"], key)
+            self.assertEqual(spec["fire_env"], name)
+            n = len(key.split())
+            self.assertIn(n, (28, 29))
+            self.assertEqual(es.word_budget_line(spec),
+                             f"WORD BUDGET: the opening sentence has {n} words; slice_1_rest 6 to 10 words, slice_2 10 "
+                             "to 18 words, slice_3 10 to 18 words; the opening plus the three fields must total at "
+                             "most 75 words.\n")
+            self.assertLessEqual(n + 10 + 18 + 18, 75)
 
     def test_people_two_or_three_close_by(self):
         spec, sl = build("T6", "U4")
@@ -633,7 +658,7 @@ class TestFireTornadoGate(unittest.TestCase):
         far = "Three people run from the fire tornado across the distant field."
         self.assertIn("slice_near_camera", {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": far})})
         line = es.people_line(spec)
-        self.assertIn("near the railing or on the road right below", line)
+        self.assertIn("near the railing or in the street right below", line)   # 16 Eki (önceki "on the road right below")
         for n in range(200):
             self.assertIn(es.choose_people(E, None, random.Random(n)), (2, 3))
         self.assertEqual(es.NUMBER_WORDS[2], "two")
@@ -676,6 +701,168 @@ class TestFireTornadoGate(unittest.TestCase):
         self.assertGreaterEqual(first, 180)
         self.assertLessEqual(longest, 175)
         es._BEAT_MEMORY.clear()
+
+
+class TestFireTornadoEnvironments(unittest.TestCase):
+    """16 Eki 2026, Bahadır: canlıda hortum ilk 10 sn boş yanan tarlada ilerledi, ev en sonda göründü. Ortam ekseni: sahne
+    her zaman içinde ev olan ağaçlık bir yerleşim (orman kenarı, ağaçlık sokak, köy kenarı); açık arazi yok."""
+
+    # Her yeni noktaya uygun, GPT tarzı serbest yakın insan cümleleri (4'er)
+    NEAR = {
+        "High balcony at the edge of a wooded neighborhood": [
+            "Two neighbors sprint between the houses right below the balcony.",
+            "Three people flee through the yard below, ducking under the trees.",
+            "Two residents run down the street below, past the burning hedges.",
+            "Three people dash away near the railing as embers swirl."],
+        "Rooftop terrace above a wooded residential area": [
+            "Two residents race across the yard below the terrace.",
+            "Three people run between the houses just below.",
+            "Two neighbors flee along the street below the rooftop.",
+            "Three people sprint away in the garden below."],
+        "High balcony over a tree-lined residential street": [
+            "Two people sprint down the tree-lined street right below.",
+            "Three residents flee along the sidewalk right below the balcony.",
+            "Two neighbors run in the street below, shielding their faces.",
+            "Three people dash away beneath the balcony."],
+        "Upper-floor terrace above a street of houses": [
+            "Two people run past the parked cars in the street below.",
+            "Three residents flee just below the terrace.",
+            "Two neighbors bolt across the street below.",
+            "Three people scramble away in the foreground near the railing."],
+        "Hillside terrace above a village": [
+            "Two villagers run between the houses right below the terrace.",
+            "Three people flee in the gardens below.",
+            "Two villagers sprint down the street below the terrace.",
+            "Three people run away just beneath the terrace."],
+        "High balcony of a village house": [
+            "Two villagers run down the street right below.",
+            "Three people flee in the yard below the balcony.",
+            "Two neighbors dash away under the balcony.",
+            "Three villagers scramble between the houses below."],
+    }
+    FAR = ["Two people run far away on the hill.",
+           "Two people sprint away from it near the road below.",
+           "Three people flee down the distant road.",
+           "Two people run toward the forest in the distance.",
+           "Three villagers run across the valley far below.",
+           "Two people run away on the road below."]
+    COUNTRIES = es._EQ_BANNED[es._EQ_BANNED.index("turkey"):]
+
+    def setUp(self):
+        es._FIRE_TOR_ENV_MEMORY.clear()
+        es._BEAT_MEMORY.clear()
+
+    def tearDown(self):
+        es._FIRE_TOR_ENV_MEMORY.clear()
+        es._BEAT_MEMORY.clear()
+
+    def test_keys_and_spots_settled_not_open_land(self):
+        self.assertEqual(list(es.FIRE_TOR_ENVS), ["forest_edge", "tree_street", "village_woods"])
+        self.assertEqual(sorted(sk.EVENT_SKELETONS[E]["spots"]), sorted(SPOTS))
+        texts = []
+        for name, env in es.FIRE_TOR_ENVS.items():
+            key = env["key"]
+            with self.subTest(env=name):
+                self.assertTrue(es.find_terms(("house",), key), key)                          # ev
+                self.assertTrue(es.find_terms(("tree", "forest", "woods"), key), key)        # ağaç/orman
+                self.assertEqual(len(env["spots"]), 2)
+            texts.append(key)
+            for spot in env["spots"]:
+                texts += [spot, sk.CAMERA_SPOTS[spot], sk.EVENT_SKELETONS[E]["spots"][spot]]
+        texts += list(sk.FIRE_WEATHER)   # hava listesi aynı, arazi ima eden ifade yok
+        for t in texts:
+            with self.subTest(text=t):
+                self.assertEqual(es.find_terms(es.FIRE_TOR_OPEN_LAND, t), [])
+                self.assertEqual(es.find_terms(self.COUNTRIES, t), [])
+                self.assertEqual(es.rain_words(t), [])
+        self.assertEqual(sk.FIRE_WEATHER, ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
+                                           "heavy smoke and scorching still air"])
+
+    def test_camera_rules_same_for_every_spot(self):
+        for spot in SPOTS:
+            with self.subTest(spot=spot):
+                suffix = es.style_suffix(E, None, spot, None, None)
+                self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {sk.CAMERA_SPOTS[spot]}, "
+                                                  "high vantage close to the fire tornado filling at least half the frame"))
+                for rule in ("two or three people fleeing in the near foreground", "its top and smoke never cut off",
+                             "slight hand shake", "one continuous shot, no zoom, no cuts"):
+                    self.assertIn(rule, suffix)
+                self.assertTrue(sk.CAMERA_SPOTS[spot].startswith("on "))
+
+    def test_env_lru_never_repeats_back_to_back(self):
+        rng = random.Random(7)
+        seq = []
+        for _ in range(300):
+            name = es.choose_fire_env(rng)
+            es.remember_fire_env(name)
+            seq.append(name)
+        self.assertEqual(set(seq), set(es.FIRE_TOR_ENVS))
+        for a, b in zip(seq, seq[1:]):
+            self.assertNotEqual(a, b)
+        for a, b in zip(seq, seq[2:]):   # son 2 ortam elenir: 3 ortamda üçüncü üretim kalan ortam
+            self.assertNotEqual(a, b)
+        self.assertEqual(es.fire_env_of_spot("High balcony of a village house"), "village_woods")
+        with self.assertRaises(es.StructureError):
+            es.fire_env_of_spot("Balcony of a roadside house")
+
+    def test_near_gate_new_spots(self):
+        for spot, sents in self.NEAR.items():
+            spec = es.build_spec(E, None, spot, None, "T1", "U3", "SUV", 2)
+            for t in sents:
+                n = 3 if t.startswith("Three") else 2
+                spec = {**spec, "people": n}
+                codes = {i["rule"] for i in es.slice_issues(spec, {"slice_1_rest": t, "slice_2": FREE["T1"][0],
+                                                                   "slice_3": FREE["U3"][0]})}
+                with self.subTest(spot=spot, text=t):
+                    self.assertFalse(codes & {"slice_near_camera", "slice_flee", "slice_count"}, codes)
+        spec = es.build_spec(E, None, SPOTS[4], None, "T1", "U3", "SUV", 2)
+        for t in self.FAR:
+            spec = {**spec, "people": 3 if t.startswith("Three") else 2}
+            codes = {i["rule"] for i in es.slice_issues(spec, {"slice_1_rest": t, "slice_2": FREE["T1"][0],
+                                                               "slice_3": FREE["U3"][0]})}
+            with self.subTest(far=t):
+                self.assertIn("slice_near_camera", codes)
+        # çığ/deprem yakınlık listesi değişmedi
+        self.assertIs(es.SLICE_RULES[es.AVALANCHE_VILLAGE][-1], es._AVA_NEAR_RULE)
+        self.assertNotIn("between the houses", es._AVA_NEAR)
+
+    def test_scenes_rotate_env_and_label(self):
+        import core.creative_pipeline as cp
+        from core.trace_format import format_final_prompt, format_generation
+        pool = {b: [t for t in FREE[b] + HELD_OUT[b] + SHORT.get(b, []) if len(t.split()) <= 18] for b in FREE}
+
+        async def gpt(system, user, **kw):
+            line = dict(l.split(": ", 1) for l in user.splitlines() if ": " in l)
+            w = line["PEOPLE RUNNING AWAY"].split()[0].capitalize()
+            v = line["VEHICLE"].strip()
+            b2 = next(b for b in es.EVENT_BEATS[E]["slice_2"] if es.beat_text(E, "slice_2", b, v) == line["4-9s EVENT"])
+            b3 = next(b for b in es.EVENT_BEATS[E]["slice_3"] if es.beat_text(E, "slice_3", b) == line["9-15s EVENT"])
+            return {"slice_1_rest": f"{w} people run away right below.", "slice_2": with_vehicle(pool[b2][0], v),
+                    "slice_3": pool[b3][0]}
+        envs = []
+        for _ in range(30):
+            scene = asyncio.run(cp.build_creative_scene("fire_disasters", E, [], [], gpt))
+            spec, st = scene["structure"]["spec"], scene["structure"]
+            envs.append(spec["fire_env"])
+            self.assertIn(scene["spot"], es.FIRE_TOR_ENVS[spec["fire_env"]]["spots"])
+            self.assertTrue(scene["prompt"].startswith(f"0-4s: {es.FIRE_TOR_ENVS[spec['fire_env']]['key']} "))
+            self.assertEqual(st["place"], sk.EVENT_SKELETONS[E]["spots"][scene["spot"]])   # GPT'ye giden PLACE
+            self.assertEqual(st["environment"], es.fire_env_label(spec["fire_env"], scene["spot"]))
+            onay = format_final_prompt({"prompt": scene["prompt"], "story": scene["story"],
+                                        "style_suffix": scene["style_suffix"], "environment": st["environment"]})[1]
+            self.assertIn(f"Ortam: {es.FIRE_TOR_ENVS[spec['fire_env']]['label']} ({spec['fire_env']}) · kamera = "
+                          f"{scene['spot']}", onay)
+            detail = "\n".join(b for _, b in format_generation(scene["trace"]))
+            self.assertIn(f"Yer: {scene['spot']} · ortam: {es.FIRE_TOR_ENVS[spec['fire_env']]['label']} · hava: ",
+                          detail)
+        for a, b in zip(envs, envs[1:]):
+            self.assertNotEqual(a, b)
+        self.assertEqual(set(envs), set(es.FIRE_TOR_ENVS))
+
+    def test_other_structured_events_have_no_fire_env(self):
+        spec = es.build_spec(es.WILDFIRE, None, "Balcony of a hillside house", None, "K1", "L2", "SUV", 3)
+        self.assertNotIn("fire_env", spec)
+        self.assertEqual(spec["key_visual"], es.EVENT_KEY_VISUAL[es.WILDFIRE])
 
 
 if __name__ == "__main__":
