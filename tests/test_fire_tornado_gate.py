@@ -9,6 +9,7 @@ SONRA yazılan kontrol cümleleri (ilk ölçümde 3/36 ret; "upward", "from the 
 T5, U3, U5 yeni (cam/korkuluk/tabela/çit yerine büyük hedefler). Yeni maddelerin kontrol cümlelerinde ilk ölçüm 1/15 ret.
 """
 import asyncio
+import json
 import os
 import random
 import sys
@@ -24,18 +25,12 @@ E = es.FIRE_TORNADO
 SPOTS = ("Overlook above the burning valley road", "Balcony of a roadside house")
 VEHICLES = ("pickup truck", "small car", "white van", "SUV")
 
-REJECTED_REAL = {
-    "T6": [
-        'Flaming debris collides with the SUV, causing it to skid violently until it halts blocking the road.',
-        "A shower of fiery debris smashes into the SUV's side, causing it to spin wildly before coming to rest across the road.",
-        "Flaming debris crashes into the SUV's flank, causing it to spin wildly before grinding to a halt in the road.",
-    ],
-    "U4": [
-        'The tornado engulfs a heap of burning brush, ejecting it in a blazing arc of sparks onto the roadway.',
-        'A fierce surge of the tornado draws in a burning brush pile, hurling it across the road in a dazzling spray of embers.',
-        'The tornado draws up burning brush, hurling it across the road in a spectacular shower of fiery sparks, still spinning.',
-    ],
-}
+# Gerçek GPT retleri tek dosyada (tests/fixtures/rejected_real.json, test_rejected_real.py da okur)
+with open(os.path.join(os.path.dirname(__file__), "fixtures", "rejected_real.json"), encoding="utf-8") as _f:
+    REJECTED_REAL = {}
+    for _r in json.load(_f)["false_rejections"]:
+        if _r["event"] == "Fire tornado tears across a burning roadside":
+            REJECTED_REAL.setdefault(_r["beat"], []).append(_r["text"])
 FREE = {
     "T1": [
         'The swirling flames heave the pickup truck off the asphalt and hurl it against a blazing tree.',
@@ -240,6 +235,93 @@ GAP = {
     ],
 }
 
+# 15 Eki (4): T3 için 8 yeni serbest cümle (beat ve gerçek retlerden farklı)
+T3_NEW = [
+    'The vortex snatches the white van off the asphalt, whirls it around and slams it back down in sparks.',
+    'Pulled into the burning column, the pickup truck twists in midair and smashes onto the road.',
+    'The SUV is swallowed by the fire tornado, tumbles high above the road and plummets back down.',
+    'The giant fire whirl grabs the small car, flings it around overhead and drops it hard on the asphalt.',
+    'The van is hoisted into the flames, rotating wildly, then hits the road in a spray of embers.',
+    'Caught by the roaring column, the truck lurches upward, spins and comes crashing back down.',
+    'The towering vortex carries the car up into the smoke before it falls and smashes onto the road.',
+    'The white van is yanked up into the fire tornado, twirls, and lands hard on the road amid sparks.',
+]
+# 15 Eki (4): her T/U maddesine 4 GPT tarzı serbest cümle (gevşeklik denetimi; ilk ölçüm 1/48 ret, T3)
+AUDIT_4 = {
+    "T1": [
+        'The vortex hauls the white van upward and hurls it straight into a blazing pine.',
+        'The pickup truck is ripped from the road by the fire column and slammed against a burning tree.',
+        'The towering tornado lifts the SUV and throws it into the burning trees beside the road.',
+        'Snatched by the vortex, the car is flung into a flaming tree at the roadside.',
+    ],
+    "T2": [
+        'The vortex flings a whole burning tree trunk down onto the white van, caving in its roof.',
+        'A blazing trunk hurled by the fire tornado smashes onto the pickup truck and crushes the cab.',
+        'The tornado drops a huge flaming tree on top of the SUV, flattening its roof.',
+        'A massive burning trunk crashes onto the car, crushing it under the weight.',
+    ],
+    "T3": [
+        'The tornado sucks the white van upward, spins it and slams it onto the road in sparks.',
+        'The pickup truck is lifted into the fire column, whirls around and crashes back down.',
+        'The vortex drags the SUV up, spinning it, before it smashes down onto the asphalt.',
+        'The car rises into the towering tornado, spins, and drops onto the road in a burst of sparks.',
+    ],
+    "T4": [
+        "The white van is shoved sideways as the tornado's huge base roars past right behind it.",
+        'The vortex sweeps past just behind the pickup truck, knocking it sideways across the road.',
+        'The SUV slides sideways while the giant fire column passes close behind it.',
+        "As the tornado's base tears by behind it, the car is pushed sideways across the lane.",
+    ],
+    "T5": [
+        'The vortex flips the white van onto its roof and the van bursts into flames.',
+        'The pickup truck is rolled over by the fire tornado and catches fire on its roof.',
+        'The tornado overturns the SUV, which goes up in flames upside down.',
+        'The car is tipped onto its roof by the towering column and erupts in flames.',
+    ],
+    "T6": [
+        'Huge burning debris thrown by the tornado slams into the white van, spinning it to a stop across the road.',
+        'A mass of flaming wreckage hits the pickup truck, which spins and halts across the lane.',
+        'Burning debris from the vortex crashes into the SUV, sending it spinning until it stops sideways.',
+        'Flaming chunks hurled by the tornado strike the car, which spins and comes to rest across the road.',
+    ],
+    "U1": [
+        'The tornado tears the burning roof off a house and sucks the sheets up into its column.',
+        'The vortex rips a flaming roof from a house, pulling the panels into the fire column.',
+        'A house loses its blazing roof as the towering tornado drags the sheets upward.',
+        'The fire column strips the burning roof from a home and swallows the sheets.',
+    ],
+    "U2": [
+        'The vortex rips a cluster of burning trees out of the ground and throws the trunks down the road.',
+        'The tornado uproots a stand of blazing trees, hurling the trunks along the road.',
+        'A group of burning trees is torn from the earth by the fire column and flung down the road.',
+        'The towering tornado yanks burning trees out by their roots and scatters the trunks on the road.',
+    ],
+    "U3": [
+        'The vortex engulfs a wooden barn and rips it apart, burning planks spiraling into the column.',
+        'The tornado swallows the barn, tearing it to pieces as flaming boards whirl upward.',
+        'A wooden barn is torn apart by the fire column, its burning planks sucked into the vortex.',
+        'The towering tornado smashes a barn to pieces and pulls the burning planks into its column.',
+    ],
+    "U4": [
+        'The vortex sucks up a huge pile of burning brush and sprays it across the road in sparks.',
+        'The tornado draws in a burning brush pile and spits it over the road as a shower of sparks.',
+        'A heap of flaming brush is pulled into the column and hurled across the road in sparks.',
+        'The fire column swallows burning brush and throws it across the road in a fountain of embers.',
+    ],
+    "U5": [
+        'The vortex rips through a big woodpile and hurls the burning logs high across the field.',
+        'The tornado scatters a woodpile, flinging blazing logs far over the field.',
+        'Burning logs from a big woodpile are thrown high across the field by the fire column.',
+        'The towering tornado tears into a woodpile and launches the burning logs across the field.',
+    ],
+    "U6": [
+        'The vortex sweeps over a parked trailer and tosses it aside in fire and smoke.',
+        'The tornado flips a parked trailer aside in a cloud of flames and smoke.',
+        'A parked trailer is thrown aside by the fire column amid fire and smoke.',
+        'The towering tornado rolls a parked trailer over and casts it aside in flames and smoke.',
+    ],
+}
+
 
 def slot(bid):
     return "slice_2" if bid[0] == "T" else "slice_3"
@@ -247,6 +329,15 @@ def slot(bid):
 
 def terms(bid):
     return es.EVENT_BEATS[E][slot(bid)][bid]["terms"]
+
+
+def beat(bid):
+    return es.EVENT_BEATS[E][slot(bid)][bid]
+
+
+def gate(bid, text):
+    """Maddenin kapısı (terim grupları + 15 Eki (4) "unless"); boş liste = geçer."""
+    return es.beat_missing(beat(bid), text)
 
 
 def with_vehicle(text, vehicle):
@@ -319,7 +410,7 @@ class TestFireTornadoGate(unittest.TestCase):
         for bid, sents in REJECTED_REAL.items():
             for t in sents:
                 with self.subTest(beat=bid, text=t):
-                    self.assertEqual(es.missing_term_groups(terms(bid), t), [])
+                    self.assertEqual(gate(bid, t), [])
         for t in REJECTED_REAL["T6"]:
             spec, sl = build("T6", "U4", "SUV", s2=t, s3=REJECTED_REAL["U4"][1])
             with self.subTest(text=t):
@@ -335,7 +426,7 @@ class TestFireTornadoGate(unittest.TestCase):
             self.assertGreaterEqual(len(FREE[bid]), 5)
             for t in FREE[bid] + HELD_OUT[bid] + SHORT.get(bid, []):
                 with self.subTest(beat=bid, text=t):
-                    self.assertEqual(es.missing_term_groups(terms(bid), t), [])
+                    self.assertEqual(gate(bid, t), [])
                     self.assertNotEqual(t.lower().rstrip("."), beat)
                     self.assertNotEqual(t.lower().split()[:4], beat.split()[:4])   # farklı kurulmuş
                     self.assertTrue(10 <= len(t.split()) <= 24)
@@ -355,10 +446,10 @@ class TestFireTornadoGate(unittest.TestCase):
                     continue
                 for t in FREE[o] + HELD_OUT[o] + SHORT.get(o, []) + REJECTED_REAL.get(o, []):
                     with self.subTest(beat=x, other=o, text=t):
-                        self.assertTrue(es.missing_term_groups(terms(x), t))
+                        self.assertTrue(gate(x, t))
         # "spinning/whirling" hortumun sıfatı: T1 cümlesi T3 (iniş yok), U1 cümlesi T6 (araç yok) sayılmaz
-        self.assertTrue(es.missing_term_groups(terms("T3"), FREE["T1"][3]))
-        self.assertTrue(es.missing_term_groups(terms("T6"), FREE["U1"][4]))
+        self.assertTrue(gate("T3", FREE["T1"][3]))
+        self.assertTrue(gate("T6", FREE["U1"][4]))
 
     def test_audit_gap_phrases(self):
         # 15 Eki (3): kaldırma (picks up, rises into the air, carried aloft, torn off the road, lifts), yana itme
@@ -376,11 +467,11 @@ class TestFireTornadoGate(unittest.TestCase):
             beat = es.beat_text(E, slot(bid), bid, "SUV").lower()
             for t in sents:
                 with self.subTest(beat=bid, text=t):
-                    self.assertEqual(es.missing_term_groups(terms(bid), t), [])
+                    self.assertEqual(gate(bid, t), [])
                     self.assertNotEqual(t.lower().split()[:4], beat.split()[:4])
                     for o in ids:   # başka madde sayılmaz (yasak çiftler hariç)
                         if o != bid and (o, bid) not in ex:
-                            self.assertTrue(es.missing_term_groups(terms(o), t), (o, t))
+                            self.assertTrue(gate(o, t), (o, t))
 
     def test_audit_gap_words_without_tornado_event_rejected(self):
         # Aynı fiiller, ama hortumun yaptığı bir olay yok: hiçbir maddeden geçmez
@@ -396,7 +487,58 @@ class TestFireTornadoGate(unittest.TestCase):
         for bid in [x for sl in ("slice_2", "slice_3") for x in es.EVENT_BEATS[E][sl]]:
             for t in texts:
                 with self.subTest(beat=bid, text=t):
-                    self.assertTrue(es.missing_term_groups(terms(bid), t))
+                    self.assertTrue(gate(bid, t))
+
+    def test_t3_real_rejections_and_new_paraphrases(self):
+        # 15 Eki (4): canlıda 3 doğru T3 cümlesi reddedildi; şart araç + kapılma/kaldırma + çarpma/iniş, dönme şart değil
+        self.assertEqual(len(REJECTED_REAL["T3"]), 3)
+        self.assertGreaterEqual(len(T3_NEW), 8)
+        text = es.beat_text(E, "slice_2", "T3", "SUV").lower()
+        for t in REJECTED_REAL["T3"] + T3_NEW:
+            with self.subTest(text=t):
+                self.assertEqual(gate("T3", t), [])
+                self.assertNotIn(t, REJECTED_REAL["T3"] if t in T3_NEW else T3_NEW)
+                self.assertNotEqual(t.lower().split()[:4], text.split()[:4])
+        # dönme tek başına yetmez; kapılma ya da iniş eksikse ret
+        for t in ("The white van spins on the road as the fire tornado passes.",
+                  "The tornado lifts the white van and holds it in the smoke.",
+                  "The white van crashes into a parked car on the road."):
+            with self.subTest(bad=t):
+                self.assertTrue(gate("T3", t))
+
+    def test_t3_false_positives(self):
+        # hortumsuz kaldırma, alakasız cümleler ve diğer maddelerin cümleleri T3 sayılmaz ("unless": ağaç, ters dönme)
+        for t in ("A crane lifts the van onto a flatbed parked beside the road.",
+                  "The van is carried aloft on a car transporter along the highway.",
+                  "A tow truck pulls the SUV off the road into the field.",
+                  "The pickup truck drives past the burning field and stops.",
+                  "Three people run from the fire tornado on the road right below."):
+            with self.subTest(text=t):
+                self.assertTrue(gate("T3", t))
+        others = [o for sl in ("slice_2", "slice_3") for o in es.EVENT_BEATS[E][sl] if o != "T3"]
+        for o in others:
+            for t in (FREE[o] + HELD_OUT[o] + SHORT.get(o, []) + GAP.get(o, []) + AUDIT_4[o]
+                      + REJECTED_REAL.get(o, [])):
+                with self.subTest(other=o, text=t):
+                    self.assertTrue(gate("T3", t))
+        self.assertEqual(beat("T3").get("unless"), es._FIRE_TOR_T3_UNLESS)
+        self.assertTrue(all("unless" not in b for e, x in es.EVENT_BEATS.items() for sl in ("slice_2", "slice_3")
+                            for k, b in x[sl].items() if (e, k) != (E, "T3")))   # sadece T3
+
+    def test_audit_4_every_beat(self):
+        # Her T/U maddesi: 4 GPT tarzı cümle kendi maddesinde geçer, başka maddede geçmez (yasak çiftler hariç)
+        b = es.EVENT_BEATS[E]
+        ex = b["excluded_pairs"] | {(d, v) for v, d in b["excluded_pairs"]}
+        ids = list(b["slice_2"]) + list(b["slice_3"])
+        self.assertEqual(sorted(AUDIT_4), sorted(ids))
+        for bid, sents in AUDIT_4.items():
+            self.assertEqual(len(sents), 4)
+            for t in sents:
+                with self.subTest(beat=bid, text=t):
+                    self.assertEqual(gate(bid, t), [])
+                    for o in ids:
+                        if o != bid and (o, bid) not in ex:
+                            self.assertTrue(gate(o, t), (o, t))
 
     def test_unrelated_sentences_rejected(self):
         # Hortumsuz, olaysız ya da alakasız cümleler hiçbir maddeden geçmez
@@ -414,7 +556,7 @@ class TestFireTornadoGate(unittest.TestCase):
         for bid in [b for sl in ("slice_2", "slice_3") for b in es.EVENT_BEATS[E][sl]]:
             for t in unrelated:
                 with self.subTest(beat=bid, text=t):
-                    self.assertTrue(es.missing_term_groups(terms(bid), t))
+                    self.assertTrue(gate(bid, t))
         bad = {"T1": "The van is pushed into a burning tree by the swirling flames.",
                "T2": "A burning tree stands beside the SUV on the road.",
                "T3": "The SUV spins on the road as the flames swirl around it.",
@@ -427,7 +569,7 @@ class TestFireTornadoGate(unittest.TestCase):
                "U6": "A parked trailer stands near the burning road."}
         for bid, t in bad.items():
             with self.subTest(beat=bid, text=t):
-                self.assertTrue(es.missing_term_groups(terms(bid), t))
+                self.assertTrue(gate(bid, t))
 
     def test_term_lists_only_fire_tornado(self):
         # _FIRE_TOR_* listeleri sadece ateş hortumunda; diğer yangın olayları ortak _FIRE_* listelerini kullanır

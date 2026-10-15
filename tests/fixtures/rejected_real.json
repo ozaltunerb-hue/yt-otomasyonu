@@ -1,0 +1,28 @@
+{
+  "_note": "Canlı üretimde kapının YANLIŞ reddettiği gerçek GPT cümleleri (kalıcı regresyon). Yeni bir canlı ret görülürse buraya eklenir; tests/test_rejected_real.py hepsini seçilen maddenin kapısından geçirir. 'correct_rejections': kapının DOĞRU reddettiği cümleler, ret sürmeli.",
+  "false_rejections": [
+    {"date": "2026-10-15 10:44", "event": "Fire tornado tears across a burning roadside", "beat": "T6", "vehicle": "SUV",
+     "text": "Flaming debris collides with the SUV, causing it to skid violently until it halts blocking the road."},
+    {"date": "2026-10-15 10:44", "event": "Fire tornado tears across a burning roadside", "beat": "T6", "vehicle": "SUV",
+     "text": "A shower of fiery debris smashes into the SUV's side, causing it to spin wildly before coming to rest across the road."},
+    {"date": "2026-10-15 10:44", "event": "Fire tornado tears across a burning roadside", "beat": "T6", "vehicle": "SUV",
+     "text": "Flaming debris crashes into the SUV's flank, causing it to spin wildly before grinding to a halt in the road."},
+    {"date": "2026-10-15 10:44", "event": "Fire tornado tears across a burning roadside", "beat": "U4", "vehicle": null,
+     "text": "The tornado engulfs a heap of burning brush, ejecting it in a blazing arc of sparks onto the roadway."},
+    {"date": "2026-10-15 10:44", "event": "Fire tornado tears across a burning roadside", "beat": "U4", "vehicle": null,
+     "text": "A fierce surge of the tornado draws in a burning brush pile, hurling it across the road in a dazzling spray of embers."},
+    {"date": "2026-10-15 10:44", "event": "Fire tornado tears across a burning roadside", "beat": "U4", "vehicle": null,
+     "text": "The tornado draws up burning brush, hurling it across the road in a spectacular shower of fiery sparks, still spinning."},
+    {"date": "2026-10-15", "event": "Fire tornado tears across a burning roadside", "beat": "T3", "vehicle": "white van",
+     "text": "The tornado draws the white van upward, spinning erratically before it crashes in a fiery burst."},
+    {"date": "2026-10-15", "event": "Fire tornado tears across a burning roadside", "beat": "T3", "vehicle": "white van",
+     "text": "The fire tornado engulfs a white van, spinning it violently before crashing down in a shower of sparks."},
+    {"date": "2026-10-15", "event": "Fire tornado tears across a burning roadside", "beat": "T3", "vehicle": "white van",
+     "text": "The white van is caught in the towering vortex, spinning skyward before crashing in a shower of sparks."}
+  ],
+  "correct_rejections": [
+    {"date": "2026-10-15", "event": "Fire tornado tears across a burning roadside", "field": "slice_1_rest",
+     "rule": "slice_near_camera", "people": 2,
+     "text": "Two people sprint away from it near the road below."}
+  ]
+}

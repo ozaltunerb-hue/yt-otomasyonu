@@ -25,6 +25,21 @@
 
 ---
 
+## 📋 DEVİR: 🔥 Ateş hortumu T3 kapısı + canlı ret dosyası (15 Eki 2026, dördüncü tur)
+
+Canlıda 3 doğru T3 cümlesi reddedildi. Hepsi "yere iniş" grubuna takıldı: "crashes" tek başına sayılmıyordu, "crashing
+down" listede yoktu. Biri ayrıca "kaldırma"ya takıldı ("engulfs").
+- T3 artık araç + hortuma kapılma/kaldırma (`_FIRE_TOR_SWEPT`) + çarpma/iniş (`_FIRE_TOR_LANDING`); dönme şart değil.
+- Yeni `beat_missing` + isteğe bağlı "unless" (sadece T3): ağaç ya da ters dönme geçen cümle T3 sayılmaz. Bu olmadan
+  T1/T5'ten 8 cümle T3 sayılıyordu.
+- Denetim (her T/U maddesine 4 GPT tarzı cümle): ilk ölçüm 1/48 ret (T3), düzeltmeden sonra 0. T3'e 8 yeni cümle: önce
+  3/8 ret, sonra 0. Maddeler arası yanlış pozitif yok.
+- **Canlı retler tek dosyada:** `tests/fixtures/rejected_real.json` (`test_rejected_real.py`). Yeni canlı ret görülünce
+  oraya ekle. Doğru retler ("insanlar kameraya yakın değil") ayrı listede, ret sürmeli.
+- Diğer olaylar HEAD ile aynı. En uzun prompt 174.
+
+---
+
 ## 📋 DEVİR: 🔥 Ateş hortumu terim boşlukları (15 Eki 2026, üçüncü tur)
 
 Denetimdeki boşluklar ateş hortumunda ölçüldü. Kaldırma ("picks up", "rises into the air", "carried aloft", "torn off the

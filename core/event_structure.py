@@ -384,6 +384,18 @@ _FIRE_TOR_DOWN = ("crash down", "crashes down", "crashed down", "slam down", "sl
                   "down onto", "down on", "hit the road", "hits the road", "hit the ground", "hits the ground",
                   "slam onto", "slams onto", "slammed onto", "crash onto", "crashes onto", "crashed onto",
                   "smash onto", "smashes onto", "smashed onto", "thud", "touch down", "touches down")
+# T3 (15 Eki (4), Bahadır): canlıda doğru T3 cümleleri reddedildi ("draws the van upward ... crashes", "engulfs a van
+# ... crashing down", "caught in the vortex ... crashing"). Şart: araç + hortuma kapılma/kaldırma + çarpma/iniş; dönme
+# şart değil. "crash/slam/smash" tek başına iniş sayılır, bu yüzden T1 (ağaca çarpar) ve T5 (ters döner) cümleleri
+# "unless" ile ayrılır. "whirl/spin" kapılma sayılmaz ("fire whirl" hortumun adı).
+_FIRE_TOR_SWEPT = _FIRE_TOR_LIFT + ("draw", "drew", "drawn", "pull", "suck", "catch", "caught", "grab", "snatch",
+                                    "engulf", "swallow", "whisk", "carry", "carried", "seize", "scoop", "haul", "drag",
+                                    "yank", "overhead", "high above", "midair", "mid-air", "in the air")
+_FIRE_TOR_LANDING = _FIRE_TOR_DOWN + ("crashing down", "slamming down", "smashing down", "come crashing",
+                                      "comes crashing", "came crashing", "coming crashing", "crash", "slam", "smash",
+                                      "hit", "strike", "struck", "fallen", "down")
+_FIRE_TOR_T3_UNLESS = _FIRE_TOR_TREE + ("upside down", "onto its roof", "on its roof", "onto its side", "overturn",
+                                        "belly up", "roll over", "rolls over", "rolled over")
 _FIRE_TOR_SKID = ("skid", "slide", "slid", "fishtail", "sideways", "swerve", "veer", "slew", "drift", "broadside",
                   "careen", "lurch", "spin out", "spins out", "spun out", "slip", "swing", "swung", "jackknife", "yaw",
                   "sidelong", "crabwise")
@@ -1230,7 +1242,8 @@ EVENT_BEATS = {
                    "terms": [_FIRE_TOR_VEH, _FIRE_FLAME, _FIRE_TOR_TRUNK, _FIRE_TOR_CRUSH]},
             "T3": {"text": "the {vehicle} is sucked up into the towering fire tornado, spins, and crashes down onto "
                            "the road in sparks",
-                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_LIFT, _FIRE_TOR_SPIN, _FIRE_TOR_DOWN]},
+                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_SWEPT, _FIRE_TOR_LANDING],
+                   "unless": _FIRE_TOR_T3_UNLESS},
             "T4": {"text": "the {vehicle} is shoved sideways as the huge base of the fire tornado sweeps past right "
                            "behind it",
                    "terms": [_FIRE_TOR_VEH, _FIRE_TOR_SKID, _FIRE_TOR_PASS]},
@@ -1996,6 +2009,14 @@ def missing_term_groups(groups, text: str) -> list[tuple[str, ...]]:
     return [g for g in groups if not find_terms(g, text)]
 
 
+def beat_missing(beat: dict, text: str) -> list[tuple[str, ...]]:
+    """Maddenin görünmeyen terim grupları. 15 Eki (4): "unless" (isteğe bağlı, şimdilik sadece ateş hortumu T3)
+    terimlerinden biri geçerse cümle başka maddeyi anlatıyordur; o terimler eksik grup gibi döner."""
+    out = missing_term_groups(beat["terms"], text)
+    hit = find_terms(beat.get("unless", ()), text)
+    return out + ([("unless",) + tuple(hit)] if hit else [])
+
+
 # ── Seçim ───────────────────────────────────────────────────────────────────────────────────────────────────
 _BEAT_MEMORY: dict[str, list[str]] = {}
 _BEAT_MEMORY_LIMIT = 12
@@ -2292,7 +2313,7 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
         out.append(_issue("beat_vehicle", f"4-9s: araç ({spec['vehicle']})",
                           f"'slice_2' must name the {spec['vehicle']}."))
     for slot, bid, text in (("slice_2", spec["beat_2"], s2), ("slice_3", spec["beat_3"], s3)):
-        miss = missing_term_groups(beats[slot][bid]["terms"], text)
+        miss = beat_missing(beats[slot][bid], text)
         if miss:
             label = "4-9s" if slot == "slice_2" else "9-15s"
             event_text = beat_text(event, slot, bid, spec["vehicle"])
