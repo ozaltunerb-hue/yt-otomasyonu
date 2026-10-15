@@ -124,6 +124,8 @@ class TestSkeletonOutput(unittest.TestCase):
                 self.assertIn("no zoom, no cuts", suffix)
                 if sk.EVENT_SKELETONS[e]["domain"] in ("avalanche_disasters", "earthquake_disasters"):   # 13 Eki: Bahadır'ın kısa çığ satırı; 14 Eki: deprem
                     self.assertIn("raw natural light, no hazmat suits", suffix)   # 14 Eki (4): ışık ortamdan
+                elif e == "Fire tornado tears across a burning roadside":   # 15 Eki (2): kısa giyim/ışık satırı
+                    self.assertIn("raw natural light matching the weather, never glossy or CGI", suffix)
                 else:
                     self.assertIn("Raw natural light matching the weather, never glossy or CGI", suffix)
                 self.assertTrue("wear" in suffix)   # kıyafet satırı korunur

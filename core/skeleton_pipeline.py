@@ -712,7 +712,8 @@ EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
                # TASLAK (8 Eki, Bahadır): yangın 3-6
                "Wall of flames sweeps into a hillside neighborhood": (3, 6),
                "Flames race up a tower facade": (3, 6),
-               "Fire tornado tears across a burning roadside": (3, 6),
+               # 15 Eki (2), Bahadır: ateş hortumunda ön planda 2-3 kişi kaçar
+               "Fire tornado tears across a burning roadside": (2, 3),
                # 10 Eki, Bahadır: helikopter 3-6 (orman gibi)
                "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (3, 6),
                # TASLAK (10 Eki, Bahadır): volkan 3-6
@@ -821,6 +822,22 @@ def earthquake_camera(spot: str) -> str:
             f"camera stays fixed and never descends; one continuous shot, no zoom, no cuts.")
 
 
+# 🔥 Ateş hortumu kamerası (15 Eki (2), Bahadır): hortum dev ve kareyi dolduruyor. Yüksek bakış, hortuma yakın; gövde
+# karenin en az yarısı, tepesi ve bulutu kesilmez; önde 2-3 kişi kaçar. Takip (pan) ve el titremesi aynı. "eye level,
+# normal lens" çıktı (yüksek bakışla çelişiyordu). 175 kelime için giyim/ışık kısa (aynı kısıtlar, görevli satırı yok:
+# havuzda görevli yok). Kısıt sayısı 8 -> 7. Önceki kamera: "Handheld footage shot by a person standing {spot}, eye
+# level, normal lens; slight hand shake, the camera pans to follow the fire tornado; no zoom, no cuts."
+FIRE_TORNADO_GUARDRAILS = ("Bystanders wear civilian clothes, never hi-vis PPE; raw natural light matching the weather, "
+                           "never glossy or CGI; no white hazmat suits.")
+
+
+def fire_tornado_camera(spot: str) -> str:
+    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage close to the towering fire "
+            f"tornado filling at least half of the frame, its top and smoke cloud never cut off, two or three people "
+            f"fleeing it in the near foreground; slight hand shake, the camera pans to follow the fire tornado; one "
+            f"continuous shot, no zoom, no cuts.")
+
+
 VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "
                       "light matching the weather, never glossy or CGI; no hazmat suits.")
 
@@ -869,6 +886,9 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     if s["domain"] == "earthquake_disasters":   # 14 Eki: deprem, çığ yapısı (sabit kamera, günlük sivil giyim)
         camera = earthquake_camera(spot)
         guardrails = EARTHQUAKE_GUARDRAILS
+    if event == "Fire tornado tears across a burning roadside":   # 15 Eki (2): dev hortum, ön planda kaçanlar
+        camera = fire_tornado_camera(spot)
+        guardrails = FIRE_TORNADO_GUARDRAILS
     out = f"{camera} {setting} {guardrails}" if setting else f"{camera} {guardrails}"
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)

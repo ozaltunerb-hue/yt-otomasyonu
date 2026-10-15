@@ -25,6 +25,26 @@
 
 ---
 
+## 📋 DEVİR: 🔥 Ateş hortumu büyüdü: dev hortum, yakın kamera, ön planda 2-3 kişi (15 Eki 2026, ikinci tur)
+
+Sadece ateş hortumu; diğer olaylar aynı. Henüz video testi yok.
+- Kilit cümle (26 kelime, ölçek kıyası): "A colossal fire tornado, several times taller than the tallest buildings and
+  trees, tears across the burning roadside, its wide base engulfing a field of flames." Önceki 18 kelimeydi.
+- Kamera (`fire_tornado_camera`): yüksek bakış, hortuma yakın; gövde karenin en az yarısı, tepe ve bulut kesilmez; önde
+  2-3 kişi kaçar; el titremesi ve takip aynı, "eye level, normal lens" çıktı. Giyim/ışık kısa satır
+  (`FIRE_TORNADO_GUARDRAILS`), kısıt 8 -> 7.
+- Kişi 3-6 -> 2-3 (`NUMBER_WORDS`'e "two"); insanlar ön planda: çığdaki yakınlık kapısı (`slice_near_camera`) ve
+  "near the railing or on the road right below" ipucu.
+- Beat'ler en fazla 18 kelime ve hepsinde hortumun büyüklüğü var. Yeni hedefler: T2 cam -> ağaç gövdesi araca, T4 kor ->
+  dev taban arkadan geçer, T5 korkuluk -> araç ters döner ve yanar, U3 tabela -> ahır, U5 çit -> odun yığını. Yeni
+  yasak çift T2/U5 (yanan odun).
+- 175 kelime: WORD BUDGET satırı (0-4s 10, 4-9s/9-15s 18, toplam 75) ve WORD_CAP_EVENTS'e eklendi. En uzun prompt
+  kuramsal ve simülasyonda 174.
+- Risk: kilit cümle 8 kelime uzadı; GPT bütçeyi aşarsa (eskiden 81/73 yazmıştı) 75 sınırına takılır.
+- Havuz lint uyarısı 55 -> 52 (ateş hortumu 3 -> 0).
+
+---
+
 ## 📋 DEVİR: 🔥 Ateş hortumu kapısı anlam bazlı + 75 kelime (15 Eki 2026)
 
 **Olay:** 15 Eki 10:44 ateş hortumu (T6+U4) 3 denemede kapıdan geçmedi (Kie'ye gitmedi). İki sebep: GPT'nin doğru

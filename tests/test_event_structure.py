@@ -95,8 +95,9 @@ class TestLockedData(unittest.TestCase):
                          "neighborhood, igniting roofs and trees.",
             es.FACADE_FIRE: "Flames race up the glass facade of a tower, blowing out windows and raining burning "
                             "debris onto the street.",
-            es.FIRE_TORNADO: "A violent fire tornado tears across a burning roadside, hurling flames, burning "
-                             "branches and embers across the road.",
+            # 15 Eki (2), Bahadır: dev hortum, ölçek kıyası
+            es.FIRE_TORNADO: "A colossal fire tornado, several times taller than the tallest buildings and trees, "
+                             "tears across the burning roadside, its wide base engulfing a field of flames.",
             # 10 Eki, Bahadır onayı: helikopter (TestHelicopter ayrıca kilitler)
             es.HELICOPTER: "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of "
                            "water onto the wall of flames racing toward the houses.",
@@ -609,7 +610,8 @@ class TestTidal(unittest.TestCase):
         self.assertEqual(sk.EVENT_COUNT, {TIDAL: (3, 6), es.MUDSLIDE: (3, 6), es.SLOPE: (3, 6), es.VILLAGE: (3, 6),
                                           es.LANDFALL: (3, 6), es.MARINA_TORNADO: (3, 6), es.AVENUE: (3, 6),
                                           # 8 Eki (TASLAK): yangın
-                                          es.WILDFIRE: (3, 6), es.FACADE_FIRE: (3, 6), es.FIRE_TORNADO: (3, 6),
+                                          es.WILDFIRE: (3, 6), es.FACADE_FIRE: (3, 6),
+                                          es.FIRE_TORNADO: (2, 3),   # 15 Eki (2): ön planda 2-3 kişi
                                           es.HELICOPTER: (3, 6),   # 10 Eki
                                           es.ERUPTION: (3, 6), es.PYROCLASTIC: (3, 6),
                                           es.VOLCANIC_BOMBS: (3, 6),
@@ -632,7 +634,7 @@ class TestTidal(unittest.TestCase):
                                                     "scramble", "dart", "hurry"))
         self.assertTrue(r["slice_count"]["people"])
         self.assertNotIn("terms", r["slice_count"])   # terim koddan: spec'teki N'in kelimesi
-        self.assertEqual(es.NUMBER_WORDS, {3: "three", 4: "four", 5: "five", 6: "six"})
+        self.assertEqual(es.NUMBER_WORDS, {2: "two", 3: "three", 4: "four", 5: "five", 6: "six"})   # 15 Eki (2)
         self.assertEqual(r["slice_flee"]["feedback"], "'slice_1_rest' must show people running away from the wave.")
         self.assertEqual(r["slice_count"]["feedback"].format(word="five"),
                          "'slice_1_rest' must say that five people run away from the wave.")
@@ -1621,8 +1623,9 @@ class TestFireStructure(unittest.TestCase):
                      "neighborhood, igniting roofs and trees.",
         es.FACADE_FIRE: "Flames race up the glass facade of a tower, blowing out windows and raining burning debris "
                         "onto the street.",
-        es.FIRE_TORNADO: "A violent fire tornado tears across a burning roadside, hurling flames, burning branches "
-                         "and embers across the road.",
+        # 15 Eki (2), Bahadır: dev hortum, ölçek kıyası (tests/test_fire_tornado_gate.py ayrıca kilitler)
+        es.FIRE_TORNADO: "A colossal fire tornado, several times taller than the tallest buildings and trees, tears "
+                         "across the burning roadside, its wide base engulfing a field of flames.",
     }
     POOLS = {
         es.WILDFIRE: ({
@@ -1657,21 +1660,24 @@ class TestFireStructure(unittest.TestCase):
             "N6": "the fire jumps to the neighboring balcony, igniting its plants and furniture",
         }, {("M1", "N3"), ("M2", "N5"), ("M5", "N2")}, {}),
         es.FIRE_TORNADO: ({
-            "T1": "the {vehicle} is lifted off the road by the swirling flames and flung into a burning tree",
-            "T2": "a burning branch hurled by the tornado smashes the windshield of the {vehicle}",
-            "T3": "the {vehicle} is swept up into the air, spins, and crashes down onto the road in a shower of sparks",
-            "T4": "the {vehicle} skids sideways as the fire tornado crosses the road behind it, throwing embers across "
-                  "its roof",
-            "T5": "the {vehicle} is shoved against the guardrail by the whirling flames and its hood catches fire",
-            "T6": "flaming debris slams into the side of the {vehicle}, which spins and stops across the road",
+            # 15 Eki (2), Bahadır: hortumun büyüklüğü her maddede; T2, T4, T5, U3, U5 yeni (büyük hedefler)
+            "T1": "the towering fire tornado lifts the {vehicle} off the road and flings it into a burning tree",
+            "T2": "the huge fire tornado hurls a whole burning tree trunk onto the {vehicle}, crushing its roof",
+            "T3": "the {vehicle} is sucked up into the towering fire tornado, spins, and crashes down onto the road in "
+                  "sparks",
+            "T4": "the {vehicle} is shoved sideways as the huge base of the fire tornado sweeps past right behind it",
+            "T5": "the huge fire tornado rolls the {vehicle} over onto its roof and it bursts into flames",
+            "T6": "huge flaming debris flung by the towering tornado slams into the {vehicle}, which spins and stops "
+                  "across the road",
         }, {
-            "U1": "the fire tornado rips the burning roof off a house and scatters flaming pieces across the street",
-            "U2": "the fire tornado uproots a burning tree and flings it down the road",
-            "U3": "the whirling flames tear a billboard from its supports and hurl it aside",
-            "U4": "the tornado sucks up a pile of burning brush and spits it across the road in a fountain of sparks",
-            "U5": "the fire tornado tears a section of burning fence away and carries it across the field",
-            "U6": "the fire tornado sweeps over a parked trailer, tossing it aside in a cloud of fire and smoke",
-        }, {("T1", "U2"), ("T2", "U2"), ("T4", "U4")}, {"U1": {"Balcony of a roadside house"}}),
+            "U1": "the towering fire tornado rips the burning roof off a house and sucks the sheets into its column",
+            "U2": "the huge fire tornado uproots a cluster of burning trees and flings their trunks down the road",
+            "U3": "the towering fire tornado swallows a wooden barn and tears it to pieces, burning planks whirling "
+                  "into the column",
+            "U4": "the towering tornado sucks up a huge burning brush pile and spits it across the road in sparks",
+            "U5": "the huge fire tornado tears through a big woodpile and hurls the burning logs high across the field",
+            "U6": "the towering fire tornado sweeps over a parked trailer and tosses it aside in fire and smoke",
+        }, {("T1", "U2"), ("T2", "U2"), ("T4", "U4"), ("T2", "U5")}, {"U1": {"Balcony of a roadside house"}}),
     }
     # spot (kamera noktası) -> (kamera satırı, PLACE metni = Bahadır'ın ortam tarifi)
     SPOTS = {
@@ -1709,6 +1715,8 @@ class TestFireStructure(unittest.TestCase):
 
     def slices(self, e, b2, b3, vehicle, people):
         s1 = f"{cap(es.NUMBER_WORDS[people])} people run from {self.AWAY[e]}."
+        if e == es.FIRE_TORNADO:   # 15 Eki (2): ateş hortumunda kaçanlar ön planda (yakınlık kapısı)
+            s1 = s1.rstrip(".") + " right below."
         return {"slice_1_rest": es.clean_slice(s1),
                 "slice_2": es.clean_slice(cap(es.beat_text(e, "slice_2", b2, vehicle))),
                 "slice_3": es.clean_slice(cap(es.beat_text(e, "slice_3", b3)))}
@@ -1743,7 +1751,7 @@ class TestFireStructure(unittest.TestCase):
                 self.assertEqual(es.structure_views(e), [None])
                 self.assertEqual(cp.EVENT_REQUIRED[e], [])
                 self.assertNotIn(e, cp.REQUIRED_APPROVED)      # TASLAK
-                self.assertEqual(sk.count_range(e, None), (3, 6))
+                self.assertEqual(sk.count_range(e, None), (2, 3) if e == es.FIRE_TORNADO else (3, 6))   # 15 Eki (2)
                 self.assertIsNone(sk.EVENT_SKELETONS[e]["ships"])
                 self.assertEqual(sk.EVENT_SKELETONS[e]["domain"], "fire_disasters")
 
@@ -1768,7 +1776,10 @@ class TestFireStructure(unittest.TestCase):
                 for spot, (camera, place) in self.SPOTS[e].items():
                     self.assertEqual(sk.CAMERA_SPOTS[spot], camera)
                     suffix = sk.style_suffix(e, None, spot)
-                    self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {camera}, eye level"),
+                    # 15 Eki (2): ateş hortumunda yüksek ve yakın bakış (eye level yok)
+                    after = (", high vantage close to the towering fire tornado" if e == es.FIRE_TORNADO
+                             else ", eye level")
+                    self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {camera}{after}"),
                                     suffix)
                     self.assertTrue(suffix.endswith(" No readable signs, text or flags."), suffix)
                     self.assertNotIn("phone", suffix.lower())
@@ -1934,7 +1945,7 @@ class TestFireStructure(unittest.TestCase):
             self.assertEqual(fb["fire_no_lift"]["feedback"], "In 'slice_2' the SUV stays on the ground: remove "
                                                              "'airborne'.")
         # ateş hortumunda araç havalanır (T1/T3)
-        spec, slices, _ = self.build(es.FIRE_TORNADO, "T3", "U5", "Overlook above the burning valley road", "SUV")
+        spec, slices, _ = self.build(es.FIRE_TORNADO, "T3", "U5", "Overlook above the burning valley road", "SUV", 3)
         self.assertEqual(self.codes(spec, slices), set())
 
     def test_all_combinations_pass_final_check(self):
@@ -1946,7 +1957,8 @@ class TestFireStructure(unittest.TestCase):
                 self.assertTrue(pairs, (e, spot))
                 for b2, b3 in pairs:
                     for vehicle in self.VEHICLES:
-                        spec, slices, prompt = self.build(e, b2, b3, spot, vehicle, people=3 + n % 4)
+                        people = 2 + n % 2 if e == es.FIRE_TORNADO else 3 + n % 4   # 15 Eki (2): hortum 2-3
+                        spec, slices, prompt = self.build(e, b2, b3, spot, vehicle, people=people)
                         issues = es.final_prompt_issues(spec, slices, prompt, es.assemble_story(spec, slices))
                         if issues:
                             self.fail(f"{e}/{spot}/{b2}+{b3}/{vehicle}: {issues}\n{prompt}")
@@ -1954,8 +1966,9 @@ class TestFireStructure(unittest.TestCase):
                         self.assertIn(sk.CAMERA_SPOTS[spot], prompt)
                         longest = max(longest, len(prompt))
                         n += 1
-        # orman: balkon 24 - 3 + set 33; cephe 4 nokta × 33; ateş hortumu: tepe 33 + balkon 30 - 3; × 4 araç
-        self.assertEqual(n, (21 + 33) * 4 + 33 * 4 * 4 + (33 + 27) * 4)
+        # orman: balkon 24 - 3 + set 33; cephe 4 nokta × 33; ateş hortumu (15 Eki (2): 4 yasak çift): tepe 32 +
+        # balkon 30 - 4; × 4 araç
+        self.assertEqual(n, (21 + 33) * 4 + 33 * 4 * 4 + (32 + 26) * 4)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -1976,17 +1989,21 @@ class TestFireStructure(unittest.TestCase):
             self.assertNotIn("rush", r["slice_flee"]["terms"])
             self.assertEqual(r["slice_flee"]["feedback"],
                              f"'slice_1_rest' must show people running away from {self.AWAY[e]}.")
-        spec, slices, _ = self.build(es.FIRE_TORNADO, "T2", "U5", "Overlook above the burning valley road", "SUV", 6)
-        msg = cp._slices_message(spec, "P", "W", 3, 6, [], None)
-        self.assertIn("\nVEHICLE: SUV\nPEOPLE RUNNING AWAY: six (slice_1_rest must say that six people run away "
-                      "from the fire tornado)\n4-9s EVENT: ", msg)
+        # 15 Eki (2): ateş hortumu 2-3 kişi, ön planda (yakınlık ipucu ve kapısı), dilim bütçesi satırı
+        spec, slices, _ = self.build(es.FIRE_TORNADO, "T2", "U6", "Overlook above the burning valley road", "SUV", 3)
+        msg = cp._slices_message(spec, "P", "W", 2, 3, [], None)
+        self.assertIn("\nVEHICLE: SUV\nPEOPLE RUNNING AWAY: three (slice_1_rest must say that three people run away "
+                      "from the fire tornado, close by: near the railing or on the road right below)\nWORD BUDGET: ",
+                      msg)
 
         def codes(s1):
             return self.codes(spec, {**slices, "slice_1_rest": es.clean_slice(s1)})
-        self.assertFalse(codes("Six drivers sprint away from the fire tornado.") & {"slice_flee", "slice_count"})
-        self.assertIn("slice_count", codes("Four drivers sprint away from the fire tornado."))
-        self.assertIn("slice_flee", codes("Six drivers rush away from the fire tornado."))   # "rush" kaçış sayılmaz
-        self.assertIn("slice_flee", codes("Six drivers stare at the fire tornado."))
+        self.assertFalse(codes("Three drivers sprint away from the fire tornado right below.")
+                         & {"slice_flee", "slice_count", "slice_near_camera"})
+        self.assertIn("slice_count", codes("Two drivers sprint away from the fire tornado right below."))
+        self.assertIn("slice_flee", codes("Three drivers rush away from the fire tornado right below."))   # "rush" yok
+        self.assertIn("slice_flee", codes("Three drivers stare at the fire tornado right below."))
+        self.assertIn("slice_near_camera", codes("Three drivers sprint away from the fire tornado."))
 
     def test_message_camera_place_weather(self):
         import core.creative_pipeline as cp
@@ -2015,7 +2032,10 @@ class TestFireStructure(unittest.TestCase):
                         if l.startswith(("4-9s EVENT", "9-15s EVENT", "PEOPLE RUNNING AWAY")))
             word = line["PEOPLE RUNNING AWAY"].split()[0]
             away = line["PEOPLE RUNNING AWAY"].split("run away from ")[1].rstrip(")")
-            return {"slice_1_rest": f"{cap(word)} people run from {away}.",
+            # 15 Eki (2): ateş hortumunda yakınlık ipucu ve 10 kelimelik bütçe (kilit cümle 26 kelime)
+            s1 = (f"{cap(word)} people run from it right below." if "fire tornado" in away
+                  else f"{cap(word)} people run from {away}.")
+            return {"slice_1_rest": s1,
                     "slice_2": cap(line["4-9s EVENT"]) + ".", "slice_3": cap(line["9-15s EVENT"]) + "."}
         for e in FIRE:
             with self.subTest(event=e):
@@ -2027,7 +2047,7 @@ class TestFireStructure(unittest.TestCase):
                 self.assertEqual(t["place"], self.SPOTS[e][t["spot"]][1])
                 self.assertIn(t["weather"], self.WEATHER)
                 self.assertIn(t["vehicle"], self.VEHICLES)
-                self.assertIn(t["people_running"], (3, 4, 5, 6))
+                self.assertIn(t["people_running"], (2, 3) if e == es.FIRE_TORNADO else (3, 4, 5, 6))
                 self.assertIn(f"|{t['spot'].lower()}##{t['beats']}|", scene["combo_key"])
                 self.assertTrue(scene["combo_key"].startswith("fire_disasters|none|"))
                 self.assertTrue(sk.is_current_universe_combo(scene["combo_key"]))
@@ -2975,7 +2995,11 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         self.assertFalse(hasattr(es, "lava_fast_words") or set(es.EVENT_BANNED_WORDS) & set(VOLC))   # 13 Eki: sadece çığ
 
     def test_other_categories_keep_pan_follow(self):
-        for e in (es.WILDFIRE, es.FACADE_FIRE, es.FIRE_TORNADO, es.HELICOPTER, es.LANDFALL, es.MARINA_TORNADO,
+        # 15 Eki (2): ateş hortumu kendi kamera cümlesinde (yüksek ve yakın), takip aynı
+        for spot in sk.EVENT_SKELETONS[es.FIRE_TORNADO]["spots"]:
+            self.assertIn("slight hand shake, the camera pans to follow the fire tornado",
+                          sk.style_suffix(es.FIRE_TORNADO, None, spot))
+        for e in (es.WILDFIRE, es.FACADE_FIRE, es.HELICOPTER, es.LANDFALL, es.MARINA_TORNADO,
                   es.AVENUE, es.MUDSLIDE, es.SLOPE, es.VILLAGE, es.TIDAL):
             s = sk.EVENT_SKELETONS[e]
             for spot in s["spots"]:

@@ -717,7 +717,9 @@ class TestFlashFloodFix(unittest.TestCase):
         import core.event_structure as es
         self.assertEqual(set(sk.CAMERA_MOTION_EXTRA), {FLOOD})
         for e, s in sk.EVENT_SKELETONS.items():
-            if e == FLOOD or e in es.VOLCANO_EVENTS or e in es.AVALANCHE_EVENTS or e in es.EARTHQUAKE_EVENTS:   # 13 Eki: çığ; 14 Eki: deprem da sabit kamera
+            # 15 Eki (2): ateş hortumu kendi kamera cümlesinde (tests/test_fire_tornado_gate.py kilitler)
+            if (e == FLOOD or e in es.VOLCANO_EVENTS or e in es.AVALANCHE_EVENTS or e in es.EARTHQUAKE_EVENTS
+                    or e == es.FIRE_TORNADO):   # 13 Eki: çığ; 14 Eki: deprem da sabit kamera
                 continue
             ship = (s["ships"] or [None])[0]
             for spot in s["spots"]:

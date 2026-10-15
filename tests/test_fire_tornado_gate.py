@@ -5,6 +5,8 @@ cümleleri "seçilen olay görünmüyor" diye reddedildi, sonraki denemeler 40-7
 anlam bazlı nesne + eylem gruplarına çevrildi (_FIRE_TOR_*, sadece bu olay), toplam 40-75. Ağ yok, Kie/GPT çağrısı yok.
 REJECTED_REAL: gerçek GPT retleri. FREE: madde metninden farklı kurulmuş serbest cümleler. HELD_OUT: ilk grup tasarımından
 SONRA yazılan kontrol cümleleri (ilk ölçümde 3/36 ret; "upward", "from the road" eklendi).
+15 Eki (2), Bahadır: hortum dev (kilit cümlede ölçek kıyası), kamera yüksek ve yakın, ön planda 2-3 kaçan kişi; T2, T4,
+T5, U3, U5 yeni (cam/korkuluk/tabela/çit yerine büyük hedefler). Yeni maddelerin kontrol cümlelerinde ilk ölçüm 1/15 ret.
 """
 import asyncio
 import os
@@ -43,11 +45,11 @@ FREE = {
         'Whirling flames pluck the van from the road, tossing it into a tree that is already ablaze.',
     ],
     "T2": [
-        "A flaming limb flung by the fire whirl crashes through the van's windshield.",
-        'The tornado hurls a blazing branch straight into the SUV, shattering its front glass.',
-        'A burning bough whips out of the vortex and caves in the windscreen of the small car.',
-        "Torn loose by the spinning fire, a glowing branch punches through the pickup truck's windshield.",
-        'A fiery branch launched by the tornado slams into the van, cracking its windshield to pieces.',
+        'The colossal vortex flings an entire blazing pine onto the SUV, caving its roof in.',
+        'A whole burning trunk, ripped up by the fire tornado, slams down on the van and flattens its cab.',
+        'The towering fire whirl drops a flaming tree right on top of the pickup truck, crumpling the roof.',
+        'Hurled by the giant tornado, a burning oak lands on the small car and crushes it.',
+        'The fire tornado launches a massive flaming log onto the SUV, pinning it beneath the burning wood.',
     ],
     "T3": [
         'The SUV rises into the fiery column, twirls around, and slams back onto the asphalt amid a burst of sparks.',
@@ -57,18 +59,18 @@ FREE = {
         'The tornado sucks the SUV off the ground, sends it spiraling, and hurls it down onto the road in a cascade of sparks.',
     ],
     "T4": [
-        'The van slides sideways while the fire whirl sweeps over the road behind it, pelting its roof with glowing embers.',
-        'As the flaming vortex passes behind the SUV, it fishtails across the lane under a rain of sparks on its roof.',
-        'The pickup truck skids broadside as the burning tornado crosses at its back, showering cinders over the roof.',
-        'Behind the small car the fire tornado cuts across the road, and the car slews sideways as embers pelt its roof.',
-        'The SUV drifts sideways across the asphalt while the swirling fire passes behind, scattering embers onto its roof.',
+        "The SUV is knocked sideways across the lane as the tornado's enormous base roars past just behind it.",
+        'With the giant fire column brushing past its rear, the van skids broadside over the road.',
+        'The pickup truck slides sideways across the asphalt while the huge burning vortex passes inches behind it.',
+        'The base of the towering fire whirl sweeps by right at its back, sending the small car sliding sideways.',
+        'The SUV slews across the road as the massive fire tornado grazes past behind it.',
     ],
     "T5": [
-        'The spinning flames pin the van against the guardrail until its bonnet bursts into flames.',
-        'Whirling fire drives the SUV into the crash barrier, and flames take hold of its hood.',
-        'The pickup truck is pushed hard into the roadside barrier by the vortex as its hood ignites.',
-        "Forced against the guardrail by the fiery whirl, the small car's front end erupts in flames.",
-        'The swirling inferno rams the SUV into the metal railing, setting the hood ablaze.',
+        'The giant fire whirl flips the SUV upside down and the whole vehicle erupts in flames.',
+        'The towering vortex overturns the van onto its roof, and fire quickly engulfs it.',
+        'The pickup truck is rolled onto its roof by the colossal tornado and goes up in flames.',
+        'The colossal fire whirl tips the small car over, leaving it belly up and ablaze.',
+        'Caught by the enormous fire column, the SUV tumbles onto its roof and bursts into flames.',
     ],
     "T6": [
         'Burning wreckage strikes the van broadside, sending it into a spin until it stalls across the lane.',
@@ -92,11 +94,11 @@ FREE = {
         'The fire tornado wrenches a blazing tree loose and launches it far down the road.',
     ],
     "U3": [
-        'The spinning fire rips a billboard off its posts and flings it to the side.',
-        'A roadside billboard is torn from its frame by the swirling flames and thrown away.',
-        'The fire whirl wrenches a large advertising board loose and tosses it across the shoulder.',
-        'Swirling flames snap a billboard from its legs and hurl it off the road.',
-        'The tornado of fire peels a burning billboard off its stand and sends it flying aside.',
+        'The colossal fire whirl engulfs a roadside barn and rips it apart, burning boards spiraling up into the funnel.',
+        'A wooden barn near the road disappears into the towering vortex, its flaming planks torn loose and lifted.',
+        'The giant tornado smashes a timber barn to pieces and sucks the blazing wreckage up into its column.',
+        'The fire tornado swallows a barn by the roadside, shredding its walls as burning boards whirl upward.',
+        'A whole barn collapses into the huge fire column, its burning timbers ripped away and flung high.',
     ],
     "U4": [
         'The fire whirl inhales a heap of blazing scrub and flings it over the road in a burst of sparks.',
@@ -106,11 +108,11 @@ FREE = {
         'The vortex scoops up a stack of smoldering brushwood and spews it across the road in a fountain of sparks.',
     ],
     "U5": [
-        'The fire whirl rips a length of blazing fence loose and sweeps it over the field.',
-        'A section of burning fencing is torn free by the vortex and carried across the meadow.',
-        'The spinning flames wrench a flaming stretch of wooden fence away and drag it across the field.',
-        'The tornado yanks a burning fence panel from the ground and hurls it across the open field.',
-        'A stretch of fence, already alight, is pulled up by the fire tornado and carried over the grassland.',
+        'The giant fire whirl plows through a huge stack of firewood and flings the flaming logs across the field.',
+        'A massive woodpile is ripped apart by the towering vortex, its burning logs hurled high over the meadow.',
+        'The colossal tornado scatters a big log pile, tossing blazing logs far across the field.',
+        'Burning logs from a huge woodpile are sucked up by the fire tornado and thrown across the open field.',
+        'The fire tornado tears into a big pile of logs and launches them, ablaze, high over the field.',
     ],
     "U6": [
         'The fire whirl rolls over a parked caravan and flips it aside amid billowing flames and smoke.',
@@ -127,9 +129,9 @@ HELD_OUT = {
         'The fiery whirlwind snatches the small car upward, smashing it into the trunk of a flaming tree.',
     ],
     "T2": [
-        'A flaming branch torn off by the tornado crashes into the SUV, splintering its windshield.',
-        "The vortex flings a burning limb that bursts through the white van's windscreen.",
-        "A blazing tree branch whirls out of the fire and shatters the pickup truck's front window.",
+        'A burning tree torn loose by the vortex crashes down onto the van, its roof buckling under the weight.',
+        "The giant fire whirl smashes a blazing trunk into the pickup truck's roof, crushing the cab.",
+        'The tornado tosses a flaming pine that falls on the small car, flattening it.',
     ],
     "T3": [
         'The fire tornado lifts the SUV high, spinning it violently before slamming it back down on the road in a burst of sparks.',
@@ -137,14 +139,14 @@ HELD_OUT = {
         'The small car is hurled upward by the inferno, spirals around, and smashes down onto the road amid sparks.',
     ],
     "T4": [
-        'The SUV skids across the road as the fire tornado passes behind it, embers raining onto its roof.',
-        'With the fiery column crossing behind, the white van slides sideways while sparks pelt its roof.',
-        'The pickup truck fishtails across the lane as burning embers scatter over its roof from the tornado behind it.',
+        'The van is pushed sideways over the road as the immense fire tornado tears past close behind.',
+        'Right behind the pickup truck the giant vortex rakes across the road, shoving it sideways.',
+        "The small car fishtails across the lane as the fire tornado's wide base crosses just behind it.",
     ],
     "T5": [
-        'The whirling flames force the SUV into the guardrail, and its hood bursts into flames.',
-        'The white van is slammed against the guardrail by the tornado as fire spreads across its hood.',
-        "Pinned against the barrier by the swirling inferno, the small car's hood starts to burn.",
+        'The fire tornado rolls the van over twice and it lands on its roof, engulfed in flames.',
+        'The massive vortex heaves the pickup truck onto its side and flames swallow it.',
+        'The small car is turned over by the towering fire whirl and catches fire upside down.',
     ],
     "T6": [
         "A burst of flaming debris rams into the SUV's side, sending it spinning to a stop across the lane.",
@@ -162,9 +164,9 @@ HELD_OUT = {
         'The fiery whirl tears a blazing pine out of the earth and sends it crashing down the road.',
     ],
     "U3": [
-        'The swirling flames rip a billboard off its supports and fling it aside.',
-        'A burning billboard is torn loose by the fire tornado and hurled across the roadside.',
-        'The vortex wrenches a flaming billboard from its frame and tosses it away.',
+        'The towering fire whirl tears a wooden barn apart, sending its blazing planks spinning up into the sky.',
+        'The massive vortex devours a barn beside the road, ripping its roof and walls away in flames.',
+        'A roadside shed is flattened by the giant fire tornado, its burning boards hurled up into the column.',
     ],
     "U4": [
         'The fire tornado sucks in a pile of burning brush and sprays it across the road in a fountain of sparks.',
@@ -172,15 +174,27 @@ HELD_OUT = {
         'The tornado swallows a burning brush pile and hurls it over the road in a glowing shower of sparks.',
     ],
     "U5": [
-        'The fire tornado rips a burning stretch of fence away and carries it over the field.',
-        'A section of flaming fence is torn loose by the vortex and swept across the field.',
-        'The swirling flames tear a blazing fence apart and hurl the pieces across the field.',
+        'The vortex rips through the stacked firewood, sending burning logs cartwheeling across the field.',
+        'A huge woodpile is blasted apart by the fire whirl, its flaming logs flying high above the grass.',
+        'The giant tornado hurls burning logs from a woodpile high over the field.',
     ],
     "U6": [
         'The fire tornado rolls over a parked trailer and flips it aside in a cloud of fire and smoke.',
         'A parked caravan is tossed aside by the vortex, disappearing in flames and smoke.',
         'The swirling flames sweep across a parked trailer, overturning it in a burst of fire and smoke.',
     ],
+}
+
+# 15 Eki (2): WORD BUDGET'e (4-9s/9-15s en fazla 18 kelime) uyan kısa serbest cümleler; kapı değiştirilmeden yazıldı
+SHORT = {
+    "T3": ["The giant vortex hoists the SUV skyward, twirls it, and slams it down onto the road.",
+           "Sucked into the fire column, the van spins high and crashes back onto the asphalt.",
+           "The pickup truck is lifted aloft, whirls around, and plunges onto the road in sparks."],
+    "T6": ["Huge burning wreckage hits the van broadside; it spins and halts across the road.",
+           "A mass of flaming debris rams the SUV, spinning it to a stop across the lane."],
+    "U4": ["The giant vortex sucks in a burning brush pile and sprays it over the road as sparks.",
+           "A heap of flaming scrub is drawn up and spat across the road in a shower of embers.",
+           "The towering fire whirl swallows burning undergrowth and hurls it over the road in sparks."],
 }
 
 
@@ -199,17 +213,66 @@ def with_vehicle(text, vehicle):
     return text
 
 
-def build(b2, b3, vehicle="SUV", spot=SPOTS[0], s2=None, s3=None, s1=None, people=5):
+def build(b2, b3, vehicle="SUV", spot=SPOTS[0], s2=None, s3=None, s1=None, people=3):
     spec = es.build_spec(E, None, spot, None, b2, b3, vehicle, people)
     word = es.NUMBER_WORDS[people].capitalize()
-    sl = {"slice_1_rest": s1 or f"{word} people run from the fire tornado along the roadside.",
+    sl = {"slice_1_rest": s1 or f"{word} people run from the fire tornado on the road right below.",
           "slice_2": s2 or with_vehicle(FREE[b2][0], vehicle), "slice_3": s3 or FREE[b3][0]}
     return spec, sl
 
 
+KEY = ("A colossal fire tornado, several times taller than the tallest buildings and trees, tears across the burning "
+       "roadside, its wide base engulfing a field of flames.")
+CAMERA = ("Handheld footage shot by a person standing {spot}, high vantage close to the towering fire tornado filling "
+          "at least half of the frame, its top and smoke cloud never cut off, two or three people fleeing it in the "
+          "near foreground; slight hand shake, the camera pans to follow the fire tornado; one continuous shot, no "
+          "zoom, no cuts.")
+POOL = ({"T1": "the towering fire tornado lifts the {vehicle} off the road and flings it into a burning tree",
+         "T2": "the huge fire tornado hurls a whole burning tree trunk onto the {vehicle}, crushing its roof",
+         "T3": "the {vehicle} is sucked up into the towering fire tornado, spins, and crashes down onto the road in "
+               "sparks",
+         "T4": "the {vehicle} is shoved sideways as the huge base of the fire tornado sweeps past right behind it",
+         "T5": "the huge fire tornado rolls the {vehicle} over onto its roof and it bursts into flames",
+         "T6": "huge flaming debris flung by the towering tornado slams into the {vehicle}, which spins and stops "
+               "across the road"},
+        {"U1": "the towering fire tornado rips the burning roof off a house and sucks the sheets into its column",
+         "U2": "the huge fire tornado uproots a cluster of burning trees and flings their trunks down the road",
+         "U3": "the towering fire tornado swallows a wooden barn and tears it to pieces, burning planks whirling into "
+               "the column",
+         "U4": "the towering tornado sucks up a huge burning brush pile and spits it across the road in sparks",
+         "U5": "the huge fire tornado tears through a big woodpile and hurls the burning logs high across the field",
+         "U6": "the towering fire tornado sweeps over a parked trailer and tosses it aside in fire and smoke"})
+
+
 class TestFireTornadoGate(unittest.TestCase):
+    def test_key_camera_pool_locked(self):
+        # 15 Eki (2), Bahadır: dev hortum (ölçek kıyası), yüksek ve yakın kamera, ön planda 2-3 kaçan kişi
+        self.assertEqual(es.EVENT_KEY_VISUAL[E], KEY)
+        self.assertLessEqual(len(KEY.split()), 26)
+        for spot in SPOTS:
+            with self.subTest(spot=spot):
+                self.assertTrue(es.style_suffix(E, None, spot, None, None).startswith(
+                    CAMERA.format(spot=sk.CAMERA_SPOTS[spot]) + " " + sk.FIRE_TORNADO_GUARDRAILS))
+        b = es.EVENT_BEATS[E]
+        self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, POOL[0])
+        self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, POOL[1])
+        self.assertEqual(b["excluded_pairs"], {("T1", "U2"), ("T2", "U2"), ("T4", "U4"), ("T2", "U5")})
+        self.assertEqual(b["excluded_spots"], {"U1": {"Balcony of a roadside house"}})
+        self.assertEqual(sk.count_range(E, None), (2, 3))
+
+    def test_beats_big_targets_and_size(self):
+        # Her maddede hortumun büyüklüğü; cam, ince direk, tel, çit, tabela hedef değil
+        size = ("towering", "huge", "colossal", "giant", "swallow")
+        small = ("glass", "window", "windshield", "pole", "wire", "cable", "fence", "sign", "billboard", "railing",
+                 "guardrail", "ember")
+        for sl in POOL:
+            for bid, text in sl.items():
+                with self.subTest(beat=bid):
+                    self.assertTrue(es.find_terms(size, text), text)
+                    self.assertEqual(es.find_terms(small, text), [], text)
+
     def test_rejected_real_gpt_sentences_pass(self):
-        # 15 Eki 10:44: 3 denemede reddedilen gerçek GPT cümleleri artık kendi maddesinde geçer
+        # 15 Eki 10:44: 3 denemede reddedilen gerçek GPT cümleleri kendi maddesinde geçer
         for bid, sents in REJECTED_REAL.items():
             for t in sents:
                 with self.subTest(beat=bid, text=t):
@@ -227,7 +290,7 @@ class TestFireTornadoGate(unittest.TestCase):
         for bid in ids:
             beat = es.beat_text(E, slot(bid), bid, "SUV").lower()
             self.assertGreaterEqual(len(FREE[bid]), 5)
-            for t in FREE[bid] + HELD_OUT[bid]:
+            for t in FREE[bid] + HELD_OUT[bid] + SHORT.get(bid, []):
                 with self.subTest(beat=bid, text=t):
                     self.assertEqual(es.missing_term_groups(terms(bid), t), [])
                     self.assertNotEqual(t.lower().rstrip("."), beat)
@@ -239,8 +302,7 @@ class TestFireTornadoGate(unittest.TestCase):
                             self.assertTrue(es.find_terms(vt, with_vehicle(t, v)), (v, t))
 
     def test_no_false_positive_between_beats(self):
-        # Bir maddenin cümlesi başka maddenin kapısından geçmez. İstisna: yasak çiftler (T1/U2, T2/U2, T4/U4) aynı
-        # videoda hiç birlikte seçilmez.
+        # Bir maddenin cümlesi başka maddenin kapısından geçmez. İstisna: yasak çiftler (aynı videoda hiç birlikte yok)
         b = es.EVENT_BEATS[E]
         ex = b["excluded_pairs"] | {(d, v) for v, d in b["excluded_pairs"]}
         ids = list(b["slice_2"]) + list(b["slice_3"])
@@ -248,20 +310,39 @@ class TestFireTornadoGate(unittest.TestCase):
             for o in ids:
                 if o == x or (x, o) in ex:
                     continue
-                for t in FREE[o] + HELD_OUT[o] + REJECTED_REAL.get(o, []):
+                for t in FREE[o] + HELD_OUT[o] + SHORT.get(o, []) + REJECTED_REAL.get(o, []):
                     with self.subTest(beat=x, other=o, text=t):
                         self.assertTrue(es.missing_term_groups(terms(x), t))
         # "spinning/whirling" hortumun sıfatı: T1 cümlesi T3 (iniş yok), U1 cümlesi T6 (araç yok) sayılmaz
         self.assertTrue(es.missing_term_groups(terms("T3"), FREE["T1"][3]))
         self.assertTrue(es.missing_term_groups(terms("T6"), FREE["U1"][4]))
 
-    def test_event_missing_still_rejected(self):
+    def test_unrelated_sentences_rejected(self):
+        # Hortumsuz, olaysız ya da alakasız cümleler hiçbir maddeden geçmez
+        unrelated = ["Three people run along the road as smoke drifts over the valley.",
+                     "The SUV drives slowly down the road past the burning field.",
+                     "A wooden barn stands beside the road under an orange sky.",
+                     "A big woodpile sits next to the house at the edge of the field.",
+                     "A tall pine sways in the hot dry wind beside the road.",
+                     "A parked trailer waits on the gravel shoulder of the road.",
+                     "The van stops on the road while thick smoke hangs in the air.",
+                     "A pile of dry brush lies at the side of the road.",
+                     "The wind tears a billboard from its supports and hurls it aside.",
+                     "A shop window shatters in the heat on the street below.",
+                     "The pickup truck is parked under a tree near the house roof."]
+        for bid in [b for sl in ("slice_2", "slice_3") for b in es.EVENT_BEATS[E][sl]]:
+            for t in unrelated:
+                with self.subTest(beat=bid, text=t):
+                    self.assertTrue(es.missing_term_groups(terms(bid), t))
         bad = {"T1": "The van is pushed into a burning tree by the swirling flames.",
+               "T2": "A burning tree stands beside the SUV on the road.",
                "T3": "The SUV spins on the road as the flames swirl around it.",
-               "T5": "The SUV is shoved against the guardrail by the whirling wind.",
+               "T4": "The SUV waits on the road as the fire tornado looms ahead.",
+               "T5": "The fire tornado rolls past the van and smoke surrounds it.",
                "T6": "The SUV spins and stops across the road as the flames swirl.",
-               "U3": "The wind tears a billboard from its supports and hurls it aside.",
+               "U3": "The fire tornado moves toward a wooden barn by the road.",
                "U4": "A pile of burning brush glows beside the road.",
+               "U5": "A big woodpile burns quietly at the edge of the field.",
                "U6": "A parked trailer stands near the burning road."}
         for bid, t in bad.items():
             with self.subTest(beat=bid, text=t):
@@ -290,12 +371,12 @@ class TestFireTornadoGate(unittest.TestCase):
         key = len(es.EVENT_KEY_VISUAL[E].split())
 
         def story(total):
-            s1 = "Five people run from the fire tornado along the roadside now."
+            s1 = "Three people run from the fire tornado on the road right below."
             s2 = "Burning debris slams into the SUV, which spins to a halt."
             base = "The tornado lifts burning brush and hurls it over the road in sparks".split()
             need = total - key - len(s1.split()) - len(s2.split())
             return {"slice_1_rest": s1, "slice_2": s2, "slice_3": " ".join((base + ["again"] * 40)[:need])}
-        spec = es.build_spec(E, None, SPOTS[0], None, "T6", "U4", "SUV", 5)
+        spec = es.build_spec(E, None, SPOTS[0], None, "T6", "U4", "SUV", 3)
         for total, ok in ((73, True), (75, True), (76, False), (81, False)):
             sl = story(total)
             self.assertEqual(len(es.plain_story(spec, sl).split()), total)
@@ -303,32 +384,53 @@ class TestFireTornadoGate(unittest.TestCase):
                 self.assertEqual("total_words" not in {i["rule"] for i in es.slice_issues(spec, sl)}, ok)
 
     def test_prompt_never_exceeds_175_words(self):
-        # 175 kelime sınırı değişmedi; ateş hortumunda en uzun stil eki + 75 + 3 etiket altında kalır
-        longest = max(len(es.style_suffix(E, None, s, None, None).split()) for s in SPOTS)
+        # En uzun stil eki + 75 + 3 etiket ≤ 175; kapı da ateş hortumunda 175'i denetler (WORD_CAP_EVENTS)
         self.assertEqual(sorted(sk.EVENT_SKELETONS[E]["spots"]), sorted(SPOTS))
-        self.assertLessEqual(longest + 75 + 3, es.VOLC_MAX_PROMPT_WORDS)
+        longest = max(len(es.style_suffix(E, None, s, None, None).split()) for s in SPOTS)
+        self.assertEqual(longest + 75 + 3, 174)
         self.assertEqual(es.VOLC_MAX_PROMPT_WORDS, 175)
+        self.assertIn(E, es.WORD_CAP_EVENTS)
+        from core.trace_format import count_constraints
+        for s in SPOTS:
+            self.assertLessEqual(count_constraints(es.style_suffix(E, None, s, None, None))[0], 8)
 
-    def test_no_word_budget_line(self):
-        # GPT'ye kural eklenmedi: dilim bütçesi satırı sadece çığ/deprem; 75 GPT'ye sadece ret geri bildiriminde gider
-        self.assertNotIn(E, es.BUDGET_EVENTS)
-        self.assertEqual(es.word_budget_line({"event": E, "key_visual": es.EVENT_KEY_VISUAL[E]}), "")
+    def test_word_budget_line(self):
+        # Kilit cümle 26 kelime: GPT'ye dilim bütçesi (0-4s 10, 4-9s/9-15s 18, toplam 75)
+        self.assertIn(E, es.BUDGET_EVENTS)
+        line = es.word_budget_line({"event": E, "key_visual": es.EVENT_KEY_VISUAL[E]})
+        self.assertEqual(line, "WORD BUDGET: the opening sentence has 26 words; slice_1_rest 6 to 10 words, slice_2 10 "
+                               "to 18 words, slice_3 10 to 18 words; the opening plus the three fields must total at "
+                               "most 75 words.\n")
 
-    def test_people_gate_unchanged(self):
+    def test_people_two_or_three_close_by(self):
         spec, sl = build("T6", "U4")
-        codes = {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": "The smoke hangs over the road."})}
-        self.assertTrue(codes & {"slice_flee", "slice_people"}, codes)
         self.assertFalse({i["rule"] for i in es.slice_issues(spec, sl)} - {"total_words"})
+        codes = {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": "The smoke hangs over the road."})}
+        self.assertTrue(codes & {"slice_flee", "slice_count"}, codes)
+        far = "Three people run from the fire tornado across the distant field."
+        self.assertIn("slice_near_camera", {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": far})})
+        line = es.people_line(spec)
+        self.assertIn("near the railing or on the road right below", line)
+        for n in range(200):
+            self.assertIn(es.choose_people(E, None, random.Random(n)), (2, 3))
+        self.assertEqual(es.NUMBER_WORDS[2], "two")
+        spec2, sl2 = build("T1", "U3", people=2)
+        self.assertTrue(sl2["slice_1_rest"].startswith("Two people"))
+        self.assertFalse({i["rule"] for i in es.slice_issues(spec2, sl2)} - {"total_words"})
 
     def test_200_productions_free_paraphrase(self):
         # Sahte GPT madde metnini değil serbest/gerçek cümlelerden birini yazar; ilk denemede en az %90
         import core.creative_pipeline as cp
         rng = random.Random(15)
-        pool = {b: FREE[b] + HELD_OUT[b] + REJECTED_REAL.get(b, []) for b in FREE}
-        people = ["{w} people run from the fire tornado along the roadside.",
-                  "{w} people flee from the fire tornado down the road.",
-                  "{w} drivers abandon their cars and run from the fire tornado.",
-                  "{w} people sprint away from the fire tornado across the field."]
+        # GPT'ye WORD BUDGET satırı gider (4-9s/9-15s en fazla 18 kelime): sahte GPT de bütçeye uyan cümleleri yazar
+        pool = {b: [t for t in FREE[b] + HELD_OUT[b] + SHORT.get(b, []) + REJECTED_REAL.get(b, [])
+                    if len(t.split()) <= 18]
+                for b in FREE}
+        self.assertTrue(all(len(v) >= 3 for v in pool.values()), {b: len(v) for b, v in pool.items()})
+        people = ["{w} people run from the fire tornado on the road right below.",
+                  "{w} drivers flee on foot near the railing.",
+                  "{w} people sprint away just below the balcony.",
+                  "{w} residents run from the fire tornado in the foreground."]
 
         async def gpt(system, user, **kw):
             line = dict(l.split(": ", 1) for l in user.splitlines() if ": " in l)
@@ -345,6 +447,7 @@ class TestFireTornadoGate(unittest.TestCase):
             scene = asyncio.run(cp.build_creative_scene("fire_disasters", E, [], [], gpt))
             spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
             self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
+            self.assertIn(spec["people"], (2, 3))
             longest = max(longest, len(scene["prompt"].split()))
             first += len(scene["trace"]["attempts"]) == 1
         self.assertGreaterEqual(first, 180)

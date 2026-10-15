@@ -135,8 +135,10 @@ EVENT_KEY_VISUAL = {
               "igniting roofs and trees.",
     FACADE_FIRE: "Flames race up the glass facade of a tower, blowing out windows and raining burning debris onto the "
                  "street.",
-    FIRE_TORNADO: "A violent fire tornado tears across a burning roadside, hurling flames, burning branches and embers "
-                  "across the road.",
+    # 15 Eki (2), Bahadır: hortum dev ve karenin ana unsuru, ölçek kıyası. Önceki: "A violent fire tornado tears across
+    # a burning roadside, hurling flames, burning branches and embers across the road."
+    FIRE_TORNADO: "A colossal fire tornado, several times taller than the tallest buildings and trees, tears across the "
+                  "burning roadside, its wide base engulfing a field of flames.",
     # 10 Eki, Bahadır onayı: helikopter kilit cümlesi birebir
     HELICOPTER: "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the "
                 "wall of flames racing toward the houses.",
@@ -353,7 +355,9 @@ _FIRE_FURNITURE = ("plant", "furniture", "chair", "table", "sofa", "cushion", "p
 _FIRE_TOR_VEH = ("vehicle", "car", "suv", "truck", "pickup", "van")
 # "into the air" araç grubuyla birlikte güvenli (8 Eki'de tek başına bilerek yoktu)
 _FIRE_TOR_LIFT = ("lift", "hoist", "raise", "heave", "airborne", "aloft", "skyward", "skywards", "into the air",
-                  "into the sky", "into the vortex", "into the funnel", "into the column", "off its wheels",
+                  "into the sky", "into the vortex", "into the funnel", "into the column", "suck into", "sucks into", "sucked into", "sucking into",
+                  "drawn into", "pulled into", "swept into", "into the tornado",
+                  "into the fire tornado", "into the whirlwind", "off its wheels",
                   "off the ground", "off the road", "off the asphalt", "off the pavement", "off the tarmac", "from the road",
                   "from the asphalt", "from the ground", "from the pavement", "upward", "upwards", "up into", "pick up",
                   "picks up", "picked up", "sweep up", "sweeps up", "swept up", "suck up", "sucks up", "sucked up",
@@ -365,7 +369,11 @@ _FIRE_TOR_HURL = ("fling", "flung", "toss", "hurl", "throw", "threw", "thrown", 
                   "drop", "shove", "propel", "catapult", "bash", "batter")
 # Bütün ağaç (T1, U2); "fir" yok ("fired" ile karışır). T2 dalı ayrıca.
 _FIRE_TOR_TREE = ("tree", "pine", "trunk", "oak", "cedar", "cypress", "eucalyptus", "poplar", "olive", "birch", "spruce")
-_FIRE_TOR_BRANCH = _FIRE_TOR_TREE + ("branch", "limb", "bough", "log", "stick", "timber", "beam")
+# 15 Eki (2): T2 dal yerine bütün ağaç gövdesi aracın üstüne; "onto" yok (T1 "aracı ağaca fırlatır" ile karışır)
+_FIRE_TOR_TRUNK = _FIRE_TOR_TREE + ("log", "timber")
+_FIRE_TOR_CRUSH = ("crush", "cave", "flatten", "crumple", "pin", "bury", "dent", "squash", "roof", "cab", "on top of",
+                   "land on", "lands on", "landed on", "fall on", "falls on", "fell on", "drop on", "drops on",
+                   "dropped on", "pancake", "buckle")
 _FIRE_TOR_SPIN = ("spin", "spun", "twirl", "whirl", "rotate", "twist", "spiral", "tumble", "cartwheel", "roll", "flip",
                   "end over end", "somersault", "revolve", "corkscrew", "pirouette", "turn over", "turns over",
                   "turned over", "gyrate")
@@ -380,16 +388,25 @@ _FIRE_TOR_SKID = ("skid", "slide", "slid", "fishtail", "sideways", "swerve", "ve
                   "careen", "lurch", "spin out", "spins out", "spun out", "slip", "swing", "swung", "jackknife", "yaw",
                   "sidelong", "crabwise")
 _FIRE_TOR_EMBER = _FIRE_EMBER + ("ash",)
-_FIRE_TOR_RAIL = _FIRE_RAIL + ("rail", "barricade", "crash rail", "safety barrier", "parapet")
-_FIRE_TOR_FRONT = _FIRE_FRONT + ("engine", "nose")
+# T4 (15 Eki (2)): hortumun tabanı aracın hemen arkasından geçer. "by" yok (T6 "flung by the tornado")
+_FIRE_TOR_PASS = ("behind", "past", "passes", "passed", "passing", "alongside", "right next", "next to", "inches",
+                  "close", "beside", "cross", "at its back", "in its wake", "graze", "skim", "brush past",
+                  "brushes past", "just miss", "just misses", "just missed", "rake", "tail")
+# T5 (15 Eki (2)): araç takla atar/ters döner. "roll" tek başına var ("rolls the van over")
+_FIRE_TOR_FLIP = ("roll over", "rolls over", "rolled over", "rolling over", "roll", "flip", "overturn", "tip over",
+                  "tips over", "tipped over", "onto its roof", "on its roof", "onto its side", "upside down",
+                  "capsize", "turn over", "turns over", "turned over", "topple", "keel over", "keels over",
+                  "keeled over", "somersault", "cartwheel", "belly up", "wheels up", "upend")
+# T5 tutuşma: "catch/caught/lick/spread" yok ("caught in the vortex" T3 cümlesini T5 sayıyordu)
 _FIRE_TOR_IGNITE = _FIRE_IGNITE + ("take hold", "takes hold", "took hold", "taking hold", "flare up", "flares up",
                                    "flared up", "light up", "lights up", "lit up", "erupt in flame", "erupts in flame",
                                    "erupted in flame", "erupt in flames", "erupts in flames", "erupted in flames",
                                    "erupting in flames", "start burning", "starts burning", "started burning",
                                    "begin burning", "begins burning", "began burning", "start to burn",
                                    "starts to burn", "started to burn", "begin to burn", "begins to burn",
-                                   "began to burn", "lick", "spread", "scorch", "sear", "char", "blacken", "smolder",
-                                   "smoulder", "blister", "melt", "catch", "caught")
+                                   "began to burn", "scorch", "sear", "char", "blacken", "smolder", "smoulder",
+                                   "blister", "melt", "erupt into flames", "erupts into flames", "erupted into flames",
+                                   "fireball", "inferno")
 _FIRE_TOR_DEBRIS = _FIRE_DEBRIS + ("shard", "scrap", "plank", "board", "firebrand", "projectile", "fireball")
 _FIRE_TOR_IMPACT = ("slam", "smash", "crash", "collide", "hit", "strike", "struck", "pound", "ram", "batter", "punch",
                     "plow", "plough", "bash", "smack", "barrel into", "barrels into", "barreled into", "barrelled into",
@@ -401,8 +418,8 @@ _FIRE_TOR_TURNSTOP = ("spin", "spun", "whirl", "twirl", "rotate", "pivot", "skid
                       "turn sideways", "turns sideways", "turned sideways", "sideways", "crosswise", "broadside",
                       "sidelong", "halt", "stop", "rest", "stall", "standstill", "stranded", "block", "jackknife",
                       "careen", "grind", "ground to", "screech", "shudder")
-_FIRE_TOR_HOUSE = ("house", "home", "cottage", "cabin", "farmhouse", "barn", "shed", "bungalow", "dwelling", "building",
-                   "homestead")
+# 15 Eki (2): "barn/shed/building" U3'ün (ahır) nesnesi, burada yok
+_FIRE_TOR_HOUSE = ("house", "home", "cottage", "cabin", "farmhouse", "bungalow", "dwelling", "homestead")
 _FIRE_TOR_RIP = ("rip", "tear", "tore", "torn", "wrench", "strip", "peel", "snap", "break", "broke", "broken", "lift",
                  "hurl", "fling", "flung", "toss", "throw", "threw", "thrown", "scatter", "blow off", "blows off",
                  "blew off", "blown off", "blow away", "blows away", "blew away", "blown away", "sweep", "swept",
@@ -412,14 +429,22 @@ _FIRE_TOR_RIP = ("rip", "tear", "tore", "torn", "wrench", "strip", "peel", "snap
 _FIRE_TOR_UPROOT = _FIRE_TOR_RIP + ("root", "out of the ground", "from the ground", "out of the earth",
                                     "from the earth", "from the soil", "topple", "knock down", "knocks down",
                                     "knocked down", "flatten")
-_FIRE_TOR_SIGN = ("billboard", "hoarding", "advertising board", "advertisement board", "ad board", "signboard", "sign",
-                  "placard", "advertising panel", "poster board")
-_FIRE_TOR_FENCE = _FIRE_FENCE + ("fence post", "fencepost", "paling", "barbed wire")
-# Çalı yığını (U4): "debris" yok (U1'in "burning debris" cümlesi U4 sayılıyordu)
+# U3 (15 Eki (2)): tabela yerine ahır. Marina Z6 kelimeleri (wreck, demolish, splinter, tear apart...) bilerek yok.
+_FIRE_TOR_BARN = ("barn", "shed", "stable", "outbuilding", "farm building", "storehouse", "granary", "hayloft",
+                  "toolshed")
+_FIRE_TOR_WRECK = _FIRE_TOR_RIP + ("swallow", "engulf", "consume", "devour", "apart", "to pieces", "shred", "explode",
+                                   "burst", "collapse", "flatten", "smash", "crush", "cave", "crumple", "level", "raze",
+                                   "gut")
+# U5 (15 Eki (2)): çit yerine odun yığını. "plank/beam/timber" yok (U3 ahırının tahtaları)
+_FIRE_TOR_LOGS = ("log", "woodpile", "wood pile", "firewood", "lumber", "log pile", "cordwood", "woodstack",
+                  "wood stack")
+_FIRE_TOR_SCATTER = _FIRE_TOR_RIP + ("blast", "apart", "fly", "flies", "flew", "flying", "explode", "burst", "plow",
+                                     "plough", "smash")
+# Çalı yığını (U4): "debris" yok (U1'in "burning debris" cümlesi U4 sayılıyordu). 15 Eki (2): "pile/heap/stack/dry
+# wood" yok (U5 odun yığını U4 sayılmasın); "pile of brush" brush ile geçer
 _FIRE_TOR_BRUSH = ("brush", "brushwood", "scrub", "scrubland", "undergrowth", "shrub", "bush", "dry grass", "grass",
-                   "twig", "pile", "heap", "mound", "stack", "thicket", "bramble", "kindling", "deadwood", "dead wood",
-                   "dry wood", "foliage", "vegetation", "leaves", "hay", "straw", "chaparral", "sagebrush", "weeds",
-                   "tumbleweed")
+                   "twig", "thicket", "bramble", "kindling", "foliage", "vegetation", "leaves", "hay", "straw",
+                   "chaparral", "sagebrush", "weeds", "tumbleweed")
 _FIRE_TOR_INTAKE = ("suck", "draw", "drew", "drawn", "pull", "engulf", "lift", "swallow", "inhale", "scoop", "gather",
                     "gulp", "devour", "sweep up", "sweeps up", "swept up", "snatch", "pick up", "picks up", "picked up",
                     "take in", "takes in", "took in", "taken in", "vacuum", "consume", "absorb", "ingest", "whip up",
@@ -1192,39 +1217,46 @@ EVENT_BEATS = {
     },
     FIRE_TORNADO: {
         "slice_2": {
-            "T1": {"text": "the {vehicle} is lifted off the road by the swirling flames and flung into a burning tree",
+            # 15 Eki (2), Bahadır: her maddede hortumun büyüklüğü; cam/çit/tabela/ince hedef yok (T2, T4, T5, U3, U5 yeni)
+            "T1": {"text": "the towering fire tornado lifts the {vehicle} off the road and flings it into a burning "
+                           "tree",
                    "terms": [_FIRE_TOR_VEH, _FIRE_TOR_LIFT, _FIRE_TOR_HURL, _FIRE_TOR_TREE, _FIRE_FLAME]},
-            "T2": {"text": "a burning branch hurled by the tornado smashes the windshield of the {vehicle}",
-                   "terms": [_FIRE_TOR_VEH, _FIRE_FLAME, _FIRE_TOR_BRANCH, _FIRE_GLASS]},
-            "T3": {"text": "the {vehicle} is swept up into the air, spins, and crashes down onto the road in a shower "
-                           "of sparks",
+            "T2": {"text": "the huge fire tornado hurls a whole burning tree trunk onto the {vehicle}, crushing its roof",
+                   "terms": [_FIRE_TOR_VEH, _FIRE_FLAME, _FIRE_TOR_TRUNK, _FIRE_TOR_CRUSH]},
+            "T3": {"text": "the {vehicle} is sucked up into the towering fire tornado, spins, and crashes down onto "
+                           "the road in sparks",
                    "terms": [_FIRE_TOR_VEH, _FIRE_TOR_LIFT, _FIRE_TOR_SPIN, _FIRE_TOR_DOWN]},
-            "T4": {"text": "the {vehicle} skids sideways as the fire tornado crosses the road behind it, throwing "
-                           "embers across its roof",
-                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_SKID, _FIRE_TOR_EMBER, _FIRE_ROOF]},
-            "T5": {"text": "the {vehicle} is shoved against the guardrail by the whirling flames and its hood catches "
-                           "fire",
-                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_RAIL, _FIRE_TOR_FRONT, _FIRE_TOR_IGNITE]},
-            "T6": {"text": "flaming debris slams into the side of the {vehicle}, which spins and stops across the road",
+            "T4": {"text": "the {vehicle} is shoved sideways as the huge base of the fire tornado sweeps past right "
+                           "behind it",
+                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_SKID, _FIRE_TOR_PASS]},
+            "T5": {"text": "the huge fire tornado rolls the {vehicle} over onto its roof and it bursts into flames",
+                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_FLIP, _FIRE_TOR_IGNITE]},
+            "T6": {"text": "huge flaming debris flung by the towering tornado slams into the {vehicle}, which spins "
+                           "and stops across the road",
                    "terms": [_FIRE_TOR_VEH, _FIRE_TOR_DEBRIS, _FIRE_TOR_IMPACT, _FIRE_TOR_TURNSTOP]},
         },
         "slice_3": {
-            "U1": {"text": "the fire tornado rips the burning roof off a house and scatters flaming pieces across the "
-                           "street",
+            "U1": {"text": "the towering fire tornado rips the burning roof off a house and sucks the sheets into its "
+                           "column",
                    "terms": [_FIRE_TOR_HOUSE, _FIRE_ROOF, _FIRE_TOR_RIP, _FIRE_FLAME]},
-            "U2": {"text": "the fire tornado uproots a burning tree and flings it down the road",
+            "U2": {"text": "the huge fire tornado uproots a cluster of burning trees and flings their trunks down the "
+                           "road",
                    "terms": [_FIRE_TOR_TREE, _FIRE_TOR_UPROOT, _FIRE_FLAME]},
-            "U3": {"text": "the whirling flames tear a billboard from its supports and hurl it aside",
-                   "terms": [_FIRE_TOR_SIGN, _FIRE_TOR_RIP, _FIRE_FLAME]},
-            "U4": {"text": "the tornado sucks up a pile of burning brush and spits it across the road in a fountain of "
+            "U3": {"text": "the towering fire tornado swallows a wooden barn and tears it to pieces, burning planks "
+                           "whirling into the column",
+                   "terms": [_FIRE_TOR_BARN, _FIRE_TOR_WRECK, _FIRE_FLAME]},
+            "U4": {"text": "the towering tornado sucks up a huge burning brush pile and spits it across the road in "
                            "sparks",
                    "terms": [_FIRE_TOR_BRUSH, _FIRE_TOR_INTAKE, _FIRE_TOR_EJECT, _FIRE_FLAME + _FIRE_TOR_EMBER]},
-            "U5": {"text": "the fire tornado tears a section of burning fence away and carries it across the field",
-                   "terms": [_FIRE_TOR_FENCE, _FIRE_TOR_RIP, _FIRE_FLAME]},
-            "U6": {"text": "the fire tornado sweeps over a parked trailer, tossing it aside in a cloud of fire and smoke",
+            "U5": {"text": "the huge fire tornado tears through a big woodpile and hurls the burning logs high across "
+                           "the field",
+                   "terms": [_FIRE_TOR_LOGS, _FIRE_TOR_SCATTER, _FIRE_FLAME]},
+            "U6": {"text": "the towering fire tornado sweeps over a parked trailer and tosses it aside in fire and "
+                           "smoke",
                    "terms": [_FIRE_TOR_TRAILER, _FIRE_TOR_TOSS, _FIRE_FLAME]},
         },
-        "excluded_pairs": {("T1", "U2"), ("T2", "U2"), ("T4", "U4")},
+        # 15 Eki (2): T2 ağaç gövdesi / U5 yanan kütükler aynı görüntü (yanan odun fırlar)
+        "excluded_pairs": {("T1", "U2"), ("T2", "U2"), ("T4", "U4"), ("T2", "U5")},
         "excluded_views": {},
         # Kamera bir yol kenarı evinin balkonunda (Bahadır onayı, 8 Eki): "evin çatısı kopar" o noktada seçilmez
         "excluded_spots": {"U1": {"Balcony of a roadside house"}},
@@ -1659,7 +1691,7 @@ EVENT_BANNED_WORDS.update({e: (("earthquake_banned", _EQ_BANNED, "depremde yasak
                                 "The buildings collapse suddenly and fast: remove {words}."))
                            for e in EARTHQUAKE_EVENTS})
 # 175 kelime kapısı olan olaylar (13 Eki: volkan + çığ; 14 Eki: deprem)
-WORD_CAP_EVENTS = VOLCANO_EVENTS + AVALANCHE_EVENTS + EARTHQUAKE_EVENTS
+WORD_CAP_EVENTS = VOLCANO_EVENTS + AVALANCHE_EVENTS + EARTHQUAKE_EVENTS + (FIRE_TORNADO,)   # 15 Eki (2)
 
 # ── Ortam havuzu (14 Eki (4), Bahadır; şimdilik sadece çığ) ──────────────────────────────────────────────────────────
 # Ders: köy ve kayak videoları birbirinin aynısıydı (aynı balkon korkuluğu, aynı bulut, aynı koşan insanlar). Her
@@ -1858,7 +1890,7 @@ def rain_words(text: str, water_drop: bool = False) -> list[str]:
 # ── Olaya özel dilim kapıları (4 Eki, Bahadır onayı): terimlerden biri dilimde geçmeli. Çekimler otomatik
 # (find_terms). "people": True olan kuralın terimi koddan gelir: spec'teki N'in sayı kelimesi (kod N'i olayın kişi
 # aralığından seçer, GPT cümleye döker). "away_from": kaçılan şey (mesaj satırı ve geri bildirim). ───────────────
-NUMBER_WORDS = {3: "three", 4: "four", 5: "five", 6: "six"}
+NUMBER_WORDS = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six"}   # 15 Eki (2): ateş hortumu 2-3
 _FLEE = ("run", "ran", "running", "flee", "fled", "fleeing", "sprint", "scatter", "dash", "bolt", "race",
          # 4 Eki, Bahadır: kuru provada "scramble", "darting" reddedildi. "rush" YOK (su da "rushes")
          "scramble", "dart", "hurry")
@@ -1902,7 +1934,8 @@ SLICE_RULES = {
     # TASLAK (8 Eki, yangın): mevcut kaçış listesi (_FLEE, "rush" yok)
     WILDFIRE: _people_rules("the flames"),
     FACADE_FIRE: _people_rules("the flames"),
-    FIRE_TORNADO: _people_rules("the fire tornado"),
+    # 15 Eki (2), Bahadır: ateş hortumunda 2-3 kişi ön planda kaçar (çığdaki yakınlık kapısının aynısı)
+    FIRE_TORNADO: _people_rules("the fire tornado") + [_AVA_NEAR_RULE],
     HELICOPTER: _people_rules("the flames"),   # 10 Eki: orman gibi
     # 10 Eki: volkan, insanlar kaçar (mevcut _FLEE); kimse lav/taşla temas etmez
     ERUPTION: _people_rules("the eruption"),
@@ -2156,6 +2189,8 @@ def people_line(spec: dict) -> str:
     # cümlede)
     near = (", close by: near the railing or in the street right below"
             if spec["event"] in AVALANCHE_EVENTS + EARTHQUAKE_EVENTS else "")   # 14 Eki: deprem de
+    if spec["event"] == FIRE_TORNADO:   # 15 Eki (2): ateş hortumu, insanlar ön planda
+        near = ", close by: near the railing or on the road right below"
     return (f"PEOPLE RUNNING AWAY: {w} (slice_1_rest must say that {w} people run away from "
             f"{rule['away_from']}{near})\n")
 
@@ -2164,7 +2199,8 @@ def people_line(spec: dict) -> str:
 # Kapı aralıkları (SLICE_WORDS, TOTAL_WORDS_BY_EVENT) aynı; sadece GPT satırı. 14 Eki (5): toplam 70 ve köy kilit
 # cümlesi 28 kelime; 0-4s insan cümlesine sabit 10 kelime (sayı + kaçış + yakın yer), 4-9s ve 9-15s kalanı eşit
 # paylaşır (en fazla 18). Önceki: 4-9s/9-15s 18, 0-4s kalan.
-BUDGET_EVENTS = AVALANCHE_EVENTS + EARTHQUAKE_EVENTS   # 14 Eki: deprem de
+# 15 Eki (2): ateş hortumu da (kilit cümle 18 -> 26 kelime, toplam 75)
+BUDGET_EVENTS = AVALANCHE_EVENTS + EARTHQUAKE_EVENTS + (FIRE_TORNADO,)   # 14 Eki: deprem de
 BUDGET_SLICE_MAX = 18
 BUDGET_SLICE_1 = 10
 
