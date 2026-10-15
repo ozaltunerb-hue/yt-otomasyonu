@@ -66,6 +66,8 @@ TOTAL_WORDS_BY_EVENT = {"Tornado crosses a marina quay": (40, 75),
                         "Wall of flames sweeps into a hillside neighborhood": (40, 75),
                         # 10 Eki, Bahadır: helikopter 40-75 (kilit cümle 24 kelime)
                         "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": (40, 75),
+                        # 15 Eki, Bahadır: ateş hortumu 40-75 (GPT insan cümlesini uzun yazıyor; diğer yangınlar aynı)
+                        "Fire tornado tears across a burning roadside": (40, 75),
                         # 10 Eki, Bahadır: volkanın 4 olayı 40-75
                         "Volcano erupts and a shockwave blows out windows": (40, 75),
                         "Pyroclastic cloud races down into a village street": (40, 75),
@@ -342,25 +344,98 @@ _FIRE_POUR = ("pour", "billow", "roll", "surge", "erupt", "belch", "spew", "gush
 _FIRE_TOWER = ("tower", "facade", "façade", "building", "floor", "storey", "story")
 _FIRE_BALCONY = ("balcony", "balconies", "terrace")
 _FIRE_FURNITURE = ("plant", "furniture", "chair", "table", "sofa", "cushion", "pot")
-# Ateş hortumu: araç havalanır (hortumdaki mantık, yangına özel kopya). "into the air" bilerek yok
-_FIRE_LIFT = ("lift", "hoist", "raise", "heave", "off its wheels", "off the ground", "off the road",
-              "off the pavement", "airborne", "pick up", "picked up", "picks up", "swept up", "sweep up", "sweeps up",
-              "ascend")
-_FIRE_FLING = ("fling", "flung", "toss", "hurl", "throw", "threw", "thrown", "launch", "slam", "smash", "crash",
-               "hurtle")
-_FIRE_SPIN = ("spin", "spun", "twirl", "whirl", "rotate", "twist", "spiral", "tumble", "cartwheel", "roll")
-_FIRE_CRASH_DOWN = ("crash", "slam", "smash", "land", "drop", "plunge", "plummet", "come down", "comes down",
-                    "came down", "fall", "fell", "hit", "strike", "struck", "collapse")
-_FIRE_SKID = ("skid", "slide", "slid", "fishtail", "sideways", "swerve", "veer")
-_FIRE_RIP = ("rip", "tear", "tore", "torn", "wrench", "strip", "peel", "snap", "break", "broke", "lift", "hurl",
-             "fling", "flung", "toss", "throw", "threw", "thrown", "scatter", "blow off", "blows off", "blew off",
-             "sweep", "swept", "carry", "carried", "pull", "uproot", "suck", "spit")
-_FIRE_SIGN = ("billboard", "hoarding", "advertising board", "signboard", "sign")
-_FIRE_BRUSH = ("brush", "brushwood", "scrub", "undergrowth", "shrub", "bush", "dry grass", "grass", "twig")
-_FIRE_SUCK = ("suck", "spit", "spew", "hurl", "fling", "flung", "toss", "throw", "threw", "thrown", "scatter",
-              "whirl", "swirl", "lift", "draw", "pull", "sweep", "swept", "blast")
-_FIRE_TRAILER = ("trailer", "caravan", "camper")
-_FIRE_TOSS = _FIRE_RIP + ("tip", "topple", "overturn", "flip", "roll")
+# Ateş hortumu (15 Eki, Bahadır): 10:44 testinde GPT'nin doğru T6/U4 cümleleri reddedildi. Kapı anlam bazlı (deprem
+# yaklaşımı): her maddede NESNE + EYLEM grupları, eş anlamlılar geniş; listeler SADECE ateş hortumunun (_FIRE_TOR_*),
+# diğer yangın olaylarının ortak listeleri değişmez. T maddelerinde araç grubu var: U maddelerinin cümleleri (çatı,
+# ağaç, çalı yığını...) T sayılmasın. "spinning/whirling/swirling" hortumun kendi sıfatı olduğu için dönme grubu tek
+# başına ayırt edici değil: T3 aşağı iniş (_FIRE_TOR_DOWN), T6 enkaz + çarpma ister. Yanlış pozitif testi:
+# tests/test_fire_tornado_gate.py.
+_FIRE_TOR_VEH = ("vehicle", "car", "suv", "truck", "pickup", "van")
+# "into the air" araç grubuyla birlikte güvenli (8 Eki'de tek başına bilerek yoktu)
+_FIRE_TOR_LIFT = ("lift", "hoist", "raise", "heave", "airborne", "aloft", "skyward", "skywards", "into the air",
+                  "into the sky", "into the vortex", "into the funnel", "into the column", "off its wheels",
+                  "off the ground", "off the road", "off the asphalt", "off the pavement", "off the tarmac", "from the road",
+                  "from the asphalt", "from the ground", "from the pavement", "upward", "upwards", "up into", "pick up",
+                  "picks up", "picked up", "sweep up", "sweeps up", "swept up", "suck up", "sucks up", "sucked up",
+                  "pluck", "snatch", "rise", "rose", "risen", "ascend", "levitate", "haul up", "hauls up", "hauled up",
+                  "yank up", "yanks up", "yanked up", "carry up", "carries up", "carried up", "loft")
+_FIRE_TOR_HURL = ("fling", "flung", "toss", "hurl", "throw", "threw", "thrown", "launch", "slam", "smash", "crash",
+                  "hurtle", "ram", "dash", "pitch", "send", "sent", "drive", "drove", "driven", "hit", "strike",
+                  "struck", "plow", "plough", "wrap", "impale", "pin", "wedge", "carry", "carried", "deposit", "dump",
+                  "drop", "shove", "propel", "catapult", "bash", "batter")
+# Bütün ağaç (T1, U2); "fir" yok ("fired" ile karışır). T2 dalı ayrıca.
+_FIRE_TOR_TREE = ("tree", "pine", "trunk", "oak", "cedar", "cypress", "eucalyptus", "poplar", "olive", "birch", "spruce")
+_FIRE_TOR_BRANCH = _FIRE_TOR_TREE + ("branch", "limb", "bough", "log", "stick", "timber", "beam")
+_FIRE_TOR_SPIN = ("spin", "spun", "twirl", "whirl", "rotate", "twist", "spiral", "tumble", "cartwheel", "roll", "flip",
+                  "end over end", "somersault", "revolve", "corkscrew", "pirouette", "turn over", "turns over",
+                  "turned over", "gyrate")
+_FIRE_TOR_DOWN = ("crash down", "crashes down", "crashed down", "slam down", "slams down", "slammed down",
+                  "smash down", "smashes down", "smashed down", "come down", "comes down", "came down", "coming down",
+                  "drop", "plunge", "plummet", "land", "fall", "fell", "onto the road", "onto the asphalt",
+                  "onto the pavement", "onto the tarmac", "onto the ground", "to the ground", "back onto", "back down",
+                  "down onto", "down on", "hit the road", "hits the road", "hit the ground", "hits the ground",
+                  "slam onto", "slams onto", "slammed onto", "crash onto", "crashes onto", "crashed onto",
+                  "smash onto", "smashes onto", "smashed onto", "thud", "touch down", "touches down")
+_FIRE_TOR_SKID = ("skid", "slide", "slid", "fishtail", "sideways", "swerve", "veer", "slew", "drift", "broadside",
+                  "careen", "lurch", "spin out", "spins out", "spun out", "slip", "swing", "swung", "jackknife", "yaw",
+                  "sidelong", "crabwise")
+_FIRE_TOR_EMBER = _FIRE_EMBER + ("ash",)
+_FIRE_TOR_RAIL = _FIRE_RAIL + ("rail", "barricade", "crash rail", "safety barrier", "parapet")
+_FIRE_TOR_FRONT = _FIRE_FRONT + ("engine", "nose")
+_FIRE_TOR_IGNITE = _FIRE_IGNITE + ("take hold", "takes hold", "took hold", "taking hold", "flare up", "flares up",
+                                   "flared up", "light up", "lights up", "lit up", "erupt in flame", "erupts in flame",
+                                   "erupted in flame", "erupt in flames", "erupts in flames", "erupted in flames",
+                                   "erupting in flames", "start burning", "starts burning", "started burning",
+                                   "begin burning", "begins burning", "began burning", "start to burn",
+                                   "starts to burn", "started to burn", "begin to burn", "begins to burn",
+                                   "began to burn", "lick", "spread", "scorch", "sear", "char", "blacken", "smolder",
+                                   "smoulder", "blister", "melt", "catch", "caught")
+_FIRE_TOR_DEBRIS = _FIRE_DEBRIS + ("shard", "scrap", "plank", "board", "firebrand", "projectile", "fireball")
+_FIRE_TOR_IMPACT = ("slam", "smash", "crash", "collide", "hit", "strike", "struck", "pound", "ram", "batter", "punch",
+                    "plow", "plough", "bash", "smack", "barrel into", "barrels into", "barreled into", "barrelled into",
+                    "sideswipe", "clip", "clout", "thump", "pummel", "hammer", "t-bone", "knock", "crunch", "dent",
+                    "cave", "tear into", "tears into", "tore into", "rip into", "rips into", "ripped into", "plunge into",
+                    "plunges into", "plunged into", "shove", "slap", "thud", "impact")
+_FIRE_TOR_TURNSTOP = ("spin", "spun", "whirl", "twirl", "rotate", "pivot", "skid", "slew", "slide", "slid", "fishtail",
+                      "swing around", "swings around", "swung around", "whip around", "whips around", "whipped around",
+                      "turn sideways", "turns sideways", "turned sideways", "sideways", "crosswise", "broadside",
+                      "sidelong", "halt", "stop", "rest", "stall", "standstill", "stranded", "block", "jackknife",
+                      "careen", "grind", "ground to", "screech", "shudder")
+_FIRE_TOR_HOUSE = ("house", "home", "cottage", "cabin", "farmhouse", "barn", "shed", "bungalow", "dwelling", "building",
+                   "homestead")
+_FIRE_TOR_RIP = ("rip", "tear", "tore", "torn", "wrench", "strip", "peel", "snap", "break", "broke", "broken", "lift",
+                 "hurl", "fling", "flung", "toss", "throw", "threw", "thrown", "scatter", "blow off", "blows off",
+                 "blew off", "blown off", "blow away", "blows away", "blew away", "blown away", "sweep", "swept",
+                 "carry", "carried", "pull", "uproot", "suck", "spit", "yank", "pluck", "snatch", "wrest", "lose",
+                 "loses", "lost", "drag", "haul", "rend", "shred", "detach", "free", "loose", "launch", "send", "sent",
+                 "whisk", "heave", "pry", "prise", "dislodge", "shear", "claw", "sever", "split", "hoist")
+_FIRE_TOR_UPROOT = _FIRE_TOR_RIP + ("root", "out of the ground", "from the ground", "out of the earth",
+                                    "from the earth", "from the soil", "topple", "knock down", "knocks down",
+                                    "knocked down", "flatten")
+_FIRE_TOR_SIGN = ("billboard", "hoarding", "advertising board", "advertisement board", "ad board", "signboard", "sign",
+                  "placard", "advertising panel", "poster board")
+_FIRE_TOR_FENCE = _FIRE_FENCE + ("fence post", "fencepost", "paling", "barbed wire")
+# Çalı yığını (U4): "debris" yok (U1'in "burning debris" cümlesi U4 sayılıyordu)
+_FIRE_TOR_BRUSH = ("brush", "brushwood", "scrub", "scrubland", "undergrowth", "shrub", "bush", "dry grass", "grass",
+                   "twig", "pile", "heap", "mound", "stack", "thicket", "bramble", "kindling", "deadwood", "dead wood",
+                   "dry wood", "foliage", "vegetation", "leaves", "hay", "straw", "chaparral", "sagebrush", "weeds",
+                   "tumbleweed")
+_FIRE_TOR_INTAKE = ("suck", "draw", "drew", "drawn", "pull", "engulf", "lift", "swallow", "inhale", "scoop", "gather",
+                    "gulp", "devour", "sweep up", "sweeps up", "swept up", "snatch", "pick up", "picks up", "picked up",
+                    "take in", "takes in", "took in", "taken in", "vacuum", "consume", "absorb", "ingest", "whip up",
+                    "whips up", "whipped up", "haul", "drag", "grab", "seize", "hoover", "siphon", "into the vortex",
+                    "into the funnel", "into the column", "envelop", "wrap", "catch", "caught", "hoist", "raise",
+                    "heave", "yank", "pluck", "rip up", "rips up", "ripped up", "tear up", "tears up", "tore up")
+_FIRE_TOR_EJECT = ("spit", "spat", "spew", "hurl", "fling", "flung", "toss", "throw", "threw", "thrown", "scatter",
+                   "eject", "spray", "shower", "fountain", "blast", "launch", "burst", "explode", "jet", "cascade",
+                   "rain", "arc", "spill", "belch", "disgorge", "release", "send", "sent", "shoot", "shot", "flying",
+                   "expel", "sling", "slung", "catapult", "hurtle", "strew", "strewn", "flick", "fan out", "fans out",
+                   "fanned out", "propel", "discharge", "pour")
+_FIRE_TOR_TRAILER = ("trailer", "caravan", "camper", "motorhome", "mobile home", "rv")
+_FIRE_TOR_TOSS = _FIRE_TOR_RIP + ("tip", "topple", "overturn", "flip", "roll", "knock", "capsize", "upend",
+                                  "bowl over", "bowls over", "bowled over", "shove", "push", "slam", "smash", "crush",
+                                  "engulf", "swallow", "flatten", "crumple", "overwhelm", "bounce", "tumble",
+                                  "cartwheel")
 _FIRE_FUEL = ("trailer", "caravan", "camper", "woodpile", "wood pile", "firewood", "log pile", "log", "logs")
 _FIRE_TILE = ("tile", "shingle", "slate")
 # Helikopter (10 Eki, Bahadır): su, buhar, helikopter, rotor rüzgârı. Yeni listeler; mevcutlar değişmez.
@@ -1118,36 +1193,36 @@ EVENT_BEATS = {
     FIRE_TORNADO: {
         "slice_2": {
             "T1": {"text": "the {vehicle} is lifted off the road by the swirling flames and flung into a burning tree",
-                   "terms": [_FIRE_LIFT, _FIRE_FLING, _FIRE_FLAME, _FIRE_TREE]},
+                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_LIFT, _FIRE_TOR_HURL, _FIRE_TOR_TREE, _FIRE_FLAME]},
             "T2": {"text": "a burning branch hurled by the tornado smashes the windshield of the {vehicle}",
-                   "terms": [_FIRE_FLAME, _FIRE_TREE, _FIRE_GLASS]},
+                   "terms": [_FIRE_TOR_VEH, _FIRE_FLAME, _FIRE_TOR_BRANCH, _FIRE_GLASS]},
             "T3": {"text": "the {vehicle} is swept up into the air, spins, and crashes down onto the road in a shower "
                            "of sparks",
-                   "terms": [_FIRE_LIFT, _FIRE_SPIN, _FIRE_CRASH_DOWN]},
+                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_LIFT, _FIRE_TOR_SPIN, _FIRE_TOR_DOWN]},
             "T4": {"text": "the {vehicle} skids sideways as the fire tornado crosses the road behind it, throwing "
                            "embers across its roof",
-                   "terms": [_FIRE_SKID, _FIRE_EMBER, _FIRE_ROOF]},
+                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_SKID, _FIRE_TOR_EMBER, _FIRE_ROOF]},
             "T5": {"text": "the {vehicle} is shoved against the guardrail by the whirling flames and its hood catches "
                            "fire",
-                   "terms": [_FIRE_RAIL, _FIRE_FRONT, _FIRE_IGNITE]},
+                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_RAIL, _FIRE_TOR_FRONT, _FIRE_TOR_IGNITE]},
             "T6": {"text": "flaming debris slams into the side of the {vehicle}, which spins and stops across the road",
-                   "terms": [_FIRE_FLAME, _FIRE_DEBRIS, _FIRE_SPIN]},
+                   "terms": [_FIRE_TOR_VEH, _FIRE_TOR_DEBRIS, _FIRE_TOR_IMPACT, _FIRE_TOR_TURNSTOP]},
         },
         "slice_3": {
             "U1": {"text": "the fire tornado rips the burning roof off a house and scatters flaming pieces across the "
                            "street",
-                   "terms": [_FIRE_ROOF, _FIRE_RIP, _FIRE_FLAME]},
+                   "terms": [_FIRE_TOR_HOUSE, _FIRE_ROOF, _FIRE_TOR_RIP, _FIRE_FLAME]},
             "U2": {"text": "the fire tornado uproots a burning tree and flings it down the road",
-                   "terms": [_FIRE_TREE, _FIRE_RIP, _FIRE_FLAME]},
+                   "terms": [_FIRE_TOR_TREE, _FIRE_TOR_UPROOT, _FIRE_FLAME]},
             "U3": {"text": "the whirling flames tear a billboard from its supports and hurl it aside",
-                   "terms": [_FIRE_SIGN, _FIRE_RIP, _FIRE_FLAME]},
+                   "terms": [_FIRE_TOR_SIGN, _FIRE_TOR_RIP, _FIRE_FLAME]},
             "U4": {"text": "the tornado sucks up a pile of burning brush and spits it across the road in a fountain of "
                            "sparks",
-                   "terms": [_FIRE_BRUSH, _FIRE_SUCK, _FIRE_FLAME + _FIRE_EMBER]},
+                   "terms": [_FIRE_TOR_BRUSH, _FIRE_TOR_INTAKE, _FIRE_TOR_EJECT, _FIRE_FLAME + _FIRE_TOR_EMBER]},
             "U5": {"text": "the fire tornado tears a section of burning fence away and carries it across the field",
-                   "terms": [_FIRE_FENCE, _FIRE_RIP, _FIRE_FLAME]},
+                   "terms": [_FIRE_TOR_FENCE, _FIRE_TOR_RIP, _FIRE_FLAME]},
             "U6": {"text": "the fire tornado sweeps over a parked trailer, tossing it aside in a cloud of fire and smoke",
-                   "terms": [_FIRE_TRAILER, _FIRE_TOSS, _FIRE_FLAME]},
+                   "terms": [_FIRE_TOR_TRAILER, _FIRE_TOR_TOSS, _FIRE_FLAME]},
         },
         "excluded_pairs": {("T1", "U2"), ("T2", "U2"), ("T4", "U4")},
         "excluded_views": {},

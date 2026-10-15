@@ -1486,6 +1486,7 @@ class TestMarinaRedesign(unittest.TestCase):
         # 10 Eki, Bahadır: orman yangını da 40-75 (TestFireStructure ayrıca kilitler)
         self.assertEqual(es.TOTAL_WORDS_BY_EVENT, {es.MARINA_TORNADO: (40, 75), es.WILDFIRE: (40, 75),
                                                    es.HELICOPTER: (40, 75),   # 10 Eki: helikopter
+                                                   es.FIRE_TORNADO: (40, 75),   # 15 Eki: ateş hortumu
                                                    # 10 Eki: volkan
                                                    es.ERUPTION: (40, 75),
                                                    es.PYROCLASTIC: (40, 75), es.VOLCANIC_BOMBS: (40, 75),
@@ -1833,10 +1834,10 @@ class TestFireStructure(unittest.TestCase):
         self.assertEqual(es._FLEE, ("run", "ran", "running", "flee", "fled", "fleeing", "sprint", "scatter", "dash",
                                     "bolt", "race", "scramble", "dart", "hurry"))
         self.assertEqual(es.TOTAL_WORDS, (40, 70))
-        # 10 Eki, Bahadır: sadece orman yangını 40-75; cephe ve ateş hortumu genel 40-70
+        # 10 Eki, Bahadır: orman yangını 40-75; 15 Eki: ateş hortumu da 40-75; cephe genel 40-70
         self.assertEqual(es.TOTAL_WORDS_BY_EVENT[es.WILDFIRE], (40, 75))
-        for e in (es.FACADE_FIRE, es.FIRE_TORNADO):
-            self.assertNotIn(e, es.TOTAL_WORDS_BY_EVENT)
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[es.FIRE_TORNADO], (40, 75))
+        self.assertNotIn(es.FACADE_FIRE, es.TOTAL_WORDS_BY_EVENT)
 
     def test_canonical_terms_pass(self):
         for e in FIRE:

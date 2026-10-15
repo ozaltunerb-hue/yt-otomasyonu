@@ -25,6 +25,25 @@
 
 ---
 
+## 📋 DEVİR: 🔥 Ateş hortumu kapısı anlam bazlı + 75 kelime (15 Eki 2026)
+
+**Olay:** 15 Eki 10:44 ateş hortumu (T6+U4) 3 denemede kapıdan geçmedi (Kie'ye gitmedi). İki sebep: GPT'nin doğru
+T6/U4 cümleleri reddedildi ("collides ... skid ... halts", "engulfs ... ejecting"); 2. ve 3. deneme toplamı 81 ve 73
+kelime (sınır 70).
+- Ateş hortumu T1-T6/U1-U6 terimleri NESNE + EYLEM gruplarına çevrildi (`_FIRE_TOR_*`, sadece bu olay; orman, cephe,
+  helikopter aynı). T maddelerinde araç grubu var (U cümleleri T sayılmasın). "spinning/whirling" hortumun sıfatı:
+  T3 aşağı iniş, T6 enkaz + çarpma ister.
+- Toplam 40-75 (sadece ateş hortumu). GPT'ye yeni satır yok: WORD BUDGET sadece çığ/deprem; 75 GPT'ye ret geri
+  bildiriminde gider. En uzun prompt: simülasyonda 145, kuramsal en fazla 149 kelime (175 altı).
+- Testler (`tests/test_fire_tornado_gate.py`): 6 gerçek ret geçer, 12 madde x 5 serbest + 3 kontrol cümlesi geçer,
+  maddeler arası yanlış pozitif yok, 200 sahte üretim ilk denemede geçer.
+- Salt okuma denetimi (her madde 5 serbest cümle, kod değişmedi): hiçbir olay %20'yi aşmadı. En yüksekler kıyı hortumu
+  sahil caddesi 10/60, karaya vuruş 9/60, heyelan çamur 7/60. Ortak boşluklar: hortum kaldırma grubunda "picks up",
+  "rises", "carried aloft", "torn off the road" yok; itme grubunda "drives/forces sideways" yok; devrilme gruplarında
+  "knocks down/over" yok. Onay bekliyor, dokunulmadı.
+
+---
+
 ## 📋 DEVİR: 🏚️ Deprem kapısı anlam bazlı (14 Eki 2026, ikinci tur)
 
 **Ders:** simülasyon cümleleri madde metnine yakın olunca kapı fazla sıkı kalmıştı; gerçek GPT paraphrase'iyle test
