@@ -333,6 +333,8 @@ async def _execute_pipeline(
             await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)
             if info.get("story_source"):   # 17 Eki: Notion "Hikâye kaynağı" alanı (ayrı istek; jsonl kaydı da sürer)
                 await asyncio.to_thread(tracker.record_story_source, info["story_source"])
+            if structure and structure.get("env_option"):   # 18 Eki (3): Notion "Ortam" (bombalar / kül bulutu)
+                await asyncio.to_thread(tracker.record_env_option, structure["env_option"])
             await asyncio.to_thread(tracker.append_body, [format_final_prompt(info)])
             await _report(reporter.final_prompt(info))
             if reporter.needs_approval:

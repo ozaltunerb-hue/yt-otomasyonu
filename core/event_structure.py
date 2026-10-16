@@ -18,8 +18,9 @@ import re
 import threading
 
 import config
-from core.skeleton_pipeline import (EVENT_SKELETONS, REGION_VIEW_EVENTS, REGION_VIEWS, count_range, style_suffix,
-                                    view_spots)
+from core.skeleton_pipeline import (EVENT_SKELETONS, REGION_VIEW_EVENTS, REGION_VIEWS, VOLC_ENV_WEIGHTS, VOLC_ENVS,
+                                    VOLC_SPOT_KIND, VOLC_SPOT_WEIGHTS, VOLCANO_WEATHER_WEIGHTS, count_range,
+                                    style_suffix, view_spots)
 from core.trace_format import count_constraints
 
 FLOOD = "Flash flooding in city streets"
@@ -2320,6 +2321,87 @@ def fire_env_label(name: str, spot: str) -> str:
     return f"Ortam: {FIRE_TOR_ENVS[name]['label']} ({name}) · kamera = {spot}"
 
 
+# ── 🌋 Bombalar ve kül bulutu ortam ekseni + yer ağırlığı + ışık (18 Eki (3), Bahadır) ─────────────────────────────
+# Hep aynı köy sokağı ve aynı gökyüzü çıkıyordu; yer eşit ağırlıkla, hafızasız seçiliyordu. Ortam (sk.VOLC_ENVS) kamera
+# cümlesine ve GPT'nin PLACE satırına girer, kilit cümleye girmez. LRU: son VOLC_ENV_BLOCK ortam ve son VOLC_SPOT_BLOCK
+# yer elenir (aday kalmazsa daha sığ), kalanlar ağırlıklı seçilir. Süreç hafızası (ateş hortumu gibi); yer geçmişi
+# Notion kayıtlarından da okunur (combo_key'de yer var). Hava ağırlıklı rastgele (sk.VOLCANO_WEATHER_WEIGHTS).
+VOLC_ENV_EVENTS = (PYROCLASTIC, VOLCANIC_BOMBS)
+VOLC_ENV_BLOCK = 2
+VOLC_SPOT_BLOCK = 1
+_VOLC_ENV_MEMORY: dict[str, list[str]] = {}
+_VOLC_SPOT_MEMORY: dict[str, list[str]] = {}
+
+
+def _weighted_choice(weights: dict[str, int], allowed: list[str], rng) -> str:
+    keys = [k for k in weights if k in allowed]
+    return (rng or random).choices(keys, weights=[weights[k] for k in keys], k=1)[0]
+
+
+def choose_volc_env(event: str, rng: random.Random | None = None) -> str:
+    """Ortam: son VOLC_ENV_BLOCK üretimin ortamı elenir, kalanlardan ağırlıklı (olay başına ayrı hafıza)."""
+    with _ENV_LOCK:
+        used = list(_VOLC_ENV_MEMORY.get(event, []))
+    weights = VOLC_ENV_WEIGHTS[event]
+    return _weighted_choice(weights, _lru_candidates_depth(list(weights), used, VOLC_ENV_BLOCK), rng)
+
+
+def remember_volc_env(event: str, name: str) -> None:
+    with _ENV_LOCK:
+        mem = _VOLC_ENV_MEMORY.setdefault(event, [])
+        mem.append(name)
+        del mem[:-_ENV_MEMORY_LIMIT]
+
+
+def volc_spot_weight(spot: str) -> int:
+    return VOLC_SPOT_WEIGHTS[VOLC_SPOT_KIND[spot]]
+
+
+def volc_spot_history(event: str, history: list[str]) -> list[str]:
+    """Olayın yer geçmişi, eskiden yeniye: Notion kayıtları (combo_key) + süreç hafızası (daha yeni)."""
+    with _ENV_LOCK:
+        memory = list(_VOLC_SPOT_MEMORY.get(event, []))
+    spots = {sp.lower(): sp for sp in EVENT_SKELETONS[event]["spots"]}
+    notion = []
+    for h in history or []:
+        parts = (h or "").split("|")
+        if len(parts) == 5 and parts[2].strip().lower() == event.lower():
+            sp = spots.get(parts[3].split("#")[0].strip().lower())
+            if sp:
+                notion.append(sp)
+    return notion + memory
+
+
+def choose_volc_spot(event: str, history: list[str] | None = None, rng: random.Random | None = None) -> str:
+    """Kamera noktası: son seçilen yer arka arkaya gelmez; kalanlardan ağırlıklı (balkon 2, çatı/yamaç 1)."""
+    spots = list(EVENT_SKELETONS[event]["spots"])
+    left = _lru_candidates_depth(spots, volc_spot_history(event, history or []), VOLC_SPOT_BLOCK)
+    return _weighted_choice({sp: volc_spot_weight(sp) for sp in spots}, left, rng)
+
+
+def remember_volc_spot(event: str, spot: str) -> None:
+    with _ENV_LOCK:
+        mem = _VOLC_SPOT_MEMORY.setdefault(event, [])
+        mem.append(spot)
+        del mem[:-_ENV_MEMORY_LIMIT]
+
+
+def choose_volc_weather(event: str, rng: random.Random | None = None) -> str:
+    weights = VOLCANO_WEATHER_WEIGHTS[event]
+    return _weighted_choice(weights, list(weights), rng)
+
+
+def volc_env_label(name: str, spot: str) -> str:
+    """Telegram onay/Notion gövde satırı (ateş hortumu biçimi)."""
+    return f"Ortam: {VOLC_ENVS[name]['label']} ({name}) · kamera = {spot}"
+
+
+def volc_place(event: str, name: str) -> str:
+    """GPT'ye giden PLACE: ortam metni + volkana göre konum (iskelet yer metninin sonu)."""
+    tail = "on the lower flank of the volcano" if event == PYROCLASTIC else "below the erupting volcano"
+    return f"{VOLC_ENVS[name]['text']}, {tail}"
+
+
 def expected_key_visual(event: str, spot: str) -> str:
     """Spec'in kilit cümlesi: ateş hortumunda kamera noktasının ortamından (16 Eki), diğer olaylarda sabit. Bilinmeyen
     olayda boş metin (son denetim tutmaz)."""
@@ -2645,7 +2727,7 @@ def clean_slice(text: str) -> str:
 
 # ── Birleştirme ve spec ─────────────────────────────────────────────────────────────────────────────────────
 def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: str, b3: str, vehicle: str,
-               people: int | None = None, setting: str | None = None) -> dict:
+               people: int | None = None, setting: str | None = None, volc_env: str | None = None) -> dict:
     """Kie'ye gidecek prompt'u kuran ve denetleyen her şey (slices hariç). people: kaçan kişi sayısı N (sadece
     kişi kuralı olan olaylarda, zorunlu)."""
     if not is_structured(event):
@@ -2656,9 +2738,13 @@ def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: st
         raise StructureError(f"Araç uyuşmuyor: {event} / {vehicle}")
     if setting is not None and (event not in ENV_EVENTS or len(setting.split()) > SETTING_MAX_WORDS):
         raise StructureError(f"Ortam satırı bu olayda kullanılamaz ya da uzun: {event} / {setting}")
+    if volc_env is not None and (event not in VOLC_ENV_EVENTS or volc_env not in VOLC_ENVS):   # 18 Eki (3)
+        raise StructureError(f"Volkan ortamı bu olayda kullanılamaz: {event} / {volc_env}")
     spec = {"event": event, "ship": ship, "spot": spot, "view": view, "beat_2": b2, "beat_3": b3,
             "vehicle": vehicle, "key_visual": expected_key_visual(event, spot),
-            "suffix": style_suffix(event, ship, spot, view, setting)}
+            "suffix": style_suffix(event, ship, spot, view, setting, volc_env)}
+    if volc_env is not None:
+        spec["volc_env"] = volc_env   # 18 Eki (3): bombalar / kül bulutu ortamı (stil ekinde kamera cümlesi)
     if people is not None:
         spec["people"] = people
     if setting is not None:
@@ -2697,6 +2783,9 @@ def people_line(spec: dict) -> str:
 BUDGET_EVENTS = AVALANCHE_EVENTS + EARTHQUAKE_EVENTS + (FIRE_TORNADO,)   # 14 Eki: deprem de
 # 18 Eki (2), kuru deneme: Parti 2 olaylarında GPT toplamı 71-78 kelime yazıp yedeğe düşüyordu (bütçe satırı yoktu)
 BUDGET_EVENTS += (FLOOD, MUDSLIDE, SLOPE, VILLAGE, WILDFIRE, FACADE_FIRE, HELICOPTER, LANDFALL, MARINA_TORNADO, AVENUE)
+# 18 Eki (3), Bahadır kararı: ortam metni stil ekini uzattı (bombalar 103, kül bulutu 113 kelime); GPT'ye söylenen toplam
+# 175 - stil eki - 3 etiket (kapı aralığı aynı, 40-75). Geçmiş GPT hikâyelerinin kül bulutunda çoğu 175'i aşacaktı.
+BUDGET_EVENTS += VOLC_ENV_EVENTS
 BUDGET_SLICE_MAX = 18
 BUDGET_SLICE_1 = 10
 
@@ -2710,6 +2799,8 @@ def word_budget_line(spec: dict) -> str:
     lo2 = SLICE_WORDS["slice_2"][0]
     key = len(spec["key_visual"].split())
     total = TOTAL_WORDS_BY_EVENT.get(event, TOTAL_WORDS)[1]
+    if event in VOLC_ENV_EVENTS:   # 18 Eki (3): prompt 175 kelimeye sığsın (3 = dilim etiketleri)
+        total = min(total, VOLC_MAX_PROMPT_WORDS - 3 - len(spec["suffix"].split()))
     s1 = min(hi1, BUDGET_SLICE_1)
     s23 = max(lo2, min(BUDGET_SLICE_MAX, (total - key - s1) // 2))
     return (f"WORD BUDGET: the opening sentence has {key} words; slice_1_rest {lo1} to {s1} words, slice_2 {lo2} to "
@@ -2821,7 +2912,8 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
     """Kie'ye gidecek son prompt'un tam denetimi. Boş liste = gönderilebilir. Her madde kapalı başarısızlık."""
     from core.creative_pipeline import STORY_RULES, story_rule_issues
     out = []
-    expected_suffix = style_suffix(spec["event"], spec["ship"], spec["spot"], spec["view"], spec.get("setting"))
+    expected_suffix = style_suffix(spec["event"], spec["ship"], spec["spot"], spec["view"], spec.get("setting"),
+                                   spec.get("volc_env"))
     expected_key = expected_key_visual(spec["event"], spec["spot"])
     if spec.get("key_visual") != expected_key:
         out.append(_issue("key_visual", "kilit görsel spec'te değişmiş"))

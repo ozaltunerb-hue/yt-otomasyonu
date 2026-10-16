@@ -2833,7 +2833,11 @@ class TestVolcano(unittest.TestCase):
             s = sk.EVENT_SKELETONS[e]
             cams = list(self.CAMS)
             with self.subTest(event=e):
-                self.assertIs(s["weather"], sk.VOLCANO_WEATHER)
+                if e in es.VOLC_ENV_EVENTS:   # 18 Eki (3): bombalar / kül bulutu ağırlıklı ışık, mevcut metin bir seçenek
+                    self.assertEqual(s["weather"], list(sk.VOLCANO_WEATHER_WEIGHTS[e]))
+                    self.assertIn(sk.VOLCANO_WEATHER[0], s["weather"])
+                else:
+                    self.assertIs(s["weather"], sk.VOLCANO_WEATHER)
                 self.assertEqual(list(s["spots"]), cams)
                 for spot in cams:
                     self.assertEqual(sk.CAMERA_SPOTS[spot], self.CAMS[spot])
@@ -3040,9 +3044,17 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                     self.assertNotIn("pans to follow", suffix)
                     self.assertNotIn("eye level", suffix)
                     self.assertEqual(suffix, f"{camera} {volc_guard(e)} No readable signs, text or flags.")
-                    with patch.object(cp, "pick_setting", lambda ev, view=None, s=spot: (s, sk.VOLCANO_WEATHER[0])):
+                    with patch.object(cp, "pick_setting", lambda ev, view=None, s=spot: (s, sk.VOLCANO_WEATHER[0])), \
+                            patch.object(es, "choose_volc_spot", lambda ev, h=None, rng=None, s=spot: s):
                         scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], _volc_gpt()))
                     self.assertNotIn("pans to follow", scene["prompt"])
+                    env = scene["trace"].get("volc_env")   # 18 Eki (3): bombalar / kül bulutu ortam ekseni
+                    if e in es.VOLC_ENV_EVENTS:
+                        self.assertIn(env, sk.VOLC_ENVS)
+                        camera = camera.replace("the village street", sk.VOLC_ENVS[env]["text"])
+                        suffix = sk.style_suffix(e, None, spot, volc_env=env)
+                    else:
+                        self.assertIsNone(env)
                     self.assertIn(camera, scene["prompt"])
                     self.assertEqual(scene["style_suffix"], suffix)
 

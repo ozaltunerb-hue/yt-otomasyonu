@@ -114,6 +114,26 @@ değişmedi):
   başlayan 0,17 $): ilk koşu GPT 62/70, düzeltmeden sonra 31/33. Kalan yedek nedeni "0-4s insanlar kameraya yakın
   değil" (deprem, çığ orman, ateş hortumu); yakınlık kuralına dokunulmadı, karar Bahadır'da.
 
+**18 Eki (3): bombalar ve kül bulutu ortam ekseni + yer ağırlığı + ışık** (Kie/GPT yok; kilit cümleler, havuzlar,
+çiftler, hariç çiftler, kapılar aynı; şok dalgası devre dışı ve dokunulmadı):
+- **Ortam** (`sk.VOLC_ENVS`, `es.choose_volc_env`): pastel kasaba caddesi "a street of colorful concrete houses with
+  parked trucks" · Akdeniz tepe kasabası "a wide hillside-town street of stone and painted houses" · banliyö mahallesi
+  "a suburban street of detached houses, garages and palm trees" · dağ eteği köyü "a village street of wooden and stone
+  houses among trees" (≤10 kelime; A, B, D Bahadır'ın metninden kısaldı). Kamera cümlesinde "the village street" yerine
+  ve GPT PLACE satırında; kilit cümleye girmez. Son 2 ortam tekrar etmez (olay başına süreç hafızası). Ağırlık: bombalar
+  eşit, kül bulutu A=2 B=2 C=1 D=1. Onay: "Ortam: ..." satırı + Yer satırında "ortam: ..."; Notion "Ortam" select alanı
+  (`ENV_PROPERTY`, ensure_schema seçenekleriyle ekler, ayrı istekle yazılır).
+- **Yer ağırlığı** (`sk.VOLC_SPOT_KIND`): köy evi balkonu = balkon 2; çatı terası = çatı 1; yamaç terası = yamaç 1. Son
+  yer arka arkaya gelmez (süreç hafızası + Notion combo_key). Yer metinleri aynı.
+- **Işık** (`sk.VOLCANO_WEATHER_WEIGHTS`): bombalar eski metin 1, "warm orange dusk sky glowing from the eruption" 2,
+  "pink-orange dawn light under a dark ash sky" 1, "dark night sky lit by glowing lava and fires" 1 (Bahadır'ınki 10
+  kelimeydi). Kül bulutu eski metin 2, dusk 1, "bright hazy daylight under a dark ash sky" 1; gece yok. Işık sadece GPT
+  WEATHER satırına gider (stil ekinde ışık satırı yok, kod yedeğinde ışık Kie'ye ulaşmaz).
+- **175:** ortam stil ekini 6-7 kelime uzattı (en uzun: bombalar 103, kül bulutu 113). Kod yedeğiyle her kombinasyon
+  sığıyor (en uzun bombalar 174, kül bulutu 173). Bahadır kararı: bu iki olay da `BUDGET_EVENTS`'te; GPT'ye söylenen toplam
+  175 - stil eki - 3 (kül bulutu 59-69, bombalar 69-75; kapı aralığı 40-75 aynı). Ölçüm: eski GPT hikâyelerinin kül
+  bulutunda 17'de 12-14'ü, bombalarda 24'te 3-5'i bütçesiz 175'i aşacaktı. Testler: `tests/test_volcano_env.py`.
+
 ---
 
 ## 📋 DEVİR: 🔥 Ateş hortumu ortam ekseni + 🧩 hibrit hikâye modu (16 Eki 2026)

@@ -612,9 +612,8 @@ class TestParti2WordBudget(unittest.TestCase):
                 self.assertIn(f"the opening sentence has {key} words; slice_1_rest 6 to 10 words", line)
                 self.assertIn(f"must total at most {total} words", line)
                 self.assertLessEqual(key + 10 + 18 + 18, total)
-        # volkan olayları ve eski hat bütçe satırı almaz
-        for e in (es.PYROCLASTIC, VB, ER):
-            self.assertNotIn(e, es.BUDGET_EVENTS)
+        # şok dalgası bütçe satırı almaz (18 Eki (3): bombalar ve kül bulutu alır, tests/test_volcano_env.py)
+        self.assertNotIn(ER, es.BUDGET_EVENTS)
 
 
 class TestParti2DryRunGateFixes(unittest.TestCase):

@@ -744,11 +744,20 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
         fire_env = es.choose_fire_env()
         es.remember_fire_env(fire_env)           # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
         spot = random.choice(es.FIRE_TOR_ENVS[fire_env]["spots"])
+    volc_env = None
+    if event in es.VOLC_ENV_EVENTS:   # 18 Eki (3): bombalar ve kül bulutu ortam ekseni + yer ağırlığı + ışık
+        volc_env = es.choose_volc_env(event)
+        spot = es.choose_volc_spot(event, history)
+        weather = es.choose_volc_weather(event)
+        es.remember_volc_env(event, volc_env)    # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
+        es.remember_volc_spot(event, spot)
     place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
+    if volc_env:
+        place = es.volc_place(event, volc_env)
     recent = recent_stories(history_texts)
     if es.is_structured(event):
         return await _build_structured_scene(domain, event, ship, spot, view, view_source, weather, place, recent,
-                                             history, call_gpt)
+                                             history, call_gpt, volc_env=volc_env)
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "domain": domain, "event": event, "ship": ship or "None",
              "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place, "weather": weather, "count_range": [lo, hi],
@@ -773,7 +782,7 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
 
 
 async def _build_structured_scene(domain, event, ship, spot, view, view_source, weather, place, recent, history,
-                                  call_gpt) -> dict:
+                                  call_gpt, volc_env: str | None = None) -> dict:
     """Yapılandırılmış olay: olay çifti + araç (kod), dilimler (GPT), son denetim (kod). Son denetim tutmazsa
     StructureError: Kie'ye gidilmez."""
     b2, b3 = es.choose_beats(event, view, spot, history)
@@ -791,12 +800,14 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     env_label = None
     if event == es.FIRE_TORNADO:   # 16 Eki: ortam kamera noktasından (spec["fire_env"]); onay mesajında "Ortam:" satırı
         env_label = es.fire_env_label(es.fire_env_of_spot(spot), spot)
+    if volc_env:   # 18 Eki (3): bombalar / kül bulutu
+        env_label = es.volc_env_label(volc_env, spot)
     if event in es.ENV_EVENTS:
         env = es.choose_environment(event, spot, b2, b3)
         es.remember_environment(env)             # seçim anında (beat hafızası gibi)
         setting = es.setting_line(env)
         weather = es.env_weather(env)   # 14 Eki: çığ ve deprem
-    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting)
+    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env)
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "structured": True, "domain": domain, "event": event, "ship": ship or "None",
              "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place,
@@ -806,9 +817,12 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
              "recent_count": len(recent), "attempts": [], "story": "", "story_words": 0}
     if env:
         trace["environment"] = env
-    if env_label:
+    if env_label and event == es.FIRE_TORNADO:
         trace["fire_env"] = spec["fire_env"]
         trace["fire_env_label_short"] = es.FIRE_TOR_ENVS[spec["fire_env"]]["label"]
+    if volc_env:   # 18 Eki (3): onay "Yer" satırında "ortam: ..." (aynı alan), Notion "Ortam" alanı
+        trace["volc_env"] = volc_env
+        trace["fire_env_label_short"] = es.VOLC_ENVS[volc_env]["label"]
     # 16 Eki, Bahadır (hibrit hikâye): GPT en fazla STRUCTURED_MAX_ATTEMPTS deneme; ikisi de kapıdan geçemezse kod
     # yedeği (üretim durmaz). GPT/JSON/şema hatası yine akışı durdurur (yedek sadece kapı retleri için).
     try:
@@ -826,7 +840,8 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     final = es.final_prompt_issues(spec, slices, prompt, story)
     if final:
         raise es.StructureError("Son denetim geçmedi, Kie'ye gönderilmedi: " + "; ".join(i["missing"] for i in final))
-    record_story_source({"event": event, "environment": (spec.get("fire_env") or (es.setting_line(env) if env else None)),
+    record_story_source({"event": event, "environment": (spec.get("fire_env") or spec.get("volc_env")
+                                                         or (es.setting_line(env) if env else None)),
                          "spot": spot, "view": view, "beats": tag, "vehicle": vehicle, "source": source["kind"],
                          "gpt_attempts": len(attempts), "fallback_reason": source["reason"] or None,
                          "attempt_missing": [a.get("missing") for a in attempts]})
@@ -842,4 +857,6 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
             "style_suffix": spec["suffix"], "prompt": prompt, "combo_key": combo_key, "trace": trace,
             "structure": {"spec": spec, "slices": slices, "place": place, "weather": weather, "recent": recent,
                           "environment": es.environment_label(env) if env else env_label,
+                          # 18 Eki (3): Notion "Ortam" alanı (sadece bombalar / kül bulutu)
+                          "env_option": es.VOLC_ENVS[volc_env]["label"] if volc_env else None,
                           "story_source": source["label"], "story_source_kind": source["kind"]}}

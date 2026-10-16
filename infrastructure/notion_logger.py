@@ -42,6 +42,10 @@ STATUS_UPLOAD_FAILED = "✅ Tamamlandı (Upload Başarısız)"
 DELIVERABLE_STATUSES = [STATUS_COMPLETED, STATUS_UPLOAD_FAILED, STATUS_TEST_DONE, STATUS_RECOVERED, STATUS_UNDELIVERED]
 
 STORY_SOURCE_PROPERTY = "Hikâye kaynağı"
+# 18 Eki (3), Bahadır: bombalar ve kül bulutunda ortam (select). Seçenekler core.skeleton_pipeline.VOLC_ENVS etiketleri
+ENV_PROPERTY = "Ortam"
+ENV_OPTIONS = {"pastel kasaba caddesi": "pink", "Akdeniz tepe kasabası": "orange", "banliyö mahallesi": "green",
+               "dağ eteği köyü": "brown"}
 # TUR 29'da eklenen alanlar. ensure_schema() eksik olanları veritabanına ekler (idempotent).
 EXTRA_PROPERTIES = {
     "Mod": {"select": {}},                 # TEST / YAYIN
@@ -54,6 +58,8 @@ EXTRA_PROPERTIES = {
     # 17 Eki (Bahadır): yapılandırılmış hatta hikâyenin kaynağı ("GPT (deneme N)" / "kod yedeği (neden: ...)").
     # Ayrı istekle yazılır (record_story_source): alan yoksa ya da Notion reddederse diğer alanlar etkilenmez.
     STORY_SOURCE_PROPERTY: {"rich_text": {}},
+    # 18 Eki (3): ayrı istekle yazılır (record_env_option); alan yoksa seçenekleriyle eklenir
+    ENV_PROPERTY: {"select": {"options": [{"name": n, "color": c} for n, c in ENV_OPTIONS.items()]}},
 }
 
 # 14 Eki (Bahadır, acil): "Durum" select'inde olması gereken seçenekler (ad -> renk). Yeni bir durum eklendiğinde
@@ -119,6 +125,8 @@ class NotionTracker:
                 log.warning(f"⚠️ Notion alanları eklenemedi ({sorted(missing)}), yazılmayacak: {e}")
         cls._schema = have
         cls.ensure_status_options(db)
+        if ENV_PROPERTY in have and ENV_PROPERTY not in missing:   # 18 Eki (3): alan önceden varsa eksik seçenekler
+            cls.ensure_select_options(ENV_PROPERTY, ENV_OPTIONS, db)
         return have
 
     @staticmethod
@@ -142,6 +150,29 @@ class NotionTracker:
             return added
         except Exception as e:
             log.warning(f"⚠️ Notion Durum seçenekleri eklenemedi: {e}")
+            return []
+
+    @staticmethod
+    def ensure_select_options(prop: str, required: dict[str, str], db: dict | None = None) -> list[str]:
+        """18 Eki (3): select alanında olmayan seçenekleri ekler (ensure_status_options ile aynı yol: mevcutlar
+        id/ad/renkleriyle aynen gönderilir, sadece yenisi eklenir). Eklenenlerin adı."""
+        if not settings.NOTION_ENABLED or settings.IS_DRY_RUN:
+            return []
+        try:
+            db = db or _notion_request("GET", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}")
+            options = db.get("properties", {}).get(prop, {}).get("select", {}).get("options", [])
+            names = {o.get("name") for o in options}
+            new = [{"name": n, "color": c} for n, c in required.items() if n not in names]
+            if not new:
+                return []
+            keep = [{k: o[k] for k in ("id", "name", "color") if k in o} for o in options]
+            _notion_request("PATCH", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}",
+                            json={"properties": {prop: {"select": {"options": keep + new}}}})
+            added = [o["name"] for o in new]
+            log.info(f"📋 Notion {prop} seçeneği eklendi: {added}")
+            return added
+        except Exception as e:
+            log.warning(f"⚠️ Notion {prop} seçenekleri eklenemedi: {e}")
             return []
 
     def _filter(self, properties: dict) -> dict:
@@ -195,6 +226,10 @@ class NotionTracker:
         """17 Eki: hikâye kaynağı ayrı istekle (Prompt/Kamera/Olay yazımından bağımsız). Şema biliniyorsa ve alan
         yoksa _filter atar; şema bilinmiyorsa Notion'un reddi sadece uyarı olur (_patch), üretim sürer."""
         self._patch({STORY_SOURCE_PROPERTY: _rt(story_source_value(label))})
+
+    def record_env_option(self, label: str) -> None:
+        """18 Eki (3): "Ortam" select alanı (bombalar / kül bulutu) ayrı istekle; alan yoksa _filter atar."""
+        self._patch({ENV_PROPERTY: {"select": {"name": label}}})
 
     def record_task(self, task_id: str) -> None:
         """Task ID polling başlamadan yazılır; restart olursa kurtarma bu alandan devam eder."""

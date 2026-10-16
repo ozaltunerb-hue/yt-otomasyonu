@@ -143,6 +143,47 @@ LANDSLIDE_WEATHER = ["driving rain and wind", "heavy downpour under dark storm l
 # Yangın havası (8 Eki, Bahadır): kuru ve dumanlı; yağmur/ıslaklık yok (event_structure yağmur kapısı denetler)
 # Volkan havası (10 Eki, Bahadır)
 VOLCANO_WEATHER = ["ash-grey sky lit orange by a distant eruption plume"]
+# 18 Eki (3), Bahadır: bombalar ve kül bulutunda ışık çeşitliliği (ağırlıklı; mevcut metin bir seçenek). Her metin
+# mevcut hava metninden (9 kelime) uzun değil. Kül bulutunda gece yok (gri bulut gecede kaybolur). Şok dalgası aynı.
+# Gece metni Bahadır'ınkinden kısaldı (10 -> 9): "dark night sky lit by glowing lava and burning fires"
+VOLCANO_WEATHER_WEIGHTS = {
+    "Volcanic bombs slam into a village street": {
+        "ash-grey sky lit orange by a distant eruption plume": 1,
+        "warm orange dusk sky glowing from the eruption": 2,
+        "pink-orange dawn light under a dark ash sky": 1,
+        "dark night sky lit by glowing lava and fires": 1},
+    "Pyroclastic cloud races down into a village street": {
+        "ash-grey sky lit orange by a distant eruption plume": 2,
+        "warm orange dusk sky glowing from the eruption": 1,
+        "bright hazy daylight under a dark ash sky": 1},
+}
+# 18 Eki (3), Bahadır: bombalar ve kül bulutunda ORTAM ekseni (ateş hortumu gibi; kilit cümleye girmez). Metin kamera
+# cümlesinde "the village street" yerine geçer ve GPT'ye PLACE satırında gider. Her metin ≤10 kelime; Bahadır'ın
+# metinlerinden kısalanlar: A "a street of colorful concrete houses with parked cars and trucks" (11), B "a wide street
+# of stone and painted houses in a hillside town" (12), D "a village street of wooden and stone houses among trees
+# below the volcano" (13; volkan kamera cümlesinde zaten var).
+VOLC_ENVS = {
+    "pastel_town": {"label": "pastel kasaba caddesi",
+                    "text": "a street of colorful concrete houses with parked trucks"},
+    "hillside_town": {"label": "Akdeniz tepe kasabası",
+                      "text": "a wide hillside-town street of stone and painted houses"},
+    "suburb": {"label": "banliyö mahallesi",
+               "text": "a suburban street of detached houses, garages and palm trees"},
+    "mountain_village": {"label": "dağ eteği köyü",
+                         "text": "a village street of wooden and stone houses among trees"},
+}
+# Ağırlıklar: bombalarda eşit; kül bulutunda renkli evler bulutu daha koyu gösteriyor (A=2, B=2, C=1, D=1)
+VOLC_ENV_WEIGHTS = {
+    "Volcanic bombs slam into a village street": {"pastel_town": 1, "hillside_town": 1, "suburb": 1,
+                                                  "mountain_village": 1},
+    "Pyroclastic cloud races down into a village street": {"pastel_town": 2, "hillside_town": 2, "suburb": 1,
+                                                           "mountain_village": 1},
+}
+# Kamera noktası ağırlığı (yer metinleri aynı): sokağa yakın balkon 2 (hit), çatı terası ve yamaç terası (uzak/yüksek) 1
+VOLC_SPOT_KIND = {"Balcony of a village house facing the erupting volcano": "balkon",
+                  "Rooftop terrace facing the erupting volcano": "çatı",
+                  "Hillside terrace facing the erupting volcano": "yamaç"}
+VOLC_SPOT_WEIGHTS = {"balkon": 2, "çatı": 1, "yamaç": 1}
 # Çığ havası (13 Eki, Bahadır): kapalı kış günü (giyim/ışık satırıyla aynı: "raw natural overcast daylight")
 AVALANCHE_WEATHER = ["overcast winter daylight over snowy mountains"]
 # Deprem havası (14 Eki): sadece iskelet hattı ve pick_setting için; yapılandırılmış hatta ortam havuzundan gelir
@@ -490,7 +531,8 @@ EVENT_SKELETONS = {
         "spots": {"Hillside terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
                   "Rooftop terrace facing the erupting volcano": "a village street on the lower flank of the volcano",
                   "Balcony of a village house facing the erupting volcano": "a village street on the lower flank of the volcano"},
-        "people": ["residents", "villagers"], "weather": VOLCANO_WEATHER, "object": "pyroclastic cloud",
+        "people": ["residents", "villagers"], "object": "pyroclastic cloud",
+        "weather": list(VOLCANO_WEATHER_WEIGHTS["Pyroclastic cloud races down into a village street"]),   # 18 Eki (3)
         "text": "In {spot} under {weather}, a pyroclastic cloud races down the volcano's flank and slams into the "
                 "street, tearing balconies off the houses and roof tiles off the rooftops as {n} {people} run from the "
                 "cloud. The cloud keeps rolling through the village, still ripping roofs apart.",
@@ -500,7 +542,8 @@ EVENT_SKELETONS = {
         "spots": {"Hillside terrace facing the erupting volcano": "a village street below the erupting volcano",
                   "Rooftop terrace facing the erupting volcano": "a village street below the erupting volcano",
                   "Balcony of a village house facing the erupting volcano": "a village street below the erupting volcano"},
-        "people": ["residents", "villagers"], "weather": VOLCANO_WEATHER, "object": "glowing rocks",
+        "people": ["residents", "villagers"], "object": "glowing rocks",
+        "weather": list(VOLCANO_WEATHER_WEIGHTS["Volcanic bombs slam into a village street"]),   # 18 Eki (3)
         "text": "In {spot} under {weather}, glowing volcanic bombs streak down and slam into the street, punching "
                 "through roofs and igniting cars as {n} {people} run from the falling rocks. More rocks keep "
                 "crashing down, still setting the street alight.",
@@ -784,7 +827,7 @@ VOLCANO_CAMERA_PERCH = {
 VOLCANO_SHORT_CAMERA_EXCLUDED = ("Pyroclastic cloud races down into a village street",)
 
 
-def volcano_camera(spot: str, event: str | None = None) -> str:
+def volcano_camera(spot: str, event: str | None = None, volc_env: str | None = None) -> str:
     # 13 Eki (2), Bahadır: lav testinde kamera aşağı eğilip volkanı kadrajdan çıkardı, çekim drone gibi göründü.
     # Volkan üst üçte birde, eğilme sınırı, ön planda korkuluk köşesi eklendi (kamera cümlesinin içinde, virgülle).
     # Korkuluk durulan yerin adıyla: terrace / rooftop / balcony railing.
@@ -796,13 +839,15 @@ def volcano_camera(spot: str, event: str | None = None) -> str:
     # camera stays fixed on the {perch}, tilting down no more than slightly and never descending, ... a corner of the
     # {perch} railing in the foreground; ..."
     perch = VOLCANO_CAMERA_PERCH[spot]
+    # 18 Eki (3): ortam ekseni (bombalar, kül bulutu): sokak metni ortamdan; ortam yoksa eski metin
+    street = VOLC_ENVS[volc_env]["text"] if volc_env else "the village street"
     if event in VOLCANO_SHORT_CAMERA_EXCLUDED:   # kül bulutu: 13 Eki (3) metni aynen
-        return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking down over the "
-                f"village street toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, "
+        return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking down over "
+                f"{street} toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, "
                 f"tilting down no more than slightly and never descending, the erupting volcano always visible in the "
                 f"upper third of the frame, a corner of the {perch} railing in the foreground; one continuous shot, no "
                 f"zoom, no cuts.")
-    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage over the village street "
+    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage over {street} "
             f"toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, tilting down only "
             f"slightly, never descending, the erupting volcano always visible in the upper third of the frame, a "
             f"{perch} railing corner in the foreground; one continuous shot, no zoom, no cuts.")
@@ -923,7 +968,8 @@ def fill_skeleton(event: str, ship: str | None, slots: dict) -> str:
                             weather=slots["weather"], n=n, N=n.capitalize(), people=slots["people"])
 
 
-def style_suffix(event: str, ship: str | None, spot: str, view: str | None = None, setting: str | None = None) -> str:
+def style_suffix(event: str, ship: str | None, spot: str, view: str | None = None, setting: str | None = None,
+                 volc_env: str | None = None) -> str:
     """Tek kamera satırı + kıyafet + ışık (+ şehirde görünüm satırı; en fazla 8 kısıt). Eski ekten kaldırılanlar:
     TUR 30 notu. setting: 14 Eki (4), çığ ortam satırı ("Setting: dağ, yerleşim, ışık."), kamera cümlesinden sonra."""
     s = EVENT_SKELETONS[event]
@@ -931,7 +977,7 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     camera = (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, eye level, normal lens; slight hand "
               f"shake, the camera pans to follow the {s['object']}{CAMERA_MOTION_EXTRA.get(event, '')}; no zoom, no cuts.")
     if s["domain"] == "volcano_disasters":   # 13 Eki: volkanda takip yok, kamera sabit (VOLCANO_CAMERA_PERCH)
-        camera = volcano_camera(spot, event)
+        camera = volcano_camera(spot, event, volc_env)
     guardrails = get_realism_guardrails(s['domain'], ship or 'None', spot)
     if s["domain"] == "volcano_disasters":   # 13 Eki (3): kısa ifade, aynı kısıtlar
         guardrails = VOLCANO_GUARDRAILS_LONG if event in VOLCANO_SHORT_CAMERA_EXCLUDED else VOLCANO_GUARDRAILS
