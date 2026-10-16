@@ -87,7 +87,7 @@ class TestRejectedReal(unittest.TestCase):
         self.assertGreaterEqual(len(data), 9)
         skipped = [r for r in data if retired(r)]
         # 17 Eki: çıkarılan maddelerin kayıtları (ateş hortumu T3/U3/U4, heyelan S6 ...) atlanır, sayısı kilitli
-        self.assertEqual(len(skipped), 19, sorted({(r["event"][:20], r["beat"]) for r in skipped}))
+        self.assertEqual(len(skipped), 30, sorted({(r["event"][:20], r["beat"]) for r in skipped}))
         for r in data:
             if retired(r):
                 continue
@@ -120,6 +120,9 @@ class TestRejectedReal(unittest.TestCase):
         self.assertEqual({(r["event"], r["beat"]) for r in fixed},
                          {(es.HELICOPTER, "F5"), (es.HELICOPTER, "G1"), (es.EARTHQUAKE_OLD_STREET, "T2")})
         for r in fixed:
+            if retired(r):   # 18 Eki (2): deprem T2 çıktı (Parti 2); kaydı tarih olarak durur
+                self.assertEqual((r["event"], r["beat"]), (es.EARTHQUAKE_OLD_STREET, "T2"))
+                continue
             spec, slices, sl = rebuild(current(r))
             with self.subTest(text=r["text"]):
                 self.assertEqual(es.soft_beat_issues(spec, slices), [])
@@ -133,8 +136,8 @@ class TestRejectedReal(unittest.TestCase):
         # "treetops" sadece helikopter listesinde; orman yangınının _FIRE_TREE listesi değişmedi
         self.assertTrue(es.find_terms(es._FIRE_HELI_TREE, "the treetops burn"))
         self.assertFalse(es.find_terms(es._FIRE_TREE, "the treetops burn"))
-        # deprem T2: nesne evler/binalar (3. grup), "sequentially" zincir grubunda
-        self.assertEqual(es.OBJECT_GROUPS[es.EARTHQUAKE_OLD_STREET]["T2"], 2)
+        # deprem T2 (18 Eki (2): havuzdan çıktı); "sequentially" zincir grubunda kalır
+        self.assertNotIn("T2", es.OBJECT_GROUPS[es.EARTHQUAKE_OLD_STREET])
         self.assertIn("sequentially", es._EQ_CHAIN)
 
     def test_correct_rejections_still_rejected(self):

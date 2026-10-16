@@ -24,15 +24,18 @@ import core.skeleton_pipeline as sk
 E = es.FIRE_TORNADO
 # 16 Eki, Bahadır: ortam ekseni, 3 ortam × 2 nokta (ağaçlık yerleşim; önceki: "Overlook above the burning valley road",
 # "Balcony of a roadside house")
+# 18 Eki (2), Bahadır: dönen huni ("A colossal spinning fire tornado, a twisting funnel several times taller..."); önceki
+# başlangıç "A colossal fire tornado, several times taller than the houses and trees, ..."
 ENVS = {
-    "forest_edge": ("A colossal fire tornado, several times taller than the houses and trees, tears out of a burning "
-                    "forest into a residential area, its wide base engulfing the houses.",
+    "forest_edge": ("A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, "
+                    "tears out of a burning forest into a residential area, its wide base engulfing the houses.",
                     ("High balcony at the edge of a wooded neighborhood", "Rooftop terrace above a wooded residential area")),
-    "tree_street": ("A colossal fire tornado, several times taller than the houses and trees, tears down a burning "
-                    "tree-lined street, its wide base engulfing the houses and cars along it.",
+    "tree_street": ("A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, "
+                    "tears down a burning tree-lined street, its wide base engulfing the houses and cars along it.",
                     ("High balcony over a tree-lined residential street", "Upper-floor terrace above a street of houses")),
-    "village_woods": ("A colossal fire tornado, several times taller than the houses and trees, tears from the burning "
-                      "woods into a village, its wide base engulfing the first houses and trees.",
+    "village_woods": ("A colossal spinning fire tornado, a twisting funnel several times taller than the houses and "
+                      "trees, tears from the burning woods into a village, its wide base engulfing the first houses and "
+                      "trees.",
                       ("Hillside terrace above a village", "High balcony of a village house")),
 }
 SPOTS = tuple(sp for _, spots in ENVS.values() for sp in spots)
@@ -226,6 +229,19 @@ HELD_OUT = {
 SHORT = {
     "T6": ["Huge burning wreckage hits the van broadside; it spins and halts across the road.",
            "A mass of flaming debris rams the SUV, spinning it to a stop across the lane."],
+    # 18 Eki (2): kilit cümle uzadı, bütçe 16 kelime; bütçeye uyan ek serbest cümleler
+    "T1": ["The giant vortex heaves the SUV off the road and hurls it into a burning pine.",
+           "Swirling flames lift the van off the asphalt and fling it into a blazing tree.",
+           "The fire whirl yanks the pickup truck aloft and throws it into a flaming oak."],
+    "U1": ["The vortex rips the blazing roof off a house across the street and swallows it.",
+           "A house across the street loses its burning roof to the spinning fire."],
+    "U6": ["The fire whirl flips a parked trailer aside in a burst of flames and smoke.",
+           "A parked caravan is tossed aside by the vortex amid fire and smoke."],
+    "U9": ["The vortex tears the facade off a house and sucks the rubble into its funnel.",
+           "A house's front wall rips loose and the tornado sucks the rubble upward."],
+    "U10": ["The vortex rips the porch and front steps off a house and pulls them inside.",
+            "A house loses its porch and steps, sucked up into the spinning funnel.",
+            "The tornado tears the front steps and porch off a home and drags them in."],
 }
 
 # 15 Eki (3): denetim boşlukları; kaldırma ve yana itme zaten geçiyordu (kilit), devirme (knock over/down) eklendi
@@ -397,9 +413,12 @@ KEY = ENVS["forest_edge"][0]   # EVENT_KEY_VISUAL'daki varsayılan (ilk ortam)
 # 16 Eki: 175 kelime için kısaldı, kurallar aynı. Önceki: "...high vantage close to the towering fire tornado filling at
 # least half of the frame, its top and smoke cloud never cut off, two or three people fleeing it in the near foreground;
 # slight hand shake, the camera pans to follow the fire tornado; ..."
-CAMERA = ("Handheld footage shot by a person standing {spot}, high vantage close to the fire tornado filling at least "
-          "half the frame, its top and smoke never cut off, two or three people fleeing in the near foreground; slight "
-          "hand shake, the camera pans to follow the tornado; one continuous shot, no zoom, no cuts.")
+# 18 Eki (2): şekil cümlesi eklendi, 175 için kısaldı (en uzun stil eki 97). Önceki: "...high vantage close to the fire
+# tornado filling at least half the frame, its top and smoke never cut off, two or three people fleeing in the near
+# foreground; ..."
+CAMERA = ("Handheld footage shot by a person standing {spot}, high vantage, the tornado filling half the frame, top never "
+          "cut off, two or three people fleeing close below; slight hand shake, the camera pans to follow the tornado; "
+          "one continuous shot, no zoom, no cuts.")
 # 17 Eki, Bahadır (temizlik + Parti 1): T3 (fizik 2), U3 (ahır), U4 (çalı yığını), U5 (odun yığını, tarla) çıktı;
 # U1 "across the street"; T7, U7-U11 yeni (Bahadır'ın metni birebir)
 POOL = ({"T1": "the towering fire tornado lifts the {vehicle} off the road and flings it into a burning tree",
@@ -410,18 +429,18 @@ POOL = ({"T1": "the towering fire tornado lifts the {vehicle} off the road and f
                "across the road",
          # 18 Eki: Parti 1 metinleri kısaldı (≤16 kelime)
          "T7": "the {vehicle} races away from the fire tornado as burning debris crashes down behind it"},
-        {"U1": "the towering fire tornado rips the burning roof off a house across the street and sucks the sheets into "
-               "its column",
+        {"U1": "the fire tornado rips the burning roof off a house across the street into its funnel",
          "U2": "the huge fire tornado uproots a cluster of burning trees and flings their trunks down the road",
          "U6": "the towering fire tornado sweeps over a parked trailer and tosses it aside in fire and smoke",
-         "U7": "a wooden house across the street is torn from its foundation, planks spiraling into the column",
-         "U8": "the roofs of two houses across the street are ripped off and sucked into the column",
-         "U9": "the front wall of a house across the street tears away, rubble sucked into the column",
+         # 18 Eki (2): "column" -> "funnel"
+         "U7": "a wooden house across the street is torn from its foundation, planks spiraling into the funnel",
+         "U8": "the roofs of two houses across the street are ripped off and sucked into the funnel",
+         "U9": "the front wall of a house across the street tears away, rubble sucked into the funnel",
          "U10": "the porch and steps of a house across the street are ripped off and pulled in",
          "U11": "a wooden garage beside a house across the street bursts apart, burning boards spiraling up"})
 # Kod yedeğinin 75 kelimeye sığmadığı çiftler (tests/test_story_fallback.py FALLBACK_GAPS_EXCLUDED). 18 Eki: kısa
 # metinlerle 23 -> 1
-FIT_GAPS = {("T6", "U1")}
+FIT_GAPS = {("T6", "U2"), ("T6", "U6")}   # 18 Eki (2): kilit cümle 32-33 kelime
 
 
 class TestFireTornadoGate(unittest.TestCase):
@@ -430,8 +449,9 @@ class TestFireTornadoGate(unittest.TestCase):
         self.assertEqual(es.EVENT_KEY_VISUAL[E], KEY)
         self.assertEqual({k: (v["key"], v["spots"]) for k, v in es.FIRE_TOR_ENVS.items()}, ENVS)
         for key, _ in ENVS.values():   # 16 Eki: ~29-30 kelime (önceki 26), ölçek ifadesi duruyor
-            self.assertLessEqual(len(key.split()), 30)
+            self.assertLessEqual(len(key.split()), 33)   # 18 Eki (2): dönen huni ifadesiyle 32-33
             self.assertIn("several times taller than the houses and trees", key)
+            self.assertIn("A colossal spinning fire tornado, a twisting funnel several times taller", key)
         for spot in SPOTS:
             with self.subTest(spot=spot):
                 self.assertTrue(es.style_suffix(E, None, spot, None, None).startswith(
@@ -450,7 +470,7 @@ class TestFireTornadoGate(unittest.TestCase):
         small = ("glass", "window", "windshield", "pole", "wire", "cable", "fence", "sign", "billboard", "railing",
                  "guardrail", "ember")
         # 17-18 Eki: Parti 1 kısa metinleri Bahadır'ın metni birebir (büyüklük sıfatı yok); kilit cümle ölçeği verir
-        no_size = {"T7", "U7", "U8", "U9", "U10", "U11"}
+        no_size = {"T7", "U1", "U7", "U8", "U9", "U10", "U11"}   # 18 Eki (2): U1 16 kelimeye kısaldı
         for sl in POOL:
             for bid, text in sl.items():
                 with self.subTest(beat=bid):
@@ -545,7 +565,7 @@ class TestFireTornadoGate(unittest.TestCase):
 
     def test_retired_beats_17oct(self):
         # 17 Eki, Bahadır (temizlik turu): T3 (emilip dönüp çakılma, fizik 2), U3 (ahır), U4 (çalı yığını), U5 (odun
-        # yığını, tarla) havuzda yok, kimlikleri tekrar kullanılmaz; "unless" artık sadece U1'de (U8'den ayırır)
+        # yığını, tarla) havuzda yok, kimlikleri tekrar kullanılmaz; "unless" ateş hortumunda sadece U1'de (U8'den ayırır)
         b = es.EVENT_BEATS[E]
         for bid in ("T3", "U3", "U4", "U5"):
             with self.subTest(beat=bid):
@@ -554,7 +574,8 @@ class TestFireTornadoGate(unittest.TestCase):
                 self.assertIn(bid, es.RETIRED_BEATS[E])
         self.assertEqual(b["slice_3"]["U1"].get("unless"), es._FIRE_TOR_ROW)
         self.assertTrue(all("unless" not in x for e, d in es.EVENT_BEATS.items() for sl in ("slice_2", "slice_3")
-                            for k, x in d[sl].items() if (e, k) != (E, "U1")))
+                            for k, x in d[sl].items()
+                            if (e, k) not in ((E, "U1"), (es.EARTHQUAKE_APARTMENT, "Q5"))))   # 18 Eki (2): deprem Q5 toz
         # yeni maddeler açık arazi/kırsal değil, yerleşim: ev, çatı, ön duvar, veranda, garaj
         for bid in ("U7", "U8", "U9", "U10", "U11"):
             text = es.beat_text(E, "slice_3", bid)
@@ -650,7 +671,8 @@ class TestFireTornadoGate(unittest.TestCase):
         # En uzun stil eki + 75 + 3 etiket ≤ 175; kapı da ateş hortumunda 175'i denetler (WORD_CAP_EVENTS)
         self.assertEqual(sorted(sk.EVENT_SKELETONS[E]["spots"]), sorted(SPOTS))
         longest = max(len(es.style_suffix(E, None, s, None, None).split()) for s in SPOTS)
-        self.assertEqual(longest + 75 + 3, 175)   # 16 Eki: en uzun nokta 21 kelime, stil eki kısaldı (önceki 174)
+        # 18 Eki (2): şekil cümlesi eklendi, kamera/giyim satırı ve iki nokta kısaldı: en uzun stil eki 96
+        self.assertEqual(longest + 75 + 3, 174)
         self.assertEqual(es.VOLC_MAX_PROMPT_WORDS, 175)
         self.assertIn(E, es.WORD_CAP_EVENTS)
         from core.trace_format import count_constraints
@@ -658,23 +680,27 @@ class TestFireTornadoGate(unittest.TestCase):
             self.assertLessEqual(count_constraints(es.style_suffix(E, None, s, None, None))[0], 8)
 
     def test_word_budget_line(self):
-        # 16 Eki: kilit cümle ortama göre 28-29 kelime; dilim bütçesi aynı (0-4s 10, 4-9s/9-15s 18, toplam 75)
+        # 16 Eki: kilit cümle ortama göre 28-29 kelime. 18 Eki (2): dönen huni ile 32-33; bütçe kendiliğinden 4-9s/9-15s
+        # 16 kelime (0-4s 10, toplam 75)
         self.assertIn(E, es.BUDGET_EVENTS)
         for name, (key, spots) in ENVS.items():
             spec = es.build_spec(E, None, spots[0], None, "T1", "U6", "SUV", 3)   # 17 Eki: U3 çıktı
             self.assertEqual(spec["key_visual"], key)
             self.assertEqual(spec["fire_env"], name)
             n = len(key.split())
-            self.assertIn(n, (28, 29))
+            self.assertIn(n, (32, 33))
+            s23 = (75 - n - 10) // 2
+            self.assertEqual(s23, 16)
             self.assertEqual(es.word_budget_line(spec),
                              f"WORD BUDGET: the opening sentence has {n} words; slice_1_rest 6 to 10 words, slice_2 10 "
-                             "to 18 words, slice_3 10 to 18 words; the opening plus the three fields must total at "
-                             "most 75 words.\n")
-            self.assertLessEqual(n + 10 + 18 + 18, 75)
+                             f"to {s23} words, slice_3 10 to {s23} words; the opening plus the three fields must total "
+                             "at most 75 words.\n")
+            self.assertLessEqual(n + 10 + s23 + s23, 75)
 
     def test_people_two_or_three_close_by(self):
-        spec, sl = build("T6", "U6")   # 17 Eki: U4 çıktı
-        self.assertFalse({i["rule"] for i in es.slice_issues(spec, sl)} - {"total_words"})
+        spec, sl = build("T6", "U7")   # 17 Eki: U4 çıktı; 18 Eki (2): T6+U6 hariç
+        # FREE cümleleri bütçeden uzun: toplam ve (ondan doğan) 175 kelime aşımı bu testin konusu değil
+        self.assertFalse({i["rule"] for i in es.slice_issues(spec, sl)} - {"total_words", "volcano_prompt_words"})
         codes = {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": "The smoke hangs over the road."})}
         self.assertTrue(codes & {"slice_flee", "slice_count"}, codes)
         far = "Three people run from the fire tornado across the distant field."
@@ -686,18 +712,19 @@ class TestFireTornadoGate(unittest.TestCase):
         self.assertEqual(es.NUMBER_WORDS[2], "two")
         spec2, sl2 = build("T1", "U6", people=2)
         self.assertTrue(sl2["slice_1_rest"].startswith("Two people"))
-        self.assertFalse({i["rule"] for i in es.slice_issues(spec2, sl2)} - {"total_words"})
+        self.assertFalse({i["rule"] for i in es.slice_issues(spec2, sl2)} - {"total_words", "volcano_prompt_words"})
 
     def test_200_productions_free_paraphrase(self):
         # Sahte GPT madde metnini değil serbest/gerçek cümlelerden birini yazar; ilk denemede en az %90
         import core.creative_pipeline as cp
         rng = random.Random(15)
-        # GPT'ye WORD BUDGET satırı gider (4-9s/9-15s en fazla 18 kelime): sahte GPT de bütçeye uyan cümleleri yazar
+        # GPT'ye WORD BUDGET satırı gider (18 Eki (2): 4-9s/9-15s en fazla 16 kelime, 0-4s 10): sahte GPT de bütçeye
+        # uyan cümleleri yazar
         pool = {b: [t for t in FREE[b] + HELD_OUT[b] + SHORT.get(b, []) + REJECTED_REAL.get(b, [])
-                    if len(t.split()) <= 18]
+                    if len(t.split()) <= 16]
                 for b in FREE}
         self.assertTrue(all(len(v) >= 3 for v in pool.values()), {b: len(v) for b, v in pool.items()})
-        people = ["{w} people run from the fire tornado on the road right below.",
+        people = ["{w} people run from the tornado right below.",
                   "{w} drivers flee on foot near the railing.",
                   "{w} people sprint away just below the balcony.",
                   "{w} residents run from the fire tornado in the foreground."]
@@ -805,9 +832,9 @@ class TestFireTornadoEnvironments(unittest.TestCase):
             with self.subTest(spot=spot):
                 suffix = es.style_suffix(E, None, spot, None, None)
                 self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {sk.CAMERA_SPOTS[spot]}, "
-                                                  "high vantage close to the fire tornado filling at least half the frame"))
-                for rule in ("two or three people fleeing in the near foreground", "its top and smoke never cut off",
-                             "slight hand shake", "one continuous shot, no zoom, no cuts"):
+                                                  "high vantage, the tornado filling half the frame"))
+                for rule in ("two or three people fleeing close below", "top never cut off", "slight hand shake",
+                             "one continuous shot, no zoom, no cuts", sk.FIRE_TORNADO_SHAPE):   # 18 Eki (2): şekil
                     self.assertIn(rule, suffix)
                 self.assertTrue(sk.CAMERA_SPOTS[spot].startswith("on "))
 
@@ -851,7 +878,7 @@ class TestFireTornadoEnvironments(unittest.TestCase):
     def test_scenes_rotate_env_and_label(self):
         import core.creative_pipeline as cp
         from core.trace_format import format_final_prompt, format_generation
-        pool = {b: [t for t in FREE[b] + HELD_OUT[b] + SHORT.get(b, []) if len(t.split()) <= 18] for b in FREE}
+        pool = {b: [t for t in FREE[b] + HELD_OUT[b] + SHORT.get(b, []) if len(t.split()) <= 16] for b in FREE}
 
         async def gpt(system, user, **kw):
             line = dict(l.split(": ", 1) for l in user.splitlines() if ": " in l)

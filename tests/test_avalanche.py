@@ -58,7 +58,7 @@ AXES = {"mountain": ("jagged rocky peaks", "wide snowy highlands below a steep s
                     "stone-and-timber houses", "tall narrow wooden houses with heavy roofs"),
         "light": ("heavy overcast sky", "falling snow and low cloud", "pale low winter sun",
                   "late-afternoon blue-grey light", "bright cold sunny day")}
-STONE = {"B1", "C5", "E3", "E5"}   # 17 Eki: F3 çıktı
+STONE = {"B1", "C5", "E3", "E7"}   # 18 Eki (2): E5 -> E7
 # En uzun izinli ortam satırı (kelime sınırı testleri en kötü durumla çalışsın)
 LONG_SETTING = "Setting: sheer cliffs above a narrow valley, dark timber chalets, falling snow and low cloud."
 # Ülke, şehir, bölge, bayrak, yazı sızıntısı: ortam satırında ve promptta hiç geçmemeli ("No readable signs, text or
@@ -101,13 +101,15 @@ POOLS = {
              "E2": "the avalanche slams a wall of snapped dark pine trunks into a wooden cabin and its side bursts open",
              "E3": "the avalanche rams a stone farmhouse's barn door and the dark planks burst inward",
              "E4": "the snow wall tears a woodshed apart and scatters the logs",
-             "E5": "the avalanche hits a stone farmhouse wall and the wall cracks open",
-             "E6": "the snow blast peels the roof off a cabin"},
+             "E6": "the snow blast peels the roof off a cabin",
+             # 18 Eki (2): E5 çıktı, E7 ve F7 yeni (Parti 2)
+             "E7": "the avalanche smashes through the front of a stone farmhouse and its roof caves in"},
             {"F1": "a second surge slams into the cabins and their walls burst outward",
              "F2": "the snow blast rips a cabin's wooden porch and front steps off and sends them flying",
              "F4": "the snow blast knocks over a wooden water tower",
              "F5": "the snow cloud blows the front off a barn and the hay bursts out",
-             "F6": "the snow wall flattens a long wooden barn and the dark boards scatter"}),
+             "F6": "the snow wall flattens a long wooden barn and the dark boards scatter",
+             "F7": "the avalanche front sweeps a wooden cabin off its base and breaks it apart"}),
 }
 # 17 Eki, Bahadır (temizlik turu, madde 1): kod yedeğinin kelime sınırına sığmadığı köy çiftleri hariç (yapı kuralı
 # dışında; tests/test_story_fallback.py FALLBACK_GAPS_EXCLUDED)
@@ -120,9 +122,9 @@ STRUCT = {
     KAYAK: {"C1": {"hut"}, "C2": {"facade"}, "C3": {"deck"}, "C4": {"hut"}, "C5": {"stone"}, "C6": {"facade"},
             "D1": {"facade"}, "D2": {"hut"}, "D3": {"roof", "deck"}, "D4": {"hut"}, "D5": {"hut"}, "D6": {"facade"}},
     ORMAN: {"E1": {"tree", "wood"}, "E2": {"tree", "wood"}, "E3": {"stonehouse", "barn"}, "E4": {"wood"},
-            "E5": {"stonehouse"}, "E6": {"roof"},
+            "E6": {"roof"}, "E7": {"stonehouse"},
             "F1": {"wood"}, "F2": {"wood"}, "F4": {"tower"}, "F5": {"wood", "barn"},   # 17 Eki: F3 çıktı
-            "F6": {"wood", "barn"}},
+            "F6": {"wood", "barn"}, "F7": {"wood"}},
 }
 VALID = {
     "A1": ["The snow blast flings a pile of heavy logs into the wall of a chalet.",
@@ -265,16 +267,22 @@ VALID = {
            "The avalanche smashes a woodshed and flings the firewood across the snow.",
            "The snow wall breaks a woodshed apart and scatters the logs.",
            "The snow wall tears a woodshed apart and scatters the logs."],
-    "E5": ["The avalanche hits a stone farmhouse and its wall cracks open.",
-           "The wall of a stone farmhouse splits as the avalanche strikes it.",
-           "The snow slams into a farmhouse and its stone wall caves in.",
-           "A stone farmhouse wall bursts open under the avalanche.",
-           "The avalanche hits a stone farmhouse wall and the wall cracks open."],
     "E6": ["The snow blast tears the roof off a cabin.",
            "A cabin's roof is ripped away by the snow blast.",
            "The avalanche lifts the roof off a wooden cabin and flings it away.",
            "The snow blast strips the roof from a small cabin.",
            "The snow blast peels the roof off a cabin."],
+    # 18 Eki (2): Parti 2
+    "E7": ["The avalanche smashes through the front of a stone farmhouse and its roof caves in.",
+           "The snow wall crashes into a stone farmhouse, bursting its front open as the roof collapses.",
+           "The avalanche rams the stone farmhouse, its front wall breaking and the roof caving in.",
+           "A stone farmhouse is hit by the avalanche and its roof falls in.",
+           "The snow blast slams into the farmhouse and its stone front shatters."],
+    "F7": ["The avalanche front sweeps a wooden cabin off its base and breaks it apart.",
+           "A wooden cabin is swept off its base by the avalanche and smashed apart.",
+           "The snow wall carries a cabin off its foundation and tears it to pieces.",
+           "The avalanche shoves the wooden cabin off its base and it breaks apart.",
+           "The snow blast sweeps a cabin away and it collapses into dark planks."],
     "F1": ["Another surge hits the cabins and their walls burst outward.",
            "The second wave smashes into the wooden cabins and their walls cave in.",
            "A second surge strikes the cabins, blowing their walls out.",
@@ -342,13 +350,14 @@ IMPACT = {
  "E2": "The avalanche sends snapped pine trunks crashing into a wooden cabin, its side bursting open.",
  "E3": "The avalanche crashes into a farmhouse barn door, sending the planks bursting inward.",
  "E4": "The snow wall crashes into a woodshed, sending the logs scattering in all directions.",
- "E5": "The avalanche slams into a stone farmhouse, its wall cracking open.",
  "E6": "The snow blast crashes into a cabin, sending its roof flying off.",
  "F1": "A second surge crashes into the cabins, their walls bursting outward.",
  "F2": "The snow blast crashes into a cabin, sending its porch and front steps flying.",
  "F4": "The snow blast slams into a wooden water tower, sending it crashing down.",
  "F5": "The snow cloud crashes into a barn, its front bursting open as hay explodes out.",
  "F6": "The snow wall crashes into a long wooden barn, sending its boards scattering.",
+ "E7": "The avalanche crashes into a stone farmhouse, sending its front wall bursting and the roof caving in.",
+ "F7": "The avalanche front crashes into a wooden cabin, sending it sliding off its base in pieces.",
 }
 for _b, _t in IMPACT.items():
     VALID[_b] = VALID[_b] + [_t]
@@ -646,7 +655,7 @@ class TestAvalanche(unittest.TestCase):
         self.assertEqual(es.EVENT_BEATS[KAYAK]["excluded_pairs"],
                          {("C1", "D2"), ("C1", "D4"), ("C1", "D5"), ("C2", "D1"), ("C2", "D6"), ("C3", "D3"),
                           ("C4", "D2"), ("C4", "D4"), ("C4", "D5"), ("C6", "D1"), ("C6", "D6")})
-        self.assertEqual(len(es.EVENT_BEATS[ORMAN]["excluded_pairs"]), 14)   # 17 Eki: F3 çiftleri gitti
+        self.assertEqual(len(es.EVENT_BEATS[ORMAN]["excluded_pairs"]), 17)   # 18 Eki (2): F7 ahşap kabin (E1, E2, E4)
 
     def test_camera_exclusions(self):
         # çatı/baca (*) sadece yamaç terasında; teleferik (†) istasyon terasında yok
@@ -663,7 +672,7 @@ class TestAvalanche(unittest.TestCase):
                         self.assertEqual(spots, set(sk.view_spots(e, None)))
         counts = {e: [len(es.allowed_pairs(e, None, s)) for s in sk.view_spots(e, None)] for e in AVA}
         # 17 Eki: köy 6 yeni hariç çift (yedek sığmıyor), orman F3 çıktı
-        self.assertEqual(counts, {KOY: [20, 7], KAYAK: [20, 20, 15], ORMAN: [16, 11]})
+        self.assertEqual(counts, {KOY: [20, 7], KAYAK: [20, 20, 15], ORMAN: [19, 13]})   # 18 Eki (2): E7, F7
 
     def test_block_depth_never_runs_out(self):
         # 14 Eki (3): zayıf madde temizliğinden sonra köy 2, kayak 2, orman 1 (yasak çiftler arttı; her noktada en
@@ -698,7 +707,7 @@ class TestAvalanche(unittest.TestCase):
                     if issues:
                         self.fail(f"{e}/{spot}/{b2}+{b3}: {issues}")
                     n += 1
-        self.assertEqual(n, 20 + 7 + 20 + 20 + 15 + 16 + 11)   # 17 Eki: köy 6 hariç çift, orman F3 çıktı
+        self.assertEqual(n, 20 + 7 + 20 + 20 + 15 + 19 + 13)   # 18 Eki (2): orman E5 -> E7, F7 eklendi
 
     def test_100_productions_each_event(self):
         import core.creative_pipeline as cp
@@ -798,7 +807,7 @@ class TestAvalanche(unittest.TestCase):
                 for used_l in permutations(AXES["light"], 2):
                     es._ENV_MEMORY[:] = [{"mountain": m, "village": v, "light": li, "spot": HT}
                                          for m, v, li in zip(used_m, used_v, used_l)]
-                    for b2, b3 in (("A1", "B1"), ("C5", "D1"), ("E5", "F4")):   # taş bina: kütük köyü elenir
+                    for b2, b3 in (("A1", "B1"), ("C5", "D1"), ("E7", "F4")):   # taş bina: kütük köyü elenir
                         e = KOY if b2[0] == "A" else KAYAK if b2[0] == "C" else ORMAN
                         env = es.choose_environment(e, HT, b2, b3, random.Random(1))
                         self.assertNotIn(env["mountain"], used_m)

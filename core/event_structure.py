@@ -109,7 +109,10 @@ RECENT_BEAT_BLOCK_BY_EVENT = {PYROCLASTIC: 2,
 # çift, balkonda 7 çift) de: en kötü durumda olaya özel derinlik adayı bitirir, 1 derinlikte en az 3 çift kalır.
 # 18 Eki: ateş hortumu listeden çıktı (kısa metinlerle 45 izinli çift, 3 derinlikte en kötü durumda 12 çift kalıyor;
 # 17 Eki'de 23 çiftle eklenmişti)
-BEAT_BLOCK_FALLBACK_EVENTS = (EARTHQUAKE_APARTMENT, EARTHQUAKE_OLD_STREET, LANDFALL, WILDFIRE, AVALANCHE_VILLAGE)
+# 18 Eki (2): cephe yangını da (Parti 2 sonrası 6 + 4 madde, 7 hariç çift: 3 derinlikte en kötü durumda aday biter,
+# 1 derinlikte 9 çift kalır)
+BEAT_BLOCK_FALLBACK_EVENTS = (EARTHQUAKE_APARTMENT, EARTHQUAKE_OLD_STREET, LANDFALL, WILDFIRE, AVALANCHE_VILLAGE,
+                              FACADE_FIRE)
 
 # ── Kilit görsel (0-4s'nin ilk cümlesi, kod yazar) ──────────────────────────────────────────────────────────
 EVENT_KEY_VISUAL = {
@@ -144,8 +147,10 @@ EVENT_KEY_VISUAL = {
     # 16 Eki, Bahadır: ortam ekseni (FIRE_TOR_ENVS). Gerçek kilit cümle seçilen ortamınkidir (event_key_visual); bu
     # değer ilk ortamın cümlesi (varsayılan). Önceki (15 Eki 2): "A colossal fire tornado, several times taller than the
     # tallest buildings and trees, tears across the burning roadside, its wide base engulfing a field of flames."
-    FIRE_TORNADO: "A colossal fire tornado, several times taller than the houses and trees, tears out of a burning forest "
-                  "into a residential area, its wide base engulfing the houses.",
+    # 18 Eki (2), Bahadır: dönen huni (videolarda düz yangın sütunu çıkıyordu). Önceki başlangıç: "A colossal fire
+    # tornado, several times taller than the houses and trees, ..."
+    FIRE_TORNADO: "A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, "
+                  "tears out of a burning forest into a residential area, its wide base engulfing the houses.",
     # 10 Eki, Bahadır onayı: helikopter kilit cümlesi birebir
     HELICOPTER: "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the "
                 "wall of flames racing toward the houses.",
@@ -813,6 +818,9 @@ _EQ_SPREAD = ("slide", "slid", "spill", "pour", "spread", "tumble", "scatter", "
 _EQ_CORNER = ("corner", "junction", "intersection", "crossroads", "end of the row", "end house")
 _EQ_NEXTONE = ("next", "neighbouring", "neighboring", "adjacent", "another house", "following", "neighbour house",
                "one more house")
+# 18 Eki (2): T7 yana çöker (T1 "sıradaki ev çöker, toz büyür" cümlesinden ayırır)
+_EQ_SIDEWAYS = ("sideways", "on its side", "onto its side", "keels over", "keel over", "tips over", "tip over",
+                "topples over", "topple over", "falls sideways", "leans over")
 _EQ_CHAIN = ("house after house", "each house", "every house", "one after another", "one by one", "house by house",
              "building after building", "in turn", "domino", "one house after another", "each of the houses",
              # 17 Eki (yumuşak kapı düzeltmesi): 2i kuru deneme yanlış reddi ("collapse sequentially")
@@ -876,12 +884,18 @@ EVENT_BEATS = {
                                                 "tilt", "lurch", "skid", "swing", "swung", "turn")]},
             "D8": {"text": "a car is lifted off the road and spins away downstream",
                    "terms": [_CAR, _LIFT, _SPIN + ("drift", "float away", "downstream")]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "D9": {"text": "the flood bursts through the ground floor of a building across the street",
+                   "terms": [("building", "house", "shop", "storefront", "shopfront", "facade", "façade",
+                             "ground floor", "doorway", "entrance"), ("burst", "smash", "crash", "pour", "flood",
+                             "break", "broke", "sweep", "swept", "surge", "rush", "cave", "give way", "gives way")]},
         },
         # Aynı videoda tekrar/çelişki (Bahadır onayı, 3 Eki)
         # 17 Eki (temizlik turu): D1, D6, D7 çıktı; (V7,D6) (V6,D1) (V8,D1) çiftleri ve D7'nin görünüm/nokta kısıtı
         # onlarla gitti (önceki: "excluded_views": {"D7": {"gulf_metropolis"}}, "excluded_spots": {"D7": {"High-rise
         # city district"}})
-        "excluded_pairs": {("V3", "D8"), ("V4", "D2")},
+        # 18 Eki (2): D9 binanın zemin katı, V7 bina duvarı (aynı yapı)
+        "excluded_pairs": {("V3", "D8"), ("V4", "D2"), ("V7", "D9")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -957,21 +971,25 @@ EVENT_BEATS = {
                    "terms": [_TOGETHER_LANDSLIDE, _DRAG]},
         },
         "slice_3": {
-            "M1": {"text": "a row of parked cars is pushed down the street one by one",
-                   "terms": [_ROW, _CAR, _DRAG]},
-            "M2": {"text": "a utility pole snaps and falls into the mud",
-                   "terms": [_POLE, _FALL]},
             "M3": {"text": "a low garden wall collapses and its stones tumble down the street",
                    "terms": [("wall", "walls"), _COLLAPSE]},
             "M4": {"text": "a tree is torn out of the slope and carried down with the mud",
                    "terms": [("tree", "trees"), _UPROOT]},
-            "M5": {"text": "a wooden fence is torn away and carried off",
-                   "terms": [_FENCE, _TEAR]},
             "M6": {"text": "the mud rams a house corner and tears off its wooden porch",
                    "terms": [("porch", "veranda", "front steps", "stoop", "house corner", "corner of a house",
                               "corner of the house"), _TEAR + ("crush", "smash", "rip off", "rip away")]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "M7": {"text": "mud slams into a house across the street and bursts through its ground floor",
+                   "terms": [_HOUSE + ("ground floor",), ("burst", "smash", "crash", "slam", "break", "broke",
+                             "ram", "plow", "plough", "tear", "tore", "pour", "flood", "sweep", "swept")]},
+            "M8": {"text": "the mud shoves a large truck sideways into the front of a house",
+                   "terms": [_CAR, _SIDEWAYS + _DRAG, _HOUSE + ("front of a house", "front of the house")]},
+            "M9": {"text": "a mass of mud and uprooted trees crashes onto the houses across the street",
+                   "terms": [("tree", "trees", "trunk", "trunks"), _HOUSE, ("crash", "slam", "smash", "hit",
+                             "bury", "buried", "engulf", "sweep", "swept", "pile", "pour")]},
         },
-        "excluded_pairs": {("H2", "M1"), ("H6", "M1"), ("H4", "M3"), ("H4", "M6")},
+        # 18 Eki (2): M1 çıktı; ev duvarı/ön cephe iki kez (H4: M7, M8, M9), araç yana itilir (H1: M8)
+        "excluded_pairs": {("H4", "M3"), ("H4", "M6"), ("H4", "M7"), ("H4", "M8"), ("H4", "M9"), ("H1", "M8")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1004,10 +1022,15 @@ EVENT_BEATS = {
                              ("slope", "hillside", "mud", "rock", "rocks", "landslide", "torrent", "surge"),
                              ("give way", "gives way", "gave way", "collapse", "pour", "surge", "slide", "slid",
                               "crash", "tumble", "break", "broke", "burst")]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "S7": {"text": "the mud and boulders shove a large truck sideways toward the edge of the road",
+                   "terms": [_CAR, _SIDEWAYS + _DRAG, ("edge", "shoulder", "verge", "side of the road", "roadside",
+                             "drop-off", "drop off")]},
         },
         # 17 Eki (temizlik turu): S1 (korkuluk) ve S6 (sıralı araçlar) çıktı; (R2,S1) (R6,S6) ve S1'in nokta kısıtı
         # onlarla gitti (önceki: {"S1": {"Behind the guardrail of a hillside road"}})
-        "excluded_pairs": {("R3", "S2")},
+        # 18 Eki (2): S7 kamyon yana/yol kenarına itilir (R1 yana itilir, R4 yol kenarına itilir)
+        "excluded_pairs": {("R3", "S2"), ("R1", "S7"), ("R4", "S7")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1039,11 +1062,17 @@ EVENT_BEATS = {
                                      "carried")]},
             "L6": {"text": "a stone wall collapses and its stones tumble into the torrent",
                    "terms": [("wall", "walls"), _COLLAPSE]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "L7": {"text": "the landslide rips a wooden house off its foundation and carries it down the slope",
+                   "terms": [("house", "home", "cottage", "cabin", "building"), _TEAR + ("foundation", "rip off",
+                             "sweep away")]},
         },
-        "excluded_pairs": {("K1", "L1"), ("K5", "L5"), ("K1", "L6")},   # 17 Eki: (K3,L2) L2 ile gitti
+        # 17 Eki: (K3,L2) L2 ile gitti. 18 Eki (2): L7 ev temelinden kopar, K1 ev duvarı (aynı yapı)
+        "excluded_pairs": {("K1", "L1"), ("K5", "L5"), ("K1", "L6"), ("K1", "L7")},
         "excluded_views": {},
         # Kamera bir köy evinin üst kat balkonunda: "ev köşesi vurulur, duvarı çöker" kameranın durduğu ev gibi çizilir
-        "excluded_spots": {"L1": {"Upper-floor balcony of a village house"}},
+        "excluded_spots": {"L1": {"Upper-floor balcony of a village house"},
+                           "L7": {"Upper-floor balcony of a village house"}},   # 18 Eki: kameranın evi olabilir
     },
     # ── Hortum (TASLAK, 4 Eki, Bahadır hazırlığı; onay bekliyor) ──
     LANDFALL: {
@@ -1071,10 +1100,14 @@ EVENT_BEATS = {
             "E5": {"text": "the tornado rips the front off a small shop, sending shutters and signs flying",
                    "terms": [("shop", "store", "storefront", "shopfront", "shop front", "shutter", "shutters"),
                              _TEAR + _AIRBORNE + _FLING + ("shear",)]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "E7": {"text": "the tornado shreds the top floor of a building across the street, debris spiraling up",
+                   "terms": [("floor", "storey", "story", "top floor", "building", "upper floor"),
+                             _TORNADO_RIP + ("shred", "spiral", "rip apart")]},   # "tear apart" sadece marina Z6
         },
         # Aynı nesne iki kez: çatı (C2/E1). 4 Eki: C5/C6 uçma maddesi oldu, ağaç (C5/E4) ve dükkân önü (C6/E5)
         # artık ortak nesne değil, o iki çift kalktı
-        "excluded_pairs": {("C2", "E1")},
+        "excluded_pairs": {("C2", "E1")},   # 18 Eki (2): E7 bina üst katı, 4-9s'de bina yok
         "excluded_views": {},
         # Kamera evin ön verandasında: "evin çatısı kopar" kameranın durduğu ev gibi çizilir
         "excluded_spots": {"E1": {"Residential coastal district"}},
@@ -1092,6 +1125,13 @@ EVENT_BEATS = {
             "Y5": {"text": "the {vehicle} is lifted off the quay road and flung into a stack of dock boxes",
                    "terms": [_LIFT_AIR, _FLING + ("slam", "smash", "crash", "hurtle"),
                              ("box", "boxes", "crate", "crates", "dock box", "locker", "bin", "bins", "stack")]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "Y7": {"text": "the tornado rips the roof off the café across the quay and hurls it away",
+                   "terms": [("roof", "roofing"), ("café", "cafe", "bar", "restaurant", "building"), _TORNADO_RIP]},
+            "Y8": {"text": "the tornado smashes into the quayside building and its front wall bursts outward",
+                   "terms": [("building", "front wall", "wall", "facade", "façade", "shopfront", "storefront"),
+                             ("smash", "burst", "blow out", "blows out", "explode", "shatter", "collapse", "tear",
+                             "tore", "rip", "cave")]},
         },
         "slice_3": {
             "Z1": {"text": "the tornado tears the awning off the harbor café and flings it across the quay",
@@ -1116,9 +1156,15 @@ EVENT_BEATS = {
                               "tear apart", "tears apart", "tore apart", "torn apart", "tearing apart",
                               "blow apart", "blows apart", "blew apart", "blown apart", "blowing apart"),
                              ("table", "tables", "chair", "chairs", "furniture", "stool")]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "Z7": {"text": "the tornado lifts the whole café terrace off the quay and scatters it across the road",
+                   "terms": [("terrace", "patio", "café terrace", "cafe terrace"),   # masa/sandalye yok (Z6 almasın)
+                             _TORNADO_RIP + ("lift", "scatter", "fling", "hurl")]},
         },
         # Aynı nesne iki kez: kutu (Y5/Z5), sandık (Y4/Z5)
-        "excluded_pairs": set(),   # 17 Eki: Y4 ve Z5 çıktı, (Y5,Z5) (Y4,Z5) onlarla gitti
+        # 17 Eki: Y4 ve Z5 çıktı. 18 Eki (2): çatı iki kez (Y7: Z4), kafe iki kez (Y7: Z1, Z3, Z7), rıhtım binası cephesi
+        # iki kez (Y8: Z2, Z6)
+        "excluded_pairs": {("Y7", "Z4"), ("Y7", "Z1"), ("Y7", "Z3"), ("Y7", "Z7"), ("Y8", "Z2"), ("Y8", "Z6")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1141,6 +1187,10 @@ EVENT_BEATS = {
                    "terms": [_LIFT_AIR, _FLING + ("slam", "smash", "crash", "hurtle"), _SHELTER]},
             "P6": {"text": "the {vehicle} is swept up into the air, spins, and crashes down across the avenue",
                    "terms": [_LIFT_AIR, _SPIN, _CRASH_DOWN]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "P7": {"text": "the tornado flings a large truck across the avenue into the front of a building",
+                   "terms": [_CAR, _FLING + _DRAG + ("slam", "smash", "crash"), ("building", "front", "facade",
+                             "façade", "storefront", "shopfront", "wall")]},
         },
         "slice_3": {
             "Q1": {"text": "the tornado rips a row of palm trees out of the ground and flings them across the avenue",
@@ -1172,16 +1222,17 @@ EVENT_BEATS = {
                    "terms": [_FIRE_REVERSE, _FIRE_FLAME, _FIRE_TREE, _FIRE_FALL]},
             "K2": {"text": "the {vehicle} skids to a stop as flames leap across the road and lick its hood",
                    "terms": [_FIRE_STOP, _FIRE_FLAME, _FIRE_TOUCH, _FIRE_FRONT]},
-            "K3": {"text": "a burning branch falls onto the {vehicle}, setting its roof alight",
-                   "terms": [_FIRE_TREE, _FIRE_FALL, _FIRE_ROOF, _FIRE_IGNITE]},
-            "K4": {"text": "the {vehicle} swerves around a falling burning pine and slams into the guardrail",
-                   "terms": [_FIRE_SWERVE, _FIRE_FLAME, _FIRE_TREE, _FIRE_RAIL]},
             "K5": {"text": "the {vehicle} U-turns in a cloud of smoke and speeds away as the flames close the road "
                            "behind it",
                    "terms": [_FIRE_UTURN, _FIRE_FLAME, _FIRE_CLOSE]},
-            "K6": {"text": "embers rain onto the {vehicle} as it races down the road, its rear window cracking in the "
-                           "heat",
-                   "terms": [_FIRE_EMBER, _FIRE_GLASS, _FIRE_CRACK]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "K7": {"text": "a wall of flames races up the slope and engulfs the first houses across the street",
+                   "terms": [_FIRE_FLAME, _FIRE_HOUSE, _FIRE_IGNITE + _FIRE_LEAP + ("hit", "slam", "sweep",
+                             "swept", "consume")]},
+            "K8": {"text": "the flames leap across the street and ignite the roof of a house",
+                   "terms": [_FIRE_FLAME, _FIRE_ROOF, _FIRE_IGNITE + _FIRE_LEAP]},
+            "K9": {"text": "the {vehicle} speeds down the road past burning houses as flames lick the asphalt",
+                   "terms": [_FIRE_SPEED, _FIRE_FLAME, _FIRE_PATH + ("asphalt",)]},
         },
         "slice_3": {
             "L1": {"text": "the flames leap onto the roofs of the nearest houses and ignite them one after another",
@@ -1192,26 +1243,33 @@ EVENT_BEATS = {
                    "terms": [_FIRE_FLAME, _FIRE_TREE, _FIRE_IGNITE]},
             "L5": {"text": "a house roof catches fire and its tiles burst apart in the heat",
                    "terms": [_FIRE_ROOF, _FIRE_IGNITE, _FIRE_TILE, _FIRE_BURST]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "L7": {"text": "a house across the street is engulfed and its roof collapses in a burst of flames",
+                   "terms": [_FIRE_HOUSE, _FIRE_FLAME + _FIRE_IGNITE, _FIRE_FALL + ("cave", "cave in", "caves in",
+                             "fall in", "give way", "gives way", "engulf")]},
         },
-        "excluded_pairs": {("K1", "L4")},   # 17 Eki: (K3,L2) (K6,L2) L2 ile gitti
+        # 17 Eki: (K3,L2) (K6,L2) L2 ile gitti. 18 Eki (2): evler/çatı iki kez (K7, K8: L1, L5, L7)
+        "excluded_pairs": {("K1", "L4"), ("K7", "L1"), ("K7", "L5"), ("K7", "L7"), ("K8", "L1"), ("K8", "L5"),
+                           ("K8", "L7")},
         "excluded_views": {},
         # Kamera bir yamaç evinin balkonunda (Bahadır onayı, 8 Eki): ev çatısını yakan maddeler o noktada seçilmez
         "excluded_spots": {"L1": {"Balcony of a hillside house"}, "L5": {"Balcony of a hillside house"}},
     },
     FACADE_FIRE: {
         "slice_2": {
-            "M1": {"text": "a burning panel crashes onto the {vehicle} parked below, crushing its roof",
-                   "terms": [_FIRE_FLAME, _FIRE_PANEL, _FIRE_FALL, _FIRE_CRUSH]},
-            "M2": {"text": "shattered glass rains onto the {vehicle} as it speeds away from the tower",
-                   "terms": [("glass", "shard"), _FIRE_SPEED]},
-            "M3": {"text": "burning debris lands on the hood of the {vehicle}, which lurches back in a hurry",
-                   "terms": [_FIRE_FLAME, _FIRE_DEBRIS, _FIRE_FRONT, _FIRE_BACK]},
-            "M4": {"text": "the {vehicle} swerves around a falling flaming panel and mounts the curb",
-                   "terms": [_FIRE_SWERVE, _FIRE_FLAME, _FIRE_DEBRIS, _FIRE_CURB]},
-            "M5": {"text": "a burning awning drops onto the {vehicle}, which reverses sharply",
-                   "terms": [_FIRE_FLAME, _FIRE_AWNING, _FIRE_FALL, _FIRE_BACK]},
             "M6": {"text": "flaming debris smashes the windshield of the {vehicle} as it brakes hard",
                    "terms": [_FIRE_FLAME, _FIRE_DEBRIS, _FIRE_GLASS, _FIRE_STOP]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "M7": {"text": "burning cladding panels peel off the facade beside the balcony and fall in flames",
+                   "terms": [_FIRE_FLAME, _FIRE_PANEL, _FIRE_PEEL + _FIRE_FALL]},
+            "M8": {"text": "flames race up the facade, panel after panel igniting right beside the balcony",
+                   "terms": [_FIRE_FLAME, _FIRE_PANEL + _FIRE_TOWER, _FIRE_IGNITE + _FIRE_LEAP]},
+            "M9": {"text": "a huge sheet of burning facade tears loose and crashes down the tower",
+                   "terms": [_FIRE_FLAME, _FIRE_PANEL + ("facade", "façade"), _FIRE_PEEL + _FIRE_FALL]},
+            "M10": {"text": "thick fire pours out of the windows of the floor below the balcony",
+                    "terms": [_FIRE_FLAME, _FIRE_GLASS + _FIRE_FLOOR, _FIRE_POUR]},
+            "M11": {"text": "the flames leap up the facade to the balconies above in a roaring wall",
+                    "terms": [_FIRE_FLAME, _FIRE_BALCONY + _FIRE_TOWER, _FIRE_LEAP + _FIRE_POUR]},
         },
         "slice_3": {
             "N1": {"text": "the flames climb floor after floor, blowing out window after window",
@@ -1223,7 +1281,10 @@ EVENT_BEATS = {
             "N5": {"text": "a row of windows explodes outward, spraying glass and flames over the street",
                    "terms": [_FIRE_GLASS, _FIRE_BLOWOUT, _FIRE_FLAME]},
         },
-        "excluded_pairs": {("M1", "N3"), ("M2", "N5")},   # 17 Eki: (M5,N2) N2 ile gitti
+        # 17 Eki: (M5,N2) N2 ile gitti. 18 Eki (2): M1-M5 çıktı; panel/cephe parçası iki kez (M7, M9: N3), pencereden
+        # ateş/kat kat tırmanma iki kez (M8, M10, M11: N1; M10: N4, N5)
+        "excluded_pairs": {("M7", "N3"), ("M9", "N3"), ("M8", "N1"), ("M10", "N1"), ("M11", "N1"), ("M10", "N4"),
+                           ("M10", "N5")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1251,9 +1312,14 @@ EVENT_BEATS = {
         "slice_3": {
             # 17 Eki, Bahadır: "across the street" (ev kameranın durduğu ev değil), nokta kısıtı kalktı. Önceki: "the
             # towering fire tornado rips the burning roof off a house and sucks the sheets into its column"
-            "U1": {"text": "the towering fire tornado rips the burning roof off a house across the street and sucks the "
-                           "sheets into its column",
-                   "terms": [_FIRE_TOR_HOUSE, _FIRE_ROOF, _FIRE_TOR_RIP, _FIRE_FLAME],
+            # 18 Eki (2): "column" -> "funnel", ≤16 kelime. Önceki: "the towering fire tornado rips the burning roof off
+            # a house across the street and sucks the sheets into its column"
+            "U1": {"text": "the fire tornado rips the burning roof off a house across the street into its funnel",
+                   # 18 Eki (2) kuru deneme: nesne ev VEYA çatı ("yanks a burning roof into its vortex" evsiz
+                   # reddediliyordu); çatı grubu ayrıca duruyor
+                   # (araç tavanı "its roof" sayılmaz: sadece yanan çatı bileşikleri)
+                   "terms": [_FIRE_TOR_HOUSE + ("burning roof", "blazing roof", "flaming roof", "roof of a house",
+                                                "house roof", "house's roof"), _FIRE_ROOF, _FIRE_TOR_RIP, _FIRE_FLAME],
                    # 17 Eki: iki evin çatısı sırayla (U8) U1 sayılmaz (eski sıkı kapı raporu; üretim kapısı nesneye bakar)
                    "unless": _FIRE_TOR_ROW},
             "U2": {"text": "the huge fire tornado uproots a cluster of burning trees and flings their trunks down the "
@@ -1265,11 +1331,11 @@ EVENT_BEATS = {
             # 17 Eki, Bahadır (Parti 1): yerleşim yıkımı, büyük ve koyu yapı + hortum sütunu (U3 ahır, U4 çalı yığını,
             # U5 odun yığını yerine)
             "U7": {"text": "a wooden house across the street is torn from its foundation, planks spiraling into the "
-                           "column",
+                           "funnel",
                    "terms": [_FIRE_TOR_HOUSE, _FIRE_TOR_WHOLE, _FIRE_TOR_PLANKS]},
-            "U8": {"text": "the roofs of two houses across the street are ripped off and sucked into the column",
+            "U8": {"text": "the roofs of two houses across the street are ripped off and sucked into the funnel",
                    "terms": [_FIRE_ROOF, _FIRE_TOR_RIP, _FIRE_TOR_ROW]},
-            "U9": {"text": "the front wall of a house across the street tears away, rubble sucked into the column",
+            "U9": {"text": "the front wall of a house across the street tears away, rubble sucked into the funnel",
                    "terms": [_FIRE_TOR_WALL, _FIRE_TOR_RIP, _FIRE_TOR_INTAKE]},   # 18 Eki: kısa metinde alev yok
             "U10": {"text": "the porch and steps of a house across the street are ripped off and pulled in",
                     "terms": [_FIRE_TOR_PORCH, _FIRE_TOR_RIP, _FIRE_TOR_INTAKE + _FIRE_TOR_COLUMN]},   # 18 Eki: kıvılcım yok
@@ -1279,9 +1345,10 @@ EVENT_BEATS = {
         },
         # 15 Eki (2): T2 ağaç gövdesi / U2 yanan ağaçlar. 17 Eki: (T4,U4) (T2,U5) U4/U5 ile gitti.
         # 17 Eki (Parti 1, madde 1 kuralı): kod yedeğinin kelime sınırına sığmayan çiftler de hariç (kilit cümle 28-29 +
-        # insan cümlesi 6-7 + uzun çift > 75). 18 Eki: yeni metinler ≤16 kelime, 23 çiftten sadece T6+U1 sığmıyor
-        # (T6 19 + araç, U1 21 kelime)
-        "excluded_pairs": {("T1", "U2"), ("T2", "U2"), ("T6", "U1")},
+        # insan cümlesi 6-7 + uzun çift > 75). 18 Eki: yeni metinler ≤16 kelime, 23 çiftten sadece T6+U1 sığmıyordu.
+        # 18 Eki (2): kilit cümle 32-33 kelime (dönen huni); U1 16 kelimeye kısaldı, T6+U1 sığıyor; T6 (19 + araç) U2 ve
+        # U6 (17'şer) ile 75'i aşıyor
+        "excluded_pairs": {("T1", "U2"), ("T2", "U2"), ("T6", "U2"), ("T6", "U6")},
         "excluded_views": {},
         # 17 Eki, Bahadır: U1 "across the street" oldu, nokta kısıtı kalktı. Önceki (16 Eki): U1 sadece köy yamaç
         # terasında (balkonlar, çatı ve üst kat terası hariç)
@@ -1320,6 +1387,9 @@ EVENT_BEATS = {
                    "terms": [_FIRE_HELI, _FIRE_PULLUP, _FIRE_FLAME, _FIRE_RETURN]},
             "G6": {"text": "a second helicopter swoops in and drops water on the flames along the road",
                    "terms": [_FIRE_SECOND, _FIRE_HELI, _FIRE_DROP + _FIRE_WATER, _FIRE_FLAME]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "G7": {"text": "burning treetops erupt as the helicopter's water load hits the ridge above the houses",
+                   "terms": [_FIRE_HELI_TREE, _FIRE_WATER, _FIRE_FLAME]},
         },
         "excluded_pairs": {("F1", "G3"), ("F2", "G2"), ("F5", "G3")},
         "excluded_views": {},
@@ -1628,13 +1698,12 @@ EVENT_BEATS = {
                    "terms": [_AVA_BARNDOOR, _AVA_BLOWOUT + _AVA_COLLAPSE + _AVA_IMPACT]},
             "E4": {"text": "the snow wall tears a woodshed apart and scatters the logs",
                    "terms": [_AVA_SHED + _AVA_LOGS, _AVA_RIP + _AVA_COLLAPSE + _AVA_HURL]},
-            # 17 Eki: kurala göre zayıf (aksiyon 2) ama ÇIKIŞ BEKLİYOR: çıkarsa balkon noktasında 1 derinlikte bile çift
-            # kalmıyor (E1/E2/E4 sadece F4 ile eşleşir). Yerine yeni beat sonraki partide.
-            "E5": {"text": "the avalanche hits a stone farmhouse wall and the wall cracks open",
-                   "terms": [_AVA_FARMHOUSE, _AVA_COLLAPSE]},
             # 14 Eki (2), false reject taraması: "sending its roof flying off"
             "E6": {"text": "the snow blast peels the roof off a cabin",
                    "terms": [_AVA_ROOF, _AVA_RIP + _AVA_LIFT_UP + _AVA_FLY]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "E7": {"text": "the avalanche smashes through the front of a stone farmhouse and its roof caves in",
+                   "terms": [_AVA_FARMHOUSE, _AVA_IMPACT + _AVA_COLLAPSE + _AVA_SHATTER]},
         },
         "slice_3": {
             "F1": {"text": "a second surge slams into the cabins and their walls burst outward",
@@ -1649,14 +1718,19 @@ EVENT_BEATS = {
             # 14 Eki (3): önceki "the avalanche sweeps a row of fences and a footbridge railing away" (ince)
             "F6": {"text": "the snow wall flattens a long wooden barn and the dark boards scatter",
                    "terms": [_AVA_BARN + ("building", "shed"), _AVA_FLATTEN + _AVA_COLLAPSE + _AVA_FLY]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "F7": {"text": "the avalanche front sweeps a wooden cabin off its base and breaks it apart",
+                   "terms": [_AVA_CABIN, _AVA_SWEEP + _AVA_COLLAPSE + _AVA_HURL]},
         },
         # 14 Eki (3) sınıflar: ahşap kabin/ahır (E1, E2, E4: F1, F2, F5, F6); ağaç gövdesi (E1, E2: F3); taş çiftlik
         # evi (E3, E5: F3); ahır (E3 ahır kapısı: F5, F6). E6 (kabin çatısı) çatı sınıfı, F'de çatı yok.
-        # 17 Eki (temizlik turu): F3 (uzak vadi tabanı) çıktı; F3 çiftleri onunla gitti. E5 çıkış bekliyor.
+        # 17 Eki (temizlik turu): F3 (uzak vadi tabanı) çıktı; F3 çiftleri onunla gitti. 18 Eki (2): E5 çıktı (yerine E7
+        # taş çiftlik evi), F7 yeni
         "excluded_pairs": {("E1", "F1"), ("E1", "F2"), ("E1", "F5"), ("E1", "F6"),
                            ("E2", "F1"), ("E2", "F2"), ("E2", "F5"), ("E2", "F6"),
                            ("E3", "F5"), ("E3", "F6"),
-                           ("E4", "F1"), ("E4", "F2"), ("E4", "F5"), ("E4", "F6")},
+                           ("E4", "F1"), ("E4", "F2"), ("E4", "F5"), ("E4", "F6"),
+                           ("E1", "F7"), ("E2", "F7"), ("E4", "F7")},   # 18 Eki (2): F7 ahşap kabin
         "excluded_views": {},
         "excluded_spots": {"E6": {"Balcony of a chalet at the edge of the village"}},
     },
@@ -1673,6 +1747,7 @@ EVENT_BEATS = {
                    "terms": [_EQ_NEXTDOOR, _EQ_BUILDING, _EQ_LEAN]},
             "P4": {"text": "a huge concrete slab from the collapsing block slams into the road and breaks it apart",
                    "terms": [_EQ_SLAB, _EQ_ROAD, _EQ_IMPACT]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
         },
         "slice_3": {
             "Q1": {"text": "the building next door crumbles floor by floor into the same dust cloud",
@@ -1684,9 +1759,18 @@ EVENT_BEATS = {
                    "terms": [_EQ_HOUSES, _EQ_FALLV]},
             "Q4": {"text": "a second apartment block across the street tilts and falls into the dust",
                    "terms": [_EQ_OTHER, _EQ_BUILDING, _EQ_LEAN]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "Q5": {"text": "the top floors of the apartment block across the street collapse straight down",
+                   "terms": [("top floors", "top floor", "upper floors", "upper floor", "top storeys", "top storey",
+                              "upper storeys",
+                              # 18 Eki (2) kuru deneme: "the upper levels collapse" tanınmıyordu
+                              "upper levels", "upper level", "top levels", "top level", "upper stories", "top stories",
+                              "upper storey"), _EQ_FALLV],   # bileşik terimler (Q2 "upper floors" tek yer)
+                   "unless": _EQ_DUST},   # eski sıkı kapı raporu: tozlu üst kat çökmesi Q2'dir
         },
         # komşu blok (P3 eğilir, yan duvarı çöker: Q1 yan bina, Q4 eğilip düşen ikinci blok); toz dalgası (P1,Q2)
-        "excluded_pairs": {("P3", "Q1"), ("P3", "Q4"), ("P1", "Q2")},
+        # 18 Eki (2): üst katlar çöker iki kez (P1: Q5)
+        "excluded_pairs": {("P3", "Q1"), ("P3", "Q4"), ("P1", "Q2"), ("P1", "Q5")},
         "excluded_views": {},
         "excluded_spots": {"P2": {"High-floor balcony across the street"}, "Q4": {"High-floor balcony across the street"}},
     },
@@ -1703,18 +1787,22 @@ EVENT_BEATS = {
         },
         "slice_3": {
             "T1": {"text": "the next house in the row caves in and the dust cloud grows",
-                   "terms": [_EQ_NEXTONE, _EQ_HOUSES, _EQ_FALLV]},
-            # 17 Eki (yumuşak kapı düzeltmesi): ana nesne evler (3. grup); önceki nesne "house after house" zinciriydi,
-            # "Buildings down the street collapse sequentially" reddediliyordu
-            "T2": {"text": "the collapse runs down the street, house after house, toward us",
-                   "terms": [_EQ_CHAIN, _EQ_PROGRESS, _EQ_HOUSES + ("building",)]},
+                   # 18 Eki (2) kuru deneme: "the adjacent building collapses" (eski sokakta bina = ev) tanınmıyordu
+                   "terms": [_EQ_NEXTONE, _EQ_HOUSES + ("building", "stone building"), _EQ_FALLV]},
             "T3": {"text": "the rubble heap of a fallen house slides out into the street",
                    "terms": [_EQ_RUBBLE, _EQ_SPREAD, _EQ_ROAD]},
             "T4": {"text": "the roof of a stone house falls in and its walls collapse into the street",
                    "terms": [_EQ_ROOF, _EQ_FALLV, _EQ_HOUSES + _EQ_WALLS]},
+            # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
+            "T5": {"text": "the upper floor of a stone house slides off and crashes onto the street below",
+                   "terms": [("upper floor", "upper storey", "top floor", "top storey", "floor", "storey"),
+                             _EQ_PEEL + _EQ_FALLV]},   # nesne kat (T4 çatı/T1 ev cümlelerini almasın)
+            "T7": {"text": "a stone house across the street collapses sideways in a huge wall of dust and rubble",
+                   "terms": [_EQ_HOUSES, _EQ_FALLV + _EQ_LEAN, _EQ_SIDEWAYS, _EQ_DUST + _EQ_RUBBLE]},
         },
         # çatı içe göçer (R2,T4); toz bulutu (R3,T1); moloz sokağa yayılır (R4,T3)
-        "excluded_pairs": {("R2", "T4"), ("R3", "T1"), ("R4", "T3")},
+        # 18 Eki (2): cephe/üst kat kayar (R1: T5), toz ve moloz (R3, R4: T7)
+        "excluded_pairs": {("R2", "T4"), ("R3", "T1"), ("R4", "T3"), ("R1", "T5"), ("R3", "T7"), ("R4", "T7")},
         "excluded_views": {},
         "excluded_spots": {"R1": {"High-floor balcony across the street"}},
     },
@@ -1731,6 +1819,9 @@ RETIRED_BEATS = {
             "D7": ("a wooden fence is torn away and carried off", "ince (çit), büyük(2)")},
     TIDAL: {"W7": ("shopfront windows burst and the surge pours through, carrying out chairs and tables",
                    "ince (cam, mobilya), fizik(2)")},
+    MUDSLIDE: {"M1": ("a row of parked cars is pushed down the street one by one", "fizik(2); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+               "M2": ("a utility pole snaps and falls into the mud", "ince (direk), büyük(2); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+               "M5": ("a wooden fence is torn away and carried off", "ince (çit), büyük(2); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı")},
     SLOPE: {"S1": ("a section of the guardrail is bent and torn away by the mud", "ince (bariyer), büyük(2)"),
             "S6": ("a row of parked cars is shoved toward the road edge", "fizik(2)")},
     VILLAGE: {"L2": ("a stretch of wooden fence is torn away and carried off", "ince (çit), büyük(2)")},
@@ -1747,11 +1838,26 @@ RETIRED_BEATS = {
                             "küçük/uzak, büyük(2), yakın(2)")},
     AVENUE: {"P3": ("the {vehicle} is pushed against a lamppost and pinned there", "aksiyon(2)"),
              "Q5": ("the tornado topples a line of street lamps one by one", "ince (direk), büyük(2)")},
-    WILDFIRE: {"L2": ("a shower of glowing embers rains onto the street and sets a wooden fence alight",
+    WILDFIRE: {"K3": ("a burning branch falls onto the {vehicle}, setting its roof alight", "küçük (dal); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+               "K4": ("the {vehicle} swerves around a falling burning pine and slams into the guardrail",
+                      "fizik(2), bariyer; " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+               "K6": ("embers rain onto the {vehicle} as it races down the road, its rear window cracking in the heat",
+                      "cam, büyük(2), fizik(2); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+               "L2": ("a shower of glowing embers rains onto the street and sets a wooden fence alight",
                       "ince (çit), büyük(2)"),
                "L6": ("the flames climb a power pole and snap the wires, which whip across the street in a shower of "
                       "sparks", "ince (direk, tel), büyük(1), fizik(2)")},
-    FACADE_FIRE: {"N2": ("a balcony awning catches fire and the flames leap to the floor above", "ince (tente)"),
+    FACADE_FIRE: {"M1": ("a burning panel crashes onto the {vehicle} parked below, crushing its roof",
+                         "cephe yangınında araç (yakın 2); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+                  "M2": ("shattered glass rains onto the {vehicle} as it speeds away from the tower",
+                         "cam, cephe yangınında araç; " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+                  "M3": ("burning debris lands on the hood of the {vehicle}, which lurches back in a hurry",
+                         "cephe yangınında araç (yakın 2); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+                  "M4": ("the {vehicle} swerves around a falling flaming panel and mounts the curb",
+                         "cephe yangınında araç (yakın 2, fizik 2); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+                  "M5": ("a burning awning drops onto the {vehicle}, which reverses sharply",
+                         "tente, cephe yangınında araç; " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+                  "N2": ("a balcony awning catches fire and the flames leap to the floor above", "ince (tente)"),
                   "N6": ("the fire jumps to the neighboring balcony, igniting its plants and furniture",
                          "küçük, büyük(2)")},
     FIRE_TORNADO: {"T3": ("the {vehicle} is sucked up into the towering fire tornado, spins, and crashes down onto the "
@@ -1773,7 +1879,10 @@ RETIRED_BEATS = {
                             "ince (cam), büyük(2), fizik(2)"),
                      "T4": ("a glowing rock splits a utility pole and its cable falls into the street spitting sparks",
                             "ince (direk, kablo), büyük(1), fizik(2)")},
-    AVALANCHE_FOREST: {"F3": ("the avalanche carries a pile of broken trunks across the valley floor into a stone house",
+    EARTHQUAKE_OLD_STREET: {"T2": ("the collapse runs down the street, house after house, toward us",
+                                   "fizik(2) (zincirleme çöküş); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı")},
+    AVALANCHE_FOREST: {"E5": ("the avalanche hits a stone farmhouse wall and the wall cracks open", "aksiyon(2); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
+                       "F3": ("the avalanche carries a pile of broken trunks across the valley floor into a stone house",
                               "uzak, yakın(2)")},
 }
 
@@ -1785,18 +1894,19 @@ RETIRED_BEATS = {
 # beat'lerde ana nesne seçilen araçtır (araç adı terimleri); diğerlerinde aşağıdaki tablo, mevcut terim gruplarından
 # nesne grubunun sırasını verir (eylem grupları artık kapı değil, sadece eski kapı raporunda: strict_beat_issues).
 OBJECT_GROUPS = {
-    FLOOD: {"D2": 0, "D3": 0, "D4": 0, "D5": 0, "D8": 0},
+    FLOOD: {"D9": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0, "D8": 0},
     TIDAL: {"W1": 1, "W2": 0, "W3": 0, "W4": 0, "W5": 0, "W6": 0, "W8": 0},
-    MUDSLIDE: {"M1": 1, "M2": 0, "M3": 0, "M4": 0, "M5": 0, "M6": 0},
-    SLOPE: {"S2": 0, "S3": 0, "S4": 0, "S5": 1},
-    VILLAGE: {"L1": 0, "L3": 0, "L4": 0, "L5": 0, "L6": 0},
-    LANDFALL: {"E1": 0, "E2": 0, "E4": 0, "E5": 0},
-    MARINA_TORNADO: {"Z1": 0, "Z2": 0, "Z3": 0, "Z4": 0, "Z6": 0},
-    AVENUE: {"Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q6": 0},
-    WILDFIRE: {"L1": 1, "L3": 1, "L4": 1, "L5": 0},
-    FACADE_FIRE: {"N1": 2, "N3": 1, "N4": 0, "N5": 0},
+    # 18 Eki (2) kuru deneme: M8'in nesnesi ev (kamyon evin önüne; "house's facade" M7'ye benzetiliyordu)
+    MUDSLIDE: {"M9": 1, "M8": 2, "M7": 0, "M3": 0, "M4": 0, "M6": 0},
+    SLOPE: {"S7": 0, "S2": 0, "S3": 0, "S4": 0, "S5": 1},
+    VILLAGE: {"L7": 0, "L1": 0, "L3": 0, "L4": 0, "L5": 0, "L6": 0},
+    LANDFALL: {"E7": 0, "E1": 0, "E2": 0, "E4": 0, "E5": 0},
+    MARINA_TORNADO: {"Z7": 0, "Y8": 0, "Y7": 0, "Z1": 0, "Z2": 0, "Z3": 0, "Z4": 0, "Z6": 0},
+    AVENUE: {"P7": 0, "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q6": 0},
+    WILDFIRE: {"L7": 0, "K8": 1, "K7": 1, "L1": 1, "L3": 1, "L4": 1, "L5": 0},
+    FACADE_FIRE: {"M11": 1, "M10": 1, "M9": 1, "M8": 1, "M7": 1, "N1": 2, "N3": 1, "N4": 0, "N5": 0},
     FIRE_TORNADO: {"U1": 0, "U2": 0, "U6": 0, "U7": 0, "U8": 0, "U9": 0, "U10": 0, "U11": 0},
-    HELICOPTER: {"F1": 0, "F2": 1, "F4": 0, "F5": 1, "G1": 2, "G2": 0, "G3": 0, "G5": 0, "G6": 1},
+    HELICOPTER: {"G7": 0, "F1": 0, "F2": 1, "F4": 0, "F5": 1, "G1": 2, "G2": 0, "G3": 0, "G5": 0, "G6": 1},
     ERUPTION: {"S3": 0, "S4": 0, "S5": 0, "S6": 1, "S7": 1, "S8": 1, "U2": 1, "U3": 0, "U4": 0, "U5": 0, "U6": 0,
                "U7": 1, "U8": 1},
     PYROCLASTIC: {"P1": 1, "P2": 0, "P3": 1, "P4": 0, "P5": 0, "P6": 0, "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q5": 0,
@@ -1807,9 +1917,9 @@ OBJECT_GROUPS = {
                         "B5": 0, "B6": 0},
     AVALANCHE_SKI: {"C1": 0, "C2": 0, "C3": 0, "C4": 0, "C5": 0, "C6": 0, "D1": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0,
                     "D6": 0},
-    AVALANCHE_FOREST: {"E1": 0, "E2": 0, "E3": 0, "E4": 0, "E5": 0, "E6": 0, "F1": 0, "F2": 0, "F4": 0, "F5": 0, "F6": 0},
-    EARTHQUAKE_APARTMENT: {"P1": 1, "P2": 0, "P3": 1, "P4": 0, "Q1": 1, "Q2": 0, "Q3": 0, "Q4": 1},
-    EARTHQUAKE_OLD_STREET: {"R1": 0, "R2": 0, "R3": 0, "R4": 1, "T1": 1, "T2": 2, "T3": 0, "T4": 0},   # 17 Eki: T2 evler
+    AVALANCHE_FOREST: {"F7": 0, "E7": 0, "E1": 0, "E2": 0, "E3": 0, "E4": 0, "E6": 0, "F1": 0, "F2": 0, "F4": 0, "F5": 0, "F6": 0},
+    EARTHQUAKE_APARTMENT: {"Q5": 0, "P1": 1, "P2": 0, "P3": 1, "P4": 0, "Q1": 1, "Q2": 0, "Q3": 0, "Q4": 1},
+    EARTHQUAKE_OLD_STREET: {"T7": 0, "T5": 0, "R1": 0, "R2": 0, "R3": 0, "R4": 1, "T1": 1, "T3": 0, "T4": 0},   # 18 Eki: T2 çıktı
 }
 
 # Sert kurallara 16 Eki eklemeleri (yapılandırılmış hat, sadece GPT'nin yazdığı üç dilim; mevcut kurallar aynen durur):
@@ -1999,7 +2109,7 @@ SETTING_MAX_WORDS = 15
 # Beat uyumu: taş BİNA maddeleri (taş dağ evi, taş servis binası, taş çiftlik evi ve ahır kapısı, taş ev) tamamen
 # kütük yerleşimde anlamsız; bu maddeler seçilince o yerleşim elenir. Taş ahır (A4) ve istinat duvarı (B4) her
 # yerleşimde olur (ahşap köylerde de taş ahır ve duvar bulunur).
-STONE_BUILDING_BEATS = {AVALANCHE_VILLAGE: {"B1"}, AVALANCHE_SKI: {"C5"}, AVALANCHE_FOREST: {"E3", "E5"}}   # 17 Eki: F3 çıktı
+STONE_BUILDING_BEATS = {AVALANCHE_VILLAGE: {"B1"}, AVALANCHE_SKI: {"C5"}, AVALANCHE_FOREST: {"E3", "E7"}}   # 18 Eki: E5 -> E7
 WOOD_ONLY_VILLAGES = ("log cabins and a large lodge",)
 _ENV_MEMORY: list[dict] = []
 _ENV_MEMORY_LIMIT = 12
@@ -2158,13 +2268,15 @@ FIRE_TOR_ENVS = {
                     "spots": ("High balcony at the edge of a wooded neighborhood",
                               "Rooftop terrace above a wooded residential area")},
     "tree_street": {"label": "ağaçlık mahalle sokağı",
-                    "key": "A colossal fire tornado, several times taller than the houses and trees, tears down a "
-                           "burning tree-lined street, its wide base engulfing the houses and cars along it.",
+                    "key": "A colossal spinning fire tornado, a twisting funnel several times taller than the houses "
+                           "and trees, tears down a burning tree-lined street, its wide base engulfing the houses and "
+                           "cars along it.",
                     "spots": ("High balcony over a tree-lined residential street",
                               "Upper-floor terrace above a street of houses")},
     "village_woods": {"label": "köy kenarı, çevresi orman",
-                      "key": "A colossal fire tornado, several times taller than the houses and trees, tears from the "
-                             "burning woods into a village, its wide base engulfing the first houses and trees.",
+                      "key": "A colossal spinning fire tornado, a twisting funnel several times taller than the houses "
+                             "and trees, tears from the burning woods into a village, its wide base engulfing the first "
+                             "houses and trees.",
                       "spots": ("Hillside terrace above a village", "High balcony of a village house")},
 }
 FIRE_TOR_ENV_BLOCK = 2
@@ -2583,6 +2695,8 @@ def people_line(spec: dict) -> str:
 # paylaşır (en fazla 18). Önceki: 4-9s/9-15s 18, 0-4s kalan.
 # 15 Eki (2): ateş hortumu da (kilit cümle 18 -> 26 kelime, toplam 75)
 BUDGET_EVENTS = AVALANCHE_EVENTS + EARTHQUAKE_EVENTS + (FIRE_TORNADO,)   # 14 Eki: deprem de
+# 18 Eki (2), kuru deneme: Parti 2 olaylarında GPT toplamı 71-78 kelime yazıp yedeğe düşüyordu (bütçe satırı yoktu)
+BUDGET_EVENTS += (FLOOD, MUDSLIDE, SLOPE, VILLAGE, WILDFIRE, FACADE_FIRE, HELICOPTER, LANDFALL, MARINA_TORNADO, AVENUE)
 BUDGET_SLICE_MAX = 18
 BUDGET_SLICE_1 = 10
 
@@ -2893,6 +3007,8 @@ POOL_LINT_SMALL_VEHICLE = ("small car", "small van", "small boxy car", "small ve
                            "compact", "compact car", "subcompact", "mini car", "minicar", "microcar")
 POOL_LINT_SHIP = ("cargo", "tugboat", "tug boat", "fishing boat", "trawler", "freighter", "container ship", "tanker",
                   "commercial ship", "barge")
+# 18 Eki (2): ateş hortumu beat'lerinde düz sütun / patlama çağrıştıran sözcükler (videoda huni yerine sütun çıkıyordu)
+FIRE_TOR_SHAPE_BANNED = ("column", "plume", "pillar", "explosion", "explode", "blast")
 POOL_LINT_RULES = (("ince/uzak hedef", POOL_LINT_THIN), ("açık arazi", POOL_LINT_OPEN_LAND),
                    ("küçük araç", POOL_LINT_SMALL_VEHICLE), ("ticari gemi", POOL_LINT_SHIP))
 _PROTECTED = "korunan: daha önce üretilmiş videoda kullanıldı"
@@ -2903,15 +3019,13 @@ _WAITING = "çıkış bekliyor: grup 4'ün altına düşerdi, yerine yeni beat s
 POOL_LINT_GRANDFATHERED = {
     (FLOOD, "V4"): _KEPT + " (özne araç, direk ikincil)", (FLOOD, "D2"): _PROTECTED + " (3 Eki Kie sel testi V6+D2)",
     (TIDAL, "T6"): _PROTECTED, (TIDAL, "W2"): _PROTECTED, (TIDAL, "W6"): _PROTECTED,
-    (MUDSLIDE, "M2"): _WAITING, (MUDSLIDE, "M5"): _WAITING,
     (SLOPE, "R2"): _PROTECTED, (SLOPE, "S4"): _PROTECTED,
     (VILLAGE, "K3"): _KEPT + " (özne araç, çit ikincil)",
     (LANDFALL, "E5"): _KEPT + " (özne dükkân önü)",
     (MARINA_TORNADO, "Y3"): _PROTECTED, (MARINA_TORNADO, "Z1"): _PROTECTED, (MARINA_TORNADO, "Z2"): _KEPT,
     (MARINA_TORNADO, "Z6"): _PROTECTED,
     (AVENUE, "P5"): _PROTECTED, (AVENUE, "Q3"): _PROTECTED, (AVENUE, "Q6"): _PROTECTED,
-    (WILDFIRE, "K4"): _WAITING, (WILDFIRE, "K6"): _WAITING,
-    (FACADE_FIRE, "M2"): _WAITING, (FACADE_FIRE, "M5"): _WAITING, (FACADE_FIRE, "M6"): _PROTECTED,
+    (FACADE_FIRE, "M6"): _PROTECTED,
     (FACADE_FIRE, "N5"): _ONLY_REPEAT,
     (ERUPTION, "S4"): _KEPT + " (özne ağaç sırası)", (ERUPTION, "U2"): _KEPT + " (özne araç)",
     (PYROCLASTIC, "P2"): _PROTECTED + "; kül bulutu bu turda dokunulmaz",
@@ -2938,6 +3052,11 @@ def pool_lint_errors() -> list[str]:
                     out.append(f"{event}/{bid}: {hits}")
                 if not hits and (event, bid) in POOL_LINT_GRANDFATHERED:
                     out.append(f"{event}/{bid}: muafiyet gereksiz (ihlal yok)")
+    for slot in ("slice_2", "slice_3"):   # 18 Eki (2): ateş hortumu dönen huni; sütun/patlama sözcüğü yok
+        for bid, beat in EVENT_BEATS[FIRE_TORNADO][slot].items():
+            shape = find_terms(FIRE_TOR_SHAPE_BANNED, beat["text"])
+            if shape:
+                out.append(f"{FIRE_TORNADO}/{bid}: ateş hortumu beat'inde şekil sözcüğü ({', '.join(shape)})")
     for event in VOLCANO_EVENTS:   # 18 Eki: volkan beat'inde "rain" fiili yok (yağmur kapısı/yağış çağrışımı)
         for slot in ("slice_2", "slice_3"):
             for bid, beat in EVENT_BEATS[event][slot].items():

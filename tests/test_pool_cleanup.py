@@ -25,10 +25,11 @@ RT, BAL = "Rooftop terrace facing the erupting volcano", "Balcony of a village h
 # Bahadır'ın metni birebir (17 Eki, Parti 1)
 NEW_BEATS = {   # 18 Eki: kısa metinler (≤16 kelime; 17 Eki uzun metinleri commit d77655d)
     (FT, "slice_2", "T7"): "the {vehicle} races away from the fire tornado as burning debris crashes down behind it",
+    # 18 Eki (2): "column" -> "funnel" (dönen huni)
     (FT, "slice_3", "U7"): "a wooden house across the street is torn from its foundation, planks spiraling into the "
-                           "column",
-    (FT, "slice_3", "U8"): "the roofs of two houses across the street are ripped off and sucked into the column",
-    (FT, "slice_3", "U9"): "the front wall of a house across the street tears away, rubble sucked into the column",
+                           "funnel",
+    (FT, "slice_3", "U8"): "the roofs of two houses across the street are ripped off and sucked into the funnel",
+    (FT, "slice_3", "U9"): "the front wall of a house across the street tears away, rubble sucked into the funnel",
     (FT, "slice_3", "U10"): "the porch and steps of a house across the street are ripped off and pulled in",
     (FT, "slice_3", "U11"): "a wooden garage beside a house across the street bursts apart, burning boards spiraling "
                             "up",
@@ -178,7 +179,7 @@ class TestPoolLint(unittest.TestCase):
 
     def test_grandfather_list_is_exact(self):
         # her muafiyetin gerekçesi var; havuzda olmayan ya da artık ihlal etmeyen beat muaf kalamaz
-        self.assertEqual(len(es.POOL_LINT_GRANDFATHERED), 31)
+        self.assertEqual(len(es.POOL_LINT_GRANDFATHERED), 25)   # 18 Eki (2): çıkış bekleyen 6 lint muafiyeti çıktı
         for (event, bid), why in es.POOL_LINT_GRANDFATHERED.items():
             with self.subTest(beat=(event, bid)):
                 self.assertTrue(why.startswith(("korunan", "denetimde", "çıkış bekliyor")), why)
@@ -206,17 +207,19 @@ class TestCleanupRule(unittest.TestCase):
     # 17 Eki kural tabanlı temizlik: çıkan beat'ler (kod -> kural), korunan ve çıkış bekleyenler havuzda
     RETIRED = {es.FLOOD: {"D1", "D6", "D7"}, es.TIDAL: {"W7"}, es.SLOPE: {"S1", "S6"}, es.VILLAGE: {"L2"},
                es.LANDFALL: {"C3", "C6", "E3", "E6"}, es.MARINA_TORNADO: {"Y4", "Y6", "Z5"},
-               es.AVENUE: {"P3", "Q5"}, es.WILDFIRE: {"L2", "L6"}, es.FACADE_FIRE: {"N2", "N6"},
+               es.AVENUE: {"P3", "Q5"}, es.WILDFIRE: {"L2", "L6", "K3", "K4", "K6"},
+               es.FACADE_FIRE: {"N2", "N6", "M1", "M2", "M3", "M4", "M5"},
                FT: {"T3", "U3", "U4", "U5"}, es.HELICOPTER: {"G4"}, ER: {"S1", "U1"}, VB: {"R6", "T3", "T4"},
-               es.AVALANCHE_FOREST: {"F3"}}
+               es.AVALANCHE_FOREST: {"F3", "E5"},
+               # 18 Eki (2): çıkış bekleyenler Parti 2 ile çıktı
+               es.MUDSLIDE: {"M1", "M2", "M5"}, es.EARTHQUAKE_OLD_STREET: {"T2"}}
     # daha önce üretilmiş videoda kullanılan (Notion, 17 Eki anlık görüntü) ve kurala göre zayıf: havuzda kalır
     PROTECTED_WEAK = {es.FLOOD: {"D2"}, es.TIDAL: {"W1", "W2", "W6"}, es.MUDSLIDE: {"M3"}, es.SLOPE: {"R2", "S4"},
                       es.MARINA_TORNADO: {"Z6"}, es.AVENUE: {"P6", "Q3", "Q6"}, es.WILDFIRE: {"K5"},
                       es.FACADE_FIRE: {"M6"}, ER: {"S2", "U3"}, VB: {"R3", "R4"}}
     # grup 4'ün altına düşerdi (ya da nokta seçilemez olurdu): çıkış bekliyor, yerine yeni beat sonraki partide
-    WAITING = {es.MUDSLIDE: {"M1", "M2", "M5"}, es.WILDFIRE: {"K3", "K4", "K6"},
-               es.FACADE_FIRE: {"M1", "M2", "M3", "M4", "M5"}, es.EARTHQUAKE_OLD_STREET: {"T2"},
-               es.AVALANCHE_FOREST: {"E5"}}
+    # 18 Eki (2): çıkış bekleyenlerin hepsi Parti 2 ile çıktı (RETIRED'da)
+    WAITING = {}
 
     def test_retired_exactly(self):
         self.assertEqual({e: set(d) for e, d in es.RETIRED_BEATS.items()}, self.RETIRED)
@@ -305,7 +308,8 @@ class TestNewBeats(unittest.TestCase):
         pairs = {p for s in sk.view_spots(FT, None) for p in es.allowed_pairs(FT, None, s)}
         for b2 in ("T6", "T7"):
             self.assertGreaterEqual(len({d for v, d in pairs if v == b2}), 4, b2)
-        self.assertEqual(es.EVENT_BEATS[FT]["excluded_pairs"], {("T1", "U2"), ("T2", "U2"), ("T6", "U1")})
+        # 18 Eki (2): kilit cümle 32-33 kelime: T6 (19 + araç) U2 ve U6 ile 75'i aşar
+        self.assertEqual(es.EVENT_BEATS[FT]["excluded_pairs"], {("T1", "U2"), ("T2", "U2"), ("T6", "U2"), ("T6", "U6")})
         self.assertEqual(es._VOLC_BOMBS_GAPS | es._VOLC_ERUPTION_GAPS, set())
         self.assertNotIn(FT, es.BEAT_BLOCK_FALLBACK_EVENTS)
 
@@ -449,6 +453,261 @@ class TestStorySourceNotion(unittest.TestCase):
         text = fr.report(rows)
         self.assertIn(f"{FT}: yedek 1/2 (%50)", text)
         self.assertIn("toplam 40-75 kelime: 1", text)
+
+
+# ── 18 Eki (2), Bahadır: Parti 2 (kalan olaylar), ateş hortumu şekli, şok dalgası devre dışı ────────────────────────
+PARTI2 = {   # (olay, dilim, kimlik): (metin, GPT tarzı doğru anlatım)
+    (es.MUDSLIDE, "slice_3", "M7"): ("mud slams into a house across the street and bursts through its ground floor",
+                                      "The mud smashes into a house across the street and floods its ground floor."),
+    (es.MUDSLIDE, "slice_3", "M8"): ("the mud shoves a large truck sideways into the front of a house",
+                                      "The mudflow shoves a big truck sideways into the front of a house."),
+    (es.MUDSLIDE, "slice_3", "M9"): ("a mass of mud and uprooted trees crashes onto the houses across the street",
+                                      "Mud and uprooted trees crash down onto the houses across the street."),
+    (es.SLOPE, "slice_3", "S7"): ("the mud and boulders shove a large truck sideways toward the edge of the road",
+                                   "The torrent of mud and boulders pushes a large truck sideways to the road edge."),
+    (es.VILLAGE, "slice_3", "L7"): ("the landslide rips a wooden house off its foundation and carries it down the slope",
+                                     "The torrent tears a wooden house off its foundation and sweeps it downhill."),
+    (es.FLOOD, "slice_3", "D9"): ("the flood bursts through the ground floor of a building across the street",
+                                   "The floodwater smashes through the ground floor of a building across the street."),
+    (es.WILDFIRE, "slice_2", "K7"): ("a wall of flames races up the slope and engulfs the first houses across the street",
+                                      "The wall of flames sweeps up the slope and engulfs the nearest houses."),
+    (es.WILDFIRE, "slice_2", "K8"): ("the flames leap across the street and ignite the roof of a house",
+                                      "Flames jump across the street and set the roof of a house ablaze."),
+    (es.WILDFIRE, "slice_2", "K9"): ("the {vehicle} speeds down the road past burning houses as flames lick the asphalt",
+                                      "The SUV races down the road past blazing houses as fire licks the asphalt."),
+    (es.WILDFIRE, "slice_3", "L7"): ("a house across the street is engulfed and its roof collapses in a burst of flames",
+                                      "A house across the street is swallowed by fire and its roof caves in."),
+    (es.FACADE_FIRE, "slice_2", "M7"): ("burning cladding panels peel off the facade beside the balcony and fall in flames",
+                                         "Burning cladding panels tear off the facade next to the balcony and drop."),
+    (es.FACADE_FIRE, "slice_2", "M8"): ("flames race up the facade, panel after panel igniting right beside the balcony",
+                                         "Fire races up the facade, igniting one panel after another by the balcony."),
+    (es.FACADE_FIRE, "slice_2", "M9"): ("a huge sheet of burning facade tears loose and crashes down the tower",
+                                         "A huge burning sheet of cladding breaks loose and crashes down the tower."),
+    (es.FACADE_FIRE, "slice_2", "M10"): ("thick fire pours out of the windows of the floor below the balcony",
+                                          "Thick flames pour out of the windows on the floor below the balcony."),
+    (es.FACADE_FIRE, "slice_2", "M11"): ("the flames leap up the facade to the balconies above in a roaring wall",
+                                          "A roaring wall of flame leaps up the facade to the balconies above."),
+    (es.HELICOPTER, "slice_3", "G7"): ("burning treetops erupt as the helicopter's water load hits the ridge above the "
+                                       "houses", "Burning treetops flare up as the water load hits the ridge above the houses."),
+    (es.LANDFALL, "slice_3", "E7"): ("the tornado shreds the top floor of a building across the street, debris spiraling up",
+                                      "The tornado rips the top floor off a building across the street, debris whirling up."),
+    (es.MARINA_TORNADO, "slice_2", "Y7"): ("the tornado rips the roof off the café across the quay and hurls it away",
+                                            "The tornado tears the roof off the café across the quay and flings it away."),
+    (es.MARINA_TORNADO, "slice_2", "Y8"): ("the tornado smashes into the quayside building and its front wall bursts outward",
+                                            "The tornado slams into the quayside building, blowing its front wall outward."),
+    (es.MARINA_TORNADO, "slice_3", "Z7"): ("the tornado lifts the whole café terrace off the quay and scatters it across the "
+                                           "road", "The tornado lifts the café terrace off the quay and scatters it over the road."),
+    (es.AVENUE, "slice_2", "P7"): ("the tornado flings a large truck across the avenue into the front of a building",
+                                    "The tornado hurls a large truck across the avenue into the front of a building."),
+    (es.EARTHQUAKE_APARTMENT, "slice_3", "Q5"): ("the top floors of the apartment block across the street collapse straight "
+                                                 "down", "The top floors of the block across the street collapse straight down."),
+    (es.EARTHQUAKE_OLD_STREET, "slice_3", "T5"): ("the upper floor of a stone house slides off and crashes onto the street "
+                                                  "below", "The upper floor of a stone house slides off and crashes into the street."),
+    (es.EARTHQUAKE_OLD_STREET, "slice_3", "T7"): ("a stone house across the street collapses sideways in a huge wall of dust "
+                                                  "and rubble", "A stone house across the street topples over sideways in a cloud of dust."),
+    (es.AVALANCHE_FOREST, "slice_2", "E7"): ("the avalanche smashes through the front of a stone farmhouse and its roof caves "
+                                             "in", "The avalanche crashes through the front of a stone farmhouse and its roof caves in."),
+    (es.AVALANCHE_FOREST, "slice_3", "F7"): ("the avalanche front sweeps a wooden cabin off its base and breaks it apart",
+                                             "The avalanche sweeps a wooden cabin off its base and smashes it apart."),
+}
+# Bahadır'ın listesinden eklenmeyenler (neden) — rapor ve kilit
+PARTI2_NOT_ADDED = {
+    "a huge wave of mud and boulders crashes across the road, burying it completely": "yamaç S5 ile aynı (aynı dilim)",
+    "the fire storm tears through the trees beside the houses, huge flames towering over the roofs": "orman L4 ile aynı",
+    "the whole upper section of the tower is engulfed, flames roaring from every window": "cephe N4 ile aynı",
+    "a burning section of the facade collapses and avalanches down the tower in flames": "cephe N3 ile aynı",
+    "the tornado tears the roof off a building across the street and flings it down the avenue": "17 kelime (≤16)",
+    "the tornado lifts a large truck and flings it across the street": "karaya vuruş C5 ile aynı (aynı dilim)",
+    "the tornado rips a row of palm trees out of the ground and flings them down the street": "E4 ile aynı, 18 kelime",
+    "the tornado tears the upper floors off a hotel across the avenue in a storm of debris": "17 kelime (≤16)",
+    "the front wall of a stone house splits open and crashes into the street": "eski sokak R1 ile aynı",
+    "the stone facade across the street peels away and collapses into a cloud of dust": "eski sokak R1 ile aynı",
+    "a stone house across the street caves in and its roof drops through the floors": "eski sokak T4 ile aynı",
+    "two stone houses lean together and collapse, walls burying the street in rubble": "deprem kuralı: gömülme yok",
+    "the facade of the apartment block across the street cracks open and slabs fall away": "apartman P2 ile aynı",
+    "a whole column of balconies on the apartment block across the street breaks away": "deprem kuralı: balkon düşmesi yok",
+    "the apartment block across the street tilts and its side wall crashes into the street": "apartman Q4 ile aynı",
+}
+
+
+class TestParti2(unittest.TestCase):
+    def test_counts_and_not_added(self):
+        self.assertEqual(len(PARTI2), 26)
+        self.assertEqual(len(PARTI2) + len(PARTI2_NOT_ADDED), 41)
+        pool_texts = {b["text"] for e in es.EVENT_BEATS.values() for sl in ("slice_2", "slice_3") for b in e[sl].values()}
+        for t in PARTI2_NOT_ADDED:
+            self.assertNotIn(t, pool_texts)
+
+    def test_every_group_at_least_four_and_spots_selectable(self):
+        for e in {k[0] for k in PARTI2}:
+            b = es.EVENT_BEATS[e]
+            self.assertGreaterEqual(min(len(b["slice_2"]), len(b["slice_3"])), 4, e)
+            for view in es.structure_views(e):
+                for spot in sk.view_spots(e, view):
+                    self.assertTrue(es.allowed_pairs(e, view, spot), (e, spot))
+
+
+def _make_parti2_test(event, slot, bid, text, para):
+    def test(self):
+        beat = es.EVENT_BEATS[event][slot][bid]
+        self.assertEqual(beat["text"], text)
+        self.assertLessEqual(len(text.replace("{vehicle}", "x").split()), 16)
+        self.assertEqual(es.pool_lint_hits(text.replace("{vehicle}", "vehicle")), [])
+        self.assertNotIn(bid, es.RETIRED_BEATS.get(event, {}))
+        for code, terms, *_ in es.EVENT_BANNED_WORDS.get(event, ()):
+            self.assertEqual(es.find_terms(terms, text), [], code)
+        view = es.structure_views(event)[0]
+        found = 0
+        for s in sk.view_spots(event, view):
+            for p2, p3 in es.allowed_pairs(event, view, s):
+                if (p2 if slot == "slice_2" else p3) != bid:
+                    continue
+                vehicles = [v for v, _ in es.event_vehicles(event, view)] if es.uses_vehicle(event) else [None]
+                lo, hi = sk.count_range(event, None)
+                for veh in vehicles:
+                    for people in (range(lo, hi + 1) if es.has_people_rule(event) else [None]):
+                        spec = es.build_spec(event, None, s, view, p2, p3, veh, people)
+                        cands = es.fallback_candidates(spec)
+                        self.assertTrue(cands, (s, p2, p3, veh, people))   # kod yedeği 75 kelimeye sığar
+                        sl = cands[0]
+                        prompt = es.assemble_prompt(spec, sl)
+                        # son denetim: yakınlık kapısı (olan olaylarda), 175 kelime, sert kurallar, yumuşak kapı
+                        self.assertEqual(es.final_prompt_issues(spec, sl, prompt, es.assemble_story(spec, sl)), [],
+                                         (s, p2, p3, veh, people))
+                        self.assertEqual(es.strict_beat_issues(spec, sl), [])
+                        found += 1
+                if found:
+                    # GPT tarzı doğru anlatım (ana nesne tanınır, başka beat'e benzetilmez)
+                    veh = "SUV" if "{vehicle}" in text else (vehicles[0] if es.uses_vehicle(event) else None)
+                    spec = es.build_spec(event, None, s, view, p2, p3, veh,
+                                         sk.count_range(event, None)[0] if es.has_people_rule(event) else None)
+                    base = {"slice_1_rest": "x", "slice_2": es.fallback_beat_slice(spec, "slice_2"),
+                            "slice_3": es.fallback_beat_slice(spec, "slice_3")}
+                    self.assertEqual(es.soft_beat_issues(spec, {**base, slot: para}), [], para)
+                    return
+        self.fail(f"izinli çift yok: {event}/{bid}")
+    return test
+
+
+for (_e, _sl, _bid), (_text, _para) in PARTI2.items():
+    _name = "".join(w[0] for w in _e.split()[:4]).lower()
+    setattr(TestParti2, f"test_beat_{_name}_{_bid}", _make_parti2_test(_e, _sl, _bid, _text, _para))
+
+
+class TestParti2WordBudget(unittest.TestCase):
+    """18 Eki (2) kuru deneme: toplam kelime aşımı yedekleri -> Parti 2 olaylarına da WORD BUDGET satırı."""
+    def test_budget_line_for_parti2_events(self):
+        for e in (es.FLOOD, es.MUDSLIDE, es.SLOPE, es.VILLAGE, es.WILDFIRE, es.FACADE_FIRE, es.HELICOPTER,
+                  es.LANDFALL, es.MARINA_TORNADO, es.AVENUE):
+            self.assertIn(e, es.BUDGET_EVENTS)
+            total = es.TOTAL_WORDS_BY_EVENT.get(e, es.TOTAL_WORDS)[1]
+            for view in es.structure_views(e):
+                spot = sk.view_spots(e, view)[0]
+                p2, p3 = sorted(es.allowed_pairs(e, view, spot))[0]
+                veh = es.event_vehicles(e, view)[0][0] if es.uses_vehicle(e) else None
+                ppl = sk.count_range(e, None)[0] if es.has_people_rule(e) else None
+                spec = es.build_spec(e, None, spot, view, p2, p3, veh, ppl)
+                line = es.word_budget_line(spec)
+                key = len(spec["key_visual"].split())
+                self.assertIn(f"the opening sentence has {key} words; slice_1_rest 6 to 10 words", line)
+                self.assertIn(f"must total at most {total} words", line)
+                self.assertLessEqual(key + 10 + 18 + 18, total)
+        # volkan olayları ve eski hat bütçe satırı almaz
+        for e in (es.PYROCLASTIC, VB, ER):
+            self.assertNotIn(e, es.BUDGET_EVENTS)
+
+
+class TestParti2DryRunGateFixes(unittest.TestCase):
+    """18 Eki (2) kuru deneme: doğru anlatılmış ama nesnesi tanınmayan gerçek GPT cümleleri (eş anlamlı sadece ekleme)."""
+    CASES = [   # (olay, b2, b3, dilim, gerçek GPT cümlesi)
+        (es.MUDSLIDE, "H5", "M8", "slice_3",
+         "Behind, the mud forces a large truck sideways, crashing it into a nearby house's facade."),
+        (FT, "T6", "U1", "slice_3", "The tornado yanks a burning roof into its vortex, swirling ferociously as it moves away."),
+        (es.EARTHQUAKE_OLD_STREET, "R4", "T1", "slice_3",
+         "The adjacent building collapses, expanding the dust cloud, as rubble continues to fall."),
+        (es.EARTHQUAKE_APARTMENT, "P4", "Q5", "slice_3",
+         "The upper levels collapse directly downward, sending debris shifting, still moving at the end."),
+    ]
+
+    def _spec(self, event, b2, b3):
+        view = es.structure_views(event)[0]
+        spot = next(s for s in sk.view_spots(event, view) if (b2, b3) in es.allowed_pairs(event, view, s))
+        veh = [v for v, _ in es.event_vehicles(event, view)][0] if es.uses_vehicle(event) else None
+        ppl = sk.count_range(event, None)[0] if es.has_people_rule(event) else None
+        return es.build_spec(event, None, spot, view, b2, b3, veh, ppl)
+
+    def test_real_gpt_sentences_pass_soft_gate(self):
+        for event, b2, b3, slot, text in self.CASES:
+            with self.subTest(event=event, beat=b3):
+                spec = self._spec(event, b2, b3)
+                sl = {"slice_2": es.fallback_beat_slice(spec, "slice_2"),
+                      "slice_3": es.fallback_beat_slice(spec, "slice_3"), slot: text}
+                self.assertEqual(es.soft_beat_issues(spec, sl), [])
+
+    def test_u1_vehicle_roof_still_not_u1(self):
+        spec = self._spec(FT, "T4", "U1")
+        sl = {"slice_2": es.fallback_beat_slice(spec, "slice_2"), "slice_3": "The vortex flings a burning tree trunk "
+              "onto the van, caving in its roof."}
+        self.assertIn("beat_object", {x["rule"] for x in es.soft_beat_issues(spec, sl)})
+
+
+class TestFireTornadoShape(unittest.TestCase):
+    def test_keys_spinning_funnel(self):
+        for name, env in es.FIRE_TOR_ENVS.items():
+            self.assertTrue(env["key"].startswith("A colossal spinning fire tornado, a twisting funnel several times "
+                                                  "taller than the houses and trees,"), name)
+        self.assertEqual(es.EVENT_KEY_VISUAL[FT], es.FIRE_TOR_ENVS["forest_edge"]["key"])
+
+    def test_suffix_shape_sentence_and_175(self):
+        for spot in sk.view_spots(FT, None):
+            suf = sk.style_suffix(FT, None, spot)
+            self.assertIn("The fire tornado is a visibly rotating funnel of flame with debris orbiting it, never a "
+                          "straight smoke plume or an explosion.", suf)
+            self.assertLessEqual(len(suf.split()) + 75 + 3, 175)
+        for e in es.structured_events():
+            if e != FT:
+                for spot in sk.view_spots(e, es.structure_views(e)[0]):
+                    self.assertNotIn(sk.FIRE_TORNADO_SHAPE, sk.style_suffix(e, None, spot, es.structure_views(e)[0]))
+
+    def test_shape_words_lint(self):
+        for slot in ("slice_2", "slice_3"):
+            for bid, beat in es.EVENT_BEATS[FT][slot].items():
+                self.assertEqual(es.find_terms(es.FIRE_TOR_SHAPE_BANNED, beat["text"]), [], bid)
+        b = es.EVENT_BEATS[FT]["slice_3"]
+        for word in ("column", "plume", "pillar", "explosion", "blast"):
+            b["UX"] = {"text": f"the fire tornado rips the roof off a house into its {word}", "terms": [("roof",)]}
+            es.OBJECT_GROUPS[FT]["UX"] = 0
+            try:
+                self.assertTrue([x for x in es.pool_lint_errors() if "UX" in x and "şekil" in x], word)
+            finally:
+                del b["UX"]
+                del es.OBJECT_GROUPS[FT]["UX"]
+        # diğer olaylarda "column" serbest (ör. deprem dışı)
+        self.assertNotIn("column", [w for w in es.POOL_LINT_THIN])
+
+
+class TestDisabledEvents(unittest.TestCase):
+    def test_shockwave_disabled_single_flag(self):
+        self.assertEqual(sk.DISABLED_EVENTS, {ER})
+        self.assertNotIn(ER, sk.skeleton_events("volcano_disasters"))
+        self.assertEqual(sk.skeleton_events("volcano_disasters"), [es.PYROCLASTIC, VB])
+        # havuz, iskelet, kilit cümle, kombinasyon denetimi duruyor
+        self.assertIn(ER, sk.EVENT_SKELETONS)
+        self.assertIn(ER, es.structured_events())
+        self.assertIn(ER, es.EVENT_BEATS)
+        # otomatik seçime girmez (domain verilse de verilmese de)
+        seen = set()
+        for _ in range(300):
+            _, e, _ = sk.choose_event_and_ship("volcano_disasters", None, [])
+            seen.add(e)
+        self.assertEqual(seen, {es.PYROCLASTIC, VB})
+        # Telegram menüsü aynı listeyi gösterir
+        import bot
+        self.assertNotIn(ER, bot.domain_events("volcano_disasters"))
+        # yeniden açmak tek satır: kümeden çıkınca menüye ve seçime döner
+        with patch.object(sk, "DISABLED_EVENTS", set()):
+            self.assertIn(ER, sk.skeleton_events("volcano_disasters"))
+            self.assertIn(ER, bot.domain_events("volcano_disasters"))
 
 
 if __name__ == "__main__":

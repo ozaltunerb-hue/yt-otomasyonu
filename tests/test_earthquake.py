@@ -42,23 +42,28 @@ POOLS = {
           {"Q1": "the building next door crumbles floor by floor into the same dust cloud",
            "Q2": "the dust wave rolls down the street and the upper floors of the apartment blocks opposite cave in",
            "Q3": "a row of low houses beside the block is flattened under falling concrete",
-           "Q4": "a second apartment block across the street tilts and falls into the dust"}),
+           "Q4": "a second apartment block across the street tilts and falls into the dust",
+           # 18 Eki (2), Bahadır (Parti 2)
+           "Q5": "the top floors of the apartment block across the street collapse straight down"}),
     OLD: ({"R1": "the facade of the nearest old stone house slides off in one piece and crashes down",
            "R2": "the stone walls of two houses fold inward and their roofs fall in",
            "R3": "a thick dust cloud pours down the narrow street as the stone houses keep falling",
            "R4": "a corner stone house crumbles and its rubble spreads across the junction"},
           {"T1": "the next house in the row caves in and the dust cloud grows",
-           "T2": "the collapse runs down the street, house after house, toward us",
            "T3": "the rubble heap of a fallen house slides out into the street",
-           "T4": "the roof of a stone house falls in and its walls collapse into the street"}),
+           "T4": "the roof of a stone house falls in and its walls collapse into the street",
+           # 18 Eki (2): T2 (zincirleme çöküş, fizik 2) çıktı; T5-T7 yeni (Parti 2)
+           "T5": "the upper floor of a stone house slides off and crashes onto the street below",
+           "T7": "a stone house across the street collapses sideways in a huge wall of dust and rubble"}),
 }
 # Aynı yapı/görüntü sınıfı: komşu blok (P3: Q1, Q4), toz dalgası (P1, Q2), çatı içe göçer (R2, T4), toz bulutu (R3, T1),
 # sokağa yayılan moloz (R4, T3)
+# 18 Eki (2): üst katlar çöker (P1: Q5), cephe/üst kat kayar (R1: T5), toz ve moloz (T7)
 STRUCT = {
-    APT: {"P1": {"dust"}, "P2": set(), "P3": {"neighbor"}, "P4": set(),
-          "Q1": {"neighbor"}, "Q2": {"dust"}, "Q3": set(), "Q4": {"neighbor"}},
-    OLD: {"R1": set(), "R2": {"roof"}, "R3": {"dust"}, "R4": {"rubble"},
-          "T1": {"dust"}, "T2": set(), "T3": {"rubble"}, "T4": {"roof"}},
+    APT: {"P1": {"dust", "upper"}, "P2": set(), "P3": {"neighbor"}, "P4": set(),
+          "Q1": {"neighbor"}, "Q2": {"dust"}, "Q3": set(), "Q4": {"neighbor"}, "Q5": {"upper"}},
+    OLD: {"R1": {"slide"}, "R2": {"roof"}, "R3": {"dust"}, "R4": {"rubble"},
+          "T1": {"dust"}, "T3": {"rubble"}, "T4": {"roof"}, "T5": {"slide"}, "T7": {"dust", "rubble"}},
 }
 VALID = {
     "P1": ["The upper floors pancake onto the ones below as a wall of dust surges across the street.",
@@ -126,11 +131,6 @@ VALID = {
            "The neighbouring house crumbles and the dust cloud swells.",
            "The next stone house in the row gives way and more dust rises.",
            "The next house in the row caves in and the dust cloud grows."],
-    "T2": ["The collapse sweeps down the street, house after house, toward us.",
-           "House after house falls in turn along the street, closer and closer.",
-           "One after another the houses collapse down the street, heading toward us.",
-           "The houses fall one by one along the street, the collapse coming our way.",
-           "The collapse runs down the street, house after house, toward us."],
     "T3": ["The rubble heap of a collapsed house slides into the street.",
            "A heap of rubble from a collapsed house spills across the street.",
            "The debris of a fallen house pours out onto the road.",
@@ -141,6 +141,22 @@ VALID = {
            "The roof of an old house drops in and the walls tumble into the street.",
            "A house's roof collapses and its stone walls fall into the street.",
            "The roof of a stone house falls in and its walls collapse into the street."],
+    # 18 Eki (2), Bahadır (Parti 2): yeni maddeler
+    "Q5": ["The top floors of the apartment block across the street collapse straight down.",
+           "The upper floors of the block across the street cave in straight down.",
+           "The top floor of the apartment block opposite gives way and drops straight down.",
+           "The upper floors of the block across the street crumble down onto the lower ones.",
+           "The top storeys of the apartment block opposite collapse in on themselves."],
+    "T5": ["The upper floor of a stone house slides off and crashes onto the street below.",
+           "A stone house's upper floor slides away and falls into the street.",
+           "The top floor of an old stone house slips off and crashes down onto the road.",
+           "The upper storey of a house slides off and smashes onto the street below.",
+           "A stone house loses its upper floor, which slides off and crashes into the street."],
+    "T7": ["A stone house across the street collapses sideways in a huge wall of dust and rubble.",
+           "A stone house across the street keels over sideways in a cloud of dust.",
+           "The stone house opposite topples over sideways, dust and rubble bursting out.",
+           "A house across the street collapses onto its side in a wall of dust.",
+           "An old stone house falls sideways into the street in a burst of rubble."],
 }
 # 14 Eki (2): madde metninden FARKLI yazılmış serbest cümleler (gerçek GPT üslubu: eş anlamlı ve yeniden kurulmuş).
 # Simülasyon cümleleri madde metnine yakın olunca kapı fazla sıkı kalmıştı.
@@ -210,11 +226,6 @@ FREE = {
            "The adjacent house crumbles and the cloud of dust grows even larger.",
            "The following house in the row falls in as the dust keeps swelling.",
            "The next home along caves in, throwing up even more dust into the air."],
-    "T2": ["House by house, the collapse moves down the street toward us.",
-           "The destruction sweeps along the street, one house after another giving way.",
-           "Each house in turn gives way as the collapse races ever closer.",
-           "One by one the houses fall, the wave of collapse heading our way.",
-           "The collapse spreads along the row, every house crumbling as it nears us."],
     "T3": ["The pile of rubble from a fallen house spills out across the street.",
            "A heap of debris slides off the ruined house into the middle of the road.",
            "Broken stones from a collapsed house pour out into the narrow lane.",
@@ -225,15 +236,28 @@ FREE = {
            "A house loses its roof inward and its stone walls topple into the street.",
            "A cottage's roof collapses and its walls tumble outward into the street.",
            "An old house's roof gives way and its walls come down in the street."],
+    # 18 Eki (2), Bahadır (Parti 2): yeni maddeler
+    "Q5": ["Across the street the top floors of the apartment block drop straight down.",
+           "The block opposite loses its upper floors as they cave in straight down.",
+           "Straight down crash the top floors of the apartment block across the street.",
+           "On the block across the street the top storeys give way and crash downward.",
+           "In seconds the upper floors of the block opposite collapse straight down."],
+    "T5": ["A stone house's upper floor slips away and smashes down onto the road.",
+           "Off the stone house slides its upper floor, crashing into the street below.",
+           "The house loses its top floor, which slides off and crashes onto the road.",
+           "With a roar the upper storey of a stone house slides off into the street.",
+           "Its upper floor sliding away, the stone house drops it onto the street below."],
+    "T7": ["Across the street a stone house keels over sideways in a huge cloud of dust.",
+           "The old stone house opposite tips over sideways, rubble and dust bursting out.",
+           "Sideways it falls, a stone house across the street, in a wall of dust and rubble.",
+           "With a roar the house across the street topples over sideways into the dust.",
+           "A stone house opposite collapses onto its side, dust and rubble flying."],
 }
 # 14 Eki 11:19 testinde reddedilen gerçek GPT cümleleri (geçmeli)
 REJECTED_REAL = {
     "R3": ["A dense cloud of dust rushes along the narrow street as the houses continue collapsing.",
            "A thick dust cloud engulfs the narrow street as stones continue to crumble.",
            "A dense dust cloud cascades down the street, engulfing everything in its path."],
-    "T2": ["The destruction speeds down the street, each house succumbing, debris filling the air as it progresses.",
-           "The collapse advances relentlessly, reducing each house to rubble as it races toward us.",
-           "The destruction advances, each house crumbling, stones hurtling toward us as the collapse accelerates."],
 }
 # Sadece atmosfer: hiçbir maddeden geçmemeli
 ATMOSPHERE = ["The ground shakes under a hazy sky.",
@@ -442,7 +466,7 @@ class TestEarthquake(unittest.TestCase):
                 self.assertIn("earthquake_no_slow", codes(spec, {**sl, "slice_3": bad}))
         # kamera kelimesi yine yasak (b kuralı)
         bad = es.clean_slice("The collapse runs down the street, house after house, toward the camera")
-        spec2, sl2 = build(OLD, "R2", "T2")
+        spec2, sl2 = build(OLD, "R2", "T3")   # 18 Eki (2): T2 çıktı
         self.assertIn("b_no_camera_words", {i["rule"] for i in es.final_prompt_issues(
             spec2, {**sl2, "slice_3": bad}, es.assemble_prompt(spec2, {**sl2, "slice_3": bad}),
             es.assemble_story(spec2, {**sl2, "slice_3": bad}))})
@@ -470,13 +494,14 @@ class TestEarthquake(unittest.TestCase):
                     spots = {ROOF, BAL} - b["excluded_spots"].get(bid, set())
                     self.assertEqual(spots, {ROOF} if bid in HIGH else {ROOF, BAL}, bid)
         counts = {e: [len(es.allowed_pairs(e, None, s)) for s in (ROOF, BAL)] for e in EQ}
-        self.assertEqual(counts, {APT: [13, 7], OLD: [13, 9]})
+        self.assertEqual(counts, {APT: [16, 9], OLD: [14, 10]})   # 18 Eki (2): Parti 2 (Q5, T5, T7; T2 çıktı)
 
     def test_block_depth_two_with_fallback_never_runs_out(self):
         self.assertEqual({e: es.RECENT_BEAT_BLOCK_BY_EVENT[e] for e in EQ}, {APT: 2, OLD: 2})
         # 17 Eki (temizlik turu): ateş hortumu, hortum karaya vuruş, orman yangını, çığ köy de aday kalmazsa 1'e düşer
         # 18 Eki: ateş hortumu listeden çıktı (kısa metinlerle yeterli çift)
-        self.assertEqual(es.BEAT_BLOCK_FALLBACK_EVENTS, EQ + (es.LANDFALL, es.WILDFIRE, es.AVALANCHE_VILLAGE))
+        self.assertEqual(es.BEAT_BLOCK_FALLBACK_EVENTS, EQ + (es.LANDFALL, es.WILDFIRE, es.AVALANCHE_VILLAGE,
+                                                              es.FACADE_FIRE))   # 18 Eki (2): cephe yangını
 
         def worst(e, spot, k):
             b, ps = es.EVENT_BEATS[e], es.allowed_pairs(e, None, spot)
@@ -521,7 +546,7 @@ class TestEarthquake(unittest.TestCase):
                             self.fail(f"{e}/{spot}/{b2}+{b3}/{env}: {issues}")
                         self.assertLessEqual(len(prompt.split()), 175)
                         n += 1
-        self.assertEqual(n, (13 + 7) * len(all_envs(APT)) + (13 + 9) * len(all_envs(OLD)))
+        self.assertEqual(n, (16 + 9) * len(all_envs(APT)) + (14 + 10) * len(all_envs(OLD)))   # 18 Eki (2)
 
     def test_environment_compatibility(self):
         self.assertEqual(es.EQ_ENV_AXES["light"], ("hazy dusty morning", "heavy grey overcast sky",
@@ -561,7 +586,7 @@ class TestEarthquake(unittest.TestCase):
             prev = []
             for _ in range(200):
                 spot = es.choose_env_spot(e, [ROOF, BAL], rng)
-                env = es.choose_environment(e, spot, "P1" if e == APT else "R2", "Q1" if e == APT else "T2", rng)
+                env = es.choose_environment(e, spot, "P1" if e == APT else "R2", "Q1" if e == APT else "T3", rng)
                 if prev:
                     for axis in ("city", "street", "light", "spot"):
                         self.assertNotEqual(env[axis], prev[-1][axis], axis)
@@ -622,6 +647,10 @@ class TestEarthquake(unittest.TestCase):
                 self.assertGreaterEqual(len(set(tags)), 12)
                 self.assertEqual(first_pass, 100)
 
+    def _beat(self, bid):
+        e = APT if bid[0] in "PQ" else OLD
+        return es.EVENT_BEATS[e]["slice_2" if bid[0] in "PR" else "slice_3"][bid]
+
     def _terms(self, bid):
         e = APT if bid[0] in "PQ" else OLD
         return es.EVENT_BEATS[e]["slice_2" if bid[0] in "PR" else "slice_3"][bid]["terms"]
@@ -665,12 +694,13 @@ class TestEarthquake(unittest.TestCase):
                         continue
                     for t in FREE[o] + VALID[o] + REJECTED_REAL.get(o, []):
                         with self.subTest(beat=b, other=o, text=t):
-                            self.assertTrue(es.missing_term_groups(self._terms(b), t))
-        self.assertTrue(es.missing_term_groups(self._terms("T2"), FREE["R3"][0]))
+                            # 18 Eki (2): "unless" de kapının parçası (Q5: tozlu üst kat çökmesi Q2'dir)
+                            self.assertTrue(es.beat_missing(self._beat(b), t))
+        self.assertTrue(es.missing_term_groups(self._terms("T7"), FREE["R3"][0]))   # 18 Eki (2): T2 çıktı
         self.assertTrue(es.missing_term_groups(self._terms("P4"), FREE["P1"][0]))
 
     def test_people_gate_unchanged(self):
-        spec, sl = build(OLD, "R3", "T2")
+        spec, sl = build(OLD, "R3", "T3")   # 18 Eki (2): T2 çıktı
         far = "Three people sprint away from the crumbling buildings, seeking safety."
         self.assertIn("slice_near_camera", {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": far})})
         for t in ("Three people run from the collapsing buildings in the street right below.",

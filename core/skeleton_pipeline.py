@@ -96,13 +96,15 @@ CAMERA_SPOTS = {
     # 16 Eki, Bahadır: ateş hortumu ortam ekseni (event_structure.FIRE_TOR_ENVS). Sahne her zaman ağaçlık bir yerleşim;
     # açık arazi yok. Önceki iki nokta: "Overlook above the burning valley road" ("on a roadside overlook above the
     # burning valley road"), "Balcony of a roadside house" ("on a high balcony of a roadside house overlooking the road")
-    "High balcony at the edge of a wooded neighborhood": "on a high balcony of a house at the edge of the wooded "
-                                                         "neighborhood, looking down at the houses and trees",
+    # 18 Eki (2): ateş hortumu stil eki 175 için kısaldı. Önceki: "on a high balcony of a house at the edge of the
+    # wooded neighborhood, looking down at the houses and trees" / "on a high balcony of a village house looking down
+    # the street"
+    "High balcony at the edge of a wooded neighborhood": "on a high balcony above the wooded neighborhood",
     "Rooftop terrace above a wooded residential area": "on a rooftop terrace above a wooded residential area",
     "High balcony over a tree-lined residential street": "on a high balcony overlooking a tree-lined residential street",
     "Upper-floor terrace above a street of houses": "on an upper-floor terrace above a street of houses",
     "Hillside terrace above a village": "on a hillside terrace above the village houses",
-    "High balcony of a village house": "on a high balcony of a village house looking down the street",
+    "High balcony of a village house": "on a high balcony of a village house",
     # 🌋 Volkan (10 Eki, Bahadır): hepsi yüksek ve dağa bakıyor. 13 Eki: "facing the erupting volcano" volkan kamera
     # cümlesine taşındı (VOLCANO_CAMERA_PERCH); önceki metinler "..., facing the erupting volcano (across the street)"
     "Hillside terrace facing the erupting volcano": "on a hillside terrace above the village",
@@ -863,14 +865,22 @@ def earthquake_camera(spot: str) -> str:
 # suits." Önceki kamera: "...filling at least half of the frame, its top and smoke cloud never cut off, two or three
 # people fleeing it in the near foreground; slight hand shake, the camera pans to follow the fire tornado; ..." (ölçek
 # kilit cümlede: "towering" kamera cümlesinden çıktı)
-FIRE_TORNADO_GUARDRAILS = "Bystanders wear civilian clothes, never hi-vis PPE; raw natural light, never glossy or CGI; no hazmat suits."
+# 18 Eki (2), Bahadır: videolarda hortum dönen huni değil düz yangın sütunu / patlama gibi çıkıyordu. Şekil cümlesi
+# eklendi (FIRE_TORNADO_SHAPE); 175 kelime için kamera cümlesi, giyim/ışık satırı ve iki kamera noktası kısaldı (en uzun
+# stil eki 97: 97 + 75 + 3 = 175; kısıt sayısı 8). Önceki giyim/ışık: "Bystanders wear civilian clothes, never hi-vis
+# PPE; raw natural light, never glossy or CGI; no hazmat suits." Önceki kamera: "...high vantage close to the fire
+# tornado filling at least half the frame, its top and smoke never cut off, two or three people fleeing in the near
+# foreground; slight hand shake, the camera pans to follow the tornado; one continuous shot, no zoom, no cuts."
+FIRE_TORNADO_SHAPE = ("The fire tornado is a visibly rotating funnel of flame with debris orbiting it, never a straight smoke "
+                      "plume or an explosion.")
+FIRE_TORNADO_GUARDRAILS = ("Bystanders wear civilian clothes, never hi-vis PPE; natural light, never glossy or CGI; no "
+                           "hazmat suits. " + FIRE_TORNADO_SHAPE)
 
 
 def fire_tornado_camera(spot: str) -> str:
-    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage close to the fire tornado "
-            f"filling at least half the frame, its top and smoke never cut off, two or three people fleeing in the near "
-            f"foreground; slight hand shake, the camera pans to follow the tornado; one continuous shot, no zoom, no "
-            f"cuts.")
+    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage, the tornado filling half "
+            f"the frame, top never cut off, two or three people fleeing close below; slight hand shake, the camera "
+            f"pans to follow the tornado; one continuous shot, no zoom, no cuts.")
 
 
 # 18 Eki: "matching the weather" çıktı (175 kelime; kısıtlar aynı). Kül bulutu eski metinle (VOLCANO_GUARDRAILS_LONG)
@@ -884,9 +894,16 @@ class SlotFillError(RuntimeError):
     """gpt-4o-mini boşlukları iki denemede de geçerli dolduramadı (sessiz yedek yok)."""
 
 
+# 18 Eki (2), Bahadır: DEVRE DIŞI olaylar. Telegram menüsünde görünmez, otomatik (LRU) seçime girmez; havuz, beat'ler,
+# iskelet, Notion kayıtları ve testler aynen durur (kombinasyon testleri ve havuz linti bu olayları da denetler). Yeniden
+# açmak için olayı bu kümeden çıkarmak yeter (tek satır). Şok dalgası: videolar gri, uzak ve sönük çıkıyordu.
+DISABLED_EVENTS = {"Volcano erupts and a shockwave blows out windows"}
+
+
 def skeleton_events(domain: str) -> list[str]:
-    """Domain'in bu hatta kullanılabilen olayları, havuz sırasıyla (Telegram menüsü bu listeyi gösterir)."""
-    return [e for e in DOMAIN_ATTRIBUTES[domain]["events"] if e in EVENT_SKELETONS]
+    """Domain'in bu hatta kullanılabilen olayları, havuz sırasıyla (Telegram menüsü bu listeyi gösterir). 18 Eki (2):
+    DISABLED_EVENTS listede yok (menü ve otomatik seçim). Kodla doğrudan olay vermek (kuru deneme betiği) yine çalışır."""
+    return [e for e in DOMAIN_ATTRIBUTES[domain]["events"] if e in EVENT_SKELETONS and e not in DISABLED_EVENTS]
 
 
 def count_range(event: str, ship: str | None) -> tuple[int, int]:

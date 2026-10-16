@@ -90,6 +90,30 @@ Volkan stil eki patlama ve bombalarda kısaldı (en uzun 106 -> 96 kelime; 96 + 
 Kuru deneme (`scratch/dry_run_kisa_18eki.json`, 42 çağrı, ~0,20 $): ateş hortumu GPT 9/10, bombalar 8/10, şok dalgası
 10/10 (17 Eki: 9/6/5).
 
+**18 Eki (2): ateş hortumu şekli + Parti 2 + şok dalgası devre dışı** (Kie yok; kül bulutu, bombalar, eski gemi hattı
+değişmedi):
+- **Ateş hortumu şekli:** 3 kilit cümle "A colossal spinning fire tornado, a twisting funnel several times taller than the
+  houses and trees, ..." (32-33 kelime, bütçe kendiliğinden 4-9s/9-15s 16 kelime). U1/U7/U8/U9 "column" -> "funnel"
+  (U1 16 kelimeye kısaldı). Stil ekinde `sk.FIRE_TORNADO_SHAPE` ("visibly rotating funnel of flame with debris orbiting
+  it, never a straight smoke plume or an explosion"); 175 için kamera cümlesi ve 2 balkon noktası kısaldı (en uzun ek
+  96, en uzun prompt 174). Lint: ateş hortumu beat'inde column/plume/pillar/explosion/blast HATA
+  (`es.FIRE_TOR_SHAPE_BANNED`). Yedeği sığmayan hariç çiftler T1+U2, T2+U2, T6+U2, T6+U6.
+- **Parti 2:** 41 metinden 26'sı eklendi (yokuş M7-M9, yamaç S7, köy L7, sel D9, orman K7-K9 L7, cephe M7-M11, helikopter
+  G7, karaya E7, marina Y7 Y8 Z7, cadde P7, deprem apartman Q5, eski sokak T5 T7, çığ orman E7 F7). 15'i eklenmedi
+  (aynı dilimde aynı anlam 10, 16 kelimeyi aşan 3, deprem kilit kuralı 2: gömülme / balkon düşmesi): liste ve neden
+  `tests/test_pool_cleanup.py` `PARTI2_NOT_ADDED`. Çıkış bekleyenlerin hepsi çıktı (yokuş M1 M2 M5, orman K3 K4 K6, cephe
+  M1-M5, eski sokak T2, çığ orman E5); grandfather 31 -> 25. Cephe yangını `BEAT_BLOCK_FALLBACK_EVENTS`'e girdi.
+- **Şok dalgası devre dışı:** `sk.DISABLED_EVENTS` (tek bayrak). Menüde ve otomatik seçimde yok; havuz, iskelet ve tüm
+  testler duruyor. Açmak için kümeden çıkar. Volkan menüsü 2 olay: kül bulutu ve bombalar volkan seçimlerinin 1/2'sini
+  alır (önce 1/3). Eski Telegram düğmeleri indeks bazlı: eski mesajdaki düğme kayabilir.
+- **Kelime bütçesi satırı** Parti 2 olaylarına da (`es.BUDGET_EVENTS`: sel, yokuş, yamaç, köy, orman, cephe, helikopter,
+  karaya, marina, cadde). Kuru denemede GPT toplamı 71-78 kelime yazıp yedeğe düşüyordu; satırla ikinci denemede 21/21 GPT.
+- **Nesne kapısı (eş anlamlı ekleme):** deprem T1 "building", Q5 "upper levels/stories", ateş hortumu U1 nesnesi ev veya
+  yanan çatı ("burning roof"; araç tavanı sayılmaz), yokuş M8 nesnesi ev (kamyon evin önüne; M7'ye benzetiliyordu).
+- **Kuru deneme** (`scratch/dry_run_parti2_18eki.json` 70 üretim, `_2` 21, `_3` 12; toplam ~0,86 $ dahil yanlışlıkla
+  başlayan 0,17 $): ilk koşu GPT 62/70, düzeltmeden sonra 31/33. Kalan yedek nedeni "0-4s insanlar kameraya yakın
+  değil" (deprem, çığ orman, ateş hortumu); yakınlık kuralına dokunulmadı, karar Bahadır'da.
+
 ---
 
 ## 📋 DEVİR: 🔥 Ateş hortumu ortam ekseni + 🧩 hibrit hikâye modu (16 Eki 2026)

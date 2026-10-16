@@ -34,7 +34,7 @@ FALLBACK_GAPS_EXCLUDED = {
     es.AVALANCHE_VILLAGE: {("A2", "B2"), ("A2", "B5"), ("A4", "B2"), ("A4", "B5"), ("A5", "B2"), ("A5", "B5")},
     # 18 Eki: Parti 1 metinleri kısaldı, volkan stil eki 96 kelime: bombalar 7 -> 0, şok dalgası 1 -> 0, ateş hortumu
     # 23 -> 1 (T6 19 kelime + araç, U1 21 kelime; kilit 28-29 + insan 6 ile 75'i aşar)
-    es.FIRE_TORNADO: {("T6", "U1")},
+    es.FIRE_TORNADO: {("T6", "U2"), ("T6", "U6")},   # 18 Eki (2): kilit cümle 32-33 kelime (dönen huni)
 }
 
 

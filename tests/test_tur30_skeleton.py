@@ -66,10 +66,10 @@ class TestEventPool(unittest.TestCase):
                                   "coastal_tornado_landfall": 3, "urban_city_disasters": 2,
                                   "open_beach_coastal_events": 3, "landslide_disasters": 3,   # 2 Eki: heyelan
                                   "fire_disasters": 4,   # 8 Eki: yangın; 10 Eki: + helikopter
-                                  "volcano_disasters": 3,   # 10 Eki: volkan; 13 Eki: lav nehri çıktı; + 3 çığ
+                                  "volcano_disasters": 2,   # 10 Eki: volkan; 13 Eki: lav nehri çıktı; + 3 çığ; 18 Eki (2): şok dalgası devre dışı
                                   "avalanche_disasters": 3,   # 13 Eki: çığ
                                   "earthquake_disasters": 2})   # 14 Eki: deprem
-        self.assertEqual(sum(counts.values()), 36)
+        self.assertEqual(sum(counts.values()), 35)   # 18 Eki (2): şok dalgası devre dışı (sk.DISABLED_EVENTS)
 
     def test_removed_events(self):
         # 30 Eyl: + tabela/iskele (aksiyonsuz video); 1 Eki: + halat, kontrolsüz yat; 4 Eki (TASLAK): + hortum kıyıya
@@ -125,7 +125,7 @@ class TestSkeletonOutput(unittest.TestCase):
                 if sk.EVENT_SKELETONS[e]["domain"] in ("avalanche_disasters", "earthquake_disasters"):   # 13 Eki: Bahadır'ın kısa çığ satırı; 14 Eki: deprem
                     self.assertIn("raw natural light, no hazmat suits", suffix)   # 14 Eki (4): ışık ortamdan
                 elif e == "Fire tornado tears across a burning roadside":   # 15 Eki (2): kısa giyim/ışık satırı (16 Eki: daha kısa)
-                    self.assertIn("raw natural light, never glossy or CGI", suffix)
+                    self.assertIn("natural light, never glossy or CGI", suffix)   # 18 Eki (2): "raw" çıktı (175)
                 # 18 Eki: patlama ve bombalarda 175 kelime için "matching the weather" çıktı (kül bulutu aynı)
                 elif e in ("Volcano erupts and a shockwave blows out windows", "Volcanic bombs slam into a village street"):
                     self.assertIn("Raw natural light, never glossy or CGI", suffix)
@@ -309,7 +309,7 @@ class TestRecoveryQuery(unittest.TestCase):
 class TestMenu(unittest.TestCase):
     def test_menu_follows_pipeline(self):
         with patch.object(settings, "PROMPT_PIPELINE", "skeleton"):
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 36)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 35)   # 18 Eki (2): şok dalgası devre dışı; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
         with patch.object(settings, "PROMPT_PIPELINE", "legacy"):
             # 30 Eyl: dev dalga baskını havuza eklendi (tabela/iskele havuzda kaldı, sadece iskeletten çıktı)
             # 1 Eki: kontrolsüz yat havuza eklendi (halat havuzda kaldı, sadece iskeletten çıktı)
