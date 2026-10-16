@@ -23,13 +23,21 @@ sys.path.insert(0, ROOT)
 import core.event_structure as es
 import core.skeleton_pipeline as sk
 
-# Yedeğin kelime sınırlarına sığmadığı beat çiftleri (16 Eki ölçümü). Havuzdan çıkarılmadı; GPT iki denemede de
-# kalırsa bu çiftlerde üretim durur (eski davranış). Düzeltme metni raporda, karar Bahadır'da.
-FALLBACK_GAPS = {
-    # volkan bombaları: R6 (19 kelime) + T5 (22 kelime) ile prompt 175'i aşıyor (stil eki 106 kelime)
-    es.VOLCANIC_BOMBS: {("R6", "T5")},
-    # çığ köy: kilit cümle 29 + uzun A/B çifti + en kısa insan cümlesi (6) toplam 70'i aşıyor
+# Yedeğin kelime sınırlarına sığmadığı beat çiftleri. 16 Eki ölçümü: bombalar (R6,T5), çığ köy A2/A4/A5 x B2/B5.
+# 17 Eki, Bahadır (temizlik turu, madde 1): sığmayan çift hariç çifte çevrilir, beat silinmez. Çığ köyün 6 çifti hariç;
+# R6 kurala göre çıktı. Parti 1'in yeni beat'lerinde sığmayan çiftler de (ateş hortumu 23, bombalar 7, şok
+# dalgası 1) hariç. Artık
+# seçilebilen her kombinasyonun yedeği var: üretim GPT yüzünden durmaz.
+FALLBACK_GAPS = {}
+# 17 Eki'de hariç çifte çevrilen sığmayan çiftler (her biri hariç listesinde olmalı; yeniden açılırsa test kırılır)
+FALLBACK_GAPS_EXCLUDED = {
     es.AVALANCHE_VILLAGE: {("A2", "B2"), ("A2", "B5"), ("A4", "B2"), ("A4", "B5"), ("A5", "B2"), ("A5", "B5")},
+    es.VOLCANIC_BOMBS: {("R7", "T5"), ("R7", "T8"), ("R7", "T9"), ("R8", "T5"), ("R8", "T8"), ("R8", "T9"), ("R9", "T8")},
+    es.ERUPTION: {("S7", "U8")},
+    es.FIRE_TORNADO: {("T1", "U7"), ("T1", "U9"), ("T1", "U10"), ("T1", "U11"), ("T2", "U10"), ("T4", "U7"),
+                      ("T4", "U8"), ("T4", "U9"), ("T4", "U10"), ("T4", "U11"), ("T5", "U10"), ("T6", "U1"),
+                      ("T6", "U7"), ("T6", "U8"), ("T6", "U9"), ("T6", "U10"), ("T6", "U11"), ("T7", "U1"),
+                      ("T7", "U7"), ("T7", "U8"), ("T7", "U9"), ("T7", "U10"), ("T7", "U11")},
 }
 
 
@@ -94,7 +102,7 @@ class TestFallbackEveryCombination(unittest.TestCase):
             report[event] = {"kombinasyon": n, "hava_ve_ortam_dahil": n_weighted, "sigmayan_cift": sorted(gaps),
                              "en_uzun_prompt": longest}
             n_total += n
-        self.assertGreater(n_total, 30000)
+        self.assertGreater(n_total, 24000)   # 17 Eki: temizlik turu ve yedeği sığmayan çiftler hariç (16 Eki: > 30000)
         sys.stderr.write("\n🧩 YEDEK KOMBİNASYONLARI: " + json.dumps(report, ensure_ascii=False) + "\n")
 
     def test_every_people_sentence_passes_slice_one_rules(self):
@@ -131,12 +139,23 @@ class TestFallbackEveryCombination(unittest.TestCase):
                 self.assertEqual(es.find_terms(es.FIRE_TOR_OPEN_LAND, t), [])
 
     def test_transition_only_when_needed(self):
-        spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D2", "small car")
+        spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D2", "large SUV")
         self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),
                          "Seconds later, in full view, a lamppost topples into the current.")
         self.assertEqual(es.fallback_beat_slice(spec, "slice_2"),
-                         "The small car is caught by the current, turns sideways and is dragged down the street.")
+                         "The large SUV is caught by the current, turns sideways and is dragged down the street.")
         self.assertEqual(es.FALLBACK_TRANSITION, "Seconds later, in full view, ")
+
+    def test_former_gaps_are_excluded_pairs(self):
+        # 17 Eki, Bahadır (madde 1): yedeği sığmayan çiftler hariç çift oldu; beat'lerin kendisi havuzda
+        for event, pairs in FALLBACK_GAPS_EXCLUDED.items():
+            b = es.EVENT_BEATS[event]
+            for v, d in pairs:
+                with self.subTest(event=event, pair=(v, d)):
+                    self.assertIn((v, d), b["excluded_pairs"])
+                    self.assertIn(v, b["slice_2"])
+                    self.assertIn(d, b["slice_3"])
+        self.assertEqual(FALLBACK_GAPS, {})
 
     def test_gap_combination_raises(self):
         spec = es.build_spec(es.AVALANCHE_VILLAGE, None, "Terrace at the edge of the village", None, "A2", "B2", None, 3)
@@ -147,12 +166,13 @@ class TestFallbackEveryCombination(unittest.TestCase):
 # Yumuşak kapı: doğru nesne geçer, yanlış nesne/yanlış beat yedeğe düşer
 WRONG = [
     # (olay, b2, b3, dilim, cümle, beklenen kod)
-    (es.FIRE_TORNADO, "T3", "U2", "slice_3",
+    # 17 Eki: T3 ve U3 çıktı; aynı cümleler T4/T1 + U2/U1 çiftlerinde
+    (es.FIRE_TORNADO, "T4", "U2", "slice_3",
      "The giant fire tornado rips the burning roof off a house and scatters the house's sheets.", "beat_object"),
-    (es.FIRE_TORNADO, "T3", "U2", "slice_3",
+    (es.FIRE_TORNADO, "T4", "U2", "slice_3",
      "The fire tornado rips the burning roof off a house beside a tree, tearing the house apart in flames.",
      "beat_other_object"),
-    (es.FIRE_TORNADO, "T1", "U3", "slice_2",
+    (es.FIRE_TORNADO, "T1", "U1", "slice_2",
      "The towering vortex lifts a burning tree trunk and flings it high across the street.", "beat_vehicle"),
     (es.FLOOD, "V1", "D2", "slice_3", "A low wall collapses into the water as the street fills with debris.",
      "beat_object"),
@@ -162,7 +182,7 @@ WRONG = [
      "The next stone house in the row caves in as dust billows across the lane.", "beat_object"),
 ]
 RIGHT = [
-    (es.FIRE_TORNADO, "T3", "U2", "slice_3",
+    (es.FIRE_TORNADO, "T4", "U2", "slice_3",
      "Burning pines are ripped from the earth by the vortex and hurled along the street."),
     (es.FIRE_TORNADO, "T5", "U1", "slice_2", "The towering vortex tips the SUV upside down beside a burning tree."),
     (es.FLOOD, "V1", "D2", "slice_3", "A streetlight snaps at its base and falls into the brown torrent."),
@@ -197,8 +217,9 @@ class TestSoftGate(unittest.TestCase):
                 self.assertEqual(self.codes(spec, slot, text), set())
 
     def test_verb_chain_no_longer_rejects(self):
-        # Eski kapı fiil zinciri ister (T3: kapılma + iniş); yeni kapı aracı görünce geçer
-        spec = self.spec(es.FIRE_TORNADO, "T3", "U2")
+        # Eski kapı fiil zinciri ister (T4: kayma + hortumun yanından geçmesi; 17 Eki: T3 çıktı); yeni kapı aracı
+        # görünce geçer
+        spec = self.spec(es.FIRE_TORNADO, "T4", "U2")
         text = "The SUV spins wildly in the smoke beside the burning houses."
         self.assertIn("beat_terms", {x["rule"] for x in es.strict_beat_issues(spec, {"slice_2": text,
                                                                                     "slice_3": "x"})})
@@ -218,17 +239,17 @@ class TestSoftGate(unittest.TestCase):
     def test_rejected_real_pass_soft_gate(self):
         with open(os.path.join(os.path.dirname(__file__), "fixtures", "rejected_real.json"), encoding="utf-8") as f:
             data = json.load(f)["false_rejections"]
-        # 15 Eki canlı retleri; 2i kayıtları ("source") üretimleriyle birebir test_rejected_real.py'de
-        for r in [x for x in data if "source" not in x]:
+        # 15 Eki canlı retleri; 2i kayıtları ("source") üretimleriyle birebir test_rejected_real.py'de. 17 Eki:
+        # çıkarılan maddelerin kayıtları atlanır, eski araç adları bugünkü karşılığına çevrilir
+        sys.path.insert(0, os.path.dirname(__file__))
+        from test_rejected_real import current, retired
+        for r in [current(x) for x in data if "source" not in x and not retired(x)]:
             e, bid = r["event"], r["beat"]
             slot = "slice_2" if bid in es.EVENT_BEATS[e]["slice_2"] else "slice_3"
-            b2 = bid if slot == "slice_2" else next(iter(es.EVENT_BEATS[e]["slice_2"]))
-            b3 = bid if slot == "slice_3" else next(iter(es.EVENT_BEATS[e]["slice_3"]))
-            spot = next(s for s in sk.view_spots(e, None) if (b2, b3) in es.allowed_pairs(e, None, s)) \
-                if None in es.structure_views(e) else None
             view = es.structure_views(e)[0]
-            if spot is None:
-                spot = next(s for s in sk.view_spots(e, view) if (b2, b3) in es.allowed_pairs(e, view, s))
+            # 17 Eki: maddenin herhangi bir noktada izinli ilk eşi (hariç çiftler arttı)
+            b2, b3, spot = next((p[0], p[1], s) for s in sk.view_spots(e, view) for p in es.allowed_pairs(e, view, s)
+                                if p[0 if slot == "slice_2" else 1] == bid)
             veh = r.get("vehicle") or ([v for v, _ in es.event_vehicles(e, view)][0] if es.uses_vehicle(e) else None)
             lo, _ = sk.count_range(e, None)
             spec = es.build_spec(e, None, spot, view, b2, b3, veh, lo if es.has_people_rule(e) else None)

@@ -256,3 +256,4 @@ birikir. Gerçek GPT ile kuru deneme (Kie yok): `scripts\dry_run_hybrid.py --per
 | Olay | Rich Text | Seçilen olay (TUR 29) |
 | Commit | Rich Text | Stil eki sürümü: çalışan kodun git commit'i (TUR 29) |
 | Telegram File ID | Rich Text | Videonun Telegram'daki kalıcı kopyası (TUR 29) |
+| Hikâye kaynağı | Rich Text | Yapılandırılmış hatta hikâyenin kaynağı: "GPT (deneme N)" ya da "kod yedeği (neden: ...)" (17 Eki 2026; `ensure_schema` ekler, ayrı istekle yazılır). İstatistik: `tools/fallback_report.py --notion` |

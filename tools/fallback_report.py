@@ -1,7 +1,10 @@
 # Hibrit hikâye istatistiği (16 Eki 2026, Bahadır): data/story_source_log.jsonl'deki her yapılandırılmış üretimden olay
-# bazında kod yedeği oranı ve en sık yedek nedenleri. Ağ yok, Kie/GPT/Notion yok; sadece dosya okur.
+# bazında kod yedeği oranı ve en sık yedek nedenleri. Varsayılan: ağ yok, sadece dosya okur. Kie/GPT çağrısı hiç yok;
+# --notion seçeneği Notion'u salt okur.
 # Kullanım (proje kökünden): .venv\Scripts\python.exe tools\fallback_report.py [log.jsonl]
 #   Varsayılan dosya: STORY_SOURCE_LOG ortam değişkeni, yoksa data/story_source_log.jsonl
+# 17 Eki: .venv\Scripts\python.exe tools\fallback_report.py --notion  -> Notion "Hikâye kaynağı" alanından (salt okuma;
+#   Railway diski geçici olduğu için kalıcı kaynak Notion, jsonl yerelde/kuru denemede kalır)
 import collections
 import json
 import os
@@ -50,7 +53,57 @@ def report(rows: list[dict]) -> str:
     return "\n".join(lines)
 
 
+_NOTION_REASON = re.compile(r"deneme \d+:\s*([^|]*)")
+
+
+def rows_from_notion(pages: list[dict]) -> list[dict]:
+    """17 Eki: Notion sayfalarından (Hikâye kaynağı alanı dolu olanlar) jsonl satırı biçiminde kayıtlar. Olay "Olay"
+    alanından, yoksa Combo Key'in 3. parçasından. Yedek nedeni alandaki "deneme N: a; b | deneme M: c" metninden."""
+    from infrastructure.notion_logger import STORY_SOURCE_PROPERTY
+    rows = []
+    for page in pages:
+        props = page.get("properties", {})
+
+        def text(name):
+            return "".join(x.get("plain_text") or x.get("text", {}).get("content", "")
+                           for x in props.get(name, {}).get("rich_text", []) or []).strip()
+        value = text(STORY_SOURCE_PROPERTY)
+        if not value:
+            continue
+        event = text("Olay") or (text("Combo Key").split("|") + ["", "", "?"])[2]
+        fallback = value.lower().startswith("kod yedeği")
+        inner = value[value.find("neden:") + 6:value.rfind(")")] if fallback and "neden:" in value else value
+        attempts = [[m.strip() for m in part.split(";") if m.strip()] for part in _NOTION_REASON.findall(inner)]
+        gpt_n = re.search(r"deneme (\d+)", value)
+        rows.append({"event": event, "source": "fallback" if fallback else "gpt",
+                     "gpt_attempts": len(attempts) if fallback else int(gpt_n.group(1)) if gpt_n else None,
+                     "attempt_missing": attempts, "environment": None})
+    return rows
+
+
+def fetch_notion() -> list[dict]:
+    """Notion veritabanının tüm sayfaları (salt okuma, filtresiz: alan yoksa sorgu kırılmaz)."""
+    sys.path.insert(0, ROOT)
+    from config import settings
+    from infrastructure.notion_logger import NOTION_API_URL, _notion_request
+    pages, cursor = [], None
+    while True:
+        body = {"page_size": 100, **({"start_cursor": cursor} if cursor else {})}
+        r = _notion_request("POST", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query", json=body)
+        pages += r.get("results", [])
+        if not r.get("has_more"):
+            return pages
+        cursor = r.get("next_cursor")
+
+
 def main(argv: list[str]) -> int:
+    if argv and argv[0] == "--notion":   # 17 Eki: Notion "Hikâye kaynağı" alanından
+        rows = rows_from_notion(fetch_notion())
+        if not rows:
+            print("Notion'da 'Hikâye kaynağı' dolu kayıt yok (alan yeni; ilk üretimden sonra dolar)")
+            return 1
+        print(report(rows))
+        return 0
     path = argv[0] if argv else os.environ.get("STORY_SOURCE_LOG") or DEFAULT
     if not os.path.exists(path):
         print(f"Kayıt dosyası yok: {path} (henüz yapılandırılmış üretim olmamış olabilir)")

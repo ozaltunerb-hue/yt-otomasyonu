@@ -41,6 +41,7 @@ STATUS_UPLOAD_FAILED = "✅ Tamamlandı (Upload Başarısız)"
 # Teslim adayı: videosu olan bitmiş kayıtlar (Telegram File ID boşsa teslim edilmemiş sayılır)
 DELIVERABLE_STATUSES = [STATUS_COMPLETED, STATUS_UPLOAD_FAILED, STATUS_TEST_DONE, STATUS_RECOVERED, STATUS_UNDELIVERED]
 
+STORY_SOURCE_PROPERTY = "Hikâye kaynağı"
 # TUR 29'da eklenen alanlar. ensure_schema() eksik olanları veritabanına ekler (idempotent).
 EXTRA_PROPERTIES = {
     "Mod": {"select": {}},                 # TEST / YAYIN
@@ -50,6 +51,9 @@ EXTRA_PROPERTIES = {
     "Olay": {"rich_text": {}},
     "Commit": {"rich_text": {}},
     "Telegram File ID": {"rich_text": {}},
+    # 17 Eki (Bahadır): yapılandırılmış hatta hikâyenin kaynağı ("GPT (deneme N)" / "kod yedeği (neden: ...)").
+    # Ayrı istekle yazılır (record_story_source): alan yoksa ya da Notion reddederse diğer alanlar etkilenmez.
+    STORY_SOURCE_PROPERTY: {"rich_text": {}},
 }
 
 # 14 Eki (Bahadır, acil): "Durum" select'inde olması gereken seçenekler (ad -> renk). Yeni bir durum eklendiğinde
@@ -74,6 +78,12 @@ def _rt(text: str) -> dict:
     return {"rich_text": [{"text": {"content": (text or "")[:_TEXT_LIMIT]}}]}
 
 
+def story_source_value(label: str) -> str:
+    """Onay satırından ("Hikâye: GPT (deneme 2)") Notion değeri ("GPT (deneme 2)" / "kod yedeği (neden: ...)")."""
+    label = (label or "").strip()
+    return label.split(":", 1)[1].strip() if label.startswith("Hikâye:") else label
+
+
 class NotionTracker:
     """Bir video üretim pipeline'ı boyunca Notion entry'sini yönetir."""
 
@@ -94,16 +104,20 @@ class NotionTracker:
         try:
             db = _notion_request("GET", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}")
             have = set(db.get("properties", {}))
-            missing = {k: v for k, v in EXTRA_PROPERTIES.items() if k not in have}
-            if missing:
+        except Exception as e:
+            log.warning(f"⚠️ Notion şema kontrolü başarısız (yeni alanlar yazılamayabilir): {e}")
+            return None
+        missing = {k: v for k, v in EXTRA_PROPERTIES.items() if k not in have}
+        if missing:
+            # 17 Eki: ekleme başarısızsa şema yine bilinir (mevcut alanlar); eksik alan yazılmaz, filtre/sorgu kırılmaz
+            try:
                 _notion_request("PATCH", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}",
                                 json={"properties": missing})
                 log.info(f"📋 Notion şemasına eklendi: {sorted(missing)}")
                 have |= set(missing)
-            cls._schema = have
-        except Exception as e:
-            log.warning(f"⚠️ Notion şema kontrolü başarısız (yeni alanlar yazılamayabilir): {e}")
-            return None
+            except Exception as e:
+                log.warning(f"⚠️ Notion alanları eklenemedi ({sorted(missing)}), yazılmayacak: {e}")
+        cls._schema = have
         cls.ensure_status_options(db)
         return have
 
@@ -176,6 +190,11 @@ class NotionTracker:
         preflight öncesi metni tutuyordu; rewrite olunca Kie'ye gidenle aynı değildi."""
         self._patch({"Prompt": _rt(prompt), "Kamera": _rt(selection.get("camera", "")),
                      "Olay": _rt(selection.get("event", "")), "Commit": _rt(commit)})
+
+    def record_story_source(self, label: str) -> None:
+        """17 Eki: hikâye kaynağı ayrı istekle (Prompt/Kamera/Olay yazımından bağımsız). Şema biliniyorsa ve alan
+        yoksa _filter atar; şema bilinmiyorsa Notion'un reddi sadece uyarı olur (_patch), üretim sürer."""
+        self._patch({STORY_SOURCE_PROPERTY: _rt(story_source_value(label))})
 
     def record_task(self, task_id: str) -> None:
         """Task ID polling başlamadan yazılır; restart olursa kurtarma bu alandan devam eder."""

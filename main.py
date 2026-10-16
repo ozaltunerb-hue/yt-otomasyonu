@@ -331,6 +331,8 @@ async def _execute_pipeline(
             meta.update({"final_prompt": info["prompt"], "story": info.get("story", ""),
                          "style_suffix": info.get("style_suffix", ""), "preflight": info.get("preflight") or {}})
             await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)
+            if info.get("story_source"):   # 17 Eki: Notion "Hikâye kaynağı" alanı (ayrı istek; jsonl kaydı da sürer)
+                await asyncio.to_thread(tracker.record_story_source, info["story_source"])
             await asyncio.to_thread(tracker.append_body, [format_final_prompt(info)])
             await _report(reporter.final_prompt(info))
             if reporter.needs_approval:

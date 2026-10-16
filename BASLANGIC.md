@@ -25,6 +25,63 @@
 
 ---
 
+## 📋 DEVİR: 🧹 Havuz temizliği + Parti 1 yeni beat'ler + kalıcı lint + Notion "Hikâye kaynağı" (17 Eki 2026)
+
+Amaç: kusur sadece video motorundan gelsin, bizim taraftan hiç gelmesin. Kie çağrısı yok. Kül bulutuna dokunulmadı.
+
+**Kural (çıkarma):** denetimde (`scratch/asama3_havuz_denetimi.md`) ZAYIF/ÇIKAR ve en az biri: ince/uzak/küçük hedef
+(direk, tel, çit, tabela, cam, bariyer, tente, alçak duvar), fizik ≤2, aksiyon ≤2, yakın ≤2, büyük ≤2, koyu 1, boş arazi/
+kırsal, cephe yangınında araç. Sadece tekrar(2)/koyu(2) yüzünden zayıf olan kalır. Daha önce videosu üretilmiş beat
+KORUNAN (Notion'daki 40 videolu kayıt + 3 Eki sel testi V6+D2), çıkarılmaz. Grup 4'ün altına düşecekse ya da bir nokta
+seçilemez olacaksa o grupta çıkarma yok: ÇIKIŞ BEKLİYOR.
+- **Çıkanlar** (`es.RETIRED_BEATS`, kimlikler tekrar kullanılmaz): sel D1 D6 D7 · dalga W7 · yamaç S1 S6 · heyelan köy L2 ·
+  hortum karaya C3 C6 E3 E6 · marina Y4 Y6 Z5 · cadde P3 Q5 · orman yangını L2 L6 · cephe N2 N6 · ateş hortumu T3 U3 U4 U5 ·
+  helikopter G4 · şok dalgası S1 U1 · bombalar R6 T3 T4 · çığ orman F3.
+- **Korunan ama kurala göre zayıf:** sel D2 · dalga W1 W2 W6 · yokuş M3 · yamaç R2 S4 · marina Z6 · cadde P6 Q3 Q6 ·
+  orman K5 · cephe M6 · şok S2 U3 · bombalar R3 R4.
+- **Çıkış bekliyor** (yerine yeni beat gelince çıkar): yokuş M1 M2 M5 · orman yangını K3 K4 K6 · cephe M1-M5 (araç
+  beat'leri) · deprem eski sokak T2 · çığ orman E5 (çıkarsa balkon noktasında 1 derinlikte bile çift kalmıyor).
+- **Küçük araç yok:** `REGION_VEHICLES`/`EVENT_VEHICLES` ve görünüm tarifleri büyük araç (large SUV, pickup, delivery/box
+  truck, van). Eski adlar `RETIRED_VEHICLES(_BY_VIEW)` ile eski kayıt okunurken çevrilir.
+
+**Parti 1 yeni beat'ler (Bahadır'ın metni birebir):** ateş hortumu T7, U7-U11 · bombalar R7-R9, T7-T9 · şok dalgası S6-S8,
+U7-U8. U1 metni "across the street", nokta kısıtı kalktı. Havuzlar: ateş hortumu 6+8, bombalar 8+7, şok 7+7.
+- Hariç çiftler: aynı yapı iki dilimde yok (bombalar R7×T1/T7 çatı, R8×T6 duvar, R9×T5 yol, R1/R2×T9 araç; şok S6×U4/U7/U8
+  ev, S8×U2 araç). Kamera evi: şok U7 ve bombalar T7 çatı terası/köy evi balkonunda seçilmez.
+- **Kod yedeği sığmayan çiftler hariç** (madde 1 kuralı): çığ köy A2/A4/A5 × B2/B5 (6), bombalar R7×T5/T8/T9, R8×T5/T8/T9,
+  R9×T8 (7), şok S7×U8 (1), ateş hortumu 23 çift (yeni U7-U11 20-24 kelime; kilit 28-29 + insan 6 + çift > 75). Ateş
+  hortumunda T6/T7 sadece U2/U6 ile eşleşir. **U10 hiç seçilemez** (24 kelime, her eşle 75'i 1-2 kelime aşıyor):
+  kısaltma Bahadır onayı bekliyor (öneri: "...pulls them into its column" sonundaki "in a storm of sparks" çıkarsa 19).
+- U8 ve U9 metninde büyüklük sıfatı yok (Bahadır'ın metni; kilit cümle ölçeği verir), testte istisna.
+- Aday kalmazsa derinlik 1'e düşen olaylar (`BEAT_BLOCK_FALLBACK_EVENTS`): deprem + ateş hortumu, hortum karaya vuruş,
+  orman yangını, çığ köy (normal akışta derinlik aynı).
+
+**Yumuşak kapı düzeltmeleri:** helikopterde kendi nesnesi varsa "başka beat'e benziyor" kontrolü yok
+(`OWN_OBJECT_ENOUGH_EVENTS`; F5 "cascade of water hits a burning house" F1'e benzetiliyordu) · helikopter ağaç listesi
+"treetop(s)" tanır (`_FIRE_HELI_TREE`, orman yangını aynı) · deprem T2 nesnesi evler/binalar, "sequentially" zincir
+grubunda. Regresyon: `tests/fixtures/rejected_real.json` 5 yeni kayıt ("origin" alanlı).
+
+**Kalıcı lint** (`es.pool_lint_errors`, modül açılışında HATA): ince/uzak hedef, açık arazi, küçük araç, ticari gemi
+sözcükleri beat metninde, araç adında ve görünüm tarifinde yok. Mevcut korunan/KALSIN/çıkış bekleyen 31 beat
+`POOL_LINT_GRANDFATHERED`'da gerekçesiyle (liste birebir güncel olmak zorunda). Yeni beat lint'ten geçmeden paket açılmaz.
+
+**Notion "Hikâye kaynağı":** `EXTRA_PROPERTIES`'te (`ensure_schema` ekler; ekleyemezse şema yine bilinir, alan yazılmaz).
+Her yapılandırılmış üretimde ayrı istekle "GPT (deneme N)" / "kod yedeği (neden: ...)". İstatistik:
+`tools\fallback_report.py --notion` (salt okuma). `data/story_source_log.jsonl` aynen sürer.
+
+**Gerçek GPT kuru deneme** (`scratch/dry_run_parti1_17eki.json`, 54 çağrı, ~0,25 $, Kie yok, olay başına 10):
+ateş hortumu GPT 9/10 (yedek 1: U1 cümlesinde "house" yok), bombalar GPT 6/10, şok dalgası GPT 5/10. Volkan yedek
+nedeni yine uzunluk (175 kelime / toplam 75), 16 Eki ile aynı düzey (%41). Yeni beat'li 15 üretimin 9'u GPT.
+
+**Testler:** `tests/test_pool_cleanup.py` (lint, kural, her yeni beat ayrı test: metin, kapı, her izinli kombinasyonda
+yedek + son denetim, yakınlık, paraphrase, yanlış nesne; Notion alanı). Kilitli havuz testleri yeni havuzlara göre
+güncellendi.
+
+**Açık kararlar (Bahadır):** U10 kısaltma · çıkış bekleyenlerin yerine Parti 2 beat'leri · volkan uzunluk kaynaklı yedek
+oranı · yeni ev beat'lerinde (U7-U11) "across the street" yok (kameranın evi gibi çizilme riski; U1'deki gibi eklenebilir).
+
+---
+
 ## 📋 DEVİR: 🔥 Ateş hortumu ortam ekseni + 🧩 hibrit hikâye modu (16 Eki 2026)
 
 **1) Ateş hortumu ortam ekseni** (commit "ateş hortumu: ortam ekseni"): hortum boş tarlada ilerliyordu. 3 ortam

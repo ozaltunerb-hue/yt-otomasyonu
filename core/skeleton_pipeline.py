@@ -593,19 +593,22 @@ REGION_VIEWS = {
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Körfez metropolü (BAE, Katar)
     "gulf_metropolis": "glass towers behind palm-lined multi-lane boulevards, sand-colored low buildings, white SUVs",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Kuzey Afrika kıyısı (Fas, Tunus)
-    "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, small hatchback cars",
+    # 17 Eki, Bahadır (temizlik turu): küçük araç yok. Önceki: "small hatchback cars"
+    "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, large SUVs",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: ABD kıyı kasabası (Florida, Carolina)
     "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, overhead power lines",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Kuzey Avrupa sahil kasabası (Hollanda, İngiltere)
-    "north_european_seaside": "brick terraced houses, narrow streets, small parked cars",
+    # 17 Eki: küçük araç yok. Önceki: "small parked cars"
+    "north_european_seaside": "brick terraced houses, narrow streets, parked SUVs and vans",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Riviera (Fransa, İtalya)
     # 4 Eki, Bahadır: "cobbled promenade" GPT'ye caddeyi "promenade" diye yazdırıyordu (sel kuru provası, olay adı
     # kuralından ret); "cobbled streets" oldu. Kıyı dev dalga da bu görünümü kullanır.
     "riviera": "cream stone buildings with shuttered windows, cobbled streets, scooters, plane trees",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Doğu Asya kıyısı (Japonya, Tayvan)
     # 1 Eki (2): videoda Akdeniz çıktı; "covered arcade entrances" Akdeniz çağrışımı yaptı, klima ve kablo eklendi
+    # 17 Eki: küçük araç yok. Önceki son parça: "small boxy cars and scooters"
     "east_asian_coast": "dense mid-rise apartment blocks with air-conditioner units and tangled overhead wires, "
-                        "narrow lanes, small boxy cars and scooters",
+                        "narrow lanes, delivery vans and box trucks",
 }
 REGION_VIEW_CLOTHING = "people in light everyday clothes suited to the climate"
 NO_SIGNS = "no readable signs, text or flags"

@@ -9,6 +9,8 @@ Kurallar (her madde):
   (b) zayıf nesneyi (WEAK: direk, kablo, korkuluk, cam, tabela...) tek başına hedef almaz: metindeki ilk nesne zayıfsa
       ihlal ("glass-fronted lodge entrance", "windows of a long wooden building"),
   (c) gömülme/kaybolma fiili ana fiil değildir: bu fiillerden biri var ve yıkım fiili yoksa ihlal.
+17 Eki 2026: bunun yanında tüm olaylarda sözcük bazlı ZORUNLU havuz linti var (ince/uzak hedef, açık arazi, küçük araç,
+ticari gemi; es.pool_lint_errors, modül açılışında hata; tests/test_pool_cleanup.py). Bu dosyadaki yapı kontrolü aynen:
 Çığda ZORUNLU (kırmızıysa paket hata verir). Diğer kategorilerde sadece UYARI: ihlaller yazdırılır, maddeler
 değiştirilmez. Ağ yok, Kie/GPT çağrısı yok.
 """

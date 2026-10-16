@@ -10,6 +10,7 @@ alanlı kayıtlar 2i gerçek GPT kuru denemesinden otomatik eklendi (scripts/dry
 reddediyordu, yeni kapı geçiriyor; üretim birebir kurulur (nokta, görünüm, beat çifti, araç, kişi).
 """
 import json
+import re
 import os
 import sys
 import unittest
@@ -26,6 +27,28 @@ BEAT_RULES = {"beat_terms", "beat_vehicle", "beat_object", "beat_other_object"}
 def load():
     with open(FIXTURE, encoding="utf-8") as f:
         return json.load(f)
+
+
+def retired(r) -> bool:
+    """17 Eki (temizlik turu): kaydın maddesi havuzdan çıktı (es.RETIRED_BEATS). Kayıt dosyada kalır (geçmiş), test
+    atlar ve sayar."""
+    return r["beat"] in es.RETIRED_BEATS.get(r["event"], {})
+
+
+def current(r) -> dict:
+    """Kaydı bugünkü havuza çevirir (17 Eki): çıkarılan küçük araç adı yerine gelen büyük araç (kayıt ve cümlede),
+    çiftin diğer maddesi çıkmışsa çift bilgisi düşer (rebuild dilimin ilk maddesini alır)."""
+    r = dict(r)
+    old = r.get("vehicle")
+    if old in es.RETIRED_VEHICLES:
+        new = es.retired_vehicle(old, r.get("view"))
+        text = re.sub(re.escape(old), new, r["text"], count=1, flags=re.IGNORECASE)
+        if text == r["text"]:   # cümle aracı kısa adla anıyor ("the hatchback", "the car")
+            text = re.sub(r"\b%s\b" % re.escape(old.split()[-1]), new, r["text"], count=1, flags=re.IGNORECASE)
+        r["vehicle"], r["text"] = new, text
+    if r.get("beats") and any(b in es.RETIRED_BEATS.get(r["event"], {}) for b in r["beats"].split("+")):
+        r.pop("beats")
+    return r
 
 
 def slot_of(event, bid):
@@ -62,7 +85,13 @@ class TestRejectedReal(unittest.TestCase):
     def test_false_rejections_now_pass(self):
         data = load()["false_rejections"]
         self.assertGreaterEqual(len(data), 9)
+        skipped = [r for r in data if retired(r)]
+        # 17 Eki: çıkarılan maddelerin kayıtları (ateş hortumu T3/U3/U4, heyelan S6 ...) atlanır, sayısı kilitli
+        self.assertEqual(len(skipped), 19, sorted({(r["event"][:20], r["beat"]) for r in skipped}))
         for r in data:
+            if retired(r):
+                continue
+            r = current(r)
             e, bid, text = r["event"], r["beat"], r["text"]
             with self.subTest(event=e, beat=bid, text=text):
                 spec, slices, sl = rebuild(r)
@@ -76,13 +105,37 @@ class TestRejectedReal(unittest.TestCase):
     def test_auto_added_entries_were_old_gate_rejections(self):
         # 2i kayıtları: eski sıkı kapı reddeder, yeni yumuşak kapı geçirir (kaydın nedeni)
         for r in load()["false_rejections"]:
-            if "source" not in r:
+            if "source" not in r or retired(r):
                 continue
+            r = current(r)
             spec, slices, sl = rebuild(r)
             label = "4-9s" if sl == "slice_2" else "9-15"
             with self.subTest(text=r["text"]):
                 self.assertIn(label, {i["missing"][:4] for i in es.strict_beat_issues(spec, slices)})
                 self.assertNotIn(label, {i["missing"][:4] for i in es.soft_beat_issues(spec, slices)})
+
+    def test_17oct_soft_gate_fixes(self):
+        # 17 Eki, Bahadır: 2i kuru denemede yanlış reddedilen üç cümle tipi artık geçer (kayıtlar "origin" alanlı)
+        fixed = [r for r in load()["false_rejections"] if "17 Eki" in r.get("origin", "")]
+        self.assertEqual({(r["event"], r["beat"]) for r in fixed},
+                         {(es.HELICOPTER, "F5"), (es.HELICOPTER, "G1"), (es.EARTHQUAKE_OLD_STREET, "T2")})
+        for r in fixed:
+            spec, slices, sl = rebuild(current(r))
+            with self.subTest(text=r["text"]):
+                self.assertEqual(es.soft_beat_issues(spec, slices), [])
+        # helikopter: kural kapatılırsa F5 cümlesi yine F1'e benzetilip reddedilir (düzeltmenin sebebi)
+        from unittest.mock import patch
+        f5 = next(r for r in fixed if r["beat"] == "F5")
+        spec, slices, _ = rebuild(current(f5))
+        with patch.object(es, "OWN_OBJECT_ENOUGH_EVENTS", ()):
+            self.assertIn("beat_other_object", {i["rule"] for i in es.soft_beat_issues(spec, slices)})
+        self.assertEqual(es.OWN_OBJECT_ENOUGH_EVENTS, (es.HELICOPTER,))   # diğer olaylarda benzerlik kontrolü aynen
+        # "treetops" sadece helikopter listesinde; orman yangınının _FIRE_TREE listesi değişmedi
+        self.assertTrue(es.find_terms(es._FIRE_HELI_TREE, "the treetops burn"))
+        self.assertFalse(es.find_terms(es._FIRE_TREE, "the treetops burn"))
+        # deprem T2: nesne evler/binalar (3. grup), "sequentially" zincir grubunda
+        self.assertEqual(es.OBJECT_GROUPS[es.EARTHQUAKE_OLD_STREET]["T2"], 2)
+        self.assertIn("sequentially", es._EQ_CHAIN)
 
     def test_correct_rejections_still_rejected(self):
         for r in load()["correct_rejections"]:

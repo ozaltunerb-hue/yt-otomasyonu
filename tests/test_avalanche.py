@@ -58,7 +58,7 @@ AXES = {"mountain": ("jagged rocky peaks", "wide snowy highlands below a steep s
                     "stone-and-timber houses", "tall narrow wooden houses with heavy roofs"),
         "light": ("heavy overcast sky", "falling snow and low cloud", "pale low winter sun",
                   "late-afternoon blue-grey light", "bright cold sunny day")}
-STONE = {"B1", "C5", "E3", "E5", "F3"}
+STONE = {"B1", "C5", "E3", "E5"}   # 17 Eki: F3 çıktı
 # En uzun izinli ortam satırı (kelime sınırı testleri en kötü durumla çalışsın)
 LONG_SETTING = "Setting: sheer cliffs above a narrow valley, dark timber chalets, falling snow and low cloud."
 # Ülke, şehir, bölge, bayrak, yazı sızıntısı: ortam satırında ve promptta hiç geçmemeli ("No readable signs, text or
@@ -105,11 +105,13 @@ POOLS = {
              "E6": "the snow blast peels the roof off a cabin"},
             {"F1": "a second surge slams into the cabins and their walls burst outward",
              "F2": "the snow blast rips a cabin's wooden porch and front steps off and sends them flying",
-             "F3": "the avalanche carries a pile of broken trunks across the valley floor into a stone house",
              "F4": "the snow blast knocks over a wooden water tower",
              "F5": "the snow cloud blows the front off a barn and the hay bursts out",
              "F6": "the snow wall flattens a long wooden barn and the dark boards scatter"}),
 }
+# 17 Eki, Bahadır (temizlik turu, madde 1): kod yedeğinin kelime sınırına sığmadığı köy çiftleri hariç (yapı kuralı
+# dışında; tests/test_story_fallback.py FALLBACK_GAPS_EXCLUDED)
+FIT_GAPS = {KOY: {("A2", "B2"), ("A2", "B5"), ("A4", "B2"), ("A4", "B5"), ("A5", "B2"), ("A5", "B5")}}
 # Aynı yapı sınıfı (14 Eki (3), zayıf madde temizliği sonrası). Etiketler event_structure yorumlarıyla aynı.
 STRUCT = {
     KOY: {"A1": {"facade"}, "A2": {"chalet"}, "A3": {"roof"}, "A4": {"stone"}, "A5": {"shed"}, "A6": {"facade", "balcony"},
@@ -119,7 +121,7 @@ STRUCT = {
             "D1": {"facade"}, "D2": {"hut"}, "D3": {"roof", "deck"}, "D4": {"hut"}, "D5": {"hut"}, "D6": {"facade"}},
     ORMAN: {"E1": {"tree", "wood"}, "E2": {"tree", "wood"}, "E3": {"stonehouse", "barn"}, "E4": {"wood"},
             "E5": {"stonehouse"}, "E6": {"roof"},
-            "F1": {"wood"}, "F2": {"wood"}, "F3": {"tree", "stonehouse"}, "F4": {"tower"}, "F5": {"wood", "barn"},
+            "F1": {"wood"}, "F2": {"wood"}, "F4": {"tower"}, "F5": {"wood", "barn"},   # 17 Eki: F3 çıktı
             "F6": {"wood", "barn"}},
 }
 VALID = {
@@ -283,11 +285,6 @@ VALID = {
            "The snow blast wrenches the wooden porch and stairs off a cabin, hurling them through the air.",
            "The avalanche strips the porch and front steps from a cabin and sends them flying.",
            "The snow blast rips a cabin's wooden porch and front steps off and sends them flying."],
-    "F3": ["The avalanche carries broken trunks across the valley floor and into a stone house.",
-           "Broken trunks are swept across the valley floor and slam into a stone house.",
-           "The avalanche drives a pile of snapped trees into a stone house on the valley floor.",
-           "The snow pushes a mass of broken trunks into the side of a stone house.",
-           "The avalanche carries a pile of broken trunks across the valley floor into a stone house."],
     "F4": ["The snow blast knocks down a wooden water tower.",
            "A wooden water tower topples over in the snow blast.",
            "The avalanche brings down a water tower, which crashes into the snow.",
@@ -349,7 +346,6 @@ IMPACT = {
  "E6": "The snow blast crashes into a cabin, sending its roof flying off.",
  "F1": "A second surge crashes into the cabins, their walls bursting outward.",
  "F2": "The snow blast crashes into a cabin, sending its porch and front steps flying.",
- "F3": "The avalanche sends a pile of broken trunks crashing across the valley floor into a stone house.",
  "F4": "The snow blast slams into a wooden water tower, sending it crashing down.",
  "F5": "The snow cloud crashes into a barn, its front bursting open as hay explodes out.",
  "F6": "The snow wall crashes into a long wooden barn, sending its boards scattering.",
@@ -639,14 +635,14 @@ class TestAvalanche(unittest.TestCase):
             self.assertEqual(set(tags), set(b["slice_2"]) | set(b["slice_3"]))
             with self.subTest(event=e):
                 self.assertEqual(b["excluded_pairs"], {(v, d) for v in b["slice_2"] for d in b["slice_3"]
-                                                      if tags[v] & tags[d]})
+                                                      if tags[v] & tags[d]} | FIT_GAPS.get(e, set()))
         self.assertEqual(es.EVENT_BEATS[KOY]["excluded_pairs"],
                          {("A1", "B1"), ("A1", "B5"), ("A2", "B6"), ("A3", "B3"), ("A4", "B1"), ("A4", "B4"),
-                          ("A5", "B6"), ("A6", "B1"), ("A6", "B2"), ("A6", "B5")})
+                          ("A5", "B6"), ("A6", "B1"), ("A6", "B2"), ("A6", "B5")} | FIT_GAPS[KOY])
         self.assertEqual(es.EVENT_BEATS[KAYAK]["excluded_pairs"],
                          {("C1", "D2"), ("C1", "D4"), ("C1", "D5"), ("C2", "D1"), ("C2", "D6"), ("C3", "D3"),
                           ("C4", "D2"), ("C4", "D4"), ("C4", "D5"), ("C6", "D1"), ("C6", "D6")})
-        self.assertEqual(len(es.EVENT_BEATS[ORMAN]["excluded_pairs"]), 18)
+        self.assertEqual(len(es.EVENT_BEATS[ORMAN]["excluded_pairs"]), 14)   # 17 Eki: F3 çiftleri gitti
 
     def test_camera_exclusions(self):
         # çatı/baca (*) sadece yamaç terasında; teleferik (†) istasyon terasında yok
@@ -662,7 +658,8 @@ class TestAvalanche(unittest.TestCase):
                     else:
                         self.assertEqual(spots, set(sk.view_spots(e, None)))
         counts = {e: [len(es.allowed_pairs(e, None, s)) for s in sk.view_spots(e, None)] for e in AVA}
-        self.assertEqual(counts, {KOY: [26, 10], KAYAK: [20, 20, 15], ORMAN: [18, 12]})
+        # 17 Eki: köy 6 yeni hariç çift (yedek sığmıyor), orman F3 çıktı
+        self.assertEqual(counts, {KOY: [20, 7], KAYAK: [20, 20, 15], ORMAN: [16, 11]})
 
     def test_block_depth_never_runs_out(self):
         # 14 Eki (3): zayıf madde temizliğinden sonra köy 2, kayak 2, orman 1 (yasak çiftler arttı; her noktada en
@@ -676,10 +673,13 @@ class TestAvalanche(unittest.TestCase):
                        for x2 in map(set, combinations(b["slice_2"], k))
                        for x3 in map(set, combinations(b["slice_3"], k)))
         for e in AVA:
-            k = es.RECENT_BEAT_BLOCK_BY_EVENT[e]
+            # 17 Eki: köyde 6 yeni hariç çift; balkonda 2 derinlik de adayı bitirebilir, aday kalmazsa 1'e düşer
+            k = 1 if e in es.BEAT_BLOCK_FALLBACK_EVENTS else es.RECENT_BEAT_BLOCK_BY_EVENT[e]
             for spot in sk.view_spots(e, None):
                 with self.subTest(event=e, spot=spot):
                     self.assertGreater(worst(e, spot, k), 0)
+        self.assertIn(KOY, es.BEAT_BLOCK_FALLBACK_EVENTS)
+        self.assertEqual(worst(KOY, BAL, 2), 0)       # 17 Eki: 1'e düşmenin sebebi
         self.assertEqual(worst(KOY, BAL, 3), 0)       # düşürmenin sebepleri
         self.assertEqual(worst(KAYAK, LIFT, 3), 0)
         self.assertEqual(worst(ORMAN, BAL, 2), 0)
@@ -694,7 +694,7 @@ class TestAvalanche(unittest.TestCase):
                     if issues:
                         self.fail(f"{e}/{spot}/{b2}+{b3}: {issues}")
                     n += 1
-        self.assertEqual(n, 26 + 10 + 20 + 20 + 15 + 18 + 12)
+        self.assertEqual(n, 20 + 7 + 20 + 20 + 15 + 16 + 11)   # 17 Eki: köy 6 hariç çift, orman F3 çıktı
 
     def test_100_productions_each_event(self):
         import core.creative_pipeline as cp
@@ -794,7 +794,7 @@ class TestAvalanche(unittest.TestCase):
                 for used_l in permutations(AXES["light"], 2):
                     es._ENV_MEMORY[:] = [{"mountain": m, "village": v, "light": li, "spot": HT}
                                          for m, v, li in zip(used_m, used_v, used_l)]
-                    for b2, b3 in (("A1", "B1"), ("C5", "D1"), ("E5", "F3")):   # taş bina: kütük köyü elenir
+                    for b2, b3 in (("A1", "B1"), ("C5", "D1"), ("E5", "F4")):   # taş bina: kütük köyü elenir
                         e = KOY if b2[0] == "A" else KAYAK if b2[0] == "C" else ORMAN
                         env = es.choose_environment(e, HT, b2, b3, random.Random(1))
                         self.assertNotIn(env["mountain"], used_m)

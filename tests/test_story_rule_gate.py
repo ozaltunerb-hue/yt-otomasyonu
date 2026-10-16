@@ -459,13 +459,14 @@ class TestRegionViews(unittest.TestCase):
         self.assertEqual(sk.REGION_VIEWS, {
             "gulf_metropolis": "glass towers behind palm-lined multi-lane boulevards, sand-colored low buildings, "
                                "white SUVs",
-            "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, small hatchback "
-                                   "cars",
+            # 17 Eki, Bahadır (temizlik turu): küçük araç yok ("small hatchback cars", "small parked cars", "small
+            # boxy cars and scooters" yerine büyük araçlar)
+            "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, large SUVs",
             "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, overhead power lines",
-            "north_european_seaside": "brick terraced houses, narrow streets, small parked cars",
+            "north_european_seaside": "brick terraced houses, narrow streets, parked SUVs and vans",
             "riviera": "cream stone buildings with shuttered windows, cobbled streets, scooters, plane trees",
             "east_asian_coast": "dense mid-rise apartment blocks with air-conditioner units and tangled overhead "
-                                "wires, narrow lanes, small boxy cars and scooters"})
+                                "wires, narrow lanes, delivery vans and box trucks"})
         self.assertEqual(sk.REGION_VIEW_CLOTHING, "people in light everyday clothes suited to the climate")
         self.assertEqual(sk.NO_SIGNS, "no readable signs, text or flags")
 

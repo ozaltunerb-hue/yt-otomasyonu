@@ -1659,6 +1659,66 @@
    "beats": "R2+S6",
    "people": 3,
    "text": "The unyielding torrent propels a row of parked cars perilously close to the precipice, inching ever closer to the drop."
+  },
+  {
+   "date": "2026-10-16",
+   "origin": "2i kuru prova; 17 Eki yumuşak kapı düzeltmesi (helikopter: kendi nesnesi varsa benzerlik kontrolü yok)",
+   "event": "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
+   "beat": "F5",
+   "vehicle": null,
+   "spot": "Embankment above the village road",
+   "view": null,
+   "beats": "F5+G1",
+   "people": 5,
+   "text": "A cascade of water hits a burning house, smothering flames as thick steam billows upward, obscuring views."
+  },
+  {
+   "date": "2026-10-16",
+   "origin": "2i kuru prova; 17 Eki yumuşak kapı düzeltmesi (helikopter: kendi nesnesi varsa benzerlik kontrolü yok)",
+   "event": "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
+   "beat": "F5",
+   "vehicle": null,
+   "spot": "Embankment above the village road",
+   "view": null,
+   "beats": "F5+G1",
+   "people": 5,
+   "text": "A massive cascade of water drenches a burning house, the fire smothered and vanishing into swirling clouds of steam."
+  },
+  {
+   "date": "2026-10-16",
+   "origin": "2i kuru prova; 17 Eki yumuşak kapı düzeltmesi (helikopter: kendi nesnesi varsa benzerlik kontrolü yok)",
+   "event": "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
+   "beat": "F5",
+   "vehicle": null,
+   "spot": "Embankment above the village road",
+   "view": null,
+   "beats": "F5+G4",
+   "people": 5,
+   "text": "The water cascades over a burning house, quenching the flames but transforming them into billowing white steam."
+  },
+  {
+   "date": "2026-10-16",
+   "origin": "2i kuru prova; 17 Eki yumuşak kapı düzeltmesi (\"treetops\" ağaç sayılır)",
+   "event": "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
+   "beat": "G1",
+   "vehicle": null,
+   "spot": "Embankment above the village road",
+   "view": null,
+   "beats": "F3+G1",
+   "people": 5,
+   "text": "A renewed surge of flames engulfs the treetops, roaring above the neighborhood, spreading further as the fire advances."
+  },
+  {
+   "date": "2026-10-16",
+   "origin": "2i kuru prova; 17 Eki yumuşak kapı düzeltmesi (deprem T2: nesne evler/binalar, \"sequentially\")",
+   "event": "Earthquake collapses a row of old stone houses",
+   "beat": "T2",
+   "vehicle": null,
+   "spot": "Rooftop terrace of a building across the street",
+   "view": null,
+   "beats": "R1+T2",
+   "people": 4,
+   "text": "Buildings down the street collapse sequentially, generating huge dust clouds, still creeping closer."
   }
  ],
  "correct_rejections": [
