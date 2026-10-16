@@ -475,8 +475,8 @@ class TestEarthquake(unittest.TestCase):
     def test_block_depth_two_with_fallback_never_runs_out(self):
         self.assertEqual({e: es.RECENT_BEAT_BLOCK_BY_EVENT[e] for e in EQ}, {APT: 2, OLD: 2})
         # 17 Eki (temizlik turu): ateş hortumu, hortum karaya vuruş, orman yangını, çığ köy de aday kalmazsa 1'e düşer
-        self.assertEqual(es.BEAT_BLOCK_FALLBACK_EVENTS, EQ + (es.FIRE_TORNADO, es.LANDFALL, es.WILDFIRE,
-                                                              es.AVALANCHE_VILLAGE))
+        # 18 Eki: ateş hortumu listeden çıktı (kısa metinlerle yeterli çift)
+        self.assertEqual(es.BEAT_BLOCK_FALLBACK_EVENTS, EQ + (es.LANDFALL, es.WILDFIRE, es.AVALANCHE_VILLAGE))
 
         def worst(e, spot, k):
             b, ps = es.EVENT_BEATS[e], es.allowed_pairs(e, None, spot)

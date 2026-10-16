@@ -778,19 +778,32 @@ VOLCANO_CAMERA_PERCH = {
 }
 
 
-def volcano_camera(spot: str) -> str:
+# 18 Eki, Bahadır: kül bulutuna bu turda dokunulmaz; kısa şablon sadece patlama (şok dalgası) ve bombalarda
+VOLCANO_SHORT_CAMERA_EXCLUDED = ("Pyroclastic cloud races down into a village street",)
+
+
+def volcano_camera(spot: str, event: str | None = None) -> str:
     # 13 Eki (2), Bahadır: lav testinde kamera aşağı eğilip volkanı kadrajdan çıkardı, çekim drone gibi göründü.
     # Volkan üst üçte birde, eğilme sınırı, ön planda korkuluk köşesi eklendi (kamera cümlesinin içinde, virgülle).
     # Korkuluk durulan yerin adıyla: terrace / rooftop / balcony railing.
     # 13 Eki (3), Bahadır: tekrarsız şablon (prompt 216 kelimeye uzamıştı). "only tilts slightly" + "tilts down no more
     # than slightly" tek ifade; "always visible above the rooftops" + "stays in the upper third" tek ifade; yön için
     # "toward the erupting volcano" kaldı.
+    # 18 Eki, Bahadır: 175 kelime için kısaldı (en uzun stil eki 106 -> 97; 97 + 75 + 3 etiket = 175), kurallar aynı.
+    # Önceki: "...high vantage looking down over the village street toward the erupting volcano; slight hand shake, the
+    # camera stays fixed on the {perch}, tilting down no more than slightly and never descending, ... a corner of the
+    # {perch} railing in the foreground; ..."
     perch = VOLCANO_CAMERA_PERCH[spot]
-    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking down over the "
-            f"village street toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, "
-            f"tilting down no more than slightly and never descending, the erupting volcano always visible in the upper "
-            f"third of the frame, a corner of the {perch} railing in the foreground; one continuous shot, no zoom, "
-            f"no cuts.")
+    if event in VOLCANO_SHORT_CAMERA_EXCLUDED:   # kül bulutu: 13 Eki (3) metni aynen
+        return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking down over the "
+                f"village street toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, "
+                f"tilting down no more than slightly and never descending, the erupting volcano always visible in the "
+                f"upper third of the frame, a corner of the {perch} railing in the foreground; one continuous shot, no "
+                f"zoom, no cuts.")
+    return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage over the village street "
+            f"toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, tilting down only "
+            f"slightly, never descending, the erupting volcano always visible in the upper third of the frame, a "
+            f"{perch} railing corner in the foreground; one continuous shot, no zoom, no cuts.")
 
 
 # 13 Eki (3), Bahadır kararı: volkan prompt'u en fazla 175 kelime; kısıt silinmeden giyim/ışık satırları kısa yazıldı
@@ -860,8 +873,11 @@ def fire_tornado_camera(spot: str) -> str:
             f"cuts.")
 
 
+# 18 Eki: "matching the weather" çıktı (175 kelime; kısıtlar aynı). Kül bulutu eski metinle (VOLCANO_GUARDRAILS_LONG)
 VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "
-                      "light matching the weather, never glossy or CGI; no hazmat suits.")
+                      "light, never glossy or CGI; no hazmat suits.")
+VOLCANO_GUARDRAILS_LONG = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw "
+                           "natural light matching the weather, never glossy or CGI; no hazmat suits.")
 
 
 class SlotFillError(RuntimeError):
@@ -898,10 +914,10 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     camera = (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, eye level, normal lens; slight hand "
               f"shake, the camera pans to follow the {s['object']}{CAMERA_MOTION_EXTRA.get(event, '')}; no zoom, no cuts.")
     if s["domain"] == "volcano_disasters":   # 13 Eki: volkanda takip yok, kamera sabit (VOLCANO_CAMERA_PERCH)
-        camera = volcano_camera(spot)
+        camera = volcano_camera(spot, event)
     guardrails = get_realism_guardrails(s['domain'], ship or 'None', spot)
-    if s["domain"] == "volcano_disasters":
-        guardrails = VOLCANO_GUARDRAILS   # 13 Eki (3): kısa ifade, aynı kısıtlar
+    if s["domain"] == "volcano_disasters":   # 13 Eki (3): kısa ifade, aynı kısıtlar
+        guardrails = VOLCANO_GUARDRAILS_LONG if event in VOLCANO_SHORT_CAMERA_EXCLUDED else VOLCANO_GUARDRAILS
     if s["domain"] == "avalanche_disasters":   # 13 Eki: çığ, volkan yapısı (sabit kamera, kısa giyim/ışık)
         camera = avalanche_camera(spot)
         guardrails = AVALANCHE_GUARDRAILS

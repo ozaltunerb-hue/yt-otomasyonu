@@ -106,7 +106,7 @@ FREE = {
     ],
     # 17 Eki, Bahadır (Parti 1): yeni maddeler T7, U7-U11 (T3, U3-U5 çıktı)
     "T7": [
-        "The SUV races away down the road as burning wreckage from the vortex crashes onto the asphalt behind it.",
+        "Down the road the SUV races away as burning wreckage from the vortex crashes onto the asphalt behind it.",
         "The pickup truck speeds off from the giant fire column while flaming debris slams down at its back.",
         "The white van accelerates down the road, burning debris from the tornado falling just behind it.",
         "Fleeing the colossal fire whirl, the small car tears away as blazing debris rains onto the road behind.",
@@ -408,27 +408,20 @@ POOL = ({"T1": "the towering fire tornado lifts the {vehicle} off the road and f
          "T5": "the huge fire tornado rolls the {vehicle} over onto its roof and it bursts into flames",
          "T6": "huge flaming debris flung by the towering tornado slams into the {vehicle}, which spins and stops "
                "across the road",
-         "T7": "the {vehicle} races down the road away from the towering fire tornado as burning debris crashes down "
-               "behind it"},
+         # 18 Eki: Parti 1 metinleri kısaldı (≤16 kelime)
+         "T7": "the {vehicle} races away from the fire tornado as burning debris crashes down behind it"},
         {"U1": "the towering fire tornado rips the burning roof off a house across the street and sucks the sheets into "
                "its column",
          "U2": "the huge fire tornado uproots a cluster of burning trees and flings their trunks down the road",
          "U6": "the towering fire tornado sweeps over a parked trailer and tosses it aside in fire and smoke",
-         "U7": "the towering fire tornado tears a wooden house off its foundation and swallows it, planks and beams "
-               "spiraling up into the flaming column",
-         "U8": "the roofs of two houses in a row are ripped off one after another and pulled up into the spinning fire "
-               "column",
-         "U9": "the front wall of a house tears away and the rubble is sucked into the fire tornado, flames pouring into "
-               "the open rooms",
-         "U10": "the towering fire tornado rips the porch and front steps off a house and pulls them into its column in "
-                "a storm of sparks",
-         "U11": "the towering fire tornado engulfs a wooden garage beside a house, its walls bursting apart as burning "
-                "boards spiral up into the column"})
-# 17 Eki: kod yedeğinin 75 kelimeye sığmadığı çiftler (tests/test_story_fallback.py FALLBACK_GAPS_EXCLUDED)
-FIT_GAPS = {("T1", "U7"), ("T1", "U9"), ("T1", "U10"), ("T1", "U11"), ("T2", "U10"), ("T4", "U7"), ("T4", "U8"),
-            ("T4", "U9"), ("T4", "U10"), ("T4", "U11"), ("T5", "U10"), ("T6", "U1"), ("T6", "U7"), ("T6", "U8"),
-            ("T6", "U9"), ("T6", "U10"), ("T6", "U11"), ("T7", "U1"), ("T7", "U7"), ("T7", "U8"), ("T7", "U9"),
-            ("T7", "U10"), ("T7", "U11")}
+         "U7": "a wooden house across the street is torn from its foundation, planks spiraling into the column",
+         "U8": "the roofs of two houses across the street are ripped off and sucked into the column",
+         "U9": "the front wall of a house across the street tears away, rubble sucked into the column",
+         "U10": "the porch and steps of a house across the street are ripped off and pulled in",
+         "U11": "a wooden garage beside a house across the street bursts apart, burning boards spiraling up"})
+# Kod yedeğinin 75 kelimeye sığmadığı çiftler (tests/test_story_fallback.py FALLBACK_GAPS_EXCLUDED). 18 Eki: kısa
+# metinlerle 23 -> 1
+FIT_GAPS = {("T6", "U1")}
 
 
 class TestFireTornadoGate(unittest.TestCase):
@@ -456,8 +449,8 @@ class TestFireTornadoGate(unittest.TestCase):
         size = ("towering", "huge", "colossal", "giant", "swallow")
         small = ("glass", "window", "windshield", "pole", "wire", "cable", "fence", "sign", "billboard", "railing",
                  "guardrail", "ember")
-        # 17 Eki: U8 ve U9 Bahadır'ın metni birebir (hortumun adı var, büyüklük sıfatı yok); kilit cümle ölçeği verir
-        no_size = {"U8", "U9"}
+        # 17-18 Eki: Parti 1 kısa metinleri Bahadır'ın metni birebir (büyüklük sıfatı yok); kilit cümle ölçeği verir
+        no_size = {"T7", "U7", "U8", "U9", "U10", "U11"}
         for sl in POOL:
             for bid, text in sl.items():
                 with self.subTest(beat=bid):

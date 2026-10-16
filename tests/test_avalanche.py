@@ -507,10 +507,14 @@ class TestAvalanche(unittest.TestCase):
                     # 14 Eki (5): yamaçlı şablonla stil eki en fazla 102 kelime; 70 kelimelik hikâye + 3 etiket ≤ 175
                     self.assertLessEqual(70 + 3 + len(suffix.split()), 175)
                     self.assertLessEqual(count_constraints(suffix)[0], 8)
-        # volkan ve diğer kategorilerin kamera satırı değişmedi
-        self.assertTrue(sk.style_suffix(es.ERUPTION, None, "Hillside terrace facing the erupting volcano")
+        # volkan ve diğer kategorilerin kamera satırı çığdan bağımsız (18 Eki: patlama/bombalar kısa şablon, kül bulutu
+        # eski şablon)
+        self.assertTrue(sk.style_suffix(es.PYROCLASTIC, None, "Hillside terrace facing the erupting volcano")
                         .startswith("Handheld footage shot by a person standing on a hillside terrace above the village, "
                                     "high vantage looking down over the village street toward the erupting volcano;"))
+        self.assertTrue(sk.style_suffix(es.ERUPTION, None, "Hillside terrace facing the erupting volcano")
+                        .startswith("Handheld footage shot by a person standing on a hillside terrace above the village, "
+                                    "high vantage over the village street toward the erupting volcano;"))
         self.assertIn("the camera pans to follow the", sk.style_suffix(es.MUDSLIDE, None, list(
             sk.EVENT_SKELETONS[es.MUDSLIDE]["spots"])[0]))
 

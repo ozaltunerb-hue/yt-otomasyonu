@@ -105,12 +105,11 @@ RECENT_BEAT_BLOCK_BY_EVENT = {PYROCLASTIC: 2,
                               # çifte denk gelebilir: o durumda 1'e düşer (BEAT_BLOCK_FALLBACK_EVENTS, testli)
                               EARTHQUAKE_APARTMENT: 2, EARTHQUAKE_OLD_STREET: 2}
 # Aday kalmazsa derinliği 1'e düşen olaylar (14 Eki, deprem). Diğer olaylarda davranış aynı (aday bitince hata).
-# 17 Eki: ateş hortumu da (Parti 1 sonrası 23 izinli çift; T6/T7 sadece U2/U6 ile eşleştiği için 3 derinlik en kötü
-# durumda adayı bitirir, 1 derinlikte en az 11 çift kalır; normal akışta derinlik yine 3)
 # 17 Eki (temizlik turu): hortum karaya vuruş (4 + 4 kaldı), orman yangını (balkonda 3 + 3) ve çığ köy (6 yeni hariç
 # çift, balkonda 7 çift) de: en kötü durumda olaya özel derinlik adayı bitirir, 1 derinlikte en az 3 çift kalır.
-BEAT_BLOCK_FALLBACK_EVENTS = (EARTHQUAKE_APARTMENT, EARTHQUAKE_OLD_STREET, FIRE_TORNADO, LANDFALL, WILDFIRE,
-                              AVALANCHE_VILLAGE)
+# 18 Eki: ateş hortumu listeden çıktı (kısa metinlerle 45 izinli çift, 3 derinlikte en kötü durumda 12 çift kalıyor;
+# 17 Eki'de 23 çiftle eklenmişti)
+BEAT_BLOCK_FALLBACK_EVENTS = (EARTHQUAKE_APARTMENT, EARTHQUAKE_OLD_STREET, LANDFALL, WILDFIRE, AVALANCHE_VILLAGE)
 
 # ── Kilit görsel (0-4s'nin ilk cümlesi, kod yazar) ──────────────────────────────────────────────────────────
 EVENT_KEY_VISUAL = {
@@ -835,9 +834,9 @@ _FIRE_BURST = ("burst", "shatter", "crack", "explode", "split", "pop", "fly", "f
 
 # 17 Eki (Parti 1, madde 1 kuralı): kod yedeğinin 175 kelimeye sığmadığı çiftler hariç (beat silinmez). Ölçüm:
 # tests/test_story_fallback.py (FALLBACK_GAPS_EXCLUDED).
-_VOLC_BOMBS_GAPS = {("R7", "T5"), ("R7", "T8"), ("R7", "T9"), ("R8", "T5"), ("R8", "T8"), ("R8", "T9"),
-                            ("R9", "T8")}
-_VOLC_ERUPTION_GAPS = {("S7", "U8")}
+# 18 Eki: kısa metinler ve kısa stil eki (96 kelime) ile sığmayan çift kalmadı (17 Eki: bombalar 7, şok dalgası 1)
+_VOLC_BOMBS_GAPS = set()
+_VOLC_ERUPTION_GAPS = set()
 EVENT_BEATS = {
     FLOOD: {
         "slice_2": {
@@ -1244,9 +1243,9 @@ EVENT_BEATS = {
             "T6": {"text": "huge flaming debris flung by the towering tornado slams into the {vehicle}, which spins "
                            "and stops across the road",
                    "terms": [_FIRE_TOR_VEH, _FIRE_TOR_DEBRIS, _FIRE_TOR_IMPACT, _FIRE_TOR_TURNSTOP]},
-            # 17 Eki, Bahadır (Parti 1): araç hortumdan kaçar, arkasına yanan moloz düşer
-            "T7": {"text": "the {vehicle} races down the road away from the towering fire tornado as burning debris "
-                           "crashes down behind it",
+            # 17 Eki, Bahadır (Parti 1): araç hortumdan kaçar, arkasına yanan moloz düşer. 18 Eki: Parti 1 metinleri
+            # kısaldı (≤16 kelime, kod yedeği 75 kelimeye sığsın; önceki uzun metinler commit d77655d)
+            "T7": {"text": "the {vehicle} races away from the fire tornado as burning debris crashes down behind it",
                    "terms": [_FIRE_TOR_VEH, _FIRE_TOR_ESCAPE, _FIRE_TOR_DEBRIS]},
         },
         "slice_3": {
@@ -1265,31 +1264,24 @@ EVENT_BEATS = {
                    "terms": [_FIRE_TOR_TRAILER, _FIRE_TOR_TOSS, _FIRE_FLAME]},
             # 17 Eki, Bahadır (Parti 1): yerleşim yıkımı, büyük ve koyu yapı + hortum sütunu (U3 ahır, U4 çalı yığını,
             # U5 odun yığını yerine)
-            "U7": {"text": "the towering fire tornado tears a wooden house off its foundation and swallows it, planks "
-                           "and beams spiraling up into the flaming column",
+            "U7": {"text": "a wooden house across the street is torn from its foundation, planks spiraling into the "
+                           "column",
                    "terms": [_FIRE_TOR_HOUSE, _FIRE_TOR_WHOLE, _FIRE_TOR_PLANKS]},
-            "U8": {"text": "the roofs of two houses in a row are ripped off one after another and pulled up into the "
-                           "spinning fire column",
+            "U8": {"text": "the roofs of two houses across the street are ripped off and sucked into the column",
                    "terms": [_FIRE_ROOF, _FIRE_TOR_RIP, _FIRE_TOR_ROW]},
-            "U9": {"text": "the front wall of a house tears away and the rubble is sucked into the fire tornado, flames "
-                           "pouring into the open rooms",
-                   "terms": [_FIRE_TOR_WALL, _FIRE_TOR_RIP, _FIRE_TOR_INTAKE, _FIRE_FLAME]},
-            "U10": {"text": "the towering fire tornado rips the porch and front steps off a house and pulls them into "
-                            "its column in a storm of sparks",
-                    "terms": [_FIRE_TOR_PORCH, _FIRE_TOR_RIP, _FIRE_TOR_INTAKE + _FIRE_TOR_COLUMN,
-                              _FIRE_FLAME + _FIRE_TOR_EMBER]},
-            "U11": {"text": "the towering fire tornado engulfs a wooden garage beside a house, its walls bursting apart as "
-                            "burning boards spiral up into the column",
+            "U9": {"text": "the front wall of a house across the street tears away, rubble sucked into the column",
+                   "terms": [_FIRE_TOR_WALL, _FIRE_TOR_RIP, _FIRE_TOR_INTAKE]},   # 18 Eki: kısa metinde alev yok
+            "U10": {"text": "the porch and steps of a house across the street are ripped off and pulled in",
+                    "terms": [_FIRE_TOR_PORCH, _FIRE_TOR_RIP, _FIRE_TOR_INTAKE + _FIRE_TOR_COLUMN]},   # 18 Eki: kıvılcım yok
+            "U11": {"text": "a wooden garage beside a house across the street bursts apart, burning boards spiraling "
+                            "up",
                     "terms": [_FIRE_TOR_GARAGE, _FIRE_TOR_WRECK, _FIRE_FLAME]},
         },
         # 15 Eki (2): T2 ağaç gövdesi / U2 yanan ağaçlar. 17 Eki: (T4,U4) (T2,U5) U4/U5 ile gitti.
         # 17 Eki (Parti 1, madde 1 kuralı): kod yedeğinin kelime sınırına sığmayan çiftler de hariç (kilit cümle 28-29 +
-        # insan cümlesi 6-7 + uzun çift > 75). Yeni U7-U11 20-23 kelime; T6/T7 (19-20) sadece U2/U6 ile eşleşir.
-        "excluded_pairs": {("T1", "U2"), ("T2", "U2"),
-                           ("T1", "U7"), ("T1", "U9"), ("T1", "U10"), ("T1", "U11"), ("T2", "U10"),
-                           ("T4", "U7"), ("T4", "U8"), ("T4", "U9"), ("T4", "U10"), ("T4", "U11"), ("T5", "U10"),
-                           ("T6", "U1"), ("T6", "U7"), ("T6", "U8"), ("T6", "U9"), ("T6", "U10"), ("T6", "U11"),
-                           ("T7", "U1"), ("T7", "U7"), ("T7", "U8"), ("T7", "U9"), ("T7", "U10"), ("T7", "U11")},
+        # insan cümlesi 6-7 + uzun çift > 75). 18 Eki: yeni metinler ≤16 kelime, 23 çiftten sadece T6+U1 sığmıyor
+        # (T6 19 + araç, U1 21 kelime)
+        "excluded_pairs": {("T1", "U2"), ("T2", "U2"), ("T6", "U1")},
         "excluded_views": {},
         # 17 Eki, Bahadır: U1 "across the street" oldu, nokta kısıtı kalktı. Önceki (16 Eki): U1 sadece köy yamaç
         # terasında (balkonlar, çatı ve üst kat terası hariç)
@@ -1361,14 +1353,12 @@ EVENT_BEATS = {
                    "terms": [_VOLC_TREE + _VOLC_POLE, _VOLC_SNAP]},
             "S5": {"text": "the shockwave topples a stone wall along the street and the stones scatter across the road",
                    "terms": [_VOLC_WALL, _VOLC_TOPPLE]},
-            # 17 Eki, Bahadır (Parti 1): karşıdaki ev ve büyük kamyon (S1 vitrin camı yerine)
-            "S6": {"text": "the shockwave hits the house across the street and its front wall bursts outward, bricks "
-                           "and roof tiles flying",
+            # 17 Eki, Bahadır (Parti 1): karşıdaki ev ve büyük kamyon (S1 vitrin camı yerine). 18 Eki: kısa metinler
+            "S6": {"text": "the shockwave hits the house across the street and its front wall bursts outward",
                    "terms": [_VOLC_SHOCK, _VOLC_HOUSE, _VOLC_BURST + _VOLC_FLING]},
-            "S7": {"text": "the shockwave lifts the roof off a house across the street and hurls it down the road in "
-                           "pieces",
+            "S7": {"text": "the shockwave lifts the roof off a house across the street and hurls it away",
                    "terms": [_VOLC_SHOCK, _VOLC_ROOF, _VOLC_RIP + _VOLC_FLING]},
-            "S8": {"text": "the shockwave shoves a large truck sideways down the street and flips it onto its side",
+            "S8": {"text": "the shockwave shoves a large truck sideways down the street and flips it",
                    "terms": [_VOLC_SHOCK, _VOLC_CAR, _VOLC_PUSH + ("flip", "overturn", "tip over", "roll over",
                                                                     "onto its side", "on its side")]},
         },
@@ -1387,11 +1377,9 @@ EVENT_BEATS = {
             "U6": {"text": "the shockwave collapses a row of garden walls and a tin-roofed shed",
                    "terms": [_VOLC_WALL + _VOLC_SHED, _VOLC_COLLAPSE + _VOLC_TOPPLE]},
             # 17 Eki, Bahadır (Parti 1): evler çöker (U1 tabela/tente yerine)
-            "U7": {"text": "the shockwave rolls down the village street and the houses on both sides collapse inward "
-                           "one after another, walls and roofs crumbling",
+            "U7": {"text": "the shockwave rolls down the street and the houses on both sides collapse inward",
                    "terms": [_VOLC_SHOCK, _VOLC_HOUSE, _VOLC_COLLAPSE]},
-            "U8": {"text": "the shockwave tears the upper floor off a stone house and its walls fall into the street in "
-                           "a cloud of dust",
+            "U8": {"text": "the shockwave tears the upper floor off a stone house across the street",
                    "terms": [_VOLC_SHOCK, _VOLC_HOUSE + _VOLC_FLOOR, _VOLC_RIP + _VOLC_COLLAPSE + _VOLC_FALL]},
         },
         # Aynı yapı iki dilimde yok: vitrin/kepenk aynı dükkân cephesi (S1,U3); araç camı iki kez (S2,U2); duvar iki
@@ -1466,15 +1454,12 @@ EVENT_BEATS = {
             # 13 Eki (4), Bahadır: R5-R6 birebir
             "R5": {"text": "a volcanic bomb punches through a stone wall and the wall bursts apart",
                    "terms": [_VOLC_ROCK, _VOLC_WALL, _VOLC_SMASH]},
-            # 17 Eki, Bahadır (Parti 1): büyük ve yakın hedefler (ev çatısı, ev duvarı, yol)
-            "R7": {"text": "a huge glowing rock crashes through the roof of a house across the street, tiles and "
-                           "burning timbers flying skyward",
+            # 17 Eki, Bahadır (Parti 1): büyük ve yakın hedefler (ev çatısı, ev duvarı, yol). 18 Eki: kısa metinler
+            "R7": {"text": "a huge glowing rock crashes through the roof of a house across the street",
                    "terms": [_VOLC_ROCK, _VOLC_HOUSE + _VOLC_ROOF, _VOLC_SMASH]},
-            "R8": {"text": "a glowing rock slams into the side wall of a house and the wall bursts apart in a shower "
-                           "of sparks and stone",
+            "R8": {"text": "a glowing rock slams into a house across the street and its wall bursts apart",
                    "terms": [_VOLC_ROCK, _VOLC_HOUSE + _VOLC_WALL, _VOLC_BURST + _VOLC_SMASH]},
-            "R9": {"text": "a glowing rock hits the road ahead, splitting the asphalt and sending burning chunks flying "
-                           "across the street",
+            "R9": {"text": "a glowing rock hits the road ahead and sends burning chunks across the street",
                    "terms": [_VOLC_ROCK, _VOLC_ROAD, _VOLC_CRATER + _VOLC_SNAP + _VOLC_SMASH]},
         },
         "slice_3": {
@@ -1489,12 +1474,11 @@ EVENT_BEATS = {
             "T6": {"text": "a volcanic bomb hits a house's upper floor and a section of the wall bursts outward in flames",
                    "terms": [_VOLC_ROCK, _VOLC_HOUSE + _VOLC_FLOOR, _VOLC_BURST + _VOLC_IGNITE + _VOLC_SMASH]},
             # 17 Eki, Bahadır (Parti 1)
-            "T7": {"text": "glowing rocks rain onto a row of houses and set their roofs ablaze one after another",
+            "T7": {"text": "glowing rocks hit a row of houses and set their roofs ablaze",
                    "terms": [_VOLC_ROCK, _VOLC_HOUSE + _VOLC_ROOF, _VOLC_IGNITE]},
-            "T8": {"text": "a huge glowing rock hits a house and its whole upper floor erupts in flames, burning beams "
-                           "collapsing into the street",
+            "T8": {"text": "a huge glowing rock hits a house and its upper floor erupts in flames",
                    "terms": [_VOLC_ROCK, _VOLC_HOUSE + _VOLC_FLOOR, _VOLC_IGNITE + _VOLC_COLLAPSE + _VOLC_SMASH]},
-            "T9": {"text": "a glowing rock smashes into a large parked truck and flames wrap the cab and the box behind it",
+            "T9": {"text": "a glowing rock smashes into a large parked truck and flames wrap the cab",
                    "terms": [_VOLC_ROCK, _VOLC_CAR, _VOLC_SMASH + _VOLC_IGNITE]},
         },
         # araç iki kez (R2,T2) (R1,T2); dükkân yangını iki kez (R3,T3); 13 Eki (4): duvar iki kez (R5,T6), ağaç/direk
@@ -2954,6 +2938,12 @@ def pool_lint_errors() -> list[str]:
                     out.append(f"{event}/{bid}: {hits}")
                 if not hits and (event, bid) in POOL_LINT_GRANDFATHERED:
                     out.append(f"{event}/{bid}: muafiyet gereksiz (ihlal yok)")
+    for event in VOLCANO_EVENTS:   # 18 Eki: volkan beat'inde "rain" fiili yok (yağmur kapısı/yağış çağrışımı)
+        for slot in ("slice_2", "slice_3"):
+            for bid, beat in EVENT_BEATS[event][slot].items():
+                rain = [t for t in re.findall(r"[a-z]+", beat["text"].lower()) if t in _RAIN_TOKENS]
+                if rain:
+                    out.append(f"{event}/{bid}: volkan beat'inde 'rain' fiili ({', '.join(rain)})")
     for event, bid in POOL_LINT_GRANDFATHERED:
         if bid not in EVENT_BEATS.get(event, {}).get("slice_2", {}) and bid not in EVENT_BEATS.get(event, {}).get(
                 "slice_3", {}):

@@ -23,42 +23,29 @@ FT, VB, ER = es.FIRE_TORNADO, es.VOLCANIC_BOMBS, es.ERUPTION
 RT, BAL = "Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"
 
 # Bahadır'ın metni birebir (17 Eki, Parti 1)
-NEW_BEATS = {
-    (FT, "slice_2", "T7"): "the {vehicle} races down the road away from the towering fire tornado as burning debris "
-                           "crashes down behind it",
-    (FT, "slice_3", "U7"): "the towering fire tornado tears a wooden house off its foundation and swallows it, planks "
-                           "and beams spiraling up into the flaming column",
-    (FT, "slice_3", "U8"): "the roofs of two houses in a row are ripped off one after another and pulled up into the "
-                           "spinning fire column",
-    (FT, "slice_3", "U9"): "the front wall of a house tears away and the rubble is sucked into the fire tornado, flames "
-                           "pouring into the open rooms",
-    (FT, "slice_3", "U10"): "the towering fire tornado rips the porch and front steps off a house and pulls them into "
-                            "its column in a storm of sparks",
-    (FT, "slice_3", "U11"): "the towering fire tornado engulfs a wooden garage beside a house, its walls bursting apart "
-                            "as burning boards spiral up into the column",
-    (VB, "slice_2", "R7"): "a huge glowing rock crashes through the roof of a house across the street, tiles and "
-                           "burning timbers flying skyward",
-    (VB, "slice_2", "R8"): "a glowing rock slams into the side wall of a house and the wall bursts apart in a shower "
-                           "of sparks and stone",
-    (VB, "slice_2", "R9"): "a glowing rock hits the road ahead, splitting the asphalt and sending burning chunks flying "
-                           "across the street",
-    (VB, "slice_3", "T7"): "glowing rocks rain onto a row of houses and set their roofs ablaze one after another",
-    (VB, "slice_3", "T8"): "a huge glowing rock hits a house and its whole upper floor erupts in flames, burning beams "
-                           "collapsing into the street",
-    (VB, "slice_3", "T9"): "a glowing rock smashes into a large parked truck and flames wrap the cab and the box behind "
-                           "it",
-    (ER, "slice_2", "S6"): "the shockwave hits the house across the street and its front wall bursts outward, bricks "
-                           "and roof tiles flying",
-    (ER, "slice_2", "S7"): "the shockwave lifts the roof off a house across the street and hurls it down the road in "
-                           "pieces",
-    (ER, "slice_2", "S8"): "the shockwave shoves a large truck sideways down the street and flips it onto its side",
-    (ER, "slice_3", "U7"): "the shockwave rolls down the village street and the houses on both sides collapse inward "
-                           "one after another, walls and roofs crumbling",
-    (ER, "slice_3", "U8"): "the shockwave tears the upper floor off a stone house and its walls fall into the street in "
-                           "a cloud of dust",
+NEW_BEATS = {   # 18 Eki: kısa metinler (≤16 kelime; 17 Eki uzun metinleri commit d77655d)
+    (FT, "slice_2", "T7"): "the {vehicle} races away from the fire tornado as burning debris crashes down behind it",
+    (FT, "slice_3", "U7"): "a wooden house across the street is torn from its foundation, planks spiraling into the "
+                           "column",
+    (FT, "slice_3", "U8"): "the roofs of two houses across the street are ripped off and sucked into the column",
+    (FT, "slice_3", "U9"): "the front wall of a house across the street tears away, rubble sucked into the column",
+    (FT, "slice_3", "U10"): "the porch and steps of a house across the street are ripped off and pulled in",
+    (FT, "slice_3", "U11"): "a wooden garage beside a house across the street bursts apart, burning boards spiraling "
+                            "up",
+    (VB, "slice_2", "R7"): "a huge glowing rock crashes through the roof of a house across the street",
+    (VB, "slice_2", "R8"): "a glowing rock slams into a house across the street and its wall bursts apart",
+    (VB, "slice_2", "R9"): "a glowing rock hits the road ahead and sends burning chunks across the street",
+    (VB, "slice_3", "T7"): "glowing rocks hit a row of houses and set their roofs ablaze",
+    (VB, "slice_3", "T8"): "a huge glowing rock hits a house and its upper floor erupts in flames",
+    (VB, "slice_3", "T9"): "a glowing rock smashes into a large parked truck and flames wrap the cab",
+    (ER, "slice_2", "S6"): "the shockwave hits the house across the street and its front wall bursts outward",
+    (ER, "slice_2", "S7"): "the shockwave lifts the roof off a house across the street and hurls it away",
+    (ER, "slice_2", "S8"): "the shockwave shoves a large truck sideways down the street and flips it",
+    (ER, "slice_3", "U7"): "the shockwave rolls down the street and the houses on both sides collapse inward",
+    (ER, "slice_3", "U8"): "the shockwave tears the upper floor off a stone house across the street",
 }
-# Seçilemeyen yeni beat (kod yedeği hiçbir 4-9s maddesiyle 75 kelimeye sığmıyor; metin Bahadır onayıyla kısalır)
-UNUSABLE = {(FT, "U10"): "24 kelime: kilit cümle 28-29 + insan cümlesi 6 + her 4-9s maddesi ile 75'i aşar"}
+# 18 Eki: seçilemeyen yeni beat kalmadı (17 Eki'de U10 24 kelimeydi)
+UNUSABLE = {}
 # GPT tarzı doğru anlatımlar (yumuşak kapıdan geçer) ve yanlış nesne (beat_object)
 PARAPHRASE = {
     (FT, "T7"): ["The SUV speeds off down the road as flaming debris from the vortex crashes behind it.",
@@ -307,15 +294,45 @@ class TestNewBeats(unittest.TestCase):
             self.assertIn("across the street", es.beat_text(e, "slice_2", bid))
             self.assertNotIn(bid, es.EVENT_BEATS[e]["excluded_spots"])
 
-    def test_u10_unusable_until_shortened(self):
-        # U10 metni 24 kelime; kod yedeği hiçbir 4-9s maddesiyle 75'e sığmadığı için hiçbir çifti izinli değil.
-        # Metin kısalırsa (Bahadır onayı) bu test kırılır: UNUSABLE ve FALLBACK_GAPS_EXCLUDED güncellenir.
-        for (e, bid), why in UNUSABLE.items():
-            with self.subTest(beat=bid, why=why):
-                self.assertFalse([p for s in sk.view_spots(e, None) for p in es.allowed_pairs(e, None, s)
-                                  if bid in p])
-                self.assertEqual(len(es.beat_text(e, "slice_3", bid).split()), 24)
+    def test_short_texts_fit_and_pair_widely(self):
+        # 18 Eki, Bahadır: Parti 1 metinleri ≤16 kelime; ateş hortumunda T6 ve T7 en az 4 farklı U ile eşleşir; yedeği
+        # sığmayan çift ateş hortumunda sadece T6+U1, volkanda hiç yok; her yeni beat en az bir çiftte seçilebilir
+        for (e, slot, bid), text in NEW_BEATS.items():
+            with self.subTest(beat=(e, bid)):
+                self.assertLessEqual(len(text.replace("{vehicle}", "x").split()), 16)
+                self.assertTrue([p for s in sk.view_spots(e, None) for p in es.allowed_pairs(e, None, s)
+                                 if p[0 if slot == "slice_2" else 1] == bid])
+        pairs = {p for s in sk.view_spots(FT, None) for p in es.allowed_pairs(FT, None, s)}
+        for b2 in ("T6", "T7"):
+            self.assertGreaterEqual(len({d for v, d in pairs if v == b2}), 4, b2)
+        self.assertEqual(es.EVENT_BEATS[FT]["excluded_pairs"], {("T1", "U2"), ("T2", "U2"), ("T6", "U1")})
+        self.assertEqual(es._VOLC_BOMBS_GAPS | es._VOLC_ERUPTION_GAPS, set())
+        self.assertNotIn(FT, es.BEAT_BLOCK_FALLBACK_EVENTS)
 
+    def test_volcano_prompt_never_over_175(self):
+        # 18 Eki: patlama ve bombalarda en uzun stil eki 96 kelime: 96 + 75 + 3 etiket ≤ 175 (GPT'ye kural yok). Kül
+        # bulutu bu turda dokunulmadı (eski kamera metni aynen)
+        for e in (ER, VB):
+            longest = max(len(sk.style_suffix(e, None, s).split()) for s in sk.view_spots(e, None))
+            self.assertLessEqual(longest + es.TOTAL_WORDS_BY_EVENT[e][1] + 3, es.VOLC_MAX_PROMPT_WORDS, e)
+        self.assertIn(es.PYROCLASTIC, sk.VOLCANO_SHORT_CAMERA_EXCLUDED)
+        self.assertIn("matching the weather", sk.style_suffix(es.PYROCLASTIC, None, RT))
+        self.assertIn("looking down over the village street", sk.style_suffix(es.PYROCLASTIC, None, RT))
+
+    def test_volcano_rain_verb_lint(self):
+        # 18 Eki: volkan beat'inde "rain" fiili lint hatası
+        b = es.EVENT_BEATS[VB]["slice_3"]
+        b["TX"] = {"text": "glowing rocks rain onto the roofs of the houses", "terms": [("rock",)]}
+        es.OBJECT_GROUPS[VB]["TX"] = 0
+        try:
+            self.assertIn(f"{VB}/TX: volkan beat'inde 'rain' fiili (rain)", es.pool_lint_errors())
+        finally:
+            del b["TX"]
+            del es.OBJECT_GROUPS[VB]["TX"]
+        for e in es.VOLCANO_EVENTS:
+            for slot in ("slice_2", "slice_3"):
+                for bid, beat in es.EVENT_BEATS[e][slot].items():
+                    self.assertNotIn("rain", beat["text"].lower().split(), (e, bid))
 
 def _make_test(event, slot, bid, text):
     def test(self):

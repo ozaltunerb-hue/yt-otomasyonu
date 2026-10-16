@@ -126,6 +126,9 @@ class TestSkeletonOutput(unittest.TestCase):
                     self.assertIn("raw natural light, no hazmat suits", suffix)   # 14 Eki (4): ışık ortamdan
                 elif e == "Fire tornado tears across a burning roadside":   # 15 Eki (2): kısa giyim/ışık satırı (16 Eki: daha kısa)
                     self.assertIn("raw natural light, never glossy or CGI", suffix)
+                # 18 Eki: patlama ve bombalarda 175 kelime için "matching the weather" çıktı (kül bulutu aynı)
+                elif e in ("Volcano erupts and a shockwave blows out windows", "Volcanic bombs slam into a village street"):
+                    self.assertIn("Raw natural light, never glossy or CGI", suffix)
                 else:
                     self.assertIn("Raw natural light matching the weather, never glossy or CGI", suffix)
                 self.assertTrue("wear" in suffix)   # kıyafet satırı korunur

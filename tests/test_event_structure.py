@@ -1635,31 +1635,22 @@ class TestFireStructure(unittest.TestCase):
             "T5": "the huge fire tornado rolls the {vehicle} over onto its roof and it bursts into flames",
             "T6": "huge flaming debris flung by the towering tornado slams into the {vehicle}, which spins and stops "
                   "across the road",
-            # 17 Eki, Bahadır (Parti 1): T3 çıktı (fizik 2), T7 yeni
-            "T7": "the {vehicle} races down the road away from the towering fire tornado as burning debris crashes "
-                  "down behind it",
+            # 17 Eki, Bahadır (Parti 1): T3 çıktı (fizik 2), T7 yeni. 18 Eki: kısa metinler
+            "T7": "the {vehicle} races away from the fire tornado as burning debris crashes down behind it",
         }, {
             # 17 Eki, Bahadır: U1 "across the street", nokta kısıtı kalktı; U3-U5 çıktı (kırsal/boş arazi), U7-U11 yeni
             "U1": "the towering fire tornado rips the burning roof off a house across the street and sucks the sheets "
                   "into its column",
             "U2": "the huge fire tornado uproots a cluster of burning trees and flings their trunks down the road",
             "U6": "the towering fire tornado sweeps over a parked trailer and tosses it aside in fire and smoke",
-            "U7": "the towering fire tornado tears a wooden house off its foundation and swallows it, planks and beams "
-                  "spiraling up into the flaming column",
-            "U8": "the roofs of two houses in a row are ripped off one after another and pulled up into the spinning "
-                  "fire column",
-            "U9": "the front wall of a house tears away and the rubble is sucked into the fire tornado, flames pouring "
-                  "into the open rooms",
-            "U10": "the towering fire tornado rips the porch and front steps off a house and pulls them into its column "
-                   "in a storm of sparks",
-            "U11": "the towering fire tornado engulfs a wooden garage beside a house, its walls bursting apart as "
-                   "burning boards spiral up into the column",
+            "U7": "a wooden house across the street is torn from its foundation, planks spiraling into the column",
+            "U8": "the roofs of two houses across the street are ripped off and sucked into the column",
+            "U9": "the front wall of a house across the street tears away, rubble sucked into the column",
+            "U10": "the porch and steps of a house across the street are ripped off and pulled in",
+            "U11": "a wooden garage beside a house across the street bursts apart, burning boards spiraling up",
         }, {("T1", "U2"), ("T2", "U2"),
-            # 17 Eki: kod yedeğinin 75 kelimeye sığmadığı çiftler (tests/test_story_fallback.py FALLBACK_GAPS_EXCLUDED)
-            ("T1", "U7"), ("T1", "U9"), ("T1", "U10"), ("T1", "U11"), ("T2", "U10"), ("T4", "U7"), ("T4", "U8"),
-            ("T4", "U9"), ("T4", "U10"), ("T4", "U11"), ("T5", "U10"), ("T6", "U1"), ("T6", "U7"), ("T6", "U8"),
-            ("T6", "U9"), ("T6", "U10"), ("T6", "U11"), ("T7", "U1"), ("T7", "U7"), ("T7", "U8"), ("T7", "U9"),
-            ("T7", "U10"), ("T7", "U11")},
+            # kod yedeğinin 75 kelimeye sığmadığı tek çift (18 Eki; 17 Eki'de 23)
+            ("T6", "U1")},
             {}),
     }
     # spot (kamera noktası) -> (kamera satırı, PLACE metni = Bahadır'ın ortam tarifi)
@@ -1956,9 +1947,9 @@ class TestFireStructure(unittest.TestCase):
                         self.assertIn(sk.CAMERA_SPOTS[spot], prompt)
                         longest = max(longest, len(prompt))
                         n += 1
-        # 17 Eki (temizlik turu): orman balkon 11 + set 23; cephe 4 nokta × 22; ateş hortumu 6 nokta × 23 (Parti 1:
-        # 6 × 8 - 25 hariç çift, U1 her noktada); × 4 araç
-        self.assertEqual(n, (11 + 23) * 4 + 22 * 4 * 4 + 23 * 6 * 4)
+        # 17 Eki (temizlik turu): orman balkon 11 + set 23; cephe 4 nokta × 22; ateş hortumu 6 nokta × 45 (18 Eki: kısa
+        # metinler, 6 × 8 - 3 hariç çift, U1 her noktada); × 4 araç
+        self.assertEqual(n, (11 + 23) * 4 + 22 * 4 * 4 + 45 * 6 * 4)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -2375,14 +2366,30 @@ class TestHelicopter(unittest.TestCase):
 
 # 13 Eki (4), Bahadır: lav nehri çıkarıldı, volkan 3 olay
 VOLC = (es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS)
-# 13 Eki, Bahadır: volkan kamera cümlesi, kamera sabit, takip (pan) yok. 13 Eki (3): tekrarsız şablon
-VOLC_CAMERA = ("Handheld footage shot by a person standing {cam}, high vantage looking down over the village street "
-               "toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, tilting down no "
-               "more than slightly and never descending, the erupting volcano always visible in the upper third of the "
-               "frame, a corner of the {perch} railing in the foreground; one continuous shot, no zoom, no cuts.")
-# 13 Eki (3), Bahadır kararı: volkan giyim/ışık satırları kısa ifade (aynı kısıtlar)
-VOLC_GUARD = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light "
-              "matching the weather, never glossy or CGI; no hazmat suits.")
+# 13 Eki, Bahadır: volkan kamera cümlesi, kamera sabit, takip (pan) yok. 13 Eki (3): tekrarsız şablon. 18 Eki: patlama
+# ve bombalarda 175 kelime için kısa şablon (aynı kurallar); kül bulutu bu turda dokunulmadı (eski şablon)
+VOLC_CAMERA_LONG = ("Handheld footage shot by a person standing {cam}, high vantage looking down over the village street "
+                    "toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, tilting down "
+                    "no more than slightly and never descending, the erupting volcano always visible in the upper third "
+                    "of the frame, a corner of the {perch} railing in the foreground; one continuous shot, no zoom, no "
+                    "cuts.")
+VOLC_CAMERA_SHORT = ("Handheld footage shot by a person standing {cam}, high vantage over the village street toward the "
+                     "erupting volcano; slight hand shake, the camera stays fixed on the {perch}, tilting down only "
+                     "slightly, never descending, the erupting volcano always visible in the upper third of the frame, a "
+                     "{perch} railing corner in the foreground; one continuous shot, no zoom, no cuts.")
+# 13 Eki (3), Bahadır kararı: volkan giyim/ışık satırları kısa ifade (aynı kısıtlar). 18 Eki: "matching the weather" çıktı
+VOLC_GUARD_LONG = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light "
+                   "matching the weather, never glossy or CGI; no hazmat suits.")
+VOLC_GUARD_SHORT = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light, "
+                    "never glossy or CGI; no hazmat suits.")
+
+
+def volc_camera(e):
+    return VOLC_CAMERA_LONG if e == es.PYROCLASTIC else VOLC_CAMERA_SHORT
+
+
+def volc_guard(e):
+    return VOLC_GUARD_LONG if e == es.PYROCLASTIC else VOLC_GUARD_SHORT
 # 13 Eki (4): bombalarda R6 ve T5 birlikte kelimesi kelimesine 175 kelimeyi aşıyor (balkon noktasında 178); gerçek akışta
 # GPT kapının "kısalt" geri bildirimiyle kısaltır. Testlerdeki sahte GPT de kısa hâli yazar.
 SHORT = {"a volcanic bomb hits a row of street trees and splits one in two as it falls in flames":
@@ -2424,21 +2431,18 @@ class TestVolcano(unittest.TestCase):
             "S3": "the shockwave rips roof tiles off a house and hurls them into the street",
             "S4": "the shockwave bends a row of street trees flat and snaps power poles in two",
             "S5": "the shockwave topples a stone wall along the street and the stones scatter across the road",
-            "S6": "the shockwave hits the house across the street and its front wall bursts outward, bricks and roof "
-                  "tiles flying",
-            "S7": "the shockwave lifts the roof off a house across the street and hurls it down the road in pieces",
-            "S8": "the shockwave shoves a large truck sideways down the street and flips it onto its side",
+            "S6": "the shockwave hits the house across the street and its front wall bursts outward",
+            "S7": "the shockwave lifts the roof off a house across the street and hurls it away",
+            "S8": "the shockwave shoves a large truck sideways down the street and flips it",
         }, {
             "U2": "a glowing rock from the eruption slams into a parked car and shatters its rear window",
             "U3": "the shop shutters buckle and burst outward into the street",
             "U4": "a second blast tears the front off a house across the street and the rubble spills into the road",
             "U5": "a bell tower cracks and its top section topples across the street",
             "U6": "the shockwave collapses a row of garden walls and a tin-roofed shed",
-            "U7": "the shockwave rolls down the village street and the houses on both sides collapse inward one after "
-                  "another, walls and roofs crumbling",
-            "U8": "the shockwave tears the upper floor off a stone house and its walls fall into the street in a cloud "
-                  "of dust",
-        }, {("S2", "U2"), ("S5", "U6"), ("S6", "U4"), ("S6", "U7"), ("S6", "U8"), ("S8", "U2"), ("S7", "U8")},
+            "U7": "the shockwave rolls down the street and the houses on both sides collapse inward",
+            "U8": "the shockwave tears the upper floor off a stone house across the street",
+        }, {("S2", "U2"), ("S5", "U6"), ("S6", "U4"), ("S6", "U7"), ("S6", "U8"), ("S8", "U2")},
            {"S3": {RT, VB}, "U7": {RT, VB}}),
         es.PYROCLASTIC: ({   # 13 Eki: yukarıdan görünen büyük şeyler; 13 Eki (4): 6'şar madde
             "P1": "the cloud front slams into the houses across the street and tears the balconies off their facades",
@@ -2464,12 +2468,9 @@ class TestVolcano(unittest.TestCase):
             "R4": "a glowing rock slams into a shop sign, which crashes onto the sidewalk",
             "R5": "a volcanic bomb punches through a stone wall and the wall bursts apart",
             # 17 Eki: R6 çıktı (fizik 2); R7-R9 yeni (Parti 1)
-            "R7": "a huge glowing rock crashes through the roof of a house across the street, tiles and burning timbers "
-                  "flying skyward",
-            "R8": "a glowing rock slams into the side wall of a house and the wall bursts apart in a shower of sparks "
-                  "and stone",
-            "R9": "a glowing rock hits the road ahead, splitting the asphalt and sending burning chunks flying across "
-                  "the street",
+            "R7": "a huge glowing rock crashes through the roof of a house across the street",
+            "R8": "a glowing rock slams into a house across the street and its wall bursts apart",
+            "R9": "a glowing rock hits the road ahead and sends burning chunks across the street",
         }, {
             "T1": "glowing rocks slam into the roofs, sending tiles flying as flames rise",
             "T2": "a glowing rock bounces along the road and slams into a parked car",
@@ -2477,14 +2478,11 @@ class TestVolcano(unittest.TestCase):
                   "rock",
             "T6": "a volcanic bomb hits a house's upper floor and a section of the wall bursts outward in flames",
             # 17 Eki: T3 (vitrin), T4 (direk) çıktı; T7-T9 yeni (Parti 1)
-            "T7": "glowing rocks rain onto a row of houses and set their roofs ablaze one after another",
-            "T8": "a huge glowing rock hits a house and its whole upper floor erupts in flames, burning beams collapsing "
-                  "into the street",
-            "T9": "a glowing rock smashes into a large parked truck and flames wrap the cab and the box behind it",
+            "T7": "glowing rocks hit a row of houses and set their roofs ablaze",
+            "T8": "a huge glowing rock hits a house and its upper floor erupts in flames",
+            "T9": "a glowing rock smashes into a large parked truck and flames wrap the cab",
         }, {("R2", "T2"), ("R1", "T2"), ("R5", "T6"), ("R7", "T1"), ("R7", "T7"), ("R8", "T6"), ("R9", "T5"),
-            ("R1", "T9"), ("R2", "T9"),
-            # kod yedeği 175 kelimeye sığmıyor (FALLBACK_GAPS_EXCLUDED)
-            ("R7", "T5"), ("R7", "T8"), ("R7", "T9"), ("R8", "T5"), ("R8", "T8"), ("R8", "T9"), ("R9", "T8")},
+            ("R1", "T9"), ("R2", "T9")},   # 18 Eki: yedeği sığmayan çift kalmadı
            {"T1": {RT, VB}, "T7": {RT, VB}}),
     }
     VALID = {
@@ -2815,7 +2813,8 @@ class TestVolcano(unittest.TestCase):
                 for spot in cams:
                     self.assertEqual(sk.CAMERA_SPOTS[spot], self.CAMS[spot])
                     suffix = sk.style_suffix(e, None, spot)
-                    self.assertTrue(suffix.startswith(VOLC_CAMERA.format(cam=self.CAMS[spot], perch=self.PERCH[spot])))
+                    self.assertTrue(suffix.startswith(volc_camera(e).format(cam=self.CAMS[spot],
+                                                                            perch=self.PERCH[spot])))
                     self.assertTrue(suffix.endswith(" No readable signs, text or flags."))
                     self.assertLessEqual(count_constraints(suffix)[0], 8)
                     self.assertEqual(es.rain_words(suffix), [])
@@ -2907,8 +2906,9 @@ class TestVolcano(unittest.TestCase):
                         n += 1
                         if not es.uses_vehicle(e):
                             break   # 13 Eki: kül bulutu araçsız (tek tur)
-        # 17 Eki (Parti 1): patlama 42 + 30 + 30 ve bombalar 40 + 26 + 26 (× 4 araç); kül bulutu 28 + 13 + 13 (değişmedi)
-        self.assertEqual(n, (102 + 92) * 4 + 54)
+        # 18 Eki: patlama 43 + 31 + 31 ve bombalar 47 + 33 + 33 (× 4 araç; yedeği sığmayan çift kalmadı); kül bulutu
+        # 28 + 13 + 13 (değişmedi)
+        self.assertEqual(n, (105 + 113) * 4 + 54)
 
     def test_block_depth_and_never_runs_out(self):
         from itertools import combinations
@@ -3009,12 +3009,12 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         import core.creative_pipeline as cp
         for e in VOLC:
             for spot in sk.view_spots(e, None):
-                camera = VOLC_CAMERA.format(cam=TestVolcano.CAMS[spot], perch=TestVolcano.PERCH[spot])
+                camera = volc_camera(e).format(cam=TestVolcano.CAMS[spot], perch=TestVolcano.PERCH[spot])
                 with self.subTest(event=e, spot=spot):
                     suffix = sk.style_suffix(e, None, spot)
                     self.assertNotIn("pans to follow", suffix)
                     self.assertNotIn("eye level", suffix)
-                    self.assertEqual(suffix, f"{camera} {VOLC_GUARD} No readable signs, text or flags.")
+                    self.assertEqual(suffix, f"{camera} {volc_guard(e)} No readable signs, text or flags.")
                     with patch.object(cp, "pick_setting", lambda ev, view=None, s=spot: (s, sk.VOLCANO_WEATHER[0])):
                         scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], _volc_gpt()))
                     self.assertNotIn("pans to follow", scene["prompt"])
@@ -3065,8 +3065,8 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         # 17 Eki (temizlik + Parti 1): patlama 7 + 7, bombalar 8 + 7; kül bulutu dokunulmadı
         self.assertEqual(sizes, {es.ERUPTION: (7, 7), es.PYROCLASTIC: (6, 6), es.VOLCANIC_BOMBS: (8, 7)})
         pairs = {e: [len(es.allowed_pairs(e, None, s)) for s in (self.HT, self.RT, self.VB)] for e in VOLC}
-        self.assertEqual(pairs, {es.ERUPTION: [42, 30, 30], es.PYROCLASTIC: [28, 13, 13],
-                                 es.VOLCANIC_BOMBS: [40, 26, 26]})
+        self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [28, 13, 13],
+                                 es.VOLCANIC_BOMBS: [47, 33, 33]})   # 18 Eki: yedeği sığmayan çift kalmadı
         for e in VOLC:   # araçsız kül bulutu; patlama ve bombalarda araç sadece eski maddelerde
             for slot in ("slice_2", "slice_3"):
                 for bid in self.NEW[e]:
@@ -3114,15 +3114,20 @@ class TestVolcanoClose13Oct(unittest.TestCase):
 
     def test_volcano_prompt_max_175_words(self):
         self.assertEqual(es.VOLC_MAX_PROMPT_WORDS, 175)
-        # bombalar R7+T5 kelimesi kelimesine, balkon noktasında: 179 kelime -> kısaltma geri bildirimi (17 Eki: R6
-        # çıktı; R7+T5 bu yüzden hariç çift, GPT'ye hiç gitmez ama kapı yine yakalar)
-        spec, sl = TestVolcano.build(TestVolcano(), es.VOLCANIC_BOMBS, "R7", "T5", spot=self.VB, people=4)
-        long = {**sl, "slice_2": es.clean_slice(cap(es.beat_text(es.VOLCANIC_BOMBS, "slice_2", "R7"))),
-                "slice_3": es.clean_slice(cap(es.beat_text(es.VOLCANIC_BOMBS, "slice_3", "T5")))}
-        self.assertEqual(len(es.assemble_prompt(spec, long).split()), 179)
+        # 18 Eki: patlama ve bombalarda en uzun stil eki 96 kelime; 75 kelimelik hikâye + 3 etiket ile en fazla 174
+        for e in (es.ERUPTION, es.VOLCANIC_BOMBS):
+            longest = max(len(sk.style_suffix(e, None, s).split()) for s in sk.view_spots(e, None))
+            self.assertEqual(longest, 96)
+            self.assertLessEqual(longest + 75 + 3, 175)
+        # kapı yine durur: kül bulutu (eski şablon, 106) balkonda 75 kelimelik hikâye -> 184 -> kısaltma geri bildirimi
+        spec, sl = TestVolcano.build(TestVolcano(), es.PYROCLASTIC, "P2", "Q2", spot=self.VB, people=4)
+        pad = 75 - len(es.plain_story(spec, sl).split())
+        long = {**sl, "slice_3": es.clean_slice(sl["slice_3"].rstrip(".") + " " + " ".join(["dust"] * pad))}
+        self.assertEqual(len(es.plain_story(spec, long).split()), 75)
+        self.assertEqual(len(es.assemble_prompt(spec, long).split()), 184)
         issue = next(i for i in es.final_prompt_issues(spec, long, es.assemble_prompt(spec, long))
                      if i["rule"] == "volcano_prompt_words")
-        self.assertIn("shorten the three fields to at most 45 words", issue["feedback"])
+        self.assertIn("shorten the three fields to at most", issue["feedback"])
         self.assertNotIn("volcano_prompt_words", TestVolcano.codes(TestVolcano(), spec, sl))   # kısa hâli geçer
 
     def test_100_productions_each_event(self):

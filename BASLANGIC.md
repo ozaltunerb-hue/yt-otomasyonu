@@ -80,6 +80,16 @@ güncellendi.
 **Açık kararlar (Bahadır):** U10 kısaltma · çıkış bekleyenlerin yerine Parti 2 beat'leri · volkan uzunluk kaynaklı yedek
 oranı · yeni ev beat'lerinde (U7-U11) "across the street" yok (kameranın evi gibi çizilme riski; U1'deki gibi eklenebilir).
 
+**18 Eki, küçük düzeltme turu:** Parti 1'in 17 metni Bahadır'ın kısa metinleriyle değişti (≤16 kelime, anahtarlar aynı;
+ev beat'lerinde "across the street" var, bombalar T7'de "rain" fiili yok). U9/U10 terimlerinden alev grubu çıktı (kısa
+metinde yok). Yedeği sığmayan hariç çift: ateş hortumu 23 -> 1 (T6+U1: T6 19 + araç, U1 21 kelime), bombalar 7 -> 0, şok
+dalgası 1 -> 0; çığ köyün 6 çifti (1. madde, değişmedi) duruyor. Ateş hortumunda T6 7, T7 8 farklı U ile eşleşir; U10
+artık seçilebilir; ateş hortumu "aday kalmazsa 1'e düş" listesinden çıktı (3 derinlikte en kötü durumda 12 çift).
+Volkan stil eki patlama ve bombalarda kısaldı (en uzun 106 -> 96 kelime; 96 + 75 + 3 = 174, kurallar ve 8 kısıt aynı;
+`sk.VOLCANO_SHORT_CAMERA_EXCLUDED`: kül bulutu eski metinde, dokunulmadı). Lint: volkan beat'inde "rain" fiili HATA.
+Kuru deneme (`scratch/dry_run_kisa_18eki.json`, 42 çağrı, ~0,20 $): ateş hortumu GPT 9/10, bombalar 8/10, şok dalgası
+10/10 (17 Eki: 9/6/5).
+
 ---
 
 ## 📋 DEVİR: 🔥 Ateş hortumu ortam ekseni + 🧩 hibrit hikâye modu (16 Eki 2026)

@@ -32,12 +32,9 @@ FALLBACK_GAPS = {}
 # 17 Eki'de hariç çifte çevrilen sığmayan çiftler (her biri hariç listesinde olmalı; yeniden açılırsa test kırılır)
 FALLBACK_GAPS_EXCLUDED = {
     es.AVALANCHE_VILLAGE: {("A2", "B2"), ("A2", "B5"), ("A4", "B2"), ("A4", "B5"), ("A5", "B2"), ("A5", "B5")},
-    es.VOLCANIC_BOMBS: {("R7", "T5"), ("R7", "T8"), ("R7", "T9"), ("R8", "T5"), ("R8", "T8"), ("R8", "T9"), ("R9", "T8")},
-    es.ERUPTION: {("S7", "U8")},
-    es.FIRE_TORNADO: {("T1", "U7"), ("T1", "U9"), ("T1", "U10"), ("T1", "U11"), ("T2", "U10"), ("T4", "U7"),
-                      ("T4", "U8"), ("T4", "U9"), ("T4", "U10"), ("T4", "U11"), ("T5", "U10"), ("T6", "U1"),
-                      ("T6", "U7"), ("T6", "U8"), ("T6", "U9"), ("T6", "U10"), ("T6", "U11"), ("T7", "U1"),
-                      ("T7", "U7"), ("T7", "U8"), ("T7", "U9"), ("T7", "U10"), ("T7", "U11")},
+    # 18 Eki: Parti 1 metinleri kısaldı, volkan stil eki 96 kelime: bombalar 7 -> 0, şok dalgası 1 -> 0, ateş hortumu
+    # 23 -> 1 (T6 19 kelime + araç, U1 21 kelime; kilit 28-29 + insan 6 ile 75'i aşar)
+    es.FIRE_TORNADO: {("T6", "U1")},
 }
 
 
