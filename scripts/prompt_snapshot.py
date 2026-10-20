@@ -74,7 +74,9 @@ def axes(scene: dict) -> dict:
                             or (" · ".join(f"{k}={v}" for k, v in env.items() if k != "spot") if env else None)),
             "vehicle": t.get("vehicle"), "people": t.get("people_running"), "beats": t.get("beats"),
             "key_visual": t.get("key_visual"),
-            "story_source": (scene.get("structure") or {}).get("story_source_kind")}
+            "story_source": (scene.get("structure") or {}).get("story_source_kind"),
+            # 21 Eki (Aşama 4): kadraj ekseni
+            **{k: (t.get("axes") or {}).get(k) for k in ("kadraj", "on_plan", "kamera_modu", "kamera_noktasi")}}
 
 
 def snapshot_event(event: str, seed: int) -> dict:

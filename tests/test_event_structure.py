@@ -16,6 +16,22 @@ sys.path.insert(0, ROOT)
 import core.event_structure as es
 import core.skeleton_pipeline as sk
 
+
+def assert_frame_camera(tc, scene):
+    """21 Eki (Aşama 4): prompt'taki kamera cümlesi spec'teki kadrajdan kurulanla aynı; kamera noktası kendi/ödünç
+    spotsa onun yeri cümlede geçer."""
+    import core.frame_axis as fx
+    spec = scene["structure"]["spec"]
+    f = spec["frame"]
+    fire_env = es.fire_env_of_spot(spec["spot"]) if spec["event"] == es.FIRE_TORNADO else None
+    suffix = sk.style_suffix(spec["event"], spec["ship"], spec["spot"], spec["view"], spec.get("setting"),
+                             spec.get("volc_env"), f, fire_env)
+    tc.assertEqual(scene["style_suffix"], suffix)
+    tc.assertIn(suffix, scene["prompt"])
+    pos = f.get("pos_spot")
+    if pos and fx.SPOT_FRAME[spec["event"]][pos][2]:
+        tc.assertIn(fx.SPOT_FRAME[spec["event"]][pos][2], scene["prompt"])
+
 FLOOD = es.FLOOD
 TIDAL = es.TIDAL
 B = es.EVENT_BEATS[FLOOD]
@@ -2053,7 +2069,7 @@ class TestFireStructure(unittest.TestCase):
                 self.assertIn(f"|{t['spot'].lower()}##{t['beats']}|", scene["combo_key"])
                 self.assertTrue(scene["combo_key"].startswith("fire_disasters|none|"))
                 self.assertTrue(sk.is_current_universe_combo(scene["combo_key"]))
-                self.assertIn(self.SPOTS[e][t["spot"]][0], scene["prompt"])
+                assert_frame_camera(self, scene)   # 21 Eki (Aşama 4): kamera yeri kadraj ekseninden
                 spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
                 self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
                 self.assertIn(f"run away from {self.AWAY[e]}", calls[-1])
@@ -2381,7 +2397,8 @@ class TestHelicopter(unittest.TestCase):
         scene = asyncio.run(cp.build_creative_scene("fire_disasters", self.E, [], [], gpt))
         t = scene["trace"]
         self.assertIn(t["spot"], self.SPOTS)
-        self.assertIn(self.SPOTS[t["spot"]], scene["prompt"])
+        # 21 Eki (Aşama 4): kamera yeri kadraj ekseninden (kendi spotu, ödünç ya da kütüphane)
+        assert_frame_camera(self, scene)
         self.assertTrue(scene["combo_key"].startswith("fire_disasters|none|firefighting helicopter"))
         spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
         self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
@@ -3055,8 +3072,13 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                         suffix = sk.style_suffix(e, None, spot, volc_env=env)
                     else:
                         self.assertIsNone(env)
-                    self.assertIn(camera, scene["prompt"])
-                    self.assertEqual(scene["style_suffix"], suffix)
+                    # 21 Eki (Aşama 4): kadraj ekseni; yerli nokta + korkuluk = bugünkü cümle birebir
+                    f = scene["structure"]["spec"]["frame"]
+                    if f.get("pos_spot") == spot and f.get("fg") == "korkuluk":
+                        self.assertIn(camera, scene["prompt"])
+                        self.assertEqual(scene["style_suffix"], suffix)
+                    assert_frame_camera(self, scene)
+                    self.assertNotIn("eye level", scene["prompt"])
 
     def test_camera_sentence_has_no_repetition(self):
         from core.trace_format import count_constraints

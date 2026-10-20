@@ -2786,7 +2786,8 @@ def clean_slice(text: str) -> str:
 
 # ── Birleştirme ve spec ─────────────────────────────────────────────────────────────────────────────────────
 def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: str, b3: str, vehicle: str,
-               people: int | None = None, setting: str | None = None, volc_env: str | None = None) -> dict:
+               people: int | None = None, setting: str | None = None, volc_env: str | None = None,
+               frame: dict | None = None) -> dict:
     """Kie'ye gidecek prompt'u kuran ve denetleyen her şey (slices hariç). people: kaçan kişi sayısı N (sadece
     kişi kuralı olan olaylarda, zorunlu)."""
     if not is_structured(event):
@@ -2799,9 +2800,12 @@ def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: st
         raise StructureError(f"Ortam satırı bu olayda kullanılamaz ya da uzun: {event} / {setting}")
     if volc_env is not None and (event not in VOLC_ENV_EVENTS or volc_env not in VOLC_ENVS):   # 18 Eki (3)
         raise StructureError(f"Volkan ortamı bu olayda kullanılamaz: {event} / {volc_env}")
+    fire_env = fire_env_of_spot(spot) if event == FIRE_TORNADO else None
     spec = {"event": event, "ship": ship, "spot": spot, "view": view, "beat_2": b2, "beat_3": b3,
             "vehicle": vehicle, "key_visual": expected_key_visual(event, spot),
-            "suffix": style_suffix(event, ship, spot, view, setting, volc_env)}
+            "suffix": style_suffix(event, ship, spot, view, setting, volc_env, frame, fire_env)}
+    if frame is not None:
+        spec["frame"] = dict(frame)   # 21 Eki (Aşama 4): kadraj ekseni (son denetim stil ekini bununla yeniden kurar)
     if volc_env is not None:
         spec["volc_env"] = volc_env   # 18 Eki (3): bombalar / kül bulutu ortamı (stil ekinde kamera cümlesi)
     if people is not None:
@@ -2972,7 +2976,8 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
     from core.creative_pipeline import STORY_RULES, story_rule_issues
     out = []
     expected_suffix = style_suffix(spec["event"], spec["ship"], spec["spot"], spec["view"], spec.get("setting"),
-                                   spec.get("volc_env"))
+                                   spec.get("volc_env"), spec.get("frame"),
+                                   fire_env_of_spot(spec["spot"]) if spec["event"] == FIRE_TORNADO else None)
     expected_key = expected_key_visual(spec["event"], spec["spot"])
     if spec.get("key_visual") != expected_key:
         out.append(_issue("key_visual", "kilit görsel spec'te değişmiş"))

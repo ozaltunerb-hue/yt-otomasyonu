@@ -767,10 +767,13 @@ def _axes_line(axes: dict, excluded: dict, source: str, warning: str | None) -> 
     env = axes.get("view") or axes.get("env")
     if isinstance(env, dict):
         env = ", ".join(str(v) for v in env.values())
+    mode = {"A": "A (mevcut)", "B": "B (sabit)"}.get(axes.get("kamera_modu"))
     shown = {"spot": axes.get("spot"), "ortam": env, "ışık": axes.get("light"), "araç": axes.get("vehicle"),
-             "kişi": axes.get("people")}
+             "kişi": axes.get("people"), "kadraj": axes.get("kadraj"), "ön plan": axes.get("on_plan"),
+             "kamera modu": mode}
     line = "Eksenler: " + " · ".join(f"{k}={v if v not in (None, '') else '-'}" for k, v in shown.items())
-    names = {"spot": "spot", "env": "ortam", "view": "ortam", "light": "ışık", "vehicle": "araç", "people": "kişi"}
+    names = {"spot": "spot", "env": "ortam", "view": "ortam", "light": "ışık", "vehicle": "araç", "people": "kişi",
+             "kadraj": "kadraj", "on_plan": "ön plan", "kamera_modu": "kamera modu"}
     gone = [f"{names[k]}: {', '.join(str(x) for x in v)}" for k, v in excluded.items() if v and k in names]
     line += f"\nTekrar önleme ({source}): " + ("elenen " + " · ".join(gone) if gone else "elenen yok")
     if warning:
@@ -911,12 +914,42 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
         es.remember_environment(env)             # seçim anında (beat hafızası gibi)
         setting = es.setting_line(env)
         weather = es.env_weather(env)   # 14 Eki: çığ ve deprem
-    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env)
+    # 21 Eki (Aşama 4): kadraj ekseni (tip, ön plan, kamera modu). Ayrı rastgele akış: ana akışın çekimleri (spot,
+    # beat, ortam, araç, kişi, kod yedeği) değişmez. Beat'lerin dışlandığı spotlarda kamera olmaz (risky)
+    import core.frame_axis as fx
+    pool = (list(es.FIRE_TOR_ENVS[es.fire_env_of_spot(spot)]["spots"]) if event == es.FIRE_TORNADO
+            else view_spots(event, view))
+    beats_cfg = es.EVENT_BEATS[event]["excluded_spots"]
+    risky = set(beats_cfg.get(b2, set())) | set(beats_cfg.get(b3, set()))
+    frame_rng = fx.side_rng()
+    frame, frame_excluded = fx.choose_frame(event, spot, pool, risky, ev_hist, frame_rng)
+    excluded.update(frame_excluded)
+    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, frame)
+    if not es.fallback_candidates(spec):   # K5 sığma koruması: kod yedeği 175'e sığmıyorsa sığan bir kadraj varyantı
+        alternatives = [f for f in fx.all_frames(event, spot, pool, risky) if f != frame]
+        frame_rng.shuffle(alternatives)
+        # tekrar önlemeye uyan alternatifler önce: geçmişteki son kadraj (derinlik choose_frame ile aynı), son ön plan,
+        # son kamera modu (ilk seçim kütüphane noktasıysa elenen mod listesi boştur; değerler geçmişten okunur)
+        def _recent_values(axis, depth):
+            vals = [h.get(axis) for h in ev_hist if h.get(axis) not in (None, "", "-")]
+            return set(vals[-depth:]) if depth else set()
+        last_k = _recent_values("kadraj", fx.frame_depth(len(fx.FRAME_EVENTS[event]["types"])))
+        last_fg, last_mode = _recent_values("on_plan", 1), _recent_values("kamera_modu", 1)
+        alternatives.sort(key=lambda f: (f["type"] in last_k, f.get("mode") in last_mode, f.get("fg") in last_fg))
+        for alt in alternatives:
+            alt_spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, alt)
+            if es.fallback_candidates(alt_spec):
+                log.info(f"🎞️ Kadraj sığmadı ({fx.frame_label(frame)}), yerine: {fx.frame_label(alt)}")
+                excluded["kadraj_sığmadı"] = [frame["type"]]
+                frame, spec = alt, alt_spec
+                break
     # 21 Eki: seçilen tüm eksenler (Notion "Eksenler" + süreç hafızası + Onay satırı)
     axes = {"spot": spot, "view": view,
             "env": ({k: v for k, v in env.items() if k != "spot"} if env else (spec.get("fire_env") or volc_env)),
             "light": env["light"] if env else weather, "vehicle": vehicle, "people": people,
-            "key": spec.get("fire_env") or "default", "beats": tag}
+            "key": spec.get("fire_env") or "default", "beats": tag,
+            "kadraj": frame["type"], "on_plan": frame.get("fg"), "kamera_modu": frame.get("mode"),
+            "kamera_noktasi": frame.get("pos_spot")}
     es.remember_axes(event, axes)
     axes_line = _axes_line(axes, excluded, hist["source"], hist["warning"])
     lo, hi = count_range(event, ship)

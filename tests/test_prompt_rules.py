@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prompt kural denetimi cırcırı (21 Eki 2026, Gece 1 / Aşama 2).
+"""Prompt kural denetimi cırcırı (21 Eki 2026, Gece 1 / Aşama 2; Aşama 4: K1-K3 sadece mod A'da izinli).
 
 Mevcut koddan yapılandırılmış hattın her aktif olayı için 20 tohumla son prompt kurulur (scripts/prompt_snapshot.py:
 GPT yok, kod yedeği hikâyesi; Kie/Notion yok) ve K1-K5 denetlenir (scripts/prompt_rules.py). Bugünkü ihlaller
@@ -23,9 +23,10 @@ import prompt_snapshot as ps   # noqa: E402
 
 
 def _current_pairs() -> dict:
+    """21 Eki (Aşama 4): tohum anlık görüntüsü + tüm kamera varyantları (K1-K3 tohumdan bağımsız tam kapsam)."""
     logging.disable(logging.WARNING)
     try:
-        return pr.known_pairs(pr.evaluate(ps.snapshot_all()))
+        return pr.current_pairs()
     finally:
         logging.disable(logging.NOTSET)
 
@@ -53,6 +54,20 @@ class TestPromptRulesRatchet(unittest.TestCase):
         active = set(ps.active_events())
         for rule in pr.RULES:
             self.assertTrue(set(self.known.get(rule, [])) <= active, rule)
+        for rule in pr.CAMERA_RULES:
+            self.assertTrue(set(self.known["mod_a"].get(rule, [])) <= active, rule)
+
+    def test_camera_rules_only_in_mode_a(self):
+        # 21 Eki (Aşama 4): K1-K3 sadece mod A (kanıtlanmış bugünkü cümle) için izinli; mod B ve yeni cümleler geçer
+        for rule in pr.CAMERA_RULES:
+            self.assertEqual(self.known.get(rule), [], rule)
+            self.assertEqual(self.now[rule], [], f"{rule} mod A dışında ihlal: {self.now[rule]}")
+
+    def test_mode_a_bucket_ratchet(self):
+        for rule in pr.CAMERA_RULES:
+            with self.subTest(rule=rule):
+                self.assertEqual(sorted(self.now["mod_a"][rule]), sorted(self.known["mod_a"].get(rule, [])))
+        self.assertIn(pr.MODE_A_NOTE, self.known["_note"])
 
 
 class TestRuleChecks(unittest.TestCase):

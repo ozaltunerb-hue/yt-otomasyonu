@@ -25,7 +25,8 @@ AXES_VERSION = 1
 AXES_PROPERTY = "Eksenler"
 HISTORY_LIMIT = 10   # olay başına okunan son kayıt (görev: "o olayın son 10 kaydı")
 # Eksen anahtarları (genişletilebilir: yeni eksen eklenince JSON'a yeni anahtar girer, eski kayıtta None sayılır)
-AXIS_KEYS = ("spot", "view", "env", "light", "vehicle", "people", "key", "beats")
+AXIS_KEYS = ("spot", "view", "env", "light", "vehicle", "people", "key", "beats",
+             "kadraj", "on_plan", "kamera_modu", "kamera_noktasi")   # 21 Eki (Aşama 4): kadraj ekseni; eski kayıtta boş
 
 _EVENTS_LOWER = {e.lower(): e for e in EVENT_SKELETONS}
 _VOLC_LABEL = {v["label"]: k for k, v in VOLC_ENVS.items()}

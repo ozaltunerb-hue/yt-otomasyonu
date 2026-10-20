@@ -8,7 +8,8 @@
 #   önce / deploy  : aynı, her üretimden önce süreç hafızası silinir (her üretim arasında deploy)
 #   sonra / normal : sahte Notion "Eksenler" geçmişi (her üretim bir kayıt ekler) + süreç hafızası
 #   sonra / deploy : sahte Notion geçmişi, her üretimden önce süreç hafızası silinir
-# Ölçülen eksenler: ortam, spot, ışık, araç, kişi sayısı, kilit cümle, beat çifti. Ortam: çığ/deprem ortamı (ışık
+# Ölçülen eksenler: ortam, spot, ışık, araç, kişi sayısı, kilit cümle, beat çifti; Aşama 4: kadraj, ön plan, kamera
+# modu (kamera modu sadece A/B noktalarında, diğerlerinde "—"). Ortam: çığ/deprem ortamı (ışık
 # hariç), ateş hortumu ve volkan ortamı, sel/kıyı dalgada bölge görünümü; diğerlerinde yok ("—").
 # "Tam kopya": spot + ortam + ışık + kilit cümle bir önceki üretimle birebir aynı.
 #
@@ -25,11 +26,13 @@ for p in (ROOT, os.path.join(ROOT, "scripts")):
 
 import prompt_snapshot as ps   # noqa: E402
 
-AXES = ("environment", "spot", "weather", "vehicle", "people", "key_visual", "beats")
-AXIS_NAMES = {"environment": "ortam", "spot": "spot/kamera", "weather": "ışık", "vehicle": "araç",
-              "people": "kişi", "key_visual": "kilit cümle", "beats": "beat çifti"}
+AXES = ("environment", "spot", "weather", "vehicle", "people", "key_visual", "beats", "kadraj", "on_plan",
+        "kamera_modu")
+AXIS_NAMES = {"environment": "ortam", "spot": "spot", "weather": "ışık", "vehicle": "araç",
+              "people": "kişi", "key_visual": "kilit cümle", "beats": "beat çifti", "kadraj": "kadraj",
+              "on_plan": "ön plan", "kamera_modu": "kamera modu"}
 COPY_AXES = ("spot", "environment", "weather", "key_visual")
-LRU_AXES = ("environment", "spot", "weather", "vehicle", "people")
+LRU_AXES = ("environment", "spot", "weather", "vehicle", "people", "kadraj", "on_plan", "kamera_modu")   # 21 Eki: +3
 SCENARIOS = {"önce_normal": (False, False), "önce_deploy": (False, True),
              "sonra_normal": (True, False), "sonra_deploy": (True, True)}
 

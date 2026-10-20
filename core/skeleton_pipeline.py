@@ -968,27 +968,42 @@ def fill_skeleton(event: str, ship: str | None, slots: dict) -> str:
                             weather=slots["weather"], n=n, N=n.capitalize(), people=slots["people"])
 
 
-def style_suffix(event: str, ship: str | None, spot: str, view: str | None = None, setting: str | None = None,
-                 volc_env: str | None = None) -> str:
-    """Tek kamera satırı + kıyafet + ışık (+ şehirde görünüm satırı; en fazla 8 kısıt). Eski ekten kaldırılanlar:
-    TUR 30 notu. setting: 14 Eki (4), çığ ortam satırı ("Setting: dağ, yerleşim, ışık."), kamera cümlesinden sonra."""
+def legacy_camera(event: str, spot: str, volc_env: str | None = None) -> str:
+    """Bugünkü (21 Eki öncesi) kamera cümlesi. Aşama 4'te kadraj ekseninin mod A'sı ve volkan/çığ/deprem yerli cümlesi;
+    serbest hat ve frame verilmeyen çağrılar da bunu kullanır."""
     s = EVENT_SKELETONS[event]
     # Final turu: "phone" kelimesi çıktı; model elde tutulan telefonu ve kayıt (REC) ekranını çiziyordu
     camera = (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, eye level, normal lens; slight hand "
               f"shake, the camera pans to follow the {s['object']}{CAMERA_MOTION_EXTRA.get(event, '')}; no zoom, no cuts.")
     if s["domain"] == "volcano_disasters":   # 13 Eki: volkanda takip yok, kamera sabit (VOLCANO_CAMERA_PERCH)
         camera = volcano_camera(spot, event, volc_env)
+    if s["domain"] == "avalanche_disasters":
+        camera = avalanche_camera(spot)
+    if s["domain"] == "earthquake_disasters":
+        camera = earthquake_camera(spot)
+    if event == "Fire tornado tears across a burning roadside":
+        camera = fire_tornado_camera(spot)
+    return camera
+
+
+def style_suffix(event: str, ship: str | None, spot: str, view: str | None = None, setting: str | None = None,
+                 volc_env: str | None = None, frame: dict | None = None, fire_env: str | None = None) -> str:
+    """Tek kamera satırı + kıyafet + ışık (+ şehirde görünüm satırı; en fazla 8 kısıt). Eski ekten kaldırılanlar:
+    TUR 30 notu. setting: 14 Eki (4), çığ ortam satırı ("Setting: dağ, yerleşim, ışık."), kamera cümlesinden sonra.
+    frame: 21 Eki (Aşama 4) kadraj ekseni (core/frame_axis.py); None ise bugünkü kamera (legacy_camera)."""
+    s = EVENT_SKELETONS[event]
+    camera = legacy_camera(event, spot, volc_env)
+    if frame is not None:
+        from core.frame_axis import frame_camera
+        camera = frame_camera(event, spot, frame, volc_env, fire_env, legacy=legacy_camera)
     guardrails = get_realism_guardrails(s['domain'], ship or 'None', spot)
     if s["domain"] == "volcano_disasters":   # 13 Eki (3): kısa ifade, aynı kısıtlar
         guardrails = VOLCANO_GUARDRAILS_LONG if event in VOLCANO_SHORT_CAMERA_EXCLUDED else VOLCANO_GUARDRAILS
     if s["domain"] == "avalanche_disasters":   # 13 Eki: çığ, volkan yapısı (sabit kamera, kısa giyim/ışık)
-        camera = avalanche_camera(spot)
         guardrails = AVALANCHE_GUARDRAILS
     if s["domain"] == "earthquake_disasters":   # 14 Eki: deprem, çığ yapısı (sabit kamera, günlük sivil giyim)
-        camera = earthquake_camera(spot)
         guardrails = EARTHQUAKE_GUARDRAILS
     if event == "Fire tornado tears across a burning roadside":   # 15 Eki (2): dev hortum, ön planda kaçanlar
-        camera = fire_tornado_camera(spot)
         guardrails = FIRE_TORNADO_GUARDRAILS
     out = f"{camera} {setting} {guardrails}" if setting else f"{camera} {guardrails}"
     if view:

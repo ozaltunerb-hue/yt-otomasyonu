@@ -99,7 +99,7 @@ class TestVariety(_Quiet):
 
     def test_measure_copies(self):
         r = {"environment": "a", "spot": "s", "weather": "w", "vehicle": "v", "people": 3, "key_visual": "k",
-             "beats": "A1+B1"}
+             "beats": "A1+B1", "kadraj": "balkon", "on_plan": "boş", "kamera_modu": "—"}
         m = vr.measure([r, dict(r, beats="A2+B2"), dict(r, spot="t")])
         self.assertEqual(m["copies"], 1)
         self.assertEqual(m["rep_spot"], 1)

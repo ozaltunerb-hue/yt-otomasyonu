@@ -291,14 +291,28 @@ class TestDeployScenario(_Quiet):
                 self.assertEqual(m["copies"], 0)
 
     def test_every_lru_axis_no_consecutive_repeat(self):
+        import core.frame_axis as fx
         import variety_report as vr
         for e in ps.active_events():
             with self.subTest(event=e):
-                m = vr.measure(vr.simulate(e, runs=10, seed=3, reset_each=True, notion=True))
+                rows = vr.simulate(e, runs=10, seed=3, reset_each=True, notion=True)
+                m = vr.measure(rows)
+                self.assertEqual(m["errors"], 0)
                 single = {a for a, n in vr.option_counts(e).items() if n == 1}
                 for axis in vr.LRU_AXES:
-                    if axis not in single:
+                    if axis not in single and axis != "kadraj":
                         self.assertEqual(m[f"rep_{axis}"], 0, axis)
+                # 21 Eki (Aşama 4): kadraj tekrarı sadece seçilen beat'lerin dışlamaları tek güvenli kadraj bıraktıysa
+                beats = es.EVENT_BEATS[e]["excluded_spots"]
+                for a, b in zip(rows, rows[1:]):
+                    if a["kadraj"] != b["kadraj"]:
+                        continue
+                    b2, b3 = b["beats"].split("+")
+                    risky = set(beats.get(b2, set())) | set(beats.get(b3, set()))
+                    pool = (list(es.FIRE_TOR_ENVS[es.fire_env_of_spot(b["spot"])]["spots"]) if e == es.FIRE_TORNADO
+                            else sk.view_spots(e, None if b["environment"] not in sk.REGION_VIEWS else b["environment"]))
+                    types = {f["type"] for f in fx.all_frames(e, b["spot"], pool, risky)}
+                    self.assertEqual(types, {b["kadraj"]}, (e, a, b))
 
 
 class TestPipelineOrder(_Quiet):
