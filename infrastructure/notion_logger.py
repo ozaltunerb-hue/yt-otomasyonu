@@ -42,6 +42,7 @@ STATUS_UPLOAD_FAILED = "✅ Tamamlandı (Upload Başarısız)"
 DELIVERABLE_STATUSES = [STATUS_COMPLETED, STATUS_UPLOAD_FAILED, STATUS_TEST_DONE, STATUS_RECOVERED, STATUS_UNDELIVERED]
 
 STORY_SOURCE_PROPERTY = "Hikâye kaynağı"
+AXES_PROPERTY = "Eksenler"   # 21 Eki: core.axes_history.AXES_PROPERTY ile aynı
 # 18 Eki (3), Bahadır: bombalar ve kül bulutunda ortam (select). Seçenekler core.skeleton_pipeline.VOLC_ENVS etiketleri
 ENV_PROPERTY = "Ortam"
 ENV_OPTIONS = {"pastel kasaba caddesi": "pink", "Akdeniz tepe kasabası": "orange", "banliyö mahallesi": "green",
@@ -60,7 +61,11 @@ EXTRA_PROPERTIES = {
     STORY_SOURCE_PROPERTY: {"rich_text": {}},
     # 18 Eki (3): ayrı istekle yazılır (record_env_option); alan yoksa seçenekleriyle eklenir
     ENV_PROPERTY: {"select": {"options": [{"name": n, "color": c} for n, c in ENV_OPTIONS.items()]}},
+    # 21 Eki (Gece 1 / Aşama 3): seçim anında tüm eksenler, tek satır JSON (core/axes_history.py). Ayrı istekle yazılır
+    AXES_PROPERTY: {"rich_text": {}},
 }
+# Eksen geçmişi sorgusu: kategorinin son kayıtları, durum filtresi YOK (iptal, hata, test dahil: seçilen her şey sayılır)
+AXES_QUERY_PAGE_SIZE = 100
 
 # 14 Eki (Bahadır, acil): "Durum" select'inde olması gereken seçenekler (ad -> renk). Yeni bir durum eklendiğinde
 # BURAYA da eklenmeli: Notion'da hiç olmayan seçenekle filtre kuran sorgu 400 validation_error verir. 83b0d71'de
@@ -226,6 +231,23 @@ class NotionTracker:
         """17 Eki: hikâye kaynağı ayrı istekle (Prompt/Kamera/Olay yazımından bağımsız). Şema biliniyorsa ve alan
         yoksa _filter atar; şema bilinmiyorsa Notion'un reddi sadece uyarı olur (_patch), üretim sürer."""
         self._patch({STORY_SOURCE_PROPERTY: _rt(story_source_value(label))})
+
+    def record_axes(self, axes_json: str) -> None:
+        """21 Eki: "Eksenler" alanı (seçilen tüm eksenler, JSON) ayrı istekle; alan yoksa _filter atar, hata üretimi
+        durdurmaz (_patch uyarı loglar)."""
+        if axes_json:
+            self._patch({AXES_PROPERTY: _rt(axes_json)})
+
+    def get_axes_records(self, domain: str) -> list[dict] | None:
+        """21 Eki: kategorinin (Combo Key "domain|..." ile başlayan) son kayıtları, eskiden yeniye, durum filtresi
+        yok (iptaller dahil). Ham sözlük: combo_key, eksenler, ortam, prompt, status, date. Notion kapalıysa / dry-run
+        ise None (geçmiş bilinmiyor, uyarı yok). Ağ/API hatası yükselir: çağıran süreç hafızasına düşer."""
+        if not self.enabled or settings.IS_DRY_RUN:
+            return None
+        payload = {"filter": {"property": "Combo Key", "rich_text": {"starts_with": f"{domain}|"}},
+                   "sorts": [{"property": "Tarih", "direction": "descending"}], "page_size": AXES_QUERY_PAGE_SIZE}
+        response = _notion_request("POST", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query", json=payload)
+        return [axes_record(page) for page in reversed(response.get("results", []))]
 
     def record_env_option(self, label: str) -> None:
         """18 Eki (3): "Ortam" select alanı (bombalar / kül bulutu) ayrı istekle; alan yoksa _filter atar."""
@@ -692,6 +714,19 @@ def _query_status_filtered(build_payload, statuses, what: str, required: bool = 
                 raise
             statuses.remove(m.group(1))
             log.warning(f"⚠️ Notion {what}: '{m.group(1)}' seçeneği hâlâ yok; filtreden çıkarıldı, kalan durumlarla devam")
+
+
+def axes_record(page: dict) -> dict:
+    """Notion sayfası -> eksen geçmişi ham kaydı (21 Eki; ayrıştırma core.axes_history.parse_record)."""
+    props = page.get("properties", {})
+
+    def text(name, kind="rich_text"):
+        return "".join(x.get("plain_text") or x.get("text", {}).get("content", "")
+                       for x in props.get(name, {}).get(kind, []) or [])
+    return {"combo_key": text("Combo Key"), "eksenler": text(AXES_PROPERTY), "prompt": text("Prompt"),
+            "ortam": (props.get(ENV_PROPERTY, {}).get("select") or {}).get("name", ""),
+            "status": (props.get("Durum", {}).get("select") or {}).get("name", ""),
+            "date": (props.get("Tarih", {}).get("date") or {}).get("start") or ""}
 
 
 def _page_record(page: dict) -> dict:

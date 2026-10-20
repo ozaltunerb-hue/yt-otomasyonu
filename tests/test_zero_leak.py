@@ -80,6 +80,7 @@ class Harness:
         else:
             t.get_recent_history.return_value = []
         t.get_recent_beat1_verbs.return_value = []
+        t.get_axes_records.return_value = []   # 21 Eki: Notion eksen geçmişi (boş)
         t.create_entry.side_effect = lambda *a, **k: setattr(t, "page_id", "p")
         self.trackers.append(t)
         return t
@@ -90,6 +91,7 @@ class Harness:
 
     def run(self):
         es._BEAT_MEMORY.clear()
+        es._AXES_MEMORY.clear()   # 21 Eki: eksen hafızası (Notion okunamazsa yedek)
         client = KieClient()
         patches = [
             patch.object(settings, "IS_DRY_RUN", False), patch.object(settings, "YOUTUBE_ENABLED", False),
@@ -112,7 +114,7 @@ class Harness:
             patch.object(client, "_poll_for_result", AsyncMock(return_value="https://cdn/v.mp4")),
             patch.object(client, "get_credit", AsyncMock(return_value=100.0)),
             patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")),
-            patch.object(es, "choose_vehicle", lambda v, rng=None: VEHICLE),
+            patch.object(es, "choose_vehicle", lambda v, rng=None, used=None: VEHICLE),
         ]
         if self.rewrite:
             patches.append(patch.object(cp, "rewrite_structured", self.rewrite))

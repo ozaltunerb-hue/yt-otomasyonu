@@ -112,18 +112,19 @@ class TestVolcEnvSelection(unittest.TestCase):
         self.assertAlmostEqual(c["pastel_town"] / c["suburb"], 2, delta=0.3)
         self.assertAlmostEqual(c["hillside_town"] / c["mountain_village"], 2, delta=0.3)
 
-    def test_spot_last_never_repeats_and_weighted(self):
+    def test_spot_last_two_never_repeat_and_weighted(self):
+        # 21 Eki (Gece 1 / Aşama 3): tüm eksenlerde son 2 elenir (önceki: son 1). 3 yerde son 2 elenince tek aday
+        # kalır, sıra döner; ağırlık sadece ilk seçimde ve aday biterse etkili (ağırlıklar değişmedi, aşağıda)
+        self.assertEqual(es.VOLC_SPOT_BLOCK, 2)
         rng = random.Random(5)
         for e in es.VOLC_ENV_EVENTS:
             seq = []
-            for _ in range(3000):
+            for _ in range(300):
                 sp = es.choose_volc_spot(e, [], rng)
                 es.remember_volc_spot(e, sp)
                 seq.append(sp)
-            self.assertFalse([i for i in range(1, len(seq)) if seq[i] == seq[i - 1]])
-            c = collections.Counter(seq)
-            self.assertGreater(c[BAL], c[RT] * 1.2)   # balkon ağırlığı 2 (son-1 kuralıyla birlikte)
-            self.assertGreater(c[BAL], c[HT] * 1.2)
+            self.assertFalse([i for i in range(2, len(seq)) if seq[i] in (seq[i - 1], seq[i - 2])])
+            self.assertEqual(set(seq), {BAL, RT, HT})
         # ağırlık tek başına (LRU yok): balkon ≈ 2 x çatı
         c = collections.Counter(es._weighted_choice({sp: es.volc_spot_weight(sp) for sp in (BAL, RT, HT)},
                                                     [BAL, RT, HT], rng) for _ in range(6000))

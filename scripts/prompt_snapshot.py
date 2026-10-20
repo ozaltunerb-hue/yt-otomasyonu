@@ -42,7 +42,7 @@ def reset_memory() -> None:
     """Süreç içi LRU hafızalarını boşaltır (görünüm, beat, çığ/deprem ortamı, ateş hortumu, volkan ortamı ve yeri)."""
     _, es, sk = _modules()
     for mem in (sk._VIEW_MEMORY, es._BEAT_MEMORY, es._ENV_MEMORY, es._EQ_ENV_MEMORY, es._FIRE_TOR_ENV_MEMORY,
-                es._VOLC_ENV_MEMORY, es._VOLC_SPOT_MEMORY):
+                es._VOLC_ENV_MEMORY, es._VOLC_SPOT_MEMORY, es._AXES_MEMORY):   # 21 Eki: eksen hafızası
         mem.clear()
 
 
@@ -50,14 +50,16 @@ async def _fake_gpt(*args, **kwargs):
     return dict(FAKE_SLICES)
 
 
-def build(event: str, history: list[str] | None = None, history_texts: list[str] | None = None) -> dict:
-    """Tek üretim (seçim + kod yedeği hikâyesi + son prompt). Rastgelelik çağıranın tohumundan gelir."""
+def build(event: str, history: list[str] | None = None, history_texts: list[str] | None = None,
+          axes_loader=None) -> dict:
+    """Tek üretim (seçim + kod yedeği hikâyesi + son prompt). Rastgelelik çağıranın tohumundan gelir. axes_loader:
+    21 Eki, sahte Notion eksen geçmişi (domain -> ham kayıtlar); None = üretimdeki yükleyicisiz yol (eski davranış)."""
     cp, es, _ = _modules()
     real_record = cp.record_story_source
     cp.record_story_source = lambda entry: None   # günlüğe yazılmaz
     try:
         scene = asyncio.run(cp.build_creative_scene(None, event, list(history or []), list(history_texts or []),
-                                                    _fake_gpt))
+                                                    _fake_gpt, axes_loader=axes_loader))
     finally:
         cp.record_story_source = real_record
     return scene

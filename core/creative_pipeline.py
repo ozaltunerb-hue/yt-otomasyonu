@@ -19,6 +19,8 @@ import re
 import sys
 from datetime import datetime, timezone
 
+import asyncio
+
 import core.event_structure as es
 from core.prompt_generator import NoValidScenarioError
 from core.skeleton_pipeline import (
@@ -724,40 +726,126 @@ def submit_issues(structure: dict, info: dict) -> list[str]:
     return out
 
 
+HISTORY_WARNING = "⚠️ geçmiş Notion'dan okunamadı"
+
+
+def _with_used(fn, *args, used=None, kw: str = "used", **kwargs):
+    """Seçiciyi geçmişle çağırır; geçmiş boşsa parametresiz (eski çağrı biçimi, eski davranış: süreç hafızası)."""
+    return fn(*args, **({kw: used} if used else {}), **kwargs)
+
+
+async def load_axes_history(domain: str, event: str, axes_loader) -> dict:
+    """21 Eki (Gece 1 / Aşama 3): seçimden önce eksen geçmişi. axes_loader(domain) -> ham Notion kayıtları (eskiden
+    yeniye, iptaller dahil). Dönüş: {"event": olayın son 10 kaydı, "category": kategorinin son 10 kaydı (çığ/deprem
+    ortamı ve spotu), "source": "notion" | "bellek" | "yok", "warning": str | None}. Okuma başarısızsa ya da Notion
+    kapalıysa süreç hafızası (es._AXES_MEMORY; kategori ortamı için event_structure'ın kendi hafızası, category=None);
+    okuma hatası üretimi durdurmaz, Onay mesajına uyarı satırı gider. Yükleyici hiç verilmediyse (betikler, testler,
+    kuru deneme) yeni eksenlerde geçmiş yok ("yok"): eski davranış birebir (ortam eksenleri kendi süreç hafızasıyla)."""
+    import core.axes_history as ah
+    warning = None
+    if axes_loader is None:
+        return {"event": [], "category": None, "source": "yok", "warning": None}
+    else:
+        try:
+            records = await asyncio.to_thread(axes_loader, domain)
+            if records is not None and not isinstance(records, list):
+                raise TypeError(f"eksen geçmişi liste değil: {type(records).__name__}")
+            if records is not None:
+                parsed = ah.build_history(records)
+                group = (es.AVALANCHE_EVENTS if event in es.AVALANCHE_EVENTS
+                         else es.EARTHQUAKE_EVENTS if event in es.EARTHQUAKE_EVENTS else (event,))
+                return {"event": ah.event_history(parsed, event), "category": ah.category_history(parsed, group),
+                        "source": "notion", "warning": None}
+        except Exception as e:   # noqa: BLE001 - okuma hatası üretimi durdurmaz
+            log.warning(f"⚠️ Eksen geçmişi Notion'dan okunamadı, süreç hafızasıyla devam: {e}")
+            warning = HISTORY_WARNING
+    return {"event": es.axes_memory(event), "category": None, "source": "bellek", "warning": warning}
+
+
+def _axes_line(axes: dict, excluded: dict, source: str, warning: str | None) -> str:
+    """Onay mesajı satırı (Bahadır okusun diye kısa)."""
+    env = axes.get("view") or axes.get("env")
+    if isinstance(env, dict):
+        env = ", ".join(str(v) for v in env.values())
+    shown = {"spot": axes.get("spot"), "ortam": env, "ışık": axes.get("light"), "araç": axes.get("vehicle"),
+             "kişi": axes.get("people")}
+    line = "Eksenler: " + " · ".join(f"{k}={v if v not in (None, '') else '-'}" for k, v in shown.items())
+    names = {"spot": "spot", "env": "ortam", "view": "ortam", "light": "ışık", "vehicle": "araç", "people": "kişi"}
+    gone = [f"{names[k]}: {', '.join(str(x) for x in v)}" for k, v in excluded.items() if v and k in names]
+    line += f"\nTekrar önleme ({source}): " + ("elenen " + " · ".join(gone) if gone else "elenen yok")
+    if warning:
+        line += f"\n{warning}"
+    return line
+
+
 async def build_creative_scene(domain: str | None, event: str | None, history: list[str], history_texts: list[str],
-                               call_gpt, view: str | None = None) -> dict:
+                               call_gpt, view: str | None = None, axes_loader=None) -> dict:
     """Seçim (Python) + GPT-4o hikâyesi + iskeletle aynı stil eki. view: Telegram bölge menüsünden seçilen görünüm
-    (sadece şehir olayları); None ise LRU seçer."""
+    (sadece şehir olayları); None ise LRU seçer. axes_loader: 21 Eki, Notion eksen geçmişi okuyucusu (domain ->
+    ham kayıtlar); None ise süreç hafızası (betikler, testler)."""
+    import core.axes_history as ah
     domain, event, ship = choose_event_and_ship(domain, event, history)
+    structured = es.is_structured(event)
+    hist = (await load_axes_history(domain, event, axes_loader) if structured
+            else {"event": [], "category": None, "source": "bellek", "warning": None})
+    from_notion = hist["source"] == "notion"
+    ev_hist, cat_hist = hist["event"], hist["category"]
+    excluded = {}
     if view is not None:
         if event not in REGION_VIEW_EVENTS or view not in REGION_VIEWS:
             raise ValueError(f"Bu olayda bu görünüm seçilemez: {event} / {view}")
         view_source = "menü"
+    elif from_notion and event in REGION_VIEW_EVENTS:   # 21 Eki: Notion eksen geçmişinden LRU (iptaller dahil)
+        from core.skeleton_pipeline import _lru
+        seen = ah.values(ev_hist, "view")
+        view = _lru(list(REGION_VIEWS), seen)
+        view_source = "Python, LRU (Notion)"
+        excluded["view"] = [v for v in REGION_VIEWS if v in seen[-es.AXIS_BLOCK:]]
     else:
         view = choose_region_view(event, history)   # şehir olayları (1 Eki); diğerlerinde None
         view_source = "Python, LRU" if view else None
     remember_view(event, view)                   # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
-    spot, weather = pick_setting(event, view=view)
+    used_spot, used_light = ah.values(ev_hist, "spot"), ah.values(ev_hist, "light")
+    if structured and (used_spot or used_light):   # 21 Eki: spot ve ışıkta son 2 elenir (pick_setting ile aynı sıra)
+        spot_c, excluded["spot"] = es.lru_axis(view_spots(event, view), used_spot)
+        light_c, excluded["light"] = es.lru_axis(list(EVENT_SKELETONS[event]["weather"]), used_light)
+        spot, weather = random.choice(spot_c), random.choice(light_c)
+    else:
+        spot, weather = pick_setting(event, view=view)
     if event in es.ENV_EVENTS:   # 14 Eki (4): çığda kamera noktası da ortam ekseni (kategori LRU)
-        spot = es.choose_env_spot(event, view_spots(event, view))
+        spots = view_spots(event, view)
+        used = ah.values(cat_hist, "spot") if cat_hist is not None else None
+        spot = _with_used(es.choose_env_spot, event, spots, used=used)
+        excluded["spot"] = es.lru_axis(spots, used)[1] if used is not None else []
+        excluded["light"] = []   # ışık ortam ekseninin parçası (choose_environment)
     elif event == es.FIRE_TORNADO:   # 16 Eki: ateş hortumu ortam ekseni (LRU), nokta ortamın iki noktasından
-        fire_env = es.choose_fire_env()
+        used_env = ah.values(ev_hist, "env") if from_notion else None
+        fire_env = _with_used(es.choose_fire_env, used=used_env)
+        excluded["env"] = es.lru_axis(list(es.FIRE_TOR_ENVS), used_env)[1] if used_env is not None else []
         es.remember_fire_env(fire_env)           # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
-        spot = random.choice(es.FIRE_TOR_ENVS[fire_env]["spots"])
+        spot_c, excluded["spot"] = es.lru_axis(list(es.FIRE_TOR_ENVS[fire_env]["spots"]), ah.values(ev_hist, "spot"))
+        spot = random.choice(spot_c)
     volc_env = None
     if event in es.VOLC_ENV_EVENTS:   # 18 Eki (3): bombalar ve kül bulutu ortam ekseni + yer ağırlığı + ışık
-        volc_env = es.choose_volc_env(event)
-        spot = es.choose_volc_spot(event, history)
-        weather = es.choose_volc_weather(event)
+        used_env = ah.values(ev_hist, "env") if from_notion else None
+        used_spot = ah.values(ev_hist, "spot") if from_notion else None
+        volc_env = _with_used(es.choose_volc_env, event, used=used_env)
+        spot = _with_used(es.choose_volc_spot, event, history, used=used_spot)
+        weather = _with_used(es.choose_volc_weather, event, used=ah.values(ev_hist, "light"))
+        spots = list(EVENT_SKELETONS[event]["spots"])
+        excluded["env"] = es.lru_axis(list(es.VOLC_ENV_WEIGHTS[event]), used_env)[1] if used_env is not None else []
+        excluded["spot"] = (es.lru_axis(spots, used_spot)[1] if used_spot is not None
+                            else es.lru_axis(spots, es.volc_spot_history(event, history))[1])
+        excluded["light"] = es.lru_axis(list(es.VOLCANO_WEATHER_WEIGHTS[event]), ah.values(ev_hist, "light"))[1]
         es.remember_volc_env(event, volc_env)    # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
         es.remember_volc_spot(event, spot)
     place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
     if volc_env:
         place = es.volc_place(event, volc_env)
     recent = recent_stories(history_texts)
-    if es.is_structured(event):
+    if structured:
         return await _build_structured_scene(domain, event, ship, spot, view, view_source, weather, place, recent,
-                                             history, call_gpt, volc_env=volc_env)
+                                             history, call_gpt, volc_env=volc_env, hist=hist, excluded=excluded)
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "domain": domain, "event": event, "ship": ship or "None",
              "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place, "weather": weather, "count_range": [lo, hi],
@@ -777,22 +865,37 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
     combo_key = f"{domain}|{(ship or 'none').lower()}|{event.lower()}|{spot_key}|{SKELETON_CAMERA}"
     trace.update(attempts=attempts, story=story, story_words=len(story.split()))
     log.info(f"✍️ Creative: [{domain}] {event} | gemi={ship} | yer={spot} | görünüm={view} | hava={weather} | {len(story.split())} kelime")
+    axes = {"spot": spot, "view": view, "light": weather}   # 21 Eki: serbest hatta sadece kayıt (LRU yok)
     return {"domain": domain, "event": event, "ship": ship, "spot": spot, "story": story, "style_suffix": suffix,
-            "prompt": f"{story.rstrip('.')}. {suffix}", "combo_key": combo_key, "trace": trace}
+            "prompt": f"{story.rstrip('.')}. {suffix}", "combo_key": combo_key, "trace": trace,
+            "axes_json": ah.axes_json(event, axes)}
 
 
 async def _build_structured_scene(domain, event, ship, spot, view, view_source, weather, place, recent, history,
-                                  call_gpt, volc_env: str | None = None) -> dict:
+                                  call_gpt, volc_env: str | None = None, hist: dict | None = None,
+                                  excluded: dict | None = None) -> dict:
     """Yapılandırılmış olay: olay çifti + araç (kod), dilimler (GPT), son denetim (kod). Son denetim tutmazsa
     StructureError: Kie'ye gidilmez."""
+    import core.axes_history as ah
+    hist = hist or {"event": [], "category": None, "source": "yok", "warning": None}
+    excluded = dict(excluded or {})
+    ev_hist, cat_hist = hist["event"], hist["category"]
     b2, b3 = es.choose_beats(event, view, spot, history)
     # Görünümü olmayan olayda (heyelan, TASLAK) araç olayın kendi listesinden; araçsız olayda (13 Eki: lav, kül
-    # bulutu) araç seçilmez
+    # bulutu) araç seçilmez. 21 Eki: araç ve kişi sayısında son 2 elenir
+    used_vehicle = ah.values(ev_hist, "vehicle")
     if not es.uses_vehicle(event):
         vehicle = None
     else:
-        vehicle = es.choose_vehicle(view) if view is not None else es.choose_event_vehicle(event)
-    people =es.choose_people(event, ship)       # kaçan kişi sayısı N (kişi kuralı olan olaylarda); combo_key'e girmez
+        vehicle = (_with_used(es.choose_vehicle, view, used=used_vehicle) if view is not None
+                   else _with_used(es.choose_event_vehicle, event, used=used_vehicle))
+        options = [v for v, _ in es.event_vehicles(event, view)]
+        excluded["vehicle"] = es.lru_axis(options, used_vehicle)[1]
+    used_people = ah.values(ev_hist, "people")
+    people = _with_used(es.choose_people, event, ship, used=used_people)   # kaçan kişi sayısı N; combo_key'e girmez
+    if people is not None:
+        lo_p, hi_p = count_range(event, ship)
+        excluded["people"] = es.lru_axis(list(range(lo_p, hi_p + 1)), used_people)[1]
     tag = es.beat_tag(b2, b3)
     es.remember_beats(event, tag)                # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
     # 14 Eki (4): çığda ortam (dağ, yerleşim, ışık) koddan; GPT'ye WEATHER satırı olarak, Kie'ye stil ekinde gider
@@ -803,11 +906,19 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     if volc_env:   # 18 Eki (3): bombalar / kül bulutu
         env_label = es.volc_env_label(volc_env, spot)
     if event in es.ENV_EVENTS:
-        env = es.choose_environment(event, spot, b2, b3)
+        mem = ([h["env"] for h in cat_hist if isinstance(h.get("env"), dict)] if cat_hist is not None else None)
+        env = _with_used(es.choose_environment, event, spot, b2, b3, used=mem, kw="mem")
         es.remember_environment(env)             # seçim anında (beat hafızası gibi)
         setting = es.setting_line(env)
         weather = es.env_weather(env)   # 14 Eki: çığ ve deprem
     spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env)
+    # 21 Eki: seçilen tüm eksenler (Notion "Eksenler" + süreç hafızası + Onay satırı)
+    axes = {"spot": spot, "view": view,
+            "env": ({k: v for k, v in env.items() if k != "spot"} if env else (spec.get("fire_env") or volc_env)),
+            "light": env["light"] if env else weather, "vehicle": vehicle, "people": people,
+            "key": spec.get("fire_env") or "default", "beats": tag}
+    es.remember_axes(event, axes)
+    axes_line = _axes_line(axes, excluded, hist["source"], hist["warning"])
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "structured": True, "domain": domain, "event": event, "ship": ship or "None",
              "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place,
@@ -815,6 +926,9 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
              "vehicle": vehicle, "people_running": people, "beat_2_text": es.beat_text(event, "slice_2", b2, vehicle),
              "beat_3_text": es.beat_text(event, "slice_3", b3), "outcome": EVENT_OUTCOMES[event],
              "recent_count": len(recent), "attempts": [], "story": "", "story_words": 0}
+    trace["axes"] = axes
+    trace["axes_excluded"] = excluded
+    trace["axes_source"] = hist["source"]
     if env:
         trace["environment"] = env
     if env_label and event == es.FIRE_TORNADO:
@@ -859,4 +973,8 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
                           "environment": es.environment_label(env) if env else env_label,
                           # 18 Eki (3): Notion "Ortam" alanı (sadece bombalar / kül bulutu)
                           "env_option": es.VOLC_ENVS[volc_env]["label"] if volc_env else None,
-                          "story_source": source["label"], "story_source_kind": source["kind"]}}
+                          "story_source": source["label"], "story_source_kind": source["kind"],
+                          # 21 Eki: Notion "Eksenler" (seçim anında yazılır) ve Onay mesajı satırı
+                          "axes": axes, "axes_json": ah.axes_json(event, axes, excluded), "axes_line": axes_line,
+                          "axes_warning": hist["warning"]},
+            "axes_json": ah.axes_json(event, axes, excluded)}

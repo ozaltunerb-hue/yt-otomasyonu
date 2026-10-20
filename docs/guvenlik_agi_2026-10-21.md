@@ -92,3 +92,11 @@ deploy'dan sonra da LRU'da; diğer eksenler değil.
 Ayrıca İptal kayıtları geçmişe girmiyor: iptal edilen üretimin seçimi deploy sonrası unutuluyor (süreç hafızası varken
 sayılıyordu). Ölçüm: `docs/cesitlilik_2026-10-21.md` "deploy" tablosunda çığ ve depremde spot 0 tekrardan 8-14 art arda
 tekrara, ateş hortumu ortamı 0'dan 7'ye, volkan ortamı 0'dan 3-4'e çıkıyor.
+
+## Güncelleme: Aşama 3 (aynı gün) — çözüldü
+
+Eksen geçmişi artık Notion'da: her üretim seçim anında (Onay'dan önce) "Eksenler" alanına JSON yazar, sonraki üretim
+kategorinin son kayıtlarını durum filtresi olmadan (iptaller dahil) okur (`core/axes_history.py`,
+`NotionTracker.get_axes_records`). Eski kayıtlar yukarıdaki tablodaki yollarla ayrıştırılır. Spot, ortam, ışık, araç ve
+kişide son 2 elenir. Okuma başarısızsa süreç hafızası + Onay'da "⚠️ geçmiş Notion'dan okunamadı". Ölçüm:
+`docs/cesitlilik_2026-10-21.md` (deploy senaryosunda da 5 eksende art arda tekrar 0; tek istisna tek spotlu marina).

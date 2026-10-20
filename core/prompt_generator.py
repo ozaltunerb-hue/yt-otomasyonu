@@ -1170,7 +1170,8 @@ async def generate_creative_prompts(config: dict) -> dict:
     topics = list(config.get("recent_topics", []))
     history = list(dict.fromkeys(used + topics))
     scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history, topics,
-                                       _call_gpt, view=config.get("view") or None)
+                                       _call_gpt, view=config.get("view") or None,
+                                       axes_loader=config.get("axes_loader"))   # 21 Eki: Notion eksen geçmişi
     domain, event, ship, story = scene["domain"], scene["event"], scene["ship"], scene["story"]
     metadata = await _generate_metadata(
         # 4 Eki: yapılandırılmış olaylarda zaman etiketsiz düz metin (etiketler YouTube metnine sızmasın)
@@ -1188,6 +1189,7 @@ async def generate_creative_prompts(config: dict) -> dict:
         # Notion "Konu" tam hikâyeyi tutar: sonraki üretimde "bunlardan farklı yaz" listesi buradan gelir
         "scenario_summary": story,
         "combo_key": scene["combo_key"],
+        "axes_json": scene.get("axes_json", ""),   # 21 Eki: Notion "Eksenler" (seçim anında yazılır)
         "total_duration": settings.DEFAULT_DURATION,
         "animal": ship or "None", "talent": event, "category": domain,
         "beat1_action_verb": "",

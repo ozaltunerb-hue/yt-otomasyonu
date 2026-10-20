@@ -2085,6 +2085,43 @@ EVENT_BANNED_WORDS.update({e: (("earthquake_banned", _EQ_BANNED, "depremde yasak
                                 "The buildings collapse suddenly and fast: remove {words}."))
                            for e in EARTHQUAKE_EVENTS})
 # 175 kelime kapısı olan olaylar (13 Eki: volkan + çığ; 14 Eki: deprem)
+# ── Tüm eksenlerde tekrar önleme (21 Eki 2026, Gece 1 / Aşama 3) ──────────────────────────────────────────────────
+# Spot, ışık/hava, araç, kişi sayısı: son AXIS_BLOCK kullanılan değer seçilemez. 2 ya da daha az seçenekli eksende
+# sadece son 1, tek seçenekli eksende hiç eleme yok. Geçmiş Notion "Eksenler" alanından (iptaller dahil), okunamazsa
+# süreç hafızası (_AXES_MEMORY). Boş geçmişte aday listesi tam liste: rastgele çekim eskisiyle birebir aynı.
+AXIS_BLOCK = 2
+_AXES_MEMORY: dict[str, list[dict]] = {}
+_AXES_MEMORY_LIMIT = 12
+
+
+def axis_block_depth(n_options: int) -> int:
+    return 0 if n_options <= 1 else (1 if n_options <= 2 else AXIS_BLOCK)
+
+
+def lru_axis(options: list, used: list) -> tuple[list, list]:
+    """(adaylar, elenenler). used eskiden yeniye; boş değerler sayılmaz. Seçenek sırası korunur."""
+    depth = axis_block_depth(len(set(options)))
+    recent = [u for u in used if u is not None and u != ""][-depth:] if depth else []
+    blocked = set(recent)
+    cands = [o for o in options if o not in blocked]
+    if not cands:   # güvenlik: hepsi eleniyorsa eleme yok
+        return list(options), []
+    return cands, [o for o in options if o in blocked]
+
+
+def remember_axes(event: str, axes: dict) -> None:
+    """Seçim anında eksen değerlerini süreç hafızasına yazar (Notion okunamazsa yedek)."""
+    with _ENV_LOCK:
+        mem = _AXES_MEMORY.setdefault(event, [])
+        mem.append(dict(axes))
+        del mem[:-_AXES_MEMORY_LIMIT]
+
+
+def axes_memory(event: str) -> list[dict]:
+    with _ENV_LOCK:
+        return [dict(a) for a in _AXES_MEMORY.get(event, [])]
+
+
 WORD_CAP_EVENTS = VOLCANO_EVENTS + AVALANCHE_EVENTS + EARTHQUAKE_EVENTS + (FIRE_TORNADO,)   # 15 Eki (2)
 
 # ── Ortam havuzu (14 Eki (4), Bahadır; şimdilik sadece çığ) ──────────────────────────────────────────────────────────
@@ -2196,21 +2233,28 @@ def _lru_candidates(values, used: list) -> list:
     return list(values)
 
 
-def choose_env_spot(event: str, spots: list[str], rng: random.Random | None = None) -> str:
-    """Kamera noktası ekseni: kategoride son ENV_BLOCK üretimin noktaları elenir (aday kalmazsa 1)."""
+def choose_env_spot(event: str, spots: list[str], rng: random.Random | None = None,
+                    used: list[str] | None = None) -> str:
+    """Kamera noktası ekseni: kategoride son ENV_BLOCK üretimin noktaları elenir (aday kalmazsa 1). used: 21 Eki,
+    Notion'dan kurulan kategori geçmişi (eskiden yeniye); None ise süreç hafızası."""
     rng = rng or random
-    with _ENV_LOCK:
-        used = [m["spot"] for m in _env_memory(event)]
-    return rng.choice(_lru_candidates(spots, used))
+    if used is None:
+        with _ENV_LOCK:
+            used = [m["spot"] for m in _env_memory(event)]
+    return rng.choice(_lru_candidates(spots, [u for u in used if u]))
 
 
-def choose_environment(event: str, spot: str, b2: str, b3: str, rng: random.Random | None = None) -> dict:
-    """Dağ, yerleşim, ışık: LRU + beat uyumu + satır en fazla SETTING_MAX_WORDS kelime. Aday kalmazsa StructureError."""
+def choose_environment(event: str, spot: str, b2: str, b3: str, rng: random.Random | None = None,
+                       mem: list[dict] | None = None) -> dict:
+    """Dağ, yerleşim, ışık: LRU + beat uyumu + satır en fazla SETTING_MAX_WORDS kelime. Aday kalmazsa StructureError.
+    mem: 21 Eki, Notion'dan kurulan kategori ortam geçmişi (eskiden yeniye); None ise süreç hafızası."""
     rng = rng or random
     if event in EARTHQUAKE_EVENTS:
-        return _choose_eq_environment(event, spot, rng)
-    with _ENV_LOCK:
-        mem = list(_ENV_MEMORY)
+        return _choose_eq_environment(event, spot, rng, mem)
+    if mem is None:
+        with _ENV_LOCK:
+            mem = list(_ENV_MEMORY)
+    mem = [m for m in mem if m and all(m.get(a) for a in ("mountain", "village", "light"))]
     villages = ENV_AXES["village"]
     if {b2, b3} & STONE_BUILDING_BEATS.get(event, set()):
         villages = tuple(v for v in villages if v not in WOOD_ONLY_VILLAGES)
@@ -2225,11 +2269,13 @@ def choose_environment(event: str, spot: str, b2: str, b3: str, rng: random.Rand
     return {**rng.choice(combos), "spot": spot}
 
 
-def _choose_eq_environment(event: str, spot: str, rng) -> dict:
+def _choose_eq_environment(event: str, spot: str, rng, mem: list[dict] | None = None) -> dict:
     """Deprem: şehir, sokak, ışık. Her eksende son ENV_BLOCK üretimin değeri elenir; uyumlu ve en fazla 15 kelimelik
     üçlü kalmazsa derinlik birlikte 1'e, sonra 0'a düşer."""
-    with _ENV_LOCK:
-        mem = list(_EQ_ENV_MEMORY)
+    if mem is None:
+        with _ENV_LOCK:
+            mem = list(_EQ_ENV_MEMORY)
+    mem = [m for m in mem if m and all(m.get(a) for a in ("city", "street", "light"))]
     for depth in (ENV_BLOCK, 1, 0):
         recent = mem[-depth:] if depth else []
         blocked = {a: {m[a] for m in recent} for a in ("city", "street", "light")}
@@ -2294,10 +2340,13 @@ def fire_env_of_spot(spot: str) -> str:
     raise StructureError(f"Ateş hortumu kamera noktası hiçbir ortamda yok: {spot}")
 
 
-def choose_fire_env(rng: random.Random | None = None) -> str:
-    """Ortam: son FIRE_TOR_ENV_BLOCK üretimin ortamları elenir (aday kalmazsa 1, sonra 0)."""
-    with _ENV_LOCK:
-        used = list(_FIRE_TOR_ENV_MEMORY)
+def choose_fire_env(rng: random.Random | None = None, used: list[str] | None = None) -> str:
+    """Ortam: son FIRE_TOR_ENV_BLOCK üretimin ortamları elenir (aday kalmazsa 1, sonra 0). used: 21 Eki, Notion
+    geçmişi (eskiden yeniye); None ise süreç hafızası."""
+    if used is None:
+        with _ENV_LOCK:
+            used = list(_FIRE_TOR_ENV_MEMORY)
+    used = [u for u in used if u]
     return (rng or random).choice(_lru_candidates_depth(list(FIRE_TOR_ENVS), used, FIRE_TOR_ENV_BLOCK))
 
 
@@ -2328,7 +2377,7 @@ def fire_env_label(name: str, spot: str) -> str:
 # Notion kayıtlarından da okunur (combo_key'de yer var). Hava ağırlıklı rastgele (sk.VOLCANO_WEATHER_WEIGHTS).
 VOLC_ENV_EVENTS = (PYROCLASTIC, VOLCANIC_BOMBS)
 VOLC_ENV_BLOCK = 2
-VOLC_SPOT_BLOCK = 1
+VOLC_SPOT_BLOCK = 2   # 21 Eki (Gece 1 / Aşama 3): tüm eksenlerde son 2 (önceki 1); ağırlıklar aynı
 _VOLC_ENV_MEMORY: dict[str, list[str]] = {}
 _VOLC_SPOT_MEMORY: dict[str, list[str]] = {}
 
@@ -2338,10 +2387,13 @@ def _weighted_choice(weights: dict[str, int], allowed: list[str], rng) -> str:
     return (rng or random).choices(keys, weights=[weights[k] for k in keys], k=1)[0]
 
 
-def choose_volc_env(event: str, rng: random.Random | None = None) -> str:
-    """Ortam: son VOLC_ENV_BLOCK üretimin ortamı elenir, kalanlardan ağırlıklı (olay başına ayrı hafıza)."""
-    with _ENV_LOCK:
-        used = list(_VOLC_ENV_MEMORY.get(event, []))
+def choose_volc_env(event: str, rng: random.Random | None = None, used: list[str] | None = None) -> str:
+    """Ortam: son VOLC_ENV_BLOCK üretimin ortamı elenir, kalanlardan ağırlıklı (olay başına ayrı hafıza). used: 21 Eki,
+    Notion geçmişi (eskiden yeniye); None ise süreç hafızası."""
+    if used is None:
+        with _ENV_LOCK:
+            used = list(_VOLC_ENV_MEMORY.get(event, []))
+    used = [u for u in used if u]
     weights = VOLC_ENV_WEIGHTS[event]
     return _weighted_choice(weights, _lru_candidates_depth(list(weights), used, VOLC_ENV_BLOCK), rng)
 
@@ -2372,10 +2424,14 @@ def volc_spot_history(event: str, history: list[str]) -> list[str]:
     return notion + memory
 
 
-def choose_volc_spot(event: str, history: list[str] | None = None, rng: random.Random | None = None) -> str:
-    """Kamera noktası: son seçilen yer arka arkaya gelmez; kalanlardan ağırlıklı (balkon 2, çatı/yamaç 1)."""
+def choose_volc_spot(event: str, history: list[str] | None = None, rng: random.Random | None = None,
+                     used: list[str] | None = None) -> str:
+    """Kamera noktası: son VOLC_SPOT_BLOCK yer elenir; kalanlardan ağırlıklı (balkon 2, çatı/yamaç 1). used: 21 Eki,
+    Notion eksen geçmişi (eskiden yeniye); None ise combo_key geçmişi + süreç hafızası."""
     spots = list(EVENT_SKELETONS[event]["spots"])
-    left = _lru_candidates_depth(spots, volc_spot_history(event, history or []), VOLC_SPOT_BLOCK)
+    if used is None:
+        used = volc_spot_history(event, history or [])
+    left = _lru_candidates_depth(spots, [u for u in used if u], VOLC_SPOT_BLOCK)
     return _weighted_choice({sp: volc_spot_weight(sp) for sp in spots}, left, rng)
 
 
@@ -2386,9 +2442,10 @@ def remember_volc_spot(event: str, spot: str) -> None:
         del mem[:-_ENV_MEMORY_LIMIT]
 
 
-def choose_volc_weather(event: str, rng: random.Random | None = None) -> str:
+def choose_volc_weather(event: str, rng: random.Random | None = None, used: list[str] | None = None) -> str:
+    """Işık: ağırlıklı; 21 Eki: son AXIS_BLOCK ışık elenir (lru_axis), ağırlıklar aynı."""
     weights = VOLCANO_WEATHER_WEIGHTS[event]
-    return _weighted_choice(weights, list(weights), rng)
+    return _weighted_choice(weights, lru_axis(list(weights), used or [])[0], rng)
 
 
 def volc_env_label(name: str, spot: str) -> str:
@@ -2521,12 +2578,14 @@ def has_people_rule(event: str) -> bool:
     return any(r.get("people") for r in SLICE_RULES.get(event, ()))
 
 
-def choose_people(event: str, ship: str | None, rng: random.Random | None = None) -> int | None:
+def choose_people(event: str, ship: str | None, rng: random.Random | None = None,
+                  used: list[int] | None = None) -> int | None:
     """Kaçan kişi sayısı N (olayın kişi aralığından); kişi kuralı olmayan olayda None."""
     if not has_people_rule(event):
         return None
     lo, hi = count_range(event, ship)
-    return (rng or random).randint(lo, hi)
+    # 21 Eki: son AXIS_BLOCK sayı elenir. choice(range listesi) boş geçmişte randint ile aynı çekimi yapar
+    return (rng or random).choice(lru_axis(list(range(lo, hi + 1)), used or [])[0])
 
 
 class StructureError(RuntimeError):
@@ -2636,10 +2695,10 @@ def choose_beats(event: str, view: str | None, spot: str, history: list[str],
     return rng.choice([p for p in pairs if last(p) == best])
 
 
-def choose_vehicle(view: str, rng: random.Random | None = None) -> str:
+def choose_vehicle(view: str, rng: random.Random | None = None, used: list[str] | None = None) -> str:
     if view not in REGION_VEHICLES:
         raise StructureError(f"Görünümün araç listesi yok: {view}")
-    return (rng or random).choice([v for v, _ in REGION_VEHICLES[view]])
+    return (rng or random).choice(lru_axis([v for v, _ in REGION_VEHICLES[view]], used or [])[0])
 
 
 def vehicle_terms(view: str, vehicle: str) -> tuple[str, ...]:
@@ -2661,8 +2720,8 @@ def event_vehicles(event: str, view: str | None) -> list[tuple[str, tuple[str, .
     return EVENT_VEHICLES[event]
 
 
-def choose_event_vehicle(event: str, rng: random.Random | None = None) -> str:
-    return (rng or random).choice([v for v, _ in event_vehicles(event, None)])
+def choose_event_vehicle(event: str, rng: random.Random | None = None, used: list[str] | None = None) -> str:
+    return (rng or random).choice(lru_axis([v for v, _ in event_vehicles(event, None)], used or [])[0])
 
 
 def uses_vehicle(event: str) -> bool:

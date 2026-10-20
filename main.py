@@ -230,6 +230,8 @@ async def _execute_pipeline(
         "domain": domain,
         "event": event,
         "view": view,
+        # 21 Eki (Gece 1 / Aşama 3): seçimden önce kategorinin eksen geçmişi Notion'dan (iptaller dahil)
+        "axes_loader": tracker.get_axes_records,
     }
 
     try:
@@ -270,6 +272,8 @@ async def _execute_pipeline(
             "mode": mode,
         }
         await asyncio.to_thread(tracker.create_entry, notion_config, trigger=trigger)
+        # 21 Eki: seçilen eksenler Onay'dan önce (iptal edilse de kayıt kalır, sonraki seçim bunu görür)
+        await asyncio.to_thread(tracker.record_axes, prompt_data.get("axes_json", ""))
         await asyncio.to_thread(tracker.update_with_prompts, prompt_data)
         if prompt_data.get("trace"):
             await asyncio.to_thread(tracker.append_body, format_generation(prompt_data["trace"]))
@@ -328,6 +332,8 @@ async def _execute_pipeline(
                 info["environment"] = structure["environment"]
             if structure and structure.get("story_source"):   # 16 Eki: hikâye kaynağı (GPT / kod yedeği)
                 info["story_source"] = structure["story_source"]
+            if structure and structure.get("axes_line"):   # 21 Eki: eksenler + elenenler (+ Notion uyarısı)
+                info["axes_line"] = structure["axes_line"]
             meta.update({"final_prompt": info["prompt"], "story": info.get("story", ""),
                          "style_suffix": info.get("style_suffix", ""), "preflight": info.get("preflight") or {}})
             await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)
