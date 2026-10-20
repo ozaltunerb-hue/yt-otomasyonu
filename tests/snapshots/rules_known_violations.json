@@ -1,0 +1,39 @@
+{
+ "_note": "Cırcır: bugünkü bilinen ihlaller (kural -> olaylar). tests/test_prompt_rules.py yeni ihlalde ve artık ihlal etmeyen kayıtta başarısız olur; düzeltilen olayı buradan sil. Üretim: scripts/prompt_rules.py --write-known",
+ "K1": [
+  "Fire tornado tears across a burning roadside",
+  "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
+  "Flames race up a tower facade",
+  "Flash flooding in city streets",
+  "Mud and debris torrent tears through a hillside village",
+  "Mudslide pours down a hillside street",
+  "Rain-soaked slope collapses onto a roadside",
+  "Tidal wave surges over a coastal city street",
+  "Tornado crosses a marina quay",
+  "Tornado making landfall",
+  "Tornado sweeps down a coastal avenue",
+  "Wall of flames sweeps into a hillside neighborhood"
+ ],
+ "K2": [
+  "Flash flooding in city streets",
+  "Mudslide pours down a hillside street",
+  "Rain-soaked slope collapses onto a roadside",
+  "Tornado making landfall"
+ ],
+ "K3": [
+  "Fire tornado tears across a burning roadside",
+  "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
+  "Flames race up a tower facade",
+  "Flash flooding in city streets",
+  "Mud and debris torrent tears through a hillside village",
+  "Mudslide pours down a hillside street",
+  "Rain-soaked slope collapses onto a roadside",
+  "Tidal wave surges over a coastal city street",
+  "Tornado crosses a marina quay",
+  "Tornado making landfall",
+  "Tornado sweeps down a coastal avenue",
+  "Wall of flames sweeps into a hillside neighborhood"
+ ],
+ "K4": [],
+ "K5": []
+}
