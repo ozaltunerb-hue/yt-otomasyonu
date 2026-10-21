@@ -955,8 +955,8 @@ class TestLandslideStructure(unittest.TestCase):
         }, {("H4", "M3"), ("H6", "M6"), ("H6", "M7"), ("H6", "M8"), ("H6", "M9"), ("H1", "M8"), ("H4", "M6")}, {}),
         es.SLOPE: ({
             "R1": "the {vehicle} is shoved sideways across the road by the mud and rocks",
-            "R2": "the mud shoves the {vehicle} across both lanes and slams it into the rock face on the far side of "
-                  "the road",
+            # 22 Eki (2): R2 kısaldı, R2+S4 ve R2+S5 dışlamaları kalktı
+            "R2": "the mud shoves the {vehicle} across the road into the rock face",
             "R3": "a rolling boulder strikes the {vehicle}, which spins and slides down the road",
             "R4": "a wave of mud and rocks hits the front of the {vehicle} and shoves it backwards down the road",
             "R5": "the {vehicle} tips over onto its side in the mud",
@@ -969,7 +969,7 @@ class TestLandslideStructure(unittest.TestCase):
             "S5": "more of the slope gives way and a second surge of mud and rocks pours onto the road",
             # 18 Eki (2): Parti 2
             "S7": "the mud and boulders shove a stopped truck sideways toward the edge of the road",
-        }, {("R3", "S2"), ("R1", "S7"), ("R4", "S7"), ("R2", "S7"), ("R2", "S4"), ("R2", "S5")}, {}),
+        }, {("R3", "S2"), ("R1", "S7"), ("R4", "S7"), ("R2", "S7")}, {}),
         es.VILLAGE: ({
             "K1": "the {vehicle} is swept down the lane and rammed against a house wall",
             "K2": "the {vehicle} is spun around by the torrent and dragged along the lane",
@@ -1165,8 +1165,8 @@ class TestLandslideStructure(unittest.TestCase):
                         n += 1
         # 18 Eki (2): çamur 3 × 30 × 4; yol 2 × 27 × 4; köy (32 + 32 + 22) × 3
         # 22 Eki: çamur 3 × 29 × 4 (H4+M6 bütçe); yol 2 × 24 × 4 (R2+S7, R2+S4, R2+S5); köy (31 + 31 + 21) × 3 (K5+L5
-        # çıktı, K1+L5 ve K3+L6 eklendi)
-        self.assertEqual(n, 348 + 192 + 249)
+        # çıktı, K1+L5 ve K3+L6 eklendi). 22 Eki (2): yol 2 × 26 × 4 (R2 kısaldı, R2+S4 ve R2+S5 geri geldi)
+        self.assertEqual(n, 348 + 208 + 249)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):

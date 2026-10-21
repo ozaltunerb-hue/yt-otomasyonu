@@ -1024,8 +1024,9 @@ EVENT_BEATS = {
             "R1": {"text": "the {vehicle} is shoved sideways across the road by the mud and rocks",
                    "terms": [_SIDEWAYS + ("across the road", "across both lanes"), _DRAG]},
             # 22 Eki (heyelan denetimi): önceki "the {vehicle} is pushed against the guardrail and pinned there"
-            "R2": {"text": "the mud shoves the {vehicle} across both lanes and slams it into the rock face on the far "
-                           "side of the road",
+            # 22 Eki (2): kısaldı (bütçe dışlamaları kalksın). Önceki: "the mud shoves the {vehicle} across both lanes
+            # and slams it into the rock face on the far side of the road"
+            "R2": {"text": "the mud shoves the {vehicle} across the road into the rock face",
                    "terms": [_HIT, _ROCK_FACE]},
             "R3": {"text": "a rolling boulder strikes the {vehicle}, which spins and slides down the road",
                    "terms": [_ROCK, _SPIN + ("slide", "slid", "skid")]},
@@ -1068,8 +1069,8 @@ EVENT_BEATS = {
         # onlarla gitti (önceki: {"S1": {"Behind the guardrail of a hillside road"}})
         # 18 Eki (2): S7 kamyon yana/yol kenarına itilir (R1 yana itilir, R4 yol kenarına itilir)
         # 22 Eki: R2 araç iki şeridi geçip itilir (S7 gibi); R4 artık geriye itilir (yine araç itilir, çift kalır)
-        # 22 Eki: R2+S4, R2+S5 175 bütçesi (R2 23 kelime; kod yedeği sığmıyor, metinler onaylı, kısaltılmadı)
-        "excluded_pairs": {("R3", "S2"), ("R1", "S7"), ("R4", "S7"), ("R2", "S7"), ("R2", "S4"), ("R2", "S5")},
+        # 22 Eki (2): R2 kısaldı (12 kelime), bütçe için konan R2+S4, R2+S5 dışlamaları kalktı
+        "excluded_pairs": {("R3", "S2"), ("R1", "S7"), ("R4", "S7"), ("R2", "S7")},
         "excluded_views": {},
         "excluded_spots": {},
     },
