@@ -78,8 +78,10 @@ CAMERA_SPOTS = {
     # Heyelan (2 Eki): her yer akıntıyı karede gösterir
     "Balcony across a steep hillside street": "on a balcony across the steep hillside street",
     "Rooftop terrace below a hillside street": "on a rooftop terrace just below the hillside street, facing up the street",
-    "Side stairway off a narrow hillside lane": "at the top of a side stairway beside the narrow hillside lane",
-    "Behind the guardrail of a hillside road": "behind the guardrail on the far side of the hillside road",
+    # 21 Eki (genel kalite): 175 kelime için kısa. Önceki: "at the top of a side stairway beside the narrow hillside
+    # lane", "behind the guardrail on the far side of the hillside road"
+    "Side stairway off a narrow hillside lane": "atop a side stairway beside the hillside lane",
+    "Behind the guardrail of a hillside road": "behind the guardrail across the hillside road",
     "Bridge on a side road below the slope": "on a bridge on a side road, facing the slope and the road",
     "Far edge of the road across from the slope": "on the far edge of the road, across from the slope",
     "Terrace on the opposite hillside": "on a terrace on the opposite hillside, facing the village",
@@ -100,8 +102,10 @@ CAMERA_SPOTS = {
     # wooded neighborhood, looking down at the houses and trees" / "on a high balcony of a village house looking down
     # the street"
     "High balcony at the edge of a wooded neighborhood": "on a high balcony above the wooded neighborhood",
-    "Rooftop terrace above a wooded residential area": "on a rooftop terrace above a wooded residential area",
-    "High balcony over a tree-lined residential street": "on a high balcony overlooking a tree-lined residential street",
+    # 21 Eki (genel kalite): 175 kelime için kısa. Önceki: "...above a wooded residential area", "on a high balcony
+    # overlooking a tree-lined residential street"
+    "Rooftop terrace above a wooded residential area": "on a rooftop terrace above a wooded area",
+    "High balcony over a tree-lined residential street": "on a high balcony over a tree-lined street",
     "Upper-floor terrace above a street of houses": "on an upper-floor terrace above a street of houses",
     "Hillside terrace above a village": "on a hillside terrace above the village houses",
     "High balcony of a village house": "on a high balcony of a village house",
@@ -109,7 +113,7 @@ CAMERA_SPOTS = {
     # cümlesine taşındı (VOLCANO_CAMERA_PERCH); önceki metinler "..., facing the erupting volcano (across the street)"
     "Hillside terrace facing the erupting volcano": "on a hillside terrace above the village",
     "Rooftop terrace facing the erupting volcano": "on a rooftop terrace across the street",
-    "Balcony of a village house facing the erupting volcano": "on the balcony of a village house across the street",
+    "Balcony of a village house facing the erupting volcano": "on a village house balcony across the street",   # 21 Eki: 175 (önceki "on the balcony of a village house...")
     # ❄️ Çığ (13 Eki, Bahadır): hepsi yüksek; yön kamera cümlesinde. 14 Eki: köyün/tesisin kenarına, çığın yoluna
     # taşındı. 14 Eki (2): kısa adlar, kamera cümlesi "Handheld footage from ..." (175 kelime sınırı). Önceki: "on a
     # terrace at the edge of the village", "on the balcony of a chalet at the edge of the village", "on the terrace
@@ -636,12 +640,12 @@ REMOVED_EVENTS = [e for e in ALL_EVENTS if e not in EVENT_SKELETONS]
 REGION_VIEW_EVENTS = ("Flash flooding in city streets", "Tidal wave surges over a coastal city street")
 REGION_VIEWS = {
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Körfez metropolü (BAE, Katar)
-    "gulf_metropolis": "glass towers behind palm-lined multi-lane boulevards, sand-colored low buildings, white SUVs",
+    "gulf_metropolis": "glass towers behind palm-lined boulevards, sand-colored low buildings, white SUVs",   # 21 Eki: -"multi-lane" (175)
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Kuzey Afrika kıyısı (Fas, Tunus)
     # 17 Eki, Bahadır (temizlik turu): küçük araç yok. Önceki: "small hatchback cars"
     "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, large SUVs",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: ABD kıyı kasabası (Florida, Carolina)
-    "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, overhead power lines",
+    "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, power lines",   # 21 Eki: -"overhead" (175)
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Kuzey Avrupa sahil kasabası (Hollanda, İngiltere)
     # 17 Eki: küçük araç yok. Önceki: "small parked cars"
     "north_european_seaside": "brick terraced houses, narrow streets, parked SUVs and vans",
@@ -652,8 +656,10 @@ REGION_VIEWS = {
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Doğu Asya kıyısı (Japonya, Tayvan)
     # 1 Eki (2): videoda Akdeniz çıktı; "covered arcade entrances" Akdeniz çağrışımı yaptı, klima ve kablo eklendi
     # 17 Eki: küçük araç yok. Önceki son parça: "small boxy cars and scooters"
-    "east_asian_coast": "dense mid-rise apartment blocks with air-conditioner units and tangled overhead wires, "
-                        "narrow lanes, delivery vans and box trucks",
+    # 21 Eki (genel kalite): 175 kelime için kısa. Önceki: "...and tangled overhead wires, narrow lanes, delivery vans
+    # and box trucks"
+    "east_asian_coast": "dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, "
+                        "delivery vans",
 }
 REGION_VIEW_CLOTHING = "people in light everyday clothes suited to the climate"
 NO_SIGNS = "no readable signs, text or flags"
@@ -861,7 +867,9 @@ def volcano_camera(spot: str, event: str | None = None, volc_env: str | None = N
 # Çığ giyim/ışık (Bahadır'ın metni birebir, 175 kelime kapısı için kısa; 2 kısıt). 14 Eki (4): ışık artık ortam
 # satırından geliyor (güneşli gün, kar yağışı...); "overcast daylight" ile çelişmesin diye "raw natural light". Önceki:
 # "Bystanders wear winter civilian clothes; raw natural overcast daylight, no hazmat suits."
-AVALANCHE_GUARDRAILS = "Bystanders wear winter civilian clothes; raw natural light, no hazmat suits."
+# 21 Eki (genel kalite): 175 kelime için kısa (aynı 2 kısıt). Önceki: "Bystanders wear winter civilian clothes; raw
+# natural light, no hazmat suits."
+AVALANCHE_GUARDRAILS = "Civilians in winter clothes, no hazmat suits."   # ışık ortam satırından (Setting)
 
 
 def avalanche_camera(spot: str) -> str:
@@ -889,7 +897,8 @@ def avalanche_camera(spot: str) -> str:
 
 # 🏚️ Deprem kamerası (14 Eki, Bahadır; metin birebir): karşı binadan sabit, yüksek açı; çöken binalar ve toz üst üçte
 # ikide, sokak ve korkuluk köşesi altta. Yer sarsıntısıyla güçlü el titremesi; kamera sabit, inmez.
-EARTHQUAKE_GUARDRAILS = "Bystanders wear everyday clothes; raw natural light, no hazmat suits."
+# 21 Eki (genel kalite): kısa. Önceki: "Bystanders wear everyday clothes; raw natural light, no hazmat suits."
+EARTHQUAKE_GUARDRAILS = "Civilians in everyday clothes, no hazmat suits."   # ışık ortam satırından (Setting)
 
 
 def earthquake_camera(spot: str) -> str:
@@ -916,10 +925,11 @@ def earthquake_camera(spot: str) -> str:
 # PPE; raw natural light, never glossy or CGI; no hazmat suits." Önceki kamera: "...high vantage close to the fire
 # tornado filling at least half the frame, its top and smoke never cut off, two or three people fleeing in the near
 # foreground; slight hand shake, the camera pans to follow the tornado; one continuous shot, no zoom, no cuts."
-FIRE_TORNADO_SHAPE = ("The fire tornado is a visibly rotating funnel of flame with debris orbiting it, never a straight smoke "
-                      "plume or an explosion.")
-FIRE_TORNADO_GUARDRAILS = ("Bystanders wear civilian clothes, never hi-vis PPE; natural light, never glossy or CGI; no "
-                           "hazmat suits. " + FIRE_TORNADO_SHAPE)
+# 21 Eki (genel kalite): 175 kelime için kısa (gerçek zaman ve ön plan yüzü cümleleri eklendi; kısıtlar aynı). Önceki:
+# "The fire tornado is a visibly rotating funnel of flame with debris orbiting it, never a straight smoke plume or an
+# explosion." / "Bystanders wear civilian clothes, never hi-vis PPE; natural light, never glossy or CGI; no hazmat suits."
+FIRE_TORNADO_SHAPE = "A rotating funnel of flame with orbiting debris, never a straight plume or explosion."
+FIRE_TORNADO_GUARDRAILS = "Civilians in everyday clothes, no hazmat suits, never CGI. " + FIRE_TORNADO_SHAPE
 
 
 def fire_tornado_camera(spot: str) -> str:
@@ -929,10 +939,70 @@ def fire_tornado_camera(spot: str) -> str:
 
 
 # 18 Eki: "matching the weather" çıktı (175 kelime; kısıtlar aynı). Kül bulutu eski metinle (VOLCANO_GUARDRAILS_LONG)
-VOLCANO_GUARDRAILS = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural "
-                      "light, never glossy or CGI; no hazmat suits.")
-VOLCANO_GUARDRAILS_LONG = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw "
-                           "natural light matching the weather, never glossy or CGI; no hazmat suits.")
+# 21 Eki (genel kalite): üniforma cümlesi çıktı, herkes sivil. Önceki: "Bystanders wear civilian clothes, no hi-vis PPE;
+# responders wear service uniforms. Raw natural light..."
+VOLCANO_GUARDRAILS = "All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI."
+VOLCANO_GUARDRAILS_LONG = VOLCANO_GUARDRAILS   # 21 Eki (genel kalite): kül bulutu da kısa satır (ışık ekseni var)
+# 21 Eki (genel kalite), Bahadır: çamur seli testinde insanlar ağır çekimde koştu, alt kenarda bir yüz kadraja girdi,
+# çamur gri lapa gibiydi. Tüm yapılandırılmış olayların stil ekine gerçek zaman cümlesi, kamera cümlesine ön plan yüzü
+# yasağı; heyelanda çamur rengi. Kamera "shot by a person standing" -> "filmed" (kişi ifadesi ön plana insan çizdiriyor
+# olabilir; 175 kelime için de kısa).
+# Bahadır'ın metni; ";" yerine virgül: stil eki en fazla 8 kısıt (count_constraints ";" ve "." ile sayar)
+REAL_TIME = "Everything moves in real time, never in slow motion, people run at full speed."
+NO_FACE = "no person or face close to the camera"
+MUD_COLOR = "The mud is dark brown, never grey."
+# Yapılandırılmış hat, gemisiz ortam olayları: giyim + ışık tek satır (önceki iki satır 25 kelime; ışık ortam / ışık
+# ekseninden). Serbest hat get_realism_guardrails ile iki satırı kullanır (üniformasız giyim satırıyla).
+ENV_GUARDRAILS = "All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI."
+
+
+# 175 kelime için kamera kısaltmaları (anlam ve kurallar aynı: yükseklik, sabitlik, inmez, tehdit karede, tek çekim).
+# Kaynak cümleler ve kadraj eksenindeki birebir eşleştirmeler (NATIVE_FG) değişmez; kısaltma son adımda uygulanır.
+CAMERA_SHORTEN = (
+    ("shot by a person standing ", "filmed "),
+    (" where the avalanche is descending into the buildings just below it;",
+     " as the avalanche descends into the buildings below;"),
+    ("the slope and the avalanche fill the upper half of the frame", "slope and avalanche fill the upper half"),
+    ("high vantage looking up a steep snowy slope", "high vantage up a snowy slope"),
+    ("the nearest buildings and a corner of the railing fill the lower half",
+     "the nearest buildings and a railing corner below"),
+    ("the street and a corner of the railing fill the lower part", "the street and a railing corner below"),
+    ("high vantage looking across the street", "high vantage across the street"),
+    ("high vantage across the street at the buildings collapsing opposite;", "high vantage across the street;"),
+    ("strong hand shake from the ground tremor", "strong hand shake from the tremor"),
+    ("a corner of the railing", "a railing corner"),
+    ("the camera stays fixed, tilting slightly and never descending", "the camera stays fixed, never descending"),
+    ("tilting slightly and never descending", "tilting slightly, never descending"),
+    ("tilting down no more than slightly and never descending", "tilting only slightly, never descending"),
+    ("tilting down only slightly, never descending", "tilting only slightly, never descending"),
+    ("the erupting volcano always visible in the upper third of the frame", "the volcano always in the upper third"),
+    ("high vantage looking down over ", "high vantage over "),
+    ("high vantage looking down toward ", "high vantage down toward "),
+    ("no on-screen text, no timestamp", "no on-screen text or timestamp"),
+    (" toward the erupting volcano;", " toward the volcano;"),
+    ("the collapsing buildings and the dust fill the upper two thirds of the frame",
+     "the collapsing buildings and dust fill the upper two thirds"),
+    ("the camera pans to follow the tornado", "the camera follows the tornado"),
+    ("two or three people fleeing close below", "two or three people fleeing below"),
+)
+_THREAT_TWICE = re.compile(r"high vantage (?:looking )?down toward (?P<t>[^;,]+); (?P<rest>[^;]*?)(?P=t) always in frame")
+_FIXED_ON = re.compile(r"the camera stays fixed (?:on|at) the [\w-]+(?: [\w-]+)?,")
+_RAILING_CORNER = re.compile(r"a corner of the \w+ railing|a (?!railing\b)\w+ railing corner")
+
+
+def camera_rules(camera: str) -> str:
+    """Kamera cümlesine ortak kurallar: kısaltmalar ("shot by a person standing" -> "filmed"...); sonuna ön plan yüzü
+    yasağı."""
+    for old, new in CAMERA_SHORTEN:
+        camera = camera.replace(old, new)
+    camera = _RAILING_CORNER.sub("a railing corner", camera).replace("nothing in the foreground", "an empty foreground")
+    # mod B: tehdit iki kez anılıyordu ("high vantage down toward X; ... X always in frame") -> bir kez (175 kelime)
+    camera = _THREAT_TWICE.sub(r"high vantage; \g<rest>\g<t> always in frame", camera)
+    # mod B: yer cümlenin başında söyleniyor ("filmed on a high balcony…"); "stays fixed on the balcony" tekrarı çıktı
+    camera = _FIXED_ON.sub("the camera stays fixed,", camera)
+    if camera.endswith("no cuts."):
+        return camera[:-1] + f", {NO_FACE}."
+    return camera.rstrip(".") + f"; {NO_FACE}."
 
 
 class SlotFillError(RuntimeError):
@@ -1004,6 +1074,8 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
         scene_signs = s["domain"] in NO_SIGNS_DOMAINS
         setting = f"Setting: {env_text(event, scene_env)}" + (f", {NO_SIGNS}." if scene_signs else ".")
     guardrails = get_realism_guardrails(s['domain'], ship or 'None', spot)
+    if s["domain"] in ENV_CENTRIC_DOMAINS and not ship:   # 21 Eki (genel kalite): birleşik satır
+        guardrails = ENV_GUARDRAILS
     if s["domain"] == "volcano_disasters":   # 13 Eki (3): kısa ifade, aynı kısıtlar
         guardrails = VOLCANO_GUARDRAILS_LONG if event in VOLCANO_SHORT_CAMERA_EXCLUDED else VOLCANO_GUARDRAILS
     if s["domain"] == "avalanche_disasters":   # 13 Eki: çığ, volkan yapısı (sabit kamera, kısa giyim/ışık)
@@ -1012,10 +1084,16 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
         guardrails = EARTHQUAKE_GUARDRAILS
     if event == "Fire tornado tears across a burning roadside":   # 15 Eki (2): dev hortum, ön planda kaçanlar
         guardrails = FIRE_TORNADO_GUARDRAILS
+    env_centric = s["domain"] in ENV_CENTRIC_DOMAINS
+    if env_centric:   # 21 Eki (genel kalite): kamera ortak kuralları, gerçek zaman, heyelanda çamur rengi
+        camera = camera_rules(camera)
+        guardrails = f"{guardrails} {REAL_TIME}" + (f" {MUD_COLOR}" if s["domain"] == "landslide_disasters" else "")
     out = f"{camera} {setting} {guardrails}" if setting else f"{camera} {guardrails}"
     if view:
-        # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)
-        out += f" Setting: {view_district(event, view)}, {REGION_VIEW_CLOTHING}, {NO_SIGNS}."
+        # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8). 21 Eki (genel kalite):
+        # giyim ifadesi çıktı (giyim satırı "ordinary civilians in everyday clothes" diyor; 175 kelime)
+        clothing = "" if env_centric else f", {REGION_VIEW_CLOTHING}"
+        out += f" Setting: {view_district(event, view)}{clothing}, {NO_SIGNS}."
     elif s["domain"] in NO_SIGNS_DOMAINS and not scene_signs:
         out += f" {NO_SIGNS[0].upper()}{NO_SIGNS[1:]}."   # 2 Eki: heyelan (toplam 8 kısıt)
     return out

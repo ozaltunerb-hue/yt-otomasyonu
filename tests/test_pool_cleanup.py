@@ -320,8 +320,9 @@ class TestNewBeats(unittest.TestCase):
             longest = max(len(sk.style_suffix(e, None, s).split()) for s in sk.view_spots(e, None))
             self.assertLessEqual(longest + es.TOTAL_WORDS_BY_EVENT[e][1] + 3, es.VOLC_MAX_PROMPT_WORDS, e)
         self.assertIn(es.PYROCLASTIC, sk.VOLCANO_SHORT_CAMERA_EXCLUDED)
-        self.assertIn("matching the weather", sk.style_suffix(es.PYROCLASTIC, None, RT))
-        self.assertIn("looking down over the village street", sk.style_suffix(es.PYROCLASTIC, None, RT))
+        # 21 Eki (genel kalite): kül bulutu da kısa giyim/ışık satırı; "looking down over" -> "over" (175)
+        self.assertEqual(sk.VOLCANO_GUARDRAILS_LONG, sk.VOLCANO_GUARDRAILS)
+        self.assertIn("high vantage over the village street", sk.style_suffix(es.PYROCLASTIC, None, RT))
 
     def test_volcano_rain_verb_lint(self):
         # 18 Eki: volkan beat'inde "rain" fiili lint hatası
@@ -459,11 +460,12 @@ class TestStorySourceNotion(unittest.TestCase):
 PARTI2 = {   # (olay, dilim, kimlik): (metin, GPT tarzı doğru anlatım)
     (es.MUDSLIDE, "slice_3", "M7"): ("mud slams into a house across the street and bursts through its ground floor",
                                       "The mud smashes into a house across the street and floods its ground floor."),
-    (es.MUDSLIDE, "slice_3", "M8"): ("the mud shoves a large truck sideways into the front of a house",
+    # 21 Eki (genel kalite): kadraj dışı hedef düzeltmesi (M8, S7)
+    (es.MUDSLIDE, "slice_3", "M8"): ("the mud shoves a parked truck sideways into a house on the street",
                                       "The mudflow shoves a big truck sideways into the front of a house."),
     (es.MUDSLIDE, "slice_3", "M9"): ("a mass of mud and uprooted trees crashes onto the houses across the street",
                                       "Mud and uprooted trees crash down onto the houses across the street."),
-    (es.SLOPE, "slice_3", "S7"): ("the mud and boulders shove a large truck sideways toward the edge of the road",
+    (es.SLOPE, "slice_3", "S7"): ("the mud and boulders shove a stopped truck sideways toward the edge of the road",
                                    "The torrent of mud and boulders pushes a large truck sideways to the road edge."),
     (es.VILLAGE, "slice_3", "L7"): ("the landslide rips a wooden house off its foundation and carries it down the slope",
                                      "The torrent tears a wooden house off its foundation and sweeps it downhill."),
@@ -614,8 +616,8 @@ class TestParti2WordBudget(unittest.TestCase):
                 key = len(spec["key_visual"].split())
                 self.assertIn(f"the opening sentence has {key} words; slice_1_rest 6 to 10 words", line)
                 self.assertIn(f"must total at most {total} words", line)
-                if e not in es.CAP_BUDGET_EVENTS:
-                    self.assertLessEqual(key + 10 + 18 + 18, total)
+                if e not in es.CAP_BUDGET_EVENTS:   # 21 Eki: heyelan kilit cümlesi dokuyla uzadı; dilim üst
+                    self.assertLessEqual(key + 10 + 16 + 16, total)   # sınırı bütçeden hesaplanır (önceki 18 + 18)
                 total = es.TOTAL_WORDS_BY_EVENT.get(e, es.TOTAL_WORDS)[1]
         # şok dalgası bütçe satırı almaz (18 Eki (3): bombalar ve kül bulutu alır, tests/test_volcano_env.py)
         self.assertNotIn(ER, es.BUDGET_EVENTS)
@@ -665,8 +667,9 @@ class TestFireTornadoShape(unittest.TestCase):
     def test_suffix_shape_sentence_and_175(self):
         for spot in sk.view_spots(FT, None):
             suf = sk.style_suffix(FT, None, spot)
-            self.assertIn("The fire tornado is a visibly rotating funnel of flame with debris orbiting it, never a "
-                          "straight smoke plume or an explosion.", suf)
+            # 21 Eki (genel kalite): kısa şekil cümlesi (175). Önceki: "The fire tornado is a visibly rotating funnel
+            # of flame with debris orbiting it, never a straight smoke plume or an explosion."
+            self.assertIn("A rotating funnel of flame with orbiting debris, never a straight plume or explosion.", suf)
             self.assertLessEqual(len(suf.split()) + 75 + 3, 175)
         for e in es.structured_events():
             if e != FT:

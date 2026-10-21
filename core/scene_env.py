@@ -39,15 +39,19 @@ EARTHQUAKE = ("Earthquake collapses an apartment block", "Earthquake collapses a
 ENV_A = "A"
 # Bahadır'ın metinleri birebir (21 Eki, Aşama 5)
 SCENE_ENVS = {
-    MUDSLIDE: {"B": "a steep hillside town of pastel concrete houses with tin roofs, banana trees and tangled power lines",
-               "C": "a steep Mediterranean village of white-washed stone houses with terracotta roofs and narrow stepped "
-                    "lanes",
-               "D": "a hillside suburb of two-storey modern houses with garages, retaining walls and parked SUVs",
+    # 21 Eki (genel kalite): 175 kelime için kısa (gerçek zaman / ön plan / çamur satırları eklendi). Önceki: "a steep
+    # hillside town of pastel concrete houses with tin roofs, banana trees and tangled power lines", "...with terracotta
+    # roofs and narrow stepped lanes"
+    MUDSLIDE: {"B": "a steep town of pastel concrete houses with tin roofs and banana trees",
+               "C": "a steep Mediterranean village of white-washed houses with terracotta roofs and stepped lanes",
+               "D": "a hillside suburb of modern houses with garages, retaining walls and parked SUVs",
                "E": "a mountain town of wooden chalets with balconies among tall pine trees"},
-    SLOPE: {"B": "a mountain road through a small roadside village of shops and houses, with a bus stop and parked "
-                 "motorbikes",
-            "C": "a coastal cliff road lined with white houses above the sea, with guardrails and parked cars",
-            "D": "a highway cut through a forested hillside beside a petrol station and a row of houses",
+    # 21 Eki (genel kalite): kısa. Önceki: "a mountain road through a small roadside village of shops and houses, with a
+    # bus stop and parked motorbikes", "...above the sea, with guardrails and parked cars", "...beside a petrol station
+    # and a row of houses"
+    SLOPE: {"B": "a mountain road through a small village with a bus stop and parked motorbikes",
+            "C": "a coastal cliff road lined with white houses above the sea, with parked cars",
+            "D": "a highway cut through a forested hillside beside a petrol station and houses",
             "E": "a winding road through terraced tea fields with farmhouses on the slopes"},
     VILLAGE: {"B": "a terraced rice-field village of stilt houses among palm trees",
               "C": "a highland village of adobe houses with red tile roofs around a small church",

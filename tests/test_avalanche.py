@@ -32,7 +32,9 @@ CAMERA = ("Handheld footage from {cam}, high vantage looking up a steep snowy sl
           "buildings and a corner of the railing fill the lower half; slight hand shake, the camera stays fixed, "
           "tilting slightly and never descending; one continuous shot, no zoom, no cuts.")
 # 14 Eki (4): "overcast daylight" ortamın ışığıyla çelişmesin diye "raw natural light"
-GUARD = "Bystanders wear winter civilian clothes; raw natural light, no hazmat suits."
+# 21 Eki (genel kalite): giyim satırı kısa + gerçek zaman cümlesi; kamera kaynak metni aynı, ortak
+# kurallar (kısaltma, ön plan yüzü yasağı) sk.camera_rules ile son adımda
+GUARD = "Civilians in winter clothes, no hazmat suits. " + sk.REAL_TIME
 ROOF = {"A3", "A6", "B2", "B3", "D3", "E6"}  # (*) sadece köy kenarı terasında (14 Eki (3): + B2 balkon)
 DECK = {"C3"}                               # (‡) teras noktalarında seçilmez, sadece balkonda (14 Eki (3))
 LIFTB = set()                               # (†) 14 Eki (3): teleferik maddesi kalmadı (kural test_pool_lint'te)
@@ -404,7 +406,7 @@ def ava_gpt(messages=None):
             s2, s3 = _short_slice(inv.get(s2), s2), _short_slice(inv.get(s3), s3)
         s2 += " as the snow roars" if len(s2.split()) < 10 else ""
         s3 += " as the snow roars" if len(s3.split()) < 10 else ""
-        return {"slice_1_rest": f"{cap(word)} people run from {away} near the railing.",
+        return {"slice_1_rest": f"{cap(word)} people run from {away} right below.",   # 22 Eki: korkuluk yok
                 "slice_2": s2 + ".", "slice_3": s3 + "."}
     return gpt
 
@@ -414,8 +416,8 @@ def build(e, b2, b3, spot=HT, people=5, setting=LONG_SETTING):
     s2, s3 = cap(es.beat_text(e, "slice_2", b2)), cap(es.beat_text(e, "slice_3", b3))
     s2 += " as the snow roars" if len(s2.split()) < 10 else ""
     s3 += " as the snow roars" if len(s3.split()) < 10 else ""
-    sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from the avalanche near the "
-                                         f"railing."),
+    sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from the avalanche right "
+                                         f"below."),   # 22 Eki: korkuluk yok
           "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
     if len(es.plain_story(spec, sl).split()) > 70:   # GPT bütçeye uyar: uzun maddeler kısa yazılır
         sl.update(slice_2=es.clean_slice(_short_slice(b2, s2)), slice_3=es.clean_slice(_short_slice(b3, s3)))
@@ -505,7 +507,7 @@ class TestAvalanche(unittest.TestCase):
                 suffix = sk.style_suffix(e, None, spot)
                 with self.subTest(event=e, spot=spot):
                     self.assertEqual(sk.CAMERA_SPOTS[spot], CAMS[spot])
-                    self.assertEqual(suffix, f"{CAMERA.format(cam=CAMS[spot])} {GUARD} No readable "
+                    self.assertEqual(suffix, f"{sk.camera_rules(CAMERA.format(cam=CAMS[spot]))} {GUARD} No readable "
                                              f"signs, text or flags.")
                     self.assertNotIn("pans to follow", suffix)
                     self.assertNotIn("follow", suffix)
@@ -518,12 +520,13 @@ class TestAvalanche(unittest.TestCase):
                     self.assertLessEqual(count_constraints(suffix)[0], 8)
         # volkan ve diğer kategorilerin kamera satırı çığdan bağımsız (18 Eki: patlama/bombalar kısa şablon, kül bulutu
         # eski şablon)
+        # 21 Eki (genel kalite): ortak kamera kısaltmaları ("filmed", "high vantage over", "toward the volcano")
         self.assertTrue(sk.style_suffix(es.PYROCLASTIC, None, "Hillside terrace facing the erupting volcano")
-                        .startswith("Handheld footage shot by a person standing on a hillside terrace above the village, "
-                                    "high vantage looking down over the village street toward the erupting volcano;"))
+                        .startswith("Handheld footage filmed on a hillside terrace above the village, "
+                                    "high vantage over the village street toward the volcano;"))
         self.assertTrue(sk.style_suffix(es.ERUPTION, None, "Hillside terrace facing the erupting volcano")
-                        .startswith("Handheld footage shot by a person standing on a hillside terrace above the village, "
-                                    "high vantage over the village street toward the erupting volcano;"))
+                        .startswith("Handheld footage filmed on a hillside terrace above the village, "
+                                    "high vantage over the village street toward the volcano;"))
         self.assertIn("the camera pans to follow the", sk.style_suffix(es.MUDSLIDE, None, list(
             sk.EVENT_SKELETONS[es.MUDSLIDE]["spots"])[0]))
 
@@ -592,7 +595,7 @@ class TestAvalanche(unittest.TestCase):
         # Fixture'larla kurulan tam hikâye bütçe içinde son denetimden geçer
         spec = es.build_spec(KOY, None, BAL, None, "A4", "B5", None, 5)
         # 14 Eki (5): toplam 70; kısa insan cümlesiyle (WORD BUDGET 0-4s 6-10) fixture'lar sığar
-        sl = {"slice_1_rest": es.clean_slice("Five villagers flee near the railing"),
+        sl = {"slice_1_rest": es.clean_slice("Five villagers flee in the street right below"),
               "slice_2": es.clean_slice(FIXTURES["A4"][2]), "slice_3": es.clean_slice(FIXTURES["B5"][0])}
         self.assertEqual(es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl), es.assemble_story(spec, sl)), [])
         self.assertLessEqual(len(es.assemble_prompt(spec, sl).split()), 175)
@@ -620,15 +623,21 @@ class TestAvalanche(unittest.TestCase):
         import core.creative_pipeline as cp
         spec, sl = build(KOY, "A1", "B2")
         self.assertEqual(codes(spec, sl) & {"slice_near_camera", "b_no_camera_words"}, set())
-        self.assertIn("close by: near the railing or in the street right below", es.people_line(spec))
+        self.assertIn("in the street right below, in the lower half of the frame", es.people_line(spec))   # 22 Eki
         self.assertNotIn("village street", es.people_line(spec))
         self.assertIn("in the street right below", es.people_line(build(KAYAK, "C2", "D2")[0]))
-        ok = ["Five villagers run from the avalanche near the railing.",
-              "Five people run from the avalanche in the street right below.",
+        # 22 Eki (genel kalite devam): yakınlık aşağıdaki sokak / karenin alt yarısı; sadece korkuluk / teras / balkon
+        # yanını söyleyen cümle artık yakın sayılmaz (aşağıda "railing_only")
+        ok = ["Five people run from the avalanche in the street right below.",
               "Five residents run from the avalanche just below the terrace.",
-              "Five people run from the avalanche along the railing of the terrace.",
               "Five villagers run from the avalanche in the village street below the balcony.",
-              "Five guests run from the avalanche beneath the balcony, screaming."]
+              "Five guests run from the avalanche in the lower half of the frame.",
+              "Five guests run from the avalanche just beneath the balcony, screaming."]
+        for t in ("Five villagers run from the avalanche near the railing.",
+                  "Five people run from the avalanche along the railing of the terrace.",
+                  "Five guests run from the avalanche beneath the balcony, screaming."):
+            with self.subTest(railing_only=t):
+                self.assertIn("slice_near_camera", {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": t})})
         for t in ok:
             with self.subTest(text=t):
                 self.assertFalse(codes(spec, {**sl, "slice_1_rest": t}) & {"slice_near_camera", "b_no_camera_words"})
@@ -761,7 +770,7 @@ class TestAvalanche(unittest.TestCase):
                     self.assertNotIn("pans to follow", scene["prompt"])
                     self.assertIsNone(t["vehicle"])
                     self.assertNotIn("VEHICLE:", msgs[-1])
-                    self.assertIn("close by: near the railing", msgs[-1])
+                    self.assertIn("in the street right below, in the lower half of the frame", msgs[-1])   # 22 Eki
                     self.assertTrue(scene["combo_key"].startswith("avalanche_disasters|none|"))
                     tags.append(pair)
                     spots.add(t["spot"])
@@ -832,7 +841,7 @@ class TestAvalanche(unittest.TestCase):
                 suf = sk.style_suffix(e, None, spot, None, LONG_SETTING)
                 self.assertLessEqual(len(suf.split()), 102)
                 self.assertLessEqual(70 + 3 + len(suf.split()), 175)
-                self.assertTrue(suf.startswith(CAMERA.format(cam=CAMS[spot]) + " " + LONG_SETTING + " " + GUARD))
+                self.assertTrue(suf.startswith(sk.camera_rules(CAMERA.format(cam=CAMS[spot])) + " " + LONG_SETTING + " " + GUARD))
         with self.assertRaises(es.StructureError):   # volkanda ortam satırı yok
             es.build_spec(es.ERUPTION, None, "Hillside terrace facing the erupting volcano", None, "S1", "U1",
                           None, 5, LONG_SETTING)

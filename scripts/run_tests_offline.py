@@ -1,5 +1,7 @@
 # Push öncesi tam test paketi, ÇEVRİMDIŞI (7 Eki kuralı: tamamı yeşil değilse push yok).
 # Kullanım (proje kökünden): .venv\Scripts\python.exe scripts\run_tests_offline.py
+#   --modules tests.test_a tests.test_b ...  -> sadece bu modüller (bellek sıkışınca paketi gruplara bölmek için; 22
+#   Eki). Push için grupların hepsi ayrı ayrı yeşil olmalı ve toplam test sayısı tam paketle aynı olmalı.
 #
 # Neden: yerelde gerçek anahtarlı .env var, CI'da yok. Bir test mock'u kaçırırsa gerçek Kie/OpenAI/Google/Railway
 # çağrısı olmasın diye localhost dışı tüm bağlantılar engellenir. CI'daki sahte anahtarlar verilir.
@@ -62,7 +64,14 @@ def main() -> int:
         print(f"⚠️  .venv dışındaki Python ile koşuyor: {sys.executable}")
     before = snapshot()
     block_network()
-    result = unittest.main(module=None, argv=["unittest", "discover", "-s", "tests"], exit=False).result
+    if "--modules" in sys.argv:   # 22 Eki: grup koşusu (aynı ağ engeli ve dosya izleme)
+        sys.path.insert(0, os.path.join(ROOT, "tests"))
+        import core.event_structure  # noqa: F401  (döngüsel import sırası: tam paketteki gibi önce)
+        names = sys.argv[sys.argv.index("--modules") + 1:]
+        suite = unittest.defaultTestLoader.loadTestsFromNames(names)
+        result = unittest.TextTestRunner(verbosity=1).run(suite)
+    else:
+        result = unittest.main(module=None, argv=["unittest", "discover", "-s", "tests"], exit=False).result
     after = snapshot()
     changed = sorted(k for k in set(before) | set(after) if before.get(k) != after.get(k))
 

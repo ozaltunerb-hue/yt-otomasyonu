@@ -12,6 +12,7 @@ import asyncio
 import json
 import os
 import random
+import re
 import sys
 import unittest
 
@@ -454,8 +455,9 @@ class TestFireTornadoGate(unittest.TestCase):
             self.assertIn("A colossal spinning fire tornado, a twisting funnel several times taller", key)
         for spot in SPOTS:
             with self.subTest(spot=spot):
+                # 21 Eki (genel kalite): kaynak cümle aynı, ortak kurallar son adımda (sk.camera_rules)
                 self.assertTrue(es.style_suffix(E, None, spot, None, None).startswith(
-                    CAMERA.format(spot=sk.CAMERA_SPOTS[spot]) + " " + sk.FIRE_TORNADO_GUARDRAILS))
+                    sk.camera_rules(CAMERA.format(spot=sk.CAMERA_SPOTS[spot])) + " " + sk.FIRE_TORNADO_GUARDRAILS))
         b = es.EVENT_BEATS[E]
         self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, POOL[0])
         self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, POOL[1])
@@ -706,7 +708,7 @@ class TestFireTornadoGate(unittest.TestCase):
         far = "Three people run from the fire tornado across the distant field."
         self.assertIn("slice_near_camera", {i["rule"] for i in es.slice_issues(spec, {**sl, "slice_1_rest": far})})
         line = es.people_line(spec)
-        self.assertIn("near the railing or in the street right below", line)   # 16 Eki (önceki "on the road right below")
+        self.assertIn("in the street right below, in the lower half of the frame", line)   # 22 Eki (önceki "near the railing or in the street right below")
         for n in range(200):
             self.assertIn(es.choose_people(E, None, random.Random(n)), (2, 3))
         self.assertEqual(es.NUMBER_WORDS[2], "two")
@@ -725,7 +727,7 @@ class TestFireTornadoGate(unittest.TestCase):
                 for b in FREE}
         self.assertTrue(all(len(v) >= 3 for v in pool.values()), {b: len(v) for b, v in pool.items()})
         people = ["{w} people run from the tornado right below.",
-                  "{w} drivers flee on foot near the railing.",
+                  "{w} drivers flee on foot right below.",   # 22 Eki: korkuluk yok
                   "{w} people sprint away just below the balcony.",
                   "{w} residents run from the fire tornado in the foreground."]
 
@@ -736,8 +738,13 @@ class TestFireTornadoGate(unittest.TestCase):
             b2 = next(b for b in es.EVENT_BEATS[E]["slice_2"]
                       if es.beat_text(E, "slice_2", b, v) == line["4-9s EVENT"])
             b3 = next(b for b in es.EVENT_BEATS[E]["slice_3"] if es.beat_text(E, "slice_3", b) == line["9-15s EVENT"])
+            # 21 Eki (genel kalite): bütçe stil ekine göre (CAP_BUDGET_EVENTS); sahte GPT mesajdaki dilim sınırını okur
+            m = re.search(r"slice_2 \d+ to (\d+) words", user)
+            cap = int(m.group(1)) if m else 16
+            fit2 = [t for t in pool[b2] if len(with_vehicle(t, v).split()) <= cap] or pool[b2]
+            fit3 = [t for t in pool[b3] if len(t.split()) <= cap] or pool[b3]
             return {"slice_1_rest": rng.choice(people).format(w=w),
-                    "slice_2": with_vehicle(rng.choice(pool[b2]), v), "slice_3": rng.choice(pool[b3])}
+                    "slice_2": with_vehicle(rng.choice(fit2), v), "slice_3": rng.choice(fit3)}
         es._BEAT_MEMORY.clear()
         first, longest = 0, 0
         for _ in range(200):
@@ -762,7 +769,7 @@ class TestFireTornadoEnvironments(unittest.TestCase):
             "Two neighbors sprint between the houses right below the balcony.",
             "Three people flee through the yard below, ducking under the trees.",
             "Two residents run down the street below, past the burning hedges.",
-            "Three people dash away near the railing as embers swirl."],
+            "Three people dash away right below as embers swirl."],   # 22 Eki
         "Rooftop terrace above a wooded residential area": [
             "Two residents race across the yard below the terrace.",
             "Three people run between the houses just below.",
@@ -772,12 +779,12 @@ class TestFireTornadoEnvironments(unittest.TestCase):
             "Two people sprint down the tree-lined street right below.",
             "Three residents flee along the sidewalk right below the balcony.",
             "Two neighbors run in the street below, shielding their faces.",
-            "Three people dash away beneath the balcony."],
+            "Three people dash away right beneath the balcony."],
         "Upper-floor terrace above a street of houses": [
             "Two people run past the parked cars in the street below.",
             "Three residents flee just below the terrace.",
             "Two neighbors bolt across the street below.",
-            "Three people scramble away in the foreground near the railing."],
+            "Three people scramble away in the street right below."],
         "Hillside terrace above a village": [
             "Two villagers run between the houses right below the terrace.",
             "Three people flee in the gardens below.",
@@ -786,7 +793,7 @@ class TestFireTornadoEnvironments(unittest.TestCase):
         "High balcony of a village house": [
             "Two villagers run down the street right below.",
             "Three people flee in the yard below the balcony.",
-            "Two neighbors dash away under the balcony.",
+            "Two neighbors dash away just beneath the balcony.",
             "Three villagers scramble between the houses below."],
     }
     FAR = ["Two people run far away on the hill.",
@@ -831,9 +838,10 @@ class TestFireTornadoEnvironments(unittest.TestCase):
         for spot in SPOTS:
             with self.subTest(spot=spot):
                 suffix = es.style_suffix(E, None, spot, None, None)
-                self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {sk.CAMERA_SPOTS[spot]}, "
+                self.assertTrue(suffix.startswith(f"Handheld footage filmed {sk.CAMERA_SPOTS[spot]}, "
                                                   "high vantage, the tornado filling half the frame"))
-                for rule in ("two or three people fleeing close below", "top never cut off", "slight hand shake",
+                # 21 Eki (genel kalite): "close" çıktı (ön plan yüzü yasağıyla çelişiyordu)
+                for rule in ("two or three people fleeing below", "top never cut off", "slight hand shake", sk.NO_FACE,
                              "one continuous shot, no zoom, no cuts", sk.FIRE_TORNADO_SHAPE):   # 18 Eki (2): şekil
                     self.assertIn(rule, suffix)
                 self.assertTrue(sk.CAMERA_SPOTS[spot].startswith("on "))

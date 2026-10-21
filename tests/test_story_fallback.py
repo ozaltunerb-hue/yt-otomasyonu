@@ -317,7 +317,8 @@ class TestFlow(unittest.TestCase):
         st = scene["structure"]
         self.assertEqual(st["story_source_kind"], "fallback")
         self.assertIn("çekim/kayıt kelimesi (filmed)", st["story_source"])
-        self.assertNotIn("filmed", scene["prompt"])
+        # hikâyede çekim kelimesi yok (21 Eki: stil ekindeki kamera cümlesi "Handheld footage filmed ..." ile başlar)
+        self.assertNotIn("filmed", scene["story"])
         self.assertEqual(es.final_prompt_issues(st["spec"], st["slices"], scene["prompt"], scene["story"]), [])
         self.assertTrue(scene["prompt"].startswith(f"0-4s: {es.FIRE_TOR_ENVS[st['spec']['fire_env']]['key']} "))
 

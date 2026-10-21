@@ -457,16 +457,16 @@ class TestRegionViews(unittest.TestCase):
     def test_views_locked(self):
         self.assertEqual(sk.REGION_VIEW_EVENTS, (FLOOD, TIDAL))
         self.assertEqual(sk.REGION_VIEWS, {
-            "gulf_metropolis": "glass towers behind palm-lined multi-lane boulevards, sand-colored low buildings, "
-                               "white SUVs",
+            # 21 Eki (genel kalite): 175 için kısa ("multi-lane", "overhead", "units", "and box trucks" çıktı)
+            "gulf_metropolis": "glass towers behind palm-lined boulevards, sand-colored low buildings, white SUVs",
             # 17 Eki, Bahadır (temizlik turu): küçük araç yok ("small hatchback cars", "small parked cars", "small
             # boxy cars and scooters" yerine büyük araçlar)
             "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, large SUVs",
-            "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, overhead power lines",
+            "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, power lines",
             "north_european_seaside": "brick terraced houses, narrow streets, parked SUVs and vans",
             "riviera": "cream stone buildings with shuttered windows, cobbled streets, scooters, plane trees",
-            "east_asian_coast": "dense mid-rise apartment blocks with air-conditioner units and tangled overhead "
-                                "wires, narrow lanes, delivery vans and box trucks"})
+            "east_asian_coast": "dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow "
+                                "lanes, delivery vans"})
         self.assertEqual(sk.REGION_VIEW_CLOTHING, "people in light everyday clothes suited to the climate")
         self.assertEqual(sk.NO_SIGNS, "no readable signs, text or flags")
 
@@ -659,8 +659,10 @@ class TestLandslide(unittest.TestCase):
                 suffix = sk.style_suffix(e, None, spot)
                 self.assertLessEqual(count_constraints(suffix)[0], 8, suffix)
                 self.assertTrue(suffix.endswith(" No readable signs, text or flags."))
-                self.assertIn("Bystanders wear civilian clothes", suffix)
-                self.assertIn("emergency responders wear service uniforms", suffix)
+                # 21 Eki (genel kalite): üniforma cümlesi çıktı, herkes sivil; çamur rengi
+                self.assertIn("All people are ordinary civilians in everyday clothes", suffix)
+                self.assertNotIn("uniform", suffix)
+                self.assertIn(sk.MUD_COLOR, suffix)
                 self.assertIn(sk.CAMERA_SPOTS[spot], suffix)
                 text = (suffix.replace("No readable signs, text or flags.", "") + " " + s["spots"][spot]).lower()
                 self.assertFalse(set(re.findall(r"[a-z]+", text)) & set(self.PLACES), text)
@@ -707,8 +709,9 @@ class TestFlashFloodFix(unittest.TestCase):
                     continue
                 with self.subTest(spot=spot, view=v):
                     suffix = sk.style_suffix(FLOOD, None, spot, v)
-                    self.assertIn(f"Handheld footage shot by a person standing {sk.CAMERA_SPOTS[spot]}, eye level, "
-                                  f"normal lens; slight hand shake, {self.CAMERA}", suffix)
+                    # 21 Eki (genel kalite): "shot by a person standing" -> "filmed"; sonda ön plan yüzü yasağı
+                    self.assertIn(f"Handheld footage filmed {sk.CAMERA_SPOTS[spot]}, eye level, "
+                                  f"normal lens; slight hand shake, {self.CAMERA[:-1]}, {sk.NO_FACE}.", suffix)
                     self.assertLessEqual(count_constraints(suffix)[0], 8, suffix)
                     self.assertNotIn("phone", suffix.lower())
 
@@ -726,7 +729,10 @@ class TestFlashFloodFix(unittest.TestCase):
             for spot in s["spots"]:
                 with self.subTest(event=e, spot=spot):
                     suffix = sk.style_suffix(e, ship, spot)
-                    self.assertIn(f"the camera pans to follow the {s['object']}; no zoom, no cuts.", suffix)
+                    tail = "" if s["domain"] not in sk.ENV_CENTRIC_DOMAINS else f", {sk.NO_FACE}"   # 21 Eki
+                    follow = ("the camera follows the tornado" if s["object"] == "tornado" and tail   # 21 Eki: kısa
+                              else f"the camera pans to follow the {s['object']}")
+                    self.assertIn(f"{follow}; no zoom, no cuts{tail}.", suffix)
                     self.assertNotIn("slow short arc", suffix)
                     self.assertNotIn("middle and far distance", suffix)
 

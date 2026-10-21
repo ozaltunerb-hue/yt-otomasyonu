@@ -122,10 +122,15 @@ EVENT_KEY_VISUAL = {
     # 4 Eki, Bahadır onayı. Kaynak: EVENT_OUTCOMES'taki kahverengi molozlu dalga (1 Eki, 6 görünüm videosu).
     TIDAL: "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
     # TASLAK (4 Eki, Bahadır hazırlığı, onay bekliyor): heyelan
-    MUDSLIDE: "A massive wall of brown mud and rocks tears loose from the saturated hillside and pours down the steep "
-              "street.",
-    SLOPE: "The saturated slope collapses and a fast torrent of brown mud and rocks surges across the road.",
-    VILLAGE: "A massive torrent of brown mud, logs and rocks bursts through the drenched hillside village.",
+    # 21 Eki (genel kalite), Bahadır: çamur gri lapa gibi çıktı; "mud" geçen ilk ifadeye doku. Önceki: "A massive wall
+    # of brown mud and rocks tears loose...", "...a fast torrent of brown mud and rocks surges across the road.", "A
+    # massive torrent of brown mud, logs and rocks bursts through the drenched hillside village."
+    MUDSLIDE: "A massive wall of thick brown mud full of rocks, branches and debris tears loose from the saturated "
+              "hillside and pours down the steep street.",
+    SLOPE: "The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris "
+           "surges across the road.",
+    VILLAGE: "A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched "
+             "hillside village.",
     # TASLAK (4 Eki, Bahadır hazırlığı, onay bekliyor): hortum
     LANDFALL: "A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air.",
     # 4 Eki, Bahadır: marina test videosunda sorun çıktı. Eski: "A violent tornado crosses the marina, bending masts
@@ -972,18 +977,24 @@ EVENT_BEATS = {
                    "terms": [_TOGETHER_LANDSLIDE, _DRAG]},
         },
         "slice_3": {
-            "M3": {"text": "a low garden wall collapses and its stones tumble down the street",
+            # 21 Eki (genel kalite): kadraj dışı hedef düzeltmesi (hedef açılış sokağında görünen şey). Önceki: "a
+            # low garden wall collapses and its stones tumble down the street"
+            "M3": {"text": "a garden wall along the street collapses and its stones tumble downhill",
                    "terms": [("wall", "walls"), _COLLAPSE]},
-            "M4": {"text": "a tree is torn out of the slope and carried down with the mud",
+            # Önceki: "a tree is torn out of the slope and carried down with the mud" (yamaç kadrajda tanımlı değil)
+            "M4": {"text": "a tree along the street is torn out and swept downhill",
                    "terms": [("tree", "trees"), _UPROOT]},
-            "M6": {"text": "the mud rams a house corner and tears off its wooden porch",
+            # Önceki: "the mud rams a house corner and tears off its wooden porch" (21 Eki 17:39 testi H2+M6: 12. sn'de
+            # kamera tanımsız "ev köşesi"ne döndü, gizli kesme)
+            "M6": {"text": "the mud rams the nearest house and tears off its wooden porch",
                    "terms": [("porch", "veranda", "front steps", "stoop", "house corner", "corner of a house",
                               "corner of the house"), _TEAR + ("crush", "smash", "rip off", "rip away")]},
             # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
             "M7": {"text": "mud slams into a house across the street and bursts through its ground floor",
                    "terms": [_HOUSE + ("ground floor",), ("burst", "smash", "crash", "slam", "break", "broke",
                              "ram", "plow", "plough", "tear", "tore", "pour", "flood", "sweep", "swept")]},
-            "M8": {"text": "the mud shoves a large truck sideways into the front of a house",
+            # Önceki: "the mud shoves a large truck sideways into the front of a house"
+            "M8": {"text": "the mud shoves a parked truck sideways into a house on the street",
                    "terms": [_CAR, _SIDEWAYS + _DRAG, _HOUSE + ("front of a house", "front of the house")]},
             "M9": {"text": "a mass of mud and uprooted trees crashes onto the houses across the street",
                    "terms": [("tree", "trees", "trunk", "trunks"), _HOUSE, ("crash", "slam", "smash", "hit",
@@ -1011,7 +1022,9 @@ EVENT_BEATS = {
                    "terms": [_TOGETHER_LANDSLIDE, _DRAG]},
         },
         "slice_3": {
-            "S2": {"text": "a large boulder rolls across the road and smashes into a parked car",
+            # 21 Eki (genel kalite): kadraj dışı hedef. Önceki: "...smashes into a parked car" (dağ yolunda park yeri
+            # tanımlı değil)
+            "S2": {"text": "a large boulder rolls across the road and smashes into a stopped car",
                    "terms": [_ROCK, ("roll", "tumble", "bounce", "crash", "smash", "slam", "hurtle", "careen",
                                      "barrel", "ram", "hit", "strike", "struck"), _CAR]},
             "S3": {"text": "a tree is torn out of the slope and slides across the road",
@@ -1024,7 +1037,8 @@ EVENT_BEATS = {
                              ("give way", "gives way", "gave way", "collapse", "pour", "surge", "slide", "slid",
                               "crash", "tumble", "break", "broke", "burst")]},
             # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
-            "S7": {"text": "the mud and boulders shove a large truck sideways toward the edge of the road",
+            # Önceki: "the mud and boulders shove a large truck sideways toward the edge of the road"
+            "S7": {"text": "the mud and boulders shove a stopped truck sideways toward the edge of the road",
                    "terms": [_CAR, _SIDEWAYS + _DRAG, ("edge", "shoulder", "verge", "side of the road", "roadside",
                              "drop-off", "drop off")]},
         },
@@ -1051,17 +1065,20 @@ EVENT_BEATS = {
                    "terms": [("motorbike", "motorcycle", "moped", "scooter", "bike"), _DRAG]},
         },
         "slice_3": {
-            "L1": {"text": "a wooden house corner is struck and its wall collapses",
+            # 21 Eki (genel kalite): kadraj dışı hedef. Önceki: "a wooden house corner is struck and its wall collapses"
+            "L1": {"text": "a wooden house along the lane is struck and its wall collapses",
                    "terms": [("house", "home", "cottage", "cabin", "building"), _COLLAPSE]},
             "L3": {"text": "a large tree is uprooted and rolls down with the torrent",
                    "terms": [("tree", "trees"), _UPROOT + ("roll", "tumble")]},
-            "L4": {"text": "a roof section is torn off a shed and swept away",
+            # Önceki: "a roof section is torn off a shed and swept away" (kulübe kadrajda tanımlı değil)
+            "L4": {"text": "a roof section is torn off a house along the lane and swept away",
                    "terms": [("roof", "roofing", "rooftop"), _TEAR]},
             "L5": {"text": "a pile of logs breaks loose and rolls down the lane",
                    "terms": [_LOGS, ("roll", "tumble", "break loose", "breaks loose", "broke loose", "scatter",
                                      "spill", "crash", "bounce", "slide", "slid", "sweep", "swept", "carry",
                                      "carried")]},
-            "L6": {"text": "a stone wall collapses and its stones tumble into the torrent",
+            # Önceki: "a stone wall collapses and its stones tumble into the torrent"
+            "L6": {"text": "a stone wall along the lane collapses and its stones tumble into the torrent",
                    "terms": [("wall", "walls"), _COLLAPSE]},
             # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
             "L7": {"text": "the landslide rips a wooden house off its foundation and carries it down the slope",
@@ -2526,16 +2543,16 @@ def _people_rules(away_from: str) -> list[dict]:
 # ❄️ Çığ (14 Eki, Bahadır, ilk test dersi): 0-4s'deki insan cümlesi kameraya yakın yeri söyler ("near the railing",
 # "in the street below"). Bahadır kararı: b kuralı korunur, "camera" kelimesi hikâyede yine yasak; yakınlık
 # korkuluk/sokak/teras ile söylenir. Eş anlamlılar ekleme; yakınlık bildirmeyen cümle reddedilir.
-_AVA_NEAR = ("near the railing", "by the railing", "along the railing", "below the railing", "under the railing",
-             "past the railing", "below the terrace", "below the balcony", "under the balcony", "under the terrace",
-             "right below", "just below", "in the street below", "on the street below", "in the foreground",
-             "close to the railing", "next to the railing", "beside the railing",
-             "close to the terrace", "close to the balcony", "beneath the terrace", "beneath the balcony",
-             "right beneath", "just beneath")
+# 22 Eki, Bahadır (genel kalite devam): kaçanlar kameranın yanında değil, aşağıdaki sokakta ve karenin alt yarısında
+# ("no person or face close to the camera" ile çelişmesin). Korkuluk / teras / balkon ifadeleri listeden çıktı (kontrol
+# gevşemedi: kalan ifadelerin hepsi aynı); "lower half" ve "street below" eklendi. Önceki ilk terimler: "near the
+# railing", "by the railing", ..., "close to the terrace", "beneath the balcony".
+_AVA_NEAR = ("right below", "just below", "in the street below", "on the street below", "in the foreground",
+             "right beneath", "just beneath", "street below", "lower half")
 _AVA_NEAR_RULE = {"rule": "slice_near_camera", "field": "slice_1_rest", "terms": _AVA_NEAR,
-                  "missing": "0-4s: insanlar kameraya yakın değil",
-                  "feedback": "'slice_1_rest' must place the running people close to the viewer, e.g. 'near "
-                              "the railing' or 'in the street right below' (never use the word camera)."}
+                  "missing": "0-4s: insanlar aşağıdaki sokakta değil",
+                  "feedback": "'slice_1_rest' must place the running people in the street right below, in the lower "
+                              "half of the frame (never use the word camera)."}
 # 🔥 Ateş hortumu (16 Eki, ortam ekseni): yakınlık yeni mekânlara göre (evlerin arası, aşağıdaki bahçe/avlu, balkonun/
 # terasın hemen altı, aşağıdaki sokak). Çığ/deprem listesi değişmez; "road below" tek başına yakın sayılmaz.
 _FIRE_TOR_NEAR = _AVA_NEAR + ("between the houses", "between the nearby houses", "among the houses below",
@@ -2845,11 +2862,9 @@ def people_line(spec: dict) -> str:
     w = people_word(spec)
     # 14 Eki: çığda insanlar ön planda. (14 Eki (2): köydeki "village street" ipucu kaldırıldı, "village" kilit
     # cümlede)
-    near = (", close by: near the railing or in the street right below"
-            if spec["event"] in AVALANCHE_EVENTS + EARTHQUAKE_EVENTS else "")   # 14 Eki: deprem de
-    if spec["event"] == FIRE_TORNADO:   # 15 Eki (2): ateş hortumu, insanlar ön planda
-        # 16 Eki (ortam ekseni): önceki ipucu "near the railing or on the road right below"
-        near = ", close by: near the railing or in the street right below"
+    # 22 Eki (genel kalite devam): önceki ipucu ", close by: near the railing or in the street right below"
+    near = (", in the street right below, in the lower half of the frame"
+            if spec["event"] in AVALANCHE_EVENTS + EARTHQUAKE_EVENTS + (FIRE_TORNADO,) else "")
     return (f"PEOPLE RUNNING AWAY: {w} (slice_1_rest must say that {w} people run away from "
             f"{rule['away_from']}{near})\n")
 
@@ -2868,6 +2883,9 @@ BUDGET_EVENTS += VOLC_ENV_EVENTS
 BUDGET_EVENTS += (TIDAL,)   # 21 Eki (Aşama 5): kıyı dalga (sel zaten listede)
 # GPT'ye söylenen toplam = min(olay toplamı, 175 - stil eki - 3): volkan ortam olayları + sel + kıyı dalga (Aşama 5)
 CAP_BUDGET_EVENTS = VOLC_ENV_EVENTS + (FLOOD, TIDAL)
+# 21 Eki (genel kalite): stil eki uzadı (gerçek zaman, ön plan yüzü); 175 tavanlı diğer olaylarda da GPT bütçesi stil
+# ekine göre (yoksa bütçeye uyan GPT hikâyesi 176-178 kelimeyle son denetimden dönüyordu)
+CAP_BUDGET_EVENTS += AVALANCHE_EVENTS + EARTHQUAKE_EVENTS + (FIRE_TORNADO,)
 BUDGET_SLICE_MAX = 18
 BUDGET_SLICE_1 = 10
 
@@ -3057,12 +3075,13 @@ _FB_TORNADO = ("{N} people sprint for cover from the tornado.", "{N} onlookers r
 _FB_FLAMES = ("{N} residents run from the flames down the street.", "{N} villagers flee from the fire toward the road.",
               "{N} people sprint away from the flames.", "{N} residents scramble downhill away from the fire.",
               "{N} people run from the flames.", "{N} villagers dash away from the burning slope.")
-_FB_AVA_NEAR = ("{N} villagers run away right below.", "{N} people flee near the railing.",
+# 22 Eki (genel kalite devam): korkuluk / teras / balkon geçen insan cümleleri "in the street right below" oldu
+_FB_AVA_NEAR = ("{N} villagers run away right below.", "{N} people flee in the street right below.",
                 "{N} villagers sprint off right below.", "{N} residents run from it just below.",
                 "{N} people scatter in the street below.", "{N} villagers dash away just beneath.")
-_FB_EQ_NEAR = ("{N} residents run away in the street below.", "{N} neighbours flee right below the railing.",
+_FB_EQ_NEAR = ("{N} residents run away in the street below.", "{N} neighbours flee in the street right below.",
                "{N} people sprint off right below.", "{N} residents scatter in the street below.",
-               "{N} people run away near the railing.", "{N} neighbours dash away just below.")
+               "{N} people run away in the street right below.", "{N} neighbours dash away just below.")
 FALLBACK_PEOPLE = {
     FLOOD: ("Pedestrians scramble onto steps and ledges as it hits.", "People run for the doorways as the water hits.",
             "Pedestrians flee up the steps of the nearest buildings.",
@@ -3096,7 +3115,7 @@ FALLBACK_PEOPLE = {
                      "{N} people sprint away from the falling rocks.", "{N} villagers scramble for cover from the rocks.",
                      "{N} people run for cover from it.", "{N} residents dash away between the houses."),
     AVALANCHE_VILLAGE: _FB_AVA_NEAR, AVALANCHE_FOREST: _FB_AVA_NEAR,
-    AVALANCHE_SKI: ("{N} guests run away right below.", "{N} guests flee near the railing.",
+    AVALANCHE_SKI: ("{N} guests run away right below.", "{N} guests flee in the street right below.",
                     "{N} people sprint off right below.", "{N} guests run from it just below.",
                     "{N} people scatter in the street below.", "{N} guests dash away just beneath."),
     EARTHQUAKE_APARTMENT: _FB_EQ_NEAR, EARTHQUAKE_OLD_STREET: _FB_EQ_NEAR,
@@ -3104,14 +3123,14 @@ FALLBACK_PEOPLE = {
 # 🔥 Ateş hortumu: ortama göre (kilit cümle 28-29 kelime, en uzun beat çifti 39: insan cümlesi 6-7 kelime)
 FALLBACK_PEOPLE_FIRE_ENV = {
     "forest_edge": ("{N} people run between the houses below.", "{N} neighbors flee in the yard below.",
-                    "{N} people sprint away right below.", "{N} residents run away near the railing.",
+                    "{N} people sprint away right below.", "{N} residents run away in the street right below.",
                     "{N} people dash between the houses below.", "{N} neighbors run through the yard below."),
     "tree_street": ("{N} people run down the street below.", "{N} residents flee in the street below.",
                     "{N} people sprint away right below.", "{N} neighbors run along the street below.",
-                    "{N} people dash away near the railing.", "{N} residents run across the street below."),
+                    "{N} people dash away in the street right below.", "{N} residents run across the street below."),
     "village_woods": ("{N} villagers run between the houses below.", "{N} villagers flee down the street below.",
                       "{N} people sprint away right below.", "{N} villagers run through the yard below.",
-                      "{N} people run away near the railing.", "{N} villagers dash in the gardens below."),
+                      "{N} people run away in the street right below.", "{N} villagers dash in the gardens below."),
 }
 
 
@@ -3152,9 +3171,31 @@ def fallback_candidates(spec: dict) -> list[dict[str, str]]:
     out = []
     for t in fallback_people_pool(spec):
         sl = {"slice_1_rest": clean_slice(t.format(N=word)), "slice_2": s2, "slice_3": s3}
-        if _fallback_fits(spec, sl):
+        textured = mud_texture(spec, sl)   # 21 Eki (genel kalite): sığarsa dokulu hâl
+        if textured is not None and _fallback_fits(spec, textured):
+            out.append(textured)
+        elif _fallback_fits(spec, sl):
             out.append(sl)
     return out
+
+
+# 21 Eki (genel kalite), Bahadır: heyelanda çamur gri lapa gibi çıktı. Kilit cümlede "mud" yoksa (yamaç C, köy C/D) kod
+# yedeğinde "mud" geçen ilk ifadeye doku eklenir; kilit cümlede varsa dokuyu kilit cümle taşır.
+MUD_TEXTURE = "thick brown mud full of rocks, branches and debris"
+LANDSLIDE_EVENTS = (MUDSLIDE, SLOPE, VILLAGE)
+_MUD_RE = re.compile(r"\b(?:the )?mud(?: and (?:rocks|boulders))?\b", re.I)
+
+
+def mud_texture(spec: dict, slices: dict[str, str]) -> dict[str, str] | None:
+    """Kod yedeği dilimlerinde ilk "mud" ifadesi dokulu (kilit cümlede "mud" yoksa); değişiklik yoksa None."""
+    if spec["event"] not in LANDSLIDE_EVENTS or "mud" in spec["key_visual"].lower():
+        return None
+    for f in SLICE_FIELDS:
+        m = _MUD_RE.search(slices[f])
+        if m:
+            new = MUD_TEXTURE[0].upper() + MUD_TEXTURE[1:] if m.start() == 0 else MUD_TEXTURE
+            return {**slices, f: slices[f][:m.start()] + new + slices[f][m.end():]}
+    return None
 
 
 def build_fallback(spec: dict, rng: random.Random | None = None) -> dict[str, str]:

@@ -112,26 +112,35 @@ class TestSkeletonOutput(unittest.TestCase):
                 total, negative = count_constraints(suffix)
                 self.assertLessEqual(total, 8, suffix)
                 # 14 Eki (2): çığda kısa şablon "Handheld footage from ..." (175 kelime sınırı; TestAvalanche kilitler)
+                # 21 Eki (genel kalite): ortam olaylarında "shot by a person standing" -> "filmed"; gemi hattı aynı
+                env = sk.EVENT_SKELETONS[e]["domain"] in sk.ENV_CENTRIC_DOMAINS
                 self.assertIn("Handheld footage from " if sk.EVENT_SKELETONS[e]["domain"] in ("avalanche_disasters", "earthquake_disasters")   # 14 Eki: deprem
-                              else "Handheld footage shot by a person standing", suffix)
+                              else ("Handheld footage filmed " if env else "Handheld footage shot by a person standing"),
+                              suffix)
                 if sk.EVENT_SKELETONS[e]["domain"] in ("volcano_disasters", "avalanche_disasters", "earthquake_disasters"):   # 13 Eki: çığ; 14 Eki: deprem
                     # 13 Eki: volkanda takip yok, kamera sabit (TestVolcano kilitler)
                     self.assertNotIn("pans to follow", suffix)
                     self.assertIn("the camera stays fixed", suffix)   # 13 Eki (3) sade şablon; 14 Eki (2): çığda yer adı yok
-                else:
-                    self.assertIn("the camera pans to follow the", suffix)
+                else:   # 21 Eki (genel kalite): ateş hortumunda "the camera follows the tornado" (175)
+                    self.assertTrue("the camera pans to follow the" in suffix or "the camera follows the" in suffix)
                 self.assertNotIn("phone", suffix.lower())   # final turu: telefon/REC ekranı çiziliyordu
                 self.assertIn("no zoom, no cuts", suffix)
-                if sk.EVENT_SKELETONS[e]["domain"] in ("avalanche_disasters", "earthquake_disasters"):   # 13 Eki: Bahadır'ın kısa çığ satırı; 14 Eki: deprem
-                    self.assertIn("raw natural light, no hazmat suits", suffix)   # 14 Eki (4): ışık ortamdan
-                elif e == "Fire tornado tears across a burning roadside":   # 15 Eki (2): kısa giyim/ışık satırı (16 Eki: daha kısa)
-                    self.assertIn("natural light, never glossy or CGI", suffix)   # 18 Eki (2): "raw" çıktı (175)
-                # 18 Eki: patlama ve bombalarda 175 kelime için "matching the weather" çıktı (kül bulutu aynı)
-                elif e in ("Volcano erupts and a shockwave blows out windows", "Volcanic bombs slam into a village street"):
-                    self.assertIn("Raw natural light, never glossy or CGI", suffix)
-                else:
+                if not env:   # gemi hattı: eski giyim / ışık satırı
                     self.assertIn("Raw natural light matching the weather, never glossy or CGI", suffix)
-                self.assertTrue("wear" in suffix)   # kıyafet satırı korunur
+                    self.assertTrue("wear" in suffix)
+                # 21 Eki (genel kalite): giyim + ışık tek satır, üniforma yok, herkes sivil; gerçek zaman; ön plan yüzü yok
+                elif sk.EVENT_SKELETONS[e]["domain"] in ("avalanche_disasters", "earthquake_disasters"):
+                    self.assertIn("Civilians in", suffix)   # ışık ortam satırından
+                    self.assertIn("no hazmat suits", suffix)
+                elif e == "Fire tornado tears across a burning roadside":
+                    self.assertIn("Civilians in everyday clothes, no hazmat suits, never CGI.", suffix)
+                else:
+                    self.assertIn("All people are ordinary civilians in everyday clothes, no hazmat suits, natural "
+                                  "light, never CGI.", suffix)
+                if env:
+                    self.assertNotIn("uniform", suffix)
+                    self.assertIn(sk.REAL_TIME, suffix)
+                    self.assertIn(sk.NO_FACE, suffix)
                 for removed in ("fully in frame", "fisheye", "hands or fingers", "bow-first", "fixed position",
                                 "Already moving in the first frame", "Nobody pushes", "second ship"):
                     self.assertNotIn(removed, suffix)

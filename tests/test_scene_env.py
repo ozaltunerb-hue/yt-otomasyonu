@@ -55,8 +55,10 @@ class TestEnvData(unittest.TestCase):
             self.assertEqual(sv.env_options(e), ["A", "B", "C", "D", "E"])
 
     def test_texts_verbatim_spot_checks(self):
-        self.assertEqual(sv.SCENE_ENVS[es.MUDSLIDE]["B"], "a steep hillside town of pastel concrete houses with tin "
-                                                          "roofs, banana trees and tangled power lines")
+        # 21 Eki (genel kalite): 175 için kısa (önceki: "a steep hillside town of pastel concrete houses with tin
+        # roofs, banana trees and tangled power lines")
+        self.assertEqual(sv.SCENE_ENVS[es.MUDSLIDE]["B"], "a steep town of pastel concrete houses with tin roofs and "
+                                                          "banana trees")
         self.assertEqual(sv.SCENE_ENVS[es.FACADE_FIRE]["E"], "a 1970s concrete housing estate with long balcony "
                                                               "corridors and a playground")
         self.assertEqual(sv.SCENE_ENVS[es.HELICOPTER]["C"], "a lakeside town of houses below wooded hills")

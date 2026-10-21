@@ -88,6 +88,48 @@ def slices_from_message(user):
     return {"slice_1_rest": S1_TIDAL.format(word=word), "slice_2": s2 + ".", "slice_3": s3 + "."}
 
 
+class TestPeopleNotNearCamera(unittest.TestCase):
+    """22 Eki 2026, Bahadır (genel kalite devam): çığ, deprem ve ateş hortumunda kaçanlar aşağıdaki sokakta, karenin alt
+    yarısında; GPT ipucunda ve kod yedeğinin insan cümlelerinde korkuluk / teras / balkon geçmez."""
+    EVENTS = es.AVALANCHE_EVENTS + es.EARTHQUAKE_EVENTS + (es.FIRE_TORNADO,)
+    NEAR_CAMERA = ("railing", "terrace", "balcony")
+
+    def test_six_events(self):
+        self.assertEqual(len(self.EVENTS), 6)
+
+    def test_fallback_people_sentences(self):
+        pools = [es.FALLBACK_PEOPLE[e] for e in self.EVENTS if e != es.FIRE_TORNADO]
+        pools += list(es.FALLBACK_PEOPLE_FIRE_ENV.values())
+        for pool in pools:
+            for t in pool:
+                for w in self.NEAR_CAMERA:
+                    self.assertNotIn(w, t.lower(), t)
+                self.assertTrue(es.find_terms(es._FIRE_TOR_NEAR, t), t)   # yakınlık kontrolü kabul eder
+
+    def test_gpt_hint(self):
+        import core.skeleton_pipeline as sk
+        for e in self.EVENTS:
+            spot = sk.view_spots(e, None)[0]
+            pair = sorted(es.allowed_pairs(e, None, spot))[0]
+            veh = es.event_vehicles(e, None)[0][0] if es.uses_vehicle(e) else None
+            spec = es.build_spec(e, None, spot, None, *pair, veh, sk.count_range(e, None)[0])
+            line = es.people_line(spec)
+            self.assertIn("in the street right below, in the lower half of the frame", line, e)
+            for w in self.NEAR_CAMERA:
+                self.assertNotIn(w, line.lower(), e)
+            self.assertNotIn("close by", line)
+
+    def test_near_terms_accept_street_below_and_lower_half(self):
+        for w in self.NEAR_CAMERA:
+            self.assertFalse([t for t in es._AVA_NEAR if w in t], w)
+        for t in ("Four people flee in the street right below.", "Four people run in the lower half of the frame.",
+                  "Four people sprint off just below."):
+            self.assertTrue(es.find_terms(es._AVA_NEAR, t), t)
+        for t in ("Four people flee near the railing.", "Four people run down the avenue.",
+                  "Four people run far away across the valley."):
+            self.assertFalse(es.find_terms(es._AVA_NEAR, t), t)
+
+
 class TestLockedData(unittest.TestCase):
     def test_key_visual_and_labels(self):
         self.assertEqual(es.EVENT_KEY_VISUAL, {
@@ -95,10 +137,13 @@ class TestLockedData(unittest.TestCase):
             # 4 Eki, Bahadır onayı
             TIDAL: "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
             # 4 Eki, TASLAK (Bahadır hazırlığı, onay bekliyor): heyelan
-            es.MUDSLIDE: "A massive wall of brown mud and rocks tears loose from the saturated hillside and pours "
-                         "down the steep street.",
-            es.SLOPE: "The saturated slope collapses and a fast torrent of brown mud and rocks surges across the road.",
-            es.VILLAGE: "A massive torrent of brown mud, logs and rocks bursts through the drenched hillside village.",
+            # 21 Eki (genel kalite): çamur dokusu ("mud" geçen ilk ifade)
+            es.MUDSLIDE: "A massive wall of thick brown mud full of rocks, branches and debris tears loose from the "
+                         "saturated hillside and pours down the steep street.",
+            es.SLOPE: "The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and "
+                      "debris surges across the road.",
+            es.VILLAGE: "A massive torrent of thick brown mud full of rocks, branches and debris bursts through the "
+                        "drenched hillside village.",
             # 4 Eki, TASLAK (Bahadır hazırlığı, onay bekliyor): hortum
             es.LANDFALL: "A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air.",
             # 4 Eki, Bahadır: marina yeniden tasarımı
@@ -896,12 +941,13 @@ class TestLandslideStructure(unittest.TestCase):
             "H5": "the {vehicle} tips over onto its side in the mud",
             "H6": "the {vehicle} and the car behind it are pushed down the street together, bumper to bumper",
         }, {
-            "M3": "a low garden wall collapses and its stones tumble down the street",
-            "M4": "a tree is torn out of the slope and carried down with the mud",
-            "M6": "the mud rams a house corner and tears off its wooden porch",
+            # 21 Eki (genel kalite): kadraj dışı hedef düzeltmesi (M3, M4, M6, M8; S2, S7; L1, L4, L6)
+            "M3": "a garden wall along the street collapses and its stones tumble downhill",
+            "M4": "a tree along the street is torn out and swept downhill",
+            "M6": "the mud rams the nearest house and tears off its wooden porch",
             # 18 Eki (2): Parti 2
             "M7": "mud slams into a house across the street and bursts through its ground floor",
-            "M8": "the mud shoves a large truck sideways into the front of a house",
+            "M8": "the mud shoves a parked truck sideways into a house on the street",
             "M9": "a mass of mud and uprooted trees crashes onto the houses across the street",
         }, {("H4", "M3"), ("H4", "M6"), ("H4", "M7"), ("H4", "M8"), ("H4", "M9"), ("H1", "M8")}, {}),
         es.SLOPE: ({
@@ -913,12 +959,12 @@ class TestLandslideStructure(unittest.TestCase):
             "R6": "the {vehicle} and the car behind it are shoved along the road together",
         }, {
             # 17 Eki (temizlik turu): S1, S6 çıktı
-            "S2": "a large boulder rolls across the road and smashes into a parked car",
+            "S2": "a large boulder rolls across the road and smashes into a stopped car",
             "S3": "a tree is torn out of the slope and slides across the road",
             "S4": "a utility pole snaps and falls across the road",
             "S5": "more of the slope gives way and a second surge of mud and rocks pours onto the road",
             # 18 Eki (2): Parti 2
-            "S7": "the mud and boulders shove a large truck sideways toward the edge of the road",
+            "S7": "the mud and boulders shove a stopped truck sideways toward the edge of the road",
         }, {("R3", "S2"), ("R1", "S7"), ("R4", "S7")}, {}),
         es.VILLAGE: ({
             "K1": "the {vehicle} is swept down the lane and rammed against a house wall",
@@ -928,11 +974,11 @@ class TestLandslideStructure(unittest.TestCase):
             "K5": "the {vehicle} slams into a pile of logs and both are carried away",
             "K6": "the {vehicle} is shoved into a parked motorbike and both are carried along",
         }, {
-            "L1": "a wooden house corner is struck and its wall collapses",   # 17 Eki: L2 çıktı
+            "L1": "a wooden house along the lane is struck and its wall collapses",   # 17 Eki: L2 çıktı
             "L3": "a large tree is uprooted and rolls down with the torrent",
-            "L4": "a roof section is torn off a shed and swept away",
+            "L4": "a roof section is torn off a house along the lane and swept away",
             "L5": "a pile of logs breaks loose and rolls down the lane",
-            "L6": "a stone wall collapses and its stones tumble into the torrent",
+            "L6": "a stone wall along the lane collapses and its stones tumble into the torrent",
             # 18 Eki (2): Parti 2
             "L7": "the landslide rips a wooden house off its foundation and carries it down the slope",
         }, {("K1", "L1"), ("K5", "L5"), ("K1", "L6"), ("K1", "L7")},
@@ -1457,12 +1503,13 @@ class TestTornadoStructure(unittest.TestCase):
         spec = es.build_spec(es.MUDSLIDE, None, "Balcony across a steep hillside street", None, "H3", "M4", "SUV", 4)
         self.assertEqual(
             cp._slices_message(spec, "P", "W", 3, 6, [], ["Fix A.", "Fix B."]),
-            "OPENING SENTENCE (fixed, already written): A massive wall of brown mud and rocks tears loose from the "
-            "saturated hillside and pours down the steep street.\nPLACE: P\nWEATHER: W\nPEOPLE VISIBLE: 3 to 6\n"
+            "OPENING SENTENCE (fixed, already written): A massive wall of thick brown mud full of rocks, branches and "
+            "debris tears loose from the saturated hillside and pours down the steep street.\nPLACE: P\nWEATHER: W\n"
+            "PEOPLE VISIBLE: 3 to 6\n"
             "VEHICLE: SUV\nPEOPLE RUNNING AWAY: four (slice_1_rest must say that four people run away from the mud)\n"
             + es.word_budget_line(spec) +   # 18 Eki (2): bütçe satırı
             "4-9s EVENT: the SUV is spun around by the mud and dragged downhill\n"
-            "9-15s EVENT: a tree is torn out of the slope and carried down with the mud\nRECENT STORIES:\n- (none)\n\n"
+            "9-15s EVENT: a tree along the street is torn out and swept downhill\nRECENT STORIES:\n- (none)\n\n"
             "YOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already correct: "
             "Fix A. Fix B.")
 
@@ -1574,7 +1621,7 @@ class TestMarinaRedesign(unittest.TestCase):
         self.assertIn("High marina balcony", env)
         self.assertNotIn("High marina terrace", env)
         suffix = sk.style_suffix(es.MARINA_TORNADO, None, "High marina balcony")
-        self.assertTrue(suffix.startswith("Handheld footage shot by a person standing on a high balcony overlooking "
+        self.assertTrue(suffix.startswith("Handheld footage filmed on a high balcony overlooking "   # 21 Eki
                                           "the marina and quay, eye level"), suffix)
         for spot, cam in sk.CAMERA_SPOTS.items():
             self.assertFalse(cam.startswith("from "), spot)   # "standing from ..." kırık cümle olmasın
@@ -1723,10 +1770,11 @@ class TestFireStructure(unittest.TestCase):
         es.FIRE_TORNADO: {
             "High balcony at the edge of a wooded neighborhood": (   # 18 Eki (2): kısa kamera noktası
                 "on a high balcony above the wooded neighborhood", "a residential area at the edge of a burning forest"),
-            "Rooftop terrace above a wooded residential area": ("on a rooftop terrace above a wooded residential area",
+            # 21 Eki (genel kalite): iki kamera noktası kısa (175)
+            "Rooftop terrace above a wooded residential area": ("on a rooftop terrace above a wooded area",
                                                                 "a residential area at the edge of a burning forest"),
             "High balcony over a tree-lined residential street": (
-                "on a high balcony overlooking a tree-lined residential street", "a burning tree-lined residential street"),
+                "on a high balcony over a tree-lined street", "a burning tree-lined residential street"),
             "Upper-floor terrace above a street of houses": ("on an upper-floor terrace above a street of houses",
                                                              "a burning tree-lined residential street"),
             "Hillside terrace above a village": ("on a hillside terrace above the village houses",
@@ -1810,7 +1858,7 @@ class TestFireStructure(unittest.TestCase):
                     # 15 Eki (2): ateş hortumunda yüksek ve yakın bakış (eye level yok; 16 Eki: "towering" kilit cümlede)
                     after = (", high vantage, the tornado filling half the frame" if e == es.FIRE_TORNADO
                              else ", eye level")
-                    self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {camera}{after}"),
+                    self.assertTrue(suffix.startswith(f"Handheld footage filmed {camera}{after}"),   # 21 Eki
                                     suffix)
                     self.assertTrue(suffix.endswith(" No readable signs, text or flags."), suffix)
                     self.assertNotIn("phone", suffix.lower())
@@ -2016,7 +2064,7 @@ class TestFireStructure(unittest.TestCase):
         spec, slices, _ = self.build(es.FIRE_TORNADO, "T2", "U6", "Hillside terrace above a village", "SUV", 3)
         msg = cp._slices_message(spec, "P", "W", 2, 3, [], None)
         self.assertIn("\nVEHICLE: SUV\nPEOPLE RUNNING AWAY: three (slice_1_rest must say that three people run away "
-                      "from the fire tornado, close by: near the railing or in the street right below)\nWORD BUDGET: ",
+                      "from the fire tornado, in the street right below, in the lower half of the frame)\nWORD BUDGET: ",   # 22 Eki
                       msg)
 
         def codes(s1):
@@ -2115,7 +2163,7 @@ class TestOct10Changes(unittest.TestCase):
         for spot, cam in cams.items():
             self.assertEqual(sk.CAMERA_SPOTS[spot], cam)
             suffix = sk.style_suffix(es.AVENUE, None, spot)
-            self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {cam}, eye level,"), suffix)
+            self.assertTrue(suffix.startswith(f"Handheld footage filmed {cam}, eye level,"), suffix)   # 21 Eki
         self.assertEqual(es.EVENT_BEATS[es.AVENUE]["excluded_spots"], {})
 
     def test_other_tornado_and_beach_cameras_unchanged(self):
@@ -2265,7 +2313,7 @@ class TestHelicopter(unittest.TestCase):
         for spot, cam in self.SPOTS.items():
             self.assertEqual(sk.CAMERA_SPOTS[spot], cam)
             suffix = sk.style_suffix(self.E, None, spot)
-            self.assertTrue(suffix.startswith(f"Handheld footage shot by a person standing {cam}, eye level"))
+            self.assertTrue(suffix.startswith(f"Handheld footage filmed {cam}, eye level"))   # 21 Eki
             self.assertIn("the camera pans to follow the firefighting helicopter", suffix)
             self.assertTrue(suffix.endswith(" No readable signs, text or flags."))
             self.assertEqual(es.rain_words(suffix, True), [])
@@ -2427,10 +2475,12 @@ VOLC_CAMERA_SHORT = ("Handheld footage shot by a person standing {cam}, high van
                      "slightly, never descending, the erupting volcano always visible in the upper third of the frame, a "
                      "{perch} railing corner in the foreground; one continuous shot, no zoom, no cuts.")
 # 13 Eki (3), Bahadır kararı: volkan giyim/ışık satırları kısa ifade (aynı kısıtlar). 18 Eki: "matching the weather" çıktı
-VOLC_GUARD_LONG = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light "
-                   "matching the weather, never glossy or CGI; no hazmat suits.")
-VOLC_GUARD_SHORT = ("Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light, "
-                    "never glossy or CGI; no hazmat suits.")
+# 21 Eki (genel kalite): üniforma cümlesi çıktı, herkes sivil; kül bulutu da kısa satır; gerçek zaman cümlesi. Önceki:
+# "Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light (matching the
+# weather), never glossy or CGI; no hazmat suits."
+VOLC_GUARD_SHORT = ("All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. "
+                    "Everything moves in real time, never in slow motion, people run at full speed.")
+VOLC_GUARD_LONG = VOLC_GUARD_SHORT
 
 
 def volc_camera(e):
@@ -2472,7 +2522,7 @@ class TestVolcano(unittest.TestCase):
     # 13 Eki: "facing the erupting volcano" kamera cümlesine taşındı
     CAMS = {HT: "on a hillside terrace above the village",
             RT: "on a rooftop terrace across the street",
-            VB: "on the balcony of a village house across the street"}
+            VB: "on a village house balcony across the street"}   # 21 Eki (genel kalite): kısa (175)
     PERCH = {HT: "terrace", RT: "rooftop", VB: "balcony"}
     POOLS = {
         es.ERUPTION: ({   # 17 Eki: S1 (vitrin camı) ve U1 (tabela/tente) çıktı; S6-S8, U7-U8 yeni (Parti 1)
@@ -2868,8 +2918,8 @@ class TestVolcano(unittest.TestCase):
                 for spot in cams:
                     self.assertEqual(sk.CAMERA_SPOTS[spot], self.CAMS[spot])
                     suffix = sk.style_suffix(e, None, spot)
-                    self.assertTrue(suffix.startswith(volc_camera(e).format(cam=self.CAMS[spot],
-                                                                            perch=self.PERCH[spot])))
+                    self.assertTrue(suffix.startswith(sk.camera_rules(volc_camera(e).format(cam=self.CAMS[spot],
+                                                                                            perch=self.PERCH[spot]))))
                     self.assertTrue(suffix.endswith(" No readable signs, text or flags."))
                     self.assertLessEqual(count_constraints(suffix)[0], 8)
                     self.assertEqual(es.rain_words(suffix), [])
@@ -3008,7 +3058,7 @@ class TestVolcano(unittest.TestCase):
                 scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], gpt))
                 t = scene["trace"]
                 self.assertIn(t["spot"], self.CAMS)
-                self.assertIn("the erupting volcano always visible in the upper third of the frame", scene["prompt"])
+                self.assertIn("the volcano always in the upper third", scene["prompt"])   # 21 Eki: kısa (175)
                 self.assertTrue(scene["combo_key"].startswith("volcano_disasters|none|"))
                 spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
                 self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
@@ -3069,7 +3119,8 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                     suffix = sk.style_suffix(e, None, spot)
                     self.assertNotIn("pans to follow", suffix)
                     self.assertNotIn("eye level", suffix)
-                    self.assertEqual(suffix, f"{camera} {volc_guard(e)} No readable signs, text or flags.")
+                    self.assertEqual(suffix, f"{sk.camera_rules(camera)} {volc_guard(e)} No readable signs, text or "
+                                             f"flags.")
                     with patch.object(cp, "pick_setting", lambda ev, view=None, s=spot: (s, sk.VOLCANO_WEATHER[0])), \
                             patch.object(es, "choose_volc_spot", lambda ev, h=None, rng=None, s=spot: s):
                         scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], _volc_gpt()))
@@ -3083,8 +3134,8 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                         self.assertIsNone(env)
                     # 21 Eki (Aşama 4): kadraj ekseni; yerli nokta + korkuluk = bugünkü cümle birebir
                     f = scene["structure"]["spec"]["frame"]
-                    if f.get("pos_spot") == spot and f.get("fg") == "korkuluk":
-                        self.assertIn(camera, scene["prompt"])
+                    if f.get("pos_spot") == spot and f.get("fg") == "korkuluk":   # 21 Eki: ortak kurallar son adımda
+                        self.assertIn(sk.camera_rules(camera), scene["prompt"])
                         self.assertEqual(scene["style_suffix"], suffix)
                     assert_frame_camera(self, scene)
                     self.assertNotIn("eye level", scene["prompt"])
@@ -3106,25 +3157,27 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                                  "moves closer to the ground", "stays fixed in place"):
                         self.assertNotIn(gone, low)
                     self.assertIn("slight hand shake", cam)
-                    self.assertEqual(count_constraints(sk.style_suffix(e, None, spot))[0], 8)
+                    # 21 Eki (genel kalite): birleşik satırlar virgüllü (en fazla 8 kısıt kuralı aynı)
+                    self.assertLessEqual(count_constraints(sk.style_suffix(e, None, spot))[0], 8)
         # diğer kategorilerin ortak giyim/ışık satırı değişmedi; lav hız cümlesi kalmadı
-        self.assertIn("never hi-vis PPE on civilians; emergency responders wear service uniforms",
-                      sk.style_suffix(es.MUDSLIDE, None, list(sk.EVENT_SKELETONS[es.MUDSLIDE]["spots"])[0]))
+        # 21 Eki (genel kalite): ortak satır birleşik ve üniformasız
+        self.assertIn(sk.ENV_GUARDRAILS, sk.style_suffix(es.MUDSLIDE, None, list(sk.EVENT_SKELETONS[es.MUDSLIDE]["spots"])[0]))
         self.assertFalse(hasattr(sk, "VOLCANO_LAVA_PACE") or hasattr(sk, "VOLCANO_LAVA_GUARDRAILS"))
         self.assertFalse(hasattr(es, "lava_fast_words") or set(es.EVENT_BANNED_WORDS) & set(VOLC))   # 13 Eki: sadece çığ
 
     def test_other_categories_keep_pan_follow(self):
         # 15 Eki (2): ateş hortumu kendi kamera cümlesinde (yüksek ve yakın), takip aynı (16 Eki: "the tornado")
         for spot in sk.EVENT_SKELETONS[es.FIRE_TORNADO]["spots"]:
-            self.assertIn("slight hand shake, the camera pans to follow the tornado",
+            self.assertIn("slight hand shake, the camera follows the tornado",   # 21 Eki: kısa (175)
                           sk.style_suffix(es.FIRE_TORNADO, None, spot))
         for e in (es.WILDFIRE, es.FACADE_FIRE, es.HELICOPTER, es.LANDFALL, es.MARINA_TORNADO,
                   es.AVENUE, es.MUDSLIDE, es.SLOPE, es.VILLAGE, es.TIDAL):
             s = sk.EVENT_SKELETONS[e]
             for spot in s["spots"]:
                 with self.subTest(event=e, spot=spot):
-                    self.assertIn(f"eye level, normal lens; slight hand shake, the camera pans to follow the "
-                                  f"{s['object']}", sk.style_suffix(e, None, spot))
+                    follow = ("the camera follows the tornado" if s["object"] == "tornado"   # 21 Eki: kısa (175)
+                              else f"the camera pans to follow the {s['object']}")
+                    self.assertIn(f"eye level, normal lens; slight hand shake, {follow}", sk.style_suffix(e, None, spot))
         self.assertEqual(set(sk.CAMERA_MOTION_EXTRA), {es.FLOOD})
 
     def test_pool_sizes_and_pair_counts(self):
@@ -3185,14 +3238,15 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         # 18 Eki: patlama ve bombalarda en uzun stil eki 96 kelime; 75 kelimelik hikâye + 3 etiket ile en fazla 174
         for e in (es.ERUPTION, es.VOLCANIC_BOMBS):
             longest = max(len(sk.style_suffix(e, None, s).split()) for s in sk.view_spots(e, None))
-            self.assertEqual(longest, 96)
+            self.assertEqual(longest, 95)   # 21 Eki (genel kalite): gerçek zaman + ön plan yüzü, ortak kısaltmalar (önceki 96)
             self.assertLessEqual(longest + 75 + 3, 175)
-        # kapı yine durur: kül bulutu (eski şablon, 106) balkonda 75 kelimelik hikâye -> 184 -> kısaltma geri bildirimi
+        # kapı yine durur: kül bulutu balkonda bütçeyi aşan hikâye -> 175 üstü -> kısaltma geri bildirimi. 21 Eki (genel
+        # kalite): kül bulutu eki kısaldı (106 -> 95), aşım için hikâye 75 yerine 80 kelime
         spec, sl = TestVolcano.build(TestVolcano(), es.PYROCLASTIC, "P2", "Q2", spot=self.VB, people=4)
-        pad = 75 - len(es.plain_story(spec, sl).split())
+        pad = 80 - len(es.plain_story(spec, sl).split())
         long = {**sl, "slice_3": es.clean_slice(sl["slice_3"].rstrip(".") + " " + " ".join(["dust"] * pad))}
-        self.assertEqual(len(es.plain_story(spec, long).split()), 75)
-        self.assertEqual(len(es.assemble_prompt(spec, long).split()), 184)
+        self.assertEqual(len(es.plain_story(spec, long).split()), 80)
+        self.assertGreater(len(es.assemble_prompt(spec, long).split()), 175)
         issue = next(i for i in es.final_prompt_issues(spec, long, es.assemble_prompt(spec, long))
                      if i["rule"] == "volcano_prompt_words")
         self.assertIn("shorten the three fields to at most", issue["feedback"])

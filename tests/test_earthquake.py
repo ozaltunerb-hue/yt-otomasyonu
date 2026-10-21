@@ -26,7 +26,9 @@ CAMERA = ("Handheld footage from {cam}, high vantage looking across the street a
           "the collapsing buildings and the dust fill the upper two thirds of the frame, the street and a corner of "
           "the railing fill the lower part; strong hand shake from the ground tremor, the camera stays fixed and never "
           "descends; one continuous shot, no zoom, no cuts.")
-GUARD = "Bystanders wear everyday clothes; raw natural light, no hazmat suits."
+# 21 Eki (genel kalite): giyim satırı kısa + gerçek zaman cümlesi; kamera kaynak metni aynı, ortak
+# kurallar sk.camera_rules ile son adımda
+GUARD = "Civilians in everyday clothes, no hazmat suits. " + sk.REAL_TIME
 HIGH = {"P2", "Q4", "R1"}   # (*) sadece çatı terasında
 KEY = {
     APT: "The ground is already shaking violently and a six-storey apartment block across the street collapses floor "
@@ -286,7 +288,7 @@ def eq_gpt(messages=None):
         s2, s3 = cap(line["4-9s EVENT"]), cap(line["9-15s EVENT"])
         s2 += " as the ground shakes" if len(s2.split()) < 10 else ""
         s3 += " as the ground shakes" if len(s3.split()) < 10 else ""
-        return {"slice_1_rest": f"{cap(word)} people run from {away} near the railing.",
+        return {"slice_1_rest": f"{cap(word)} people run from {away} right below.",   # 22 Eki: korkuluk yok
                 "slice_2": s2 + ".", "slice_3": s3 + "."}
     return gpt
 
@@ -297,7 +299,7 @@ def build(e, b2, b3, spot=ROOF, people=5, setting=SETTING):
     s2 += " as the ground shakes" if len(s2.split()) < 10 else ""
     s3 += " as the ground shakes" if len(s3.split()) < 10 else ""
     sl = {"slice_1_rest": es.clean_slice(f"{cap(es.NUMBER_WORDS[people])} people run from the collapsing buildings "
-                                         f"near the railing."),
+                                         f"right below."),
           "slice_2": es.clean_slice(s2), "slice_3": es.clean_slice(s3)}
     return spec, sl
 
@@ -408,17 +410,19 @@ class TestEarthquake(unittest.TestCase):
                 suffix = sk.style_suffix(e, None, spot, None, SETTING)
                 with self.subTest(event=e, spot=spot):
                     self.assertEqual(sk.CAMERA_SPOTS[spot], CAMS[spot])
-                    self.assertEqual(suffix, f"{CAMERA.format(cam=CAMS[spot])} {SETTING} {GUARD} No readable signs, "
+                    self.assertEqual(suffix, f"{sk.camera_rules(CAMERA.format(cam=CAMS[spot]))} {SETTING} {GUARD} No readable signs, "
                                              f"text or flags.")
                     self.assertNotIn("follow", suffix)
                     self.assertLessEqual(count_constraints(suffix)[0], 8)
-                    self.assertLessEqual(len(suffix.split()), 95)
-                    self.assertLessEqual(70 + 3 + len(suffix.split()), 175)
+                    # 21 Eki (genel kalite): gerçek zaman + ön plan yüzü cümleleriyle ek uzadı; GPT bütçesi stil ekine
+                    # göre (CAP_BUDGET_EVENTS), toplam 175 (100 üretim testi denetler)
+                    self.assertLessEqual(len(suffix.split()), 102)
+                    self.assertIn(e, es.CAP_BUDGET_EVENTS)
         # çığ ve volkan kamerası değişmedi
         self.assertTrue(sk.style_suffix(es.AVALANCHE_SKI, None, "Terrace of the lift station")
-                        .startswith("Handheld footage from the lift station terrace, high vantage looking up a steep"))
+                        .startswith("Handheld footage from the lift station terrace, high vantage up a snowy slope"))
         self.assertTrue(sk.style_suffix(es.ERUPTION, None, "Hillside terrace facing the erupting volcano")
-                        .startswith("Handheld footage shot by a person standing on a hillside terrace above the village"))
+                        .startswith("Handheld footage filmed on a hillside terrace above the village"))
 
     def test_term_lists_earthquake_only(self):
         import ast
@@ -475,9 +479,9 @@ class TestEarthquake(unittest.TestCase):
 
     def test_people_close_to_camera(self):
         spec, sl = build(APT, "P1", "Q1")
-        self.assertIn("close by: near the railing or in the street right below", es.people_line(spec))
+        self.assertIn("in the street right below, in the lower half of the frame", es.people_line(spec))   # 22 Eki
         self.assertIn("run away from the collapsing buildings", es.people_line(spec))
-        for t in ("Five residents run from the collapsing buildings near the railing.",
+        for t in ("Five residents run from the collapsing buildings just below.",
                   "Five people run from the collapsing buildings in the street right below."):
             self.assertFalse(codes(spec, {**sl, "slice_1_rest": t}) & {"slice_near_camera", "slice_flee"})
         far = "Five people run from the collapsing buildings down the avenue."
@@ -639,7 +643,7 @@ class TestEarthquake(unittest.TestCase):
                     self.assertIsNone(t["vehicle"])
                     self.assertNotIn("VEHICLE:", msgs[-1])
                     self.assertIn("WORD BUDGET:", msgs[-1])
-                    self.assertIn("close by: near the railing", msgs[-1])
+                    self.assertIn("in the street right below, in the lower half of the frame", msgs[-1])   # 22 Eki
                     first_pass += len(t["attempts"]) == 1
                     tags.append(pair)
                     envs.append(env)
@@ -713,11 +717,12 @@ class TestEarthquake(unittest.TestCase):
         # 14 Eki (2): sahte GPT madde metnini değil 5 farklı serbest cümleden birini yazar; ilk denemede en az %90
         import core.creative_pipeline as cp
         rng = random.Random(11)
-        people = ["{w} people run from the collapsing buildings near the railing.",
+        # 22 Eki: GPT'ye "in the street right below, in the lower half of the frame" denir; korkuluk yok
+        people = ["{w} people run from the collapsing buildings right below.",
                   "{w} residents flee in the street right below.",
                   "{w} people sprint away just below in the street.",
-                  "{w} neighbours run past the railing as the ground shakes.",
-                  "{w} people flee from the collapse close to the railing."]
+                  "{w} neighbours run in the street below as it shakes.",
+                  "{w} people flee from the collapse just below."]
         inv = {es.beat_text(e, sl, b): b for e in EQ for sl in ("slice_2", "slice_3") for b in es.EVENT_BEATS[e][sl]}
 
         def gpt_factory():

@@ -32,20 +32,28 @@ OPENINGS = {
         "D": "A giant wave explodes against the harbor wall and a white wall of water collapses onto the street "
              "in front of the seafront houses."},
     "Mudslide pours down a hillside street": {
-        "B": "A torrent of mud and rocks pours around the bend at the top of the steep street and flips the first "
-             "parked car onto its side.",
-        "C": "A retaining wall on the slope bursts apart and mud and boulders pour straight into the steep "
-             "street.",
-        "D": "Mud pours down the steep street in waves, dragging flower pots and parked motorbikes with it."},
+        # 21 Eki (genel kalite): çamur dokusu ("mud" geçen ilk ifade). Önceki: "A torrent of mud and rocks pours
+        # around...", "...bursts apart and mud and boulders pour straight into the steep street.", "Mud pours down the
+        # steep street in waves..."
+        "B": "A torrent of thick brown mud full of rocks, branches and debris pours around the bend at the top of the "
+             "street and flips the first parked car over.",
+        "C": "A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours "
+             "straight into the steep street.",
+        "D": "Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower "
+             "pots and parked motorbikes with it."},
     "Rain-soaked slope collapses onto a roadside": {
-        "B": "A mass of rock and mud breaks off the slope and buries both lanes of the road, cutting off a pickup "
-             "truck.",
+        # 21 Eki (genel kalite): çamur dokusu. Önceki: "A mass of rock and mud breaks off the slope...", "Mud and tree
+        # trunks slide off the slope over the roadside guardrail and pile up against a stopped bus."
+        "B": "A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, "
+             "cutting off a pickup truck.",
         "C": "A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right "
              "behind it.",
-        "D": "Mud and tree trunks slide off the slope over the roadside guardrail and pile up against a stopped "
-             "bus."},
+        "D": "Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail "
+             "and piles up against a stopped bus."},
     "Mud and debris torrent tears through a hillside village": {
-        "B": "The terraced hillside fields above the village turn to mud and slide into the top row of houses.",
+        # 21 Eki (genel kalite): çamur dokusu. Önceki: "...turn to mud and slide into the top row of houses."
+        "B": "The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and "
+             "debris and slide into the top row of houses.",
         "C": "A debris torrent bursts from the stream bed, floods the village lane and shoves a house off its "
              "foundations.",
         "D": "Half of the hillside behind the village breaks away with its trees and slides down to the roofs of "

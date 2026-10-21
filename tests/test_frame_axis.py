@@ -85,7 +85,7 @@ class TestLibrary(unittest.TestCase):
             for spot in sk.view_spots(e, None):
                 for f in fx.all_frames(e, spot, pool(e, spot)):
                     cam = pr.camera_sentence(sk.style_suffix(e, None, spot, frame=f))
-                    self.assertIn("strong hand shake from the ground tremor", cam)
+                    self.assertIn("strong hand shake from the tremor", cam)   # 21 Eki: "ground" çıktı (175)
 
 
 class TestAllowedTypes(unittest.TestCase):

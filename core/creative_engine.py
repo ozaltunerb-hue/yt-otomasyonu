@@ -997,11 +997,15 @@ _CLOTHING = {
 }
 _CLOTHING_CRUISE_ONBOARD = "Passengers wear swimwear or resort wear; crew wear white cruise uniforms."
 _CLOTHING_CRUISE_BERTH = "Dock crew wear orange hi-vis PPE; passengers wear casual clothes."
-_CLOTHING_ENV = "Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms."
+# 21 Eki (genel kalite), Bahadır: üniforma cümlesi çıktı (çamur seli testinde kaçanların bir kısmı üniformalıydı); herkes
+# sivil. Önceki: "Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service
+# uniforms."
+_CLOTHING_ENV = "All people are ordinary civilians in everyday clothes, never hi-vis PPE on civilians."
 _CLOTHING_ENV_DOCK = " Dock workers wear orange hi-vis PPE."
 _CLOTHING_LEGACY = "Crew wear orange hi-vis PPE; passengers and bystanders wear casual clothes, never hi-vis PPE on civilians."
 
 _LIGHTING = "Raw natural light matching the weather, never glossy or CGI; no white hazmat suits."
+# (Yapılandırılmış hat birleşik giyim + ışık satırını kullanır: skeleton_pipeline.ENV_GUARDRAILS)
 
 # El kamerası çekim yeri (gemi dışı sahne), domain'e göre
 _HANDHELD_SPOT = {

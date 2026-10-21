@@ -36,7 +36,8 @@ class TestClothingByDomain(unittest.TestCase):
                     out = apply_style_lock("A tornado tears across the beach", cam, {"domain_id": d, "forced_ship": "None"})
                     self.assertIsNone(VESSEL_ROLE.search(out), VESSEL_ROLE.search(out))
                     self.assertIn("never hi-vis PPE on civilians", out)
-                    self.assertIn("emergency responders", out)
+                    self.assertNotIn("uniform", out)   # 21 Eki (genel kalite): herkes sivil
+                    self.assertIn("ordinary civilians in everyday clothes", out)
                     self.assertNotIn("Dock workers", out)
 
     def test_tornado_marina_adds_dock_workers(self):
