@@ -76,7 +76,8 @@ def axes(scene: dict) -> dict:
             "key_visual": t.get("key_visual"),
             "story_source": (scene.get("structure") or {}).get("story_source_kind"),
             # 21 Eki (Aşama 4): kadraj ekseni
-            **{k: (t.get("axes") or {}).get(k) for k in ("kadraj", "on_plan", "kamera_modu", "kamera_noktasi")},
+            **{k: (t.get("axes") or {}).get(k) for k in ("kadraj", "on_plan", "kamera_modu", "kamera_noktasi",
+                                                          "acilis")},
             # 21 Eki (Aşama 5): K5 sığma koruması devreye girdi mi (kadraj/ortam bütçe yüzünden değişti)
             "fit_guard": bool((t.get("axes_excluded") or {}).get("kadraj_sığmadı"))}
 

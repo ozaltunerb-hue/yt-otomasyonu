@@ -309,7 +309,7 @@ class TestBudget(unittest.TestCase):
                 with self.subTest(event=e):
                     m = fb.measure(e)
                     self.assertEqual(m["after_fail"], 0)
-                    self.assertEqual(m["before_fail"], 0)
+                    self.assertEqual(m["gate_fail"], 0)   # 21 Eki (Aşama 6): açılışlar dahil son denetim
         finally:
             logging.disable(logging.NOTSET)
 

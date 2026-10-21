@@ -301,12 +301,23 @@ class TestDeployScenario(_Quiet):
                 single = {a for a, n in vr.option_counts(e).items() if n == 1}
                 for axis in vr.LRU_AXES:
                     # kadraj: aşağıda (tek güvenli kadraj); ortam ve ön plan: aşağıda (uyum / bütçe zorunlu)
-                    if axis not in single and axis not in ("kadraj", "environment", "on_plan"):
+                    if axis not in single and axis not in ("kadraj", "environment", "on_plan", "key_visual"):
                         self.assertEqual(m[f"rep_{axis}"], 0, axis)
                 # 21 Eki (Aşama 5): ortam tekrarı sadece spotla uyumlu ortamlar son 2 elenince bitiyorsa; ön plan
                 # tekrarı sadece K5 sığma koruması devreye girdiyse (bütçe zorunlu)
                 import core.scene_env as sv
+                import core.opening_axis as ox
                 envs = [r["environment"] for r in rows]
+                keys = [r["key_visual"] for r in rows]
+                # 21 Eki (Aşama 6): açılış tekrarı sadece ortam + beat çakışması son 2 dışında açılış bırakmadıysa
+                for i in range(1, len(rows)):
+                    if e in ox.OPENINGS and keys[i] == keys[i - 1]:
+                        b2, b3 = rows[i]["beats"].split("+")
+                        env = rows[i]["environment"] if e in sv.SCENE_ENVS else None
+                        letters = {(ox.text(e, o) or es.EVENT_KEY_VISUAL[e]): o for o in ox.options(e)}
+                        recent = {letters[k] for k in keys[max(0, i - 2):i]}
+                        left = [o for o in ox.allowed(e, env, b2, b3) if o not in recent]
+                        self.assertEqual(left, [], (e, i, rows[i]["beats"], env))
                 for i in range(1, len(rows)):
                     a, b = rows[i - 1], rows[i]
                     if e in sv.SCENE_ENVS and a["environment"] == b["environment"]:

@@ -260,7 +260,9 @@ class TestVolcEnvPipeline(unittest.TestCase):
                 import core.scene_env as sv   # 21 Eki (Aşama 5): ışık kapsamı (eklenenler ağırlık 1)
                 self.assertIn(tr["weather"], list(WEATHER[e]) + list(sv.LIGHT_ADD[e]))
                 self.assertIn(ENVS[env][1], scene["prompt"])
-                self.assertTrue(scene["prompt"].startswith(f"0-4s: {KEYS[e]}"))
+                import core.opening_axis as ox   # 21 Eki (Aşama 6): açılış ekseni (A = bugünkü kilit cümle)
+                key = ox.text(e, st["axes"]["acilis"]) or KEYS[e]
+                self.assertTrue(scene["prompt"].startswith(f"0-4s: {key}"))
                 self.assertIn(f"PLACE: {ENVS[env][1]}, ", msgs[0])
                 self.assertIn(f"WEATHER: {tr['weather']}\n", msgs[0])
                 self.assertEqual(st["env_option"], ENVS[env][0])

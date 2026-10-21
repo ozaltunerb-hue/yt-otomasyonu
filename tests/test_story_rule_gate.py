@@ -800,8 +800,10 @@ class TestStructuredScene(unittest.TestCase):
             if isinstance(r, Exception):
                 raise r
             return r
+        import core.opening_axis as ox   # 21 Eki (Aşama 6): sahte GPT dilimleri bugünkü kilit cümleye göre yazıldı
         with patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
-                patch.object(es, "choose_vehicle", lambda v, rng=None: "pickup truck"):
+                patch.object(es, "choose_vehicle", lambda v, rng=None: "pickup truck"), \
+                patch.object(ox, "choose", lambda *a, **k: ("A", [])):
             scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", FLOOD, [], [], gpt, view=view))
         return scene, calls
 

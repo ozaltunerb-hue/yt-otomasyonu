@@ -52,6 +52,9 @@ def preflight_seq(*results):
     return fake
 
 
+import core.opening_axis as ox   # noqa: E402
+
+
 class Harness:
     def __init__(self, gpt=None, preflight=None, create=None, combos=None, history=None, rewrite=None):
         self.gpt_responses = list(gpt or [slices()])
@@ -115,6 +118,8 @@ class Harness:
             patch.object(client, "get_credit", AsyncMock(return_value=100.0)),
             patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")),
             patch.object(es, "choose_vehicle", lambda v, rng=None, used=None: VEHICLE),
+            # 21 Eki (Aşama 6): sahte GPT dilimleri bugünkü kilit cümleye (açılış A) göre yazıldı
+            patch.object(ox, "choose", lambda *a, **k: ("A", [])),
         ]
         if self.rewrite:
             patches.append(patch.object(cp, "rewrite_structured", self.rewrite))
@@ -458,7 +463,8 @@ class TestReporting(unittest.TestCase):
             return slices(s2=f"The {chosen['v']} is caught by the current, turns sideways and is dragged down the street.")
         with patch.object(pg, "_call_gpt", fake), patch.object(settings, "IS_DRY_RUN", False), \
                 patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
-                patch.object(es, "choose_vehicle", vehicle):
+                patch.object(es, "choose_vehicle", vehicle), \
+                patch.object(ox, "choose", lambda *a, **k: ("A", [])):   # 21 Eki (Aşama 6): açılış A (KEY)
             asyncio.run(dr.main_creative(out, only=[FLOOD], per_event=1, max_calls=3))
         row = json.load(open(out, encoding="utf-8"))["rows"][0]
         self.assertEqual(calls, [es.SLICE_SCHEMA])

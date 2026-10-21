@@ -2460,11 +2460,14 @@ def volc_place(event: str, name: str) -> str:
     return f"{VOLC_ENVS[name]['text']}, {tail}"
 
 
-def expected_key_visual(event: str, spot: str) -> str:
+def expected_key_visual(event: str, spot: str, opening: str | None = None) -> str:
     """Spec'in kilit cümlesi: ateş hortumunda kamera noktasının ortamından (16 Eki), diğer olaylarda sabit. Bilinmeyen
     olayda boş metin (son denetim tutmaz)."""
     if event == FIRE_TORNADO:
         return FIRE_TOR_ENVS[fire_env_of_spot(spot)]["key"]
+    if opening and opening != "A":   # 21 Eki (Aşama 6): açılış varyantı (core/opening_axis.py); A = bugünkü
+        from core.opening_axis import text as opening_text
+        return opening_text(event, opening)
     return EVENT_KEY_VISUAL.get(event, "")
 
 
@@ -2788,7 +2791,7 @@ def clean_slice(text: str) -> str:
 # ── Birleştirme ve spec ─────────────────────────────────────────────────────────────────────────────────────
 def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: str, b3: str, vehicle: str,
                people: int | None = None, setting: str | None = None, volc_env: str | None = None,
-               frame: dict | None = None, scene_env: str | None = None) -> dict:
+               frame: dict | None = None, scene_env: str | None = None, opening: str | None = None) -> dict:
     """Kie'ye gidecek prompt'u kuran ve denetleyen her şey (slices hariç). people: kaçan kişi sayısı N (sadece
     kişi kuralı olan olaylarda, zorunlu)."""
     if not is_structured(event):
@@ -2803,10 +2806,12 @@ def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: st
         raise StructureError(f"Volkan ortamı bu olayda kullanılamaz: {event} / {volc_env}")
     fire_env = fire_env_of_spot(spot) if event == FIRE_TORNADO else None
     spec = {"event": event, "ship": ship, "spot": spot, "view": view, "beat_2": b2, "beat_3": b3,
-            "vehicle": vehicle, "key_visual": expected_key_visual(event, spot),
+            "vehicle": vehicle, "key_visual": expected_key_visual(event, spot, opening),
             "suffix": style_suffix(event, ship, spot, view, setting, volc_env, frame, fire_env, scene_env)}
     if scene_env is not None:
         spec["scene_env"] = scene_env   # 21 Eki (Aşama 5): ortam ekseni (9 olay)
+    if opening is not None:
+        spec["opening"] = opening       # 21 Eki (Aşama 6): açılış ekseni (18 olay)
     if frame is not None:
         spec["frame"] = dict(frame)   # 21 Eki (Aşama 4): kadraj ekseni (son denetim stil ekini bununla yeniden kurar)
     if volc_env is not None:
@@ -2985,7 +2990,7 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
                                    spec.get("volc_env"), spec.get("frame"),
                                    fire_env_of_spot(spec["spot"]) if spec["event"] == FIRE_TORNADO else None,
                                    spec.get("scene_env"))
-    expected_key = expected_key_visual(spec["event"], spec["spot"])
+    expected_key = expected_key_visual(spec["event"], spec["spot"], spec.get("opening"))
     if spec.get("key_visual") != expected_key:
         out.append(_issue("key_visual", "kilit görsel spec'te değişmiş"))
     if spec.get("suffix") != expected_suffix:

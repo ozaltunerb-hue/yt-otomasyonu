@@ -32,7 +32,8 @@ AXIS_NAMES = {"environment": "ortam", "spot": "spot", "weather": "ışık", "veh
               "people": "kişi", "key_visual": "kilit cümle", "beats": "beat çifti", "kadraj": "kadraj",
               "on_plan": "ön plan", "kamera_modu": "kamera modu"}
 COPY_AXES = ("spot", "environment", "weather", "key_visual")
-LRU_AXES = ("environment", "spot", "weather", "vehicle", "people", "kadraj", "on_plan", "kamera_modu")   # 21 Eki: +3
+LRU_AXES = ("environment", "spot", "weather", "vehicle", "people", "kadraj", "on_plan", "kamera_modu",
+            "key_visual")   # 21 Eki: +3 (Aşama 4), açılış (Aşama 6)
 SCENARIOS = {"önce_normal": (False, False), "önce_deploy": (False, True),
              "sonra_normal": (True, False), "sonra_deploy": (True, True)}
 

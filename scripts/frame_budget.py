@@ -34,15 +34,20 @@ def _longest_setting(event: str) -> str | None:
 
 
 def measure(event: str) -> dict:
+    """Kombinasyon = görünüm × spot × beat çifti × araç × (volkan ortamı) × (ortam) × (açılış: Aşama 6). Her kombinasyonda
+    kadraj varyantlarından en az biri kod yedeğini 175'e sığdırmalı (üretimdeki sığma koruması) ve sığan ilk varyantın
+    kod yedeği son denetimden geçmeli (gate_fail: olay adı, ilk cümle tetiği, yasak kelime... açılışlar dahil)."""
     import core.event_structure as es
     import core.frame_axis as fx
+    import core.opening_axis as ox
+    import core.scene_env as sv
     import core.skeleton_pipeline as sk
     setting = _longest_setting(event)
     lo, hi = sk.count_range(event, None)
     people = hi if es.has_people_rule(event) else None
     volc_envs = list(sk.VOLC_ENVS) if event in es.VOLC_ENV_EVENTS else [None]
-    import core.scene_env as sv
-    out = {"combos": 0, "before_fail": 0, "after_fail": 0, "variants": 0, "variant_fail": 0, "max_suffix": 0}
+    out = {"combos": 0, "before_fail": 0, "after_fail": 0, "variants": 0, "variant_fail": 0, "max_suffix": 0,
+           "gate_fail": 0, "env_reset": 0}
     beats = es.EVENT_BEATS[event]["excluded_spots"]
     for view in es.structure_views(event):
         for spot in sk.view_spots(event, view):
@@ -54,38 +59,50 @@ def measure(event: str) -> dict:
                 risky = set(beats.get(b2, set())) | set(beats.get(b3, set()))
                 for veh in vehicles:
                     for venv in volc_envs:
-                      for senv in scene_envs:
-                        frames = fx.all_frames(event, spot, pool, risky, sv.excluded_positions(event, senv))
-                        out["combos"] += 1
-                        base = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv)
-                        out["before_fail"] += not es.fallback_candidates(base)
-                        ok_any = False
-                        if senv not in (None, "A"):   # üretimdeki koruma: en son ortam A'ya döner
-                            frames = frames + [dict(f, _env="A") for f in fx.all_frames(event, spot, pool, risky)]
-                        for f in frames:
-                            env_used = f.pop("_env", senv) if "_env" in f else senv
-                            spec = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv, f,
-                                                 env_used)
-                            fits = bool(es.fallback_candidates(spec))
-                            out["variants"] += 1
-                            out["variant_fail"] += not fits
-                            out["env_fail"] = out.get("env_fail", 0) + (not fits and env_used not in (None, "A"))
-                            out["max_suffix"] = max(out["max_suffix"], len(spec["suffix"].split()))
-                            ok_any = ok_any or fits
-                        out["after_fail"] += not ok_any
+                        for senv0 in scene_envs:
+                            senv, openings = senv0, ([None] if event not in ox.OPENINGS
+                                                     else ox.allowed(event, senv0, b2, b3))
+                            if not openings:   # üretimdeki gibi: ortam A'ya döner
+                                out["env_reset"] += 1
+                                senv, openings = sv.ENV_A, ox.allowed(event, sv.ENV_A, b2, b3)
+                            for op in openings:
+                                out["combos"] += 1
+                                base = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv,
+                                                     None, None, op)
+                                out["before_fail"] += not es.fallback_candidates(base)
+                                frames = [(senv, f) for f in fx.all_frames(event, spot, pool, risky,
+                                                                           sv.excluded_positions(event, senv))]
+                                if senv not in (None, "A"):   # üretimdeki koruma: en son ortam A'ya döner
+                                    frames += [("A", f) for f in fx.all_frames(event, spot, pool, risky)]
+                                first = None
+                                for env_used, f in frames:
+                                    spec = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv,
+                                                         f, env_used, op)
+                                    cands = es.fallback_candidates(spec)
+                                    out["variants"] += 1
+                                    out["variant_fail"] += not cands
+                                    out["max_suffix"] = max(out["max_suffix"], len(spec["suffix"].split()))
+                                    if cands and first is None:
+                                        first = (spec, cands[0])
+                                out["after_fail"] += first is None
+                                if first is not None:
+                                    spec, sl = first
+                                    prompt = es.assemble_prompt(spec, sl)
+                                    out["gate_fail"] += bool(es.final_prompt_issues(spec, sl, prompt,
+                                                                                    es.assemble_story(spec, sl)))
     return out
 
 
 def main(argv: list[str]) -> int:
     rows = {e: measure(e) for e in ps.active_events()}
-    lines = ["| Olay | kombinasyon | kod yedeği sığmıyor: önce | sonra (koruma ile) | sığmayan kadraj varyantı | "
-             "en uzun stil eki |", "|---|---|---|---|---|---|"]
+    lines = ["| Olay | kombinasyon | kod yedeği sığmıyor: önce | sonra (koruma ile) | son denetimden kalan | "
+             "sığmayan kadraj varyantı | en uzun stil eki |", "|---|---|---|---|---|---|---|"]
     for e, m in rows.items():
-        lines.append(f"| {e} | {m['combos']} | {m['before_fail']} | {m['after_fail']} | "
+        lines.append(f"| {e} | {m['combos']} | {m['before_fail']} | {m['after_fail']} | {m['gate_fail']} | "
                      f"{m['variant_fail']}/{m['variants']} | {m['max_suffix']} |")
     tot = {k: sum(m[k] for m in rows.values()) for k in ("combos", "before_fail", "after_fail", "variants",
-                                                          "variant_fail")}
-    lines.append(f"| **Toplam** | {tot['combos']} | {tot['before_fail']} | {tot['after_fail']} | "
+                                                          "variant_fail", "gate_fail")}
+    lines.append(f"| **Toplam** | {tot['combos']} | {tot['before_fail']} | {tot['after_fail']} | {tot['gate_fail']} | "
                  f"{tot['variant_fail']}/{tot['variants']} | |")
     md = "\n".join(lines)
     print(md)
