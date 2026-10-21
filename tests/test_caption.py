@@ -156,20 +156,18 @@ class TestSelection(unittest.TestCase):
             gen.append({**cap.meta(c), "date": f"2026-10-{22 + i}"})
 
     def test_overlap_rule_every_event(self):
-        # her olay art arda 10 post: aynı kategorideki önceki postla en fazla 2 ortak, son 10'da aynı set yok.
-        # İstisna: cephe yangınında olaya uygun özel etiket sadece 3 (#firestorm #firefighters #smoke): 6 farklı set
-        # var; ardışık cephe postlarında en az 3 ortak kaçınılmaz, 7. posttan sonra set tekrarı da kaçınılmaz. Kod önce
-        # "son 10'da aynı set yok"u, sonra en az ortaklıyı seçer (raporda; havuza 2 etiket eklemek Bahadır kararı)
+        # her olay art arda 10 post: aynı kategorideki önceki postla en fazla 2 ortak, son 10'da aynı set yok. 21 Eki
+        # (7.1): cephe yangınına #buildingfire #apartmentfire eklendi; istisna kalmadı, 19 olayın hepsinde karşılanır
         for e in cap.SHARE_CATEGORY:
             gen = []
             for i in range(10):
                 tags = cap.choose_hashtags(e, cap.build_context([], gen), random.Random(i))
                 if gen:
-                    common = len(set(tags) & set(gen[-1]["hashtags"]))
-                    self.assertLessEqual(common, 4 if e == cap.FACADE else 2, (e, i))
-                if e != cap.FACADE or i < 6:
-                    self.assertNotIn(set(tags), [set(g["hashtags"]) for g in gen[-10:]], (e, i))
+                    self.assertLessEqual(len(set(tags) & set(gen[-1]["hashtags"])), 2, (e, i))
+                self.assertNotIn(set(tags), [set(g["hashtags"]) for g in gen[-10:]], (e, i))
                 gen.append({"hashtags": tags, "category": cap.SHARE_CATEGORY[e], "date": f"2026-11-{i + 1:02d}"})
+        self.assertEqual(set(cap.event_tags(cap.FACADE)[1]),
+                         {"#firestorm", "#firefighters", "#smoke", "#buildingfire", "#apartmentfire"})
         self.assertEqual(cap.event_tags(cap.EQ_A)[0], ("#disaster", "#extremeevents", "#catastrophe", "#survival"))
 
     def test_block_format(self):
@@ -336,6 +334,145 @@ class TestSimulation(unittest.TestCase):
                 self.assertNotIn(styles[i], styles[i - 2:i], e)
             titles = [r["title"] for r in rows]
             self.assertEqual(len(set(titles)), len(titles), e)
+
+
+# ── 21 Eki 2026, Aşama 7.1: hashtag kategorisi, şablon dili, cephe etiketleri ───────────────────────────────────────
+POOL_OF = {cap.FLOOD: "sel", cap.TIDAL: "dalga", cap.MUDSLIDE: "heyelan", cap.SLOPE: "heyelan", cap.VILLAGE: "heyelan",
+           cap.AVENUE: "hortum", cap.MARINA: "hortum", cap.LANDFALL: "hortum", cap.WILDFIRE: "yangın",
+           cap.FACADE: "yangın", cap.FIRE_TORNADO: "yangın", cap.HELICOPTER: "yangın", cap.PYRO: "volkan",
+           cap.BOMBS: "volkan", cap.AVA_V: "çığ", cap.AVA_S: "çığ", cap.AVA_F: "çığ", cap.EQ_A: "deprem",
+           cap.EQ_O: "deprem"}
+SHARE_OF = {cap.FLOOD: "Sel", cap.TIDAL: "Dev dalga", cap.MUDSLIDE: "Heyelan", cap.SLOPE: "Heyelan",
+            cap.VILLAGE: "Heyelan", cap.AVENUE: "Hortum", cap.MARINA: "Su hortumu", cap.LANDFALL: "Su hortumu",
+            cap.WILDFIRE: "Yangın", cap.FACADE: "Yangın", cap.FIRE_TORNADO: "Yangın", cap.HELICOPTER: "Yangın",
+            cap.PYRO: "Volkan", cap.BOMBS: "Volkan", cap.AVA_V: "Çığ", cap.AVA_S: "Çığ", cap.AVA_F: "Çığ",
+            cap.EQ_A: "Deprem", cap.EQ_O: "Deprem"}
+EVENT_ONLY = {"#firetornado": {cap.FIRE_TORNADO}, "#waterspout": {cap.MARINA, cap.LANDFALL},
+              "#skiresort": {cap.AVA_S}, "#aerialfirefighting": {cap.HELICOPTER}, "#pyroclasticflow": {cap.PYRO},
+              "#lavabombs": {cap.BOMBS}, "#mountainroad": {cap.SLOPE}, "#rockfall": {cap.SLOPE},
+              "#buildingfire": {cap.FACADE}, "#apartmentfire": {cap.FACADE}}
+
+
+def _sim(gpt: bool, runs: int = 10, seed: int = 11):
+    import caption_sim
+    logging.disable(logging.WARNING)
+    try:
+        return caption_sim.simulate(runs=runs, seed=seed, gpt=gpt)
+    finally:
+        logging.disable(logging.NOTSET)
+
+
+class TestCategoryMapping(unittest.TestCase):
+    def test_mapping_tables(self):
+        self.assertEqual(len(cap.SHARE_CATEGORY), 19)
+        self.assertEqual(cap.SHARE_CATEGORY, SHARE_OF)
+        self.assertEqual(cap.TAG_POOL, POOL_OF)
+        # Paylaşımlar "Kategori" seçenekleri: hepsi gerçek tabloda var (fixture = salt okuma kopyası)
+        self.assertLessEqual(set(SHARE_OF.values()), {r["Kategori"] for r in ROWS if r.get("Kategori")})
+        for t, evs in EVENT_ONLY.items():
+            self.assertEqual(cap.TAG_ONLY.get(t), evs, t)
+
+    def test_fifty_captions_each_event_own_pool(self):
+        # 19 olay × 50 caption (sahte GPT + şablon, geçmiş birikir): her etiket olayın kendi havuzundan, olaya özgü
+        # etiket sadece kendi olayında, Paylaşımlar kategorisi olayın kategorisi
+        res = _sim(True, runs=50, seed=7)
+        for e, rows in res.items():
+            broad, special = cap._POOL[POOL_OF[e]]
+            for r in rows:
+                self.assertLessEqual(set(r["hashtags"]), set(broad) | set(special), (e, r["hashtags"]))
+                self.assertEqual(r["category"], SHARE_OF[e])
+                for t in r["hashtags"]:
+                    if t in EVENT_ONLY:
+                        self.assertIn(e, EVENT_ONLY[t], (e, t))
+                self.assertFalse(set(r["hashtags"]) & set(cap.MARITIME_TAGS))
+
+    def test_share_row_category_from_caption(self):
+        c = cap.choose(cap.MARINA, {"opening": "", "people": None, "kadraj": None}, None, ctx(), random.Random(1))
+        sent = []
+
+        def fake_request(method, url, json=None, **kw):
+            sent.append(json)
+            return {"results": []} if url.endswith("/query") else {"id": "row"}
+        with patch.object(nl, "_notion_request", side_effect=fake_request):
+            nl.NotionTracker.add_shared_post(c, "Marina", "a" * 32, "2026-10-21")
+        self.assertEqual(sent[-1]["properties"]["Kategori"], {"select": {"name": "Su hortumu"}})
+        self.assertTrue(set(c["hashtags"]) <= set(sum(cap._POOL["hortum"], ())))
+
+
+class TestTemplateLanguage(unittest.TestCase):
+    GENERIC = ("with every second", "the last frame", "nobody expected", "this part", "this moment")
+
+    def _infos(self, e):
+        b = es.EVENT_BEATS[e]
+        return [{"opening": "", "people": p, "kadraj": k, "beat_2": es.beat_text(e, "slice_2", x, "SUV"),
+                 "beat_3": es.beat_text(e, "slice_3", y, "SUV")}
+                for (x, y), p, k in zip([(x, y) for x in b["slice_2"] for y in b["slice_3"]][:6],
+                                        (None, 3, 4, None, 5, 2), list(cap.WITNESS)[:6])]
+
+    def test_no_generic_phrases_in_any_template(self):
+        for e in cap.SHARE_CATEGORY:
+            for info in self._infos(e) + [{"opening": "", "people": None, "kadraj": None}]:
+                texts = [cap._fill(t, e, info) for ts in cap.TITLE_TEMPLATES.values() for t in ts]
+                texts += [cap._fill(t, e, info) for t in cap.desc_templates(info)]
+                texts += [cap._fill(t, e, info) for ts in cap.CTA_TEMPLATES.values() for t in ts]
+                for text in texts:
+                    for g in self.GENERIC:
+                        self.assertNotIn(g, text.lower(), (e, text))
+                    self.assertFalse(cap.banned_phrases(text), (e, text))
+                    self.assertNotIn("{", text)
+        for g in self.GENERIC:   # GPT adaylarında da kalıcı yasak
+            self.assertIn(g, cap.BANNED_PHRASES)
+
+    def test_title_templates_follow_styles(self):
+        info = {"opening": "", "people": 4, "kadraj": "balkon"}
+        for e in cap.SHARE_CATEGORY:
+            for st, tpls in cap.TITLE_TEMPLATES.items():
+                filled = [cap._fill(t, e, info) for t in tpls]
+                self.assertTrue([f for f in filled if len(cap.words(f)) <= 9], (e, st))   # her stilde 9 kelimelik var
+                for f in filled:
+                    self.assertTrue(f[0].isupper() or f[0].isdigit(), f)
+                    self.assertLessEqual(cap.emoji_count(f), 2)
+                    if st == "T4":   # gerçek soru: soru kelimesiyle başlar, "?" ile biter
+                        self.assertRegex(f, r"^(Could|How|Would|What|Where|Who|Which|Can|Will)\b")
+                        self.assertTrue(cap._EMOJI.sub("", f).strip().endswith("?"), f)
+                    if st == "T5":
+                        self.assertRegex(f, r"\b(From)\b")
+        # çoğul tehdit fiil uyumu
+        self.assertEqual(cap._fill("{threat} Tear{s} Through {target}", cap.BOMBS, info),
+                         "Volcanic Bombs Tear Through a Village Street")
+        self.assertEqual(cap._fill("{threat} Tear{s} Through {target}", cap.FLOOD, info),
+                         "Flash Flood Tears Through a City Street")
+
+    def test_descriptions_are_concrete(self):
+        # beat'li açıklama: üretimin beat cümlesinden en az bir öğe + tehdit (adı ya da beat'teki tehdit kelimesi)
+        for e in cap.SHARE_CATEGORY:
+            threat = cap.VARS[e][0].lower()
+            for info in self._infos(e):
+                heads = (cap.beat_head(info["beat_2"]), cap.beat_head(info["beat_3"]))
+                for t in cap.DESC_TEMPLATES:
+                    d = cap._fill(t, e, info).lower()
+                    self.assertTrue(any(cap._it(h).lower()[3:] in d or h.lower() in d for h in heads), (e, d))
+                    self.assertTrue(threat in d or set(cap.words(d)) & (cap.EVENT_WORDS | cap.event_stop(e))
+                                    or "it " in d, (e, d))
+        info = self._infos(cap.MARINA)[0]
+        self.assertIn("marina", cap._fill(cap.DESC_TEMPLATES[0], cap.MARINA, info).lower())
+
+    def test_ten_template_captions_distinct(self):
+        # GPT adayı yok, 10 ardışık şablon caption: hiçbir iki açıklama Jaccard > 0.45 değil, ilk 3 kelime aynı değil
+        res = _sim(False)
+        for e, rows in res.items():
+            stop = cap.event_stop(e)
+            ds = [r["description"] for r in rows]
+            for i in range(len(ds)):
+                for j in range(i + 1, len(ds)):
+                    self.assertLessEqual(cap.jaccard(ds[i], ds[j], stop), 0.45, (e, ds[i], ds[j]))
+                    f3 = cap.first3(ds[i], stop)
+                    self.assertFalse(len(f3) == 3 and f3 == cap.first3(ds[j], stop), (e, ds[i], ds[j]))
+            self.assertEqual(len({r["title"] for r in rows}), len(rows), e)
+
+    def test_caption_info_has_beats(self):
+        self.assertIn('"beat_2": es.beat_text(event, "slice_2", spec["beat_2"], spec["vehicle"])',
+                      open(os.path.join(ROOT, "core", "creative_pipeline.py"), encoding="utf-8").read())
 
 
 if __name__ == "__main__":

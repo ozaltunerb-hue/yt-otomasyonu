@@ -19,17 +19,40 @@ if ROOT not in sys.path:
 FIXTURE = os.path.join(ROOT, "tests", "fixtures", "paylasimlar_snapshot.json")
 VERBS = ("Rolls Into", "Overruns", "Breaks Over", "Pours Across", "Batters", "Rips Through", "Buries", "Hammers",
          "Floods Into", "Crashes Onto", "Charges Down", "Tears Into")
-HOOKS = ("Nobody Expected This Part", "Look at the Left Side", "Wait for the Last Second", "Watch the Car on the Right",
+HOOKS = ("Keep Your Eyes on the Roof", "Look at the Left Side", "Wait for the Last Second", "Watch the Car on the Right",
          "This Is How Fast It Moves", "It Did Not Slow Down")
 WITNESS = ("From a Rooftop", "From an Upper Window", "From a Hillside", "From the Third Floor",
            "From a Street Camera")   # gerçek GPT'ye "en fazla 9 kelime" denir; sahte adaylar da kısa
 NUMBERS = ("Fifteen Seconds", "Ten Seconds", "Three Floors", "Four Cars", "Six Houses", "Two Streets")
 
 
-def mock_candidates(event: str, rng: random.Random, avoid_styles: list[str] = ()) -> dict:
-    """Sahte GPT: gerçek GPT'ye söylendiği gibi son 2 stilden kaçınır (kalan 4 stilden 3'ü); 6 stilin hepsi üretilebilir."""
+VEHICLES = ("SUV", "pickup truck", "delivery van", "white sedan")
+
+
+def beat_rotation(event: str, runs: int, rng: random.Random) -> list[dict]:
+    """Üretimdeki gibi: LRU beat ÇİFTİ üzerinde (Eksenler "beats" = "Y2+Z7"), çift tekrar etmez; tek bir beat art arda
+    gelebilir. İzinli çiftler rastgele sırayla, araç rastgele. 21 Eki (Aşama 7.1)."""
+    import core.event_structure as es
+    b = es.EVENT_BEATS[event]
+    bad = b.get("excluded_pairs", set())
+    pairs = [(x, y) for x in b["slice_2"] for y in b["slice_3"] if (x, y) not in bad]
+    rng.shuffle(pairs)
+    out = []
+    for i in range(runs):
+        x, y = pairs[i % len(pairs)]
+        veh = rng.choice(VEHICLES)
+        out.append({"beat_2": es.beat_text(event, "slice_2", x, veh), "beat_3": es.beat_text(event, "slice_3", y, veh)})
+    return out
+
+
+def mock_candidates(event: str, rng: random.Random, avoid_styles: list[str] = (), info: dict | None = None) -> dict:
+    """Sahte GPT: gerçek GPT'ye söylendiği gibi son 2 stilden kaçınır (kalan 4 stilden 3'ü); 6 stilin hepsi üretilebilir.
+    Açıklamalar bu üretimin beat cümlelerinden (gerçek GPT de hikâyeyi bilir)."""
     import core.caption as cap
-    threat, target, emoji, escalation = cap.VARS[event]
+    threat, target, emoji = cap.VARS[event][:3]
+    info = info or {}
+    b2 = (info.get("beat_2") or "the first car is hit").rstrip(".")
+    b3 = (info.get("beat_3") or "the street is torn apart").rstrip(".")
     pool = [s for s in cap.STYLES if s not in set(avoid_styles)] or list(cap.STYLES)
     styles = rng.sample(pool, min(3, len(pool)))
     make = {
@@ -40,11 +63,11 @@ def mock_candidates(event: str, rng: random.Random, avoid_styles: list[str] = ()
         "T5": lambda: f"Filmed {rng.choice(WITNESS)} as the {threat} Hit",
         "T6": lambda: f"{threat} {rng.choice(VERBS)} {target} {emoji}",
     }
-    descs = [f"It starts at the edge of {target.lower()}. A few moments later the result is {escalation}.",
-             f"It {rng.choice(('builds', 'grows', 'speeds up'))} with every second. The last frame: {escalation}.",
-             f"One calm scene, then the {threat.lower()}: {escalation}, all in a single take."]
+    descs = [f"{b2[0].upper() + b2[1:]}. Then {b3}.",
+             f"The {threat.lower()} reaches {target.lower()} and {b3}.",
+             f"One calm scene, then the {threat.lower()}: {b2}."]
     cta_type = rng.choice(list(cap.CTA_TYPES))
-    cta = {"question": "Where would you have gone first?", "watch": "Stay until the last frame.",
+    cta = {"question": "Where would you have gone first?", "watch": "Stay until the very end.",
            "emoji": f"Comment {emoji} or 🏃", "stat": "Fifteen seconds, one take.", "none": ""}[cta_type]
     return {"titles": [(make[s](), s) for s in styles], "descriptions": rng.sample(descs, 2), "cta": cta,
             "cta_type": cta_type}
@@ -62,22 +85,25 @@ def reason_kind(neden: str) -> str:
     return "biçim"
 
 
-def simulate(runs: int = 10, seed: int = 11) -> dict:
+def simulate(runs: int = 10, seed: int = 11, gpt: bool = True) -> dict:
+    """gpt=False: GPT adayı yok, hepsi şablon (şablon çeşitliliği ölçümü)."""
     import core.caption as cap
     rows = json.load(open(FIXTURE, encoding="utf-8"))["rows"]
     rng = random.Random(seed)
     out = {}
     for event in cap.SHARE_CATEGORY:
         generated, results = [], []
+        beats = beat_rotation(event, runs, rng)
         for i in range(runs):
             ctx = cap.build_context(rows, generated)
-            info = {"opening": "", "people": rng.choice((None, 3, 4, 5)), "kadraj": rng.choice(list(cap.WITNESS))}
-            cands = mock_candidates(event, rng, ctx["recent_styles"][-2:])
+            info = {"opening": "", "people": rng.choice((None, 3, 4, 5)), "kadraj": rng.choice(list(cap.WITNESS)),
+                    **beats[i]}
+            cands = mock_candidates(event, rng, ctx["recent_styles"][-2:], info) if gpt else None
             c = cap.choose(event, info, cands, ctx, rng)
             gpt_rej = [r for r in c["rejected"] if r["kaynak"] == "GPT" and r["alan"] == "başlık"]
-            results.append({**c, "gpt_titles": len(cands["titles"]), "gpt_title_rejected": len(gpt_rej),
+            results.append({**c, "gpt_titles": len(cands["titles"]) if cands else 0, "gpt_title_rejected": len(gpt_rej),
                             "reasons": [reason_kind(r["neden"]) for r in gpt_rej],
-                            "cand_styles": [s for _, s in cands["titles"]]})
+                            "cand_styles": [s for _, s in cands["titles"]] if cands else []})
             generated.append({**cap.meta(c), "date": f"2026-11-{i + 1:02d}"})
         out[event] = results
     return out

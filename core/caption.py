@@ -13,6 +13,7 @@ Caption sistemi (21 Eki 2026, Aşama 7): başlık + açıklama + CTA + hashtag.
 """
 from __future__ import annotations
 
+import functools
 import itertools
 import random
 import re
@@ -43,7 +44,9 @@ def schema_properties() -> dict:
 
 
 BANNED_PHRASES = ("massive", "in seconds", "would you run or stay", "the moment everything", "swallows the entire",
-                  "out of nowhere")
+                  "out of nowhere",
+                  # 21 Eki (Aşama 7.1): genel / tık tuzağı kalıplar
+                  "nobody expected", "this part", "this moment", "with every second", "the last frame")
 AI_WORDS = ("ai", "a.i.", "artificial", "generated", "aigenerated", "aiart", "aivideo", "midjourney", "sora", "kie",
             "seedance")
 PLACE_WORDS = ("turkey", "türkiye", "greece", "italy", "spain", "france", "japan", "china", "india", "usa", "america",
@@ -118,7 +121,7 @@ _POOL = {
                ("#tornado", "#twister", "#supercell", "#stormchasing", "#tornadowarning", "#waterspout", "#storm")),
     "yangın": (("#naturaldisaster", "#extremeweather", "#disaster", "#firesafety"),
                ("#wildfire", "#firetornado", "#forestfire", "#bushfire", "#firestorm", "#firefighters",
-                "#aerialfirefighting", "#smoke")),
+                "#aerialfirefighting", "#smoke", "#buildingfire", "#apartmentfire")),   # 21 Eki (7.1): +2 cephe
     "volkan": (("#naturepower", "#naturaldisaster", "#disaster", "#earthscience"),
                ("#volcano", "#eruption", "#volcaniceruption", "#ashcloud", "#lavabombs", "#pyroclasticflow", "#volcanic")),
     "çığ": (("#naturepower", "#naturaldisaster", "#extremeweather", "#disaster"),
@@ -134,13 +137,15 @@ TAG_POOL = {FLOOD: "sel", TIDAL: "dalga", MUDSLIDE: "heyelan", SLOPE: "heyelan",
 TAG_ONLY = {"#firetornado": {FIRE_TORNADO}, "#aerialfirefighting": {HELICOPTER}, "#waterspout": {MARINA, LANDFALL},
             "#skiresort": {AVA_S}, "#mountainroad": {SLOPE}, "#pyroclasticflow": {PYRO}, "#lavabombs": {BOMBS},
             "#wildfire": {WILDFIRE, FIRE_TORNADO, HELICOPTER}, "#forestfire": {WILDFIRE, FIRE_TORNADO, HELICOPTER},
-            "#bushfire": {WILDFIRE, FIRE_TORNADO, HELICOPTER}, "#rockfall": {SLOPE}}
+            "#bushfire": {WILDFIRE, FIRE_TORNADO, HELICOPTER}, "#rockfall": {SLOPE},
+            "#buildingfire": {FACADE}, "#apartmentfire": {FACADE}}
 MARITIME_TAGS = ("#maritime", "#ocean", "#shiplife", "#roughseas", "#cctv")
 MARITIME_EVENTS = {TIDAL, MARINA, LANDFALL}
 BANNED_TAGS = ("#viral", "#reels", "#cinematic", "#fyp", "#aivideo", "#foryou", "#foryoupage", "#explore",
                "#earthquake")
 
 
+@functools.lru_cache(maxsize=4096)
 def is_banned_tag(tag: str) -> bool:
     t = tag.lower()
     return t in BANNED_TAGS or bool(re.search(r"(^#ai|ai$|aiart|aigenerated|artificial)", t))
@@ -153,52 +158,69 @@ def event_tags(event: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
     return broad, special
 
 
-# Şablon değişkenleri: tehdit, hedef, emoji, sonuç (isim öbeği: özne uyumu gerekmez)
+# Şablon değişkenleri (21 Eki, Aşama 7.1): tehdit, hedef, emoji, nesneler (sahnede kesin olan; ör. marina: 4 Eki'den
+# beri yat yok, kafe var), yer öbeği. Açıklama şablonları üretimin beat cümlelerini kullanır (info["beat_2"/"beat_3"]).
 VARS = {
-    FLOOD: ("Flash Flood", "a City Street", "🌊", "cars dragged down the street"),
-    TIDAL: ("Tidal Wave", "a Seafront Street", "🌊", "cars and benches pushed inland"),
-    MUDSLIDE: ("Mudslide", "a Steep Hillside Street", "⛰️", "the whole street under mud"),
-    SLOPE: ("Slope Collapse", "a Mountain Road", "⛰️", "both lanes buried"),
-    VILLAGE: ("Debris Torrent", "a Hillside Village", "🌧️", "the village lanes torn apart"),
-    LANDFALL: ("Waterspout", "the Waterfront", "🌪️", "debris thrown across the seafront"),
-    MARINA: ("Waterspout", "a Marina", "🌪️", "boats tossed against the quay"),
-    AVENUE: ("Tornado", "a Coastal Avenue", "🌪️", "cars and shop fronts flung across the road"),
-    WILDFIRE: ("Wall of Flames", "a Hillside Neighborhood", "🔥", "flames jumping from roof to roof"),
-    FACADE: ("Facade Fire", "an Apartment Tower", "🔥", "fire climbing from floor to floor"),
-    FIRE_TORNADO: ("Fire Tornado", "a Wooded Neighborhood", "🔥", "burning debris pulled into the funnel"),
-    HELICOPTER: ("Water Drop", "a Burning Neighborhood", "🚁", "a helicopter fighting the flames above the rooftops"),
-    PYRO: ("Ash Cloud", "a Village Street", "🌋", "the whole street turned grey"),
-    BOMBS: ("Volcanic Bombs", "a Village Street", "🌋", "roofs punched through and cars on fire"),
-    AVA_V: ("Avalanche", "a Mountain Village", "🏔️", "the first houses buried"),
-    AVA_S: ("Avalanche", "a Ski Resort", "⛷️", "the resort buildings hit"),
-    AVA_F: ("Avalanche", "a Forest Valley", "🌲", "snapped trees and broken cabins"),
-    EQ_A: ("Building Collapse", "an Apartment Block", "🏢", "the block down floor by floor"),
-    EQ_O: ("Building Collapse", "a Row of Old Houses", "🧱", "the houses down one after another"),
+    FLOOD: ("Flash Flood", "a City Street", "🌊", "Parked Cars", "on a City Street"),
+    TIDAL: ("Tidal Wave", "the Seafront", "🌊", "Parked Cars", "on the Seafront"),
+    MUDSLIDE: ("Mudslide", "a Steep Hillside Street", "⛰️", "Hillside Houses", "on a Hillside Street"),
+    SLOPE: ("Slope Collapse", "a Mountain Road", "⛰️", "Parked Cars", "on a Mountain Road"),
+    VILLAGE: ("Debris Torrent", "a Hillside Village", "🌧️", "Village Houses", "in a Hillside Village"),
+    LANDFALL: ("Waterspout", "the Waterfront", "🌪️", "Waterfront Houses", "on the Waterfront"),
+    MARINA: ("Waterspout", "a Marina", "🌪️", "Quayside Cafés", "at a Marina"),
+    AVENUE: ("Tornado", "a Coastal Avenue", "🌪️", "Palm Trees", "on a Coastal Avenue"),
+    WILDFIRE: ("Wall of Flames", "a Hillside Neighborhood", "🔥", "Hillside Homes", "in a Hillside Neighborhood"),
+    FACADE: ("Facade Fire", "an Apartment Tower", "🔥", "Upper Floors", "on an Apartment Tower"),
+    FIRE_TORNADO: ("Fire Tornado", "a Burning Roadside", "🔥", "Roadside Houses", "on a Burning Roadside"),
+    HELICOPTER: ("Water Drop", "a Burning Hillside", "🚁", "Hillside Homes", "over a Burning Hillside"),
+    PYRO: ("Ash Cloud", "a Village Street", "🌋", "Village Houses", "on a Village Street"),
+    BOMBS: ("Volcanic Bombs", "a Village Street", "🌋", "Village Roofs", "on a Village Street"),
+    AVA_V: ("Avalanche", "a Mountain Village", "🏔️", "Stone Chalets", "in a Mountain Village"),
+    AVA_S: ("Avalanche", "a Ski Lodge", "⛷️", "Lodge Buildings", "at a Ski Lodge"),
+    AVA_F: ("Avalanche", "a Forest Valley", "🌲", "Wooden Cabins", "in a Forest Valley"),
+    EQ_A: ("Building Collapse", "an Apartment Block", "🏢", "Upper Floors", "on a City Block"),
+    EQ_O: ("Building Collapse", "a Row of Old Houses", "🧱", "Old Stone Houses", "on an Old Street"),
 }
+PLURAL_THREATS = {BOMBS}   # fiil uyumu: "Volcanic Bombs Tear", "Flash Flood Tears"
 WITNESS = {"balkon": "the Balcony", "çatı": "the Rooftop", "pencere": "an Upper Window", "tepe": "the Hillside",
            "direk": "a Street Camera", "teras": "the Terrace", None: "Across the Street"}
 _NUMW = {2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten"}
+# 21 Eki (Aşama 7.1): genel / tık tuzağı kalıp yok ("Nobody expected", "this part", "with every second", "The last
+# frame:"); T4 gerçek soru; her başlık olayın tehdidini, hedefini ya da sahnedeki nesneleri anar.
 TITLE_TEMPLATES = {
-    "T1": ("{threat} Hits {target} {emoji}", "No Way Out on {target} {emoji}", "{target} Had No Warning {emoji}"),
-    "T2": ("The Second the {threat} Arrives {emoji}", "When {target} Goes Under {emoji}",
-           "The Moment the {threat} Reached {target}"),
-    "T3": ("15 Seconds Inside a {threat} {emoji}", "{people} People, One {threat} {emoji}",
-           "Fifteen Seconds, One Take, One {threat}"),
-    "T4": ("Could You Outrun This {threat}? {emoji}", "What Happens When a {threat} Hits? {emoji}",
-           "Would You Stay on {target}? {emoji}"),
-    "T5": ("Filmed From {witness} as the {threat} Hit {emoji}", "Seen From {witness}: {threat} {emoji}",
-           "Caught From {witness} on {target}"),
-    "T6": ("{threat} Tears Through {target} {emoji}", "{threat} Slams Into {target} {emoji}",
-           "{threat} Pounds {target} {emoji}"),
+    "T1": ("{threat} Hit{s} {target} {emoji}", "{target} Had No Warning {emoji}",
+           "The {objects} Never Stood a Chance {emoji}", "{threat} Versus the {objects}"),
+    "T2": ("The Second the {threat} Reached {target}", "When the {threat} Reached the {objects} {emoji}",
+           "The Instant {target} Was Hit {emoji}", "The Moment the {objects} Gave Way {emoji}"),
+    "T3": ("15 Seconds of {threat} {loc}", "{people} People Run From the {threat} {emoji}",
+           "Fifteen Seconds Near the {objects} {emoji}", "One Take, One {threat_one} {emoji}"),
+    "T4": ("Could These {objects} Survive the {threat}? {emoji}", "Could You Outrun the {threat}? {emoji}",
+           "How Long Would the {objects} Last? {emoji}", "Could {target} Hold Back the {threat}?"),
+    "T5": ("Filmed From {witness} as the {threat} Hit {emoji}", "Seen From {witness} as the {objects} Were Hit",
+           "Caught From {witness} {loc}", "Watching the {objects} From {witness}"),
+    "T6": ("{threat} Tear{s} Through {target} {emoji}", "{threat} Slam{s} Into the {objects} {emoji}",
+           "{threat} Pound{s} {target} {emoji}", "{threat} Rip{s} Through the {objects}"),
 }
-DESC_TEMPLATES = ("From the first second to the last: {target_l}, the {threat_l} and finally {escalation}. One take, no cut.",
-                  "Shot from {witness_l} above {target_l}. The {threat_l} keeps building and the last frame shows "
-                  "{escalation}.")
+# Açıklama: tehdit + hedef + üretimin beat cümlesi (somut). Beat bilgisi yoksa (eski durum) beat'siz iki şablon.
+# h2/h3: beat cümlesinin ilk cümleciği (ortak kuyruklar benzerliği şişirmesin); i2/i3: tehdit adı başta geçiyorsa
+# öznesi "it" (çerçeve tehdidi zaten adlandırıyor). İki beat'li şablonlar önce: üretimde beat ÇİFTİ tekrar etmez.
+DESC_TWO_BEATS = 5   # ilk 5 şablon iki beat'li (önce denenir)
+DESC_TEMPLATES = ("{Threat} {loc_l}: {i2}, then {i3}.",
+                  "{H2}{as2}. Seconds later {h3}.",
+                  "From {witness_l}: {h2}{as2}, then {h3}.",
+                  "First the {threat_l}: {i2}. Moments later {h3}.",
+                  "Camera rolling {loc_l}. {H2}{as2}, and soon {h3}.",
+                  "The {threat_l} reach{es} {target_l}: {i3}.",
+                  "{Threat} {loc_l}, one take: {i2}.",
+                  "One take from {witness_l} as the {threat_l} hit{s}: {i3}.",
+                  "Halfway through the {threat_l}, {h3}.")
+DESC_TEMPLATES_NO_BEAT = ("The {threat_l} reach{es} {target_l} and the {objects_l} take the first hit.",
+                          "Filmed from {witness_l} as the {threat_l} hit the {objects_l} {loc_l}.")
 CTA_TEMPLATES = {
-    "question": ("Where would you have taken cover?", "Which detail did you notice first?"),
-    "watch": ("Watch until the last second.", "Keep watching, the last five seconds are the worst."),
-    "emoji": ("Comment {emoji} if you would watch or 🏃 if you would leave.", "Comment 🏠 or 🚗: what would you save first?"),
-    "stat": ("{people} people, 15 seconds, one {threat_l}.", "15 seconds from first impact to the last frame."),
+    "question": ("Would you have stayed near the {objects_l}?", "Where would you run {loc_l}?"),
+    "watch": ("Keep your eyes on the {objects_l} until the end.", "Watch {target_l} until the very end."),
+    "emoji": ("Comment {emoji} if you would stay or 🏃 if you would run.", "Comment 🏠 or 🚗: what would you save first?"),
+    "stat": ("{people} people, 15 seconds, one take.", "15 seconds, one take, no cuts."),
     "none": ("",),
 }
 
@@ -214,12 +236,19 @@ _STOP = {"a", "an", "the", "of", "to", "in", "on", "as", "and", "it", "its", "th
 EVENT_WORDS = {"tornado", "tornadoe", "twister", "funnel", "waterspout", "wave", "tidal", "flood", "floodwater",
                "flooding", "mud", "mudslide", "landslide", "slope", "hillside", "fire", "flame", "wildfire",
                "helicopter", "volcano", "volcanic", "ash", "bomb", "avalanche", "snow", "building", "block",
-               "collapse", "street", "town", "village", "city", "road"}
+               "collapse", "street", "town", "village", "city", "road",
+               # 21 Eki (7.1): olay adlarının eş anlamlıları (su bırakma = helikopter, kızgın kaya = volkan bombası)
+               "water", "drop", "load", "rock", "glowing", "facade"}
 _EMOJI = re.compile("[\U0001F000-\U0001FFFF☀-➿️‍]")
 
 
-def words(text: str) -> list[str]:
-    return re.findall(r"[a-z0-9']+", _EMOJI.sub(" ", (text or "").lower()))
+def words(text: str) -> tuple[str, ...]:
+    return _words(text or "")
+
+
+@functools.lru_cache(maxsize=16384)
+def _words(text: str) -> tuple[str, ...]:
+    return tuple(re.findall(r"[a-z0-9']+", _EMOJI.sub(" ", text.lower())))
 
 
 def _norm(w: str) -> str:
@@ -229,29 +258,55 @@ def _norm(w: str) -> str:
     return w[:-1] if len(w) > 3 and w.endswith("s") and not w.endswith("ss") else w
 
 
-def clean_words(text: str) -> list[str]:
-    """Benzerlik kelimeleri (sıralı): stopword, olay/kategori adı ve eş anlamlısı, sayı ve emoji çıkarılmış."""
+def clean_words(text: str, stop: frozenset = frozenset()) -> list[str]:
+    return list(_clean_words(text or "", frozenset(stop)))
+
+
+@functools.lru_cache(maxsize=16384)   # 21 Eki (7.1): aynı geçmiş metinleri her adayda yeniden temizlenmesin
+def _clean_words(text: str, stop: frozenset) -> tuple[str, ...]:
+    """Benzerlik kelimeleri (sıralı): stopword, olay/kategori adı ve eş anlamlısı, sayı ve emoji çıkarılmış.
+    stop: ek olarak sayılmayan kelimeler (aday olayının kendi adındaki kelimeler, event_stop)."""
     out = []
     for w in words(text):
         n = _norm(w)
-        if not n or n in _STOP or w in _STOP or n in EVENT_WORDS or w in EVENT_WORDS or re.fullmatch(r"\d+", n):
+        if not n or n in _STOP or w in _STOP or n in EVENT_WORDS or w in EVENT_WORDS or re.fullmatch(r"\d+", n) \
+                or n in stop:
             continue
         out.append(n)
-    return out
+    return tuple(out)
 
 
-def content_words(text: str) -> set[str]:
-    return set(clean_words(text))
+def event_stop(event: str | None) -> frozenset:
+    """21 Eki (7.1): olayın kendi adındaki kelimeler (ör. "row of old stone houses" -> row, old, stone, house) o olayın
+    adaylarında benzerliğe sayılmaz: her caption olayını anar."""
+    return frozenset(_norm(w) for w in words(event or "") if w not in _STOP) - {""}
 
 
-def jaccard(a: str, b: str) -> float:
-    x, y = content_words(a), content_words(b)
+def content_words(text: str, stop: frozenset = frozenset()) -> frozenset[str]:
+    return _content_words(text or "", frozenset(stop))
+
+
+@functools.lru_cache(maxsize=16384)
+def _content_words(text: str, stop: frozenset) -> frozenset[str]:
+    return frozenset(_clean_words(text, stop))
+
+
+def jaccard(a: str, b: str, stop: frozenset = frozenset()) -> float:
+    x, y = content_words(a, stop), content_words(b, stop)
+    if stop and (len(x) < 2 or len(y) < 2):   # olay adı çıkınca kelime kalmıyorsa olay adı sayılır (boş = benzer değil
+        x, y = content_words(a), content_words(b)   # olmasın: "Debris Torrent Tears Through a Hillside Village")
     return len(x & y) / len(x | y) if x | y else 0.0
 
 
-def first3(text: str) -> tuple[str, ...]:
+def first3(text: str, stop: frozenset = frozenset()) -> tuple[str, ...]:
     """İlk 3 kelime kuralı temizlenmiş kelimelerle ("The…", "A…" ile başlayan başlıklar haksız ret almasın)."""
-    return tuple(clean_words(text)[:3])
+    out = clean_words(text, stop)
+    return tuple((out if len(out) >= 3 or not stop else clean_words(text))[:3])
+
+
+def same_text(a: str, b: str) -> bool:
+    """Birebir tekrar (büyük/küçük harf, emoji ve noktalama hariç)."""
+    return bool(words(a)) and words(a) == words(b)
 
 
 def emoji_count(text: str) -> int:
@@ -333,16 +388,17 @@ def title_issues(title: str, ctx: dict, extra_titles: list[str] = ()) -> list[st
     bad = banned_phrases(title)
     if bad:
         out.append("yasak: " + ", ".join(bad))
-    dyn = content_words(title) & ctx.get("dynamic_banned", set())
+    stop = ctx.get("event_stop", frozenset())
+    dyn = content_words(title, stop) & ctx.get("dynamic_banned", set())
     if dyn:
         out.append("son başlıklarda sık: " + ", ".join(sorted(dyn)))
     for old in list(ctx.get("titles", [])) + list(extra_titles):
         if not old:
             continue
-        if jaccard(title, old) > 0.5:
+        if same_text(title, old) or jaccard(title, old, stop) > 0.5:
             out.append(f"benzer: {old}")
             break
-        if first3(title) == first3(old) and len(first3(title)) == 3:
+        if first3(title, stop) == first3(old, stop) and len(first3(title, stop)) == 3:
             out.append(f"ilk 3 kelime aynı: {old}")
             break
     return out
@@ -360,7 +416,7 @@ def description_issues(desc: str, ctx: dict, opening: str = "", extra: list[str]
     if opening and opening.rstrip(".").lower() in (desc or "").lower():
         out.append("açılış cümlesi birebir")
     for old in list(ctx.get("descriptions", [])) + list(extra):
-        if old and jaccard(desc, old) > 0.45:
+        if old and (same_text(desc, old) or jaccard(desc, old, ctx.get("event_stop", frozenset())) > 0.45):
             out.append(f"benzer: {old[:60]}")
             break
     return out
@@ -390,19 +446,55 @@ def allowed_after(options: list[str], history: list[str], depth: int = 2) -> lis
 
 
 # ── Seçim ────────────────────────────────────────────────────────────────────────────────────────────────────────
-_NO_PEOPLE_ALT = {"{people} People, One {threat} {emoji}": "Fifteen Seconds on {target} {emoji}",
-                  "{people} people, 15 seconds, one {threat_l}.": "15 seconds from first impact to the last frame."}
+_NO_PEOPLE_ALT = {"{people} People Run From the {threat} {emoji}": "One Take, Fifteen Seconds, {objects} {emoji}",
+                  "{people} people, 15 seconds, one take.": "15 seconds, one take, no cuts."}
+
+
+def _cap1(s: str) -> str:
+    return s[:1].upper() + s[1:] if s else s
+
+
+_CLAUSE_CUT = re.compile(r",\s|\s(?:and|sending|as|while)\s")
+# Tekil özne olarak "it" ile değiştirilebilen tehdit adları (çoğullar hariç: "the flames leap" -> "it leap" olmaz)
+_IT_SUBJECTS = re.compile(r"^the (?:towering |huge |violent )?(?:fire tornado|tornado|avalanche(?: front)?|flood|floodwater|mudslide|"
+                          r"tidal wave|wave|surge|cloud(?: front)?|ash cloud|snow blast|snow wall|current)\b")
+
+
+def beat_head(text: str) -> str:
+    """Beat cümlesinin ilk cümleciği (en az 4 kelime kalıyorsa kesilir)."""
+    t = (text or "").strip().rstrip(".")
+    for m in _CLAUSE_CUT.finditer(t):   # ilk uygun kesim ("the SUV and the car behind it" kesilmez)
+        if len(t[:m.start()].split()) >= 5:
+            return t[:m.start()]
+    return t
+
+
+def _it(head: str) -> str:
+    return _IT_SUBJECTS.sub("it", head, count=1)
+
+
+def mentions_threat(head: str, event: str) -> bool:
+    """Beat cümleciği tehdidi zaten anıyor mu (olay adı / eş anlamlısı)."""
+    ws = {_norm(w) for w in words(head)} | set(words(head))
+    return bool(ws & (EVENT_WORDS | event_stop(event) | {_norm(w) for w in words(VARS[event][0])}))
 
 
 def _fill(template: str, event: str, info: dict) -> str:
-    threat, target, emoji, escalation = VARS[event]
+    threat, target, emoji, objects, loc = VARS[event]
     if "{people}" in template and not info.get("people"):   # kişi sayısı yoksa uydurma sayı yok
         template = _NO_PEOPLE_ALT.get(template, template.replace("{people} ", ""))
     people = _NUMW.get(info.get("people") or 0, str(info.get("people") or ""))
-    return " ".join(template.format(threat=threat, target=target, emoji=emoji, witness=WITNESS.get(info.get("kadraj"),
-                                    WITNESS[None]), people=people, threat_l=threat.lower(), target_l=_lower(target),
-                                    escalation=escalation, witness_l=_lower(WITNESS.get(info.get("kadraj"),
-                                                                                         WITNESS[None]))).split())
+    plural = event in PLURAL_THREATS
+    witness = WITNESS.get(info.get("kadraj"), WITNESS[None])
+    h2, h3 = beat_head(info.get("beat_2") or ""), beat_head(info.get("beat_3") or "")
+    text = template.format(threat=threat, Threat=_cap1(threat.lower()), target=target, emoji=emoji,
+                           threat_one=threat[:-1] if plural else threat,
+                           objects=objects, loc=loc, witness=witness, people=people, threat_l=threat.lower(),
+                           target_l=_lower(target), objects_l=_lower(objects), loc_l=_lower(loc), Loc=_cap1(_lower(loc)),
+                           witness_l=_lower(witness), h2=h2, h3=h3, H2=_cap1(h2), H3=_cap1(h3), i2=_it(h2), i3=_it(h3),
+                           as2="" if mentions_threat(h2, event) else f" as the {threat.lower()} hit{'' if plural else 's'}",
+                           s="" if plural else "s", es="" if plural else "es")
+    return _cap1(" ".join(text.split()))
 
 
 def _lower(s: str) -> str:
@@ -423,9 +515,21 @@ def title_pool(event: str, info: dict, candidates: dict | None, styles: list[str
     return out
 
 
-def desc_pool(event: str, info: dict, candidates: dict | None) -> list:
+def desc_templates(info: dict) -> tuple[str, ...]:
+    """Beat cümleleri varsa beat'li şablonlar (somut), yoksa beat'siz iki şablon."""
+    return DESC_TEMPLATES if info.get("beat_2") and info.get("beat_3") else DESC_TEMPLATES_NO_BEAT
+
+
+def desc_pool(event: str, info: dict, candidates: dict | None, rng: random.Random | None = None) -> list:
+    tpls = list(desc_templates(info))
+    if rng is not None:   # iki beat'li şablonlar (çift tekrar etmez) önce, kendi içinde karışık; sonra tek beat'liler
+        k = DESC_TWO_BEATS if tpls[0] == DESC_TEMPLATES[0] else 0
+        two, one = tpls[:k], tpls[k:]
+        rng.shuffle(two)
+        rng.shuffle(one)
+        tpls = two + one
     return ([("GPT", d) for d in (candidates or {}).get("descriptions", [])]
-            + [("şablon", _fill(t, event, info)) for t in DESC_TEMPLATES])
+            + [("şablon", _fill(t, event, info)) for t in tpls])
 
 
 def choose_hashtags(event: str, ctx: dict, rng: random.Random, exclude_sets: list = ()) -> list[str]:
@@ -440,16 +544,22 @@ def choose_hashtags(event: str, ctx: dict, rng: random.Random, exclude_sets: lis
               and (event in MARITIME_EVENTS or not set(c) & set(MARITIME_TAGS))]
     ok = [c for c in combos if len(set(c) & prev_same) <= 2 and frozenset(c) not in last10]
     if ok:
-        return ok[0]
-    # kural karşılanamıyorsa (ör. deprem: 2 geniş etiket -> ardışık postta en az 2 ortak) en az ortaklı ve yeni set
-    fresh = [c for c in combos if frozenset(c) not in last10] or combos
-    return min(fresh, key=lambda c: len(set(c) & prev_same))
+        chosen = ok[0]
+    else:   # kural karşılanamıyorsa en az ortaklı ve yeni set
+        fresh = [c for c in combos if frozenset(c) not in last10] or combos
+        chosen = min(fresh, key=lambda c: len(set(c) & prev_same))
+    foreign = set(chosen) - set(broad) - set(special)
+    if foreign:   # 21 Eki (7.1): başka kategorinin etiketi asla çıkmaz
+        raise ValueError(f"Etiket olayın havuzunda değil ({event}): {sorted(foreign)}")
+    return chosen
 
 
 def choose(event: str, info: dict, candidates: dict | None, ctx: dict, rng: random.Random,
            exclude_titles: list[str] = (), exclude_tag_sets: list = (), exclude_descriptions: list[str] = ()) -> dict:
     """Seçilen caption: {"title","description","cta","cta_type","hashtags","style","source","rejected",...}.
     info: {"opening","people","kadraj"} (hikâyeden). exclude_titles: bu üretimde daha önce önerilenler (Yeni caption)."""
+    ctx = {**ctx, "event_stop": event_stop(event)}
+    stop = ctx["event_stop"]
     styles = allowed_after(list(STYLES), ctx.get("recent_styles", []))
     rejected = []
     title = style = t_src = None
@@ -468,20 +578,29 @@ def choose(event: str, info: dict, candidates: dict | None, ctx: dict, rng: rand
         tpls = [(st, text) for src, st, text in pool if src == "şablon" and text not in used] or \
                [(st, text) for src, st, text in pool if src == "şablon"]
         style, title = min(tpls, key=lambda x: (len(title_issues(x[1], ctx, exclude_titles)),
-                                                max([jaccard(x[1], o) for o in ctx.get("titles", []) if o] or [0])))
+                                                max([jaccard(x[1], o, stop) for o in ctx.get("titles", []) if o] or [0])))
         t_src = "şablon (zorunlu)"
     description = d_src = None
-    for src, text in desc_pool(event, info, candidates):
+    for src, text in desc_pool(event, info, candidates, rng):
         if text in exclude_descriptions:
             continue
         issues = description_issues(text, ctx, info.get("opening", ""))
+        if not issues and src == "şablon":   # 21 Eki (7.1): şablonlar aynı ilk 3 kelimeyle başlamaz
+            same = next((o for o in ctx.get("descriptions", []) if o and len(first3(text, stop)) == 3
+                         and first3(text, stop) == first3(o, stop)), None)
+            if same:
+                issues = [f"ilk 3 kelime aynı: {same[:60]}"]
         if issues:
             rejected.append({"alan": "açıklama", "kaynak": src, "metin": text, "neden": issues[0]})
             continue
         description, d_src = text, src
         break
     if description is None:
-        description, d_src = _fill(DESC_TEMPLATES[0], event, info), "şablon (zorunlu)"
+        opts = [_fill(t, event, info) for t in desc_templates(info)]
+        opts = [o for o in opts if o not in exclude_descriptions] or opts
+        description = min(opts, key=lambda o: max([jaccard(o, x, stop) for x in ctx.get("descriptions", []) if x]
+                                                  or [0]))
+        d_src = "şablon (zorunlu)"
     types = allowed_after(list(CTA_TYPES), ctx.get("recent_cta_types", []))
     gpt_type = (candidates or {}).get("cta_type")
     gpt_cta = (candidates or {}).get("cta", "")

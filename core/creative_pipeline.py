@@ -1069,5 +1069,8 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
                           "caption_candidates": next((a["caption"] for a in reversed(attempts) if a.get("caption")),
                                                      None),
                           "caption_info": {"opening": spec["key_visual"], "people": people,
-                                           "kadraj": frame.get("type")}},
+                                           "kadraj": frame.get("type"),
+                                           # 21 Eki (7.1): şablon açıklaması bu üretimin beat cümlelerinden
+                                           "beat_2": es.beat_text(event, "slice_2", spec["beat_2"], spec["vehicle"]),
+                                           "beat_3": es.beat_text(event, "slice_3", spec["beat_3"], spec["vehicle"])}},
             "axes_json": ah.axes_json(event, axes, excluded)}
