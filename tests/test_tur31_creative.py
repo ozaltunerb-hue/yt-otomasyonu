@@ -221,7 +221,8 @@ class TestGeneratePrompts(unittest.TestCase):
         self.assertIsNone(r["gate_context"])
         self.assertTrue(is_current_universe_combo(r["combo_key"]))
         self.assertEqual(r["trace"]["pipeline"], "creative")
-        self.assertEqual([c.kwargs.get("model", "gpt-4o") for c in gpt.await_args_list], ["gpt-4o", "gpt-4o"])
+        # 21 Eki (Aşama 7): ayrı metadata çağrısı kalktı (caption hikâye çağrısında / şablonda): tek GPT çağrısı
+        self.assertEqual([c.kwargs.get("model", "gpt-4o") for c in gpt.await_args_list], ["gpt-4o"])
 
     def test_all_three_switches(self):
         with patch.object(pg, "generate_skeleton_prompts", AsyncMock(return_value="S")), \

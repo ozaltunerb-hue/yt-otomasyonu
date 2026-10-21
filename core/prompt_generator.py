@@ -1169,27 +1169,61 @@ async def generate_creative_prompts(config: dict) -> dict:
     used = list(config.get("used_combos", []))
     topics = list(config.get("recent_topics", []))
     history = list(dict.fromkeys(used + topics))
+    # 21 Eki (Aşama 7): caption bağlamı (Paylaşımlar + son 20 üretilmiş caption). Okunamazsa boş bağlamla devam
+    import core.caption as cap
+    caption_warning = None
+    posted, generated = [], []
+    loader = config.get("caption_loader")
+    if loader is not None:
+        try:
+            got = await asyncio.to_thread(loader)
+            posted, generated = list(got.get("posted") or []), list(got.get("generated") or [])
+        except Exception as e:   # noqa: BLE001 - caption geçmişi üretimi durdurmaz
+            log.warning(f"⚠️ Caption geçmişi okunamadı, boş geçmişle devam: {e}")
+            caption_warning = "⚠️ caption geçmişi Notion'dan okunamadı"
+    caption_ctx = cap.build_context(posted, generated)
     scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history, topics,
                                        _call_gpt, view=config.get("view") or None,
-                                       axes_loader=config.get("axes_loader"))   # 21 Eki: Notion eksen geçmişi
+                                       axes_loader=config.get("axes_loader"),   # 21 Eki: Notion eksen geçmişi
+                                       caption_ctx=caption_ctx if loader is not None else None)
     domain, event, ship, story = scene["domain"], scene["event"], scene["ship"], scene["story"]
-    metadata = await _generate_metadata(
-        # 4 Eki: yapılandırılmış olaylarda zaman etiketsiz düz metin (etiketler YouTube metnine sızmasın)
-        {"vessel_class": ship or "None", "incident_type": event,
-         "scenario_summary": scene.get("plain_story") or story},
-        {"domain_title": MARITIME_INSPIRATION_DOMAINS_TITLES.get(domain, domain)})
+    # 21 Eki (Aşama 7): eski denizcilik odaklı metadata çağrısı (ayrı GPT çağrısı) kaldırıldı. Caption hikâye
+    # çağrısının adaylarından (yapılandırılmış hat) ya da şablondan; Kie prompt'una girmez.
+    st = scene.get("structure") or {}
+    info = st.get("caption_info") or {"opening": scene.get("plain_story") or story, "people": None, "kadraj": None}
+    candidates = st.get("caption_candidates")
+    caption = cap.choose(event, info, candidates, caption_ctx, random.Random()) if event in cap.SHARE_CATEGORY \
+        else None
+    if caption is not None:
+        caption["warning"] = caption_warning
+    axes_json = scene.get("axes_json", "")
+    if caption is not None and axes_json:
+        try:
+            data = json.loads(axes_json)
+            data["caption"] = cap.meta(caption)
+            axes_json = json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        except ValueError:
+            pass
+    title = caption["title"] if caption else event
     return {
+        "caption": caption, "caption_block": cap.block(caption) if caption else "",
+        "caption_state": {"event": event, "info": info, "candidates": candidates, "ctx": caption_ctx,
+                          "shown": [caption["title"]] if caption else [],
+                          "tag_sets": [caption["hashtags"]] if caption else []},
+        "youtube_title_raw": title,
         "scenes": [{"scene_number": 1, "prompt": scene["prompt"], "story": story,
                     "style_suffix": scene["style_suffix"], "duration": settings.DEFAULT_DURATION}],
         # Yapılandırılmış olaylarda Kie öncesi son denetimin spec'i (TUR 3: before_submit); diğerlerinde None
         "structure": scene.get("structure"),
-        "youtube_title": clean_youtube_title(metadata.get("youtube_title", "")),
-        "youtube_description": metadata.get("youtube_description", ""),
-        "tags": metadata.get("tags", []),
+        # 21 Eki (Aşama 7): YouTube verisi caption'dan (YouTube akışı kapalı; sadece veri)
+        "youtube_title": f"{title} #Shorts",
+        "youtube_description": (caption["description"] + (f"\n\n{caption['cta']}" if caption and caption["cta"] else ""))
+                               if caption else "",
+        "tags": [t.lstrip("#") for t in caption["hashtags"]] if caption else [],
         # Notion "Konu" tam hikâyeyi tutar: sonraki üretimde "bunlardan farklı yaz" listesi buradan gelir
         "scenario_summary": story,
         "combo_key": scene["combo_key"],
-        "axes_json": scene.get("axes_json", ""),   # 21 Eki: Notion "Eksenler" (seçim anında yazılır)
+        "axes_json": axes_json,   # 21 Eki: Notion "Eksenler" (seçim anında yazılır; Aşama 7: caption meta dahil)
         "total_duration": settings.DEFAULT_DURATION,
         "animal": ship or "None", "talent": event, "category": domain,
         "beat1_action_verb": "",
@@ -1629,12 +1663,9 @@ STRICT RULE: The title MUST highlight the immediate physical crisis and danger, 
     raw_title = result.get("youtube_title", "")
     result["youtube_title"] = clean_youtube_title(raw_title)
 
-    tags = result.get("tags", [])
-    mandatory_tags = ["DeepMyster", "Shorts", "Maritime", "CCTV", "Ocean", "RoughSeas"]
-    for tag in mandatory_tags:
-        if tag not in tags:
-            tags.append(tag)
-    result["tags"] = tags
+    # 21 Eki (Aşama 7): zorla eklenen "Maritime / CCTV / Ocean / RoughSeas" etiketleri kaldırıldı (eski hatlar)
+    result["tags"] = [t for t in result.get("tags", []) if str(t).lower() not in
+                      ("maritime", "cctv", "ocean", "roughseas")]
 
     return result
 

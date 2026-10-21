@@ -232,6 +232,8 @@ async def _execute_pipeline(
         "view": view,
         # 21 Eki (Gece 1 / Aşama 3): seçimden önce kategorinin eksen geçmişi Notion'dan (iptaller dahil)
         "axes_loader": tracker.get_axes_records,
+        # 21 Eki (Aşama 7): caption geçmişi (Paylaşımlar + son 20 üretilmiş caption)
+        "caption_loader": tracker.get_caption_context,
     }
 
     try:
@@ -274,6 +276,7 @@ async def _execute_pipeline(
         await asyncio.to_thread(tracker.create_entry, notion_config, trigger=trigger)
         # 21 Eki: seçilen eksenler Onay'dan önce (iptal edilse de kayıt kalır, sonraki seçim bunu görür)
         await asyncio.to_thread(tracker.record_axes, prompt_data.get("axes_json", ""))
+        await asyncio.to_thread(tracker.record_caption, prompt_data.get("caption_block", ""))   # 21 Eki (Aşama 7)
         await asyncio.to_thread(tracker.update_with_prompts, prompt_data)
         if prompt_data.get("trace"):
             await asyncio.to_thread(tracker.append_body, format_generation(prompt_data["trace"]))
@@ -491,6 +494,10 @@ async def _execute_pipeline(
             "prompt": meta.get("final_prompt") or (scenes[0]["prompt"] if scenes else ""),
             "description": prompt_data.get("youtube_description", ""),
             "tags": prompt_data.get("tags", []),
+            # 21 Eki (Aşama 7): Telegram caption bloğu + Yeni caption için adaylar (GPT çağrısı yok)
+            "caption": prompt_data.get("caption"),
+            "caption_block": prompt_data.get("caption_block", ""),
+            "caption_state": prompt_data.get("caption_state"),
             "model": settings.DEFAULT_MODEL,
             "resolution": settings.DEFAULT_RESOLUTION,
             "video_path": saved_local_path,

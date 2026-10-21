@@ -934,7 +934,9 @@ class TestStructuredScene(unittest.TestCase):
 
     def test_metadata_gets_plain_story(self):
         src = inspect.getsource(pg.generate_creative_prompts)
-        self.assertIn('"scenario_summary": scene.get("plain_story") or story', src)
+        # 21 Eki (Aşama 7): eski metadata çağrısı kalktı; caption bilgisi düz hikâyeden (etiketsiz)
+        self.assertIn('scene.get("plain_story") or story', src)
+        self.assertNotIn("_generate_metadata(", src)
         self.assertIn('"structure": scene.get("structure")', src)
 
 

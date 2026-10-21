@@ -8,6 +8,8 @@ Inline database property'leriyle uyumlu.
 NOT: Notion DB erişimi hazır olmadığında sessizce log'a yazar, pipeline'ı durdurmaz.
 """
 import re
+import json
+import os
 import time
 import logging
 import requests
@@ -43,6 +45,7 @@ DELIVERABLE_STATUSES = [STATUS_COMPLETED, STATUS_UPLOAD_FAILED, STATUS_TEST_DONE
 
 STORY_SOURCE_PROPERTY = "Hikâye kaynağı"
 AXES_PROPERTY = "Eksenler"   # 21 Eki: core.axes_history.AXES_PROPERTY ile aynı
+CAPTION_PROPERTY = "Caption"   # 21 Eki (Aşama 7)
 # 18 Eki (3), Bahadır: bombalar ve kül bulutunda ortam (select). Seçenekler core.skeleton_pipeline.VOLC_ENVS etiketleri
 ENV_PROPERTY = "Ortam"
 ENV_OPTIONS = {"pastel kasaba caddesi": "pink", "Akdeniz tepe kasabası": "orange", "banliyö mahallesi": "green",
@@ -63,7 +66,14 @@ EXTRA_PROPERTIES = {
     ENV_PROPERTY: {"select": {"options": [{"name": n, "color": c} for n, c in ENV_OPTIONS.items()]}},
     # 21 Eki (Gece 1 / Aşama 3): seçim anında tüm eksenler, tek satır JSON (core/axes_history.py). Ayrı istekle yazılır
     AXES_PROPERTY: {"rich_text": {}},
+    # 21 Eki (Aşama 7): seçilen caption (kopyalanmaya hazır blok); Yeni caption'da güncellenir
+    CAPTION_PROPERTY: {"rich_text": {}},
 }
+# Paylaşımlar veritabanı ("DeepMyster Youtube Otomasyonu" sayfasının altında). Eski API sürümünde (2022-06-28) veritabanı
+# kimliğiyle erişilir; data source kimliği a41b9858-9e06-4d7c-a8e0-cbdb9e2b20b0. NOTION_DB_PAYLASIMLAR ile değişir.
+SHARES_DB_ID = os.environ.get("NOTION_DB_PAYLASIMLAR", "effeab88-08cc-48c3-baaf-8013bd836154")
+SHARE_NOTE = "sistem üretimi"
+CAPTION_HISTORY_LIMIT = 20
 # Eksen geçmişi sorgusu: kategorinin son kayıtları, durum filtresi YOK (iptal, hata, test dahil: seçilen her şey sayılır)
 AXES_QUERY_PAGE_SIZE = 100
 
@@ -262,6 +272,68 @@ class NotionTracker:
 
     def set_telegram_file_id(self, file_id: str) -> None:
         self._patch({"Telegram File ID": _rt(file_id)})
+
+    # ── 21 Eki (Aşama 7): caption ──────────────────────────────────────────────────────────────────────────────
+    def record_caption(self, text: str) -> None:
+        """Seçilen caption bloğu üretim kaydının "Caption" alanına (ayrı istek; hata üretimi durdurmaz)."""
+        if text:
+            self._patch({CAPTION_PROPERTY: _rt(text)})
+
+    def get_caption_context(self) -> dict | None:
+        """Caption geçmişi: Paylaşımlar'daki tüm satırlar + üretim kayıtlarındaki son 20 caption (Eksenler JSON'undaki
+        "caption" meta). Notion kapalıysa / dry-run ise None. Ağ hatası yükselir (çağıran boş geçmişle devam eder)."""
+        if not self.enabled or settings.IS_DRY_RUN:
+            return None
+        posted = shared_rows()
+        payload = {"filter": {"property": CAPTION_PROPERTY, "rich_text": {"is_not_empty": True}},
+                   "sorts": [{"property": "Tarih", "direction": "descending"}], "page_size": CAPTION_HISTORY_LIMIT}
+        generated = []
+        try:
+            res = _notion_request("POST", f"{NOTION_API_URL}/databases/{settings.NOTION_DB_ID}/query", json=payload)
+        except RuntimeError as e:
+            if "Could not find property" not in str(e) and "property" not in str(e).lower():
+                raise
+            res = {"results": []}   # alan henüz yoksa (ilk açılış) üretilmiş geçmiş boş
+        for page in reversed(res.get("results", [])):
+            rec = axes_record(page)
+            try:
+                meta = json.loads(rec.get("eksenler") or "{}").get("caption")
+            except ValueError:
+                meta = None
+            if meta:
+                generated.append({**meta, "date": rec.get("date")})
+        return {"posted": posted, "generated": generated}
+
+    @staticmethod
+    def find_shared_post(page_id: str) -> str | None:
+        """Bu üretim için Paylaşımlar'da açılmış satır (Not alanında üretim kaydının kimliği), yoksa None."""
+        key = (page_id or "").replace("-", "")
+        if not key:
+            return None
+        res = _notion_request("POST", f"{NOTION_API_URL}/databases/{SHARES_DB_ID}/query",
+                              json={"filter": {"property": "Not", "rich_text": {"contains": key}}, "page_size": 1})
+        hits = res.get("results", [])
+        return hits[0].get("id") if hits else None
+
+    @staticmethod
+    def add_shared_post(caption: dict, event_label: str, page_id: str, date_iso: str) -> tuple[str, bool]:
+        """📤 Paylaştım: Paylaşımlar'a tek satır. Aynı üretim için ikinci kez basılırsa yeni satır açmaz.
+        Dönüş: (satır kimliği, yeni mi)."""
+        existing = NotionTracker.find_shared_post(page_id)
+        if existing:
+            return existing, False
+        from core.caption import CTA_TYPES
+        link = f"https://www.notion.so/{(page_id or '').replace('-', '')}"
+        props = {"Başlık": {"title": [{"text": {"content": caption["title"][:200]}}]},
+                 "Açıklama": _rt(caption["description"]), "CTA": _rt(caption.get("cta") or ""),
+                 "CTA Tipi": {"select": {"name": CTA_TYPES[caption["cta_type"]]}},
+                 "Hashtagler": _rt(" ".join(caption["hashtags"])),
+                 "Kategori": {"select": {"name": caption["category"]}}, "Olay": _rt(event_label or ""),
+                 "Paylaşım Tarihi": {"date": {"start": date_iso}}, "Platform": {"multi_select": [{"name": "Instagram"}]},
+                 "Deneme Reel": {"checkbox": True}, "Not": _rt(f"{SHARE_NOTE} · {link}")}
+        res = _notion_request("POST", f"{NOTION_API_URL}/pages",
+                              json={"parent": {"database_id": SHARES_DB_ID}, "properties": props})
+        return res.get("id", ""), True
 
     @staticmethod
     def find_undelivered(since_iso: str) -> list[dict]:
@@ -714,6 +786,33 @@ def _query_status_filtered(build_payload, statuses, what: str, required: bool = 
                 raise
             statuses.remove(m.group(1))
             log.warning(f"⚠️ Notion {what}: '{m.group(1)}' seçeneği hâlâ yok; filtreden çıkarıldı, kalan durumlarla devam")
+
+
+def shared_rows() -> list[dict]:
+    """Paylaşımlar'daki tüm satırlar (metin alanları), eskiden yeniye (tests/fixtures/paylasimlar_snapshot.json biçimi)."""
+    rows, cursor = [], None
+    while True:
+        body = {"page_size": 100, **({"start_cursor": cursor} if cursor else {})}
+        res = _notion_request("POST", f"{NOTION_API_URL}/databases/{SHARES_DB_ID}/query", json=body)
+        for page in res.get("results", []):
+            props = page.get("properties", {})
+
+            def val(name):
+                x = props.get(name) or {}
+                kind = x.get("type")
+                if kind in ("title", "rich_text"):
+                    return "".join(i.get("plain_text") or i.get("text", {}).get("content", "") for i in x[kind])
+                if kind == "select":
+                    return (x["select"] or {}).get("name")
+                if kind == "date":
+                    return (x["date"] or {}).get("start")
+                return None
+            rows.append({k: val(k) for k in ("Başlık", "Açıklama", "CTA", "CTA Tipi", "Hashtagler", "Kategori", "Olay",
+                                             "Paylaşım Tarihi", "Not")})
+        if not res.get("has_more"):
+            break
+        cursor = res.get("next_cursor")
+    return sorted(rows, key=lambda r: (r.get("Paylaşım Tarihi") or "", r.get("Başlık") or ""))
 
 
 def axes_record(page: dict) -> dict:

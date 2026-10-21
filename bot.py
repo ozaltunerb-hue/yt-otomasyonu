@@ -27,7 +27,9 @@ from __future__ import annotations
 
 import asyncio
 import concurrent.futures
+import html
 import json
+import random
 import os
 import secrets
 import sys
@@ -312,6 +314,40 @@ def resend_keyboard(page_id: str) -> InlineKeyboardMarkup:
         "🔁 Yeniden gönder", callback_data=f"{CALLBACK_PREFIX}rs:{page_id.replace('-', '')}")]])
 
 
+CAPTION_MAX_REGEN = 3   # 21 Eki (Aşama 7): 🔄 Yeni caption en fazla 3 kez (GPT çağrısı yok)
+
+
+def caption_keyboard(page_id: str) -> InlineKeyboardMarkup:
+    page = page_id.replace("-", "")
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("📤 Paylaştım", callback_data=f"{CALLBACK_PREFIX}cs:{page}"),
+        InlineKeyboardButton("🔄 Yeni caption", callback_data=f"{CALLBACK_PREFIX}cn:{page}"),
+    ]])
+
+
+def caption_text(caption: dict) -> str:
+    """Kopyalanmaya hazır tek parça blok (HTML <pre>, tek dokunuşla kopyalanır) + küçük bilgi satırı."""
+    import core.caption as cap
+    text = f"<pre>{html.escape(cap.block(caption))}</pre>\n{html.escape(cap.info_line(caption))}"
+    if caption.get("warning"):
+        text += f"\n{html.escape(caption['warning'])}"
+    return text
+
+
+async def send_caption(bot, chat_id: int, page_id: str, caption: dict | None, state: dict | None,
+                       bot_data: dict) -> None:
+    """21 Eki (Aşama 7): video hazır mesajının altında caption bloğu ve butonlar. Durum bu süreçte saklanır (Yeni caption
+    GPT'siz: kalan GPT adaylarından ve şablonlardan)."""
+    if not caption:
+        return
+    key = (page_id or "").replace("-", "")
+    if key:
+        bot_data.setdefault("captions", {})[key] = {**(state or {}), "caption": caption, "page_id": page_id,
+                                                     "regen": 0, "shared": False}
+    await safe_send(bot, chat_id, caption_text(caption), parse_mode="HTML",
+                    reply_markup=caption_keyboard(page_id) if key else None)
+
+
 def rating_keyboard(page_id: str) -> InlineKeyboardMarkup:
     page = page_id.replace("-", "")
     return InlineKeyboardMarkup([[
@@ -489,6 +525,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action == "rs" and len(args) == 1 and len(args[0]) == 32:   # 14 Eki: 🔁 Yeniden gönder
         await _on_resend(query, context, args[0])
         return
+    if action in ("cs", "cn") and len(args) == 1 and len(args[0]) == 32:   # 21 Eki (Aşama 7): caption butonları
+        await (_on_caption_share if action == "cs" else _on_caption_new)(query, context, args[0])
+        return
     if action == "t" and args in (["d"], ["o"]):
         key = "detail" if args[0] == "d" else "approval"
         cfg[key] = not cfg[key]
@@ -551,6 +590,52 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                 log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
             await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
                           view=view)
+
+
+async def _on_caption_share(query, context, page: str) -> None:
+    """📤 Paylaştım: Paylaşımlar'a tek satır (aynı üretim için ikinci kez basılırsa yeni satır açmaz)."""
+    import core.caption as cap
+    chat = _allowed_chat(context)
+    state = context.bot_data.setdefault("captions", {}).get(page)
+    if not state:
+        await safe_send(context.bot, chat, "Caption bu oturumda yok (bot yeniden başlamış). Paylaşımlar'a elle ekle.")
+        return
+    try:
+        row, new = await asyncio.to_thread(NotionTracker.add_shared_post, state["caption"],
+                                           EVENT_LABELS.get(state.get("event"), state.get("event") or ""),
+                                           state["page_id"], cap.today_tr())
+    except Exception as e:
+        log.warning(f"⚠️ Paylaşımlar'a yazılamadı: {e}")
+        await safe_send(context.bot, chat, f"❌ Paylaşımlar'a yazılamadı: {str(e)[:200]}")
+        return
+    state["shared"] = True
+    await safe_send(context.bot, chat, "📤 Paylaşımlar'a kaydedildi." if new
+                    else "📤 Bu üretim zaten Paylaşımlar'da; yeni satır açılmadı.")
+
+
+async def _on_caption_new(query, context, page: str) -> None:
+    """🔄 Yeni caption: GPT ÇAĞRISI YOK; kalan GPT adayları + şablonlar, aynı kontrollerle (en fazla 3 kez)."""
+    import core.caption as cap
+    chat = _allowed_chat(context)
+    state = context.bot_data.setdefault("captions", {}).get(page)
+    if not state:
+        await safe_send(context.bot, chat, "Caption bu oturumda yok (bot yeniden başlamış).")
+        return
+    if state["regen"] >= CAPTION_MAX_REGEN:
+        await safe_send(context.bot, chat, f"🔄 En fazla {CAPTION_MAX_REGEN} kez yeni caption üretilir.")
+        return
+    shown = state.setdefault("shown", [state["caption"]["title"]])
+    descs = state.setdefault("descriptions", [state["caption"]["description"]])
+    tag_sets = state.setdefault("tag_sets", [state["caption"]["hashtags"]])
+    c = cap.choose(state["event"], state.get("info") or {}, state.get("candidates"), state.get("ctx") or {},
+                   random.Random(), exclude_titles=shown, exclude_tag_sets=tag_sets, exclude_descriptions=descs)
+    state["regen"] += 1
+    shown.append(c["title"])
+    descs.append(c["description"])
+    tag_sets.append(c["hashtags"])
+    state["caption"] = c
+    await asyncio.to_thread(NotionTracker(page_id=state["page_id"]).record_caption, cap.block(c))
+    await safe_send(context.bot, chat, caption_text(c), parse_mode="HTML", reply_markup=caption_keyboard(state["page_id"]))
 
 
 async def _on_approval(query, context, token: str, answer: str) -> None:
@@ -660,6 +745,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
     await deliver_video(bot, chat_id, result.get("video_path", ""), title, result.get("mode", ""),
                         result.get("notion_page_id", ""), result.get("archive_dir", ""), bot_data,
                         video_url=result.get("video_cdn_url", ""))   # 14 Eki: dosya yoksa Kie linki
+    await send_caption(bot, chat_id, result.get("notion_page_id", ""), result.get("caption"),
+                       result.get("caption_state"), bot_data)   # 21 Eki (Aşama 7)
 
 
 def _is_network_error(e: Exception) -> bool:

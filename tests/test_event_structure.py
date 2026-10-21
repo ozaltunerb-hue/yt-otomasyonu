@@ -442,7 +442,9 @@ class TestSchemaParse(unittest.TestCase):
         s = es.SLICE_SCHEMA
         self.assertTrue(s["strict"])
         self.assertFalse(s["schema"]["additionalProperties"])
-        self.assertEqual(s["schema"]["required"], list(es.SLICE_FIELDS))
+        # 21 Eki (Aşama 7): caption alanları aynı strict şemada (ek GPT çağrısı yok)
+        from core.caption import CAPTION_FIELDS
+        self.assertEqual(s["schema"]["required"], list(es.SLICE_FIELDS) + list(CAPTION_FIELDS))
 
     def test_good_cleaned(self):
         out = es.parse_slices(self.GOOD)

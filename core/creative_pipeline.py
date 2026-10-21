@@ -566,7 +566,7 @@ Rules: describe only what is visible, never sounds, the camera or the video. Peo
 
 
 def _slices_message(spec: dict, place: str, weather: str, lo: int, hi: int, recent: list[str],
-                    feedback: list[str] | None) -> str:
+                    feedback: list[str] | None, caption_ctx: dict | None = None) -> str:
     event = spec["event"]
     # 13 Eki: araçsız olaylarda (lav, kül bulutu) VEHICLE satırı yok
     vehicle_line = f"VEHICLE: {spec['vehicle']}\n" if spec["vehicle"] is not None else ""
@@ -578,6 +578,9 @@ def _slices_message(spec: dict, place: str, weather: str, lo: int, hi: int, rece
            + f"4-9s EVENT: {es.beat_text(event, 'slice_2', spec['beat_2'], spec['vehicle'])}\n"
            f"9-15s EVENT: {es.beat_text(event, 'slice_3', spec['beat_3'])}\n"
            "RECENT STORIES:\n" + ("\n".join(f"- {s}" for s in recent) or "- (none)"))
+    if caption_ctx is not None:   # 21 Eki (Aşama 7): caption alanları aynı yanıtta (ek GPT çağrısı yok)
+        from core.caption import instruction_block
+        msg += "\n\n" + instruction_block(caption_ctx).rstrip("\n")
     if feedback and es.SLICE_RULES.get(event):
         # 4 Eki, Bahadır: birikimli geri bildirim; düzeltilen madde sonraki denemede silinmesin
         msg += ("\n\nYOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already "
@@ -608,22 +611,25 @@ def structured_issues(spec: dict, slices: dict, recent: list[str]) -> list[dict]
 
 
 async def write_slices(spec: dict, place: str, weather: str, recent: list[str], call_gpt,
-                       max_attempts: int = MAX_ATTEMPTS, initial_feedback: list[str] | None = None
-                       ) -> tuple[dict, list[dict]]:
+                       max_attempts: int = MAX_ATTEMPTS, initial_feedback: list[str] | None = None,
+                       caption_ctx: dict | None = None) -> tuple[dict, list[dict]]:
     """Strict şemalı GPT-4o dilimleri; kapıdan kalırsa geri bildirimle yeniden, en fazla max_attempts deneme.
     (dilimler, deneme kaydı). GPT/JSON/şema hatası yükselir (deneme sayılmaz, yedek yok)."""
     lo, hi = count_range(spec["event"], spec["ship"])
     attempts, feedback = [], initial_feedback
     for attempt in range(max_attempts):
-        raw = await call_gpt(SLICES_SYSTEM, _slices_message(spec, place, weather, lo, hi, recent, feedback),
+        raw = await call_gpt(SLICES_SYSTEM, _slices_message(spec, place, weather, lo, hi, recent, feedback,
+                                                            caption_ctx),
                              temperature=0.9, model="gpt-4o", json_schema=es.SLICE_SCHEMA)
         slices = es.parse_slices(raw)
+        from core.caption import extract_candidates
+        caption_raw = extract_candidates(raw)   # 21 Eki (Aşama 7): hikâye kapılarına girmez
         found = structured_issues(spec, slices, recent)
         story = es.assemble_story(spec, slices)
         issues = [i["feedback"] for i in found if i["feedback"]]
         attempts.append({"attempt": attempt + 1, "story": story, "slices": slices,
                          "words": len(es.plain_story(spec, slices).split()), "issues": issues,
-                         "missing": [i["missing"] for i in found]})
+                         "missing": [i["missing"] for i in found], "caption": caption_raw})
         if not found:
             return slices, attempts
         # Dilim kapısı olan olaylarda önceki tüm ret nedenleri (tekrarsız) birikir; diğerlerinde sadece son ret
@@ -782,7 +788,8 @@ def _axes_line(axes: dict, excluded: dict, source: str, warning: str | None) -> 
 
 
 async def build_creative_scene(domain: str | None, event: str | None, history: list[str], history_texts: list[str],
-                               call_gpt, view: str | None = None, axes_loader=None) -> dict:
+                               call_gpt, view: str | None = None, axes_loader=None,
+                               caption_ctx: dict | None = None) -> dict:
     """Seçim (Python) + GPT-4o hikâyesi + iskeletle aynı stil eki. view: Telegram bölge menüsünden seçilen görünüm
     (sadece şehir olayları); None ise LRU seçer. axes_loader: 21 Eki, Notion eksen geçmişi okuyucusu (domain ->
     ham kayıtlar); None ise süreç hafızası (betikler, testler)."""
@@ -859,7 +866,8 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
     recent = recent_stories(history_texts)
     if structured:
         return await _build_structured_scene(domain, event, ship, spot, view, view_source, weather, place, recent,
-                                             history, call_gpt, volc_env=volc_env, hist=hist, excluded=excluded)
+                                             history, call_gpt, volc_env=volc_env, hist=hist, excluded=excluded,
+                                             caption_ctx=caption_ctx)
     lo, hi = count_range(event, ship)
     trace = {"pipeline": "creative", "domain": domain, "event": event, "ship": ship or "None",
              "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place, "weather": weather, "count_range": [lo, hi],
@@ -887,7 +895,7 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
 
 async def _build_structured_scene(domain, event, ship, spot, view, view_source, weather, place, recent, history,
                                   call_gpt, volc_env: str | None = None, hist: dict | None = None,
-                                  excluded: dict | None = None) -> dict:
+                                  excluded: dict | None = None, caption_ctx: dict | None = None) -> dict:
     """Yapılandırılmış olay: olay çifti + araç (kod), dilimler (GPT), son denetim (kod). Son denetim tutmazsa
     StructureError: Kie'ye gidilmez."""
     import core.axes_history as ah
@@ -1021,7 +1029,7 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     # yedeği (üretim durmaz). GPT/JSON/şema hatası yine akışı durdurur (yedek sadece kapı retleri için).
     try:
         slices, attempts = await write_slices(spec, place, weather, recent, call_gpt,
-                                              max_attempts=STRUCTURED_MAX_ATTEMPTS)
+                                              max_attempts=STRUCTURED_MAX_ATTEMPTS, caption_ctx=caption_ctx)
         source = {"kind": "gpt", "attempt": len(attempts), "reason": ""}
     except CreativeStoryError as e:
         attempts = e.attempts
@@ -1056,5 +1064,10 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
                           "story_source": source["label"], "story_source_kind": source["kind"],
                           # 21 Eki: Notion "Eksenler" (seçim anında yazılır) ve Onay mesajı satırı
                           "axes": axes, "axes_json": ah.axes_json(event, axes, excluded), "axes_line": axes_line,
-                          "axes_warning": hist["warning"]},
+                          "axes_warning": hist["warning"],
+                          # 21 Eki (Aşama 7): caption adayları (son GPT denemesinden; kod yedeğinde de olaya uygun)
+                          "caption_candidates": next((a["caption"] for a in reversed(attempts) if a.get("caption")),
+                                                     None),
+                          "caption_info": {"opening": spec["key_visual"], "people": people,
+                                           "kadraj": frame.get("type")}},
             "axes_json": ah.axes_json(event, axes, excluded)}

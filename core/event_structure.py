@@ -2763,13 +2763,21 @@ SLICE_SCHEMA = {
         "additionalProperties": False,
     },
 }
+# 21 Eki (Aşama 7): caption alanları aynı strict şemada (ek GPT çağrısı yok). Hikâye alanları ve kapıları aynı.
+from core.caption import CAPTION_FIELDS as _CAPTION_FIELDS, schema_properties as _caption_props   # noqa: E402
+SLICE_SCHEMA["schema"]["properties"].update(_caption_props())
+SLICE_SCHEMA["schema"]["required"] = list(SLICE_FIELDS) + list(_CAPTION_FIELDS)
 
 
 def parse_slices(raw) -> dict[str, str]:
-    """GPT yanıtı → {alan: metin}. Biçim hatası StructureError (geri bildirimle düzeltilmez, akış durur)."""
+    """GPT yanıtı → {alan: metin}. Biçim hatası StructureError (geri bildirimle düzeltilmez, akış durur).
+    21 Eki (Aşama 7): yanıt caption alanlarını da taşıyabilir (core.caption.CAPTION_FIELDS); hikâye dilimleri aynı."""
     if not isinstance(raw, dict):
         raise StructureError(f"GPT yanıtı nesne değil: {type(raw).__name__}")
+    from core.caption import CAPTION_FIELDS
     keys = set(raw)
+    if keys == set(SLICE_FIELDS) | set(CAPTION_FIELDS):
+        keys = set(SLICE_FIELDS)
     if keys != set(SLICE_FIELDS):
         raise StructureError(f"GPT yanıtı alanları hatalı: eksik={sorted(set(SLICE_FIELDS) - keys)}, "
                              f"fazla={sorted(keys - set(SLICE_FIELDS))}")
