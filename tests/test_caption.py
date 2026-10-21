@@ -4,6 +4,7 @@
 Mock GPT; Kie/Notion yok (Notion istekleri sahte). Fixture: tests/fixtures/paylasimlar_snapshot.json (49 paylaşım).
 """
 import asyncio
+import functools
 import json
 import logging
 import os
@@ -36,9 +37,9 @@ def ctx(generated=()):
 def gpt_candidates(styles=("T3", "T5", "T6"), cta_type="emoji", cta="Comment 🏃 or 🏠"):
     texts = {"T1": "Fire Rain Over the Rooftops 🔥", "T2": "The Instant the Sky Turns Red", "T3": "Six Glowing Rocks, One Street",
              "T4": "Could Anyone Stay on This Street?", "T5": "Filmed From a Balcony as Rocks Fell 🌋",
-             "T6": "Glowing Rocks Pound a Quiet Lane"}
+             "T6": "Glowing Rocks Pound a Narrow Lane"}
     return {"titles": [(texts[s], s) for s in styles],
-            "descriptions": ["Glowing rocks begin to fall on a quiet lane, then one hits a parked truck and flames spread.",
+            "descriptions": ["Glowing rocks begin to fall on a narrow lane, then one hits a parked truck and flames spread.",
                              "First a single rock, then a barrage: roofs crack and a truck burns in the middle of the lane."],
             "cta": cta, "cta_type": cta_type}
 
@@ -216,8 +217,8 @@ class TestSchemaAndStory(unittest.TestCase):
             calls.append(json_schema)
             return {"slice_1_rest": "x", "slice_2": "x", "slice_3": "x", "title_1": "Six Glowing Rocks, One Street",
                     "title_1_style": "T3", "title_2": "Filmed From a Balcony as Rocks Fell 🌋", "title_2_style": "T5",
-                    "title_3": "Glowing Rocks Pound a Quiet Lane", "title_3_style": "T6",
-                    "description_1": "Rocks fall on a quiet lane and a parked truck catches fire.",
+                    "title_3": "Glowing Rocks Pound a Narrow Lane", "title_3_style": "T6",
+                    "description_1": "Rocks fall on a narrow lane and a parked truck catches fire.",
                     "description_2": "One rock, then many: roofs crack and the lane burns.",
                     "cta": "Which detail did you notice first?", "cta_type": "question"}
         logging.disable(logging.WARNING)
@@ -353,6 +354,7 @@ EVENT_ONLY = {"#firetornado": {cap.FIRE_TORNADO}, "#waterspout": {cap.MARINA, ca
               "#buildingfire": {cap.FACADE}, "#apartmentfire": {cap.FACADE}}
 
 
+@functools.lru_cache(maxsize=8)   # aynı simülasyon birden çok testte (süre)
 def _sim(gpt: bool, runs: int = 10, seed: int = 11):
     import caption_sim
     logging.disable(logging.WARNING)
@@ -451,9 +453,9 @@ class TestTemplateLanguage(unittest.TestCase):
                 heads = (cap.beat_head(info["beat_2"]), cap.beat_head(info["beat_3"]))
                 for t in cap.DESC_TEMPLATES:
                     d = cap._fill(t, e, info).lower()
-                    self.assertTrue(any(cap._it(h).lower()[3:] in d or h.lower() in d for h in heads), (e, d))
-                    self.assertTrue(threat in d or set(cap.words(d)) & (cap.EVENT_WORDS | cap.event_stop(e))
-                                    or "it " in d, (e, d))
+                    # beat öğesi (7.2: ikinci geçişte zamir / eş anlamlı olabilir: en az 2 içerik kelimesi)
+                    self.assertTrue(any(len(cap._cw(h) & cap._cw(d)) >= 2 for h in heads), (e, d))
+                    self.assertTrue(threat in d or cap.mentions_threat(d, e) or "it " in d, (e, d))
         info = self._infos(cap.MARINA)[0]
         self.assertIn("marina", cap._fill(cap.DESC_TEMPLATES[0], cap.MARINA, info).lower())
 
@@ -473,6 +475,131 @@ class TestTemplateLanguage(unittest.TestCase):
     def test_caption_info_has_beats(self):
         self.assertIn('"beat_2": es.beat_text(event, "slice_2", spec["beat_2"], spec["vehicle"])',
                       open(os.path.join(ROOT, "core", "creative_pipeline.py"), encoding="utf-8").read())
+
+
+# ── 21 Eki 2026, Aşama 7.2: sayı doğruluğu, sakinlik yasağı, kelime tekrarı, CTA çeşitliliği ─────────────────────
+def _infos(e, n=6):
+    b = es.EVENT_BEATS[e]
+    pairs = [(x, y) for x in b["slice_2"] for y in b["slice_3"]][:n]
+    return [{"opening": "", "people": p, "kadraj": k, "beat_2": es.beat_text(e, "slice_2", x, "SUV"),
+             "beat_3": es.beat_text(e, "slice_3", y, "SUV")}
+            for (x, y), p, k in zip(pairs, (None, 3, 4, None, 5, 2), list(cap.WITNESS)[:n])]
+
+
+class TestNumbers(unittest.TestCase):
+    def test_number_rules(self):
+        self.assertTrue(cap.number_issues("Three Floors of Avalanche", cap.AVA_S, {}))
+        self.assertTrue(cap.number_issues("Four Cars of Flash Flood", cap.FLOOD, {}))
+        self.assertTrue(cap.number_issues("Ten Seconds of Tornado", cap.AVENUE, {}))
+        self.assertEqual(cap.number_issues("Fifteen Seconds of Avalanche", cap.AVA_S, {}), [])
+        self.assertEqual(cap.number_issues("15 Seconds on a Marina", cap.MARINA, {}), [])
+        self.assertEqual(cap.number_issues("Four People Run From the Flood", cap.FLOOD, {"people": 4}), [])
+        self.assertTrue(cap.number_issues("Five People Run From the Flood", cap.FLOOD, {"people": 4}))
+        floors = {"beat_2": "the upper floors pancake down onto the lower ones", "beat_3": "x"}
+        self.assertEqual(cap.number_issues("Six Floors Down in 15 Seconds", cap.EQ_A, floors), [])
+        self.assertTrue(cap.number_issues("Six Floors Down in 15 Seconds", cap.AVA_V, floors))   # kat: deprem / cephe
+        self.assertTrue(cap.number_issues("Six Floors Down", cap.EQ_A, {"beat_2": "a wall falls", "beat_3": "x"}))
+        two = {"beat_2": "x", "beat_3": "the tornado rips the roofs off two houses"}
+        self.assertEqual(cap.number_issues("Two Houses Hit in 15 Seconds", cap.LANDFALL, two), [])
+        self.assertTrue(cap.number_issues("Three Houses Hit in 15 Seconds", cap.LANDFALL, two))
+
+    def test_gpt_bad_number_rejected(self):
+        bad = {"titles": [("Three Floors of Avalanche", "T3"), ("Avalanche Hammers a Ski Lodge ⛷️", "T6")],
+               "descriptions": ["Snow hits the lodge and the sheds break apart."], "cta": "", "cta_type": "none"}
+        c = cap.choose(cap.AVA_S, {"opening": "", "people": 3, "kadraj": None}, bad, ctx(), random.Random(1))
+        self.assertNotEqual(c["title"], "Three Floors of Avalanche")
+        self.assertTrue(any("videoda olmayan sayı" in r["neden"] for r in c["rejected"]))
+
+    def test_templates_never_invent_numbers(self):
+        for e in cap.SHARE_CATEGORY:
+            for info in _infos(e) + [{"opening": "", "people": None, "kadraj": None}]:
+                for st, tpls in cap.TITLE_TEMPLATES.items():
+                    for t in tpls:
+                        if not cap.template_usable(t, info):
+                            continue
+                        f = cap._fill(t, e, info)
+                        self.assertEqual(cap.number_issues(f, e, info), [], (e, f))
+                for t in cap.desc_templates(info):
+                    f = cap._fill(t, e, info)
+                    self.assertEqual(cap.number_issues(f, e, info), [], (e, f))
+        self.assertFalse(cap.template_usable("{count} Hit in 15 Seconds", {"beat_2": "a car", "beat_3": "a wall"}))
+        self.assertEqual(cap.beat_count({"beat_2": "x", "beat_3": "rips the roofs off two houses"}), "Two Houses")
+
+
+class TestCalmAndRepeat(unittest.TestCase):
+    CALM = ("calm", "quiet", "peaceful", "ordinary", "one calm scene", "it started as")
+
+    def test_calm_phrases_banned(self):
+        for p in self.CALM:
+            self.assertIn(p, cap.BANNED_PHRASES)
+            self.assertTrue(cap.banned_phrases(f"{p.capitalize()} street before the flood"), p)
+        self.assertFalse(cap.banned_phrases("An extraordinary wave"))   # kelime sınırı
+        bad = {"titles": [("The Quiet Street Before the Wave", "T1"), ("Tidal Wave Hits the Seafront 🌊", "T6")],
+               "descriptions": ["It started as a calm morning, then the wave hit."], "cta": "", "cta_type": "none"}
+        c = cap.choose(cap.TIDAL, {"opening": "", "people": None, "kadraj": None}, bad, ctx(), random.Random(2))
+        self.assertNotIn("quiet", c["title"].lower())
+        self.assertNotIn("calm", c["description"].lower())
+        for p in self.CALM:
+            self.assertIn(f'"{p}"', cap.instruction_block(None))
+
+    def test_repeat_detection_and_fix(self):
+        self.assertTrue(cap.repeat_issues("The avalanche: the avalanche slams into the lodge."))
+        self.assertTrue(cap.repeat_issues("Volcanic bombs: a volcanic bomb punches through a roof."))
+        self.assertEqual(cap.repeat_issues("The avalanche hits. Then the snow buries the cabins."), [])
+        self.assertTrue(cap.repeat_issues("Caught From the Hillside in a Hillside Village", whole=True))
+        self.assertEqual(cap.fix_repeats("First the volcanic bombs: a volcanic bomb punches through a stone wall."),
+                         "First the volcanic bombs: one punches through a stone wall.")
+        self.assertEqual(cap.fix_repeats("Avalanche at a ski lodge: the avalanche slams into the shed."),
+                         "Avalanche at a ski lodge: it slams into the shed.")
+        self.assertEqual(cap.fix_repeats("The tornado tips the SUV. Seconds later the tornado rips the roof off."),
+                         "The tornado tips the SUV. Seconds later it rips the roof off.")
+        self.assertEqual(cap.repeat_issues(cap.fix_repeats(
+            "The SUV is carried down the street. Seconds later a dumpster tumbles down the street.")), [])
+        self.assertNotIn("lane tree", cap.fix_repeats("On a city street: a street tree is uprooted.").lower())
+        # "it" önceki parçanın öznesi tehdit değilse kullanılmaz (SUV'yi gösterir gibi okunmasın)
+        info = {"beat_2": "the SUV slides along the quay and slams into a lamppost",
+                "beat_3": "the tornado rips the roof off the marina office"}
+        self.assertIn("then the tornado rips", cap._fill(cap.DESC_TEMPLATES[0], cap.MARINA, info))
+        info["beat_2"] = "the tornado lifts the SUV"
+        self.assertIn("then it rips", cap._fill(cap.DESC_TEMPLATES[0], cap.MARINA, info))
+
+    def test_selected_captions_have_no_repeats(self):
+        for gpt in (True, False):
+            for e, rows in _sim(gpt).items():
+                for r in rows:
+                    self.assertEqual(cap.repeat_issues(r["title"], whole=True), [], (e, r["title"]))
+                    self.assertEqual(cap.repeat_issues(r["description"]), [], (e, r["description"]))
+                    self.assertFalse(cap.banned_phrases(cap.block(r)), (e, cap.block(r)))
+
+
+class TestCtaVariety(unittest.TestCase):
+    def test_six_texts_per_type(self):
+        for t, texts in cap.CTA_TEMPLATES.items():
+            if t != "none":
+                self.assertGreaterEqual(len(set(texts)), 6, t)
+                self.assertGreaterEqual(len([x for x in texts if "{people}" not in x]), 6, t)
+
+    def test_no_repeat_in_ten_and_one_take_limit(self):
+        # 19 olay × 50 caption: her olayın ardışık caption dizisinde 10'luk her pencerede aynı CTA metni yok,
+        # "one take" (başlık + açıklama + CTA) en fazla 1
+        for e, rows in _sim(True, runs=50, seed=7).items():
+            for i in range(len(rows)):
+                win = rows[max(0, i - 9):i + 1]
+                ctas = [r["cta"] for r in win if r["cta"]]
+                self.assertEqual(len(ctas), len(set(ctas)), (e, i, ctas))
+                self.assertLessEqual(sum(cap.has_one_take(cap.block(r)) for r in win), 1, (e, i))
+        for e, rows in _sim(False).items():
+            ctas = [r["cta"] for r in rows if r["cta"]]
+            self.assertEqual(len(ctas), len(set(ctas)), e)
+            self.assertLessEqual(sum(cap.has_one_take(cap.block(r)) for r in rows), 1, e)
+
+    def test_gpt_cta_repeat_rejected(self):
+        gen = [{"title": "x", "description": "y", "cta": "Where would you have gone first?", "cta_type": "stat",
+                "date": "2026-11-01"}]
+        cands = {**gpt_candidates(), "cta": "Where would you have gone first?", "cta_type": "question"}
+        c = cap.choose(cap.BOMBS, INFO, cands, ctx(gen), random.Random(3))
+        self.assertNotEqual(c["cta"], "Where would you have gone first?")
+        self.assertEqual(c["cta_source"], "şablon")
 
 
 if __name__ == "__main__":

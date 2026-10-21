@@ -46,7 +46,9 @@ def schema_properties() -> dict:
 BANNED_PHRASES = ("massive", "in seconds", "would you run or stay", "the moment everything", "swallows the entire",
                   "out of nowhere",
                   # 21 Eki (Aşama 7.1): genel / tık tuzağı kalıplar
-                  "nobody expected", "this part", "this moment", "with every second", "the last frame")
+                  "nobody expected", "this part", "this moment", "with every second", "the last frame",
+                  # 21 Eki (Aşama 7.2): sakinlik ifadeleri
+                  "calm", "quiet", "peaceful", "ordinary", "one calm scene", "it started as")
 AI_WORDS = ("ai", "a.i.", "artificial", "generated", "aigenerated", "aiart", "aivideo", "midjourney", "sora", "kie",
             "seedance")
 PLACE_WORDS = ("turkey", "türkiye", "greece", "italy", "spain", "france", "japan", "china", "india", "usa", "america",
@@ -70,6 +72,9 @@ def instruction_block(ctx: dict | None) -> str:
         "sentence word for word.",
         "- cta: one line matching cta_type: question / watch (watch till the end) / emoji (emoji choice, e.g. "
         "\"Comment 🏃 or 🏠\") / stat (a concrete number from the video, no fake statistics) / none (empty cta).",
+        "- Numbers only if they are in the video: 15 seconds, the number of people running, or a count that is in "
+        "the story. Never repeat a content word (including the threat name) in two consecutive clauses; use it, they "
+        "or a synonym the second time. Do not open with a calm or ordinary moment.",
         "- English only. No country or real place names. No mention of AI. Never use: "
         + ", ".join(f'"{p}"' for p in BANNED_PHRASES) + ".",
     ]
@@ -192,8 +197,9 @@ TITLE_TEMPLATES = {
            "The {objects} Never Stood a Chance {emoji}", "{threat} Versus the {objects}"),
     "T2": ("The Second the {threat} Reached {target}", "When the {threat} Reached the {objects} {emoji}",
            "The Instant {target} Was Hit {emoji}", "The Moment the {objects} Gave Way {emoji}"),
+    # T3 (7.2): sadece videodaki sayı: 15 saniye, kaçan kişi sayısı, beat'te geçen "sayı + isim" ({count})
     "T3": ("15 Seconds of {threat} {loc}", "{people} People Run From the {threat} {emoji}",
-           "Fifteen Seconds Near the {objects} {emoji}", "One Take, One {threat_one} {emoji}"),
+           "Fifteen Seconds Near the {objects} {emoji}", "{count} Hit in 15 Seconds {emoji}"),
     "T4": ("Could These {objects} Survive the {threat}? {emoji}", "Could You Outrun the {threat}? {emoji}",
            "How Long Would the {objects} Last? {emoji}", "Could {target} Hold Back the {threat}?"),
     "T5": ("Filmed From {witness} as the {threat} Hit {emoji}", "Seen From {witness} as the {objects} Were Hit",
@@ -205,22 +211,38 @@ TITLE_TEMPLATES = {
 # h2/h3: beat cümlesinin ilk cümleciği (ortak kuyruklar benzerliği şişirmesin); i2/i3: tehdit adı başta geçiyorsa
 # öznesi "it" (çerçeve tehdidi zaten adlandırıyor). İki beat'li şablonlar önce: üretimde beat ÇİFTİ tekrar etmez.
 DESC_TWO_BEATS = 5   # ilk 5 şablon iki beat'li (önce denenir)
-DESC_TEMPLATES = ("{Threat} {loc_l}: {i2}, then {i3}.",
+DESC_TEMPLATES = ("{Threat} {loc_l}: {i2}, then {j3}.",
                   "{H2}{as2}. Seconds later {h3}.",
                   "From {witness_l}: {h2}{as2}, then {h3}.",
                   "First the {threat_l}: {i2}. Moments later {h3}.",
-                  "Camera rolling {loc_l}. {H2}{as2}, and soon {h3}.",
+                  "Filmed {loc_l}. {H2}{as2}, and soon {h3}.",
                   "The {threat_l} reach{es} {target_l}: {i3}.",
                   "{Threat} {loc_l}, one take: {i2}.",
                   "One take from {witness_l} as the {threat_l} hit{s}: {i3}.",
-                  "Halfway through the {threat_l}, {h3}.")
+                  "Halfway through the {threat_l}, {h3}.",
+                  # 21 Eki (7.2): tekrar kuralı sonrası seçenek (tek beat'li, çerçeve kelimesi az)
+                  "Seen from {witness_l}: {h2}{as2}.",
+                  "Near the end, {h3}{as3}.",
+                  "{H3}{as3}, all within 15 seconds.")
 DESC_TEMPLATES_NO_BEAT = ("The {threat_l} reach{es} {target_l} and the {objects_l} take the first hit.",
                           "Filmed from {witness_l} as the {threat_l} hit the {objects_l} {loc_l}.")
-CTA_TEMPLATES = {
-    "question": ("Would you have stayed near the {objects_l}?", "Where would you run {loc_l}?"),
-    "watch": ("Keep your eyes on the {objects_l} until the end.", "Watch {target_l} until the very end."),
-    "emoji": ("Comment {emoji} if you would stay or 🏃 if you would run.", "Comment 🏠 or 🚗: what would you save first?"),
-    "stat": ("{people} people, 15 seconds, one take.", "15 seconds, one take, no cuts."),
+CTA_TEMPLATES = {   # 21 Eki (7.2): her tipte en az 6 metin; son 10 caption'da aynı metin yok
+    "question": ("Would you have stayed near the {objects_l}?", "Where would you run {loc_l}?",
+                 "Which way would you run from the {threat_l}?", "What would you grab first?",
+                 "Would you keep filming or get out?", "How many seconds would you need to get out?",
+                 "Would you trust the {objects_l} to protect you?"),
+    "watch": ("Keep your eyes on the {objects_l} until the end.", "Watch {target_l} until the very end.",
+              "Watch the left side of the frame.", "Don't skip the final seconds.",
+              "Watch it twice and follow the {objects_l}.", "Stay with it to the end.",
+              "Look at the background, not the {threat_l}."),
+    "emoji": ("Comment {emoji} if you would stay or 🏃 if you would run.", "Comment 🏠 or 🚗: what would you save first?",
+              "Drop a {emoji} if you felt that.", "🏃 or 📱: run or keep filming?",
+              "Comment 😱 if you saw it coming, 😶 if you did not.", "One emoji for this {threat_l}: go.",
+              "Comment {emoji} for the {objects_l}."),
+    "stat": ("{people} people, 15 seconds, one take.", "15 seconds, one take, no cuts.",
+             "15 seconds from the first hit to the end.", "{people} people on screen, 15 seconds of {threat_l}.",
+             "15 seconds, start to finish.", "15 seconds, filmed in a single shot.", "{people} people had 15 seconds.",
+             "15 seconds of {threat_l}, no edits.", "15 seconds, no slow motion."),
     "none": ("",),
 }
 
@@ -293,7 +315,7 @@ def _content_words(text: str, stop: frozenset) -> frozenset[str]:
 
 def jaccard(a: str, b: str, stop: frozenset = frozenset()) -> float:
     x, y = content_words(a, stop), content_words(b, stop)
-    if stop and (len(x) < 2 or len(y) < 2):   # olay adı çıkınca kelime kalmıyorsa olay adı sayılır (boş = benzer değil
+    if stop and (not x or not y):   # olay adı çıkınca kelime kalmıyorsa olay adı sayılır (boş = benzer değil
         x, y = content_words(a), content_words(b)   # olmasın: "Debris Torrent Tears Through a Hillside Village")
     return len(x & y) / len(x | y) if x | y else 0.0
 
@@ -315,11 +337,87 @@ def emoji_count(text: str) -> int:
 
 def banned_phrases(text: str) -> list[str]:
     low = (text or "").lower()
-    out = [p for p in BANNED_PHRASES if p in low]
+    # kelime sınırıyla ("ordinary" "extraordinary" içinde, "calm" "becalmed" içinde yakalanmaz)
+    out = [p for p in BANNED_PHRASES if re.search(r"(?<![a-z])" + re.escape(p) + r"(?![a-z])", low)]
     ws = set(words(text))
     out += [w for w in AI_WORDS if w in ws]
     out += [w for w in PLACE_WORDS if w in ws]
     return out
+
+
+# ── 21 Eki (Aşama 7.2): sayı doğruluğu, kelime tekrarı, "one take" sınırı ───────────────────────────────────────────
+_NUM = {"two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+        "eleven": 11, "twelve": 12, "fifteen": 15, "twenty": 20, "thirty": 30}
+FLOOR_EVENTS = {EQ_A, EQ_O, FACADE}
+_FLOOR = {"floor", "story", "storey", "storie", "level"}
+_PEOPLE = {"people", "person", "resident", "neighbor", "neighbour", "survivor"}
+
+
+def _num(w: str) -> int | None:
+    return int(w) if w.isdigit() else _NUM.get(w)
+
+
+def number_issues(text: str, event: str | None, info: dict | None) -> list[str]:
+    """Sadece videoda gerçekten olan sayı: 15 saniye (video süresi); kişi sayısı = üretimdeki kaçan kişi sayısı; kat
+    sayısı sadece deprem / cephe yangınında ve beat'te kat geçiyorsa; araç / ev vb. sayısı sadece beat'te o sayı ve o
+    isim birlikte geçiyorsa. ("Three Floors of Avalanche" -> ret)"""
+    info = info or {}
+    ws = list(words(text))
+    beats = " ".join([info.get("beat_2") or "", info.get("beat_3") or ""]).lower()
+    bws = list(words(beats))
+    beat_pairs = {(_num(a), _norm(b)) for a, b in zip(bws, bws[1:]) if _num(a)}
+    beat_pairs |= {(_num(a), _norm(c)) for a, b, c in zip(bws, bws[1:], bws[2:]) if _num(a)}
+    out = []
+    for i, w in enumerate(ws):
+        n = _num(w)
+        if n is None or n == 1:
+            continue
+        nouns = [_norm(x) for x in ws[i + 1:i + 3] if x not in _STOP]
+        noun = nouns[0] if nouns else ""
+        if noun == "second":
+            ok = n == 15
+        elif noun in _PEOPLE:
+            ok = n == info.get("people")
+        elif noun in _FLOOR:
+            ok = event in FLOOR_EVENTS and any(_norm(b) in _FLOOR for b in bws)
+        else:
+            ok = any((n, x) in beat_pairs for x in nouns)
+        if not ok:
+            out.append(f"videoda olmayan sayı: {w} {' '.join(ws[i + 1:i + 3])}".strip())
+    return out
+
+
+def _parts(text: str) -> list[str]:
+    """Cümle parçaları: nokta, iki nokta, noktalı virgül, virgül, soru / ünlem ve "then" / "and soon" bağlaçları."""
+    return [p for p in re.split(r"[.:;,!?]+|\s(?:then|and soon|moments later|seconds later)\s", text or "") if p.strip()]
+
+
+def _cw(part: str) -> set[str]:
+    """Tekrar denetimi için içerik kelimeleri: stopword hariç, olay adları DAHİL (tehdit adı da tekrar sayılır)."""
+    return {_norm(w) for w in words(part) if w not in _STOP and _norm(w) not in _STOP and not _num(w)} - {""}
+
+
+def repeat_issues(text: str, whole: bool = False) -> list[str]:
+    """Art arda iki cümle parçasında aynı içerik kelimesi ("the avalanche: the avalanche…"). whole=True (başlık):
+    başlığın tamamında bir içerik kelimesi iki kez geçmez."""
+    if whole:
+        seen, dup = set(), set()
+        for w in words(text):
+            n = _norm(w)
+            if w in _STOP or n in _STOP or _num(w):
+                continue
+            (dup if n in seen else seen).add(n)
+        return [f"kelime tekrarı: {', '.join(sorted(dup))}"] if dup else []
+    parts = _parts(text)
+    for a, b in zip(parts, parts[1:]):
+        common = _cw(a) & _cw(b)
+        if common:
+            return [f"art arda tekrar: {', '.join(sorted(common))}"]
+    return []
+
+
+def has_one_take(text: str) -> bool:
+    return "one take" in " ".join(words(text))
 
 
 def infer_style(title: str) -> str:
@@ -349,11 +447,15 @@ def build_context(posted: list[dict] | None, generated: list[dict] | None) -> di
     timeline = []
     for r in posted:
         timeline.append({"date": r.get("Paylaşım Tarihi") or "", "title": r.get("Başlık") or "",
+                         "text": " ".join([r.get("Başlık") or "", r.get("Açıklama") or "", r.get("CTA") or ""]),
+                         "cta": r.get("CTA") or "",
                          "style": infer_style(r.get("Başlık") or ""), "cta_type": CTA_FROM_TR.get(r.get("CTA Tipi")),
                          "hashtags": set(re.findall(r"#\w+", (r.get("Hashtagler") or "").lower())),
                          "category": r.get("Kategori")})
     for g in generated:
         timeline.append({"date": g.get("date") or "9999", "title": g.get("title") or "", "style": g.get("style"),
+                         "text": " ".join([g.get("title") or "", g.get("description") or "", g.get("cta") or ""]),
+                         "cta": g.get("cta") or "",
                          "cta_type": g.get("cta_type"), "hashtags": set(t.lower() for t in g.get("hashtags") or []),
                          "category": g.get("category")})
     timeline.sort(key=lambda x: x["date"])
@@ -368,6 +470,9 @@ def build_context(posted: list[dict] | None, generated: list[dict] | None) -> di
         "tag_history": [(t["category"], t["hashtags"]) for t in timeline if t["hashtags"]],
         "dynamic_banned": _dynamic_banned(recent_posted),
         "generated_ctas": [g.get("cta") or "" for g in generated],
+        # 7.2: son 10 caption (bu caption ile 10: önceki 9) içinde aynı CTA metni yok, "one take" en fazla 1
+        "recent_ctas": [t["cta"] for t in timeline[-9:] if t["cta"]],
+        "one_take_recent": sum(has_one_take(t["text"]) for t in timeline[-9:]),
     }
 
 
@@ -388,6 +493,7 @@ def title_issues(title: str, ctx: dict, extra_titles: list[str] = ()) -> list[st
     bad = banned_phrases(title)
     if bad:
         out.append("yasak: " + ", ".join(bad))
+    out += _fact_issues(title, ctx, whole=True)
     stop = ctx.get("event_stop", frozenset())
     dyn = content_words(title, stop) & ctx.get("dynamic_banned", set())
     if dyn:
@@ -415,10 +521,32 @@ def description_issues(desc: str, ctx: dict, opening: str = "", extra: list[str]
         out.append("yasak: " + ", ".join(bad))
     if opening and opening.rstrip(".").lower() in (desc or "").lower():
         out.append("açılış cümlesi birebir")
+    out += _fact_issues(desc, ctx)
     for old in list(ctx.get("descriptions", [])) + list(extra):
         if old and (same_text(desc, old) or jaccard(desc, old, ctx.get("event_stop", frozenset())) > 0.45):
             out.append(f"benzer: {old[:60]}")
             break
+    return out
+
+
+def _fact_issues(text: str, ctx: dict, whole: bool = False) -> list[str]:
+    """7.2: videoda olmayan sayı, art arda kelime tekrarı, "one take" son 10 caption'da en fazla 1 kez."""
+    out = []
+    if "number_info" in ctx:
+        out += number_issues(text, ctx["number_info"].get("event"), ctx["number_info"])
+    out += repeat_issues(text, whole=whole)
+    if has_one_take(text) and (ctx.get("one_take_recent", 0) >= 1 or ctx.get("one_take_used")):
+        out.append("\"one take\" son 10 caption'da var")
+    return out
+
+
+def cta_text_issues(cta: str, ctx: dict) -> list[str]:
+    """7.2: aynı CTA metni son 10 caption'da yok; "one take" sınırı."""
+    out = []
+    if cta and any(same_text(cta, o) for o in ctx.get("recent_ctas", [])):
+        out.append("CTA son 10 caption'da var")
+    if has_one_take(cta) and (ctx.get("one_take_recent", 0) >= 1 or ctx.get("one_take_used")):
+        out.append("\"one take\" son 10 caption'da var")
     return out
 
 
@@ -446,8 +574,22 @@ def allowed_after(options: list[str], history: list[str], depth: int = 2) -> lis
 
 
 # ── Seçim ────────────────────────────────────────────────────────────────────────────────────────────────────────
-_NO_PEOPLE_ALT = {"{people} People Run From the {threat} {emoji}": "One Take, Fifteen Seconds, {objects} {emoji}",
-                  "{people} people, 15 seconds, one take.": "15 seconds, one take, no cuts."}
+_COUNT = re.compile(r"\b(two|three|four|five|six|seven|eight|nine|ten)\s+((?:[a-z-]+\s+)?[a-z-]+s)\b")
+
+
+def beat_count(info: dict) -> str:
+    """Beat cümlesinde geçen "sayı + çoğul isim" (ör. "two houses" -> "Two Houses"); yoksa boş."""
+    m = _COUNT.search(" ".join([info.get("beat_2") or "", info.get("beat_3") or ""]).lower())
+    return " ".join(w.capitalize() for w in m.group(0).split()) if m else ""
+
+
+def template_usable(template: str, info: dict) -> bool:
+    """Bilgisi olmayan şablon kullanılmaz: kişi sayısı yoksa {people}, beat'te sayı yoksa {count} (uydurma sayı yok)."""
+    if "{people}" in template and not info.get("people"):
+        return False
+    if "{count}" in template and not beat_count(info):
+        return False
+    return True
 
 
 def _cap1(s: str) -> str:
@@ -458,6 +600,80 @@ _CLAUSE_CUT = re.compile(r",\s|\s(?:and|sending|as|while)\s")
 # Tekil özne olarak "it" ile değiştirilebilen tehdit adları (çoğullar hariç: "the flames leap" -> "it leap" olmaz)
 _IT_SUBJECTS = re.compile(r"^the (?:towering |huge |violent )?(?:fire tornado|tornado|avalanche(?: front)?|flood|floodwater|mudslide|"
                           r"tidal wave|wave|surge|cloud(?: front)?|ash cloud|snow blast|snow wall|current)\b")
+# 21 Eki (7.2): art arda parçada aynı özne -> zamir / eş anlamlı (ikinci geçiş). Sıra önemli: ilk uyan uygulanır.
+_SUBJECT_ALTS = (
+    (_IT_SUBJECTS, "it"),
+    (re.compile(r"^(?:a|another) (?:huge |large |single |second )?(?:volcanic bomb|glowing rock|bomb|rock)\b"), "one"),
+    (re.compile(r"^(?:huge |large )?(?:glowing rocks|volcanic bombs|rocks|bombs)\b"), "they"),
+    (re.compile(r"^the flames\b"), "they"),
+    (re.compile(r"^the fire\b"), "the blaze"),
+    (re.compile(r"^(?:the|a) (?:second |fresh )?(?:snow surge|surge)\b"), "a second wave of snow"),
+    (re.compile(r"^the (?:helicopter|water load)\b"), "it"),
+)
+# Tekrar eden yer / nesne kelimesinin ikinci geçişi (tekil, çoğul). Anahtar _norm hâli (houses -> house).
+_WORD_ALTS = {"street": ("lane", "lanes"), "road": ("roadway", "roadways"), "block": ("building", "buildings"),
+              "house": ("home", "homes"), "car": ("vehicle", "vehicles"), "mud": ("sludge", "sludge"), "boulder": ("rock", "rocks"), "helicopter": ("chopper", "choppers"),
+              "slide": ("spill", "spills"), "concrete": ("cement", "cement"), "burning": ("blazing", "blazing"),
+              "water": ("spray", "spray"), "drop": ("release", "releases"), "hit": ("strike", "strikes"),
+              "lodge": ("building", "buildings"), "wooden": ("timber", "timber"), "facade": ("tower", "towers"),
+              "flame": ("fire", "fires"), "stone": ("", ""), "quay": ("waterfront", "waterfronts"),
+              "tree": ("trunk", "trunks"), "roof": ("rooftop", "rooftops"), "building": ("block", "blocks"),
+              "village": ("hamlet", "hamlets"), "chalet": ("cabin", "cabins"), "cabin": ("hut", "huts"),
+              "floor": ("level", "levels"), "window": ("pane", "panes"), "dust": ("debris", "debris"),
+              "apartment": ("residential", "residential"), "slope": ("hillside", "hillsides"), "current": ("water", "water")}
+_ADJ_ALTS = {"stone", "wooden", "burning", "concrete"}
+_COMPOUND_NEXT = (r"(?!\s+(?:tree|trees|camera|cameras|lamp|lamps|lamppost|corner|level|front|wall|walls|door|"
+                  r"doors|sign|signs|light|lights|bus|vendor|stall|stalls|line|lines|edge|side|surface|frame|deck|"
+                  r"office|shed|annex|porch|roof|roofs|terrace|load|wave)\b)")
+_SPLIT = re.compile(r"[.:;,!?]+\s*|\s(?:then|and soon|moments later|seconds later)\s")
+
+
+def fix_repeats(text: str) -> str:
+    """Art arda iki parçada aynı içerik kelimesi varsa ikinci parçanın öznesini zamir / eş anlamlıyla değiştirir
+    ("First the volcanic bombs: a volcanic bomb punches…" -> "…: one punches…"). Düzelmezse metin aynen döner
+    (repeat_issues reddeder)."""
+    for _ in range(4):
+        cuts = [0] + [m.end() for m in _SPLIT.finditer(text)] + [len(text)]
+        segs = [(cuts[i], cuts[i + 1]) for i in range(len(cuts) - 1) if text[cuts[i]:cuts[i + 1]].strip()]
+        changed = False
+        for (a0, a1), (b0, b1) in zip(segs, segs[1:]):
+            prev, seg = text[a0:a1], text[b0:b1]
+            if not _cw(prev) & _cw(seg):
+                continue
+            m = re.match(r"\s*(?:(?:then|and soon|moments later|seconds later)\s+)?", seg, re.I)
+            lead, body = seg[:m.end()], seg[m.end():]
+            low = body[:1].lower() + body[1:]
+            for pat, alt in _SUBJECT_ALTS:
+                new = pat.sub(alt, low, count=1)
+                if new != low and not (_cw(prev) & _cw(new)):
+                    if body[:1].isupper():
+                        new = _cap1(new)
+                    text = text[:b0] + lead + new + text[b1:]
+                    changed = True
+                    break
+            if not changed:   # özne değil: tekrar eden yer / nesne kelimesi eş anlamlıyla
+                new = low
+                for w in sorted(_cw(prev) & _cw(low)):
+                    if w in _WORD_ALTS:
+                        sing, plur = _WORD_ALTS[w]
+                        if sing and _norm(sing) in _cw(low):   # "cladding panels peel off the cladding" olmasın
+                            continue
+                        # isim olarak kullanıldığında değişir; "street tree", "road edge" gibi sıfat kullanımı kalır
+                        guard = "" if w in _ADJ_ALTS else _COMPOUND_NEXT
+                        new = re.sub(rf"\b{w}s\b{guard}", plur, new)
+                        new = re.sub(rf"\b{w}\b{guard}", sing, new)
+                tail = new[len(new.rstrip()):]   # parçanın sonundaki boşluk korunur ("wall. Moments")
+                new = re.sub(r"\ba (?=[aeiou])", "an ", " ".join(new.split())) + tail
+                if new != low and not (_cw(prev) & _cw(new)):
+                    if body[:1].isupper():
+                        new = _cap1(new)
+                    text = text[:b0] + lead + new + text[b1:]
+                    changed = True
+            if changed:
+                break
+        if not changed:
+            return text
+    return text
 
 
 def beat_head(text: str) -> str:
@@ -476,13 +692,18 @@ def _it(head: str) -> str:
 def mentions_threat(head: str, event: str) -> bool:
     """Beat cümleciği tehdidi zaten anıyor mu (olay adı / eş anlamlısı)."""
     ws = {_norm(w) for w in words(head)} | set(words(head))
-    return bool(ws & (EVENT_WORDS | event_stop(event) | {_norm(w) for w in words(VARS[event][0])}))
+    return bool(ws & (THREAT_WORDS | {_norm(w) for w in words(VARS[event][0])}))
+
+
+# 7.2: tehdidi anan kelimeler (yer adları değil: "a garden wall collapses down the street" tehdidi anmaz)
+THREAT_WORDS = {"tornado", "tornadoe", "twister", "funnel", "waterspout", "wave", "tidal", "flood", "floodwater",
+                "current", "surge", "mud", "mudslide", "landslide", "torrent", "fire", "flame", "wildfire", "blaze",
+                "helicopter", "volcano", "volcanic", "ash", "cloud", "bomb", "avalanche", "snow", "earthquake",
+                "quake"}
 
 
 def _fill(template: str, event: str, info: dict) -> str:
     threat, target, emoji, objects, loc = VARS[event]
-    if "{people}" in template and not info.get("people"):   # kişi sayısı yoksa uydurma sayı yok
-        template = _NO_PEOPLE_ALT.get(template, template.replace("{people} ", ""))
     people = _NUMW.get(info.get("people") or 0, str(info.get("people") or ""))
     plural = event in PLURAL_THREATS
     witness = WITNESS.get(info.get("kadraj"), WITNESS[None])
@@ -492,9 +713,13 @@ def _fill(template: str, event: str, info: dict) -> str:
                            objects=objects, loc=loc, witness=witness, people=people, threat_l=threat.lower(),
                            target_l=_lower(target), objects_l=_lower(objects), loc_l=_lower(loc), Loc=_cap1(_lower(loc)),
                            witness_l=_lower(witness), h2=h2, h3=h3, H2=_cap1(h2), H3=_cap1(h3), i2=_it(h2), i3=_it(h3),
+                           # 7.2: ikinci beat'te "it" sadece önceki parçanın öznesi de tehditse ("the SUV slides…, then
+                           # it rips…" SUV'yi gösterir gibi okunmasın)
+                           j3=_it(h3) if _IT_SUBJECTS.match(h2) else h3,
                            as2="" if mentions_threat(h2, event) else f" as the {threat.lower()} hit{'' if plural else 's'}",
-                           s="" if plural else "s", es="" if plural else "es")
-    return _cap1(" ".join(text.split()))
+                           as3="" if mentions_threat(h3, event) else f" as the {threat.lower()} hit{'' if plural else 's'}",
+                           s="" if plural else "s", es="" if plural else "es", count=beat_count(info))
+    return fix_repeats(_cap1(" ".join(text.split())))
 
 
 def _lower(s: str) -> str:
@@ -511,7 +736,8 @@ def title_pool(event: str, info: dict, candidates: dict | None, styles: list[str
     rng.shuffle(order)
     for st in order:
         for tpl in TITLE_TEMPLATES[st]:
-            out.append(("şablon", st, _fill(tpl, event, info)))
+            if template_usable(tpl, info):
+                out.append(("şablon", st, _fill(tpl, event, info)))
     return out
 
 
@@ -528,6 +754,8 @@ def desc_pool(event: str, info: dict, candidates: dict | None, rng: random.Rando
         rng.shuffle(two)
         rng.shuffle(one)
         tpls = two + one
+    if tpls and tpls[0] in DESC_TEMPLATES:   # 7.2: beat'ler tükenince son çare beat'siz somut şablonlar (zorunludan önce)
+        tpls += list(DESC_TEMPLATES_NO_BEAT)
     return ([("GPT", d) for d in (candidates or {}).get("descriptions", [])]
             + [("şablon", _fill(t, event, info)) for t in tpls])
 
@@ -558,7 +786,7 @@ def choose(event: str, info: dict, candidates: dict | None, ctx: dict, rng: rand
            exclude_titles: list[str] = (), exclude_tag_sets: list = (), exclude_descriptions: list[str] = ()) -> dict:
     """Seçilen caption: {"title","description","cta","cta_type","hashtags","style","source","rejected",...}.
     info: {"opening","people","kadraj"} (hikâyeden). exclude_titles: bu üretimde daha önce önerilenler (Yeni caption)."""
-    ctx = {**ctx, "event_stop": event_stop(event)}
+    ctx = {**ctx, "event_stop": event_stop(event), "number_info": {**(info or {}), "event": event}}
     stop = ctx["event_stop"]
     styles = allowed_after(list(STYLES), ctx.get("recent_styles", []))
     rejected = []
@@ -577,9 +805,11 @@ def choose(event: str, info: dict, candidates: dict | None, ctx: dict, rng: rand
         used = set(exclude_titles) | set(ctx.get("titles", []))   # zorunlu durumda da birebir tekrar yok
         tpls = [(st, text) for src, st, text in pool if src == "şablon" and text not in used] or \
                [(st, text) for src, st, text in pool if src == "şablon"]
+        tpls = [x for x in tpls if not has_one_take(x[1])] or tpls
         style, title = min(tpls, key=lambda x: (len(title_issues(x[1], ctx, exclude_titles)),
                                                 max([jaccard(x[1], o, stop) for o in ctx.get("titles", []) if o] or [0])))
         t_src = "şablon (zorunlu)"
+    ctx["one_take_used"] = has_one_take(title)   # bu caption'da "one take" bir kez
     description = d_src = None
     for src, text in desc_pool(event, info, candidates, rng):
         if text in exclude_descriptions:
@@ -598,22 +828,31 @@ def choose(event: str, info: dict, candidates: dict | None, ctx: dict, rng: rand
     if description is None:
         opts = [_fill(t, event, info) for t in desc_templates(info)]
         opts = [o for o in opts if o not in exclude_descriptions] or opts
-        description = min(opts, key=lambda o: max([jaccard(o, x, stop) for x in ctx.get("descriptions", []) if x]
-                                                  or [0]))
+        opts = [o for o in opts if not has_one_take(o)] or opts   # "one take" sınırı zorunlu durumda da
+        # 7.2: zorunlu durumda da önce kesin kurallar (yasak, sayı, tekrar, "one take"), sonra en az benzer
+        description = min(opts, key=lambda o: (len([i for i in description_issues(o, {**ctx, "descriptions": []},
+                                                                                     info.get("opening", ""))]),
+                                               max([jaccard(o, x, stop) for x in ctx.get("descriptions", []) if x]
+                                                   or [0])))
         d_src = "şablon (zorunlu)"
+    ctx["one_take_used"] = ctx["one_take_used"] or has_one_take(description)
     types = allowed_after(list(CTA_TYPES), ctx.get("recent_cta_types", []))
     gpt_type = (candidates or {}).get("cta_type")
     gpt_cta = (candidates or {}).get("cta", "")
-    if gpt_type in types and not cta_issues(gpt_cta if gpt_type != "none" else "", gpt_type):
+    gpt_bad = cta_issues(gpt_cta if gpt_type != "none" else "", gpt_type) + \
+        (cta_text_issues(gpt_cta, ctx) if gpt_type != "none" else [])
+    if gpt_type in types and not gpt_bad:
         cta_type, cta, c_src = gpt_type, (gpt_cta if gpt_type != "none" else ""), "GPT"
     else:
         if candidates and gpt_type:
             rejected.append({"alan": "CTA", "kaynak": "GPT", "metin": gpt_cta,
-                             "neden": "tip son 2'de" if gpt_type not in types else cta_issues(gpt_cta, gpt_type)[0]})
+                             "neden": "tip son 2'de" if gpt_type not in types else gpt_bad[0]})
         cta_type = gpt_type if gpt_type in types else rng.choice(types)
         used = set(ctx.get("generated_ctas", []))
-        opts = [_fill(t, event, info) for t in CTA_TEMPLATES[cta_type]]
-        cta = next((o for o in opts if o not in used), opts[0])
+        opts = [_fill(t, event, info) for t in CTA_TEMPLATES[cta_type] if template_usable(t, info)]
+        rng.shuffle(opts)
+        ok = [o for o in opts if not cta_text_issues(o, ctx)]
+        cta = (ok or [o for o in opts if o not in used] or opts)[0]
         c_src = "şablon"
     hashtags = choose_hashtags(event, ctx, rng, exclude_tag_sets)
     srcs = {t_src.split(" ")[0], d_src.split(" ")[0]}

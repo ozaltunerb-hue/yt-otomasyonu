@@ -23,7 +23,8 @@ HOOKS = ("Keep Your Eyes on the Roof", "Look at the Left Side", "Wait for the La
          "This Is How Fast It Moves", "It Did Not Slow Down")
 WITNESS = ("From a Rooftop", "From an Upper Window", "From a Hillside", "From the Third Floor",
            "From a Street Camera")   # gerçek GPT'ye "en fazla 9 kelime" denir; sahte adaylar da kısa
-NUMBERS = ("Fifteen Seconds", "Ten Seconds", "Three Floors", "Four Cars", "Six Houses", "Two Streets")
+# 21 Eki (7.2): gerçek GPT'ye "sayı sadece videoda olan" denir; sahte aday da 15 saniye ya da kişi sayısı kullanır
+NUMBERS = ("Fifteen Seconds", "15 Seconds")
 
 
 VEHICLES = ("SUV", "pickup truck", "delivery van", "white sedan")
@@ -58,14 +59,15 @@ def mock_candidates(event: str, rng: random.Random, avoid_styles: list[str] = ()
     make = {
         "T1": lambda: f"{rng.choice(HOOKS)} {emoji}",
         "T2": lambda: f"The Second the {threat} {rng.choice(('Arrived', 'Hit', 'Broke Through', 'Turned'))}",
-        "T3": lambda: f"{rng.choice(NUMBERS)} of {threat}",
-        "T4": lambda: f"{rng.choice(('Could You Outrun', 'Would Anyone Survive', 'How Close Is Too Close to'))} the {threat}?",
+        "T3": lambda: (f"{cap._NUMW[info['people']]} People, One {threat}" if info.get("people")
+                       else f"{rng.choice(NUMBERS)} of {threat}"),
+        "T4": lambda: f"{rng.choice(('Could You Outrun', 'Would Anyone Survive', 'How Long Would You Last Near'))} the {threat}?",
         "T5": lambda: f"Filmed {rng.choice(WITNESS)} as the {threat} Hit",
         "T6": lambda: f"{threat} {rng.choice(VERBS)} {target} {emoji}",
     }
     descs = [f"{b2[0].upper() + b2[1:]}. Then {b3}.",
              f"The {threat.lower()} reaches {target.lower()} and {b3}.",
-             f"One calm scene, then the {threat.lower()}: {b2}."]
+             f"The {threat.lower()} arrives and {b2}."]
     cta_type = rng.choice(list(cap.CTA_TYPES))
     cta = {"question": "Where would you have gone first?", "watch": "Stay until the very end.",
            "emoji": f"Comment {emoji} or 🏃", "stat": "Fifteen seconds, one take.", "none": ""}[cta_type]
