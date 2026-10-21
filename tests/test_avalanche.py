@@ -711,6 +711,7 @@ class TestAvalanche(unittest.TestCase):
 
     def test_100_productions_each_event(self):
         import core.creative_pipeline as cp
+        import core.scene_env as sv
         for e in AVA:
             es._BEAT_MEMORY.clear()
             es._ENV_MEMORY.clear()
@@ -745,7 +746,9 @@ class TestAvalanche(unittest.TestCase):
                         for axis in ("mountain", "village", "light", "spot"):
                             self.assertNotEqual(env[axis], envs[-1][axis], axis)
                     for axis in ("mountain", "village", "light"):
-                        self.assertIn(env[axis], AXES[axis])
+                        # 21 Eki (Aşama 5): ışık kapsamı (sabah, gün batımı) eklendi
+                        allowed = AXES[axis] + (sv.ENV_LIGHT_ADD["avalanche"] if axis == "light" else ())
+                        self.assertIn(env[axis], allowed)
                     no_neg = scene["prompt"].lower().replace("no readable signs, text or flags", "")
                     self.assertEqual(es.find_terms(LEAK, no_neg), [])
                     envs.append(env)
@@ -765,8 +768,9 @@ class TestAvalanche(unittest.TestCase):
                 self.assertEqual(spots, set(sk.view_spots(e, None)))
                 self.assertGreaterEqual(len(set(tags)), 15)
                 self.assertLessEqual(most, 175)
-                for axis in ("mountain", "village", "light"):   # her değer kullanılıyor
-                    self.assertEqual({x[axis] for x in envs}, set(AXES[axis]), axis)
+                for axis in ("mountain", "village", "light"):   # her değer kullanılıyor (21 Eki: eklenen ışıklar dahil)
+                    allowed = set(AXES[axis]) | (set(sv.ENV_LIGHT_ADD["avalanche"]) if axis == "light" else set())
+                    self.assertEqual({x[axis] for x in envs}, allowed, axis)
 
     def test_environment_mixed_events_lru(self):
         # 14 Eki (4): LRU kategori bazında (köy ve kayak aynı görünmesin): karışık sırayla 150 üretim

@@ -44,7 +44,9 @@ def _row(scene: dict) -> dict:
         a["environment"] = " · ".join(f"{k}={v}" for k, v in env.items() if k not in ("spot", "light"))
         a["weather"] = env["light"]
     a["environment"] = a["environment"] or a["view"] or "—"
-    return {k: (a[k] if a[k] is not None else "—") for k in AXES}
+    row = {k: (a[k] if a[k] is not None else "—") for k in AXES}
+    row["fit_guard"] = a.get("fit_guard", False)   # 21 Eki (Aşama 5): testler bütçe zorunlu tekrarı ayırt eder
+    return row
 
 
 def simulate(event: str, runs: int = 20, seed: int = 2026, reset_each: bool = False,

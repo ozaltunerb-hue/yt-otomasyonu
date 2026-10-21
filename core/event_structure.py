@@ -2123,6 +2123,7 @@ def axes_memory(event: str) -> list[dict]:
 
 
 WORD_CAP_EVENTS = VOLCANO_EVENTS + AVALANCHE_EVENTS + EARTHQUAKE_EVENTS + (FIRE_TORNADO,)   # 15 Eki (2)
+WORD_CAP_EVENTS += (FLOOD, TIDAL)   # 21 Eki (Aşama 5): sel ve kıyı dalga da 175 tavanlı (GPT bütçesi + kod yedeği)
 
 # ── Ortam havuzu (14 Eki (4), Bahadır; şimdilik sadece çığ) ──────────────────────────────────────────────────────────
 # Ders: köy ve kayak videoları birbirinin aynısıydı (aynı balkon korkuluğu, aynı bulut, aynı koşan insanlar). Her
@@ -2787,7 +2788,7 @@ def clean_slice(text: str) -> str:
 # ── Birleştirme ve spec ─────────────────────────────────────────────────────────────────────────────────────
 def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: str, b3: str, vehicle: str,
                people: int | None = None, setting: str | None = None, volc_env: str | None = None,
-               frame: dict | None = None) -> dict:
+               frame: dict | None = None, scene_env: str | None = None) -> dict:
     """Kie'ye gidecek prompt'u kuran ve denetleyen her şey (slices hariç). people: kaçan kişi sayısı N (sadece
     kişi kuralı olan olaylarda, zorunlu)."""
     if not is_structured(event):
@@ -2803,7 +2804,9 @@ def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: st
     fire_env = fire_env_of_spot(spot) if event == FIRE_TORNADO else None
     spec = {"event": event, "ship": ship, "spot": spot, "view": view, "beat_2": b2, "beat_3": b3,
             "vehicle": vehicle, "key_visual": expected_key_visual(event, spot),
-            "suffix": style_suffix(event, ship, spot, view, setting, volc_env, frame, fire_env)}
+            "suffix": style_suffix(event, ship, spot, view, setting, volc_env, frame, fire_env, scene_env)}
+    if scene_env is not None:
+        spec["scene_env"] = scene_env   # 21 Eki (Aşama 5): ortam ekseni (9 olay)
     if frame is not None:
         spec["frame"] = dict(frame)   # 21 Eki (Aşama 4): kadraj ekseni (son denetim stil ekini bununla yeniden kurar)
     if volc_env is not None:
@@ -2849,6 +2852,9 @@ BUDGET_EVENTS += (FLOOD, MUDSLIDE, SLOPE, VILLAGE, WILDFIRE, FACADE_FIRE, HELICO
 # 18 Eki (3), Bahadır kararı: ortam metni stil ekini uzattı (bombalar 103, kül bulutu 113 kelime); GPT'ye söylenen toplam
 # 175 - stil eki - 3 etiket (kapı aralığı aynı, 40-75). Geçmiş GPT hikâyelerinin kül bulutunda çoğu 175'i aşacaktı.
 BUDGET_EVENTS += VOLC_ENV_EVENTS
+BUDGET_EVENTS += (TIDAL,)   # 21 Eki (Aşama 5): kıyı dalga (sel zaten listede)
+# GPT'ye söylenen toplam = min(olay toplamı, 175 - stil eki - 3): volkan ortam olayları + sel + kıyı dalga (Aşama 5)
+CAP_BUDGET_EVENTS = VOLC_ENV_EVENTS + (FLOOD, TIDAL)
 BUDGET_SLICE_MAX = 18
 BUDGET_SLICE_1 = 10
 
@@ -2862,7 +2868,7 @@ def word_budget_line(spec: dict) -> str:
     lo2 = SLICE_WORDS["slice_2"][0]
     key = len(spec["key_visual"].split())
     total = TOTAL_WORDS_BY_EVENT.get(event, TOTAL_WORDS)[1]
-    if event in VOLC_ENV_EVENTS:   # 18 Eki (3): prompt 175 kelimeye sığsın (3 = dilim etiketleri)
+    if event in CAP_BUDGET_EVENTS:   # 18 Eki (3) / 21 Eki: prompt 175 kelimeye sığsın (3 = dilim etiketleri)
         total = min(total, VOLC_MAX_PROMPT_WORDS - 3 - len(spec["suffix"].split()))
     s1 = min(hi1, BUDGET_SLICE_1)
     s23 = max(lo2, min(BUDGET_SLICE_MAX, (total - key - s1) // 2))
@@ -2977,7 +2983,8 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
     out = []
     expected_suffix = style_suffix(spec["event"], spec["ship"], spec["spot"], spec["view"], spec.get("setting"),
                                    spec.get("volc_env"), spec.get("frame"),
-                                   fire_env_of_spot(spec["spot"]) if spec["event"] == FIRE_TORNADO else None)
+                                   fire_env_of_spot(spec["spot"]) if spec["event"] == FIRE_TORNADO else None,
+                                   spec.get("scene_env"))
     expected_key = expected_key_visual(spec["event"], spec["spot"])
     if spec.get("key_visual") != expected_key:
         out.append(_issue("key_visual", "kilit görsel spec'te değişmiş"))

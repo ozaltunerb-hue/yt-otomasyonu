@@ -152,7 +152,7 @@ class TestNotionSuccess(_Quiet):
             scene = self.scene(e, records, seed=seed)
             ax = scene["structure"]["axes"]
             self.assertEqual(ax["spot"], spots[2])
-            self.assertEqual(ax["light"], lights[2])
+            self.assertNotIn(ax["light"], lights[:2])   # 21 Eki (Aşama 5): ışık listesi genişledi
             self.assertIn(ax["vehicle"], vehicles[2:])
             self.assertIn(ax["people"], (5, 6))
             self.assertEqual(scene["trace"]["axes_source"], "notion")
@@ -300,8 +300,20 @@ class TestDeployScenario(_Quiet):
                 self.assertEqual(m["errors"], 0)
                 single = {a for a, n in vr.option_counts(e).items() if n == 1}
                 for axis in vr.LRU_AXES:
-                    if axis not in single and axis != "kadraj":
+                    # kadraj: aşağıda (tek güvenli kadraj); ortam ve ön plan: aşağıda (uyum / bütçe zorunlu)
+                    if axis not in single and axis not in ("kadraj", "environment", "on_plan"):
                         self.assertEqual(m[f"rep_{axis}"], 0, axis)
+                # 21 Eki (Aşama 5): ortam tekrarı sadece spotla uyumlu ortamlar son 2 elenince bitiyorsa; ön plan
+                # tekrarı sadece K5 sığma koruması devreye girdiyse (bütçe zorunlu)
+                import core.scene_env as sv
+                envs = [r["environment"] for r in rows]
+                for i in range(1, len(rows)):
+                    a, b = rows[i - 1], rows[i]
+                    if e in sv.SCENE_ENVS and a["environment"] == b["environment"]:
+                        left = [x for x in sv.compatible_envs(e, b["spot"]) if x not in envs[max(0, i - 2):i]]
+                        self.assertEqual(left, [], (e, i, b["spot"], envs[:i + 1]))
+                    if a["on_plan"] == b["on_plan"] and b["on_plan"] != "—":
+                        self.assertTrue(b["fit_guard"], (e, i, a, b))
                 # 21 Eki (Aşama 4): kadraj tekrarı sadece seçilen beat'lerin dışlamaları tek güvenli kadraj bıraktıysa
                 beats = es.EVENT_BEATS[e]["excluded_spots"]
                 for a, b in zip(rows, rows[1:]):

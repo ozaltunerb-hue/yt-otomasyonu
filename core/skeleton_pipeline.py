@@ -987,7 +987,8 @@ def legacy_camera(event: str, spot: str, volc_env: str | None = None) -> str:
 
 
 def style_suffix(event: str, ship: str | None, spot: str, view: str | None = None, setting: str | None = None,
-                 volc_env: str | None = None, frame: dict | None = None, fire_env: str | None = None) -> str:
+                 volc_env: str | None = None, frame: dict | None = None, fire_env: str | None = None,
+                 scene_env: str | None = None) -> str:
     """Tek kamera satırı + kıyafet + ışık (+ şehirde görünüm satırı; en fazla 8 kısıt). Eski ekten kaldırılanlar:
     TUR 30 notu. setting: 14 Eki (4), çığ ortam satırı ("Setting: dağ, yerleşim, ışık."), kamera cümlesinden sonra.
     frame: 21 Eki (Aşama 4) kadraj ekseni (core/frame_axis.py); None ise bugünkü kamera (legacy_camera)."""
@@ -995,7 +996,13 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     camera = legacy_camera(event, spot, volc_env)
     if frame is not None:
         from core.frame_axis import frame_camera
-        camera = frame_camera(event, spot, frame, volc_env, fire_env, legacy=legacy_camera)
+        camera = frame_camera(event, spot, frame, volc_env, fire_env, legacy=legacy_camera, scene_env=scene_env)
+    scene_signs = False
+    if scene_env and scene_env != "A":   # 21 Eki (Aşama 5): ortam ekseni (9 olay), çığ ortam satırı gibi kameradan sonra
+        from core.scene_env import env_text
+        # en fazla 8 kısıt: yazı/tabela yasağı ortam cümlesine katılır (bölge görünümündeki gibi tek kısıt)
+        scene_signs = s["domain"] in NO_SIGNS_DOMAINS
+        setting = f"Setting: {env_text(event, scene_env)}" + (f", {NO_SIGNS}." if scene_signs else ".")
     guardrails = get_realism_guardrails(s['domain'], ship or 'None', spot)
     if s["domain"] == "volcano_disasters":   # 13 Eki (3): kısa ifade, aynı kısıtlar
         guardrails = VOLCANO_GUARDRAILS_LONG if event in VOLCANO_SHORT_CAMERA_EXCLUDED else VOLCANO_GUARDRAILS
@@ -1009,7 +1016,7 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8)
         out += f" Setting: {view_district(event, view)}, {REGION_VIEW_CLOTHING}, {NO_SIGNS}."
-    elif s["domain"] in NO_SIGNS_DOMAINS:
+    elif s["domain"] in NO_SIGNS_DOMAINS and not scene_signs:
         out += f" {NO_SIGNS[0].upper()}{NO_SIGNS[1:]}."   # 2 Eki: heyelan (toplam 8 kısıt)
     return out
 

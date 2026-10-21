@@ -269,7 +269,7 @@ def family_window(event: str, volc_env: str | None = None) -> str:
 
 
 def frame_camera(event: str, spot: str, frame: dict, volc_env: str | None = None, fire_env: str | None = None,
-                 legacy=None) -> str:
+                 legacy=None, scene_env: str | None = None) -> str:
     """Kadraja göre kamera cümlesi. legacy(event, spot, volc_env) -> bugünkü cümle (skeleton_pipeline verir)."""
     ftype, pos_spot, fg, mode = frame["type"], frame.get("pos_spot"), frame.get("fg"), frame.get("mode")
     fam = family(event)
@@ -288,6 +288,9 @@ def frame_camera(event: str, spot: str, frame: dict, volc_env: str | None = None
         return family_window(event, volc_env)
     data = FRAME_EVENTS[event]
     scene = FIRE_SCENE[fire_env] if fam == "fire_tornado" else data["scene"]
+    if scene_env and scene_env != "A":   # 21 Eki (Aşama 5): ortam seçiliyse sahne genel, ayrıntı Setting satırından
+        from core.scene_env import GENERIC_SCENE
+        scene = GENERIC_SCENE.get(event, scene)
     if pos_spot:
         _, _, pos, perch = native(event, pos_spot)
     else:
@@ -324,9 +327,12 @@ def _weighted(options: list[str], rng) -> str:
 
 
 def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: list[dict],
-                 rng: random.Random) -> tuple[dict, dict]:
+                 rng: random.Random, blocked: set[str] | None = None) -> tuple[dict, dict]:
     """(frame, elenenler). pool: bu üretimde kamera yeri ödünç alınabilecek spotlar (görünüm/ortam süzülmüş). risky:
-    seçilen beat'lerin dışlandığı spotlar (orada kamera olmaz; pencere balkon riskini de taşır)."""
+    seçilen beat'lerin dışlandığı spotlar (orada kamera olmaz; pencere balkon riskini de taşır). blocked: 21 Eki
+    (Aşama 5) ortamla çelişen kamera noktaları (spot adı ya da "lib:<tip>")."""
+    blocked = blocked or set()
+    pool = [s for s in pool if s not in blocked]
     types = FRAME_EVENTS[event]["types"]
     fam = family(event)
     risky_types = {native(event, s)[0] for s in risky if s in SPOT_FRAME[event]}
@@ -345,7 +351,7 @@ def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: 
                 available.append(t)
                 pos_for[t] = usable
         elif t not in risky_types and (fam not in ("volcano", "avalanche", "earthquake") or t == "pencere") \
-                and t != "teras":
+                and t != "teras" and f"lib:{t}" not in blocked:
             available.append(t)
             pos_for[t] = [None]
     if not available:   # güvenlik: seçilen spotun kendi tipi her zaman vardır (izinli listede değilse bile)
@@ -357,8 +363,10 @@ def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: 
     pos_spot = pos_for[ftype][0] if len(pos_for[ftype]) == 1 else rng.choice(pos_for[ftype])
     mode = None
     if pos_spot and native(event, pos_spot)[1] == AB:
-        modes, excluded["kamera_modu"] = _lru(["A", "B"], [h.get("kamera_modu") for h in hist], 1)
-        mode = rng.choice(modes)
+        if pos_spot == spot:   # 21 Eki (Aşama 5): mod A sadece kendi spotunun kendi eski cümlesi
+            modes, excluded["kamera_modu"] = _lru(["A", "B"], [h.get("kamera_modu") for h in hist], 1)
+            mode = rng.choice(modes)
+        # ödünç nokta: mod ekseni yok (None), cümle her zaman yeni sabit-yüksek şablon (mod A ödünç alınmaz)
     fgs = list(fg_options(event, ftype, pos_spot, mode))
     fg = None
     if fgs:
@@ -375,10 +383,13 @@ def frame_label(frame: dict | None) -> str:
             + (f" · kamera noktası={frame['pos_spot']}" if frame.get("pos_spot") else " · kamera noktası=kütüphane"))
 
 
-def all_frames(event: str, spot: str, pool: list[str], risky: set[str] | None = None) -> list[dict]:
+def all_frames(event: str, spot: str, pool: list[str], risky: set[str] | None = None,
+               blocked: set[str] | None = None) -> list[dict]:
     """Bu spotta olası tüm kadraj varyantları (testler, kural denetimi, K5 sığma koruması). risky verilirse seçilen
-    beat'lerin dışlandığı spotlar ödünç alınmaz (choose_frame ile aynı süzgeç)."""
+    beat'lerin dışlandığı spotlar ödünç alınmaz; blocked: ortamla çelişen noktalar (choose_frame ile aynı süzgeç)."""
     risky = risky or set()
+    blocked = blocked or set()
+    pool = [s for s in pool if s not in blocked]
     risky_types = {native(event, s)[0] for s in risky if s in SPOT_FRAME[event]}
     if "balkon" in risky_types:
         risky_types.add("pencere")
@@ -396,12 +407,13 @@ def all_frames(event: str, spot: str, pool: list[str], risky: set[str] | None = 
                 continue
             if natives:
                 spots = natives
-            elif t == "teras" or (family(event) in ("volcano", "avalanche", "earthquake") and t != "pencere"):
+            elif t == "teras" or (family(event) in ("volcano", "avalanche", "earthquake") and t != "pencere") \
+                    or f"lib:{t}" in blocked:
                 continue
             else:
                 spots = [None]
         for ps in spots:
-            modes = ["A", "B"] if ps and native(event, ps)[1] == AB else [None]
+            modes = ["A", "B"] if ps == spot and native(event, ps)[1] == AB else [None]
             for m in modes:
                 fgs = fg_options(event, t, ps, m) or (None,)
                 for fg in fgs:

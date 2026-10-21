@@ -764,7 +764,7 @@ async def load_axes_history(domain: str, event: str, axes_loader) -> dict:
 
 def _axes_line(axes: dict, excluded: dict, source: str, warning: str | None) -> str:
     """Onay mesajı satırı (Bahadır okusun diye kısa)."""
-    env = axes.get("view") or axes.get("env")
+    env = axes.get("view") or axes.get("env") or axes.get("ortam")
     if isinstance(env, dict):
         env = ", ".join(str(v) for v in env.values())
     mode = {"A": "A (mevcut)", "B": "B (sabit)"}.get(axes.get("kamera_modu"))
@@ -787,6 +787,7 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
     (sadece şehir olayları); None ise LRU seçer. axes_loader: 21 Eki, Notion eksen geçmişi okuyucusu (domain ->
     ham kayıtlar); None ise süreç hafızası (betikler, testler)."""
     import core.axes_history as ah
+    import core.scene_env as sv
     domain, event, ship = choose_event_and_ship(domain, event, history)
     structured = es.is_structured(event)
     hist = (await load_axes_history(domain, event, axes_loader) if structured
@@ -842,6 +843,16 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
         excluded["light"] = es.lru_axis(list(es.VOLCANO_WEATHER_WEIGHTS[event]), ah.values(ev_hist, "light"))[1]
         es.remember_volc_env(event, volc_env)    # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
         es.remember_volc_spot(event, spot)
+    if structured and event in sv.LIGHT_ADD:   # 21 Eki (Aşama 5): ışık kapsamı (sabah, öğle, gün batımı, kapalı)
+        weights = None
+        if event in es.VOLC_ENV_EVENTS:
+            base = list(es.VOLCANO_WEATHER_WEIGHTS[event])
+            weights = {**es.VOLCANO_WEATHER_WEIGHTS[event], **{x: 1 for x in sv.LIGHT_ADD[event] if x not in base}}
+        else:
+            base = list(EVENT_SKELETONS[event]["weather"])
+        options = base + [x for x in sv.LIGHT_ADD[event] if x not in base]
+        weather, excluded["light"] = sv.choose_light(event, options, ah.values(ev_hist, "light"), sv.side_rng("light"),
+                                                     weights)
     place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
     if volc_env:
         place = es.volc_place(event, volc_env)
@@ -880,6 +891,7 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     """Yapılandırılmış olay: olay çifti + araç (kod), dilimler (GPT), son denetim (kod). Son denetim tutmazsa
     StructureError: Kie'ye gidilmez."""
     import core.axes_history as ah
+    import core.scene_env as sv
     hist = hist or {"event": [], "category": None, "source": "yok", "warning": None}
     excluded = dict(excluded or {})
     ev_hist, cat_hist = hist["event"], hist["category"]
@@ -911,6 +923,15 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     if event in es.ENV_EVENTS:
         mem = ([h["env"] for h in cat_hist if isinstance(h.get("env"), dict)] if cat_hist is not None else None)
         env = _with_used(es.choose_environment, event, spot, b2, b3, used=mem, kw="mem")
+        # 21 Eki (Aşama 5): ışık kapsamı; ana çekim aynen, son ışık ayrı akıştan (son 2 hariç, satır ≤15 kelime)
+        fam = "earthquake" if event in es.EARTHQUAKE_EVENTS else "avalanche"
+        axis = es.EQ_ENV_AXES["light"] if fam == "earthquake" else es.ENV_AXES["light"]
+        lights = [li for li in list(axis) + list(sv.ENV_LIGHT_ADD[fam])
+                  if len(es.setting_line({**env, "light": li}).split()) <= es.SETTING_MAX_WORDS]
+        used_light = (ah.values(cat_hist, "light") if cat_hist is not None
+                      else [m.get("light") for m in (es._EQ_ENV_MEMORY if fam == "earthquake" else es._ENV_MEMORY)])
+        light, excluded["light"] = sv.choose_light(event, lights, used_light, sv.side_rng("light"))
+        env = {**env, "light": light}
         es.remember_environment(env)             # seçim anında (beat hafızası gibi)
         setting = es.setting_line(env)
         weather = es.env_weather(env)   # 14 Eki: çığ ve deprem
@@ -921,12 +942,19 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
             else view_spots(event, view))
     beats_cfg = es.EVENT_BEATS[event]["excluded_spots"]
     risky = set(beats_cfg.get(b2, set())) | set(beats_cfg.get(b3, set()))
+    # 21 Eki (Aşama 5): ortam ekseni (9 olay). Seçilen spotla uyumlu ortamlardan, son 2 hariç, ayrı akıştan
+    scene_env = None
+    if event in sv.SCENE_ENVS:
+        scene_env, excluded["ortam"] = sv.choose_env(event, spot, ah.values(ev_hist, "ortam"), sv.side_rng("ortam"))
+    blocked = sv.excluded_positions(event, scene_env)
     frame_rng = fx.side_rng()
-    frame, frame_excluded = fx.choose_frame(event, spot, pool, risky, ev_hist, frame_rng)
+    frame, frame_excluded = fx.choose_frame(event, spot, pool, risky, ev_hist, frame_rng, blocked)
     excluded.update(frame_excluded)
-    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, frame)
+    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, frame, scene_env)
     if not es.fallback_candidates(spec):   # K5 sığma koruması: kod yedeği 175'e sığmıyorsa sığan bir kadraj varyantı
-        alternatives = [f for f in fx.all_frames(event, spot, pool, risky) if f != frame]
+        alternatives = [(scene_env, f) for f in fx.all_frames(event, spot, pool, risky, blocked) if f != frame]
+        if scene_env not in (None, sv.ENV_A):   # en son: ortam A (bugünkü görünüm, Setting satırı yok)
+            alternatives += [(sv.ENV_A, f) for f in fx.all_frames(event, spot, pool, risky)]
         frame_rng.shuffle(alternatives)
         # tekrar önlemeye uyan alternatifler önce: geçmişteki son kadraj (derinlik choose_frame ile aynı), son ön plan,
         # son kamera modu (ilk seçim kütüphane noktasıysa elenen mod listesi boştur; değerler geçmişten okunur)
@@ -935,21 +963,25 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
             return set(vals[-depth:]) if depth else set()
         last_k = _recent_values("kadraj", fx.frame_depth(len(fx.FRAME_EVENTS[event]["types"])))
         last_fg, last_mode = _recent_values("on_plan", 1), _recent_values("kamera_modu", 1)
-        alternatives.sort(key=lambda f: (f["type"] in last_k, f.get("mode") in last_mode, f.get("fg") in last_fg))
-        for alt in alternatives:
-            alt_spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, alt)
+        alternatives.sort(key=lambda a: (a[0] != scene_env, (a[1]["type"] in last_k) + (a[1].get("mode") in last_mode)
+                                         + (a[1].get("fg") in last_fg), a[1]["type"] in last_k))
+        for alt_env, alt in alternatives:
+            alt_spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, alt, alt_env)
             if es.fallback_candidates(alt_spec):
-                log.info(f"🎞️ Kadraj sığmadı ({fx.frame_label(frame)}), yerine: {fx.frame_label(alt)}")
+                log.info(f"🎞️ Kadraj sığmadı ({fx.frame_label(frame)}, ortam {scene_env}), yerine: "
+                         f"{fx.frame_label(alt)}, ortam {alt_env}")
                 excluded["kadraj_sığmadı"] = [frame["type"]]
-                frame, spec = alt, alt_spec
+                frame, spec, scene_env = alt, alt_spec, alt_env
                 break
+    if sv.env_text(event, scene_env):   # GPT'nin PLACE satırı ortam metni (volkan ortamı gibi)
+        place = sv.env_text(event, scene_env)
     # 21 Eki: seçilen tüm eksenler (Notion "Eksenler" + süreç hafızası + Onay satırı)
     axes = {"spot": spot, "view": view,
             "env": ({k: v for k, v in env.items() if k != "spot"} if env else (spec.get("fire_env") or volc_env)),
             "light": env["light"] if env else weather, "vehicle": vehicle, "people": people,
             "key": spec.get("fire_env") or "default", "beats": tag,
             "kadraj": frame["type"], "on_plan": frame.get("fg"), "kamera_modu": frame.get("mode"),
-            "kamera_noktasi": frame.get("pos_spot")}
+            "kamera_noktasi": frame.get("pos_spot"), "ortam": scene_env}
     es.remember_axes(event, axes)
     axes_line = _axes_line(axes, excluded, hist["source"], hist["warning"])
     lo, hi = count_range(event, ship)
@@ -960,6 +992,9 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
              "beat_3_text": es.beat_text(event, "slice_3", b3), "outcome": EVENT_OUTCOMES[event],
              "recent_count": len(recent), "attempts": [], "story": "", "story_words": 0}
     trace["axes"] = axes
+    trace["place"] = place
+    if scene_env:
+        trace["scene_env"] = scene_env
     trace["axes_excluded"] = excluded
     trace["axes_source"] = hist["source"]
     if env:

@@ -25,7 +25,7 @@ def assert_frame_camera(tc, scene):
     f = spec["frame"]
     fire_env = es.fire_env_of_spot(spec["spot"]) if spec["event"] == es.FIRE_TORNADO else None
     suffix = sk.style_suffix(spec["event"], spec["ship"], spec["spot"], spec["view"], spec.get("setting"),
-                             spec.get("volc_env"), f, fire_env)
+                             spec.get("volc_env"), f, fire_env, spec.get("scene_env"))
     tc.assertEqual(scene["style_suffix"], suffix)
     tc.assertIn(suffix, scene["prompt"])
     pos = f.get("pos_spot")
@@ -331,7 +331,10 @@ class TestExhaustive(unittest.TestCase):
               "slice_3": es.clean_slice("A lamppost topples into the current and crashes into the churning water " + pad)}
         n = len(es.plain_story(spec, sl).split())
         self.assertTrue(60 < n <= 70, n)
-        self.assertEqual(es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl)), [])
+        # 21 Eki (Aşama 5): sel 175 tavanlı; bu uzun stil ekiyle 70 kelime tavanı aşar (tavan kuralı, uzunluk değil)
+        rules = [i["rule"] for i in es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl))]
+        self.assertEqual([r for r in rules if r != "volcano_prompt_words"], [])
+        self.assertEqual(rules == ["volcano_prompt_words"], len(es.assemble_prompt(spec, sl).split()) > 175)
         self.assertNotIn("length", [i["rule"] for i in cp.structured_issues(spec, sl, [])])
         # diğer olaylarda genel 40-60 aynen
         self.assertIn("length", [i["rule"] for i in cp.story_rule_issues(
@@ -669,7 +672,7 @@ class TestTidal(unittest.TestCase):
             msg = cp._slices_message(spec, "P", "W", 3, 6, [], None)
             with self.subTest(n=n):
                 self.assertIn(f"\nVEHICLE: large SUV\nPEOPLE RUNNING AWAY: {word} (slice_1_rest must say that {word} "
-                              f"people run away from the wave)\n4-9s EVENT: ", msg)
+                              f"people run away from the wave)\n{es.word_budget_line(spec)}4-9s EVENT: ", msg)
 
     def test_people_out_of_range_caught_in_final_check(self):
         spec, slices, prompt = build("T2", "W3", "riviera", "Coastal avenue behind a seawall", "large SUV", TIDAL, 5)
@@ -1136,6 +1139,7 @@ class TestLandslideStructure(unittest.TestCase):
             "OPENING SENTENCE (fixed, already written): A towering brown tidal wave thick with debris crashes over the "
             "waterfront onto the coastal street.\nPLACE: P\nWEATHER: W\nPEOPLE VISIBLE: 3 to 6\nVEHICLE: large SUV\n"
             "PEOPLE RUNNING AWAY: five (slice_1_rest must say that five people run away from the wave)\n"
+            + es.word_budget_line(spec) +   # 21 Eki (Aşama 5): kıyı dalga da bütçe satırı alır (175 tavanı)
             "4-9s EVENT: the large SUV is carried down the street by the surge\n"
             "9-15s EVENT: a street tree is uprooted and carried along\nRECENT STORIES:\n- old\n\n"
             "YOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already correct: Fix A.")
@@ -2062,8 +2066,11 @@ class TestFireStructure(unittest.TestCase):
                 self.assertIsNone(t["view"])
                 self.assertIsNone(scene["ship"])
                 self.assertIn(t["spot"], self.SPOTS[e])
-                self.assertEqual(t["place"], self.SPOTS[e][t["spot"]][1])
-                self.assertIn(t["weather"], self.WEATHER)
+                # 21 Eki (Aşama 5): ortam seçiliyse PLACE ortam metni; ışık listesi genişledi (kapsam)
+                import core.scene_env as sv
+                senv = scene["structure"]["axes"].get("ortam")
+                self.assertEqual(t["place"], sv.env_text(e, senv) or self.SPOTS[e][t["spot"]][1])
+                self.assertIn(t["weather"], self.WEATHER + list(sv.LIGHT_ADD[e]))
                 self.assertIn(t["vehicle"], self.VEHICLES)
                 self.assertIn(t["people_running"], (2, 3) if e == es.FIRE_TORNADO else (3, 4, 5, 6))
                 self.assertIn(f"|{t['spot'].lower()}##{t['beats']}|", scene["combo_key"])

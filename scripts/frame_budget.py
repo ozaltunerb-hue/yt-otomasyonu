@@ -41,6 +41,7 @@ def measure(event: str) -> dict:
     lo, hi = sk.count_range(event, None)
     people = hi if es.has_people_rule(event) else None
     volc_envs = list(sk.VOLC_ENVS) if event in es.VOLC_ENV_EVENTS else [None]
+    import core.scene_env as sv
     out = {"combos": 0, "before_fail": 0, "after_fail": 0, "variants": 0, "variant_fail": 0, "max_suffix": 0}
     beats = es.EVENT_BEATS[event]["excluded_spots"]
     for view in es.structure_views(event):
@@ -48,20 +49,27 @@ def measure(event: str) -> dict:
             pool = (list(es.FIRE_TOR_ENVS[es.fire_env_of_spot(spot)]["spots"]) if event == es.FIRE_TORNADO
                     else sk.view_spots(event, view))
             vehicles = [v for v, _ in es.event_vehicles(event, view)] if es.uses_vehicle(event) else [None]
+            scene_envs = sv.compatible_envs(event, spot) if event in sv.SCENE_ENVS else [None]
             for b2, b3 in es.allowed_pairs(event, view, spot):
                 risky = set(beats.get(b2, set())) | set(beats.get(b3, set()))
-                frames = fx.all_frames(event, spot, pool, risky)
                 for veh in vehicles:
                     for venv in volc_envs:
+                      for senv in scene_envs:
+                        frames = fx.all_frames(event, spot, pool, risky, sv.excluded_positions(event, senv))
                         out["combos"] += 1
                         base = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv)
                         out["before_fail"] += not es.fallback_candidates(base)
                         ok_any = False
+                        if senv not in (None, "A"):   # üretimdeki koruma: en son ortam A'ya döner
+                            frames = frames + [dict(f, _env="A") for f in fx.all_frames(event, spot, pool, risky)]
                         for f in frames:
-                            spec = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv, f)
+                            env_used = f.pop("_env", senv) if "_env" in f else senv
+                            spec = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv, f,
+                                                 env_used)
                             fits = bool(es.fallback_candidates(spec))
                             out["variants"] += 1
                             out["variant_fail"] += not fits
+                            out["env_fail"] = out.get("env_fail", 0) + (not fits and env_used not in (None, "A"))
                             out["max_suffix"] = max(out["max_suffix"], len(spec["suffix"].split()))
                             ok_any = ok_any or fits
                         out["after_fail"] += not ok_any

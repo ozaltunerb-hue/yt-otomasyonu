@@ -608,10 +608,15 @@ class TestParti2WordBudget(unittest.TestCase):
                 ppl = sk.count_range(e, None)[0] if es.has_people_rule(e) else None
                 spec = es.build_spec(e, None, spot, view, p2, p3, veh, ppl)
                 line = es.word_budget_line(spec)
+                if e in es.CAP_BUDGET_EVENTS:   # 21 Eki (Aşama 5): sel 175 tavanlı (toplam stil ekine göre)
+                    total = min(es.TOTAL_WORDS_BY_EVENT.get(e, es.TOTAL_WORDS)[1],
+                                es.VOLC_MAX_PROMPT_WORDS - 3 - len(spec["suffix"].split()))
                 key = len(spec["key_visual"].split())
                 self.assertIn(f"the opening sentence has {key} words; slice_1_rest 6 to 10 words", line)
                 self.assertIn(f"must total at most {total} words", line)
-                self.assertLessEqual(key + 10 + 18 + 18, total)
+                if e not in es.CAP_BUDGET_EVENTS:
+                    self.assertLessEqual(key + 10 + 18 + 18, total)
+                total = es.TOTAL_WORDS_BY_EVENT.get(e, es.TOTAL_WORDS)[1]
         # şok dalgası bütçe satırı almaz (18 Eki (3): bombalar ve kül bulutu alır, tests/test_volcano_env.py)
         self.assertNotIn(ER, es.BUDGET_EVENTS)
 

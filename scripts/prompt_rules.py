@@ -96,10 +96,13 @@ def camera_items() -> dict:
                 pool = (list(es.FIRE_TOR_ENVS[es.fire_env_of_spot(spot)]["spots"]) if event == es.FIRE_TORNADO
                         else sk.view_spots(event, view))
                 fire_env = es.fire_env_of_spot(spot) if event == es.FIRE_TORNADO else None
+                import core.scene_env as sv
+                scene_envs = sv.compatible_envs(event, spot) if event in sv.SCENE_ENVS else [None]
                 for venv in (list(sk.VOLC_ENVS) if event in es.VOLC_ENV_EVENTS else [None]):
-                    for f in fx.all_frames(event, spot, pool):
-                        suffix = sk.style_suffix(event, None, spot, view, None, venv, f, fire_env)
-                        key = f"{spot}|{view}|{venv}|{f['type']}|{f['pos_spot']}|{f['mode']}|{f['fg']}"
+                    for senv in scene_envs:
+                      for f in fx.all_frames(event, spot, pool, blocked=sv.excluded_positions(event, senv)):
+                        suffix = sk.style_suffix(event, None, spot, view, None, venv, f, fire_env, senv)
+                        key = f"{spot}|{view}|{venv}|{senv}|{f['type']}|{f['pos_spot']}|{f['mode']}|{f['fg']}"
                         items[key] = {"style_suffix": suffix, "prompt": suffix, "axes": {"kamera_modu": f["mode"]},
                                       "frame": f}
         out[event] = items

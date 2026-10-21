@@ -154,13 +154,41 @@ class TestModeAndNative(unittest.TestCase):
                     continue
                 old = pr.camera_sentence(sk.style_suffix(e, None, spot, view))
                 for f in fx.all_frames(e, spot, pool(e, spot, view)):
-                    if f["mode"] == "A":   # ödünç alınan yüksek A/B noktasının kanıtlanmış cümlesi (alçak spot değil)
-                        self.assertNotEqual(f["pos_spot"], spot)
-                        continue
+                    # 21 Eki (Aşama 5): sabit spotta mod A hiç yok, ödünç de alınmaz; hiçbir K1 ifadesi yok
+                    self.assertNotEqual(f["mode"], "A", (e, spot, f))
                     cam = pr.camera_sentence(sk.style_suffix(e, None, spot, view, frame=f))
                     self.assertNotEqual(cam, old)
-                    self.assertNotIn("eye level", cam)
-                    self.assertNotIn("sidewalk", cam)
+                    self.assertEqual(pr._has(pr.CAMERA_BANNED, cam), [], (e, spot, f))
+
+    def test_mode_a_only_own_spot(self):
+        # 21 Eki (Aşama 5): mod A sadece kendi spotunun kendi eski cümlesi; ödünç noktada mod ekseni yok
+        for e in ps.active_events():
+            for spot in sk.EVENT_SKELETONS[e]["spots"]:
+                for f in fx.all_frames(e, spot, pool(e, spot)):
+                    if f["mode"] == "A":
+                        self.assertEqual(f["pos_spot"], spot, (e, spot, f))
+                    if f["pos_spot"] and f["pos_spot"] != spot:
+                        self.assertIsNone(f["mode"], (e, spot, f))
+        for i in range(60):
+            f, _ = fx.choose_frame(es.AVENUE, "High balcony over a downtown avenue", sk.view_spots(es.AVENUE, None),
+                                   set(), [], random.Random(i))
+            if f["pos_spot"] != "High balcony over a downtown avenue":
+                self.assertIsNone(f["mode"])
+
+    def test_fixed_spot_prompts_have_no_k1(self):
+        logging.disable(logging.WARNING)
+        try:
+            fixed = {(e, s) for e in ps.active_events() for s, v in fx.SPOT_FRAME[e].items() if v[1] == fx.FIXED}
+            n = 0
+            for e in {e for e, _ in fixed}:
+                for seed in range(30):
+                    item = ps.snapshot_event(e, seed)
+                    if (e, item["axes"]["spot"]) in fixed:
+                        n += 1
+                        self.assertEqual(pr._has(pr.CAMERA_BANNED, pr.camera_sentence(item["style_suffix"])), [])
+            self.assertGreater(n, 50)
+        finally:
+            logging.disable(logging.NOTSET)
 
     def test_new_sentences_pass_camera_rules(self):
         for e, items in pr.camera_items().items():

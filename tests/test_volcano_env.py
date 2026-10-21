@@ -257,7 +257,8 @@ class TestVolcEnvPipeline(unittest.TestCase):
                 tr, st = scene["trace"], scene["structure"]
                 env = tr["volc_env"]
                 self.assertIn(env, ENVS)
-                self.assertIn(tr["weather"], WEATHER[e])
+                import core.scene_env as sv   # 21 Eki (Aşama 5): ışık kapsamı (eklenenler ağırlık 1)
+                self.assertIn(tr["weather"], list(WEATHER[e]) + list(sv.LIGHT_ADD[e]))
                 self.assertIn(ENVS[env][1], scene["prompt"])
                 self.assertTrue(scene["prompt"].startswith(f"0-4s: {KEYS[e]}"))
                 self.assertIn(f"PLACE: {ENVS[env][1]}, ", msgs[0])

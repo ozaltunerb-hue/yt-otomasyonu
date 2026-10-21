@@ -70,13 +70,15 @@ def axes(scene: dict) -> dict:
     t = scene["trace"]
     env = t.get("environment")
     return {"spot": scene["spot"], "view": t.get("view"), "weather": t.get("weather"),
-            "environment": (t.get("fire_env") or t.get("volc_env")
+            "environment": (t.get("fire_env") or t.get("volc_env") or t.get("scene_env")
                             or (" · ".join(f"{k}={v}" for k, v in env.items() if k != "spot") if env else None)),
             "vehicle": t.get("vehicle"), "people": t.get("people_running"), "beats": t.get("beats"),
             "key_visual": t.get("key_visual"),
             "story_source": (scene.get("structure") or {}).get("story_source_kind"),
             # 21 Eki (Aşama 4): kadraj ekseni
-            **{k: (t.get("axes") or {}).get(k) for k in ("kadraj", "on_plan", "kamera_modu", "kamera_noktasi")}}
+            **{k: (t.get("axes") or {}).get(k) for k in ("kadraj", "on_plan", "kamera_modu", "kamera_noktasi")},
+            # 21 Eki (Aşama 5): K5 sığma koruması devreye girdi mi (kadraj/ortam bütçe yüzünden değişti)
+            "fit_guard": bool((t.get("axes_excluded") or {}).get("kadraj_sığmadı"))}
 
 
 def snapshot_event(event: str, seed: int) -> dict:
