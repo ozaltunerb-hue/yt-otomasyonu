@@ -729,7 +729,7 @@ class TestFireTornadoGate(unittest.TestCase):
         people = ["{w} people run from the tornado right below.",
                   "{w} drivers flee on foot right below.",   # 22 Eki: korkuluk yok
                   "{w} people sprint away just below the balcony.",
-                  "{w} residents run from the fire tornado in the foreground."]
+                  "{w} residents run from the fire tornado in the street below."]   # 22 Eki: "in the foreground" çıktı
 
         async def gpt(system, user, **kw):
             line = dict(l.split(": ", 1) for l in user.splitlines() if ": " in l)

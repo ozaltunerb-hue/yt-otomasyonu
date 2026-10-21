@@ -935,41 +935,45 @@ class TestLandslideStructure(unittest.TestCase):
     POOLS = {
         es.MUDSLIDE: ({
             "H1": "the {vehicle} is shoved sideways by the mud and slams into the car parked beside it",
-            "H2": "the {vehicle} is pushed down the street by the mud, bumping parked cars",
+            # 22 Eki (heyelan denetimi): H2, H4, H6, M3, M6; R2, R4, R6, S4; K3, L5, L6 metni değişti
+            "H2": "the mud swings the {vehicle} sideways and drags it down the steep street",
             "H3": "the {vehicle} is spun around by the mud and dragged downhill",
-            "H4": "the {vehicle} is buried to its windows and pushed against a house wall",
+            "H4": "the mud shoves the {vehicle} across the street and crushes it against the parked cars on the "
+                  "other side",
             "H5": "the {vehicle} tips over onto its side in the mud",
-            "H6": "the {vehicle} and the car behind it are pushed down the street together, bumper to bumper",
+            "H6": "the mud pushes the {vehicle} nose-first into the front steps of a house lining the street and "
+                  "buries its front half",
         }, {
             # 21 Eki (genel kalite): kadraj dışı hedef düzeltmesi (M3, M4, M6, M8; S2, S7; L1, L4, L6)
-            "M3": "a garden wall along the street collapses and its stones tumble downhill",
+            "M3": "the mud shoves the row of parked cars along the curb downhill, one car after another",
             "M4": "a tree along the street is torn out and swept downhill",
-            "M6": "the mud rams the nearest house and tears off its wooden porch",
+            "M6": "the mud rams the nearest house lining the street and buries its ground floor up to the windows",
             # 18 Eki (2): Parti 2
             "M7": "mud slams into a house across the street and bursts through its ground floor",
             "M8": "the mud shoves a parked truck sideways into a house on the street",
             "M9": "a mass of mud and uprooted trees crashes onto the houses across the street",
-        }, {("H4", "M3"), ("H4", "M6"), ("H4", "M7"), ("H4", "M8"), ("H4", "M9"), ("H1", "M8")}, {}),
+        }, {("H4", "M3"), ("H6", "M6"), ("H6", "M7"), ("H6", "M8"), ("H6", "M9"), ("H1", "M8"), ("H4", "M6")}, {}),
         es.SLOPE: ({
             "R1": "the {vehicle} is shoved sideways across the road by the mud and rocks",
-            "R2": "the {vehicle} is pushed against the guardrail and pinned there",
+            "R2": "the mud shoves the {vehicle} across both lanes and slams it into the rock face on the far side of "
+                  "the road",
             "R3": "a rolling boulder strikes the {vehicle}, which spins and slides down the road",
-            "R4": "the {vehicle} is buried to its windows in the mud and pushed toward the road edge",
+            "R4": "a wave of mud and rocks hits the front of the {vehicle} and shoves it backwards down the road",
             "R5": "the {vehicle} tips over onto its side in the mud",
-            "R6": "the {vehicle} and the car behind it are shoved along the road together",
+            "R6": "the mud spins the {vehicle} around and drags it backwards along the road toward the slope",
         }, {
             # 17 Eki (temizlik turu): S1, S6 çıktı
             "S2": "a large boulder rolls across the road and smashes into a stopped car",
             "S3": "a tree is torn out of the slope and slides across the road",
-            "S4": "a utility pole snaps and falls across the road",
+            "S4": "a huge slab of rock breaks off the slope and crashes onto the road in front of the stopped cars",
             "S5": "more of the slope gives way and a second surge of mud and rocks pours onto the road",
             # 18 Eki (2): Parti 2
             "S7": "the mud and boulders shove a stopped truck sideways toward the edge of the road",
-        }, {("R3", "S2"), ("R1", "S7"), ("R4", "S7")}, {}),
+        }, {("R3", "S2"), ("R1", "S7"), ("R4", "S7"), ("R2", "S7"), ("R2", "S4"), ("R2", "S5")}, {}),
         es.VILLAGE: ({
             "K1": "the {vehicle} is swept down the lane and rammed against a house wall",
             "K2": "the {vehicle} is spun around by the torrent and dragged along the lane",
-            "K3": "the {vehicle} is buried to its windows and pushed against a fence",
+            "K3": "the torrent shoves the {vehicle} down the lane and wedges it between two houses",
             "K4": "the {vehicle} tips over onto its side in the torrent",
             "K5": "the {vehicle} slams into a pile of logs and both are carried away",
             "K6": "the {vehicle} is shoved into a parked motorbike and both are carried along",
@@ -977,11 +981,11 @@ class TestLandslideStructure(unittest.TestCase):
             "L1": "a wooden house along the lane is struck and its wall collapses",   # 17 Eki: L2 çıktı
             "L3": "a large tree is uprooted and rolls down with the torrent",
             "L4": "a roof section is torn off a house along the lane and swept away",
-            "L5": "a pile of logs breaks loose and rolls down the lane",
-            "L6": "a stone wall along the lane collapses and its stones tumble into the torrent",
+            "L5": "the torrent smashes through the front wall of a wooden house along the lane",
+            "L6": "the torrent shoves a parked car along the lane into the front of a house",
             # 18 Eki (2): Parti 2
             "L7": "the landslide rips a wooden house off its foundation and carries it down the slope",
-        }, {("K1", "L1"), ("K5", "L5"), ("K1", "L6"), ("K1", "L7")},
+        }, {("K1", "L1"), ("K1", "L5"), ("K1", "L6"), ("K1", "L7"), ("K3", "L6")},
             # kamera köy evinin üst kat balkonunda
             {"L1": {"Upper-floor balcony of a village house"}, "L7": {"Upper-floor balcony of a village house"}}),
     }
@@ -995,7 +999,9 @@ class TestLandslideStructure(unittest.TestCase):
     def build(self, event, b2, b3, spot, vehicle, people=5, s1=None):
         spec = es.build_spec(event, None, spot, None, b2, b3, vehicle, people)
         word = es.NUMBER_WORDS[people]
-        slices = fake_slices(b2, b3, vehicle, event, s1 or f"Within seconds {word} residents run uphill from the flow.")
+        # 22 Eki: 0-4s insan cümlesi kısaldı (önceki "Within seconds {word} residents run uphill from the flow."): uzun
+        # heyelan beat'leriyle (H6 22, R2 23 kelime) 40-70 toplamı kod yedeğindeki gibi kısa insan cümlesiyle tutar
+        slices = fake_slices(b2, b3, vehicle, event, s1 or f"{word} residents run uphill from the mud.")
         return spec, slices, es.assemble_prompt(spec, slices)
 
     def test_names_from_code(self):
@@ -1047,18 +1053,28 @@ class TestLandslideStructure(unittest.TestCase):
     def test_variants_and_wrong_event(self):
         ok = {(es.MUDSLIDE, "H1"): "The mud shoves the SUV broadside into the neighboring parked car.",
               (es.MUDSLIDE, "H3"): "The pickup truck whirls around and is dragged down the slope.",
-              (es.MUDSLIDE, "H4"): "The small car is engulfed up to its windows and pressed against a cottage.",
-              (es.MUDSLIDE, "M6"): "The flow smashes into the corner of a house, ripping away its veranda.",
-              (es.SLOPE, "R2"): "The mud rams the white van into the crash barrier and pins it there.",
+              (es.MUDSLIDE, "H4"): "The mud pushes the SUV across the street and crushes it against the parked cars.",
+              (es.MUDSLIDE, "H6"): "The pickup truck is shoved nose-first into the front steps of a house and buried.",
+              (es.MUDSLIDE, "M3"): "The mud pushes the parked cars along the curb downhill one by one.",
+              (es.MUDSLIDE, "M6"): "The flow slams into the nearest house and buries its ground floor.",
+              (es.SLOPE, "R2"): "The mud rams the white van across both lanes into the rock face.",
+              (es.SLOPE, "R4"): "A wave of mud and rocks hits the SUV and drives it backwards down the road.",
+              (es.SLOPE, "S4"): "A huge slab of rock breaks off and crashes onto the road.",
+              (es.VILLAGE, "K3"): "The torrent pushes the pickup truck down the lane and jams it between two houses.",
+              (es.VILLAGE, "L6"): "The torrent drags a parked car along the lane into the front of a cottage.",
               (es.SLOPE, "R3"): "A boulder slams into the SUV, which skids and spins along the road.",
               (es.SLOPE, "S5"): "Another section of hillside gives way and fresh mud pours over the road.",
               (es.VILLAGE, "K5"): "The small van crashes into a stack of timber and both are swept away.",
               (es.VILLAGE, "K6"): "The torrent shoves the pickup truck into a moped and carries both along.",
-              (es.VILLAGE, "L5"): "A woodpile breaks loose and its logs tumble down the lane."}
+              (es.VILLAGE, "L5"): "The torrent smashes through the front wall of a wooden cottage."}
         bad = {(es.MUDSLIDE, "H1"): "The SUV is pushed down the street by the mud.",
-               (es.MUDSLIDE, "H4"): "The small car is pushed against a house wall.",
-               (es.MUDSLIDE, "M6"): "A low garden wall collapses into the mud.",
+               (es.MUDSLIDE, "H4"): "The small car is pushed down the street.",
+               (es.MUDSLIDE, "M3"): "A low garden wall collapses into the mud.",
+               (es.MUDSLIDE, "M6"): "A tree along the street is torn out and swept downhill.",
                (es.SLOPE, "R2"): "The white van is shoved sideways across the road.",
+               (es.SLOPE, "R4"): "The white van is shoved sideways across the road.",
+               (es.SLOPE, "S4"): "A utility pole snaps across the road.",
+               (es.VILLAGE, "L5"): "A pile of logs rolls down the lane.",
                (es.VILLAGE, "K6"): "The pickup truck is shoved into a parked car and both are carried along.",
                (es.VILLAGE, "L1"): "A stone wall is struck by the torrent."}
         for (e, bid), s in ok.items():
@@ -1076,24 +1092,58 @@ class TestLandslideStructure(unittest.TestCase):
         self.assertEqual(es._TOGETHER_LANDSLIDE, es._TOGETHER + ("the car behind it", "trailing", "following"))
         self.assertIs(es.EVENT_BEATS[FLOOD]["slice_2"]["V8"]["terms"][0], es._TOGETHER)
         self.assertIs(es.EVENT_BEATS[TIDAL]["slice_2"]["T8"]["terms"][0], es._TOGETHER)
+        # 22 Eki (heyelan denetimi): H6 ve R6 artık "birlikte" beat'i değil (H6 evin basamaklarına, R6 geri sürüklenir)
         h6 = es.EVENT_BEATS[es.MUDSLIDE]["slice_2"]["H6"]["terms"]
         r6 = es.EVENT_BEATS[es.SLOPE]["slice_2"]["R6"]["terms"]
-        ok = [(h6, "The pickup truck and the car behind it are forcibly pushed down the street by the mud."),
-              (r6, "The relentless mudflow catches the pickup truck, dragging it and the trailing car along the road."),
-              (h6, "The SUV is shoved down the street, the following car swept along with it."),
-              (r6, "The white van and the car behind it slide along the road in the torrent.")]
+        ok = [(h6, "The mud rams the pickup truck nose-first into the steps of a house and buries its front."),
+              (h6, "The SUV is shoved into the porch of a house lining the street."),
+              (r6, "The mud spins the white van around and drags it backwards toward the slope."),
+              (r6, "The SUV whirls around and slides backwards along the road.")]
         for terms, text in ok:
             with self.subTest(ok=text):
                 self.assertEqual(es.missing_term_groups(terms, text), [])
-        bad = [(h6, "The SUV is pushed down the street behind a parked car."),
-               (r6, "The small car is shoved along the road behind the parked cars."),
-               (r6, "The small car is shoved along the road, a parked car behind it.")]
+        bad = [(h6, "The pickup truck and the car behind it are pushed down the street together."),
+               (r6, "The white van and the car behind it are shoved along the road together.")]
         for terms, text in bad:
             with self.subTest(bad=text):
                 self.assertTrue(es.missing_term_groups(terms, text))
         # sel ve tidal: aynı ifade hâlâ reddedilir (ortak liste değişmedi)
         v8 = es.EVENT_BEATS[FLOOD]["slice_2"]["V8"]["terms"]
         self.assertTrue(es.missing_term_groups(v8, "The sedan and the car behind it are swept down the street."))
+
+    # 22 Eki, Bahadır (heyelan denetimi): değişen 12 beat; araçlı metinlerde havalanma/devrilme yok (M3 park arabaları
+    # devrilmez, açılış B ilk park arabasını devirir: ikisi aynı üretimde seçilmez)
+    CHANGED_22OCT = {es.MUDSLIDE: ("H2", "H4", "H6", "M3", "M6"), es.SLOPE: ("R2", "R4", "R6", "S4"),
+                     es.VILLAGE: ("K3", "L5", "L6")}
+    NO_AIR = re.compile(r"(?:lift|lifts|lifted|lifting|airborne|flip|flips|flipped|flung|fling|tumble|tumbles|"
+                        r"tumbled|into the air)")
+
+    def test_changed_beats_no_lift_or_flip(self):
+        import core.opening_axis as ox
+        n = 0
+        for e, ids in self.CHANGED_22OCT.items():
+            for bid in ids:
+                slot = "slice_2" if bid[0] in "HRK" else "slice_3"
+                text = es.EVENT_BEATS[e][slot][bid]["text"]
+                with self.subTest(beat=bid):
+                    self.assertNotRegex(text, self.NO_AIR)
+                    self.assertEqual(es.pool_lint_hits(text.replace("{vehicle}", "vehicle")), [])
+                    self.assertNotIn((e, bid), es.POOL_LINT_GRANDFATHERED)
+                    n += 1
+        self.assertEqual(n, 12)
+        # M3 (park arabaları sırası) açılış B (ilk park arabası devrilir) ile seçilmez; köy K1+L6 dışlaması kalır
+        self.assertIn("M3", ox.beat_conflicts(es.MUDSLIDE, "B"))
+        self.assertNotIn("B", ox.allowed(es.MUDSLIDE, None, "H1", "M3"))
+        self.assertIn(("K1", "L6"), es.EVENT_BEATS[es.VILLAGE]["excluded_pairs"])
+        self.assertEqual(ox.beat_conflicts(es.SLOPE, "B"), {"S4"})
+        self.assertEqual(ox.beat_conflicts(es.SLOPE, "C"), {"S4"})
+
+    def test_near_list_without_foreground(self):
+        # 22 Eki, Bahadır: "in the foreground" yakınlık listesinden çıktı (yüz yasağıyla çelişiyor); diğerleri aynı
+        self.assertEqual(es._AVA_NEAR, ("right below", "just below", "in the street below", "on the street below",
+                                        "right beneath", "just beneath", "street below", "lower half"))
+        self.assertNotIn("in the foreground", es._FIRE_TOR_NEAR)
+        self.assertEqual(es.find_terms(es._FIRE_TOR_NEAR, "Three people run from it in the foreground."), [])
 
     def test_all_combinations_pass_final_check(self):
         n, longest = 0, 0
@@ -1114,7 +1164,9 @@ class TestLandslideStructure(unittest.TestCase):
                         longest = max(longest, len(prompt))
                         n += 1
         # 18 Eki (2): çamur 3 × 30 × 4; yol 2 × 27 × 4; köy (32 + 32 + 22) × 3
-        self.assertEqual(n, 360 + 216 + 258)
+        # 22 Eki: çamur 3 × 29 × 4 (H4+M6 bütçe); yol 2 × 24 × 4 (R2+S7, R2+S4, R2+S5); köy (31 + 31 + 21) × 3 (K5+L5
+        # çıktı, K1+L5 ve K3+L6 eklendi)
+        self.assertEqual(n, 348 + 192 + 249)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -1474,9 +1526,11 @@ class TestTornadoStructure(unittest.TestCase):
         for e in TORNADO:
             for beat in es.EVENT_BEATS[e]["slice_2"].values():
                 self.assertNotIn(es._TOGETHER_LANDSLIDE, beat["terms"])
-        # heyelan H6/R6 hâlâ kendi listesini kullanır
-        self.assertIs(es.EVENT_BEATS[es.MUDSLIDE]["slice_2"]["H6"]["terms"][0], es._TOGETHER_LANDSLIDE)
-        self.assertIs(es.EVENT_BEATS[es.SLOPE]["slice_2"]["R6"]["terms"][0], es._TOGETHER_LANDSLIDE)
+        # 22 Eki (heyelan denetimi): H6/R6 artık "birlikte" beat'i değil; liste hiçbir beat'te yok
+        for e in es.EVENT_BEATS:
+            for slot in ("slice_2", "slice_3"):
+                for beat in es.EVENT_BEATS[e][slot].values():
+                    self.assertNotIn(es._TOGETHER_LANDSLIDE, beat["terms"])
 
     def test_p4_hits_vehicle_and_marina_key(self):
         # 4 Eki, Bahadır: P4 palmiye araca çarpar; "narrowly/missing" artık geçmez

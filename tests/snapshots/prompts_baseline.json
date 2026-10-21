@@ -3980,30 +3980,30 @@
  "Mud and debris torrent tears through a hillside village": {
   "1": {
    "axes": {
-    "acilis": "A",
-    "beats": "K2+L3",
+    "acilis": "C",
+    "beats": "K6+L4",
     "environment": "E",
     "fit_guard": false,
-    "kadraj": "çatı",
+    "kadraj": "teras",
     "kamera_modu": null,
-    "kamera_noktasi": null,
-    "key_visual": "A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village.",
-    "on_plan": "parapet",
-    "people": 3,
+    "kamera_noktasi": "High steps on the village square",
+    "key_visual": "A debris torrent bursts from the stream bed, floods the village lane and shoves a house off its foundations.",
+    "on_plan": "boş",
+    "people": 5,
     "spot": "Terrace on the opposite hillside",
     "story_source": "fallback",
-    "vehicle": "white van",
+    "vehicle": "pickup truck",
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K2+L3|bystander_handheld",
-   "prompt": "0-4s: A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village. Three villagers sprint away from the mud. 4-9s: The white van is spun around by the torrent and dragged along the lane. 9-15s: A large tree is uprooted and rolls down with the torrent. Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K6+L4|bystander_handheld",
+   "prompt": "0-4s: A debris torrent bursts from the stream bed, floods the village lane and shoves a house off its foundations. Five villagers run uphill away from thick brown mud full of rocks, branches and debris. 4-9s: The pickup truck is shoved into a parked motorbike and both are carried along. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "10": {
    "axes": {
     "acilis": "D",
-    "beats": "K4+L5",
+    "beats": "K5+L3",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -4018,80 +4018,58 @@
     "view": null,
     "weather": "steady heavy rain, grey low cloud"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K4+L5|bystander_handheld",
-   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Three residents flee from the torrent to higher ground. 4-9s: The white van tips over onto its side in the torrent. 9-15s: A pile of logs breaks loose and rolls down the lane. Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K5+L3|bystander_handheld",
+   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Three residents flee from the torrent to higher ground. 4-9s: The white van slams into a pile of logs and both are carried away. 9-15s: A large tree is uprooted and rolls down with the torrent. Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "11": {
    "axes": {
-    "acilis": "B",
-    "beats": "K6+L5",
+    "acilis": "C",
+    "beats": "K6+L4",
     "environment": "A",
     "fit_guard": false,
-    "kadraj": "tepe",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "Terrace on the opposite hillside",
-    "key_visual": "The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses.",
-    "on_plan": "yaprak",
-    "people": 4,
+    "kamera_noktasi": null,
+    "key_visual": "A debris torrent bursts from the stream bed, floods the village lane and shoves a house off its foundations.",
+    "on_plan": "parapet",
+    "people": 6,
     "spot": "High steps on the village square",
     "story_source": "fallback",
     "vehicle": "white van",
     "view": null,
     "weather": "driving rain and wind"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K6+L5|bystander_handheld",
-   "prompt": "0-4s: The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses. Four residents flee from the torrent to higher ground. 4-9s: The white van is shoved into a parked motorbike and both are carried along. 9-15s: A pile of logs breaks loose and rolls down the lane. Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
-   "style_suffix": "Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K6+L4|bystander_handheld",
+   "prompt": "0-4s: A debris torrent bursts from the stream bed, floods the village lane and shoves a house off its foundations. Six people run for higher ground. 4-9s: The white van is shoved into a parked motorbike and both are carried along. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on a flat rooftop above the hillside village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage filmed on a flat rooftop above the hillside village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "12": {
    "axes": {
     "acilis": "D",
-    "beats": "K5+L3",
-    "environment": "D",
+    "beats": "K5+L4",
+    "environment": "E",
     "fit_guard": false,
     "kadraj": "balkon",
     "kamera_modu": null,
     "kamera_noktasi": "Upper-floor balcony of a village house",
     "key_visual": "Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses.",
-    "on_plan": "boş",
-    "people": 6,
-    "spot": "High steps on the village square",
-    "story_source": "fallback",
-    "vehicle": "pickup truck",
-    "view": null,
-    "weather": "grey dawn light after a night of rain"
-   },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K5+L3|bystander_handheld",
-   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Six villagers run uphill away from thick brown mud full of rocks, branches and debris. 4-9s: The pickup truck slams into a pile of logs and both are carried away. 9-15s: A large tree is uprooted and rolls down with the torrent. Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
-  },
-  "13": {
-   "axes": {
-    "acilis": "D",
-    "beats": "K3+L4",
-    "environment": "E",
-    "fit_guard": false,
-    "kadraj": "teras",
-    "kamera_modu": "A",
-    "kamera_noktasi": "High steps on the village square",
-    "key_visual": "Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses.",
-    "on_plan": null,
-    "people": 4,
+    "on_plan": "korkuluk",
+    "people": 5,
     "spot": "High steps on the village square",
     "story_source": "fallback",
     "vehicle": "large SUV",
     "view": null,
-    "weather": "bright midday light between heavy rain showers"
+    "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K3+L4|bystander_handheld",
-   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Four residents dash uphill between the houses. 4-9s: The large SUV is buried to its windows and pushed against a fence. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on the high steps at the edge of the village square, eye level, normal lens; slight hand shake, the camera pans to follow the debris torrent; no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on the high steps at the edge of the village square, eye level, normal lens; slight hand shake, the camera pans to follow the debris torrent; no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K5+L4|bystander_handheld",
+   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Five residents flee from the torrent to higher ground. 4-9s: The large SUV slams into a pile of logs and both are carried away. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
-  "14": {
+  "13": {
    "axes": {
     "acilis": "A",
-    "beats": "K4+L1",
+    "beats": "K5+L4",
     "environment": "D",
     "fit_guard": false,
     "kadraj": "çatı",
@@ -4099,43 +4077,65 @@
     "kamera_noktasi": null,
     "key_visual": "A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village.",
     "on_plan": "boş",
-    "people": 5,
+    "people": 4,
+    "spot": "High steps on the village square",
+    "story_source": "fallback",
+    "vehicle": "large SUV",
+    "view": null,
+    "weather": "bright midday light between heavy rain showers"
+   },
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K5+L4|bystander_handheld",
+   "prompt": "0-4s: A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village. Four residents dash uphill between the houses. 4-9s: The large SUV slams into a pile of logs and both are carried away. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+  },
+  "14": {
+   "axes": {
+    "acilis": "A",
+    "beats": "K5+L5",
+    "environment": "B",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "Upper-floor balcony of a village house",
+    "key_visual": "A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village.",
+    "on_plan": "korkuluk",
+    "people": 4,
     "spot": "Terrace on the opposite hillside",
     "story_source": "fallback",
-    "vehicle": "white van",
+    "vehicle": "large SUV",
     "view": null,
     "weather": "dim dusk light with steady drizzle"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K4+L1|bystander_handheld",
-   "prompt": "0-4s: A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village. Five villagers scramble up the stone steps. 4-9s: The white van tips over onto its side in the torrent. 9-15s: A wooden house along the lane is struck and its wall collapses. Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K5+L5|bystander_handheld",
+   "prompt": "0-4s: A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village. Four villagers scramble up the stone steps. 4-9s: The large SUV slams into a pile of logs and both are carried away. 9-15s: The torrent smashes through the front wall of a wooden house along the lane. Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "15": {
    "axes": {
     "acilis": "D",
-    "beats": "K1+L5",
-    "environment": "D",
+    "beats": "K4+L5",
+    "environment": "E",
     "fit_guard": false,
-    "kadraj": "çatı",
+    "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": null,
+    "kamera_noktasi": "Upper-floor balcony of a village house",
     "key_visual": "Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses.",
-    "on_plan": "boş",
-    "people": 4,
+    "on_plan": "korkuluk",
+    "people": 3,
     "spot": "Terrace on the opposite hillside",
     "story_source": "fallback",
-    "vehicle": "pickup truck",
+    "vehicle": "large SUV",
     "view": null,
     "weather": "steady heavy rain, grey low cloud"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K1+L5|bystander_handheld",
-   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Four villagers run uphill away from thick brown mud full of rocks, branches and debris. 4-9s: The pickup truck is swept down the lane and rammed against a house wall. 9-15s: A pile of logs breaks loose and rolls down the lane. Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K4+L5|bystander_handheld",
+   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Three residents flee from the torrent to higher ground. 4-9s: The large SUV tips over onto its side in the torrent. 9-15s: The torrent smashes through the front wall of a wooden house along the lane. Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on the upper-floor balcony of a village house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "16": {
    "axes": {
     "acilis": "D",
-    "beats": "K6+L6",
+    "beats": "K4+L4",
     "environment": "D",
     "fit_guard": false,
     "kadraj": "teras",
@@ -4150,14 +4150,14 @@
     "view": null,
     "weather": "steady heavy rain, grey low cloud"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K6+L6|bystander_handheld",
-   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Six residents flee from the torrent to higher ground. 4-9s: The white van is shoved into a parked motorbike and both are carried along. 9-15s: A stone wall along the lane collapses and its stones tumble into the torrent. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K4+L4|bystander_handheld",
+   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Six residents flee from the torrent to higher ground. 4-9s: The white van tips over onto its side in the torrent. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "17": {
    "axes": {
     "acilis": "D",
-    "beats": "K3+L5",
+    "beats": "K4+L3",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "tepe",
@@ -4172,36 +4172,36 @@
     "view": null,
     "weather": "heavy downpour under dark storm light"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K3+L5|bystander_handheld",
-   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Five residents flee from the torrent to higher ground. 4-9s: The white van is buried to its windows and pushed against a fence. 9-15s: A pile of logs breaks loose and rolls down the lane. Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K4+L3|bystander_handheld",
+   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Five residents flee from the torrent to higher ground. 4-9s: The white van tips over onto its side in the torrent. 9-15s: A large tree is uprooted and rolls down with the torrent. Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "18": {
    "axes": {
-    "acilis": "B",
-    "beats": "K6+L4",
-    "environment": "D",
+    "acilis": "D",
+    "beats": "K5+L4",
+    "environment": "E",
     "fit_guard": false,
-    "kadraj": "teras",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "High steps on the village square",
-    "key_visual": "The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses.",
-    "on_plan": "teras_korkuluk",
-    "people": 4,
+    "kamera_noktasi": null,
+    "key_visual": "Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses.",
+    "on_plan": "boş",
+    "people": 5,
     "spot": "Terrace on the opposite hillside",
     "story_source": "fallback",
     "vehicle": "white van",
     "view": null,
     "weather": "driving rain and wind"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K6+L4|bystander_handheld",
-   "prompt": "0-4s: The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses. Four villagers scramble up the stone steps. 4-9s: The white van is shoved into a parked motorbike and both are carried along. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K5+L4|bystander_handheld",
+   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Five residents flee from the torrent to higher ground. 4-9s: The white van slams into a pile of logs and both are carried away. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "19": {
    "axes": {
     "acilis": "C",
-    "beats": "K5+L4",
+    "beats": "K5+L6",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "teras",
@@ -4216,14 +4216,14 @@
     "view": null,
     "weather": "heavy downpour under dark storm light"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K5+L4|bystander_handheld",
-   "prompt": "0-4s: A debris torrent bursts from the stream bed, floods the village lane and shoves a house off its foundations. Four villagers sprint away from thick brown mud full of rocks, branches and debris. 4-9s: The pickup truck slams into a pile of logs and both are carried away. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K5+L6|bystander_handheld",
+   "prompt": "0-4s: A debris torrent bursts from the stream bed, floods the village lane and shoves a house off its foundations. Four villagers sprint away from thick brown mud full of rocks, branches and debris. 4-9s: The pickup truck slams into a pile of logs and both are carried away. 9-15s: The torrent shoves a parked car along the lane into the front of a house. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "2": {
    "axes": {
     "acilis": "D",
-    "beats": "K2+L4",
+    "beats": "K2+L1",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "tepe",
@@ -4238,14 +4238,14 @@
     "view": null,
     "weather": "driving rain and wind"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K2+L4|bystander_handheld",
-   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Four residents dash uphill between the houses. 4-9s: The white van is spun around by the torrent and dragged along the lane. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K2+L1|bystander_handheld",
+   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Four residents dash uphill between the houses. 4-9s: The white van is spun around by the torrent and dragged along the lane. 9-15s: A wooden house along the lane is struck and its wall collapses. Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "20": {
    "axes": {
     "acilis": "D",
-    "beats": "K2+L4",
+    "beats": "K2+L5",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -4260,36 +4260,36 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K2+L4|bystander_handheld",
-   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Three villagers scramble up the stone steps. 4-9s: The white van is spun around by the torrent and dragged along the lane. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on the upper-floor balcony of a village house, facing up the slope, eye level, normal lens; slight hand shake, the camera pans to follow the debris torrent; no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K2+L5|bystander_handheld",
+   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Three villagers scramble up the stone steps. 4-9s: The white van is spun around by the torrent and dragged along the lane. 9-15s: The torrent smashes through the front wall of a wooden house along the lane. Handheld footage filmed on the upper-floor balcony of a village house, facing up the slope, eye level, normal lens; slight hand shake, the camera pans to follow the debris torrent; no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the upper-floor balcony of a village house, facing up the slope, eye level, normal lens; slight hand shake, the camera pans to follow the debris torrent; no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "3": {
    "axes": {
     "acilis": "A",
-    "beats": "K2+L7",
-    "environment": "C",
+    "beats": "K4+L6",
+    "environment": "E",
     "fit_guard": false,
-    "kadraj": "çatı",
-    "kamera_modu": null,
-    "kamera_noktasi": null,
+    "kadraj": "tepe",
+    "kamera_modu": "A",
+    "kamera_noktasi": "Terrace on the opposite hillside",
     "key_visual": "A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village.",
-    "on_plan": "boş",
-    "people": 6,
+    "on_plan": null,
+    "people": 5,
     "spot": "Terrace on the opposite hillside",
     "story_source": "fallback",
-    "vehicle": "white van",
+    "vehicle": "pickup truck",
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K2+L7|bystander_handheld",
-   "prompt": "0-4s: A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village. Six residents dash uphill between the houses. 4-9s: The white van is spun around by the torrent and dragged along the lane. 9-15s: The landslide rips a wooden house off its foundation and carries it down the slope. Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highland village of adobe houses with red tile roofs around a small church, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highland village of adobe houses with red tile roofs around a small church, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K4+L6|bystander_handheld",
+   "prompt": "0-4s: A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village. Five people run for higher ground. 4-9s: The pickup truck tips over onto its side in the torrent. 9-15s: The torrent shoves a parked car along the lane into the front of a house. Handheld footage filmed on a terrace on the opposite hillside, facing the village, eye level, normal lens; slight hand shake, the camera pans to follow the debris torrent; no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on a terrace on the opposite hillside, facing the village, eye level, normal lens; slight hand shake, the camera pans to follow the debris torrent; no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "4": {
    "axes": {
     "acilis": "B",
-    "beats": "K2+L5",
+    "beats": "K2+L3",
     "environment": "C",
     "fit_guard": false,
     "kadraj": "teras",
@@ -4304,14 +4304,14 @@
     "view": null,
     "weather": "bright midday light between heavy rain showers"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K2+L5|bystander_handheld",
-   "prompt": "0-4s: The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses. Six villagers sprint away from the mud. 4-9s: The large SUV is spun around by the torrent and dragged along the lane. 9-15s: A pile of logs breaks loose and rolls down the lane. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highland village of adobe houses with red tile roofs around a small church, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K2+L3|bystander_handheld",
+   "prompt": "0-4s: The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses. Six villagers sprint away from the mud. 4-9s: The large SUV is spun around by the torrent and dragged along the lane. 9-15s: A large tree is uprooted and rolls down with the torrent. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highland village of adobe houses with red tile roofs around a small church, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highland village of adobe houses with red tile roofs around a small church, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "5": {
    "axes": {
     "acilis": "B",
-    "beats": "K4+L3",
+    "beats": "K4+L5",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "çatı",
@@ -4326,14 +4326,14 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K4+L3|bystander_handheld",
-   "prompt": "0-4s: The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses. Three villagers sprint away from the mud. 4-9s: The large SUV tips over onto its side in the torrent. 9-15s: A large tree is uprooted and rolls down with the torrent. Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K4+L5|bystander_handheld",
+   "prompt": "0-4s: The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses. Three villagers sprint away from the mud. 4-9s: The large SUV tips over onto its side in the torrent. 9-15s: The torrent smashes through the front wall of a wooden house along the lane. Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a terraced rice-field village of stilt houses among palm trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "6": {
    "axes": {
     "acilis": "A",
-    "beats": "K5+L3",
+    "beats": "K5+L5",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "teras",
@@ -4348,14 +4348,14 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K5+L3|bystander_handheld",
-   "prompt": "0-4s: A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village. Three villagers run uphill away from the mud. 4-9s: The white van slams into a pile of logs and both are carried away. 9-15s: A large tree is uprooted and rolls down with the torrent. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|upper-floor balcony of a village house##K5+L5|bystander_handheld",
+   "prompt": "0-4s: A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched hillside village. Three villagers run uphill away from the mud. 4-9s: The white van slams into a pile of logs and both are carried away. 9-15s: The torrent smashes through the front wall of a wooden house along the lane. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "7": {
    "axes": {
     "acilis": "B",
-    "beats": "K5+L7",
+    "beats": "K3+L7",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "tepe",
@@ -4370,36 +4370,36 @@
     "view": null,
     "weather": "heavy downpour under dark storm light"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K5+L7|bystander_handheld",
-   "prompt": "0-4s: The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses. Three villagers run uphill away from the mud. 4-9s: The large SUV slams into a pile of logs and both are carried away. 9-15s: The landslide rips a wooden house off its foundation and carries it down the slope. Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K3+L7|bystander_handheld",
+   "prompt": "0-4s: The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses. Three villagers run uphill away from the mud. 4-9s: The torrent shoves the large SUV down the lane and wedges it between two houses. 9-15s: The landslide rips a wooden house off its foundation and carries it down the slope. Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a terrace on the opposite hillside, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain village of grey-tiled houses, concrete steps and small vegetable gardens, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "8": {
    "axes": {
-    "acilis": "D",
-    "beats": "K5+L6",
-    "environment": "C",
+    "acilis": "B",
+    "beats": "K6+L7",
+    "environment": "A",
     "fit_guard": false,
-    "kadraj": "teras",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "High steps on the village square",
-    "key_visual": "Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses.",
-    "on_plan": "teras_korkuluk",
+    "kamera_noktasi": null,
+    "key_visual": "The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses.",
+    "on_plan": "parapet",
     "people": 4,
     "spot": "Terrace on the opposite hillside",
     "story_source": "fallback",
-    "vehicle": "pickup truck",
+    "vehicle": "white van",
     "view": null,
     "weather": "bright midday light between heavy rain showers"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K5+L6|bystander_handheld",
-   "prompt": "0-4s: Half of the hillside behind the village breaks away with its trees and slides down to the roofs of the houses. Four residents dash uphill between the houses. 4-9s: The pickup truck slams into a pile of logs and both are carried away. 9-15s: A stone wall along the lane collapses and its stones tumble into the torrent. Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highland village of adobe houses with red tile roofs around a small church, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on the high steps at the edge of the village square, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highland village of adobe houses with red tile roofs around a small church, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|terrace on the opposite hillside##K6+L7|bystander_handheld",
+   "prompt": "0-4s: The terraced hillside fields above the village turn to thick brown mud full of rocks, branches and debris and slide into the top row of houses. Four residents flee from the torrent to higher ground. 4-9s: The white van is shoved into a parked motorbike and both are carried along. 9-15s: The landslide rips a wooden house off its foundation and carries it down the slope. Handheld footage filmed on a flat rooftop above the hillside village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage filmed on a flat rooftop above the hillside village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "9": {
    "axes": {
     "acilis": "C",
-    "beats": "K5+L4",
+    "beats": "K3+L5",
     "environment": "D",
     "fit_guard": false,
     "kadraj": "çatı",
@@ -4414,8 +4414,8 @@
     "view": null,
     "weather": "heavy downpour under dark storm light"
    },
-   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K5+L4|bystander_handheld",
-   "prompt": "0-4s: A debris torrent bursts from the stream bed, floods the village lane and shoves a house off its foundations. Four residents flee from the torrent to higher ground. 4-9s: The white van slams into a pile of logs and both are carried away. 9-15s: A roof section is torn off a house along the lane and swept away. Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mud and debris torrent tears through a hillside village|high steps on the village square##K3+L5|bystander_handheld",
+   "prompt": "0-4s: A debris torrent bursts from the stream bed, floods the village lane and shoves a house off its foundations. Four residents flee from the torrent to higher ground. 4-9s: The torrent shoves the white van down the lane and wedges it between two houses. 9-15s: The torrent smashes through the front wall of a wooden house along the lane. Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a flat rooftop above the village, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hill village of stone farmhouses and barns around a narrow square, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   }
  },
@@ -4423,14 +4423,14 @@
   "1": {
    "axes": {
     "acilis": "C",
-    "beats": "H6+M7",
+    "beats": "H6+M3",
     "environment": "E",
-    "fit_guard": false,
-    "kadraj": "pencere",
-    "kamera_modu": null,
-    "kamera_noktasi": "Side stairway off a narrow hillside lane",
+    "fit_guard": true,
+    "kadraj": "balkon",
+    "kamera_modu": "A",
+    "kamera_noktasi": "Balcony across a steep hillside street",
     "key_visual": "A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street.",
-    "on_plan": "pencere",
+    "on_plan": null,
     "people": 5,
     "spot": "Balcony across a steep hillside street",
     "story_source": "fallback",
@@ -4438,9 +4438,9 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|balcony across a steep hillside street##H6+M7|bystander_handheld",
-   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Five people run for higher ground. 4-9s: The pickup truck and the car behind it are pushed down the street together, bumper to bumper. 9-15s: Mud slams into a house across the street and bursts through its ground floor. Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|balcony across a steep hillside street##H6+M3|bystander_handheld",
+   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Five residents run uphill away from the mud. 4-9s: The mud pushes the pickup truck nose-first into the front steps of a house lining the street and buries its front half. 9-15s: The mud shoves the row of parked cars along the curb downhill, one car after another. Handheld footage filmed on a balcony across the steep hillside street, eye level, normal lens; slight hand shake, the camera pans to follow the mud flow; no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on a balcony across the steep hillside street, eye level, normal lens; slight hand shake, the camera pans to follow the mud flow; no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "10": {
    "axes": {
@@ -4461,19 +4461,19 @@
     "weather": "steady heavy rain, grey low cloud"
    },
    "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|side stairway off a narrow hillside lane##H3+M6|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower pots and parked motorbikes with it. Three people flee from the mud up the street. 4-9s: The SUV is spun around by the mud and dragged downhill. 9-15s: The mud rams the nearest house and tears off its wooden porch. Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep town of pastel concrete houses with tin roofs and banana trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower pots and parked motorbikes with it. Three people flee from the mud up the street. 4-9s: The SUV is spun around by the mud and dragged downhill. 9-15s: The mud rams the nearest house lining the street and buries its ground floor up to the windows. Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep town of pastel concrete houses with tin roofs and banana trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep town of pastel concrete houses with tin roofs and banana trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "11": {
    "axes": {
-    "acilis": "C",
-    "beats": "H6+M7",
+    "acilis": "D",
+    "beats": "H6+M3",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": "A",
     "kamera_noktasi": "Rooftop terrace below a hillside street",
-    "key_visual": "A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street.",
+    "key_visual": "Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower pots and parked motorbikes with it.",
     "on_plan": null,
     "people": 6,
     "spot": "Rooftop terrace below a hillside street",
@@ -4482,14 +4482,14 @@
     "view": null,
     "weather": "driving rain and wind"
    },
-   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|rooftop terrace below a hillside street##H6+M7|bystander_handheld",
-   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Six people run for higher ground. 4-9s: The SUV and the car behind it are pushed down the street together, bumper to bumper. 9-15s: Mud slams into a house across the street and bursts through its ground floor. Handheld footage filmed on a rooftop terrace just below the hillside street, facing up the street, eye level, normal lens; slight hand shake, the camera pans to follow the mud flow; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|rooftop terrace below a hillside street##H6+M3|bystander_handheld",
+   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower pots and parked motorbikes with it. Six people run for higher ground. 4-9s: The mud pushes the SUV nose-first into the front steps of a house lining the street and buries its front half. 9-15s: The mud shoves the row of parked cars along the curb downhill, one car after another. Handheld footage filmed on a rooftop terrace just below the hillside street, facing up the street, eye level, normal lens; slight hand shake, the camera pans to follow the mud flow; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a rooftop terrace just below the hillside street, facing up the street, eye level, normal lens; slight hand shake, the camera pans to follow the mud flow; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "12": {
    "axes": {
     "acilis": "A",
-    "beats": "H5+M7",
+    "beats": "H5+M3",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -4504,14 +4504,14 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|rooftop terrace below a hillside street##H5+M7|bystander_handheld",
-   "prompt": "0-4s: A massive wall of thick brown mud full of rocks, branches and debris tears loose from the saturated hillside and pours down the steep street. Four residents sprint away from the mud. 4-9s: The white van tips over onto its side in the mud. 9-15s: Mud slams into a house across the street and bursts through its ground floor. Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|rooftop terrace below a hillside street##H5+M3|bystander_handheld",
+   "prompt": "0-4s: A massive wall of thick brown mud full of rocks, branches and debris tears loose from the saturated hillside and pours down the steep street. Four residents sprint away from the mud. 4-9s: The white van tips over onto its side in the mud. 9-15s: The mud shoves the row of parked cars along the curb downhill, one car after another. Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "13": {
    "axes": {
     "acilis": "C",
-    "beats": "H5+M7",
+    "beats": "H5+M3",
     "environment": "D",
     "fit_guard": false,
     "kadraj": "pencere",
@@ -4526,14 +4526,14 @@
     "view": null,
     "weather": "bright midday light between heavy rain showers"
    },
-   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|rooftop terrace below a hillside street##H5+M7|bystander_handheld",
-   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Four pedestrians dash uphill away from the flow. 4-9s: The delivery truck tips over onto its side in the mud. 9-15s: Mud slams into a house across the street and bursts through its ground floor. Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hillside suburb of modern houses with garages, retaining walls and parked SUVs, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|rooftop terrace below a hillside street##H5+M3|bystander_handheld",
+   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Four pedestrians dash uphill away from the flow. 4-9s: The delivery truck tips over onto its side in the mud. 9-15s: The mud shoves the row of parked cars along the curb downhill, one car after another. Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hillside suburb of modern houses with garages, retaining walls and parked SUVs, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hillside suburb of modern houses with garages, retaining walls and parked SUVs, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "14": {
    "axes": {
     "acilis": "D",
-    "beats": "H5+M8",
+    "beats": "H5+M4",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "pencere",
@@ -4548,8 +4548,8 @@
     "view": null,
     "weather": "dim dusk light with steady drizzle"
    },
-   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|balcony across a steep hillside street##H5+M8|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower pots and parked motorbikes with it. Five pedestrians dash uphill away from the flow. 4-9s: The delivery truck tips over onto its side in the mud. 9-15s: The mud shoves a parked truck sideways into a house on the street. Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|balcony across a steep hillside street##H5+M4|bystander_handheld",
+   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower pots and parked motorbikes with it. Five pedestrians dash uphill away from the flow. 4-9s: The delivery truck tips over onto its side in the mud. 9-15s: A tree along the street is torn out and swept downhill. Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "15": {
@@ -4598,15 +4598,15 @@
   },
   "17": {
    "axes": {
-    "acilis": "B",
-    "beats": "H6+M4",
+    "acilis": "A",
+    "beats": "H5+M8",
     "environment": "C",
-    "fit_guard": true,
-    "kadraj": "balkon",
+    "fit_guard": false,
+    "kadraj": "pencere",
     "kamera_modu": null,
-    "kamera_noktasi": "Balcony across a steep hillside street",
-    "key_visual": "A torrent of thick brown mud full of rocks, branches and debris pours around the bend at the top of the street and flips the first parked car over.",
-    "on_plan": "boş",
+    "kamera_noktasi": "Side stairway off a narrow hillside lane",
+    "key_visual": "A massive wall of thick brown mud full of rocks, branches and debris tears loose from the saturated hillside and pours down the steep street.",
+    "on_plan": "pencere",
     "people": 5,
     "spot": "Side stairway off a narrow hillside lane",
     "story_source": "fallback",
@@ -4614,14 +4614,14 @@
     "view": null,
     "weather": "heavy downpour under dark storm light"
    },
-   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|side stairway off a narrow hillside lane##H6+M4|bystander_handheld",
-   "prompt": "0-4s: A torrent of thick brown mud full of rocks, branches and debris pours around the bend at the top of the street and flips the first parked car over. Five pedestrians scramble uphill as the mud hits. 4-9s: The white van and the car behind it are pushed down the street together, bumper to bumper. 9-15s: A tree along the street is torn out and swept downhill. Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep Mediterranean village of white-washed houses with terracotta roofs and stepped lanes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep Mediterranean village of white-washed houses with terracotta roofs and stepped lanes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|side stairway off a narrow hillside lane##H5+M8|bystander_handheld",
+   "prompt": "0-4s: A massive wall of thick brown mud full of rocks, branches and debris tears loose from the saturated hillside and pours down the steep street. Five pedestrians scramble uphill as the mud hits. 4-9s: The white van tips over onto its side in the mud. 9-15s: The mud shoves a parked truck sideways into a house on the street. Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep Mediterranean village of white-washed houses with terracotta roofs and stepped lanes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep Mediterranean village of white-washed houses with terracotta roofs and stepped lanes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "18": {
    "axes": {
     "acilis": "C",
-    "beats": "H5+M7",
+    "beats": "H5+M3",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "çatı",
@@ -4636,14 +4636,14 @@
     "view": null,
     "weather": "driving rain and wind"
    },
-   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|balcony across a steep hillside street##H5+M7|bystander_handheld",
-   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Five people flee from the mud up the street. 4-9s: The SUV tips over onto its side in the mud. 9-15s: Mud slams into a house across the street and bursts through its ground floor. Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|balcony across a steep hillside street##H5+M3|bystander_handheld",
+   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Five people flee from the mud up the street. 4-9s: The SUV tips over onto its side in the mud. 9-15s: The mud shoves the row of parked cars along the curb downhill, one car after another. Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "19": {
    "axes": {
     "acilis": "C",
-    "beats": "H6+M4",
+    "beats": "H5+M8",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "pencere",
@@ -4658,8 +4658,8 @@
     "view": null,
     "weather": "heavy downpour under dark storm light"
    },
-   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|side stairway off a narrow hillside lane##H6+M4|bystander_handheld",
-   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Four residents sprint away from the mud. 4-9s: The pickup truck and the car behind it are pushed down the street together, bumper to bumper. 9-15s: A tree along the street is torn out and swept downhill. Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|side stairway off a narrow hillside lane##H5+M8|bystander_handheld",
+   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Four residents sprint away from the mud. 4-9s: The pickup truck tips over onto its side in the mud. 9-15s: The mud shoves a parked truck sideways into a house on the street. Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "2": {
@@ -4667,12 +4667,12 @@
     "acilis": "D",
     "beats": "H1+M6",
     "environment": "B",
-    "fit_guard": false,
-    "kadraj": "pencere",
+    "fit_guard": true,
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "Side stairway off a narrow hillside lane",
+    "kamera_noktasi": "Rooftop terrace below a hillside street",
     "key_visual": "Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower pots and parked motorbikes with it.",
-    "on_plan": "pencere",
+    "on_plan": "boş",
     "people": 4,
     "spot": "Balcony across a steep hillside street",
     "story_source": "fallback",
@@ -4681,13 +4681,13 @@
     "weather": "driving rain and wind"
    },
    "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|balcony across a steep hillside street##H1+M6|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower pots and parked motorbikes with it. Four people run for higher ground. 4-9s: The white van is shoved sideways by the mud and slams into the car parked beside it. 9-15s: The mud rams the nearest house and tears off its wooden porch. Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep town of pastel concrete houses with tin roofs and banana trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed through an open upper-floor window across from the narrow hillside lane, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep town of pastel concrete houses with tin roofs and banana trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower pots and parked motorbikes with it. Four people run for higher ground. 4-9s: The white van is shoved sideways by the mud and slams into the car parked beside it. 9-15s: The mud rams the nearest house lining the street and buries its ground floor up to the windows. Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep town of pastel concrete houses with tin roofs and banana trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep town of pastel concrete houses with tin roofs and banana trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "20": {
    "axes": {
     "acilis": "C",
-    "beats": "H6+M4",
+    "beats": "H5+M8",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -4702,8 +4702,8 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|side stairway off a narrow hillside lane##H6+M4|bystander_handheld",
-   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Five pedestrians dash uphill away from the flow. 4-9s: The delivery truck and the car behind it are pushed down the street together, bumper to bumper. 9-15s: A tree along the street is torn out and swept downhill. Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|side stairway off a narrow hillside lane##H5+M8|bystander_handheld",
+   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Five pedestrians dash uphill away from the flow. 4-9s: The delivery truck tips over onto its side in the mud. 9-15s: The mud shoves a parked truck sideways into a house on the street. Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "3": {
@@ -4725,7 +4725,7 @@
     "weather": "grey dawn light after a night of rain"
    },
    "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|balcony across a steep hillside street##H4+M4|bystander_handheld",
-   "prompt": "0-4s: A massive wall of thick brown mud full of rocks, branches and debris tears loose from the saturated hillside and pours down the steep street. Five people run for higher ground. 4-9s: The delivery truck is buried to its windows and pushed against a house wall. 9-15s: A tree along the street is torn out and swept downhill. Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "prompt": "0-4s: A massive wall of thick brown mud full of rocks, branches and debris tears loose from the saturated hillside and pours down the steep street. Five people run for higher ground. 4-9s: The mud shoves the delivery truck across the street and crushes it against the parked cars on the other side. 9-15s: A tree along the street is torn out and swept downhill. Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain town of wooden chalets with balconies among tall pine trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "4": {
@@ -4753,7 +4753,7 @@
   "5": {
    "axes": {
     "acilis": "A",
-    "beats": "H5+M9",
+    "beats": "H5+M6",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "çatı",
@@ -4768,8 +4768,8 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|side stairway off a narrow hillside lane##H5+M9|bystander_handheld",
-   "prompt": "0-4s: A massive wall of thick brown mud full of rocks, branches and debris tears loose from the saturated hillside and pours down the steep street. Three residents sprint away from the mud. 4-9s: The white van tips over onto its side in the mud. 9-15s: A mass of mud and uprooted trees crashes onto the houses across the street. Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep town of pastel concrete houses with tin roofs and banana trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|side stairway off a narrow hillside lane##H5+M6|bystander_handheld",
+   "prompt": "0-4s: A massive wall of thick brown mud full of rocks, branches and debris tears loose from the saturated hillside and pours down the steep street. Three residents sprint away from the mud. 4-9s: The white van tips over onto its side in the mud. 9-15s: The mud rams the nearest house lining the street and buries its ground floor up to the windows. Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep town of pastel concrete houses with tin roofs and banana trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a rooftop terrace just below the hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep town of pastel concrete houses with tin roofs and banana trees, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "6": {
@@ -4840,14 +4840,14 @@
   },
   "9": {
    "axes": {
-    "acilis": "B",
+    "acilis": "C",
     "beats": "H3+M3",
     "environment": "C",
     "fit_guard": false,
     "kadraj": "balkon",
     "kamera_modu": null,
     "kamera_noktasi": "Balcony across a steep hillside street",
-    "key_visual": "A torrent of thick brown mud full of rocks, branches and debris pours around the bend at the top of the street and flips the first parked car over.",
+    "key_visual": "A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street.",
     "on_plan": "korkuluk",
     "people": 4,
     "spot": "Rooftop terrace below a hillside street",
@@ -4857,7 +4857,7 @@
     "weather": "heavy downpour under dark storm light"
    },
    "combo_key": "landslide_disasters|none|mudslide pours down a hillside street|rooftop terrace below a hillside street##H3+M3|bystander_handheld",
-   "prompt": "0-4s: A torrent of thick brown mud full of rocks, branches and debris pours around the bend at the top of the street and flips the first parked car over. Four people flee from the mud up the street. 4-9s: The white van is spun around by the mud and dragged downhill. 9-15s: A garden wall along the street collapses and its stones tumble downhill. Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep Mediterranean village of white-washed houses with terracotta roofs and stepped lanes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "prompt": "0-4s: A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours straight into the steep street. Four people flee from the mud up the street. 4-9s: The white van is spun around by the mud and dragged downhill. 9-15s: The mud shoves the row of parked cars along the curb downhill, one car after another. Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep Mediterranean village of white-washed houses with terracotta roofs and stepped lanes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on a balcony across the steep hillside street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud flow always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a steep Mediterranean village of white-washed houses with terracotta roofs and stepped lanes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   }
  },
@@ -5306,37 +5306,37 @@
  "Rain-soaked slope collapses onto a roadside": {
   "1": {
    "axes": {
-    "acilis": "C",
-    "beats": "R6+S5",
+    "acilis": "A",
+    "beats": "R1+S4",
     "environment": "E",
     "fit_guard": false,
-    "kadraj": "tepe",
-    "kamera_modu": null,
-    "kamera_noktasi": "Far edge of the road across from the slope",
-    "key_visual": "A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right behind it.",
-    "on_plan": "boş",
-    "people": 5,
-    "spot": "Behind the guardrail of a hillside road",
-    "story_source": "fallback",
-    "vehicle": "pickup truck",
-    "view": null,
-    "weather": "grey dawn light after a night of rain"
-   },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R6+S5|bystander_handheld",
-   "prompt": "0-4s: A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right behind it. Five drivers scramble out and run from the mud. 4-9s: The pickup truck and the car behind it are shoved along the road together. 9-15s: More of the slope gives way and a second surge of mud and rocks pours onto the road. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
-  },
-  "10": {
-   "axes": {
-    "acilis": "D",
-    "beats": "R4+S4",
-    "environment": "C",
-    "fit_guard": true,
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus.",
-    "on_plan": "boş",
+    "key_visual": "The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road.",
+    "on_plan": "parapet",
+    "people": 3,
+    "spot": "Behind the guardrail of a hillside road",
+    "story_source": "fallback",
+    "vehicle": "white van",
+    "view": null,
+    "weather": "grey dawn light after a night of rain"
+   },
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R1+S4|bystander_handheld",
+   "prompt": "0-4s: The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road. Three people run for higher ground. 4-9s: The white van is shoved sideways across the road by the mud and rocks. 9-15s: A huge slab of rock breaks off the slope and crashes onto the road in front of the stopped cars. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+  },
+  "10": {
+   "axes": {
+    "acilis": "C",
+    "beats": "R5+S3",
+    "environment": "C",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "Behind the guardrail of a hillside road",
+    "key_visual": "A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right behind it.",
+    "on_plan": "korkuluk",
     "people": 4,
     "spot": "Behind the guardrail of a hillside road",
     "story_source": "fallback",
@@ -5344,36 +5344,36 @@
     "view": null,
     "weather": "heavy downpour under dark storm light"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R4+S4|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Four drivers sprint for the far side of the road. 4-9s: The pickup truck is buried to its windows in the mud and pushed toward the road edge. 9-15s: Seconds later, in full view, a utility pole snaps and falls across the road. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a coastal cliff road lined with white houses above the sea, with parked cars, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a coastal cliff road lined with white houses above the sea, with parked cars, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R5+S3|bystander_handheld",
+   "prompt": "0-4s: A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right behind it. Four drivers sprint for the far side of the road. 4-9s: The pickup truck tips over onto its side in the mud. 9-15s: A tree is torn out of the slope and slides across the road. Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a coastal cliff road lined with white houses above the sea, with parked cars, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a coastal cliff road lined with white houses above the sea, with parked cars, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "11": {
    "axes": {
-    "acilis": "C",
-    "beats": "R6+S4",
+    "acilis": "B",
+    "beats": "R5+S2",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right behind it.",
+    "key_visual": "A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck.",
     "on_plan": "parapet",
-    "people": 6,
+    "people": 4,
     "spot": "Far edge of the road across from the slope",
     "story_source": "fallback",
     "vehicle": "SUV",
     "view": null,
     "weather": "driving rain and wind"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R6+S4|bystander_handheld",
-   "prompt": "0-4s: A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right behind it. Six people run for higher ground. 4-9s: The SUV and the car behind it are shoved along the road together. 9-15s: Seconds later, in full view, a utility pole snaps and falls across the road. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R5+S2|bystander_handheld",
+   "prompt": "0-4s: A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck. Four drivers flee from the mud along the road. 4-9s: The SUV tips over onto its side in the mud. 9-15s: A large boulder rolls across the road and smashes into a stopped car. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "12": {
    "axes": {
     "acilis": "A",
-    "beats": "R5+S7",
+    "beats": "R6+S4",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -5388,21 +5388,21 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R5+S7|bystander_handheld",
-   "prompt": "0-4s: The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road. Four drivers sprint for the far side of the road. 4-9s: The white van tips over onto its side in the mud. 9-15s: The mud and boulders shove a stopped truck sideways toward the edge of the road. Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R6+S4|bystander_handheld",
+   "prompt": "0-4s: The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road. Four drivers sprint for the far side of the road. 4-9s: The mud spins the white van around and drags it backwards along the road toward the slope. 9-15s: A huge slab of rock breaks off the slope and crashes onto the road in front of the stopped cars. Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "13": {
    "axes": {
     "acilis": "D",
-    "beats": "R5+S7",
+    "beats": "R6+S4",
     "environment": "E",
-    "fit_guard": false,
-    "kadraj": "tepe",
+    "fit_guard": true,
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "Far edge of the road across from the slope",
+    "kamera_noktasi": null,
     "key_visual": "Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus.",
-    "on_plan": "yaprak",
+    "on_plan": "boş",
     "people": 4,
     "spot": "Far edge of the road across from the slope",
     "story_source": "fallback",
@@ -5410,14 +5410,14 @@
     "view": null,
     "weather": "bright midday light between heavy rain showers"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R5+S7|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Four drivers dash away as the mud hits. 4-9s: The delivery truck tips over onto its side in the mud. 9-15s: The mud and boulders shove a stopped truck sideways toward the edge of the road. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R6+S4|bystander_handheld",
+   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Four residents run away from the mud. 4-9s: The mud spins the delivery truck around and drags it backwards along the road toward the slope. 9-15s: A huge slab of rock breaks off the slope and crashes onto the road in front of the stopped cars. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "14": {
    "axes": {
     "acilis": "C",
-    "beats": "R6+S2",
+    "beats": "R6+S5",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "tepe",
@@ -5432,14 +5432,14 @@
     "view": null,
     "weather": "dim dusk light with steady drizzle"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R6+S2|bystander_handheld",
-   "prompt": "0-4s: A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right behind it. Five drivers dash away as thick brown mud full of rocks, branches and debris hits. 4-9s: The delivery truck and the car behind it are shoved along the road together. 9-15s: A large boulder rolls across the road and smashes into a stopped car. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R6+S5|bystander_handheld",
+   "prompt": "0-4s: A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right behind it. Five drivers dash away as thick brown mud full of rocks, branches and debris hits. 4-9s: The mud spins the delivery truck around and drags it backwards along the road toward the slope. 9-15s: More of the slope gives way and a second surge of mud and rocks pours onto the road. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "15": {
    "axes": {
     "acilis": "D",
-    "beats": "R4+S5",
+    "beats": "R5+S4",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -5454,20 +5454,20 @@
     "view": null,
     "weather": "steady heavy rain, grey low cloud"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R4+S5|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Four people run for higher ground. 4-9s: The pickup truck is buried to its windows in the mud and pushed toward the road edge. 9-15s: More of the slope gives way and a second surge of mud and rocks pours onto the road. Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R5+S4|bystander_handheld",
+   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Four drivers flee from the mud along the road. 4-9s: The pickup truck tips over onto its side in the mud. 9-15s: A huge slab of rock breaks off the slope and crashes onto the road in front of the stopped cars. Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "16": {
    "axes": {
-    "acilis": "D",
-    "beats": "R4+S4",
+    "acilis": "B",
+    "beats": "R5+S3",
     "environment": "D",
     "fit_guard": false,
     "kadraj": "tepe",
     "kamera_modu": null,
     "kamera_noktasi": "Far edge of the road across from the slope",
-    "key_visual": "Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus.",
+    "key_visual": "A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck.",
     "on_plan": "boş",
     "people": 6,
     "spot": "Far edge of the road across from the slope",
@@ -5476,20 +5476,20 @@
     "view": null,
     "weather": "steady heavy rain, grey low cloud"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R4+S4|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Six drivers flee from the mud along the road. 4-9s: The white van is buried to its windows in the mud and pushed toward the road edge. 9-15s: Seconds later, in full view, a utility pole snaps and falls across the road. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R5+S3|bystander_handheld",
+   "prompt": "0-4s: A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck. Six drivers flee from the mud along the road. 4-9s: The white van tips over onto its side in the mud. 9-15s: A tree is torn out of the slope and slides across the road. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "17": {
    "axes": {
-    "acilis": "D",
-    "beats": "R3+S5",
+    "acilis": "B",
+    "beats": "R4+S3",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus.",
+    "key_visual": "A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck.",
     "on_plan": "boş",
     "people": 4,
     "spot": "Far edge of the road across from the slope",
@@ -5498,14 +5498,14 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R3+S5|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Four drivers dash away as the mud hits. 4-9s: A rolling boulder strikes the white van, which spins and slides down the road. 9-15s: More of the slope gives way and a second surge of mud and rocks pours onto the road. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R4+S3|bystander_handheld",
+   "prompt": "0-4s: A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck. Four drivers dash away as the mud hits. 4-9s: A wave of mud and rocks hits the front of the white van and shoves it backwards down the road. 9-15s: A tree is torn out of the slope and slides across the road. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "18": {
    "axes": {
     "acilis": "D",
-    "beats": "R5+S7",
+    "beats": "R6+S4",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "çatı",
@@ -5520,8 +5520,8 @@
     "view": null,
     "weather": "driving rain and wind"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R5+S7|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Five drivers flee from the mud along the road. 4-9s: The SUV tips over onto its side in the mud. 9-15s: The mud and boulders shove a stopped truck sideways toward the edge of the road. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R6+S4|bystander_handheld",
+   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Five residents run away from the mud. 4-9s: The mud spins the SUV around and drags it backwards along the road toward the slope. 9-15s: A huge slab of rock breaks off the slope and crashes onto the road in front of the stopped cars. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "19": {
@@ -5565,19 +5565,19 @@
     "weather": "driving rain and wind"
    },
    "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R1+S4|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Four drivers dash away as the mud hits. 4-9s: The white van is shoved sideways across the road by the mud and rocks. 9-15s: Seconds later, in full view, a utility pole snaps and falls across the road. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain road through a small village with a bus stop and parked motorbikes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Four people run for higher ground. 4-9s: The white van is shoved sideways across the road by the mud and rocks. 9-15s: A huge slab of rock breaks off the slope and crashes onto the road in front of the stopped cars. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain road through a small village with a bus stop and parked motorbikes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a mountain road through a small village with a bus stop and parked motorbikes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "20": {
    "axes": {
-    "acilis": "B",
-    "beats": "R5+S7",
+    "acilis": "A",
+    "beats": "R6+S4",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck.",
+    "key_visual": "The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road.",
     "on_plan": "boş",
     "people": 5,
     "spot": "Behind the guardrail of a hillside road",
@@ -5586,14 +5586,14 @@
     "view": null,
     "weather": "bright midday light between heavy rain showers"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R5+S7|bystander_handheld",
-   "prompt": "0-4s: A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck. Five people run for higher ground. 4-9s: The pickup truck tips over onto its side in the mud. 9-15s: The mud and boulders shove a stopped truck sideways toward the edge of the road. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R6+S4|bystander_handheld",
+   "prompt": "0-4s: The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road. Five drivers dash away as the mud hits. 4-9s: The mud spins the pickup truck around and drags it backwards along the road toward the slope. 9-15s: A huge slab of rock breaks off the slope and crashes onto the road in front of the stopped cars. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "3": {
    "axes": {
     "acilis": "A",
-    "beats": "R5+S2",
+    "beats": "R5+S5",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "çatı",
@@ -5608,8 +5608,8 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R5+S2|bystander_handheld",
-   "prompt": "0-4s: The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road. Five people run for higher ground. 4-9s: The delivery truck tips over onto its side in the mud. 9-15s: A large boulder rolls across the road and smashes into a stopped car. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R5+S5|bystander_handheld",
+   "prompt": "0-4s: The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road. Five people run for higher ground. 4-9s: The delivery truck tips over onto its side in the mud. 9-15s: More of the slope gives way and a second surge of mud and rocks pours onto the road. Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the flat roof of a roadside shop, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "4": {
@@ -5636,14 +5636,14 @@
   },
   "5": {
    "axes": {
-    "acilis": "B",
-    "beats": "R3+S5",
+    "acilis": "A",
+    "beats": "R4+S3",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "tepe",
     "kamera_modu": null,
     "kamera_noktasi": "Far edge of the road across from the slope",
-    "key_visual": "A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck.",
+    "key_visual": "The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road.",
     "on_plan": "boş",
     "people": 6,
     "spot": "Far edge of the road across from the slope",
@@ -5652,42 +5652,42 @@
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R3+S5|bystander_handheld",
-   "prompt": "0-4s: A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck. Six drivers flee from the mud along the road. 4-9s: A rolling boulder strikes the pickup truck, which spins and slides down the road. 9-15s: More of the slope gives way and a second surge of mud and rocks pours onto the road. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R4+S3|bystander_handheld",
+   "prompt": "0-4s: The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road. Six drivers flee from the mud along the road. 4-9s: A wave of mud and rocks hits the front of the pickup truck and shoves it backwards down the road. 9-15s: A tree is torn out of the slope and slides across the road. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
    "style_suffix": "Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "6": {
    "axes": {
     "acilis": "A",
-    "beats": "R6+S4",
-    "environment": "E",
+    "beats": "R3+S5",
+    "environment": "D",
     "fit_guard": false,
-    "kadraj": "tepe",
+    "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": "Far edge of the road across from the slope",
+    "kamera_noktasi": "Behind the guardrail of a hillside road",
     "key_visual": "The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road.",
     "on_plan": "boş",
     "people": 3,
     "spot": "Behind the guardrail of a hillside road",
     "story_source": "fallback",
-    "vehicle": "white van",
+    "vehicle": "pickup truck",
     "view": null,
     "weather": "grey dawn light after a night of rain"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R6+S4|bystander_handheld",
-   "prompt": "0-4s: The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road. Three drivers scramble out and run from the mud. 4-9s: The white van and the car behind it are shoved along the road together. 9-15s: Seconds later, in full view, a utility pole snaps and falls across the road. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a winding road through terraced tea fields with farmhouses on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R3+S5|bystander_handheld",
+   "prompt": "0-4s: The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road. Three drivers flee from the mud along the road. 4-9s: A rolling boulder strikes the pickup truck, which spins and slides down the road. 9-15s: More of the slope gives way and a second surge of mud and rocks pours onto the road. Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   },
   "7": {
    "axes": {
-    "acilis": "B",
-    "beats": "R3+S7",
-    "environment": "D",
-    "fit_guard": false,
+    "acilis": "A",
+    "beats": "R4+S4",
+    "environment": "A",
+    "fit_guard": true,
     "kadraj": "tepe",
     "kamera_modu": null,
     "kamera_noktasi": "Far edge of the road across from the slope",
-    "key_visual": "A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck.",
+    "key_visual": "The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road.",
     "on_plan": "boş",
     "people": 3,
     "spot": "Far edge of the road across from the slope",
@@ -5696,21 +5696,21 @@
     "view": null,
     "weather": "heavy downpour under dark storm light"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R3+S7|bystander_handheld",
-   "prompt": "0-4s: A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck. Three people run for higher ground. 4-9s: A rolling boulder strikes the pickup truck, which spins and slides down the road. 9-15s: The mud and boulders shove a stopped truck sideways toward the edge of the road. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R4+S4|bystander_handheld",
+   "prompt": "0-4s: The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris surges across the road. Three drivers dash away as the mud hits. 4-9s: A wave of mud and rocks hits the front of the pickup truck and shoves it backwards down the road. 9-15s: A huge slab of rock breaks off the slope and crashes onto the road in front of the stopped cars. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "8": {
    "axes": {
     "acilis": "D",
-    "beats": "R3+S7",
-    "environment": "C",
-    "fit_guard": false,
+    "beats": "R4+S4",
+    "environment": "A",
+    "fit_guard": true,
     "kadraj": "tepe",
     "kamera_modu": null,
-    "kamera_noktasi": null,
+    "kamera_noktasi": "Far edge of the road across from the slope",
     "key_visual": "Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus.",
-    "on_plan": "yaprak",
+    "on_plan": "boş",
     "people": 4,
     "spot": "Behind the guardrail of a hillside road",
     "story_source": "fallback",
@@ -5718,21 +5718,21 @@
     "view": null,
     "weather": "bright midday light between heavy rain showers"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R3+S7|bystander_handheld",
-   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Four drivers dash away as the mud hits. 4-9s: A rolling boulder strikes the delivery truck, which spins and slides down the road. 9-15s: The mud and boulders shove a stopped truck sideways toward the edge of the road. Handheld footage filmed on a hillside overlook above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a coastal cliff road lined with white houses above the sea, with parked cars, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on a hillside overlook above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a coastal cliff road lined with white houses above the sea, with parked cars, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|behind the guardrail of a hillside road##R4+S4|bystander_handheld",
+   "prompt": "0-4s: Thick brown mud full of rocks, branches and debris slides off the slope over the roadside guardrail and piles up against a stopped bus. Four people run for higher ground. 4-9s: A wave of mud and rocks hits the front of the delivery truck and shoves it backwards down the road. 9-15s: A huge slab of rock breaks off the slope and crashes onto the road in front of the stopped cars. Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage filmed on the opposite slope of the valley above the road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey. No readable signs, text or flags."
   },
   "9": {
    "axes": {
-    "acilis": "C",
-    "beats": "R3+S5",
+    "acilis": "B",
+    "beats": "R4+S3",
     "environment": "D",
-    "fit_guard": false,
+    "fit_guard": true,
     "kadraj": "balkon",
     "kamera_modu": null,
     "kamera_noktasi": "Behind the guardrail of a hillside road",
-    "key_visual": "A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right behind it.",
-    "on_plan": "korkuluk",
+    "key_visual": "A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck.",
+    "on_plan": "boş",
     "people": 4,
     "spot": "Far edge of the road across from the slope",
     "story_source": "fallback",
@@ -5740,9 +5740,9 @@
     "view": null,
     "weather": "heavy downpour under dark storm light"
    },
-   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R3+S5|bystander_handheld",
-   "prompt": "0-4s: A huge boulder crashes onto the road and tumbles across it, and the whole slope slides down right behind it. Four drivers flee from the mud along the road. 4-9s: A rolling boulder strikes the white van, which spins and slides down the road. 9-15s: More of the slope gives way and a second surge of mud and rocks pours onto the road. Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
-   "style_suffix": "Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
+   "combo_key": "landslide_disasters|none|rain-soaked slope collapses onto a roadside|far edge of the road across from the slope##R4+S3|bystander_handheld",
+   "prompt": "0-4s: A mass of thick brown mud full of rocks, branches and debris breaks off the slope and buries the road, cutting off a pickup truck. Four people run for higher ground. 4-9s: A wave of mud and rocks hits the front of the white van and shoves it backwards down the road. 9-15s: A tree is torn out of the slope and slides across the road. Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey.",
+   "style_suffix": "Handheld footage filmed on the high balcony of a roadside house facing the slope, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the mud torrent always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a highway cut through a forested hillside beside a petrol station and houses, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. The mud is dark brown, never grey."
   }
  },
  "Tidal wave surges over a coastal city street": {

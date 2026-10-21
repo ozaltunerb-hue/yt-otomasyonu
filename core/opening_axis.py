@@ -211,8 +211,10 @@ def env_compatible(event: str, letter: str, env: str | None) -> bool:
 BEAT_CONFLICTS = {
     "Flash flooding in city streets": {"B": {"V5"}, "D": {"V1"}},          # araba yan yatar / yana süpürülür
     "Tidal wave surges over a coastal city street": {"B": {"T3"}},         # park hâlindeki arabalar itilir
-    "Mudslide pours down a hillside street": {"B": {"H5"}, "C": {"M3"}},  # araba yan yatar / duvar yıkılır
-    "Rain-soaked slope collapses onto a roadside": {"D": {"S3"}},          # ağaç gövdesi yamaçtan yola kayar
+    # 22 Eki (heyelan denetimi): M3 artık park arabaları sırası (B ilk park arabasını devirir); C+M3 (duvar) çıktı
+    "Mudslide pours down a hillside street": {"B": {"H5", "M3"}},         # araba yan yatar / park arabaları
+    # 22 Eki: S4 kaya kütlesi yamaçtan kopup yola düşer (B yamaçtan kopar, yolu gömer; C kaya yola düşer)
+    "Rain-soaked slope collapses onto a roadside": {"B": {"S4"}, "C": {"S4"}, "D": {"S3"}},   # D: ağaç gövdesi yola kayar
     "Mud and debris torrent tears through a hillside village": {"C": {"L7"}},   # ev temelinden sökülür
     "Tornado making landfall": {"D": {"E1"}},                              # evin çatısı (panelleri) sökülür
     "Tornado sweeps down a coastal avenue": {"C": {"Q6"}},                 # dükkân tentesi / sundurması sökülür

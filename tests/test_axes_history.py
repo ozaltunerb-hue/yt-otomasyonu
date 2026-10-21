@@ -327,8 +327,9 @@ class TestDeployScenario(_Quiet):
                         self.assertTrue(b["fit_guard"], (e, i, a, b))
                 # 21 Eki (Aşama 4): kadraj tekrarı sadece seçilen beat'lerin dışlamaları tek güvenli kadraj bıraktıysa
                 beats = es.EVENT_BEATS[e]["excluded_spots"]
+                # 22 Eki: ön plandaki gibi K5 sığma koruması devreye girdiyse de (bütçe zorunlu; uzun heyelan beat'leri)
                 for a, b in zip(rows, rows[1:]):
-                    if a["kadraj"] != b["kadraj"]:
+                    if a["kadraj"] != b["kadraj"] or b["fit_guard"]:
                         continue
                     b2, b3 = b["beats"].split("+")
                     risky = set(beats.get(b2, set())) | set(beats.get(b3, set()))

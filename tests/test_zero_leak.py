@@ -189,7 +189,8 @@ class TestNothingReachesKie(unittest.TestCase):
         self.assertEqual(len(h.sent_prompts), 1)
         p = h.sent_prompts[0]
         self.assertTrue(p.startswith(f"0-4s: {KEY} "))
-        self.assertNotIn("camera", p.split(" Handheld footage")[0].lower())
+        # 22 Eki: kamera cümlesi "Handheld footage" ya da (sabit kamera modu) "Footage from" ile başlar
+        self.assertNotIn("camera", p.split(" Handheld footage")[0].split(" Footage from")[0].lower())
         self.assertIn(" 9-15s: Seconds later, in full view, a lamppost topples into the current.", p)
         h.free_rewriter.assert_not_called()
 
@@ -405,7 +406,10 @@ class TestReporting(unittest.TestCase):
         async def gpt(system, user, **kw):
             return slices()
         with patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
-                patch.object(es, "choose_vehicle", lambda v, rng=None: VEHICLE):
+                patch.object(es, "choose_vehicle", lambda v, rng=None: VEHICLE), \
+                patch.object(ox, "choose", lambda *a, **k: ("A", [])):
+            # 22 Eki: açılış A'ya sabit (sahte GPT bugünkü kilit cümleye göre yazıldı; açılış ayrı rastgele akışta,
+            # sıraya göre B/C/D gelip test düşüyordu)
             return asyncio.run(cp.build_creative_scene("urban_city_disasters", FLOOD, [], [], gpt, view=VIEW))
 
     def test_detail_sections(self):

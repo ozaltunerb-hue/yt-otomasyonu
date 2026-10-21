@@ -299,6 +299,9 @@ _NEIGHBOR = ("beside", "next", "another", "other", "second", "parked", "adjacent
 # Heyelan H6/R6 (4 Eki, Bahadır onayı): kuru provada GPT "the car behind it", "the trailing car" yazdı. Ortak
 # _TOGETHER (sel, kıyı dev dalga) değişmez; çıplak "behind" bilerek yok.
 _TOGETHER_LANDSLIDE = _TOGETHER + ("the car behind it", "trailing", "following")
+# 22 Eki (heyelan denetimi): yeni H6 (evin ön basamakları) ve R2 (yolun karşısındaki kaya duvarı)
+_STEPS = ("front steps", "steps", "stairs", "stairway", "stoop", "doorstep", "porch", "entrance")
+_ROCK_FACE = ("rock face", "rock wall", "cliff", "slope", "hillside", "embankment", "rock", "rocks")
 # Hortum (TASLAK, 4 Eki). Mevcut listeler yeniden kullanılır; aşağıdakiler sadece hortum girdilerinde.
 _BLOW = ("blow", "blew", "blown", "gust")
 _WINDSHIELD = ("windshield", "windscreen", "front glass", "glass", "window")
@@ -965,30 +968,37 @@ EVENT_BEATS = {
         "slice_2": {
             "H1": {"text": "the {vehicle} is shoved sideways by the mud and slams into the car parked beside it",
                    "terms": [_SIDEWAYS, _HIT, _NEIGHBOR]},
-            "H2": {"text": "the {vehicle} is pushed down the street by the mud, bumping parked cars",
-                   "terms": [_DRAG, _BUMP]},
+            # 22 Eki, Bahadır (heyelan denetimi, zayıf beat'ler): H2, H4, H6, M3, M6; R2, R4, R6, S4; K3, L5, L6 metni
+            # değişti, kodlar aynı. Önceki H2: "the {vehicle} is pushed down the street by the mud, bumping parked cars"
+            "H2": {"text": "the mud swings the {vehicle} sideways and drags it down the steep street",
+                   "terms": [_SIDEWAYS + _SPIN, _DRAG + _DOWNHILL]},
             "H3": {"text": "the {vehicle} is spun around by the mud and dragged downhill",
                    "terms": [_SPIN, _DRAG + _DOWNHILL]},
-            "H4": {"text": "the {vehicle} is buried to its windows and pushed against a house wall",
-                   "terms": [_BURY, _HOUSE]},
+            # Önceki: "the {vehicle} is buried to its windows and pushed against a house wall"
+            "H4": {"text": "the mud shoves the {vehicle} across the street and crushes it against the parked cars on "
+                           "the other side",
+                   "terms": [_HIT + ("crush",), _NEIGHBOR]},
             "H5": {"text": "the {vehicle} tips over onto its side in the mud",
                    "terms": [_TIP]},
-            "H6": {"text": "the {vehicle} and the car behind it are pushed down the street together, bumper to bumper",
-                   "terms": [_TOGETHER_LANDSLIDE, _DRAG]},
+            # Önceki: "the {vehicle} and the car behind it are pushed down the street together, bumper to bumper"
+            "H6": {"text": "the mud pushes the {vehicle} nose-first into the front steps of a house lining the street "
+                           "and buries its front half",
+                   "terms": [_HOUSE + _STEPS, _HIT + _BURY]},
         },
         "slice_3": {
-            # 21 Eki (genel kalite): kadraj dışı hedef düzeltmesi (hedef açılış sokağında görünen şey). Önceki: "a
-            # low garden wall collapses and its stones tumble down the street"
-            "M3": {"text": "a garden wall along the street collapses and its stones tumble downhill",
-                   "terms": [("wall", "walls"), _COLLAPSE]},
+            # 22 Eki: önceki "a garden wall along the street collapses and its stones tumble downhill" (21 Eki: "a
+            # low garden wall collapses and its stones tumble down the street"). Açılış B ile seçilmez (opening_axis).
+            "M3": {"text": "the mud shoves the row of parked cars along the curb downhill, one car after another",
+                   "terms": [_CAR, _ROW, _DRAG]},
             # Önceki: "a tree is torn out of the slope and carried down with the mud" (yamaç kadrajda tanımlı değil)
             "M4": {"text": "a tree along the street is torn out and swept downhill",
                    "terms": [("tree", "trees"), _UPROOT]},
             # Önceki: "the mud rams a house corner and tears off its wooden porch" (21 Eki 17:39 testi H2+M6: 12. sn'de
             # kamera tanımsız "ev köşesi"ne döndü, gizli kesme)
-            "M6": {"text": "the mud rams the nearest house and tears off its wooden porch",
-                   "terms": [("porch", "veranda", "front steps", "stoop", "house corner", "corner of a house",
-                              "corner of the house"), _TEAR + ("crush", "smash", "rip off", "rip away")]},
+            # 22 Eki: önceki "the mud rams the nearest house and tears off its wooden porch"
+            "M6": {"text": "the mud rams the nearest house lining the street and buries its ground floor up to the "
+                           "windows",
+                   "terms": [_HOUSE + ("ground floor",), _HIT + _BURY + ("up to the windows", "to the windows")]},
             # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
             "M7": {"text": "mud slams into a house across the street and bursts through its ground floor",
                    "terms": [_HOUSE + ("ground floor",), ("burst", "smash", "crash", "slam", "break", "broke",
@@ -1001,7 +1011,11 @@ EVENT_BEATS = {
                              "bury", "buried", "engulf", "sweep", "swept", "pile", "pour")]},
         },
         # 18 Eki (2): M1 çıktı; ev duvarı/ön cephe iki kez (H4: M7, M8, M9), araç yana itilir (H1: M8)
-        "excluded_pairs": {("H4", "M3"), ("H4", "M6"), ("H4", "M7"), ("H4", "M8"), ("H4", "M9"), ("H1", "M8")},
+        # 22 Eki: H4 artık ev değil, park hâlindeki arabalar (H4-ev çiftleri çıktı; H4+M3 park arabaları itilir). Ev iki
+        # kez kuralı yeni H6'ya geçti (araç evin ön basamaklarına gömülür: M6 eve gömülür, M7, M8 eve itilir, M9)
+        # 22 Eki: H4+M6 175 bütçesi (açılış B ile kod yedeği sığmıyor; metinler onaylı, kısaltılmadı)
+        "excluded_pairs": {("H4", "M3"), ("H6", "M6"), ("H6", "M7"), ("H6", "M8"), ("H6", "M9"), ("H1", "M8"),
+                           ("H4", "M6")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1009,17 +1023,21 @@ EVENT_BEATS = {
         "slice_2": {
             "R1": {"text": "the {vehicle} is shoved sideways across the road by the mud and rocks",
                    "terms": [_SIDEWAYS + ("across the road", "across both lanes"), _DRAG]},
-            "R2": {"text": "the {vehicle} is pushed against the guardrail and pinned there",
-                   "terms": [_GUARDRAIL, _HIT]},
+            # 22 Eki (heyelan denetimi): önceki "the {vehicle} is pushed against the guardrail and pinned there"
+            "R2": {"text": "the mud shoves the {vehicle} across both lanes and slams it into the rock face on the far "
+                           "side of the road",
+                   "terms": [_HIT, _ROCK_FACE]},
             "R3": {"text": "a rolling boulder strikes the {vehicle}, which spins and slides down the road",
                    "terms": [_ROCK, _SPIN + ("slide", "slid", "skid")]},
-            "R4": {"text": "the {vehicle} is buried to its windows in the mud and pushed toward the road edge",
-                   "terms": [_BURY, ("edge", "shoulder", "verge", "side of the road", "roadside", "drop-off",
-                                     "drop off")]},
+            # Önceki: "the {vehicle} is buried to its windows in the mud and pushed toward the road edge"
+            "R4": {"text": "a wave of mud and rocks hits the front of the {vehicle} and shoves it backwards down the "
+                           "road",
+                   "terms": [_BACKWARD, _DRAG + _HIT]},
             "R5": {"text": "the {vehicle} tips over onto its side in the mud",
                    "terms": [_TIP]},
-            "R6": {"text": "the {vehicle} and the car behind it are shoved along the road together",
-                   "terms": [_TOGETHER_LANDSLIDE, _DRAG]},
+            # Önceki: "the {vehicle} and the car behind it are shoved along the road together"
+            "R6": {"text": "the mud spins the {vehicle} around and drags it backwards along the road toward the slope",
+                   "terms": [_SPIN, _DRAG + _BACKWARD]},
         },
         "slice_3": {
             # 21 Eki (genel kalite): kadraj dışı hedef. Önceki: "...smashes into a parked car" (dağ yolunda park yeri
@@ -1029,8 +1047,12 @@ EVENT_BEATS = {
                                      "barrel", "ram", "hit", "strike", "struck"), _CAR]},
             "S3": {"text": "a tree is torn out of the slope and slides across the road",
                    "terms": [("tree", "trees"), _UPROOT + ("slide", "slid")]},
-            "S4": {"text": "a utility pole snaps and falls across the road",
-                   "terms": [_POLE, _FALL]},
+            # 22 Eki: önceki "a utility pole snaps and falls across the road" (ince hedef, kadrajda tanımlı değil)
+            "S4": {"text": "a huge slab of rock breaks off the slope and crashes onto the road in front of the stopped "
+                           "cars",
+                   "terms": [("slab", "rock", "chunk", "block of rock", "rock face", "cliff"),
+                             ("break off", "breaks off", "broke off", "crash", "slam", "smash", "fall", "fell", "drop",
+                              "plunge", "land", "tumble", "topple", "collapse", "split", "shear off", "shears off")]},
             "S5": {"text": "more of the slope gives way and a second surge of mud and rocks pours onto the road",
                    "terms": [("more", "second", "another", "again", "fresh", "new", "further"),
                              ("slope", "hillside", "mud", "rock", "rocks", "landslide", "torrent", "surge"),
@@ -1045,7 +1067,9 @@ EVENT_BEATS = {
         # 17 Eki (temizlik turu): S1 (korkuluk) ve S6 (sıralı araçlar) çıktı; (R2,S1) (R6,S6) ve S1'in nokta kısıtı
         # onlarla gitti (önceki: {"S1": {"Behind the guardrail of a hillside road"}})
         # 18 Eki (2): S7 kamyon yana/yol kenarına itilir (R1 yana itilir, R4 yol kenarına itilir)
-        "excluded_pairs": {("R3", "S2"), ("R1", "S7"), ("R4", "S7")},
+        # 22 Eki: R2 araç iki şeridi geçip itilir (S7 gibi); R4 artık geriye itilir (yine araç itilir, çift kalır)
+        # 22 Eki: R2+S4, R2+S5 175 bütçesi (R2 23 kelime; kod yedeği sığmıyor, metinler onaylı, kısaltılmadı)
+        "excluded_pairs": {("R3", "S2"), ("R1", "S7"), ("R4", "S7"), ("R2", "S7"), ("R2", "S4"), ("R2", "S5")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1055,8 +1079,9 @@ EVENT_BEATS = {
                    "terms": [_DRAG, _HIT, _HOUSE]},
             "K2": {"text": "the {vehicle} is spun around by the torrent and dragged along the lane",
                    "terms": [_SPIN, _DRAG]},
-            "K3": {"text": "the {vehicle} is buried to its windows and pushed against a fence",
-                   "terms": [_BURY, _FENCE]},
+            # 22 Eki (heyelan denetimi): önceki "the {vehicle} is buried to its windows and pushed against a fence"
+            "K3": {"text": "the torrent shoves the {vehicle} down the lane and wedges it between two houses",
+                   "terms": [_DRAG, _HIT + ("between",), _HOUSE]},
             "K4": {"text": "the {vehicle} tips over onto its side in the torrent",
                    "terms": [_TIP]},
             "K5": {"text": "the {vehicle} slams into a pile of logs and both are carried away",
@@ -1073,20 +1098,22 @@ EVENT_BEATS = {
             # Önceki: "a roof section is torn off a shed and swept away" (kulübe kadrajda tanımlı değil)
             "L4": {"text": "a roof section is torn off a house along the lane and swept away",
                    "terms": [("roof", "roofing", "rooftop"), _TEAR]},
-            "L5": {"text": "a pile of logs breaks loose and rolls down the lane",
-                   "terms": [_LOGS, ("roll", "tumble", "break loose", "breaks loose", "broke loose", "scatter",
-                                     "spill", "crash", "bounce", "slide", "slid", "sweep", "swept", "carry",
-                                     "carried")]},
-            # Önceki: "a stone wall collapses and its stones tumble into the torrent"
-            "L6": {"text": "a stone wall along the lane collapses and its stones tumble into the torrent",
-                   "terms": [("wall", "walls"), _COLLAPSE]},
+            # 22 Eki: önceki "a pile of logs breaks loose and rolls down the lane" (K5 kütük tekrarı)
+            "L5": {"text": "the torrent smashes through the front wall of a wooden house along the lane",
+                   "terms": [_HOUSE, ("smash", "burst", "crash", "break", "broke", "tear", "tore", "rip", "ram", "slam",
+                                      "plow", "plough", "punch", "cave", "collapse")]},
+            # 22 Eki: önceki "a stone wall along the lane collapses and its stones tumble into the torrent" (21 Eki: "a
+            # stone wall collapses and its stones tumble into the torrent")
+            "L6": {"text": "the torrent shoves a parked car along the lane into the front of a house",
+                   "terms": [_CAR, _DRAG, _HOUSE]},
             # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
             "L7": {"text": "the landslide rips a wooden house off its foundation and carries it down the slope",
                    "terms": [("house", "home", "cottage", "cabin", "building"), _TEAR + ("foundation", "rip off",
                              "sweep away")]},
         },
         # 17 Eki: (K3,L2) L2 ile gitti. 18 Eki (2): L7 ev temelinden kopar, K1 ev duvarı (aynı yapı)
-        "excluded_pairs": {("K1", "L1"), ("K5", "L5"), ("K1", "L6"), ("K1", "L7")},
+        # 22 Eki: (K5,L5) çıktı (L5 artık kütük değil); L5 ev ön duvarı (K1 ev duvarı), L6 araç itilir (K3 araç itilir)
+        "excluded_pairs": {("K1", "L1"), ("K1", "L5"), ("K1", "L6"), ("K1", "L7"), ("K3", "L6")},
         "excluded_views": {},
         # Kamera bir köy evinin üst kat balkonunda: "ev köşesi vurulur, duvarı çöker" kameranın durduğu ev gibi çizilir
         "excluded_spots": {"L1": {"Upper-floor balcony of a village house"},
@@ -1915,7 +1942,7 @@ OBJECT_GROUPS = {
     FLOOD: {"D9": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0, "D8": 0},
     TIDAL: {"W1": 1, "W2": 0, "W3": 0, "W4": 0, "W5": 0, "W6": 0, "W8": 0},
     # 18 Eki (2) kuru deneme: M8'in nesnesi ev (kamyon evin önüne; "house's facade" M7'ye benzetiliyordu)
-    MUDSLIDE: {"M9": 1, "M8": 2, "M7": 0, "M3": 0, "M4": 0, "M6": 0},
+    MUDSLIDE: {"M9": 1, "M8": 2, "M7": 0, "M3": 0, "M4": 0, "M6": 0},   # 22 Eki: M3 park arabaları, M6 ev (M7 ile aynı)
     SLOPE: {"S7": 0, "S2": 0, "S3": 0, "S4": 0, "S5": 1},
     VILLAGE: {"L7": 0, "L1": 0, "L3": 0, "L4": 0, "L5": 0, "L6": 0},
     LANDFALL: {"E7": 0, "E1": 0, "E2": 0, "E4": 0, "E5": 0},
@@ -2547,7 +2574,8 @@ def _people_rules(away_from: str) -> list[dict]:
 # ("no person or face close to the camera" ile çelişmesin). Korkuluk / teras / balkon ifadeleri listeden çıktı (kontrol
 # gevşemedi: kalan ifadelerin hepsi aynı); "lower half" ve "street below" eklendi. Önceki ilk terimler: "near the
 # railing", "by the railing", ..., "close to the terrace", "beneath the balcony".
-_AVA_NEAR = ("right below", "just below", "in the street below", "on the street below", "in the foreground",
+# 22 Eki, Bahadır: "in the foreground" çıktı (yüz yasağıyla çelişiyor); diğerleri aynı.
+_AVA_NEAR = ("right below", "just below", "in the street below", "on the street below",
              "right beneath", "just beneath", "street below", "lower half")
 _AVA_NEAR_RULE = {"rule": "slice_near_camera", "field": "slice_1_rest", "terms": _AVA_NEAR,
                   "missing": "0-4s: insanlar aşağıdaki sokakta değil",
@@ -3236,8 +3264,6 @@ _WAITING = "çıkış bekliyor: grup 4'ün altına düşerdi, yerine yeni beat s
 POOL_LINT_GRANDFATHERED = {
     (FLOOD, "V4"): _KEPT + " (özne araç, direk ikincil)", (FLOOD, "D2"): _PROTECTED + " (3 Eki Kie sel testi V6+D2)",
     (TIDAL, "T6"): _PROTECTED, (TIDAL, "W2"): _PROTECTED, (TIDAL, "W6"): _PROTECTED,
-    (SLOPE, "R2"): _PROTECTED, (SLOPE, "S4"): _PROTECTED,
-    (VILLAGE, "K3"): _KEPT + " (özne araç, çit ikincil)",
     (LANDFALL, "E5"): _KEPT + " (özne dükkân önü)",
     (MARINA_TORNADO, "Y3"): _PROTECTED, (MARINA_TORNADO, "Z1"): _PROTECTED, (MARINA_TORNADO, "Z2"): _KEPT,
     (MARINA_TORNADO, "Z6"): _PROTECTED,

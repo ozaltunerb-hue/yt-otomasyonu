@@ -198,3 +198,24 @@ görünür mü. Ger: fiziksel olarak gerçekçi mi. ⚠️ = zayıf.
 
 Kameraya yakınlık hepsinde 3: kamera yüksek ve sabit, beat'ler sokak ortası. Yakınlık artırmak "no person or face close
 to the camera" ile çelişmeden nesneyle yapılabilir ("right below the balcony" araç / ev), bu raporda öneri yok.
+
+## 22 Ekim: uygulanan beat değişikliği (Bahadır onayı)
+
+12 zayıf beat'in metni değişti, kodlar aynı: çamur seli H2, H4, H6, M3, M6; yamaç R2, R4, R6, S4; köy K3, L5, L6.
+Terim grupları yeni metne göre (araçlı beat'lerde lift / airborne / flip / flung / into the air / tumble yok, testli).
+R2, S4 ve K3 artık ince hedef taşımıyor: havuz lintindeki muafiyetleri çıktı (25 -> 22).
+
+Dışlamalar (aynı hedef + aynı fiil):
+- Çamur seli: H4 artık ev değil, eski H4-ev çiftleri (M6, M7, M8, M9) çıktı; H4+M3 (park arabaları itilir) kaldı. Ev iki
+  kez kuralı yeni H6'ya geçti: H6+M6 (eve gömülür), H6+M7, H6+M8 (eve itilir), H6+M9. H1+M8 aynı.
+- Yamaç: R2+S7 eklendi (araç itilir). R4+S7 kaldı (yine araç itilir).
+- Köy: K1+L6 kaldı. K1+L5 (ev duvarı) ve K3+L6 (araç sokakta itilir) eklendi. K5+L5 çıktı (L5 artık kütük değil).
+- Açılış: çamur seli B+M3 (ilk park arabası devrilir / park arabaları itilir); C+M3 çıktı (M3 artık duvar değil).
+  Yamaç B+S4 (yamaçtan kopar, yola düşer) ve C+S4 (kaya yola düşer). Köy C ve D'nin aday listesindeki L5 (ev) elle
+  süzüldü: aynı fiil değil (temelinden itmek / çatıya kaymak), dışlanmadı.
+
+175 bütçesi: yeni metinler uzun (H6 22, R2 23, H4 20 kelime). Kod yedeği 3 çiftte sığmadı, metin kısaltılmadı, çift
+dışlandı: H4+M6 (açılış B ile 60 kombinasyon), R2+S4 (63 / 72), R2+S5 (63 / 144). Sonra sığmayan 0.
+
+Yakınlık listesi: "in the foreground" çıktı (_AVA_NEAR; ateş hortumu listesi bundan türediği için onda da). Etkilenen:
+çığ (3), deprem (2), ateş hortumu kapısı. Kod yedeği havuzlarında ve GPT ipucunda bu ifade yoktu, prompt değişmedi.

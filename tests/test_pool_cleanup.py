@@ -179,7 +179,8 @@ class TestPoolLint(unittest.TestCase):
 
     def test_grandfather_list_is_exact(self):
         # her muafiyetin gerekçesi var; havuzda olmayan ya da artık ihlal etmeyen beat muaf kalamaz
-        self.assertEqual(len(es.POOL_LINT_GRANDFATHERED), 25)   # 18 Eki (2): çıkış bekleyen 6 lint muafiyeti çıktı
+        # 18 Eki (2): çıkış bekleyen 6 lint muafiyeti çıktı. 22 Eki: yamaç R2, S4 ve köy K3 yeni metinle ihlal etmiyor
+        self.assertEqual(len(es.POOL_LINT_GRANDFATHERED), 22)
         for (event, bid), why in es.POOL_LINT_GRANDFATHERED.items():
             with self.subTest(beat=(event, bid)):
                 self.assertTrue(why.startswith(("korunan", "denetimde", "çıkış bekliyor")), why)

@@ -51,6 +51,12 @@ def current(r) -> dict:
     return r
 
 
+# 22 Eki (heyelan denetimi): metni değişen beat'ler (kod aynı). Eski metne göre kaydedilen 2i cümleleri (ör. M6 "porch")
+# artık eski kapının reddettiği cümle değil; bu testte atlanır, kayıt dosyada kalır.
+REWRITTEN = {(es.MUDSLIDE, b) for b in ("H2", "H4", "H6", "M3", "M6")} | \
+            {(es.SLOPE, b) for b in ("R2", "R4", "R6", "S4")} | {(es.VILLAGE, b) for b in ("K3", "L5", "L6")}
+
+
 def slot_of(event, bid):
     return next(sl for sl in ("slice_2", "slice_3") if bid in es.EVENT_BEATS[event][sl])
 
@@ -105,7 +111,7 @@ class TestRejectedReal(unittest.TestCase):
     def test_auto_added_entries_were_old_gate_rejections(self):
         # 2i kayıtları: eski sıkı kapı reddeder, yeni yumuşak kapı geçirir (kaydın nedeni)
         for r in load()["false_rejections"]:
-            if "source" not in r or retired(r):
+            if "source" not in r or retired(r) or (r["event"], r["beat"]) in REWRITTEN:
                 continue
             r = current(r)
             spec, slices, sl = rebuild(r)
