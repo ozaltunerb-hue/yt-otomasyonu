@@ -3151,19 +3151,21 @@ FALLBACK_PEOPLE = {
     # 23 Eki, Bahadır (heyelan testi): çamur yukarıdan geliyor; "uphill" / "up the street" insanları çamura doğru
     # koşturuyordu. Önceki: "{N} residents run uphill away from the mud.", "{N} people flee from the mud up the
     # street.", "{N} pedestrians scramble uphill as the mud hits.", "{N} pedestrians dash uphill away from the flow."
+    # 23 Eki (2), Bahadır: "{N} people run for higher ground." de çıktı (üç heyelan olayında; yukarı = çamura doğru).
+    # Yerine gelen aynı uzunlukta (6 kelime): en kısa cümle sıkışık kombinasyonları 175'e sığdırıyor
     MUDSLIDE: ("{N} residents run down the street away from the mud.",
                "{N} people flee from the mud toward the lower street.",
                "{N} pedestrians scramble away as the mud hits.", "{N} residents sprint away from the mud.",
-               "{N} people run for higher ground.", "{N} pedestrians dash away from the flow."),
+               "{N} people run from the mud.", "{N} pedestrians dash away from the flow."),
     SLOPE: ("{N} drivers scramble out and run from the mud.", "{N} drivers flee from the mud along the road.",
             "{N} residents run away from the mud.", "{N} drivers sprint for the far side of the road.",
-            "{N} people run for higher ground.", "{N} drivers dash away as the mud hits."),
+            "{N} people run from the mud.", "{N} drivers dash away as the mud hits."),
     # 23 Eki: MUDSLIDE gibi. Önceki: "{N} villagers run uphill away from the mud.", "{N} residents dash uphill
     # between the houses."
     VILLAGE: ("{N} villagers run down the lane away from the mud.",
               "{N} residents flee from the torrent to higher ground.",
               "{N} villagers scramble up the stone steps.", "{N} villagers sprint away from the mud.",
-              "{N} people run for higher ground.", "{N} residents dash away between the houses."),
+              "{N} people flee from the mud.", "{N} residents dash away between the houses."),
     LANDFALL: _FB_TORNADO, MARINA_TORNADO: _FB_TORNADO, AVENUE: _FB_TORNADO,
     WILDFIRE: _FB_FLAMES, HELICOPTER: _FB_FLAMES,
     FACADE_FIRE: ("{N} pedestrians run from the burning tower.", "{N} people flee from the flames across the street.",

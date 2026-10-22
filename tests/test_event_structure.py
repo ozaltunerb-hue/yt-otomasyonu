@@ -3378,8 +3378,14 @@ class TestLandslideTestFixes23Oct(unittest.TestCase):
                     for w in self.UPHILL:
                         self.assertNotIn(w, t.lower())
                     self.assertTrue(es.find_terms(es._FLEE, t))
+                    self.assertNotIn("for higher ground", t)   # 23 Eki (2): yukarı = çamura doğru
         self.assertIn("{N} residents run down the street away from the mud.", es.FALLBACK_PEOPLE[es.MUDSLIDE])
         self.assertIn("{N} people flee from the mud toward the lower street.", es.FALLBACK_PEOPLE[es.MUDSLIDE])
+        # köy "scramble up the stone steps" kalır (Bahadır, 23 Eki (2)); "flee from the torrent to higher ground" bu
+        # turda değişmedi ("run for higher ground" kalıbı değil)
+        self.assertIn("{N} villagers scramble up the stone steps.", es.FALLBACK_PEOPLE[es.VILLAGE])
+        for e in self.LANDSLIDE:
+            self.assertEqual(len(set(es.FALLBACK_PEOPLE[e])), 6)
 
     def test_clashing_vehicles(self):
         trucks = ["pickup truck", "delivery truck"]
