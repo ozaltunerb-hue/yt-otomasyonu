@@ -307,6 +307,22 @@ class TestFlow(unittest.TestCase):
         scene = asyncio.run(cp.build_creative_scene(domain, event, [], [], gpt, view=view))
         return scene, calls
 
+    def test_fixed_truck_beat_never_gets_truck_vehicle(self):
+        # 23 Eki, Bahadır (heyelan testi): M8 "a parked truck" / S7 "a stopped truck" ile kamyon türü araç seçilmez
+        bad = {"slice_1_rest": "x y z w v u t.", "slice_2": "nothing.", "slice_3": "nothing."}
+        for event, pair in ((es.MUDSLIDE, ("H2", "M8")), (es.SLOPE, ("R3", "S7"))):
+            seen = set()
+            for _ in range(8):
+                es._BEAT_MEMORY.clear()
+                with patch.object(es, "choose_beats", lambda *a, **k: pair):
+                    scene, _ = self.run_scene("landslide_disasters", event, [bad])
+                spec = scene["structure"]["spec"]
+                self.assertEqual((spec["beat_2"], spec["beat_3"]), pair)
+                seen.add(spec["vehicle"])
+            with self.subTest(event=event):
+                self.assertTrue(seen)
+                self.assertFalse({v for v in seen if "truck" in v.lower()}, seen)
+
     def test_hard_violation_twice_falls_back(self):
         import core.creative_pipeline as cp
         bad = {"slice_1_rest": "Three people run away right below the balcony.",

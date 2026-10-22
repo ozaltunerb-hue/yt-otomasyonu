@@ -290,7 +290,9 @@ _TEAR = ("tear", "tore", "torn", "rip", "wrench", "sweep", "swept", "carry", "ca
          "broke", "collapse", "flatten", "uproot")
 _BURY = ("bury", "buried", "engulf", "swallow", "submerge", "sink", "sank", "sunk", "to its windows",
          "up to its windows", "window-deep", "door-deep")
-_HOUSE = ("wall", "house", "home", "building", "facade", "façade", "cottage", "cabin", "doorway")
+# 23 Eki, Bahadır (heyelan testi): GPT "crashing it into a chalet's wooden balcony" yazdı, M8 reddedildi. "chalet"
+# eklendi (çoğul ve "chalet's" çekimle eşleşir; home, cottage, cabin zaten vardı)
+_HOUSE = ("wall", "house", "home", "building", "facade", "façade", "cottage", "cabin", "doorway", "chalet")
 _GUARDRAIL = ("guardrail", "guard rail", "crash barrier", "barrier", "railing")
 _ROCK = ("boulder", "rock", "stone")
 _LOGS = ("log", "logs", "timber", "lumber", "woodpile", "wood pile", "tree trunk", "trunks")
@@ -2745,10 +2747,35 @@ def choose_beats(event: str, view: str | None, spot: str, history: list[str],
     return rng.choice([p for p in pairs if last(p) == best])
 
 
-def choose_vehicle(view: str, rng: random.Random | None = None, used: list[str] | None = None) -> str:
+def choose_vehicle(view: str, rng: random.Random | None = None, used: list[str] | None = None,
+                   exclude: list[str] = ()) -> str:
     if view not in REGION_VEHICLES:
         raise StructureError(f"Görünümün araç listesi yok: {view}")
-    return (rng or random).choice(lru_axis([v for v, _ in REGION_VEHICLES[view]], used or [])[0])
+    return (rng or random).choice(lru_axis(_vehicle_options(REGION_VEHICLES[view], exclude), used or [])[0])
+
+
+# 23 Eki, Bahadır (heyelan testi): seçilen çiftte sabit geçen araçla (M8 "a parked truck", S7 "a stopped truck") aynı
+# türdeki araç seçilmez ("the pickup truck ... a parked truck" iki kamyon). Şimdilik heyelan olaylarında; diğer
+# olaylarda (sel/dev dalga sedan + "car", hortum P7 ve volkan S8/T9 kamyon) davranış aynı.
+VEHICLE_KINDS = (("truck", "lorry", "pickup"), ("car", "sedan", "saloon", "hatchback"), ("van",), ("suv",))
+SAME_KIND_VEHICLE_EVENTS = {MUDSLIDE, SLOPE, VILLAGE}
+
+
+def clashing_vehicles(event: str, view: str | None, b2: str, b3: str) -> list[str]:
+    """Olay çiftinin sabit araçlarıyla ({vehicle} dışında) aynı türdeki araç adları; bunlar seçilmez."""
+    if event not in SAME_KIND_VEHICLE_EVENTS:
+        return []
+    beats = EVENT_BEATS[event]
+    fixed = " ".join(beats[s][b]["text"].replace("{vehicle}", "") for s, b in (("slice_2", b2), ("slice_3", b3)))
+    kinds = [set(k) for k in VEHICLE_KINDS if find_terms(k, fixed)]
+    return [v for v, terms in event_vehicles(event, view) if any(k & set(terms) for k in kinds)]
+
+
+def _vehicle_options(vehicles, exclude) -> list[str]:
+    out = [v for v, _ in vehicles if v not in exclude]
+    if not out:
+        raise StructureError(f"Seçilebilir araç kalmadı (elenen: {list(exclude)})")
+    return out
 
 
 def vehicle_terms(view: str, vehicle: str) -> tuple[str, ...]:
@@ -2770,8 +2797,9 @@ def event_vehicles(event: str, view: str | None) -> list[tuple[str, tuple[str, .
     return EVENT_VEHICLES[event]
 
 
-def choose_event_vehicle(event: str, rng: random.Random | None = None, used: list[str] | None = None) -> str:
-    return (rng or random).choice(lru_axis([v for v, _ in event_vehicles(event, None)], used or [])[0])
+def choose_event_vehicle(event: str, rng: random.Random | None = None, used: list[str] | None = None,
+                         exclude: list[str] = ()) -> str:
+    return (rng or random).choice(lru_axis(_vehicle_options(event_vehicles(event, None), exclude), used or [])[0])
 
 
 def uses_vehicle(event: str) -> bool:
@@ -3120,15 +3148,22 @@ FALLBACK_PEOPLE = {
     TIDAL: ("{N} pedestrians run from the wave toward the buildings.", "{N} residents sprint away from the wave up the street.",
             "{N} people flee from the wave toward higher steps.", "{N} pedestrians scramble up the steps away from the wave.",
             "{N} people run inland as the wave hits.", "{N} residents dash away from the wave."),
-    MUDSLIDE: ("{N} residents run uphill away from the mud.", "{N} people flee from the mud up the street.",
-               "{N} pedestrians scramble uphill as the mud hits.", "{N} residents sprint away from the mud.",
-               "{N} people run for higher ground.", "{N} pedestrians dash uphill away from the flow."),
+    # 23 Eki, Bahadır (heyelan testi): çamur yukarıdan geliyor; "uphill" / "up the street" insanları çamura doğru
+    # koşturuyordu. Önceki: "{N} residents run uphill away from the mud.", "{N} people flee from the mud up the
+    # street.", "{N} pedestrians scramble uphill as the mud hits.", "{N} pedestrians dash uphill away from the flow."
+    MUDSLIDE: ("{N} residents run down the street away from the mud.",
+               "{N} people flee from the mud toward the lower street.",
+               "{N} pedestrians scramble away as the mud hits.", "{N} residents sprint away from the mud.",
+               "{N} people run for higher ground.", "{N} pedestrians dash away from the flow."),
     SLOPE: ("{N} drivers scramble out and run from the mud.", "{N} drivers flee from the mud along the road.",
             "{N} residents run away from the mud.", "{N} drivers sprint for the far side of the road.",
             "{N} people run for higher ground.", "{N} drivers dash away as the mud hits."),
-    VILLAGE: ("{N} villagers run uphill away from the mud.", "{N} residents flee from the torrent to higher ground.",
+    # 23 Eki: MUDSLIDE gibi. Önceki: "{N} villagers run uphill away from the mud.", "{N} residents dash uphill
+    # between the houses."
+    VILLAGE: ("{N} villagers run down the lane away from the mud.",
+              "{N} residents flee from the torrent to higher ground.",
               "{N} villagers scramble up the stone steps.", "{N} villagers sprint away from the mud.",
-              "{N} people run for higher ground.", "{N} residents dash uphill between the houses."),
+              "{N} people run for higher ground.", "{N} residents dash away between the houses."),
     LANDFALL: _FB_TORNADO, MARINA_TORNADO: _FB_TORNADO, AVENUE: _FB_TORNADO,
     WILDFIRE: _FB_FLAMES, HELICOPTER: _FB_FLAMES,
     FACADE_FIRE: ("{N} pedestrians run from the burning tower.", "{N} people flee from the flames across the street.",

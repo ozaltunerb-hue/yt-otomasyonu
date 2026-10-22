@@ -35,8 +35,10 @@ OPENINGS = {
         # 21 Eki (genel kalite): çamur dokusu ("mud" geçen ilk ifade). Önceki: "A torrent of mud and rocks pours
         # around...", "...bursts apart and mud and boulders pour straight into the steep street.", "Mud pours down the
         # steep street in waves..."
+        # 23 Eki, Bahadır (heyelan testi): "flips the first parked car over" -> "tips ... over" ("onto its side" 2
+        # kelime uzun: H1+M6, H4+M7, H4+M9 ile kod yedeği 175'e sığmadı, Bahadır kararı)
         "B": "A torrent of thick brown mud full of rocks, branches and debris pours around the bend at the top of the "
-             "street and flips the first parked car over.",
+             "street and tips the first parked car over.",
         "C": "A retaining wall on the slope bursts apart and thick brown mud full of rocks, branches and debris pours "
              "straight into the steep street.",
         "D": "Thick brown mud full of rocks, branches and debris pours down the steep street in waves, dragging flower "

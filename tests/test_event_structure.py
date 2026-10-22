@@ -3340,5 +3340,72 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                 self.assertLessEqual(most, 175)
 
 
+class TestLandslideTestFixes23Oct(unittest.TestCase):
+    """23 Eki 2026, Bahadır (heyelan testi sonrası): ev eş anlamlısı chalet, yedek insan cümlesi yönü, aynı tür araç
+    iki kez yok, açılış B "tips ... over" (175 bütçesi)."""
+    LANDSLIDE = (es.MUDSLIDE, es.SLOPE, es.VILLAGE)
+    UPHILL = ("uphill", "up the street", "up the slope", "up the hill", "up the road", "up the lane")
+
+    def test_chalet_in_house_group(self):
+        self.assertIn("chalet", es._HOUSE)
+        for t in ("wall", "house", "home", "cottage", "cabin"):   # eş anlamlı sadece ekleme
+            self.assertIn(t, es._HOUSE)
+        m8 = es.EVENT_BEATS[es.MUDSLIDE]["slice_3"]["M8"]
+        ok = ["The mud shoves a parked truck sideways, crashing it into a chalet's wooden balcony.",
+              "The parked truck is pushed sideways into the front of a wooden chalet.",
+              "The mud drags a parked truck sideways and slams it into the chalets along the street.",
+              "A parked truck slides sideways and rams the porch of a mountain cabin.",
+              "The flow shoves the parked truck sideways into one of the homes on the street."]
+        for s in ok:
+            with self.subTest(s=s):
+                self.assertEqual(es.beat_missing(m8, s), [])
+        # atmosfer cümlesi hâlâ geçmez
+        self.assertTrue(es.beat_missing(m8, "Rain keeps falling over the chalets on the hillside."))
+        # M8'de "wall" zorunlu değil: ev grubunda seçeneklerden biri
+        self.assertFalse([g for g in m8["terms"] if g == ("wall",)])
+        # _HOUSE kullanan diğer heyelan maddeleri de chalet'yi kabul eder
+        for e, slot, bid in ((es.MUDSLIDE, "slice_2", "H6"), (es.MUDSLIDE, "slice_3", "M6"),
+                             (es.MUDSLIDE, "slice_3", "M7"), (es.MUDSLIDE, "slice_3", "M9"),
+                             (es.VILLAGE, "slice_2", "K1"), (es.VILLAGE, "slice_2", "K3"),
+                             (es.VILLAGE, "slice_3", "L5"), (es.VILLAGE, "slice_3", "L6")):
+            groups = es.EVENT_BEATS[e][slot][bid]["terms"]
+            self.assertTrue([g for g in groups if "chalet" in g], bid)
+
+    def test_fallback_people_run_away_from_mud(self):
+        for e in self.LANDSLIDE:
+            for t in es.FALLBACK_PEOPLE[e]:
+                with self.subTest(t=t):
+                    for w in self.UPHILL:
+                        self.assertNotIn(w, t.lower())
+                    self.assertTrue(es.find_terms(es._FLEE, t))
+        self.assertIn("{N} residents run down the street away from the mud.", es.FALLBACK_PEOPLE[es.MUDSLIDE])
+        self.assertIn("{N} people flee from the mud toward the lower street.", es.FALLBACK_PEOPLE[es.MUDSLIDE])
+
+    def test_clashing_vehicles(self):
+        trucks = ["pickup truck", "delivery truck"]
+        self.assertEqual(es.clashing_vehicles(es.MUDSLIDE, None, "H2", "M8"), trucks)
+        self.assertEqual(es.clashing_vehicles(es.SLOPE, None, "R3", "S7"), trucks)
+        affected = {(e, d) for e in self.LANDSLIDE for v in es.EVENT_BEATS[e]["slice_2"]
+                    for d in es.EVENT_BEATS[e]["slice_3"] if es.clashing_vehicles(e, None, v, d)}
+        self.assertEqual(affected, {(es.MUDSLIDE, "M8"), (es.SLOPE, "S7")})
+        # "car" türünde araç yok: park arabalı maddeler (H1, H4, M3, S2, S4, L6) bir şey elemez
+        self.assertEqual(es.clashing_vehicles(es.MUDSLIDE, None, "H1", "M3"), [])
+        # diğer olaylarda davranış aynı (hortum P7 "a large truck")
+        self.assertEqual(es.clashing_vehicles(es.AVENUE, None, "P7", "Q1"), [])
+        rng = random.Random(7)
+        for _ in range(100):
+            v = es.choose_event_vehicle(es.MUDSLIDE, rng, exclude=trucks)
+            self.assertNotIn("truck", v)
+        with self.assertRaises(es.StructureError):
+            es.choose_event_vehicle(es.MUDSLIDE, rng, exclude=[v for v, _ in es.event_vehicles(es.MUDSLIDE, None)])
+
+    def test_opening_b_tips_onto_side(self):
+        import core.opening_axis as ox
+        b = ox.OPENINGS[es.MUDSLIDE]["B"]
+        self.assertIn("tips the first parked car over", b)
+        self.assertNotRegex(b, r"\bflips?\b")
+        self.assertEqual(ox.beat_conflicts(es.MUDSLIDE, "B"), {"H5", "M3"})
+
+
 if __name__ == "__main__":
     unittest.main()

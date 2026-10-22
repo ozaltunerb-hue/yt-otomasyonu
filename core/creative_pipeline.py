@@ -910,9 +910,12 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     if not es.uses_vehicle(event):
         vehicle = None
     else:
-        vehicle = (_with_used(es.choose_vehicle, view, used=used_vehicle) if view is not None
-                   else _with_used(es.choose_event_vehicle, event, used=used_vehicle))
-        options = [v for v, _ in es.event_vehicles(event, view)]
+        # 23 Eki: çiftte sabit geçen araçla aynı türdeki araç seçilmez (heyelan M8/S7 kamyon); çakışma yoksa eski çağrı
+        clash = es.clashing_vehicles(event, view, b2, b3)
+        ex = {"exclude": clash} if clash else {}
+        vehicle = (_with_used(es.choose_vehicle, view, used=used_vehicle, **ex) if view is not None
+                   else _with_used(es.choose_event_vehicle, event, used=used_vehicle, **ex))
+        options = [v for v, _ in es.event_vehicles(event, view) if v not in clash]
         excluded["vehicle"] = es.lru_axis(options, used_vehicle)[1]
     used_people = ah.values(ev_hist, "people")
     people = _with_used(es.choose_people, event, ship, used=used_people)   # kaçan kişi sayısı N; combo_key'e girmez
