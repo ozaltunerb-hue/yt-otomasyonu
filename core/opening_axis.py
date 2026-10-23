@@ -218,7 +218,8 @@ BEAT_CONFLICTS = {
     # 22 Eki: S4 kaya kütlesi yamaçtan kopup yola düşer (B yamaçtan kopar, yolu gömer; C kaya yola düşer)
     "Rain-soaked slope collapses onto a roadside": {"B": {"S4"}, "C": {"S4"}, "D": {"S3"}},   # D: ağaç gövdesi yola kayar
     "Mud and debris torrent tears through a hillside village": {"C": {"L7"}},   # ev temelinden sökülür
-    "Tornado making landfall": {"D": {"E1"}},                              # evin çatısı (panelleri) sökülür
+    # 23 Eki (hortum denetimi): C+C2 araç yan yatar; D+E2 yeni E2 de çatı söker (E1 gibi)
+    "Tornado making landfall": {"C": {"C2"}, "D": {"E1", "E2"}},           # araba yan yatar / çatı sökülür
     "Tornado sweeps down a coastal avenue": {"C": {"Q6"}},                 # dükkân tentesi / sundurması sökülür
     "Wall of flames sweeps into a hillside neighborhood": {"C": {"K8", "L1"}},   # evin çatısı tutuşur
     "Flames race up a tower facade": {"B": {"M8", "M11"}, "C": {"M10", "N5"}},  # cepheden yukarı / pencereden alev

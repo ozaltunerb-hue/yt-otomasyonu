@@ -1256,36 +1256,38 @@ class TestTornadoStructure(unittest.TestCase):
 
     POOLS = {
         es.LANDFALL: ({
-            "C1": "the {vehicle} is shoved sideways across the street by the wind",
-            "C2": "the {vehicle} tips over onto its side as roof tiles rain down around it",   # 17 Eki: C3, C6 çıktı
+            # 23 Eki (hortum denetimi): C1, C2, E1, E2 yeni metin; (C2, E1) ve E1 nokta dışlaması çıktı
+            "C1": "the tornado shoves the {vehicle} sideways across the street and slams it into the far curb",
+            "C2": "the tornado tips the {vehicle} over onto its side in the middle of the street",   # 17 Eki: C3, C6 çıktı
             "C4": "the {vehicle} slides along the street and slams into a parked car",
             "C5": "the {vehicle} is lifted off the road and flung down the street",
         }, {
-            "E1": "the tornado tears the roof off a house and scatters the pieces across the street",
-            "E2": "the tornado rips a billboard frame from its supports and throws it aside",   # 17 Eki: E3, E6 çıktı
+            "E1": "the tornado tears the roof off a waterfront building and scatters the pieces across the street",
+            "E2": "the tornado tears the roof off a waterfront restaurant and flings it across the road",   # 17 Eki: E3, E6
             "E4": "the tornado uproots a large tree and flings it through the air",
             "E5": "the tornado rips the front off a small shop, sending shutters and signs flying",
             # 18 Eki (2): Parti 2
             "E7": "the tornado shreds the top floor of a building across the street, debris spiraling up",
-        }, {("C2", "E1")},
-            {"E1": {"Residential coastal district"}}),
+        }, set(), {}),
         es.MARINA_TORNADO: ({
-            "Y1": "the {vehicle} is hit by flying debris and slides sideways across the quay",
+            # 23 Eki (hortum denetimi): Y1, Y3, Y5; Z1, Z2, Z3, Z6, Z7 yeni metin; Y3+Z4, Y3+Z2 eklendi
+            "Y1": "the tornado shoves the {vehicle} sideways across the quay toward the water's edge",
             "Y2": "the {vehicle} tips over onto its side on the quay road",
-            "Y3": "the {vehicle} slides along the quay and slams into a lamppost",
-            "Y5": "the {vehicle} is lifted off the quay road and flung into a stack of dock boxes",
+            "Y3": "the {vehicle} slides along the quay and slams into the front of the marina office",
+            "Y5": "the {vehicle} is lifted off the quay road and flung over the edge into the marina water",
             # 18 Eki (2): Parti 2
             "Y7": "the tornado rips the roof off the café across the quay and hurls it away",
             "Y8": "the tornado smashes into the quayside building and its front wall bursts outward",   # 17 Eki: Y4, Y6 çıktı
         }, {
-            "Z1": "the tornado tears the awning off the harbor café and flings it across the quay",
-            "Z2": "the tornado rips the front off a small kiosk, sending its shutters and signs flying",
-            "Z3": "a wall of dust and debris rolls across the quay and engulfs the café terrace",
+            "Z1": "the tornado rips the whole roof off the harbor café and flings it across the quay",
+            "Z2": "the tornado rips the front off the marina office, sending its shutters and furniture across the quay",
+            "Z3": "the tornado tears through the café terrace and hurls its heavy tables and chairs into the marina water",
             "Z4": "the tornado rips the roof off the marina office and scatters the pieces across the quay",
-            "Z6": "the tornado shatters the glass front of a quayside shop and hurls tables and chairs into the street",
+            "Z6": "the tornado bursts through the front of a quayside shop and hurls its contents across the quay",
             # 18 Eki (2): Parti 2
-            "Z7": "the tornado lifts the whole café terrace off the quay and scatters it across the road",
-        }, {("Y7", "Z4"), ("Y7", "Z1"), ("Y7", "Z3"), ("Y7", "Z7"), ("Y8", "Z2"), ("Y8", "Z6")}, {}),
+            "Z7": "the tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across the road",
+        }, {("Y7", "Z4"), ("Y7", "Z1"), ("Y7", "Z3"), ("Y7", "Z7"), ("Y8", "Z2"), ("Y8", "Z6"), ("Y3", "Z4"),
+            ("Y3", "Z2")}, {}),
         es.AVENUE: ({
             "P1": "the {vehicle} is shoved sideways across the avenue by the wind",
             "P2": "the {vehicle} tips over onto its side",   # 17 Eki: P3 çıktı
@@ -1392,15 +1394,17 @@ class TestTornadoStructure(unittest.TestCase):
 
     def test_variants_and_wrong_event(self):
         ok = {(es.LANDFALL, "C1"): "A gust shoves the SUV broadside across the street.",
-              (es.LANDFALL, "E2"): "The tornado wrenches a huge billboard off its frame and hurls it away.",
-              (es.MARINA_TORNADO, "Z1"): "The wind wrenches the café awning loose and hurls it over the quay.",
-              (es.MARINA_TORNADO, "Z3"): "A cloud of dust and debris sweeps over the quay, swallowing the terrace.",
+              # 23 Eki (hortum denetimi): E2, Z1, Z3, Y1 yeni metne göre
+              (es.LANDFALL, "E2"): "The tornado rips the roof off a seafront restaurant and hurls it across the road.",
+              (es.MARINA_TORNADO, "Z1"): "The tornado wrenches the roof off the harbor café and hurls it over the quay.",
+              (es.MARINA_TORNADO, "Z3"): "The tornado rips through the terrace and flings its heavy tables into the "
+                                         "harbor.",
               (es.AVENUE, "P5"): "The wind heaves the small car off the road and hurls it into a bus stop.",
               (es.AVENUE, "P4"): "A falling palm tree crashes onto the white van, crushing its roof.",
               (es.LANDFALL, "C4"): "The SUV skids across the road and crashes into a stationary car.",
               (es.LANDFALL, "E5"): "The tornado shears the front off a small store, launching its shutters.",
               (es.LANDFALL, "C5"): "The wind lifts the white van off the road and hurls it down the street.",
-              (es.MARINA_TORNADO, "Y1"): "Flying debris hammers the white van and it skids sideways across the quay.",
+              (es.MARINA_TORNADO, "Y1"): "The tornado pushes the white van broadside across the quay toward the water.",
               (es.AVENUE, "Q6"): "The tornado tears the shop awnings away and they whirl high above the road."}
         bad = {(es.LANDFALL, "E1"): "The tornado tears a billboard off its frame.",
                (es.MARINA_TORNADO, "Y3"): "The SUV is pushed along the quay into a stack of boxes.",
@@ -1439,14 +1443,16 @@ class TestTornadoStructure(unittest.TestCase):
                         longest = max(longest, len(prompt))
                         n += 1
         # 18 Eki (2): karaya vurma (19 + 16 + 19) × 4; marina 30 × 4; cadde 3 × 28 × 4
-        self.assertEqual(n, 216 + 120 + 336)
+        # 23 Eki (hortum denetimi): karaya vurma 3 × 20 × 4 (C2+E1 ve E1 nokta dışlaması çıktı); marina 28 × 4 (Y3+Z4, Y3+Z2)
+        self.assertEqual(n, 240 + 112 + 336)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
         def d3(e, spot):
             return {d for _, d in es.allowed_pairs(e, None, spot)}
-        self.assertNotIn("E1", d3(es.LANDFALL, "Residential coastal district"))
-        self.assertIn("E1", d3(es.LANDFALL, "Downtown city center"))
+        # 23 Eki: E1 artık "a waterfront building" (kameranın verandalı evi değil), kıyı mahallesinde de seçilir
+        for spot in sk.view_spots(es.LANDFALL, None):
+            self.assertEqual(d3(es.LANDFALL, spot), {"E1", "E2", "E4", "E5", "E7"})
         self.assertEqual(sk.view_spots(es.MARINA_TORNADO, None), ["High marina balcony"])
         self.assertEqual(d3(es.MARINA_TORNADO, "High marina balcony"), {"Z1", "Z2", "Z3", "Z4", "Z6", "Z7"})   # 18 Eki: Z7
         # 10 Eki, Bahadır: cadde kamerası yüksek balkonda, her madde üç noktada da seçilebilir (17 Eki: Q5 çıktı)
@@ -1520,8 +1526,9 @@ class TestTornadoStructure(unittest.TestCase):
                                                    "scattering shattered fragments into the air."))
         # 4 Eki kuru prova: doğru anlatılan Y3 reddediliyordu (Z3 yat maddesi marina yeniden tasarımında çıktı)
         y3 = es.EVENT_BEATS[es.MARINA_TORNADO]["slice_2"]["Y3"]["terms"]
-        for text in ("The wind hurls the SUV across the quay, crashing it into a steel lamppost.",
-                     "The wind forces the SUV along the quay, crashing it with a crunch into a lamppost."):
+        # 23 Eki: Y3 artık marina ofisinin önüne çarpar (önceki lamba direği)
+        for text in ("The wind hurls the SUV across the quay, crashing it into the marina office.",
+                     "The wind forces the SUV along the quay, crashing it with a crunch into the harbor office."):
             self.assertEqual(es.missing_term_groups(y3, text), [], text)
         for e in TORNADO:
             for beat in es.EVENT_BEATS[e]["slice_2"].values():
@@ -1620,7 +1627,8 @@ class TestMarinaRedesign(unittest.TestCase):
         # marina: 75'e kadar geçer, 76 ve üstü kalır (iki taraf da denenir)
         seen = set()
         for extra in range(0, 12):
-            n, rules = total_rules(es.MARINA_TORNADO, "High marina balcony", "Y2", "Z3", "SUV", extra)
+            # 23 Eki: Z3 uzadı (hortum denetimi), sınırı iki taraftan denemek için Z4
+            n, rules = total_rules(es.MARINA_TORNADO, "High marina balcony", "Y2", "Z4", "SUV", extra)
             seen.add(n)
             with self.subTest(event="marina", words=n):
                 self.assertEqual("total_words" in rules, not 40 <= n <= 75)
@@ -1635,12 +1643,13 @@ class TestMarinaRedesign(unittest.TestCase):
 
     def test_y1_y3_accept(self):
         b = es.EVENT_BEATS[es.MARINA_TORNADO]["slice_2"]
-        ok = {"Y1": ["The white van is hit by flying debris and slides sideways across the quay.",
-                     "Wreckage slams into the SUV, shoving it broadside along the quay.",
-                     "Flying debris pelts the pickup truck as it skids sideways over the wet stones."],
-              "Y3": ["The small car slides along the quay and slams into a lamppost.",
-                     "The SUV skids down the quay and crashes into a street light.",
-                     "The wind forces the white van along the quay until it hits a light pole."]}
+        # 23 Eki (hortum denetimi): Y1 hortum aracı suyun kenarına iter, Y3 araç marina ofisine çarpar
+        ok = {"Y1": ["The tornado shoves the white van sideways across the quay toward the water's edge.",
+                     "The vortex pushes the SUV broadside along the quay.",
+                     "The wind drags the pickup truck sideways over the wet stones toward the water."],
+              "Y3": ["The SUV slides along the quay and slams into the front of the marina office.",
+                     "The SUV skids down the quay and crashes into the harbor office.",
+                     "The wind forces the white van along the quay until it hits the clubhouse."]}
         bad = {"Y1": "Flying debris rains down on the white van.",
                "Y3": "The SUV slides along the quay into a stack of boxes."}
         for bid, texts in ok.items():
@@ -1653,13 +1662,14 @@ class TestMarinaRedesign(unittest.TestCase):
 
     def test_new_z_terms(self):
         b = es.EVENT_BEATS[es.MARINA_TORNADO]["slice_3"]
-        ok = {"Z2": "The tornado dislodges the kiosk front, its shutters cartwheeling away.",
+        # 23 Eki (hortum denetimi): Z2 marina ofisinin önü, Z6 dükkân önü (cam/masa grubu çıktı)
+        ok = {"Z2": "The tornado dislodges the marina office front, its shutters cartwheeling away.",
               "Z4": "The tornado peels the roof off the marina office, scattering pieces everywhere.",
-              "Z6": "The quayside shop's glass front shatters and tables and chairs fly into the street."}
+              "Z6": "The quayside shop's front shatters and its goods fly across the quay."}
         for bid, t in ok.items():
             with self.subTest(ok=bid):
                 self.assertEqual(es.missing_term_groups(b[bid]["terms"], t), [])
-        self.assertTrue(es.missing_term_groups(b["Z6"]["terms"], "The shop's glass front shatters."))
+        self.assertTrue(es.missing_term_groups(b["Z6"]["terms"], "The shop stands dark in the storm."))
         # yeni söküm listesi hortuma özel; heyelanın ortak _TEAR listesi değişmedi
         self.assertIn("dislodge", es._TORNADO_RIP)
         self.assertNotIn("dislodge", es._TEAR)
@@ -1690,9 +1700,10 @@ class TestMarinaRedesign(unittest.TestCase):
                   "drenched street.",
                   "The wind demolishes the shop window and flings tables and chairs.",
                   "The gust tears apart the shop's glass front, hurling tables.",
-                  "The glass front blew apart and chairs flew into the street.",
-                  "The glass front ruptures and chairs fly.",
-                  "The tornado pulverizes the window, scattering tables.",
+                  # 23 Eki: Z6 artık dükkânın kendisi (önceki cam ön yüz); bu üçünde "shop" eklendi
+                  "The shop front blew apart and chairs flew into the street.",
+                  "The shop's glass front ruptures and chairs fly.",
+                  "The tornado pulverizes the shop window, scattering tables.",
                   "The storm wreaks havoc on the shop window, throwing chairs.",
                   "The tornado wrecks the shop's glass front and tables tumble out."):
             with self.subTest(text=t):
@@ -3411,6 +3422,72 @@ class TestLandslideTestFixes23Oct(unittest.TestCase):
         self.assertIn("tips the first parked car over", b)
         self.assertNotRegex(b, r"\bflips?\b")
         self.assertEqual(ox.beat_conflicts(es.MUDSLIDE, "B"), {"H5", "M3"})
+
+
+class TestTornadoAudit23Oct(unittest.TestCase):
+    """23 Eki 2026, Bahadır (hortum denetimi): karaya vurur C1, C2, E1, E2; marina Y1, Y3, Y5, Z1, Z2, Z3, Z6, Z7 yeni
+    metin. Sebep ekranda (hortum), büyük hedef, ince hedef yok; marina açılış C ile kamyon türü araç seçilmez."""
+    OK = {(es.LANDFALL, "C1"): ["The tornado shoves the SUV sideways and slams it into the far curb.",
+                                "The vortex pushes the pickup truck broadside across the street."],
+          (es.LANDFALL, "C2"): ["The tornado tips the white van onto its side in the middle of the street.",
+                                "The vortex rolls the SUV over onto its side."],
+          (es.LANDFALL, "E1"): ["The tornado rips the roof off a waterfront building and scatters it.",
+                                "The vortex tears the roofing off a seafront block, strewing pieces across the road."],
+          (es.LANDFALL, "E2"): ["The tornado tears the roof off a waterfront restaurant and flings it away.",
+                                "The vortex rips the roof off a seafront diner and hurls it across the road."],
+          (es.MARINA_TORNADO, "Y1"): ["The tornado shoves the SUV sideways toward the water's edge.",
+                                      "The vortex drags the white van broadside across the quay."],
+          (es.MARINA_TORNADO, "Y3"): ["The pickup truck slides along the quay and crashes into the marina office.",
+                                      "The SUV skids across the quay and slams against the harbor office."],
+          (es.MARINA_TORNADO, "Y5"): ["The SUV is lifted off the quay and flung into the water.",
+                                      "The tornado hoists the white van and hurls it into the harbor."],
+          (es.MARINA_TORNADO, "Z1"): ["The tornado rips the whole roof off the harbor café and flings it away.",
+                                      "The vortex tears the roof off the café and hurls it across the quay."],
+          (es.MARINA_TORNADO, "Z2"): ["The tornado rips the front off the marina office, scattering its furniture.",
+                                      "The vortex tears the shutters off the harbor office and flings them away."],
+          (es.MARINA_TORNADO, "Z3"): ["The tornado tears through the café terrace and hurls its tables into the water.",
+                                      "The vortex flings heavy chairs from the terrace into the harbor."],
+          (es.MARINA_TORNADO, "Z6"): ["The tornado bursts through the front of a quayside shop and hurls its goods out.",
+                                      "The vortex rips open a quayside store and flings its contents across the quay."],
+          (es.MARINA_TORNADO, "Z7"): ["The tornado lifts the café's dark wooden pergola and smashes it across the road.",
+                                      "The vortex tears the heavy pergola off the terrace and hurls it onto the road."]}
+    ATMOSPHERE = "Dark clouds swirl above the quay as the wind howls."
+
+    def test_new_texts_gate(self):
+        for (e, bid), sents in self.OK.items():
+            slot = "slice_3" if bid[0] in "EZ" else "slice_2"
+            beat = es.EVENT_BEATS[e][slot][bid]
+            for s in sents:
+                with self.subTest(beat=bid, s=s):
+                    self.assertEqual(es.missing_term_groups(beat["terms"], s), [])
+            with self.subTest(beat=bid, atmosphere=True):
+                self.assertTrue(es.missing_term_groups(beat["terms"], self.ATMOSPHERE))
+            self.assertEqual(es.pool_lint_hits(beat["text"].replace("{vehicle}", "vehicle")), [], bid)
+            self.assertNotIn((e, bid), es.POOL_LINT_GRANDFATHERED)
+            if bid not in ("Y3", "Y5"):   # sebep ekranda: hortum öznede (Y3/Y5 araç kayar/fırlatılır)
+                self.assertIn("tornado", beat["text"], bid)
+
+    def test_exclusions(self):
+        import core.opening_axis as ox
+        self.assertEqual(es.EVENT_BEATS[es.LANDFALL]["excluded_pairs"], set())
+        self.assertEqual(es.EVENT_BEATS[es.LANDFALL]["excluded_spots"], {})
+        self.assertEqual(ox.beat_conflicts(es.LANDFALL, "C"), {"C2"})
+        self.assertEqual(ox.beat_conflicts(es.LANDFALL, "D"), {"E1", "E2"})
+        self.assertEqual(ox.beat_conflicts(es.LANDFALL, "C"), ox.candidate_beat_conflicts(es.LANDFALL, "C"))
+        m = es.EVENT_BEATS[es.MARINA_TORNADO]["excluded_pairs"]
+        self.assertTrue({("Y3", "Z4"), ("Y3", "Z2")} <= m)
+        self.assertEqual(len(m), 8)
+
+    def test_marina_opening_c_vehicle(self):
+        import core.opening_axis as ox
+        c = ox.text(es.MARINA_TORNADO, "C")
+        self.assertEqual(es.clashing_vehicles(es.MARINA_TORNADO, None, "Y1", "Z1", c), ["pickup truck", "delivery truck"])
+        for letter in ("A", "B", "D"):
+            self.assertEqual(es.clashing_vehicles(es.MARINA_TORNADO, None, "Y1", "Z1", ox.text(es.MARINA_TORNADO, letter)),
+                             [])
+        # şimdilik sadece marina: yamaç B ("cutting off a pickup truck") ve volkan bombaları D açılışı aynı
+        self.assertEqual(es.clashing_vehicles(es.VOLCANIC_BOMBS, None, "R1", "T1", ox.text(es.VOLCANIC_BOMBS, "D")), [])
+        self.assertEqual(es.SAME_KIND_OPENING_EVENTS, {es.MARINA_TORNADO})
 
 
 if __name__ == "__main__":

@@ -6207,35 +6207,35 @@
     "weather": "stormy late-afternoon light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y2+Z3|bystander_handheld",
-   "prompt": "0-4s: A violent tornado tears in from the sea onto the marina quay, ripping palms and umbrellas off the ground. Six pedestrians scramble for cover as the tornado hits. 4-9s: The pickup truck tips over onto its side on the quay road. 9-15s: A wall of dust and debris rolls across the quay and engulfs the café terrace. Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: A violent tornado tears in from the sea onto the marina quay, ripping palms and umbrellas off the ground. Six pedestrians scramble for cover as the tornado hits. 4-9s: The pickup truck tips over onto its side on the quay road. 9-15s: The tornado tears through the café terrace and hurls its heavy tables and chairs into the marina water. Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "10": {
    "axes": {
     "acilis": "C",
-    "beats": "Y3+Z4",
+    "beats": "Y3+Z7",
     "environment": "C",
     "fit_guard": false,
-    "kadraj": "balkon",
-    "kamera_modu": "A",
-    "kamera_noktasi": "High marina balcony",
+    "kadraj": "direk",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
     "key_visual": "The tornado drags a pickup truck along the quay.",
     "on_plan": null,
     "people": 4,
     "spot": "High marina balcony",
     "story_source": "fallback",
-    "vehicle": "pickup truck",
+    "vehicle": "SUV",
     "view": null,
     "weather": "howling wind and rain"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y3+Z4|bystander_handheld",
-   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Four pedestrians scramble for cover as the tornado hits. 4-9s: The pickup truck slides along the quay and slams into a lamppost. 9-15s: The tornado rips the roof off the marina office and scatters the pieces across the quay. Handheld footage filmed on a high balcony overlooking the marina and quay, eye level, normal lens; slight hand shake, the camera follows the tornado; no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a high balcony overlooking the marina and quay, eye level, normal lens; slight hand shake, the camera follows the tornado; no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y3+Z7|bystander_handheld",
+   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Four pedestrians scramble for cover as the tornado hits. 4-9s: The SUV slides along the quay and slams into the front of the marina office. 9-15s: The tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across the road. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "11": {
    "axes": {
     "acilis": "D",
-    "beats": "Y3+Z3",
+    "beats": "Y3+Z6",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -6250,14 +6250,14 @@
     "view": null,
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y3+Z3|bystander_handheld",
-   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Four people run from the tornado. 4-9s: The delivery truck slides along the quay and slams into a lamppost. 9-15s: A wall of dust and debris rolls across the quay and engulfs the café terrace. Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a luxury marina below white apartment blocks with palm trees and a waterfront restaurant terrace. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y3+Z6|bystander_handheld",
+   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Four people run from the tornado. 4-9s: The delivery truck slides along the quay and slams into the front of the marina office. 9-15s: The tornado bursts through the front of a quayside shop and hurls its contents across the quay. Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a luxury marina below white apartment blocks with palm trees and a waterfront restaurant terrace. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a luxury marina below white apartment blocks with palm trees and a waterfront restaurant terrace. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "12": {
    "axes": {
     "acilis": "A",
-    "beats": "Y5+Z4",
+    "beats": "Y5+Z7",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -6272,14 +6272,14 @@
     "view": null,
     "weather": "eerie yellow early-morning storm light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y5+Z4|bystander_handheld",
-   "prompt": "0-4s: A violent tornado tears in from the sea onto the marina quay, ripping palms and umbrellas off the ground. Four pedestrians scramble for cover as the tornado hits. 4-9s: The white van is lifted off the quay road and flung into a stack of dock boxes. 9-15s: The tornado rips the roof off the marina office and scatters the pieces across the quay. Handheld footage filmed on a high balcony overlooking the marina and quay, eye level, normal lens; slight hand shake, the camera follows the tornado; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y5+Z7|bystander_handheld",
+   "prompt": "0-4s: A violent tornado tears in from the sea onto the marina quay, ripping palms and umbrellas off the ground. Four pedestrians scramble for cover as the tornado hits. 4-9s: The white van is lifted off the quay road and flung over the edge into the marina water. 9-15s: The tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across the road. Handheld footage filmed on a high balcony overlooking the marina and quay, eye level, normal lens; slight hand shake, the camera follows the tornado; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony overlooking the marina and quay, eye level, normal lens; slight hand shake, the camera follows the tornado; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "13": {
    "axes": {
     "acilis": "D",
-    "beats": "Y5+Z4",
+    "beats": "Y5+Z7",
     "environment": "D",
     "fit_guard": false,
     "kadraj": "direk",
@@ -6294,8 +6294,8 @@
     "view": null,
     "weather": "eerie yellow early-morning storm light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y5+Z4|bystander_handheld",
-   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Four onlookers dash away from the swirling debris. 4-9s: The delivery truck is lifted off the quay road and flung into a stack of dock boxes. 9-15s: The tornado rips the roof off the marina office and scatters the pieces across the quay. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a resort marina of moored yachts, a boardwalk of shops and hotel balconies. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y5+Z7|bystander_handheld",
+   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Four onlookers dash away from the swirling debris. 4-9s: The delivery truck is lifted off the quay road and flung over the edge into the marina water. 9-15s: The tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across the road. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a resort marina of moored yachts, a boardwalk of shops and hotel balconies. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a resort marina of moored yachts, a boardwalk of shops and hotel balconies. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "14": {
@@ -6317,13 +6317,13 @@
     "weather": "heavy rain under black clouds"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y2+Z3|bystander_handheld",
-   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Five onlookers dash away from the swirling debris. 4-9s: The white van tips over onto its side on the quay road. 9-15s: A wall of dust and debris rolls across the quay and engulfs the café terrace. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a luxury marina below white apartment blocks with palm trees and a waterfront restaurant terrace. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Five onlookers dash away from the swirling debris. 4-9s: The white van tips over onto its side on the quay road. 9-15s: The tornado tears through the café terrace and hurls its heavy tables and chairs into the marina water. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a luxury marina below white apartment blocks with palm trees and a waterfront restaurant terrace. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a luxury marina below white apartment blocks with palm trees and a waterfront restaurant terrace. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "15": {
    "axes": {
     "acilis": "D",
-    "beats": "Y3+Z6",
+    "beats": "Y5+Z1",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -6338,14 +6338,14 @@
     "view": null,
     "weather": "howling wind and rain"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y3+Z6|bystander_handheld",
-   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Four onlookers run inland away from the tornado. 4-9s: The pickup truck slides along the quay and slams into a lamppost. 9-15s: The tornado shatters the glass front of a quayside shop and hurls tables and chairs into the street. Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y5+Z1|bystander_handheld",
+   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Four onlookers run inland away from the tornado. 4-9s: The pickup truck is lifted off the quay road and flung over the edge into the marina water. 9-15s: The tornado rips the whole roof off the harbor café and flings it across the quay. Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "16": {
    "axes": {
     "acilis": "B",
-    "beats": "Y3+Z4",
+    "beats": "Y3+Z7",
     "environment": "C",
     "fit_guard": false,
     "kadraj": "direk",
@@ -6360,8 +6360,8 @@
     "view": null,
     "weather": "howling wind and rain"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y3+Z4|bystander_handheld",
-   "prompt": "0-4s: The tornado reaches the marina and slams the moored yachts into one another. Six onlookers run inland away from the tornado. 4-9s: The white van slides along the quay and slams into a lamppost. 9-15s: The tornado rips the roof off the marina office and scatters the pieces across the quay. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y3+Z7|bystander_handheld",
+   "prompt": "0-4s: The tornado reaches the marina and slams the moored yachts into one another. Six onlookers run inland away from the tornado. 4-9s: The white van slides along the quay and slams into the front of the marina office. 9-15s: The tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across the road. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "17": {
@@ -6383,13 +6383,13 @@
     "weather": "eerie yellow early-morning storm light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y2+Z7|bystander_handheld",
-   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Four onlookers dash away from the swirling debris. 4-9s: The white van tips over onto its side on the quay road. 9-15s: The tornado lifts the whole café terrace off the quay and scatters it across the road. Handheld footage filmed on the flat rooftop of a marina hotel, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Four onlookers dash away from the swirling debris. 4-9s: The white van tips over onto its side on the quay road. 9-15s: The tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across the road. Handheld footage filmed on the flat rooftop of a marina hotel, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on the flat rooftop of a marina hotel, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "18": {
    "axes": {
     "acilis": "D",
-    "beats": "Y5+Z4",
+    "beats": "Y5+Z7",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -6404,14 +6404,14 @@
     "view": null,
     "weather": "a dark green storm light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y5+Z4|bystander_handheld",
-   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Five onlookers run inland away from the tornado. 4-9s: The SUV is lifted off the quay road and flung into a stack of dock boxes. 9-15s: The tornado rips the roof off the marina office and scatters the pieces across the quay. Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y5+Z7|bystander_handheld",
+   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Five onlookers run inland away from the tornado. 4-9s: The SUV is lifted off the quay road and flung over the edge into the marina water. 9-15s: The tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across the road. Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "19": {
    "axes": {
     "acilis": "A",
-    "beats": "Y3+Z6",
+    "beats": "Y5+Z1",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "pencere",
@@ -6426,8 +6426,8 @@
     "view": null,
     "weather": "eerie yellow early-morning storm light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y3+Z6|bystander_handheld",
-   "prompt": "0-4s: A violent tornado tears in from the sea onto the marina quay, ripping palms and umbrellas off the ground. Six residents flee from the tornado toward the buildings. 4-9s: The delivery truck slides along the quay and slams into a lamppost. 9-15s: The tornado shatters the glass front of a quayside shop and hurls tables and chairs into the street. Handheld footage filmed through an open upper-floor window across from the marina and quay, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y5+Z1|bystander_handheld",
+   "prompt": "0-4s: A violent tornado tears in from the sea onto the marina quay, ripping palms and umbrellas off the ground. Six residents flee from the tornado toward the buildings. 4-9s: The delivery truck is lifted off the quay road and flung over the edge into the marina water. 9-15s: The tornado rips the whole roof off the harbor café and flings it across the quay. Handheld footage filmed through an open upper-floor window across from the marina and quay, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from the marina and quay, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "2": {
@@ -6449,30 +6449,30 @@
     "weather": "a dark green storm light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y1+Z3|bystander_handheld",
-   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Four onlookers dash away from the swirling debris. 4-9s: The white van is hit by flying debris and slides sideways across the quay. 9-15s: A wall of dust and debris rolls across the quay and engulfs the café terrace. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a luxury marina below white apartment blocks with palm trees and a waterfront restaurant terrace. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Four onlookers dash away from the swirling debris. 4-9s: The tornado shoves the white van sideways across the quay toward the water's edge. 9-15s: The tornado tears through the café terrace and hurls its heavy tables and chairs into the marina water. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a luxury marina below white apartment blocks with palm trees and a waterfront restaurant terrace. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a luxury marina below white apartment blocks with palm trees and a waterfront restaurant terrace. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "20": {
    "axes": {
     "acilis": "C",
-    "beats": "Y5+Z4",
+    "beats": "Y5+Z7",
     "environment": "E",
     "fit_guard": false,
-    "kadraj": "pencere",
+    "kadraj": "direk",
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "The tornado drags a pickup truck along the quay.",
-    "on_plan": "pencere",
+    "on_plan": null,
     "people": 5,
     "spot": "High marina balcony",
     "story_source": "fallback",
-    "vehicle": "pickup truck",
+    "vehicle": "white van",
     "view": null,
     "weather": "eerie yellow early-morning storm light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y5+Z4|bystander_handheld",
-   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Five people run from the tornado. 4-9s: The pickup truck is lifted off the quay road and flung into a stack of dock boxes. 9-15s: The tornado rips the roof off the marina office and scatters the pieces across the quay. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y5+Z7|bystander_handheld",
+   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Five people sprint for cover from the tornado. 4-9s: The white van is lifted off the quay road and flung over the edge into the marina water. 9-15s: The tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across the road. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "3": {
    "axes": {
@@ -6493,7 +6493,7 @@
     "weather": "eerie yellow early-morning storm light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y2+Z7|bystander_handheld",
-   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Three people run from the tornado. 4-9s: The SUV tips over onto its side on the quay road. 9-15s: The tornado lifts the whole café terrace off the quay and scatters it across the road. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Three people run from the tornado. 4-9s: The SUV tips over onto its side on the quay road. 9-15s: The tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across the road. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "4": {
@@ -6515,13 +6515,13 @@
     "weather": "harsh bright midday sun under a towering storm cloud"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y1+Z4|bystander_handheld",
-   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Six onlookers run inland away from the tornado. 4-9s: The SUV is hit by flying debris and slides sideways across the quay. 9-15s: The tornado rips the roof off the marina office and scatters the pieces across the quay. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado crosses the marina, ripping planks off the wooden pier and tipping the sailboats onto their sides. Six onlookers run inland away from the tornado. 4-9s: The tornado shoves the SUV sideways across the quay toward the water's edge. 9-15s: The tornado rips the roof off the marina office and scatters the pieces across the quay. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "5": {
    "axes": {
     "acilis": "B",
-    "beats": "Y7+Z6",
+    "beats": "Y8+Z3",
     "environment": "D",
     "fit_guard": false,
     "kadraj": "direk",
@@ -6536,14 +6536,14 @@
     "view": null,
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y7+Z6|bystander_handheld",
-   "prompt": "0-4s: The tornado reaches the marina and slams the moored yachts into one another. Six onlookers run inland away from the tornado. 4-9s: The tornado rips the roof off the café across the quay and hurls it away. 9-15s: The tornado shatters the glass front of a quayside shop and hurls tables and chairs into the street. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a resort marina of moored yachts, a boardwalk of shops and hotel balconies. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y8+Z3|bystander_handheld",
+   "prompt": "0-4s: The tornado reaches the marina and slams the moored yachts into one another. Six onlookers run inland away from the tornado. 4-9s: The tornado smashes into the quayside building and its front wall bursts outward. 9-15s: The tornado tears through the café terrace and hurls its heavy tables and chairs into the marina water. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a resort marina of moored yachts, a boardwalk of shops and hotel balconies. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a resort marina of moored yachts, a boardwalk of shops and hotel balconies. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "6": {
    "axes": {
     "acilis": "C",
-    "beats": "Y7+Z2",
+    "beats": "Y8+Z1",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "direk",
@@ -6558,8 +6558,8 @@
     "view": null,
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y7+Z2|bystander_handheld",
-   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Three people sprint for cover from the tornado. 4-9s: The tornado rips the roof off the café across the quay and hurls it away. 9-15s: The tornado rips the front off a small kiosk, sending its shutters and signs flying. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y8+Z1|bystander_handheld",
+   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Three people sprint for cover from the tornado. 4-9s: The tornado smashes into the quayside building and its front wall bursts outward. 9-15s: The tornado rips the whole roof off the harbor café and flings it across the quay. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lake marina of wooden piers and motor boats below pine hills dotted with houses. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "7": {
@@ -6576,12 +6576,12 @@
     "people": 3,
     "spot": "High marina balcony",
     "story_source": "fallback",
-    "vehicle": "pickup truck",
+    "vehicle": "white van",
     "view": null,
     "weather": "heavy rain under black clouds"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y3+Z1|bystander_handheld",
-   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Three people run from the tornado. 4-9s: The pickup truck slides along the quay and slams into a lamppost. 9-15s: The tornado tears the awning off the harbor café and flings it across the quay. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Three residents flee from the tornado toward the buildings. 4-9s: The white van slides along the quay and slams into the front of the marina office. 9-15s: The tornado rips the whole roof off the harbor café and flings it across the quay. Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "8": {
@@ -6590,21 +6590,21 @@
     "beats": "Y3+Z1",
     "environment": "C",
     "fit_guard": false,
-    "kadraj": "direk",
-    "kamera_modu": null,
-    "kamera_noktasi": null,
+    "kadraj": "balkon",
+    "kamera_modu": "A",
+    "kamera_noktasi": "High marina balcony",
     "key_visual": "The tornado drags a pickup truck along the quay.",
     "on_plan": null,
     "people": 4,
     "spot": "High marina balcony",
     "story_source": "fallback",
-    "vehicle": "delivery truck",
+    "vehicle": "white van",
     "view": null,
     "weather": "harsh bright midday sun under a towering storm cloud"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y3+Z1|bystander_handheld",
-   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Four onlookers dash away from the swirling debris. 4-9s: The delivery truck slides along the quay and slams into a lamppost. 9-15s: The tornado tears the awning off the harbor café and flings it across the quay. Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Footage from a fixed high security camera on a tall pole above the marina, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Four people sprint for cover from the tornado. 4-9s: The white van slides along the quay and slams into the front of the marina office. 9-15s: The tornado rips the whole roof off the harbor café and flings it across the quay. Handheld footage filmed on a high balcony overlooking the marina and quay, eye level, normal lens; slight hand shake, the camera follows the tornado; no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on a high balcony overlooking the marina and quay, eye level, normal lens; slight hand shake, the camera follows the tornado; no zoom, no cuts, no person or face close to the camera. Setting: a small stone-walled harbor marina with sailboats and old townhouses behind it. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "9": {
    "axes": {
@@ -6612,28 +6612,28 @@
     "beats": "Y2+Z3",
     "environment": "A",
     "fit_guard": false,
-    "kadraj": "direk",
-    "kamera_modu": null,
-    "kamera_noktasi": null,
+    "kadraj": "balkon",
+    "kamera_modu": "B",
+    "kamera_noktasi": "High marina balcony",
     "key_visual": "The tornado drags a pickup truck along the quay.",
-    "on_plan": null,
+    "on_plan": "boş",
     "people": 4,
     "spot": "High marina balcony",
     "story_source": "fallback",
-    "vehicle": "delivery truck",
+    "vehicle": "white van",
     "view": null,
     "weather": "harsh bright midday sun under a towering storm cloud"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado crosses a marina quay|high marina balcony##Y2+Z3|bystander_handheld",
-   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Four onlookers dash away from the swirling debris. 4-9s: The delivery truck tips over onto its side on the quay road. 9-15s: A wall of dust and debris rolls across the quay and engulfs the café terrace. Footage from a fixed high security camera on a tall pole above the marina and quay, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Footage from a fixed high security camera on a tall pole above the marina and quay, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: The tornado drags a pickup truck along the quay. Four residents flee from the tornado toward the buildings. 4-9s: The white van tips over onto its side on the quay road. 9-15s: The tornado tears through the café terrace and hurls its heavy tables and chairs into the marina water. Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on a high balcony overlooking the marina, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   }
  },
  "Tornado making landfall": {
   "1": {
    "axes": {
     "acilis": "A",
-    "beats": "C2+E7",
+    "beats": "C2+E5",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -6648,14 +6648,14 @@
     "view": null,
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C2+E7|bystander_handheld",
-   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Six pedestrians scramble for cover as the tornado hits. 4-9s: The pickup truck tips over onto its side as roof tiles rain down around it. 9-15s: The tornado shreds the top floor of a building across the street, debris spiraling up. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C2+E5|bystander_handheld",
+   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Six pedestrians scramble for cover as the tornado hits. 4-9s: The tornado tips the pickup truck over onto its side in the middle of the street. 9-15s: The tornado rips the front off a small shop, sending shutters and signs flying. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "10": {
    "axes": {
     "acilis": "B",
-    "beats": "C4+E7",
+    "beats": "C4+E5",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -6670,14 +6670,14 @@
     "view": null,
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C4+E7|bystander_handheld",
-   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Three onlookers run inland away from the tornado. 4-9s: The SUV slides along the street and slams into a parked car. 9-15s: The tornado shreds the top floor of a building across the street, debris spiraling up. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C4+E5|bystander_handheld",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Three onlookers run inland away from the tornado. 4-9s: The SUV slides along the street and slams into a parked car. 9-15s: The tornado rips the front off a small shop, sending shutters and signs flying. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "11": {
    "axes": {
     "acilis": "B",
-    "beats": "C5+E5",
+    "beats": "C4+E7",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -6692,42 +6692,42 @@
     "view": null,
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C5+E5|bystander_handheld",
-   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Four people run from the tornado. 4-9s: The delivery truck is lifted off the road and flung down the street. 9-15s: The tornado rips the front off a small shop, sending shutters and signs flying. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C4+E7|bystander_handheld",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Four people run from the tornado. 4-9s: The delivery truck slides along the street and slams into a parked car. 9-15s: The tornado shreds the top floor of a building across the street, debris spiraling up. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "12": {
    "axes": {
-    "acilis": "D",
-    "beats": "C4+E7",
-    "environment": "C",
+    "acilis": "A",
+    "beats": "C5+E2",
+    "environment": "A",
     "fit_guard": false,
-    "kadraj": "çatı",
+    "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": "Downtown city center",
-    "key_visual": "The tornado makes landfall and tears the solar panels off the roof of the first house, sending them spinning through the air.",
-    "on_plan": "boş",
-    "people": 6,
+    "kamera_noktasi": "Beachfront promenade",
+    "key_visual": "A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air.",
+    "on_plan": "korkuluk",
+    "people": 4,
     "spot": "Residential coastal district",
     "story_source": "fallback",
-    "vehicle": "delivery truck",
+    "vehicle": "white van",
     "view": null,
     "weather": "eerie yellow early-morning storm light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C4+E7|bystander_handheld",
-   "prompt": "0-4s: The tornado makes landfall and tears the solar panels off the roof of the first house, sending them spinning through the air. Six people sprint for cover from the tornado. 4-9s: The delivery truck slides along the street and slams into a parked car. 9-15s: The tornado shreds the top floor of a building across the street, debris spiraling up. Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C5+E2|bystander_handheld",
+   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Four pedestrians scramble for cover as the tornado hits. 4-9s: The white van is lifted off the road and flung down the street. 9-15s: The tornado tears the roof off a waterfront restaurant and flings it across the road. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "13": {
    "axes": {
-    "acilis": "C",
-    "beats": "C2+E4",
+    "acilis": "B",
+    "beats": "C2+E1",
     "environment": "D",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "The tornado makes landfall, crosses the seafront road and flips a parked car onto its side.",
+    "key_visual": "The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air.",
     "on_plan": "boş",
     "people": 4,
     "spot": "Residential coastal district",
@@ -6736,20 +6736,20 @@
     "view": null,
     "weather": "eerie yellow early-morning storm light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C2+E4|bystander_handheld",
-   "prompt": "0-4s: The tornado makes landfall, crosses the seafront road and flips a parked car onto its side. Four onlookers run inland away from the tornado. 4-9s: The delivery truck tips over onto its side as roof tiles rain down around it. 9-15s: The tornado uproots a large tree and flings it through the air. Handheld footage filmed on a flat rooftop above the waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a beach suburb of wooden houses on stilts with porches and pickup trucks. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C2+E1|bystander_handheld",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Four onlookers run inland away from the tornado. 4-9s: The tornado tips the delivery truck over onto its side in the middle of the street. 9-15s: The tornado tears the roof off a waterfront building and scatters the pieces across the street. Handheld footage filmed on a flat rooftop above the waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a beach suburb of wooden houses on stilts with porches and pickup trucks. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a flat rooftop above the waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a beach suburb of wooden houses on stilts with porches and pickup trucks. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "14": {
    "axes": {
-    "acilis": "D",
-    "beats": "C2+E7",
+    "acilis": "B",
+    "beats": "C2+E5",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "pencere",
     "kamera_modu": null,
     "kamera_noktasi": "Residential coastal district",
-    "key_visual": "The tornado makes landfall and tears the solar panels off the roof of the first house, sending them spinning through the air.",
+    "key_visual": "The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air.",
     "on_plan": "pencere",
     "people": 5,
     "spot": "Beachfront promenade",
@@ -6758,14 +6758,14 @@
     "view": null,
     "weather": "heavy rain under black clouds"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C2+E7|bystander_handheld",
-   "prompt": "0-4s: The tornado makes landfall and tears the solar panels off the roof of the first house, sending them spinning through the air. Five onlookers dash away from the swirling debris. 4-9s: The white van tips over onto its side as roof tiles rain down around it. 9-15s: The tornado shreds the top floor of a building across the street, debris spiraling up. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C2+E5|bystander_handheld",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Five onlookers dash away from the swirling debris. 4-9s: The tornado tips the white van over onto its side in the middle of the street. 9-15s: The tornado rips the front off a small shop, sending shutters and signs flying. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "15": {
    "axes": {
     "acilis": "B",
-    "beats": "C5+E4",
+    "beats": "C5+E2",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "balkon",
@@ -6780,20 +6780,20 @@
     "view": null,
     "weather": "howling wind and rain"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C5+E4|bystander_handheld",
-   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Four onlookers run inland away from the tornado. 4-9s: The pickup truck is lifted off the road and flung down the street. 9-15s: The tornado uproots a large tree and flings it through the air. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C5+E2|bystander_handheld",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Four onlookers run inland away from the tornado. 4-9s: The pickup truck is lifted off the road and flung down the street. 9-15s: The tornado tears the roof off a waterfront restaurant and flings it across the road. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "16": {
    "axes": {
-    "acilis": "D",
-    "beats": "C5+E7",
+    "acilis": "B",
+    "beats": "C5+E1",
     "environment": "C",
     "fit_guard": false,
     "kadraj": "direk",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "The tornado makes landfall and tears the solar panels off the roof of the first house, sending them spinning through the air.",
+    "key_visual": "The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air.",
     "on_plan": null,
     "people": 6,
     "spot": "Residential coastal district",
@@ -6802,21 +6802,21 @@
     "view": null,
     "weather": "howling wind and rain"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C5+E7|bystander_handheld",
-   "prompt": "0-4s: The tornado makes landfall and tears the solar panels off the roof of the first house, sending them spinning through the air. Six onlookers run inland away from the tornado. 4-9s: The white van is lifted off the road and flung down the street. 9-15s: The tornado shreds the top floor of a building across the street, debris spiraling up. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C5+E1|bystander_handheld",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Six onlookers run inland away from the tornado. 4-9s: The white van is lifted off the road and flung down the street. 9-15s: The tornado tears the roof off a waterfront building and scatters the pieces across the street. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "17": {
    "axes": {
     "acilis": "B",
-    "beats": "C4+E1",
+    "beats": "C2+E7",
     "environment": "B",
     "fit_guard": false,
-    "kadraj": "çatı",
+    "kadraj": "pencere",
     "kamera_modu": null,
-    "kamera_noktasi": "Downtown city center",
+    "kamera_noktasi": "Residential coastal district",
     "key_visual": "The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air.",
-    "on_plan": "boş",
+    "on_plan": "pencere",
     "people": 5,
     "spot": "Downtown city center",
     "story_source": "fallback",
@@ -6824,14 +6824,14 @@
     "view": null,
     "weather": "heavy rain under black clouds"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C4+E1|bystander_handheld",
-   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Five onlookers run inland away from the tornado. 4-9s: The white van slides along the street and slams into a parked car. 9-15s: The tornado tears the roof off a house and scatters the pieces across the street. Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C2+E7|bystander_handheld",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Five onlookers run inland away from the tornado. 4-9s: The tornado tips the white van over onto its side in the middle of the street. 9-15s: The tornado shreds the top floor of a building across the street, debris spiraling up. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "18": {
    "axes": {
     "acilis": "A",
-    "beats": "C5+E1",
+    "beats": "C4+E7",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "direk",
@@ -6846,20 +6846,20 @@
     "view": null,
     "weather": "a dark green storm light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C5+E1|bystander_handheld",
-   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Four onlookers run inland away from the tornado. 4-9s: The white van is lifted off the road and flung down the street. 9-15s: The tornado tears the roof off a house and scatters the pieces across the street. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C4+E7|bystander_handheld",
+   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Four onlookers run inland away from the tornado. 4-9s: The white van slides along the street and slams into a parked car. 9-15s: The tornado shreds the top floor of a building across the street, debris spiraling up. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "19": {
    "axes": {
-    "acilis": "C",
-    "beats": "C5+E4",
+    "acilis": "B",
+    "beats": "C5+E2",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "pencere",
     "kamera_modu": null,
     "kamera_noktasi": "Residential coastal district",
-    "key_visual": "The tornado makes landfall, crosses the seafront road and flips a parked car onto its side.",
+    "key_visual": "The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air.",
     "on_plan": "pencere",
     "people": 4,
     "spot": "Downtown city center",
@@ -6868,8 +6868,8 @@
     "view": null,
     "weather": "howling wind and rain"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C5+E4|bystander_handheld",
-   "prompt": "0-4s: The tornado makes landfall, crosses the seafront road and flips a parked car onto its side. Four pedestrians scramble for cover as the tornado hits. 4-9s: The pickup truck is lifted off the road and flung down the street. 9-15s: The tornado uproots a large tree and flings it through the air. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C5+E2|bystander_handheld",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Four pedestrians scramble for cover as the tornado hits. 4-9s: The pickup truck is lifted off the road and flung down the street. 9-15s: The tornado tears the roof off a waterfront restaurant and flings it across the road. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "2": {
@@ -6891,13 +6891,13 @@
     "weather": "a dark green storm light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C1+E4|bystander_handheld",
-   "prompt": "0-4s: The tornado makes landfall, crosses the seafront road and flips a parked car onto its side. Four onlookers dash away from the swirling debris. 4-9s: The white van is shoved sideways across the street by the wind. 9-15s: The tornado uproots a large tree and flings it through the air. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado makes landfall, crosses the seafront road and flips a parked car onto its side. Four onlookers dash away from the swirling debris. 4-9s: The tornado shoves the white van sideways across the street and slams it into the far curb. 9-15s: The tornado uproots a large tree and flings it through the air. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "20": {
    "axes": {
     "acilis": "A",
-    "beats": "C2+E7",
+    "beats": "C2+E5",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "çatı",
@@ -6912,14 +6912,14 @@
     "view": null,
     "weather": "heavy rain under black clouds"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C2+E7|bystander_handheld",
-   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Five people run from the tornado. 4-9s: The pickup truck tips over onto its side as roof tiles rain down around it. 9-15s: The tornado shreds the top floor of a building across the street, debris spiraling up. Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C2+E5|bystander_handheld",
+   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Five people run from the tornado. 4-9s: The tornado tips the pickup truck over onto its side in the middle of the street. 9-15s: The tornado rips the front off a small shop, sending shutters and signs flying. Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "3": {
    "axes": {
     "acilis": "A",
-    "beats": "C4+E4",
+    "beats": "C4+E2",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "çatı",
@@ -6934,8 +6934,8 @@
     "view": null,
     "weather": "eerie yellow early-morning storm light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C4+E4|bystander_handheld",
-   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Three people run from the tornado. 4-9s: The SUV slides along the street and slams into a parked car. 9-15s: The tornado uproots a large tree and flings it through the air. Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C4+E2|bystander_handheld",
+   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Three people run from the tornado. 4-9s: The SUV slides along the street and slams into a parked car. 9-15s: The tornado tears the roof off a waterfront restaurant and flings it across the road. Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "4": {
@@ -6957,13 +6957,13 @@
     "weather": "harsh bright midday sun under a towering storm cloud"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C1+E5|bystander_handheld",
-   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Six onlookers run inland away from the tornado. 4-9s: The SUV is shoved sideways across the street by the wind. 9-15s: The tornado rips the front off a small shop, sending shutters and signs flying. Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Six onlookers run inland away from the tornado. 4-9s: The tornado shoves the SUV sideways across the street and slams it into the far curb. 9-15s: The tornado rips the front off a small shop, sending shutters and signs flying. Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a flat rooftop above the downtown waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "5": {
    "axes": {
     "acilis": "A",
-    "beats": "C4+E4",
+    "beats": "C4+E2",
     "environment": "E",
     "fit_guard": false,
     "kadraj": "direk",
@@ -6978,20 +6978,20 @@
     "view": null,
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C4+E4|bystander_handheld",
-   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Six onlookers run inland away from the tornado. 4-9s: The pickup truck slides along the street and slams into a parked car. 9-15s: The tornado uproots a large tree and flings it through the air. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C4+E2|bystander_handheld",
+   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Six onlookers run inland away from the tornado. 4-9s: The pickup truck slides along the street and slams into a parked car. 9-15s: The tornado tears the roof off a waterfront restaurant and flings it across the road. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "6": {
    "axes": {
-    "acilis": "A",
-    "beats": "C5+E2",
+    "acilis": "C",
+    "beats": "C5+E1",
     "environment": "C",
     "fit_guard": false,
     "kadraj": "direk",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air.",
+    "key_visual": "The tornado makes landfall, crosses the seafront road and flips a parked car onto its side.",
     "on_plan": null,
     "people": 3,
     "spot": "Downtown city center",
@@ -7000,14 +7000,14 @@
     "view": null,
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C5+E2|bystander_handheld",
-   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Three people sprint for cover from the tornado. 4-9s: The white van is lifted off the road and flung down the street. 9-15s: The tornado rips a billboard frame from its supports and throws it aside. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C5+E1|bystander_handheld",
+   "prompt": "0-4s: The tornado makes landfall, crosses the seafront road and flips a parked car onto its side. Three people sprint for cover from the tornado. 4-9s: The white van is lifted off the road and flung down the street. 9-15s: The tornado tears the roof off a waterfront building and scatters the pieces across the street. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "7": {
    "axes": {
     "acilis": "B",
-    "beats": "C5+E2",
+    "beats": "C4+E4",
     "environment": "C",
     "fit_guard": false,
     "kadraj": "pencere",
@@ -7022,14 +7022,14 @@
     "view": null,
     "weather": "heavy rain under black clouds"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C5+E2|bystander_handheld",
-   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Three people run from the tornado. 4-9s: The pickup truck is lifted off the road and flung down the street. 9-15s: The tornado rips a billboard frame from its supports and throws it aside. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C4+E4|bystander_handheld",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Three people run from the tornado. 4-9s: The pickup truck slides along the street and slams into a parked car. 9-15s: The tornado uproots a large tree and flings it through the air. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a harbor town of colorful terraced houses along a stone quay with small sailboats. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "8": {
    "axes": {
     "acilis": "C",
-    "beats": "C4+E5",
+    "beats": "C4+E4",
     "environment": "B",
     "fit_guard": false,
     "kadraj": "direk",
@@ -7044,20 +7044,20 @@
     "view": null,
     "weather": "harsh bright midday sun under a towering storm cloud"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C4+E5|bystander_handheld",
-   "prompt": "0-4s: The tornado makes landfall, crosses the seafront road and flips a parked car onto its side. Four onlookers dash away from the swirling debris. 4-9s: The delivery truck slides along the street and slams into a parked car. 9-15s: The tornado rips the front off a small shop, sending shutters and signs flying. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C4+E4|bystander_handheld",
+   "prompt": "0-4s: The tornado makes landfall, crosses the seafront road and flips a parked car onto its side. Four onlookers dash away from the swirling debris. 4-9s: The delivery truck slides along the street and slams into a parked car. 9-15s: The tornado uproots a large tree and flings it through the air. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "9": {
    "axes": {
-    "acilis": "C",
-    "beats": "C4+E2",
+    "acilis": "B",
+    "beats": "C2+E5",
     "environment": "A",
     "fit_guard": false,
     "kadraj": "direk",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "The tornado makes landfall, crosses the seafront road and flips a parked car onto its side.",
+    "key_visual": "The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air.",
     "on_plan": null,
     "people": 4,
     "spot": "Residential coastal district",
@@ -7066,8 +7066,8 @@
     "view": null,
     "weather": "harsh bright midday sun under a towering storm cloud"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C4+E2|bystander_handheld",
-   "prompt": "0-4s: The tornado makes landfall, crosses the seafront road and flips a parked car onto its side. Four onlookers dash away from the swirling debris. 4-9s: The delivery truck slides along the street and slams into a parked car. 9-15s: The tornado rips a billboard frame from its supports and throws it aside. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C2+E5|bystander_handheld",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Four onlookers dash away from the swirling debris. 4-9s: The tornado tips the delivery truck over onto its side in the middle of the street. 9-15s: The tornado rips the front off a small shop, sending shutters and signs flying. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   }
  },

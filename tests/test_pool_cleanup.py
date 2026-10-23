@@ -180,7 +180,8 @@ class TestPoolLint(unittest.TestCase):
     def test_grandfather_list_is_exact(self):
         # her muafiyetin gerekçesi var; havuzda olmayan ya da artık ihlal etmeyen beat muaf kalamaz
         # 18 Eki (2): çıkış bekleyen 6 lint muafiyeti çıktı. 22 Eki: yamaç R2, S4 ve köy K3 yeni metinle ihlal etmiyor
-        self.assertEqual(len(es.POOL_LINT_GRANDFATHERED), 22)
+        # 23 Eki (hortum denetimi): marina Y3, Z1, Z2, Z6 yeni metin, korumaları kalktı
+        self.assertEqual(len(es.POOL_LINT_GRANDFATHERED), 18)
         for (event, bid), why in es.POOL_LINT_GRANDFATHERED.items():
             with self.subTest(beat=(event, bid)):
                 self.assertTrue(why.startswith(("korunan", "denetimde", "çıkış bekliyor")), why)
@@ -498,8 +499,11 @@ PARTI2 = {   # (olay, dilim, kimlik): (metin, GPT tarzı doğru anlatım)
                                             "The tornado tears the roof off the café across the quay and flings it away."),
     (es.MARINA_TORNADO, "slice_2", "Y8"): ("the tornado smashes into the quayside building and its front wall bursts outward",
                                             "The tornado slams into the quayside building, blowing its front wall outward."),
-    (es.MARINA_TORNADO, "slice_3", "Z7"): ("the tornado lifts the whole café terrace off the quay and scatters it across the "
-                                           "road", "The tornado lifts the café terrace off the quay and scatters it over the road."),
+    # 23 Eki (hortum denetimi): Z7 pergola (önceki "the tornado lifts the whole café terrace off the quay and scatters it
+    # across the road"; teras zemin, kalkmaz). Onaylı metin 18 kelime: Parti 2'nin 16 kelime sınırı bu maddede 18
+    (es.MARINA_TORNADO, "slice_3", "Z7"): ("the tornado lifts the café's heavy dark wooden pergola off the terrace and smashes "
+                                           "it across the road",
+                                           "The tornado tears the café's dark pergola off the terrace and hurls it onto the road."),
     (es.AVENUE, "slice_2", "P7"): ("the tornado flings a large truck across the avenue into the front of a building",
                                     "The tornado hurls a large truck across the avenue into the front of a building."),
     (es.EARTHQUAKE_APARTMENT, "slice_3", "Q5"): ("the top floors of the apartment block across the street collapse straight "
@@ -550,11 +554,15 @@ class TestParti2(unittest.TestCase):
                     self.assertTrue(es.allowed_pairs(e, view, spot), (e, spot))
 
 
+# 23 Eki (hortum denetimi): Bahadır'ın onayladığı yeni metin 16 kelimeyi aşıyor; kısaltılmadı, sınır bu maddede açık
+PARTI2_LONG = {(es.MARINA_TORNADO, "Z7"): 18}
+
+
 def _make_parti2_test(event, slot, bid, text, para):
     def test(self):
         beat = es.EVENT_BEATS[event][slot][bid]
         self.assertEqual(beat["text"], text)
-        self.assertLessEqual(len(text.replace("{vehicle}", "x").split()), 16)
+        self.assertLessEqual(len(text.replace("{vehicle}", "x").split()), PARTI2_LONG.get((event, bid), 16))
         self.assertEqual(es.pool_lint_hits(text.replace("{vehicle}", "vehicle")), [])
         self.assertNotIn(bid, es.RETIRED_BEATS.get(event, {}))
         for code, terms, *_ in es.EVENT_BANNED_WORDS.get(event, ()):

@@ -323,6 +323,32 @@ class TestFlow(unittest.TestCase):
                 self.assertTrue(seen)
                 self.assertFalse({v for v in seen if "truck" in v.lower()}, seen)
 
+    def test_marina_opening_c_never_gets_truck_vehicle(self):
+        # 23 Eki, Bahadır (hortum denetimi): marina açılış C "drags a pickup truck along the quay" ile kamyon türü araç
+        # seçilmez (araç açılıştan sonra yeniden seçilir)
+        import core.opening_axis as ox
+        bad = {"slice_1_rest": "x y z w v u t.", "slice_2": "nothing.", "slice_3": "nothing."}
+        seen = set()
+        for _ in range(8):
+            es._BEAT_MEMORY.clear()
+            with patch.object(es, "choose_beats", lambda *a, **k: ("Y1", "Z1")), \
+                    patch.object(ox, "choose", lambda *a, **k: ("C", [])), \
+                    patch.object(es, "choose_event_vehicle", side_effect=self._truck_first()):
+                scene, _ = self.run_scene("coastal_tornado_landfall", es.MARINA_TORNADO, [bad])
+            spec = scene["structure"]["spec"]
+            self.assertEqual(spec["opening"], "C")
+            seen.add(spec["vehicle"])
+        self.assertTrue(seen)
+        self.assertFalse({v for v in seen if "truck" in v}, seen)
+
+    @staticmethod
+    def _truck_first():
+        real = es.choose_event_vehicle
+
+        def pick(event, rng=None, used=None, exclude=()):
+            return "pickup truck" if not exclude else real(event, rng, used, exclude)
+        return pick
+
     def test_hard_violation_twice_falls_back(self):
         import core.creative_pipeline as cp
         bad = {"slice_1_rest": "Three people run away right below the balcony.",

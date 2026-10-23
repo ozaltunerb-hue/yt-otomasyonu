@@ -55,6 +55,10 @@ def current(r) -> dict:
 # artık eski kapının reddettiği cümle değil; bu testte atlanır, kayıt dosyada kalır.
 REWRITTEN = {(es.MUDSLIDE, b) for b in ("H2", "H4", "H6", "M3", "M6")} | \
             {(es.SLOPE, b) for b in ("R2", "R4", "R6", "S4")} | {(es.VILLAGE, b) for b in ("K3", "L5", "L6")}
+# 23 Eki (hortum denetimi): karaya vurur ve marinada metni değişen beat'ler. Eski metne göre kaydedilen cümleler (ör. Z1
+# "awning") yeni maddeyi anlatmıyor; iki testte de atlanır, kayıt dosyada kalır.
+REWRITTEN_TORNADO = {(es.LANDFALL, b) for b in ("C1", "C2", "E1", "E2")} |                     {(es.MARINA_TORNADO, b) for b in ("Y1", "Y3", "Y5", "Z1", "Z2", "Z3", "Z6", "Z7")}
+REWRITTEN = REWRITTEN | REWRITTEN_TORNADO
 
 
 def slot_of(event, bid):
@@ -95,7 +99,7 @@ class TestRejectedReal(unittest.TestCase):
         # 17 Eki: çıkarılan maddelerin kayıtları (ateş hortumu T3/U3/U4, heyelan S6 ...) atlanır, sayısı kilitli
         self.assertEqual(len(skipped), 30, sorted({(r["event"][:20], r["beat"]) for r in skipped}))
         for r in data:
-            if retired(r):
+            if retired(r) or (r["event"], r["beat"]) in REWRITTEN_TORNADO:
                 continue
             r = current(r)
             e, bid, text = r["event"], r["beat"], r["text"]

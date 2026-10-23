@@ -968,6 +968,14 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
             scene_env = sv.ENV_A
             opening, excluded["acilis"] = ox.choose(event, scene_env, b2, b3, ah.values(ev_hist, "acilis"),
                                                     sv.side_rng("acilis"))
+    # 23 Eki: açılıştaki sabit araçla aynı türde araç seçilmişse (marina C pickup truck) araç yeniden seçilir
+    if vehicle is not None and opening:
+        clash_o = es.clashing_vehicles(event, view, b2, b3, ox.text(event, opening))
+        if vehicle in clash_o:
+            vehicle = (_with_used(es.choose_vehicle, view, used=used_vehicle, exclude=clash_o) if view is not None
+                       else _with_used(es.choose_event_vehicle, event, used=used_vehicle, exclude=clash_o))
+            excluded["vehicle"] = es.lru_axis([v for v, _ in es.event_vehicles(event, view) if v not in clash_o],
+                                              used_vehicle)[1]
     blocked = sv.excluded_positions(event, scene_env)
     frame_rng = fx.side_rng()
     frame, frame_excluded = fx.choose_frame(event, spot, pool, risky, ev_hist, frame_rng, blocked)

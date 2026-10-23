@@ -321,6 +321,10 @@ _CRASH_DOWN = ("crash", "slam", "smash", "land", "drop", "plunge", "plummet", "c
 # Marina söküm/fırlatma (4 Eki, Bahadır): hortuma özel; heyelanın ortak _TEAR listesi değişmez
 _TORNADO_RIP = ("tear", "tore", "torn", "rip", "wrench", "strip", "peel", "dislodge", "snap", "break", "broke",
                 "sweep", "swept", "carry", "carried") + _FLING + _AIRBORNE
+# 23 Eki (hortum denetimi): marina ofisi (Y3, Z2) ve marina suyu (Y5, Z3); sadece marina girdilerinde
+_MARINA_OFFICE = ("office", "marina office", "harbor office", "harbour office", "harbormaster", "harbourmaster",
+                  "clubhouse", "building")
+_MARINA_WATER = ("water", "sea", "harbor", "harbour", "basin", "splash")
 _DOWNHILL = ("downhill", "down the hill", "down the slope", "down the street", "down the lane", "along the lane",
              "down the road", "along the road")
 # Yangın (TASLAK, 8 Eki, Bahadır): yangına özel YENİ listeler; mevcut sel/heyelan/hortum listelerine dokunulmaz ve
@@ -1125,10 +1129,13 @@ EVENT_BEATS = {
     # ── Hortum (TASLAK, 4 Eki, Bahadır hazırlığı; onay bekliyor) ──
     LANDFALL: {
         "slice_2": {
-            "C1": {"text": "the {vehicle} is shoved sideways across the street by the wind",
+            # 23 Eki, Bahadır (hortum denetimi): C1, C2, E1, E2 metni değişti, kodlar aynı (sebep ekranda: hortum).
+            # Önceki C1 "the {vehicle} is shoved sideways across the street by the wind", C2 "the {vehicle} tips over
+            # onto its side as roof tiles rain down around it"
+            "C1": {"text": "the tornado shoves the {vehicle} sideways across the street and slams it into the far curb",
                    "terms": [_SIDEWAYS, _DRAG + _BLOW]},
-            "C2": {"text": "the {vehicle} tips over onto its side as roof tiles rain down around it",
-                   "terms": [_TIP, ("tile", "roof", "shingle", "slate")]},
+            "C2": {"text": "the tornado tips the {vehicle} over onto its side in the middle of the street",
+                   "terms": [_TIP]},
             "C4": {"text": "the {vehicle} slides along the street and slams into a parked car",
                    "terms": [_DRAG + ("skid",), _HIT, ("parked", "another", "second", "other", "next",
                                                         "stationary")]},
@@ -1138,11 +1145,13 @@ EVENT_BEATS = {
                    "terms": [_LIFT_AIR, _FLING + ("hurtle", "tumble", "slam", "crash")]},
         },
         "slice_3": {
-            "E1": {"text": "the tornado tears the roof off a house and scatters the pieces across the street",
+            # Önceki E1 "the tornado tears the roof off a house and scatters the pieces across the street" (şehir
+            # merkezinde ev yok), E2 "the tornado rips a billboard frame from its supports and throws it aside" (ince)
+            "E1": {"text": "the tornado tears the roof off a waterfront building and scatters the pieces across the "
+                           "street",
                    "terms": [("roof", "roofs", "roofing"), _TEAR + ("scatter", "peel", "strip", "rip off")]},
-            "E2": {"text": "the tornado rips a billboard frame from its supports and throws it aside",
-                   "terms": [("billboard", "hoarding", "advertising board", "sign frame", "signboard"),
-                             _TEAR + _FLING]},
+            "E2": {"text": "the tornado tears the roof off a waterfront restaurant and flings it across the road",
+                   "terms": [("roof", "roofs", "roofing"), _TEAR + _FLING + ("rip off",)]},
             "E4": {"text": "the tornado uproots a large tree and flings it through the air",
                    "terms": [("tree", "trees"), _UPROOT + _FLING]},
             "E5": {"text": "the tornado rips the front off a small shop, sending shutters and signs flying",
@@ -1153,26 +1162,30 @@ EVENT_BEATS = {
                    "terms": [("floor", "storey", "story", "top floor", "building", "upper floor"),
                              _TORNADO_RIP + ("shred", "spiral", "rip apart")]},   # "tear apart" sadece marina Z6
         },
-        # Aynı nesne iki kez: çatı (C2/E1). 4 Eki: C5/C6 uçma maddesi oldu, ağaç (C5/E4) ve dükkân önü (C6/E5)
-        # artık ortak nesne değil, o iki çift kalktı
-        "excluded_pairs": {("C2", "E1")},   # 18 Eki (2): E7 bina üst katı, 4-9s'de bina yok
+        # 4 Eki: C5/C6 uçma maddesi oldu, ağaç (C5/E4) ve dükkân önü (C6/E5) artık ortak nesne değil, o iki çift kalktı.
+        # 18 Eki (2): E7 bina üst katı, 4-9s'de bina yok. 23 Eki: (C2, E1) çatı iki kez çıktı (C2'de kiremit yok); E1 ve
+        # E2 (ikisi de çatı) aynı dilimde, birlikte seçilmez
+        "excluded_pairs": set(),
         "excluded_views": {},
-        # Kamera evin ön verandasında: "evin çatısı kopar" kameranın durduğu ev gibi çizilir
-        "excluded_spots": {"E1": {"Residential coastal district"}},
+        # 23 Eki: E1'in kıyı mahallesi dışlaması çıktı (önceki "a house" kameranın durduğu verandalı ev gibi
+        # çiziliyordu; şimdi "a waterfront building")
+        "excluded_spots": {},
     },
     MARINA_TORNADO: {
         # 4 Eki, Bahadır: marina yeniden tasarımı. Y1/Y3 yeni metin; Z1-Z6 tamamen yeni (direk ve yat sahneleri çıktı)
         "slice_2": {
-            "Y1": {"text": "the {vehicle} is hit by flying debris and slides sideways across the quay",
-                   "terms": [("debris", "wreckage", "rubble", "shrapnel", "flying object", "flying objects"),
-                             _SIDEWAYS]},
+            # 23 Eki, Bahadır (hortum denetimi): Y1, Y3, Y5; Z1, Z2, Z3, Z6, Z7 metni değişti, kodlar aynı. Önceki Y1
+            # "the {vehicle} is hit by flying debris and slides sideways across the quay" (sebep küçük döküntü)
+            "Y1": {"text": "the tornado shoves the {vehicle} sideways across the quay toward the water's edge",
+                   "terms": [_SIDEWAYS, _DRAG + _BLOW + ("hurl", "force")]},
             "Y2": {"text": "the {vehicle} tips over onto its side on the quay road",
                    "terms": [_TIP]},
-            "Y3": {"text": "the {vehicle} slides along the quay and slams into a lamppost",
-                   "terms": [_DRAG + _BLOW + ("hurl", "force", "skid"), _POLE]},
-            "Y5": {"text": "the {vehicle} is lifted off the quay road and flung into a stack of dock boxes",
-                   "terms": [_LIFT_AIR, _FLING + ("slam", "smash", "crash", "hurtle"),
-                             ("box", "boxes", "crate", "crates", "dock box", "locker", "bin", "bins", "stack")]},
+            # Önceki Y3 "...slams into a lamppost" (ince), Y5 "...flung into a stack of dock boxes" (küçük, açık renk)
+            "Y3": {"text": "the {vehicle} slides along the quay and slams into the front of the marina office",
+                   "terms": [_DRAG + _BLOW + ("hurl", "force", "skid"), _HIT, _MARINA_OFFICE]},
+            "Y5": {"text": "the {vehicle} is lifted off the quay road and flung over the edge into the marina water",
+                   "terms": [_LIFT_AIR, _FLING + ("slam", "smash", "crash", "hurtle", "plunge", "drop", "fall", "fell"),
+                             _MARINA_WATER]},
             # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
             "Y7": {"text": "the tornado rips the roof off the café across the quay and hurls it away",
                    "terms": [("roof", "roofing"), ("café", "cafe", "bar", "restaurant", "building"), _TORNADO_RIP]},
@@ -1182,37 +1195,51 @@ EVENT_BEATS = {
                              "tore", "rip", "cave")]},
         },
         "slice_3": {
-            "Z1": {"text": "the tornado tears the awning off the harbor café and flings it across the quay",
-                   "terms": [("awning", "awnings", "canopy", "canopies", "sunshade", "parasol"), _TORNADO_RIP]},
-            "Z2": {"text": "the tornado rips the front off a small kiosk, sending its shutters and signs flying",
-                   "terms": [("kiosk", "booth", "stall", "hut", "shutter", "shutters", "sign", "signs"), _TORNADO_RIP]},
-            "Z3": {"text": "a wall of dust and debris rolls across the quay and engulfs the café terrace",
-                   "terms": [("dust", "debris", "dirt", "sand", "spray"),
-                             ("engulf", "swallow", "envelop", "blanket", "smother", "bury", "buried", "roll", "sweep",
-                              "swept")]},
+            # Önceki Z1 "the tornado tears the awning off the harbor café and flings it across the quay" (ince), Z2
+            # "the tornado rips the front off a small kiosk, sending its shutters and signs flying" (küçük), Z3 "a wall
+            # of dust and debris rolls across the quay and engulfs the café terrace" (temas yok)
+            "Z1": {"text": "the tornado rips the whole roof off the harbor café and flings it across the quay",
+                   "terms": [("roof", "roofing"), ("café", "cafe", "bar", "restaurant", "building"), _TORNADO_RIP]},
+            "Z2": {"text": "the tornado rips the front off the marina office, sending its shutters and furniture across "
+                           "the quay",
+                   "terms": [_MARINA_OFFICE + ("shutter", "shutters"), _TORNADO_RIP]},
+            "Z3": {"text": "the tornado tears through the café terrace and hurls its heavy tables and chairs into the "
+                           "marina water",
+                   "terms": [("table", "tables", "chair", "chairs", "furniture"),
+                             _TORNADO_RIP + ("tear through", "tears through", "tore through", "tearing through"),
+                             _MARINA_WATER]},
             "Z4": {"text": "the tornado rips the roof off the marina office and scatters the pieces across the quay",
                    "terms": [("roof", "roofing"), ("office", "building", "hut", "cabin", "clubhouse", "shed",
                                                    "kiosk"), _TORNADO_RIP]},
-            "Z6": {"text": "the tornado shatters the glass front of a quayside shop and hurls tables and chairs into the "
-                           "street",
-                   "terms": [("glass", "window", "windows", "shopfront", "storefront", "shop front"),
-                             ("shatter", "smash", "burst", "break", "broke", "explode", "blow out", "blew out",
+            # Önceki Z6 "the tornado shatters the glass front of a quayside shop and hurls tables and chairs into the
+            # street" (cam); Z7 "the tornado lifts the whole café terrace off the quay and scatters it across the road"
+            # (teras zemin, kalkmaz)
+            "Z6": {"text": "the tornado bursts through the front of a quayside shop and hurls its contents across the "
+                           "quay",
+                   "terms": [("shop", "store", "shopfront", "storefront", "shop front", "boutique"),
+                             ("hurl", "fling", "flung", "throw", "threw", "thrown", "tear through", "tears through",
+                              "tore through", "rip", "tear", "tore",
+                              "shatter", "smash", "burst", "break", "broke", "explode", "blow out", "blew out",
                               "annihilate", "splinter",   # 4 Eki, Bahadır: kuru provada reddediliyordu
                               # 4 Eki, Bahadır: "obliterates" reddediliyordu. Çok kelimeli terimlerde çekim sadece
                               # son kelimeye uygulandığı için "tears/tore/torn apart" vb. ayrıca yazıldı
                               "obliterate", "demolish", "wreck", "wreak", "rupture", "pulverize",
                               "tear apart", "tears apart", "tore apart", "torn apart", "tearing apart",
-                              "blow apart", "blows apart", "blew apart", "blown apart", "blowing apart"),
-                             ("table", "tables", "chair", "chairs", "furniture", "stool")]},
+                              "blow apart", "blows apart", "blew apart", "blown apart", "blowing apart")]},
             # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
-            "Z7": {"text": "the tornado lifts the whole café terrace off the quay and scatters it across the road",
-                   "terms": [("terrace", "patio", "café terrace", "cafe terrace"),   # masa/sandalye yok (Z6 almasın)
-                             _TORNADO_RIP + ("lift", "scatter", "fling", "hurl")]},
+            "Z7": {"text": "the tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across "
+                           "the road",
+                   "terms": [("pergola", "gazebo", "wooden frame", "wooden canopy", "canopy", "beams"),
+                             _TORNADO_RIP + ("lift", "scatter", "fling", "hurl", "smash", "crash", "slam")]},
         },
         # Aynı nesne iki kez: kutu (Y5/Z5), sandık (Y4/Z5)
         # 17 Eki: Y4 ve Z5 çıktı. 18 Eki (2): çatı iki kez (Y7: Z4), kafe iki kez (Y7: Z1, Z3, Z7), rıhtım binası cephesi
         # iki kez (Y8: Z2, Z6)
-        "excluded_pairs": {("Y7", "Z4"), ("Y7", "Z1"), ("Y7", "Z3"), ("Y7", "Z7"), ("Y8", "Z2"), ("Y8", "Z6")},
+        # 23 Eki: Y7/Y8 çiftleri yeni metinlerde de geçerli (Y7 kafe çatısı: Z1 kafe çatısı, Z3 kafe terası, Z4 çatı,
+        # Z7 kafe pergolası; Y8 rıhtım binası cephesi: Z2 ofis cephesi, Z6 dükkân cephesi). Yeni: marina ofisi iki kez
+        # (Y3: Z2, Z4)
+        "excluded_pairs": {("Y7", "Z4"), ("Y7", "Z1"), ("Y7", "Z3"), ("Y7", "Z7"), ("Y8", "Z2"), ("Y8", "Z6"),
+                           ("Y3", "Z4"), ("Y3", "Z2")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -2759,14 +2786,22 @@ def choose_vehicle(view: str, rng: random.Random | None = None, used: list[str] 
 # olaylarda (sel/dev dalga sedan + "car", hortum P7 ve volkan S8/T9 kamyon) davranış aynı.
 VEHICLE_KINDS = (("truck", "lorry", "pickup"), ("car", "sedan", "saloon", "hatchback"), ("van",), ("suv",))
 SAME_KIND_VEHICLE_EVENTS = {MUDSLIDE, SLOPE, VILLAGE}
+# 23 Eki, Bahadır (hortum denetimi): açılıştaki sabit araç da sayılır (marina C "drags a pickup truck along the quay").
+# Şimdilik sadece marina; diğer olayların açılış-araç çakışmaları raporda
+SAME_KIND_OPENING_EVENTS = {MARINA_TORNADO}
 
 
-def clashing_vehicles(event: str, view: str | None, b2: str, b3: str) -> list[str]:
-    """Olay çiftinin sabit araçlarıyla ({vehicle} dışında) aynı türdeki araç adları; bunlar seçilmez."""
-    if event not in SAME_KIND_VEHICLE_EVENTS:
+def clashing_vehicles(event: str, view: str | None, b2: str, b3: str, opening_text: str | None = None) -> list[str]:
+    """Olay çiftinin (ve açılışın) sabit araçlarıyla ({vehicle} dışında) aynı türdeki araç adları; bunlar seçilmez."""
+    texts = []
+    if event in SAME_KIND_VEHICLE_EVENTS:
+        beats = EVENT_BEATS[event]
+        texts += [beats[s][b]["text"].replace("{vehicle}", "") for s, b in (("slice_2", b2), ("slice_3", b3))]
+    if opening_text and event in SAME_KIND_OPENING_EVENTS:
+        texts.append(opening_text)
+    if not texts:
         return []
-    beats = EVENT_BEATS[event]
-    fixed = " ".join(beats[s][b]["text"].replace("{vehicle}", "") for s, b in (("slice_2", b2), ("slice_3", b3)))
+    fixed = " ".join(texts)
     kinds = [set(k) for k in VEHICLE_KINDS if find_terms(k, fixed)]
     return [v for v, terms in event_vehicles(event, view) if any(k & set(terms) for k in kinds)]
 
@@ -3303,8 +3338,7 @@ POOL_LINT_GRANDFATHERED = {
     (FLOOD, "V4"): _KEPT + " (özne araç, direk ikincil)", (FLOOD, "D2"): _PROTECTED + " (3 Eki Kie sel testi V6+D2)",
     (TIDAL, "T6"): _PROTECTED, (TIDAL, "W2"): _PROTECTED, (TIDAL, "W6"): _PROTECTED,
     (LANDFALL, "E5"): _KEPT + " (özne dükkân önü)",
-    (MARINA_TORNADO, "Y3"): _PROTECTED, (MARINA_TORNADO, "Z1"): _PROTECTED, (MARINA_TORNADO, "Z2"): _KEPT,
-    (MARINA_TORNADO, "Z6"): _PROTECTED,
+    # 23 Eki, Bahadır: marina Y3, Z1, Z2, Z6 yeni metin, korumaları kalktı (lint'ten korumasız geçer)
     (AVENUE, "P5"): _PROTECTED, (AVENUE, "Q3"): _PROTECTED, (AVENUE, "Q6"): _PROTECTED,
     (FACADE_FIRE, "M6"): _PROTECTED,
     (FACADE_FIRE, "N5"): _ONLY_REPEAT,
