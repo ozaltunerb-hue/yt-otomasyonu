@@ -254,9 +254,9 @@ class TestCleanupRule(unittest.TestCase):
         for e in es.structured_events():
             b = es.EVENT_BEATS[e]
             with self.subTest(event=e):
-                if e == es.METEOR:   # 29 Eki (3): kurala takılan madde havuza girmez (X3), 3 + 3 madde;
-                    # yerine yeni madde Bahadır'ın kararıyla gelir (tests/test_meteor.py)
-                    self.assertEqual((len(b["slice_2"]), len(b["slice_3"])), (3, 3))
+                if e == es.METEOR:   # 29 Eki (3-4): ek kurala takılan madde havuza girmez; X3 4. turda girdi, 3 + 4
+                    # madde (tests/test_meteor.py)
+                    self.assertEqual((len(b["slice_2"]), len(b["slice_3"])), (3, 4))
                     continue
                 self.assertGreaterEqual(len(b["slice_2"]), 4)
                 self.assertGreaterEqual(len(b["slice_3"]), 4)

@@ -25,6 +25,14 @@
 
 ---
 
+## 📋 DEVİR: ☄️ Meteor (4): O4 pasif, K2 villa terası, ön planda yüksek bina yok, X3 (29 Eki 2026)
+
+2. test videosu: kameranın yanındaki dev kule ve O4'ün yüksek binaları sebepsiz yer/şekil değiştirdi. O4 pasif
+(`es.METEOR_RETIRED_ENVS`); K2 "High terrace of a seafront villa" (kadraj tipi balkon); meteorda ön plan cümlesi
+`sk.METEOR_NO_FACE` ("no person, face or tall building close to the camera"; diğer olaylar aynı). X3 "knocking over" ile
+havuzda. Bahadır kararı: W2+X1 dışlandı (yeni ön plan cümlesiyle O1 + öğle/kapalı ışıkta 205'i 1 kelime aşıyordu). 9 çift,
+972 kombinasyon, sığmayan 0.
+
 ## 📋 DEVİR: ☄️ Meteor (3): yeni W2/W3/X1, tavan 205 (29 Eki 2026)
 
 Bahadır kararları: meteor tavanı 195 -> 202 -> 205 (202'de 1008 kombinasyonun 204'ü 1-3 kelime aşıyordu; 205'te 0).

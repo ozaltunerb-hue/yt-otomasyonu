@@ -22,14 +22,14 @@ import core.skeleton_pipeline as sk
 
 MET = es.METEOR
 DOMAIN = "meteor_disasters"
-K1, K2, K3 = ("Rooftop terrace of a hillside villa above the bay", "High balcony of a seafront apartment",
-              "Hilltop terrace above a coastal town")
+K1, K2, K3 = ("Rooftop terrace of a hillside villa above the bay", "High terrace of a seafront villa",
+              "Hilltop terrace above a coastal town")   # 29 Eki (3): K2 villa terası
 KEY = ("A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, "
        "erupting in a blinding flash and a towering column of water and steam.")
 FRAMES = {K1: "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the "
               "seafront houses below",
-          K2: "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the "
-              "open sea",
+          K2: "Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open "
+              "sea",
           K3: "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in "
               "view"}
 TAIL = ("the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the "
@@ -38,20 +38,21 @@ RULE = ("Only one meteor and nothing else falls; the water stays white, foaming 
         "wall; every hit leaves lasting damage.")
 ENVS = {"O1": "white modern Mediterranean villas with glass railings and pools",
         "O2": "modern glass houses stepped down a green hillside",
-        "O3": "a palm-lined coastal suburb of modern homes",
-        "O4": "modern seafront apartment towers and low houses along a promenade"}
+        "O3": "a palm-lined coastal suburb of modern homes"}   # 29 Eki (3): O4 pasif (yüksek kuleler)
 LIGHTS = ["golden sunset", "hazy midday light", "overcast grey sky"]
 W_POOL = {"W1": "the shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas",
           # 29 Eki (3), Bahadır: yeni metinler
           "W2": "a ring of white steam and spray races ashore and flips the cars on the seafront road",
           "W3": "the blast rips the sunbeds off the villa terraces and smashes them into the pools"}
-X_POOL = {"X1": "the falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks",
+X_POOL = {"X3": "white, foaming seawater bursts into the villa gardens right below, knocking over the garden walls",
+          "X1": "the falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks",
           "X2": "a white, steaming surge floods the coastal road and shoves parked cars into the villa walls",
           "X4": "white surf bursts over the seawall and smashes the beach bars and loungers into the road"}
-HELD = {"X3": "white, foaming seawater bursts into the villa gardens right below, knocking down the garden walls"}
+HELD = {}
 OLD = {"M1", "M2", "M3", "M4", "M5", "M6", "N1", "N2", "N3", "N4", "N5", "N6"}
-# aynı nesne: W2+X2 araba, W3+X4 şezlong (29 Eki (3), Bahadır)
-ALLOWED = {("W1", "X1"), ("W1", "X2"), ("W1", "X4"), ("W2", "X1"), ("W2", "X4"), ("W3", "X1"), ("W3", "X2")}
+# aynı nesne: W2+X2 araba, W3+X4 şezlong; sığma: W2+X1 (29 Eki (3), Bahadır)
+ALLOWED = {("W1", "X1"), ("W1", "X2"), ("W1", "X3"), ("W1", "X4"), ("W2", "X3"), ("W2", "X4"), ("W3", "X1"),
+           ("W3", "X2"), ("W3", "X3")}
 # Test videosundaki gerçek GPT çıktısı (29 Eki): ikisi de yeni kapılardan RET almalı
 OLD_GPT_1 = "Burning fragments rain down, igniting rooftops as people race uphill in panic."
 OLD_GPT_2 = "A fierce wind levels palm trees and scatters furniture across villa terraces."
@@ -172,9 +173,10 @@ class TestMeteor(unittest.TestCase):
         for bid, scores in list(es.METEOR_BEAT_SCORES.items()) + [(k, v[1]) for k, v in es.METEOR_HELD_BEATS.items()]:
             self.assertEqual(len(scores), 6)
             self.assertGreaterEqual(min(scores), 3, bid)   # 29 Eki (2): hiçbiri puandan düşmedi
-        # havuza girmeme sebebi: X3 hasar fiili yok ("knocking down"; listede "knock over")
-        self.assertEqual(es.find_terms(es.METEOR_DAMAGE, HELD["X3"]), [])
-        self.assertEqual(b["excluded_pairs"], {("W2", "X2"), ("W3", "X4")})
+        self.assertEqual(b["excluded_pairs"], {("W2", "X2"), ("W3", "X4"), ("W2", "X1")})
+        self.assertEqual(es.METEOR_RETIRED_ENVS, {"O4": "modern seafront apartment towers and low houses along a "
+                                                        "promenade"})
+        self.assertNotIn("O4", es.METEOR_ENVS)
         for spot in (K1, K2, K3):
             self.assertEqual(set(es.allowed_pairs(MET, None, spot)), ALLOWED)
 
@@ -188,13 +190,25 @@ class TestMeteor(unittest.TestCase):
                     with self.subTest(spot=spot, env=env, light=light):
                         suffix = sk.style_suffix(MET, None, spot, None, es.meteor_setting(env, light), None,
                                                  frame_of(spot))
-                        self.assertTrue(suffix.startswith(f"{FRAMES[spot]}; {TAIL}, {sk.NO_FACE}."))
+                        # 29 Eki (3): meteorda ön planda yüksek bina da yok
+                        self.assertTrue(suffix.startswith(f"{FRAMES[spot]}; {TAIL}, no person, face or tall building "
+                                                          f"close to the camera."))
                         self.assertTrue(suffix.endswith(RULE))
                         for part in (f"Setting: {ENVS[env]}, {light}.", sk.ENV_GUARDRAILS, sk.REAL_TIME,
                                      "No readable signs, text or flags."):
                             self.assertIn(part, suffix)
                         self.assertLessEqual(count_constraints(suffix)[0], 11)
                         self.assertEqual(pr.check(MET, {"style_suffix": suffix, "prompt": suffix, "axes": {}}), {})
+
+    def test_other_events_keep_no_face(self):
+        # 29 Eki (3): "tall building" sadece meteorda
+        for e in es.structured_events():
+            if e == MET:
+                continue
+            spot = next(iter(sk.EVENT_SKELETONS[e]["spots"]))
+            view = es.structure_views(e)[0]
+            spot = sk.view_spots(e, view)[0]
+            self.assertNotIn("tall building", sk.style_suffix(e, None, spot, view), e)
 
     def test_frame_is_spot_no_borrowing(self):
         for spot in (K1, K2, K3):
@@ -268,7 +282,7 @@ class TestMeteor(unittest.TestCase):
 
     def test_every_combination_fits_205(self):
         """29 Eki (3): 205 kelimede her kadraj × ortam × ışık × çift × kişi sayısında kod yedeği sığar ve son denetimden
-        geçer (sığmayan 0). 202'de 204 / 1008 sığmıyordu."""
+        geçer (sığmayan 0; 3 × 3 × 3 × 9 × 4 = 972)."""
         for spot in (K1, K2, K3):
             for b2, b3 in ALLOWED:
                 for env in ENVS:

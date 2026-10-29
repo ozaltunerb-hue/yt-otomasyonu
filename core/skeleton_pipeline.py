@@ -126,7 +126,7 @@ CAMERA_SPOTS = {
     "High-floor balcony across the street": "a high-floor balcony",
     # ☄️ Meteor (29 Eki, Bahadır): kadraj K1-K3, hepsi yüksek; tam cümle METEOR_CAMERA'da (birebir)
     "Rooftop terrace of a hillside villa above the bay": "the rooftop terrace of a modern hillside villa",
-    "High balcony of a seafront apartment": "a high balcony of a seafront apartment",
+    "High terrace of a seafront villa": "the high terrace of a seafront villa",   # 29 Eki (3): K2
     "Hilltop terrace above a coastal town": "a hilltop terrace above a coastal town",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
@@ -614,7 +614,7 @@ EVENT_SKELETONS = {
     "Meteor slams into the sea off the coast": {
         "domain": "meteor_disasters", "ships": None,
         "spots": {"Rooftop terrace of a hillside villa above the bay": "a hillside of modern villas above the bay",
-                  "High balcony of a seafront apartment": "a seafront promenade below modern apartments",
+                  "High terrace of a seafront villa": "a seafront promenade below modern villas",
                   "Hilltop terrace above a coastal town": "a coastal town around a wide bay"},
         "people": ["residents", "people"], "weather": METEOR_WEATHER, "object": "impact",
         # 29 Eki (2): tek çarpma, beyaz taşkın (önceki: "...The blast tears across the waterfront as {n} {people} run
@@ -940,8 +940,10 @@ METEOR_CAMERA = {
     "Rooftop terrace of a hillside villa above the bay":
         "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront "
         "houses below",
-    "High balcony of a seafront apartment":
-        "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea",
+    # 29 Eki (3), Bahadır: 2. test videosunda kameranın yanındaki dev kule yer ve şekil değiştirdi. Önceki K2: "Handheld
+    # footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea"
+    "High terrace of a seafront villa":
+        "Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea",
     "Hilltop terrace above a coastal town":
         "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view",
 }
@@ -952,6 +954,10 @@ METEOR_CAMERA_TAIL = ("the impact point is visible offshore from the first secon
 # 29 Eki (2), Bahadır (metin birebir): tek meteor, beyaz su, kalıcı hasar tek cümlede; stil ekinin sonunda
 METEOR_RULE = ("Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown "
                "tsunami wall; every hit leaves lasting damage.")
+
+
+# 29 Eki (3), Bahadır: meteorda ön planda yüksek bina da yok (ortak NO_FACE yerine; diğer olaylar aynı)
+METEOR_NO_FACE = "no person, face or tall building close to the camera"
 
 
 def meteor_camera(spot: str) -> str:
@@ -1155,6 +1161,8 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     env_centric = s["domain"] in ENV_CENTRIC_DOMAINS
     if env_centric:   # 21 Eki (genel kalite): kamera ortak kuralları, gerçek zaman, heyelanda çamur rengi
         camera = camera_rules(camera)
+        if s["domain"] == "meteor_disasters":   # 29 Eki (3): ön planda yüksek bina yok
+            camera = camera.replace(NO_FACE, METEOR_NO_FACE)
         guardrails = f"{guardrails} {REAL_TIME}" + (f" {MUD_COLOR}" if s["domain"] == "landslide_disasters" else "")
     out = f"{camera} {setting} {guardrails}" if setting else f"{camera} {guardrails}"
     if view:

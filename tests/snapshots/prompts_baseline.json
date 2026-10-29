@@ -3981,15 +3981,125 @@
   "1": {
    "axes": {
     "acilis": null,
-    "beats": "W3+X2",
-    "environment": "O3",
+    "beats": "W1+X1",
+    "environment": "O1",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
     "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
     "on_plan": null,
-    "people": 3,
+    "people": 5,
+    "spot": "Rooftop terrace of a hillside villa above the bay",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "overcast grey sky"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W1+X1|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five neighbours dash inland right below. 4-9s: The shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+  },
+  "10": {
+   "axes": {
+    "acilis": null,
+    "beats": "W3+X3",
+    "environment": "O3",
+    "fit_guard": false,
+    "kadraj": "tepe",
+    "kamera_modu": null,
+    "kamera_noktasi": "Hilltop terrace above a coastal town",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 6,
+    "spot": "Hilltop terrace above a coastal town",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "golden sunset"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W3+X3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six people run off right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: White, foaming seawater bursts into the villa gardens right below, knocking over the garden walls. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: a palm-lined coastal suburb of modern homes, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: a palm-lined coastal suburb of modern homes, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+  },
+  "11": {
+   "axes": {
+    "acilis": null,
+    "beats": "W3+X1",
+    "environment": "O3",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "High terrace of a seafront villa",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 6,
+    "spot": "High terrace of a seafront villa",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "overcast grey sky"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high terrace of a seafront villa##W3+X1|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six people scatter in the street below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+  },
+  "12": {
+   "axes": {
+    "acilis": null,
+    "beats": "W3+X2",
+    "environment": "O1",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "High terrace of a seafront villa",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 5,
+    "spot": "High terrace of a seafront villa",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "hazy midday light"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high terrace of a seafront villa##W3+X2|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five residents run from it just below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+  },
+  "13": {
+   "axes": {
+    "acilis": null,
+    "beats": "W1+X2",
+    "environment": "O3",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "High terrace of a seafront villa",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 4,
+    "spot": "High terrace of a seafront villa",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "hazy midday light"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high terrace of a seafront villa##W1+X2|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four residents flee in the street right below. 4-9s: The shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: a palm-lined coastal suburb of modern homes, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: a palm-lined coastal suburb of modern homes, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+  },
+  "14": {
+   "axes": {
+    "acilis": null,
+    "beats": "W3+X2",
+    "environment": "O2",
+    "fit_guard": false,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 4,
     "spot": "Rooftop terrace of a hillside villa above the bay",
     "story_source": "fallback",
     "vehicle": null,
@@ -3997,124 +4107,14 @@
     "weather": "overcast grey sky"
    },
    "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W3+X2|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three people run off right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
-  },
-  "10": {
-   "axes": {
-    "acilis": null,
-    "beats": "W2+X1",
-    "environment": "O1",
-    "fit_guard": false,
-    "kadraj": "tepe",
-    "kamera_modu": null,
-    "kamera_noktasi": "Hilltop terrace above a coastal town",
-    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
-    "on_plan": null,
-    "people": 6,
-    "spot": "Hilltop terrace above a coastal town",
-    "story_source": "fallback",
-    "vehicle": null,
-    "view": null,
-    "weather": "golden sunset"
-   },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W2+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six residents flee in the street right below. 4-9s: A ring of white steam and spray races ashore and flips the cars on the seafront road. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
-  },
-  "11": {
-   "axes": {
-    "acilis": null,
-    "beats": "W3+X2",
-    "environment": "O4",
-    "fit_guard": false,
-    "kadraj": "balkon",
-    "kamera_modu": null,
-    "kamera_noktasi": "High balcony of a seafront apartment",
-    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
-    "on_plan": null,
-    "people": 6,
-    "spot": "High balcony of a seafront apartment",
-    "story_source": "fallback",
-    "vehicle": null,
-    "view": null,
-    "weather": "overcast grey sky"
-   },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##W3+X2|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six people scatter in the street below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern seafront apartment towers and low houses along a promenade, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern seafront apartment towers and low houses along a promenade, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
-  },
-  "12": {
-   "axes": {
-    "acilis": null,
-    "beats": "W3+X1",
-    "environment": "O2",
-    "fit_guard": false,
-    "kadraj": "balkon",
-    "kamera_modu": null,
-    "kamera_noktasi": "High balcony of a seafront apartment",
-    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
-    "on_plan": null,
-    "people": 5,
-    "spot": "High balcony of a seafront apartment",
-    "story_source": "fallback",
-    "vehicle": null,
-    "view": null,
-    "weather": "hazy midday light"
-   },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##W3+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five residents run from it just below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
-  },
-  "13": {
-   "axes": {
-    "acilis": null,
-    "beats": "W3+X1",
-    "environment": "O2",
-    "fit_guard": false,
-    "kadraj": "balkon",
-    "kamera_modu": null,
-    "kamera_noktasi": "High balcony of a seafront apartment",
-    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
-    "on_plan": null,
-    "people": 4,
-    "spot": "High balcony of a seafront apartment",
-    "story_source": "fallback",
-    "vehicle": null,
-    "view": null,
-    "weather": "hazy midday light"
-   },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##W3+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four neighbours dash inland right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
-  },
-  "14": {
-   "axes": {
-    "acilis": null,
-    "beats": "W3+X1",
-    "environment": "O3",
-    "fit_guard": false,
-    "kadraj": "çatı",
-    "kamera_modu": null,
-    "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
-    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
-    "on_plan": null,
-    "people": 4,
-    "spot": "Rooftop terrace of a hillside villa above the bay",
-    "story_source": "fallback",
-    "vehicle": null,
-    "view": null,
-    "weather": "overcast grey sky"
-   },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W3+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four neighbours dash inland right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four neighbours dash inland right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "15": {
    "axes": {
     "acilis": null,
-    "beats": "W2+X4",
-    "environment": "O2",
+    "beats": "W3+X2",
+    "environment": "O1",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
@@ -4128,37 +4128,37 @@
     "view": null,
     "weather": "golden sunset"
    },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W2+X4|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three residents flee in the street right below. 4-9s: A ring of white steam and spray races ashore and flips the cars on the seafront road. 9-15s: White surf bursts over the seawall and smashes the beach bars and loungers into the road. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W3+X2|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three residents flee in the street right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "16": {
    "axes": {
     "acilis": null,
-    "beats": "W2+X1",
-    "environment": "O4",
+    "beats": "W3+X1",
+    "environment": "O2",
     "fit_guard": false,
     "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": "High balcony of a seafront apartment",
+    "kamera_noktasi": "High terrace of a seafront villa",
     "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
     "on_plan": null,
     "people": 5,
-    "spot": "High balcony of a seafront apartment",
+    "spot": "High terrace of a seafront villa",
     "story_source": "fallback",
     "vehicle": null,
     "view": null,
     "weather": "hazy midday light"
    },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##W2+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five people run off right below. 4-9s: A ring of white steam and spray races ashore and flips the cars on the seafront road. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern seafront apartment towers and low houses along a promenade, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern seafront apartment towers and low houses along a promenade, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high terrace of a seafront villa##W3+X1|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five residents flee in the street right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "17": {
    "axes": {
     "acilis": null,
-    "beats": "W3+X2",
-    "environment": "O3",
+    "beats": "W2+X3",
+    "environment": "O2",
     "fit_guard": false,
     "kadraj": "tepe",
     "kamera_modu": null,
@@ -4172,22 +4172,22 @@
     "view": null,
     "weather": "hazy midday light"
    },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W3+X2|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five people sprint inland in the street below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W2+X3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five residents flee in the street right below. 4-9s: A ring of white steam and spray races ashore and flips the cars on the seafront road. 9-15s: White, foaming seawater bursts into the villa gardens right below, knocking over the garden walls. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "18": {
    "axes": {
     "acilis": null,
     "beats": "W3+X1",
-    "environment": "O3",
+    "environment": "O1",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
     "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
     "on_plan": null,
-    "people": 6,
+    "people": 5,
     "spot": "Rooftop terrace of a hillside villa above the bay",
     "story_source": "fallback",
     "vehicle": null,
@@ -4195,14 +4195,14 @@
     "weather": "golden sunset"
    },
    "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W3+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six residents flee in the street right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five residents flee in the street right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "19": {
    "axes": {
     "acilis": null,
     "beats": "W3+X2",
-    "environment": "O2",
+    "environment": "O3",
     "fit_guard": false,
     "kadraj": "tepe",
     "kamera_modu": null,
@@ -4217,14 +4217,14 @@
     "weather": "golden sunset"
    },
    "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W3+X2|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three residents run from it just below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three residents flee in the street right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: a palm-lined coastal suburb of modern homes, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: a palm-lined coastal suburb of modern homes, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "2": {
    "axes": {
     "acilis": null,
     "beats": "W1+X1",
-    "environment": "O2",
+    "environment": "O1",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
@@ -4239,13 +4239,13 @@
     "weather": "golden sunset"
    },
    "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W1+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five neighbours dash inland right below. 4-9s: The shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five neighbours dash inland right below. 4-9s: The shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "20": {
    "axes": {
     "acilis": null,
-    "beats": "W3+X2",
+    "beats": "W1+X2",
     "environment": "O3",
     "fit_guard": false,
     "kadraj": "tepe",
@@ -4253,22 +4253,22 @@
     "kamera_noktasi": "Hilltop terrace above a coastal town",
     "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
     "on_plan": null,
-    "people": 4,
+    "people": 5,
     "spot": "Hilltop terrace above a coastal town",
     "story_source": "fallback",
     "vehicle": null,
     "view": null,
     "weather": "overcast grey sky"
    },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W3+X2|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four neighbours dash inland right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W1+X2|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five neighbours dash inland right below. 4-9s: The shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "3": {
    "axes": {
     "acilis": null,
-    "beats": "W2+X4",
-    "environment": "O3",
+    "beats": "W3+X2",
+    "environment": "O2",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
@@ -4282,15 +4282,15 @@
     "view": null,
     "weather": "overcast grey sky"
    },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W2+X4|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four people scatter in the street below. 4-9s: A ring of white steam and spray races ashore and flips the cars on the seafront road. 9-15s: White surf bursts over the seawall and smashes the beach bars and loungers into the road. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W3+X2|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four people scatter in the street below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: A white, steaming surge floods the coastal road and shoves parked cars into the villa walls. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "4": {
    "axes": {
     "acilis": null,
     "beats": "W1+X1",
-    "environment": "O4",
+    "environment": "O2",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
@@ -4305,10 +4305,32 @@
     "weather": "hazy midday light"
    },
    "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W1+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six residents flee in the street right below. 4-9s: The shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern seafront apartment towers and low houses along a promenade, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern seafront apartment towers and low houses along a promenade, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six residents flee in the street right below. 4-9s: The shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "5": {
+   "axes": {
+    "acilis": null,
+    "beats": "W2+X4",
+    "environment": "O2",
+    "fit_guard": false,
+    "kadraj": "tepe",
+    "kamera_modu": null,
+    "kamera_noktasi": "Hilltop terrace above a coastal town",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 3,
+    "spot": "Hilltop terrace above a coastal town",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "hazy midday light"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W2+X4|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three residents run from it just below. 4-9s: A ring of white steam and spray races ashore and flips the cars on the seafront road. 9-15s: White surf bursts over the seawall and smashes the beach bars and loungers into the road. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+  },
+  "6": {
    "axes": {
     "acilis": null,
     "beats": "W3+X1",
@@ -4324,61 +4346,39 @@
     "story_source": "fallback",
     "vehicle": null,
     "view": null,
-    "weather": "hazy midday light"
-   },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W3+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five residents run from it just below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
-  },
-  "6": {
-   "axes": {
-    "acilis": null,
-    "beats": "W2+X1",
-    "environment": "O1",
-    "fit_guard": false,
-    "kadraj": "tepe",
-    "kamera_modu": null,
-    "kamera_noktasi": "Hilltop terrace above a coastal town",
-    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
-    "on_plan": null,
-    "people": 5,
-    "spot": "Hilltop terrace above a coastal town",
-    "story_source": "fallback",
-    "vehicle": null,
-    "view": null,
     "weather": "golden sunset"
    },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W2+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five people run off right below. 4-9s: A ring of white steam and spray races ashore and flips the cars on the seafront road. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##W3+X1|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five people run off right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "7": {
    "axes": {
     "acilis": null,
-    "beats": "W2+X1",
+    "beats": "W3+X3",
     "environment": "O1",
     "fit_guard": false,
     "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": "High balcony of a seafront apartment",
+    "kamera_noktasi": "High terrace of a seafront villa",
     "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
     "on_plan": null,
     "people": 3,
-    "spot": "High balcony of a seafront apartment",
+    "spot": "High terrace of a seafront villa",
     "story_source": "fallback",
     "vehicle": null,
     "view": null,
     "weather": "golden sunset"
    },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##W2+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three people scatter in the street below. 4-9s: A ring of white steam and spray races ashore and flips the cars on the seafront road. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high terrace of a seafront villa##W3+X3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three people scatter in the street below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: White, foaming seawater bursts into the villa gardens right below, knocking over the garden walls. Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "8": {
    "axes": {
     "acilis": null,
-    "beats": "W2+X1",
-    "environment": "O2",
+    "beats": "W3+X3",
+    "environment": "O1",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
@@ -4392,31 +4392,31 @@
     "view": null,
     "weather": "hazy midday light"
    },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W2+X1|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four neighbours dash inland right below. 4-9s: A ring of white steam and spray races ashore and flips the cars on the seafront road. 9-15s: The falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##W3+X3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four neighbours dash inland right below. 4-9s: The blast rips the sunbeds off the villa terraces and smashes them into the pools. 9-15s: White, foaming seawater bursts into the villa gardens right below, knocking over the garden walls. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   },
   "9": {
    "axes": {
     "acilis": null,
-    "beats": "W1+X4",
-    "environment": "O2",
+    "beats": "W2+X4",
+    "environment": "O1",
     "fit_guard": false,
     "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": "High balcony of a seafront apartment",
+    "kamera_noktasi": "High terrace of a seafront villa",
     "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
     "on_plan": null,
     "people": 5,
-    "spot": "High balcony of a seafront apartment",
+    "spot": "High terrace of a seafront villa",
     "story_source": "fallback",
     "vehicle": null,
     "view": null,
     "weather": "overcast grey sky"
    },
-   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##W1+X4|bystander_handheld",
-   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five residents flee in the street right below. 4-9s: The shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas. 9-15s: White surf bursts over the seawall and smashes the beach bars and loungers into the road. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
-   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high terrace of a seafront villa##W2+X4|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five people run off right below. 4-9s: A ring of white steam and spray races ashore and flips the cars on the seafront road. 9-15s: White surf bursts over the seawall and smashes the beach bars and loungers into the road. Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage.",
+   "style_suffix": "Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the bay, never tilting down or descending; no zoom, no cuts, no person, face or tall building close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags. Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami wall; every hit leaves lasting damage."
   }
  },
  "Mud and debris torrent tears through a hillside village": {

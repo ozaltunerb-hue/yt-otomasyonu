@@ -455,7 +455,7 @@ DOMAIN_ATTRIBUTES = {
     # tepe terası)
     "meteor_disasters": {
         "ships": [],
-        "environments": ["Rooftop terrace of a hillside villa above the bay", "High balcony of a seafront apartment",
+        "environments": ["Rooftop terrace of a hillside villa above the bay", "High terrace of a seafront villa",
                          "Hilltop terrace above a coastal town"],
         "events": [
             "Meteor slams into the sea off the coast",

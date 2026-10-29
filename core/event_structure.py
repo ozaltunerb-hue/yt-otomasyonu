@@ -1968,6 +1968,10 @@ EVENT_BEATS = {
                    "terms": [_MET_SUNBED, _MET_POOL]},
         },
         "slice_3": {
+            # 29 Eki (3), Bahadır: "knocking down" -> "knocking over" (hasar listesinde knock over)
+            "X3": {"text": "white, foaming seawater bursts into the villa gardens right below, knocking over the garden "
+                           "walls",
+                   "terms": [_MET_GARDEN, _MET_WALL]},
             # 29 Eki (3), Bahadır: yeni metin (önceki "...pours across the promenade": hasar fiili yoktu)
             "X1": {"text": "the falling water column crashes onto the promenade as a white, foaming flood, smashing the "
                            "beach kiosks",
@@ -1977,8 +1981,9 @@ EVENT_BEATS = {
             "X4": {"text": "white surf bursts over the seawall and smashes the beach bars and loungers into the road",
                    "terms": [_MET_SURF, _MET_BAR]},
         },
-        # Aynı nesne iki dilimde (29 Eki (3), Bahadır): araba (W2: X2), şezlong (W3: X4)
-        "excluded_pairs": {("W2", "X2"), ("W3", "X4")},
+        # Aynı nesne iki dilimde (29 Eki (3), Bahadır): araba (W2: X2), şezlong (W3: X4). Sığma (Bahadır kararı): W2+X1
+        # (17 + 17 kelime) O1 + öğle/kapalı ışıkta 205'i 1 kelime aşıyordu
+        "excluded_pairs": {("W2", "X2"), ("W3", "X4"), ("W2", "X1")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1989,14 +1994,12 @@ EVENT_BEATS = {
 DISABLED_BEATS: dict[str, set[str]] = {}
 # 29 Eki (2), Bahadır: yeni W/X maddelerinden havuza girmeyenler (yerine yeni madde Bahadır'ın kararıyla). Puan sırası:
 # büyüklük, kontrast, yakınlık, çizilebilirlik, aksiyon, farklılık.
-# 29 Eki (3): W2, W3, X1 yeni metinle havuza girdi; X3'ün yeni metni de girmedi.
-METEOR_HELD_BEATS = {
-    "X3": ("white, foaming seawater bursts into the villa gardens right below, knocking down the garden walls",
-           (4, 4, 5, 4, 4, 4), "hasar fiili yok (kural 4: 'knock down' listede değil, listede 'knock over' var)"),
-}
+# 29 Eki (3): W2, W3, X1 yeni metinle, X3 "knocking over" ile havuza girdi; bekleyen madde yok.
+METEOR_HELD_BEATS: dict[str, tuple] = {}
 # Havuzdaki maddelerin puanları (rapor ve test; hepsi en az 3)
 METEOR_BEAT_SCORES = {"W1": (4, 3, 4, 4, 5, 4), "W2": (5, 4, 4, 4, 5, 4), "W3": (4, 3, 4, 4, 5, 4),
-                      "X1": (5, 4, 3, 4, 5, 4), "X2": (5, 4, 4, 4, 5, 4), "X4": (4, 4, 3, 4, 5, 4)}
+                      "X1": (5, 4, 3, 4, 5, 4), "X2": (5, 4, 4, 4, 5, 4), "X3": (4, 4, 5, 4, 4, 4),
+                      "X4": (4, 4, 3, 4, 5, 4)}
 
 # ── 17 Eki 2026, Bahadır (temizlik turu): kurala göre çıkarılan beat'ler. Kural: denetimde (scratch/
 # asama3_havuz_denetimi.md) ZAYIF/ÇIKAR + en az biri: ince/uzak/küçük hedef, fizik ≤2, aksiyon ≤2, yakın ≤2, büyük ≤2,
@@ -2138,7 +2141,7 @@ OBJECT_GROUPS = {
     EARTHQUAKE_APARTMENT: {"Q5": 0, "P1": 1, "P2": 0, "P3": 1, "P4": 0, "Q1": 1, "Q2": 0, "Q3": 0, "Q4": 1},
     EARTHQUAKE_OLD_STREET: {"T7": 0, "T5": 0, "R1": 0, "R2": 0, "R3": 0, "R4": 1, "T1": 1, "T3": 0, "T4": 0},   # 18 Eki: T2 çıktı
     # 29 Eki (2): meteor nesneleri palmiye (W1), araç (X2), bar/şezlong (X4); iki nesne zorunluluğu METEOR_OBJECT_GATES
-    METEOR: {"W1": 0, "W2": 1, "W3": 0, "X1": 1, "X2": 1, "X4": 1},
+    METEOR: {"W1": 0, "W2": 1, "W3": 0, "X1": 1, "X2": 1, "X3": 0, "X4": 1},
 }
 
 # Sert kurallara 16 Eki eklemeleri (yapılandırılmış hat, sadece GPT'nin yazdığı üç dilim; mevcut kurallar aynen durur):
@@ -2538,8 +2541,10 @@ def remember_environment(env: dict) -> None:
 # Stil ekine "Setting: ortam, ışık." satırı, GPT'ye PLACE satırı olarak gider.
 METEOR_ENVS = {"O1": "white modern Mediterranean villas with glass railings and pools",
                "O2": "modern glass houses stepped down a green hillside",
-               "O3": "a palm-lined coastal suburb of modern homes",
-               "O4": "modern seafront apartment towers and low houses along a promenade"}
+               "O3": "a palm-lined coastal suburb of modern homes"}
+# 29 Eki (3), Bahadır: O4 pasif (2. test videosunda yüksek kuleler sebepsiz yer ve şekil değiştirdi). Kimlik tekrar
+# kullanılmaz; eski Notion kaydındaki "O4" tekrar önlemede zararsız.
+METEOR_RETIRED_ENVS = {"O4": "modern seafront apartment towers and low houses along a promenade"}
 SETTING_EVENTS = ENV_EVENTS + METEOR_EVENTS   # build_spec: ortam satırı taşıyabilen olaylar
 
 

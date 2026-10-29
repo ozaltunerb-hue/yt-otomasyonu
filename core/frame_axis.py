@@ -226,7 +226,8 @@ for _e in EARTHQUAKE:
     SPOT_FRAME[_e] = {"Rooftop terrace of a building across the street": ("çatı", NATIVE, None, None),
                       "High-floor balcony across the street": ("balkon", NATIVE, None, None)}
 SPOT_FRAME[METEOR] = {"Rooftop terrace of a hillside villa above the bay": ("çatı", NATIVE, None, None),
-                      "High balcony of a seafront apartment": ("balkon", NATIVE, None, None),
+                      # 29 Eki (3): K2 villa terası (yüksek apartman yok); kadraj tipi balkon kaldı
+                      "High terrace of a seafront villa": ("balkon", NATIVE, None, None),
                       "Hilltop terrace above a coastal town": ("tepe", NATIVE, None, None)}
 # Kadrajı sadece kendi kamera noktası olan aileler (kütüphane yeri, pencere ve ön plan ekseni yok)
 OWN_SPOT_ONLY = ("meteor",)

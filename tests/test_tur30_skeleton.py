@@ -146,7 +146,9 @@ class TestSkeletonOutput(unittest.TestCase):
                 if env:
                     self.assertNotIn("uniform", suffix)
                     self.assertIn(sk.REAL_TIME, suffix)
-                    self.assertIn(sk.NO_FACE, suffix)
+                    # 29 Eki (3): meteorda ön planda yüksek bina da yok (sk.METEOR_NO_FACE)
+                    self.assertIn(sk.METEOR_NO_FACE if sk.EVENT_SKELETONS[e]["domain"] == "meteor_disasters"
+                                  else sk.NO_FACE, suffix)
                 for removed in ("fully in frame", "fisheye", "hands or fingers", "bow-first", "fixed position",
                                 "Already moving in the first frame", "Nobody pushes", "second ship"):
                     self.assertNotIn(removed, suffix)
