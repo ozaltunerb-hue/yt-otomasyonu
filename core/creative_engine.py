@@ -230,6 +230,13 @@ MARITIME_INSPIRATION_DOMAINS = {
         "guidance": "A violent earthquake in a residential street: an apartment block or a row of old stone houses across the street collapsing floor by floor in a huge dust cloud. The ground shakes, concrete slabs and stone walls fall into the street. Only residential buildings collapse. NO ships or vessels, no vehicles, no casualties.",
         "example_elements": ["six-storey apartment block collapsing floor by floor", "huge dust cloud", "concrete slabs falling into the street", "old stone houses caving in"],
         "camera_styles": ["bystander phone from a rooftop terrace across the street", "bystander phone from a high-floor balcony across the street"],
+    },
+    # 29 Eki, Bahadır (TASLAK): ☄️ Meteor. Denize dev meteor düşer; kıyıdaki modern evler ve insanlar, araç seçilmez.
+    "meteor_disasters": {
+        "title": "Meteor (Meteor impact)",
+        "guidance": "A blazing meteor slams into the sea just off a modern coastal town: a blinding flash, a towering column of water and steam, a blast of wind tearing across the waterfront, burning debris crashing onto the roofs of the houses while people run inland. NO ships or vessels.",
+        "example_elements": ["blazing meteor trailing fire and smoke", "towering column of water and steam", "palm trees bent flat by the blast", "flaming debris on villa roofs"],
+        "camera_styles": ["bystander phone from a hillside villa rooftop terrace above the bay", "bystander phone from a high seafront balcony"],
     }
 }
 
@@ -442,6 +449,16 @@ DOMAIN_ATTRIBUTES = {
         "events": [
             "Earthquake collapses an apartment block",
             "Earthquake collapses a row of old stone houses",
+        ]
+    },
+    # 29 Eki, Bahadır (TASLAK): ☄️ Meteor. Kadraj K1-K3, hepsi yüksek (villa çatı terası, deniz kenarı yüksek balkon,
+    # tepe terası)
+    "meteor_disasters": {
+        "ships": [],
+        "environments": ["Rooftop terrace of a hillside villa above the bay", "High balcony of a seafront apartment",
+                         "Hilltop terrace above a coastal town"],
+        "events": [
+            "Meteor slams into the sea off the coast",
         ]
     }
 }
@@ -1072,7 +1089,8 @@ ENV_CENTRIC_DOMAINS = ["coastal_tornado_landfall", "urban_city_disasters", "open
                        "fire_disasters",        # 8 Eki: yangın (gemisiz, sivil giyim kuralı)
                        "volcano_disasters",     # 10 Eki: volkan (gemisiz, sivil giyim kuralı)
                        "avalanche_disasters",   # 13 Eki: çığ (gemisiz, sivil giyim kuralı)
-                       "earthquake_disasters"]  # 14 Eki: deprem (gemisiz, sivil giyim kuralı)
+                       "earthquake_disasters",  # 14 Eki: deprem (gemisiz, sivil giyim kuralı)
+                       "meteor_disasters"]      # 29 Eki: meteor (gemisiz, sivil giyim kuralı)
 
 # Gemi domainlerinde ekrandaki gerçekçi kişi aralığı (2026-09-24). "Max 2" sadece
 # kargo gemileri içindi; kargo domain'i artık yok. Env-centric domainler tabloya

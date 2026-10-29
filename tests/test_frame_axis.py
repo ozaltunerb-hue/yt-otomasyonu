@@ -37,10 +37,12 @@ TASK_TYPES = {   # görev metni (Aşama 4, madde 2)
     es.VILLAGE: {"balkon", "çatı", "tepe"}, es.LANDFALL: {"balkon", "çatı", "pencere", "direk"},
     es.MARINA_TORNADO: {"balkon", "çatı", "pencere", "direk"}, es.AVENUE: {"balkon", "çatı", "pencere", "direk"},
     es.WILDFIRE: {"balkon", "çatı", "tepe"}, es.FACADE_FIRE: {"balkon", "çatı", "pencere"},
-    es.FIRE_TORNADO: {"balkon", "çatı", "tepe"}, es.HELICOPTER: {"balkon", "çatı", "tepe"},
+    es.FIRE_TORNADO: {"balkon", "çatı", "tepe"},
+    es.HELICOPTER: {"balkon", "çatı"},   # 29 Eki, Bahadır: yamaç evinin çatı terası / yüksek balkon (set çıktı)
     es.PYROCLASTIC: {"balkon", "çatı", "tepe", "pencere"}, es.VOLCANIC_BOMBS: {"balkon", "çatı", "tepe", "pencere"},
     **{e: {"balkon", "teras", "pencere"} for e in es.AVALANCHE_EVENTS},
     **{e: {"balkon", "çatı", "pencere"} for e in es.EARTHQUAKE_EVENTS},
+    es.METEOR: {"çatı", "balkon", "tepe"},   # 29 Eki: K1 çatı terası, K2 yüksek balkon, K3 tepe terası
 }
 EXTRA_TERAS = {es.TIDAL, es.VILLAGE}   # mevcut teras/promenat/seawall/basamak noktaları kendi tipleriyle
 
@@ -99,6 +101,10 @@ class TestAllowedTypes(unittest.TestCase):
         for e in ps.active_events():
             self.assertTrue(set(sk.EVENT_SKELETONS[e]["spots"]) <= set(fx.SPOT_FRAME[e]), e)
             for spot, (t, kind, _, _) in fx.SPOT_FRAME[e].items():
+                if (e, spot) == (es.HELICOPTER, "Embankment above the village road"):
+                    # 29 Eki: helikopterde set (tepe) kadrajı çıktı; nokta sahne olarak kalır, kamera balkon/çatı
+                    self.assertNotIn(t, fx.FRAME_EVENTS[e]["types"])
+                    continue
                 self.assertIn(t, fx.FRAME_EVENTS[e]["types"], (e, spot))
 
     def test_no_bridge_on_slope(self):
@@ -125,7 +131,7 @@ class TestModeAndNative(unittest.TestCase):
                 self.assertEqual(sk.style_suffix(e, None, spot, view, frame=f, fire_env=fire_env),
                                  sk.style_suffix(e, None, spot, view), (e, spot))
                 n += 1
-        self.assertEqual(n, 26)   # kıyı dalga 3, yamaç 2, köy 3, marina 1, cadde 3, orman 2, cephe 4, ateş 6, heli 2
+        self.assertEqual(n, 25)   # kıyı dalga 3, yamaç 2, köy 3, marina 1, cadde 3, orman 2, cephe 4, ateş 6, heli 1 (29 Eki: balkon sabit; set noktasının mod A'sı seçilemez)
 
     def test_native_railing_is_todays_sentence_verbatim(self):
         n = 0
@@ -147,7 +153,7 @@ class TestModeAndNative(unittest.TestCase):
 
     def test_low_spots_never_use_todays_camera(self):
         fixed = [(e, s) for e in ps.active_events() for s, v in fx.SPOT_FRAME[e].items() if v[1] == fx.FIXED]
-        self.assertEqual(len(fixed), 10)   # sel 4, karaya 3, yamaç çökmesi 2, yamaç sokağı merdiven 1
+        self.assertEqual(len(fixed), 11)   # sel 4, karaya 3, yamaç çökmesi 2, yamaç sokağı merdiven 1, helikopter balkonu 1 (29 Eki)
         for e, spot in fixed:
             for view in es.structure_views(e):
                 if spot not in sk.view_spots(e, view):

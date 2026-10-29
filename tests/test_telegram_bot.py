@@ -231,8 +231,10 @@ class TestKeyboard(unittest.TestCase):
     def test_seven_domain_buttons(self):
         self.assertEqual(list(bot.DOMAIN_LABELS), DOMAINS)
         buttons = _buttons(bot.domain_keyboard())
-        self.assertEqual(len(buttons), 12)   # 2 Eki: + ⛰️ Heyelan; 8 Eki: + 🔥 Yangın; 10 Eki: + 🌋 Volkan; 13 Eki: + ❄️ Çığ; 14 Eki: + 🏚️ Deprem
-        self.assertEqual([b.callback_data for b in buttons], [f"{bot.CALLBACK_PREFIX}d:{i}" for i in range(12)])
+        # 2 Eki: + ⛰️ Heyelan; 8 Eki: + 🔥 Yangın; 10 Eki: + 🌋 Volkan; 13 Eki: + ❄️ Çığ; 14 Eki: + 🏚️ Deprem
+        # 29 Eki: + ☄️ Meteor; feribot, tersane, marina & yat pasif (menüde yok, numaralar değişmedi)
+        self.assertEqual(len(buttons), 10)
+        self.assertEqual([b.callback_data for b in buttons], [f"{bot.CALLBACK_PREFIX}d:{i}" for i in range(3, 13)])
 
     def test_event_labels_match_pool(self):
         pool = [e for a in DOMAIN_ATTRIBUTES.values() for e in a["events"]]
@@ -275,6 +277,12 @@ class TestHandlers(unittest.TestCase):
         self.lock_patch = patch.object(bot, "_production_lock", asyncio.Lock())
         self.lock_patch.start()
         self.addCleanup(self.lock_patch.stop)
+        # 29 Eki: akış testleri örnek olarak feribot/tersane düğmelerini kullanır; deniz kategorileri burada açık
+        # (pasiflik tests/test_meteor.py TestSeaCategoriesPassive'de)
+        import core.skeleton_pipeline as sk
+        sea = patch.object(sk, "DISABLED_DOMAINS", set())
+        sea.start()
+        self.addCleanup(sea.stop)
 
     def _click(self, data, chat_id=CHAT):
         ctx, upd = _context(), _update(chat_id, data=bot.CALLBACK_PREFIX + data)
@@ -338,7 +346,7 @@ class TestHandlers(unittest.TestCase):
         upd, runner = self._click("back")
         runner.assert_not_awaited()
         markup = upd.callback_query.edit_message_text.await_args.kwargs["reply_markup"]
-        self.assertEqual(len(_buttons(markup)), 14)   # 12 kategori + 🔍 Ayrıntı / ✋ Onay (TUR 29; 2 Eki heyelan; 8 Eki yangın; 10 Eki volkan; 13 Eki çığ; 14 Eki deprem)
+        self.assertEqual(len(_buttons(markup)), 15)   # 13 kategori + 🔍 Ayrıntı / ✋ Onay (TUR 29; 2 Eki heyelan; 8 Eki yangın; 10 Eki volkan; 13 Eki çığ; 14 Eki deprem; 29 Eki meteor)
 
     def test_cancel_does_not_run(self):
         upd, runner = self._click("x")
@@ -346,7 +354,7 @@ class TestHandlers(unittest.TestCase):
         self.assertIn("İptal", upd.callback_query.edit_message_text.await_args.args[0])
 
     def test_invalid_ids_do_not_run(self):
-        for data in ("d:12", "d:x", "e:0:3", "e:0:-1", "ok:0:9", "ok:12:r", "ok:0", "ok:0:1:2", "zzz", "", "back:1"):   # 14 Eki: 12 kategori (deprem)
+        for data in ("d:13", "d:x", "e:0:3", "e:0:-1", "ok:0:9", "ok:13:r", "ok:0", "ok:0:1:2", "zzz", "", "back:1"):   # 29 Eki: 13 kategori (meteor)
             with self.subTest(data=data):
                 upd, runner = self._click(data)
                 runner.assert_not_awaited()
@@ -387,7 +395,7 @@ class TestHandlers(unittest.TestCase):
         ctx, upd = _context(), _update()
         asyncio.run(bot.cmd_uret(upd, ctx))
         kwargs = upd.effective_message.reply_text.await_args.kwargs
-        self.assertEqual(len([b for r in kwargs["reply_markup"].inline_keyboard for b in r]), 14)   # 2 Eki: 8 kategori; 8 Eki: 9 kategori; 10 Eki: 10 kategori; 13 Eki: 11 (çığ); 14 Eki: 12 (deprem)
+        self.assertEqual(len([b for r in kwargs["reply_markup"].inline_keyboard for b in r]), 15)   # 2 Eki: 8 kategori; 8 Eki: 9 kategori; 10 Eki: 10 kategori; 13 Eki: 11 (çığ); 14 Eki: 12 (deprem); 29 Eki: 13 (meteor; deniz bu sınıfta açık)
         self.assertIn("🧪 TEST", upd.effective_message.reply_text.await_args.args[0])
 
     def test_uret_busy(self):
@@ -479,6 +487,9 @@ class TestRegionViewMenu(unittest.TestCase):
         self.sk = sk
         sk._VIEW_MEMORY.clear()
         self.addCleanup(sk._VIEW_MEMORY.clear)
+        sea = patch.object(sk, "DISABLED_DOMAINS", set())   # 29 Eki: akış testleri deniz düğmelerini de kullanır
+        sea.start()
+        self.addCleanup(sea.stop)
         p = patch.object(bot, "_production_lock", asyncio.Lock())
         p.start()
         self.addCleanup(p.stop)

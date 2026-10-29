@@ -632,7 +632,7 @@ class TestTelegramModes(unittest.TestCase):
 
     def test_yayin_mode_production_passes_publish_kwargs(self):
         ctx = _context(bot.default_cfg("YAYIN"))
-        upd = _update(data="uret:ok:0:r")
+        upd = _update(data="uret:ok:3:r")   # 29 Eki: feribot (0) pasif; kruvaziyer
         runner = AsyncMock(return_value={"success": False, "reason": "cancelled"})
         with patch.object(bot.pipeline, "run_pipeline", runner), patch.object(bot, "_production_lock", asyncio.Lock()):
             asyncio.run(bot.on_callback(upd, ctx))

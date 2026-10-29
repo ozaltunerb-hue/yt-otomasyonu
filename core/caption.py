@@ -109,12 +109,14 @@ PYRO, BOMBS = "Pyroclastic cloud races down into a village street", "Volcanic bo
 AVA_V, AVA_S, AVA_F = ("Avalanche slams into a mountain village", "Avalanche crashes down onto a ski lodge",
                        "Avalanche rips through a pine forest into a valley")
 EQ_A, EQ_O = "Earthquake collapses an apartment block", "Earthquake collapses a row of old stone houses"
+METEOR = "Meteor slams into the sea off the coast"   # 29 Eki
 
 # Paylaşımlar "Kategori" select (21 Eki eşlemesi)
 SHARE_CATEGORY = {FLOOD: "Sel", TIDAL: "Dev dalga", MUDSLIDE: "Heyelan", SLOPE: "Heyelan", VILLAGE: "Heyelan",
                   AVENUE: "Hortum", MARINA: "Su hortumu", LANDFALL: "Su hortumu", WILDFIRE: "Yangın", FACADE: "Yangın",
                   FIRE_TORNADO: "Yangın", HELICOPTER: "Yangın", PYRO: "Volkan", BOMBS: "Volkan", AVA_V: "Çığ",
-                  AVA_S: "Çığ", AVA_F: "Çığ", EQ_A: "Deprem", EQ_O: "Deprem"}
+                  AVA_S: "Çığ", AVA_F: "Çığ", EQ_A: "Deprem", EQ_O: "Deprem",
+                  METEOR: "Meteor"}   # 29 Eki: Notion select seçeneği ilk yazımda oluşur (mevcut kayıtlara dokunulmaz)
 _POOL = {
     "sel": (("#extremeweather", "#naturepower", "#disaster", "#severeweather"),
             ("#flashflood", "#flood", "#floodwater", "#flooding", "#rainstorm", "#stormdamage", "#weatherwatch")),
@@ -133,11 +135,13 @@ _POOL = {
             ("#avalanche", "#snowstorm", "#winterstorm", "#mountains", "#backcountry", "#powdersnow", "#skiresort")),
     "deprem": (("#disaster", "#extremeevents", "#catastrophe", "#survival"),   # 21 Eki: +2 geniş (en fazla 2 ortak)
                ("#buildingcollapse", "#collapse", "#structuralfailure", "#urbandisaster", "#dustcloud")),
+    "meteor": (("#naturepower", "#disaster", "#extremeevents", "#catastrophe"),   # 29 Eki
+               ("#meteor", "#meteorite", "#fireball", "#impact", "#asteroid", "#space", "#coastline")),
 }
 TAG_POOL = {FLOOD: "sel", TIDAL: "dalga", MUDSLIDE: "heyelan", SLOPE: "heyelan", VILLAGE: "heyelan", LANDFALL: "hortum",
             MARINA: "hortum", AVENUE: "hortum", WILDFIRE: "yangın", FACADE: "yangın", FIRE_TORNADO: "yangın",
             HELICOPTER: "yangın", PYRO: "volkan", BOMBS: "volkan", AVA_V: "çığ", AVA_S: "çığ", AVA_F: "çığ",
-            EQ_A: "deprem", EQ_O: "deprem"}
+            EQ_A: "deprem", EQ_O: "deprem", METEOR: "meteor"}
 # Olaya özgü etiketler sadece kendi olayında (ör. #firetornado sadece ateş hortumu)
 TAG_ONLY = {"#firetornado": {FIRE_TORNADO}, "#aerialfirefighting": {HELICOPTER}, "#waterspout": {MARINA, LANDFALL},
             "#skiresort": {AVA_S}, "#mountainroad": {SLOPE}, "#pyroclasticflow": {PYRO}, "#lavabombs": {BOMBS},
@@ -185,6 +189,7 @@ VARS = {
     AVA_F: ("Avalanche", "a Forest Valley", "🌲", "Wooden Cabins", "in a Forest Valley"),
     EQ_A: ("Building Collapse", "an Apartment Block", "🏢", "Upper Floors", "on a City Block"),
     EQ_O: ("Building Collapse", "a Row of Old Houses", "🧱", "Old Stone Houses", "on an Old Street"),
+    METEOR: ("Meteor", "a Coastal Town", "☄️", "Seafront Villas", "off a Coastal Town"),   # 29 Eki
 }
 PLURAL_THREATS = {BOMBS}   # fiil uyumu: "Volcanic Bombs Tear", "Flash Flood Tears"
 WITNESS = {"balkon": "the Balcony", "çatı": "the Rooftop", "pencere": "an Upper Window", "tepe": "the Hillside",
@@ -260,7 +265,8 @@ EVENT_WORDS = {"tornado", "tornadoe", "twister", "funnel", "waterspout", "wave",
                "helicopter", "volcano", "volcanic", "ash", "bomb", "avalanche", "snow", "building", "block",
                "collapse", "street", "town", "village", "city", "road",
                # 21 Eki (7.1): olay adlarının eş anlamlıları (su bırakma = helikopter, kızgın kaya = volkan bombası)
-               "water", "drop", "load", "rock", "glowing", "facade"}
+               "water", "drop", "load", "rock", "glowing", "facade",
+               "meteor", "fireball", "impact", "blast", "shockwave"}   # 29 Eki: meteor
 _EMOJI = re.compile("[\U0001F000-\U0001FFFF☀-➿️‍]")
 
 
@@ -699,7 +705,7 @@ def mentions_threat(head: str, event: str) -> bool:
 THREAT_WORDS = {"tornado", "tornadoe", "twister", "funnel", "waterspout", "wave", "tidal", "flood", "floodwater",
                 "current", "surge", "mud", "mudslide", "landslide", "torrent", "fire", "flame", "wildfire", "blaze",
                 "helicopter", "volcano", "volcanic", "ash", "cloud", "bomb", "avalanche", "snow", "earthquake",
-                "quake"}
+                "quake", "meteor", "fireball", "blast", "shockwave"}   # 29 Eki: meteor
 
 
 def _fill(template: str, event: str, info: dict) -> str:

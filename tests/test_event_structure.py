@@ -175,6 +175,8 @@ class TestLockedData(unittest.TestCase):
             # 14 Eki, Bahadır: deprem (tests/test_earthquake.py ayrıca kilitler)
             es.EARTHQUAKE_APARTMENT: es.EVENT_KEY_VISUAL[es.EARTHQUAKE_APARTMENT],
             es.EARTHQUAKE_OLD_STREET: es.EVENT_KEY_VISUAL[es.EARTHQUAKE_OLD_STREET],
+            # 29 Eki, Bahadır: meteor (tests/test_meteor.py ayrıca kilitler)
+            es.METEOR: es.EVENT_KEY_VISUAL[es.METEOR],
         })
         self.assertEqual(es.SLICE_LABELS, ("0-4s", "4-9s", "9-15s"))
         self.assertEqual(es.SLICE_FIELDS, ("slice_1_rest", "slice_2", "slice_3"))
@@ -233,7 +235,8 @@ class TestLockedData(unittest.TestCase):
                                                   es.HELICOPTER,   # 10 Eki
                                                   es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS,   # 13 Eki: lav çıktı
                                                   *es.AVALANCHE_EVENTS,   # 13 Eki: çığ
-                                                  *es.EARTHQUAKE_EVENTS))   # 14 Eki: deprem
+                                                  *es.EARTHQUAKE_EVENTS,   # 14 Eki: deprem
+                                                  es.METEOR))   # 29 Eki: meteor
         self.assertEqual(TIDAL, "Tidal wave surges over a coastal city street")
         self.assertFalse(es.is_structured("Rogue wave breaks over the rail onto the pool deck"))
 
@@ -675,7 +678,8 @@ class TestTidal(unittest.TestCase):
                                           es.ERUPTION: (3, 6), es.PYROCLASTIC: (3, 6),
                                           es.VOLCANIC_BOMBS: (3, 6),
                                           **{e: (3, 6) for e in es.AVALANCHE_EVENTS},   # 13 Eki: çığ
-                                          **{e: (3, 6) for e in es.EARTHQUAKE_EVENTS}})   # 14 Eki: deprem
+                                          **{e: (3, 6) for e in es.EARTHQUAKE_EVENTS},   # 14 Eki: deprem
+                                          es.METEOR: (3, 6)})   # 29 Eki: meteor
 
     def test_slice_rules_locked(self):
         # selde dilim kapısı yok; heyelan (TASLAK) aynı mekanizma
@@ -685,7 +689,8 @@ class TestTidal(unittest.TestCase):
                                                es.HELICOPTER,   # 10 Eki
                                                es.ERUPTION, es.PYROCLASTIC, es.VOLCANIC_BOMBS,
                                                *es.AVALANCHE_EVENTS,   # 13 Eki: çığ
-                                               *es.EARTHQUAKE_EVENTS})   # 14 Eki: deprem
+                                               *es.EARTHQUAKE_EVENTS,   # 14 Eki: deprem
+                                               es.METEOR})   # 29 Eki: meteor
         r = {x["rule"]: x for x in es.SLICE_RULES[TIDAL]}
         self.assertEqual(set(r), {"slice_flee", "slice_count"})
         self.assertEqual(r["slice_flee"]["terms"], ("run", "ran", "running", "flee", "fled", "fleeing", "sprint",
@@ -1613,7 +1618,8 @@ class TestMarinaRedesign(unittest.TestCase):
                                                    es.ERUPTION: (40, 75),
                                                    es.PYROCLASTIC: (40, 75), es.VOLCANIC_BOMBS: (40, 75),
                                                    **{e: (40, 70) for e in es.AVALANCHE_EVENTS},   # 13 Eki: çığ; 14 Eki (5): 40-70
-                                                   **{e: (40, 70) for e in es.EARTHQUAKE_EVENTS}})   # 14 Eki: deprem
+                                                   **{e: (40, 70) for e in es.EARTHQUAKE_EVENTS},   # 14 Eki: deprem
+                                                   es.METEOR: (40, 75)})   # 29 Eki: meteor
         w = "abcd"
 
         def total_rules(event, spot, b2, b3, vehicle, extra):

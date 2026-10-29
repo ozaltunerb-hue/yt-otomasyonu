@@ -61,6 +61,15 @@ def generic_camera(ftype: str, pos: str, perch: str, scene: str, threat: str, fg
             f"{fg}; {tail}")
 
 
+def helicopter_camera(pos: str) -> str:
+    """29 Eki, Bahadır: helikopter kadrajı yüksek ve geniş (yamaç evinin çatı terası ya da yüksek balkon); mahalle ve
+    alev duvarı aynı karede, helikopter büyük ve yakın (uzakta nokta değil), ön plan boş. "eye level", "normal lens",
+    "pans to follow" yok. Ön plan ekseni yok; uzunluk eski mod B cümlesine yakın (175 kelime)."""
+    return (f"Handheld footage shot by a person standing {pos}, high wide view of the neighborhood and the wall of "
+            f"flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the "
+            f"camera stays fixed, never descending, empty foreground; no zoom, no cuts.")
+
+
 def fire_tornado_b(pos: str, perch: str, fg: str) -> str:
     """Ateş hortumu mod B: mod A'nın kuralları (hortum karenin yarısı, tepesi kesilmez, önde 2-3 kişi kaçar), takip
     yerine sabit kamera. 175 kelime için kısa (A'dan en fazla birkaç kelime uzun)."""
@@ -90,6 +99,7 @@ AVA_SKI = "Avalanche crashes down onto a ski lodge"
 AVA_FOREST = "Avalanche rips through a pine forest into a valley"
 EQ_APT = "Earthquake collapses an apartment block"
 EQ_OLD = "Earthquake collapses a row of old stone houses"
+METEOR = "Meteor slams into the sea off the coast"
 VOLCANO = (ERUPTION, PYROCLASTIC, BOMBS)
 AVALANCHE = (AVA_VILLAGE, AVA_SKI, AVA_FOREST)
 EARTHQUAKE = (EQ_APT, EQ_OLD)
@@ -117,8 +127,12 @@ FRAME_EVENTS = {
     FACADE: {"types": ("balkon", "çatı", "pencere"), "scene": "the burning tower", "threat": "the burning facade",
              "lib": {"pencere": ("of an apartment across from the burning tower", "window")}},
     FIRE_TORNADO: {"types": ("balkon", "çatı", "tepe"), "scene": None, "threat": "the fire tornado"},
-    HELICOPTER: {"types": ("balkon", "çatı", "tepe"), "scene": "the hillside neighborhood",
-                 "threat": "the helicopter"},
+    # 29 Eki, Bahadır: helikopter sadece yamaç evinin çatı terası ya da yüksek balkon (tepe/set çıktı); kamera cümlesi
+    # helicopter_camera
+    HELICOPTER: {"types": ("balkon", "çatı"), "scene": "the hillside neighborhood",
+                 "threat": "the helicopter",
+                 "lib": {"çatı": ("on the rooftop terrace of a hillside house", "rooftop terrace"),
+                         "balkon": ("on a high balcony of a hillside house", "balcony")}},
     ERUPTION: {"types": ("balkon", "çatı", "tepe", "pencere")},
     PYROCLASTIC: {"types": ("balkon", "çatı", "tepe", "pencere")},
     BOMBS: {"types": ("balkon", "çatı", "tepe", "pencere")},
@@ -127,6 +141,9 @@ FRAME_EVENTS = {
     AVA_FOREST: {"types": ("balkon", "teras", "pencere")},
     EQ_APT: {"types": ("balkon", "çatı", "pencere")},
     EQ_OLD: {"types": ("balkon", "çatı", "pencere")},
+    # 29 Eki: meteor kadrajı kamera noktasının kendisi (K1 çatı terası, K2 yüksek balkon, K3 tepe terası); ödünç ve
+    # kütüphane yeri yok, ön plan ekseni yok
+    METEOR: {"types": ("çatı", "balkon", "tepe")},
 }
 # Ateş hortumu sahnesi ortamdan (event_structure.FIRE_TOR_ENVS)
 FIRE_SCENE = {"forest_edge": "the wooded neighborhood", "tree_street": "the tree-lined street",
@@ -192,7 +209,8 @@ SPOT_FRAME = {
                    "Hillside terrace above a village": ("tepe", AB, "on a hillside terrace above the village houses",
                                                         "terrace"),
                    "High balcony of a village house": ("balkon", AB, "on a high balcony of a village house", "balcony")},
-    HELICOPTER: {"Balcony of a hillside house": ("balkon", AB, "on a balcony of a hillside house", "balcony"),
+    # 29 Eki: balkon mod A (eye level, pans to follow) çıktı: sabit, yüksek balkon
+    HELICOPTER: {"Balcony of a hillside house": ("balkon", FIXED, "on a high balcony of a hillside house", "balcony"),
                  "Embankment above the village road": ("tepe", AB, "on a roadside embankment above the village road",
                                                        "embankment")},
 }
@@ -207,6 +225,11 @@ for _e in AVALANCHE:
 for _e in EARTHQUAKE:
     SPOT_FRAME[_e] = {"Rooftop terrace of a building across the street": ("çatı", NATIVE, None, None),
                       "High-floor balcony across the street": ("balkon", NATIVE, None, None)}
+SPOT_FRAME[METEOR] = {"Rooftop terrace of a hillside villa above the bay": ("çatı", NATIVE, None, None),
+                      "High balcony of a seafront apartment": ("balkon", NATIVE, None, None),
+                      "Hilltop terrace above a coastal town": ("tepe", NATIVE, None, None)}
+# Kadrajı sadece kendi kamera noktası olan aileler (kütüphane yeri, pencere ve ön plan ekseni yok)
+OWN_SPOT_ONLY = ("meteor",)
 
 # Volkan/çığ/deprem ön planı: (bugünkü metin, "boş" metni). Volkanda bugünkü metin perch'li ({perch} doldurulur).
 NATIVE_FG = {"volcano": ("a {perch} railing corner in the foreground", "nothing in the foreground"),
@@ -226,6 +249,8 @@ def family(event: str) -> str | None:
         return "earthquake"
     if event == FIRE_TORNADO:
         return "fire_tornado"
+    if event == METEOR:
+        return "meteor"
     return None
 
 
@@ -235,7 +260,7 @@ def native(event: str, spot: str) -> tuple:
 
 def fg_options(event: str, ftype: str, pos_spot: str | None, mode: str | None) -> tuple[str, ...]:
     """Ön plan anahtarları. Mod A'da yok (bugünkü cümle). Yerli (volkan/çığ/deprem) noktada korkuluk / boş."""
-    if mode == "A":
+    if mode == "A" or family(event) in OWN_SPOT_ONLY or event == HELICOPTER:   # 29 Eki: meteor, helikopter
         return ()
     if pos_spot and native(event, pos_spot)[1] == NATIVE:
         return NATIVE_FG_KEYS
@@ -275,7 +300,7 @@ def frame_camera(event: str, spot: str, frame: dict, volc_env: str | None = None
     fam = family(event)
     if pos_spot and (mode == "A" or native(event, pos_spot)[1] == NATIVE):
         cam = legacy(event, pos_spot, volc_env)
-        if native(event, pos_spot)[1] == NATIVE and fg == "boş":
+        if native(event, pos_spot)[1] == NATIVE and fg == "boş" and fam not in OWN_SPOT_ONLY:
             from core.skeleton_pipeline import VOLCANO_SHORT_CAMERA_EXCLUDED
             key = (("volcano_long" if event in VOLCANO_SHORT_CAMERA_EXCLUDED else "volcano") if fam == "volcano"
                    else fam)
@@ -297,6 +322,8 @@ def frame_camera(event: str, spot: str, frame: dict, volc_env: str | None = None
         pos, perch = data.get("lib", {}).get(ftype, LIB_POS[ftype])
         pos = pos.format(scene=scene or "")
     fg_text = FG_TEXT[fg] if fg else None
+    if event == HELICOPTER:   # 29 Eki: yüksek, geniş, helikopter büyük ve yakın
+        return helicopter_camera(pos)
     if fam == "fire_tornado":
         return fire_tornado_b(pos, perch, fg_text)
     return generic_camera(ftype, pos, perch, scene, data["threat"], fg_text)
@@ -333,6 +360,8 @@ def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: 
     (Aşama 5) ortamla çelişen kamera noktaları (spot adı ya da "lib:<tip>")."""
     blocked = blocked or set()
     pool = [s for s in pool if s not in blocked]
+    if family(event) in OWN_SPOT_ONLY:   # 29 Eki: meteor kadrajı kendi kamera noktası (ödünç yok)
+        pool = [spot]
     types = FRAME_EVENTS[event]["types"]
     fam = family(event)
     risky_types = {native(event, s)[0] for s in risky if s in SPOT_FRAME[event]}
@@ -351,7 +380,7 @@ def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: 
                 available.append(t)
                 pos_for[t] = usable
         elif t not in risky_types and (fam not in ("volcano", "avalanche", "earthquake") or t == "pencere") \
-                and t != "teras" and f"lib:{t}" not in blocked:
+                and t != "teras" and f"lib:{t}" not in blocked and fam not in OWN_SPOT_ONLY:
             available.append(t)
             pos_for[t] = [None]
     if not available:   # güvenlik: seçilen spotun kendi tipi her zaman vardır (izinli listede değilse bile)
@@ -390,6 +419,8 @@ def all_frames(event: str, spot: str, pool: list[str], risky: set[str] | None = 
     risky = risky or set()
     blocked = blocked or set()
     pool = [s for s in pool if s not in blocked]
+    if family(event) in OWN_SPOT_ONLY:   # 29 Eki: choose_frame ile aynı
+        pool = [spot]
     risky_types = {native(event, s)[0] for s in risky if s in SPOT_FRAME[event]}
     if "balkon" in risky_types:
         risky_types.add("pencere")
@@ -408,7 +439,7 @@ def all_frames(event: str, spot: str, pool: list[str], risky: set[str] | None = 
             if natives:
                 spots = natives
             elif t == "teras" or (family(event) in ("volcano", "avalanche", "earthquake") and t != "pencere") \
-                    or f"lib:{t}" in blocked:
+                    or f"lib:{t}" in blocked or family(event) in OWN_SPOT_ONLY:
                 continue
             else:
                 spots = [None]

@@ -25,6 +25,53 @@
 
 ---
 
+## 📋 DEVİR: ☄️ Meteor + deniz kategorileri pasif + helikopter kadrajı (29 Eki 2026)
+
+Kie ve gerçek GPT çağrısı yok (kuru deneme de yok). Meteor dışındaki aktif olayların promptu önce/sonra birebir aynı
+(`scripts/prompt_snapshot.py diff`: sadece helikopter kamera cümlesi ve yeni Meteor).
+
+**Deniz kategorileri pasif:** ⛴️ Feribot, 🏗️ Tersane, ⛵ Marina & Yat Telegram menüsünde yok, eski düğmesi seçilemez,
+rastgele kategori seçimine girmez (`sk.SEA_CATEGORIES_ACTIVE = False`, `sk.DISABLED_DOMAINS`). Kod, havuzlar, iskeletler,
+testler yerinde. Açmak: `SEA_CATEGORIES_ACTIVE = True`. 🚢 Kruvaziyer aktif. Menü sıra numaraları değişmedi
+(`bot.DOMAIN_KEYS` tüm kategoriler; Meteor sona eklendi).
+
+**Helikopter kadrajı:** sadece yamaç evinin çatı terası ya da yüksek balkon (set/tepe kadrajı ve balkon mod A çıktı).
+Cümle `fx.helicopter_camera`: "high wide view of the neighborhood and the wall of flames together, the helicopter large
+and close in frame, never a distant dot; ... the camera stays fixed, never descending, empty foreground". "eye level",
+"normal lens", "pans to follow" yok. Ön plan ekseni yok. Hikâye, beat, ortam seçimleri aynı (snapshot: 20/20 tohumda
+sadece kamera cümlesi değişti, en uzun prompt 174). Hortum karaya vurur: tüm kadrajlar zaten yüksekti, dokunulmadı.
+
+**☄️ Meteor (TASLAK)** `Meteor slams into the sea off the coast`, kategori `meteor_disasters`, menüde "☄️ Meteor" →
+"☄️ Denize dev meteor düşer". Kilit cümle (33 kelime), kadraj K1-K3 (= kamera noktası, ödünç/kütüphane/ön plan yok,
+`fx.OWN_SPOT_ONLY`), ortam O1-O4 (`es.METEOR_ENVS`), ışık 3 (`sk.METEOR_WEATHER`) Bahadır'ın metni birebir; her eksende son
+2 tekrar etmez (Notion "Eksenler"). Kamera kuyruğuna Bahadır kararıyla "the camera stays fixed, never descending" eklendi
+(K3 kuralı). Stil eki: Setting satırı + ENV_GUARDRAILS + gerçek zaman + yazı/tabela yok (8 kısıt), 95-99 kelime.
+Hikâye 40-75, prompt en fazla 175, kişi 3-6, insanlar aşağıdaki sokakta (`_AVA_NEAR_RULE`). Araç yok.
+- **Ek kural (puanlama):** 6 ölçütte 3'ün altındaki madde havuzda yok: M3, M4, M5, N4, N5 (`es.METEOR_HELD_BEATS`, puan +
+  gerekçe). Havuz: M1, M2, M6 / N1, N2, N3, N6 (`es.METEOR_BEAT_SCORES`). Durağan fiil (`es.METEOR_STATIC`: billow, drift,
+  rolls slowly, watch, stare, stand, calm, gently, slowly...) beat'te lint HATASI, GPT dilimlerinde ret
+  (`meteor_no_static`). Her beat'te ev/araç/insan/ağaç teması lint'te zorunlu (`es.METEOR_CONTACT`).
+- **[DALGA] bayrağı:** `es.METEOR_WAVE_ENABLED = False`; N1, N2 seçilmez (`es.DISABLED_BEATS`, genel mekanizma). M3 bayrağa
+  bağlıydı ama puanlamada düştü (havuzda yok).
+- **Seçilebilir çiftler (dalga kapalı):** M1+N3, M6+N3, M6+N6. Dışlananlar: M2+N3 (yanan çatı iki kez); kod yedeği hiç
+  sığmayan M1+N6, M2+N6, N1'in tüm eşleri (kilit 33 + insan 6 + çift > 75). M2 dalga kapalıyken hiç seçilmez. Tekrar
+  önleme derinliği 0 (3 çift LRU ile döner; 1 derinlikte M6+N3 sonrası aday kalmıyor).
+- **Sığma koruması (meteor ortamı):** en uzun ortam (O4/O1) öğle/kapalı ışıkla M1+N3 ve M6+N6'da kod yedeğini 175'i 1-2
+  kelime aşırıyor; o durumda sığan bir ortam/ışık seçilir (önce aynı ışık + tekrar önlemeye uyan ortam). Kayıt:
+  `axes_excluded["ortam_sığmadı"]`.
+- **Paylaşımlar Kategori:** caption `SHARE_CATEGORY` "Meteor" (Notion select seçeneği ilk yazımda oluşur; mevcut kayıtlara
+  dokunulmadı), hashtag havuzu "meteor".
+- Testler: `tests/test_meteor.py` (kilit metinler, kamera K1-K3, puan/lint, bayrak, tüm çiftlerde kod yedeği son
+  denetimden geçer, 100 üretimde eksen tekrar önleme, sığma koruması, 6 örnek temiz, deniz kategorileri pasif, helikopter
+  kadrajı).
+
+**Açık kararlar (Bahadır):** Meteor havuzu ince (3 çift, M2 kullanılmıyor): M3/M4/M5/N4/N5 yerine yeni madde ve/veya N1
+kısaltma (23 kelime, hiçbir eşle sığmıyor), M1/N6 kısaltma. Sığma koruması yerine kamera kuyruğundan "never descending"
+çıkarılırsa (2 kelime) tüm ortam/ışık kombinasyonları sığar. 23 Ekim gecesinden bekleyenler (cadde P/Q önerileri, Y5+Z3,
+köy "higher ground", Z7 18 kelime, açılış-araç kuralı genişlemesi) bu turda dokunulmadı.
+
+---
+
 ## 📋 DEVİR: 🧹 Havuz temizliği + Parti 1 yeni beat'ler + kalıcı lint + Notion "Hikâye kaynağı" (17 Eki 2026)
 
 Amaç: kusur sadece video motorundan gelsin, bizim taraftan hiç gelmesin. Kie çağrısı yok. Kül bulutuna dokunulmadı.

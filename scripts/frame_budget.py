@@ -21,6 +21,10 @@ import prompt_snapshot as ps   # noqa: E402
 
 def _longest_setting(event: str) -> str | None:
     import core.event_structure as es
+    if event == es.METEOR:   # 29 Eki: meteor ortam + ışık satırı (en uzun)
+        import core.skeleton_pipeline as sk
+        return max((es.meteor_setting(e, li) for e in es.METEOR_ENVS for li in sk.METEOR_WEATHER),
+                   key=lambda x: len(x.split()))
     if event not in es.ENV_EVENTS:
         return None
     if event in es.EARTHQUAKE_EVENTS:

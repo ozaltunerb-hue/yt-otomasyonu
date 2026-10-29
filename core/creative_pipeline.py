@@ -172,6 +172,8 @@ EVENT_OUTCOMES = {
     # Deprem (TASLAK, 14 Eki, Bahadır): yapılandırılmış hatta; trace/rapor için
     "Earthquake collapses an apartment block": "the ground keeps shaking and the apartment blocks keep collapsing floor by floor into the dust",
     "Earthquake collapses a row of old stone houses": "the collapse keeps running down the street, old stone houses caving in one after another",
+    # Meteor (TASLAK, 29 Eki, Bahadır): yapılandırılmış hatta; trace/rapor için
+    "Meteor slams into the sea off the coast": "the blast keeps tearing across the waterfront, flaming debris crashing onto the roofs of the houses",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -334,6 +336,7 @@ EVENT_REQUIRED = {
     "Volcanic bombs slam into a village street": [],
     "Avalanche slams into a mountain village": [], "Avalanche crashes down onto a ski lodge": [], "Avalanche rips through a pine forest into a valley": [],   # 13 Eki: çığ (yapılandırılmış hat kapıları)
     "Earthquake collapses an apartment block": [], "Earthquake collapses a row of old stone houses": [],   # 14 Eki: deprem (yapılandırılmış hat kapıları)
+    "Meteor slams into the sea off the coast": [],   # 29 Eki: meteor (yapılandırılmış hat kapıları)
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),
@@ -946,10 +949,19 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
         es.remember_environment(env)             # seçim anında (beat hafızası gibi)
         setting = es.setting_line(env)
         weather = es.env_weather(env)   # 14 Eki: çığ ve deprem
+    met_env = None
+    if event == es.METEOR:   # 29 Eki: meteor ortamı (son 2 hariç); ışık = weather (spot ve ışık LRU'su yukarıda)
+        used_env = ah.values(ev_hist, "env")
+        met_env = _with_used(es.choose_meteor_env, used=used_env)
+        excluded["env"] = es.lru_axis(list(es.METEOR_ENVS), used_env)[1]
+        setting = es.meteor_setting(met_env, weather)
+        env_label = f"Ortam: {es.METEOR_ENVS[met_env]} · ışık = {weather}"
+        place = es.METEOR_ENVS[met_env]   # GPT'nin PLACE satırı ortam metni
     # 21 Eki (Aşama 4): kadraj ekseni (tip, ön plan, kamera modu). Ayrı rastgele akış: ana akışın çekimleri (spot,
     # beat, ortam, araç, kişi, kod yedeği) değişmez. Beat'lerin dışlandığı spotlarda kamera olmaz (risky)
     import core.frame_axis as fx
     pool = (list(es.FIRE_TOR_ENVS[es.fire_env_of_spot(spot)]["spots"]) if event == es.FIRE_TORNADO
+            else [spot] if event == es.METEOR   # 29 Eki: meteorda kadraj = kamera noktası (ödünç yok)
             else view_spots(event, view))
     beats_cfg = es.EVENT_BEATS[event]["excluded_spots"]
     risky = set(beats_cfg.get(b2, set())) | set(beats_cfg.get(b3, set()))
@@ -981,6 +993,30 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     frame, frame_excluded = fx.choose_frame(event, spot, pool, risky, ev_hist, frame_rng, blocked)
     excluded.update(frame_excluded)
     spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, frame, scene_env, opening)
+    if met_env and not es.fallback_candidates(spec):
+        # 29 Eki: meteor sığma koruması. Kadraj kamera noktasının kendisi (alternatif yok); en uzun ortam satırı (O4/O1)
+        # öğle/kapalı ışıkla en uzun çiftte (M1+N3, M6+N6) kod yedeğini 175'i 1-2 kelime aşırıyor. Sığan bir ortam/ışık
+        # seçilir: önce aynı ışık + tekrar önlemeye uyan ortam, sonra tekrar önlemeye uyan ışık, en son hepsi.
+        used_env, used_light = ah.values(ev_hist, "env"), ah.values(ev_hist, "light")
+        ok_envs = es.lru_axis(list(es.METEOR_ENVS), used_env)[0]
+        ok_lights = es.lru_axis(list(EVENT_SKELETONS[event]["weather"]), used_light)[0]
+        tiers = ([(e, weather) for e in ok_envs], [(e, li) for e in ok_envs for li in ok_lights],
+                 [(e, li) for e in es.METEOR_ENVS for li in EVENT_SKELETONS[event]["weather"]])
+        for tier in tiers:
+            fits = [(e, li) for e, li in tier if (e, li) != (met_env, weather) and es.fallback_candidates(
+                es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, es.meteor_setting(e, li), volc_env,
+                              frame, scene_env, opening))]
+            if fits:
+                old = (met_env, weather)
+                met_env, weather = random.choice(fits)
+                setting = es.meteor_setting(met_env, weather)
+                spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, frame,
+                                     scene_env, opening)
+                env_label = f"Ortam: {es.METEOR_ENVS[met_env]} · ışık = {weather}"
+                place = es.METEOR_ENVS[met_env]
+                excluded["ortam_sığmadı"] = [f"{old[0]}/{old[1]}"]
+                log.info(f"☄️ Meteor ortamı sığmadı ({old[0]}, {old[1]}), yerine: {met_env}, {weather}")
+                break
     if not es.fallback_candidates(spec):   # K5 sığma koruması: kod yedeği 175'e sığmıyorsa sığan bir kadraj varyantı
         alternatives = [(scene_env, f) for f in fx.all_frames(event, spot, pool, risky, blocked) if f != frame]
         if scene_env not in (None, sv.ENV_A):   # en son: ortam A (bugünkü görünüm, Setting satırı yok)
@@ -1008,7 +1044,8 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
         place = sv.env_text(event, scene_env)
     # 21 Eki: seçilen tüm eksenler (Notion "Eksenler" + süreç hafızası + Onay satırı)
     axes = {"spot": spot, "view": view,
-            "env": ({k: v for k, v in env.items() if k != "spot"} if env else (spec.get("fire_env") or volc_env)),
+            "env": ({k: v for k, v in env.items() if k != "spot"} if env
+                    else (spec.get("fire_env") or volc_env or met_env)),
             "light": env["light"] if env else weather, "vehicle": vehicle, "people": people,
             "key": spec.get("fire_env") or "default", "beats": tag,
             "kadraj": frame["type"], "on_plan": frame.get("fg"), "kamera_modu": frame.get("mode"),
@@ -1026,6 +1063,8 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     trace["place"] = place
     if scene_env:
         trace["scene_env"] = scene_env
+    if met_env:   # 29 Eki: meteor ortamı (O1-O4)
+        trace["meteor_env"] = met_env
     trace["axes_excluded"] = excluded
     trace["axes_source"] = hist["source"]
     if env:

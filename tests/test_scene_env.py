@@ -166,11 +166,17 @@ class TestLight(_Quiet):
             return list(es.ENV_AXES["light"]) + list(sv.ENV_LIGHT_ADD["avalanche"])
         if e in es.EARTHQUAKE_EVENTS:
             return list(es.EQ_ENV_AXES["light"]) + list(sv.ENV_LIGHT_ADD["earthquake"])
+        if e == es.METEOR:   # 29 Eki: Bahadır'ın ışık ekseni birebir (LIGHT_ADD yok)
+            return list(sk.METEOR_WEATHER)
         base = list(es.VOLCANO_WEATHER_WEIGHTS[e]) if e in es.VOLC_ENV_EVENTS else list(sk.EVENT_SKELETONS[e]["weather"])
         return base + [x for x in sv.LIGHT_ADD[e] if x not in base]
 
     def test_every_event_covers_four_conditions(self):
         for e in ps.active_events():
+            if e == es.METEOR:   # 29 Eki: 3 ışık birebir Bahadır'ın (gün batımı, öğle, kapalı; sabah yok), raporda
+                self.assertEqual(set().union(*(sv.light_category(t) for t in self.full_lights(e))),
+                                 set(sv.LIGHT_CATEGORIES) - {"sabah"})
+                continue
             cats = set().union(*(sv.light_category(t) for t in self.full_lights(e)))
             self.assertEqual(cats, set(sv.LIGHT_CATEGORIES), e)
 

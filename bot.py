@@ -45,7 +45,7 @@ from telegram.ext import Application, CallbackQueryHandler, CommandHandler, Cont
 import main as pipeline
 from config import settings
 from core.creative_engine import DOMAIN_ATTRIBUTES, SIDE_LAUNCH_EVENT
-from core.skeleton_pipeline import REGION_VIEW_EVENTS, REGION_VIEWS, skeleton_events
+from core.skeleton_pipeline import REGION_VIEW_EVENTS, REGION_VIEWS, domain_active, skeleton_events
 from core.trace_format import format_final_prompt, format_generation, sections_to_text, split_message
 from infrastructure.archive import update_meta
 from infrastructure.notion_logger import (NotionTracker, STATUS_COMPLETED, STATUS_TEST_DONE, STATUS_UNDELIVERED,
@@ -70,6 +70,7 @@ DOMAIN_LABELS = {
     "volcano_disasters": "🌋 Volkan",       # 10 Eki, Bahadır (TASLAK olaylar)
     "avalanche_disasters": "❄️ Çığ",         # 13 Eki, Bahadır (TASLAK olaylar)
     "earthquake_disasters": "🏚️ Deprem",      # 14 Eki, Bahadır (TASLAK olaylar)
+    "meteor_disasters": "☄️ Meteor",          # 29 Eki, Bahadır (TASLAK olay)
 }
 
 # Olay butonları; anahtarlar DOMAIN_ATTRIBUTES "events" ile birebir (test_telegram_bot denetler)
@@ -145,6 +146,8 @@ EVENT_LABELS = {
     # Deprem (14 Eki, Bahadır; TASLAK). Bahadır'ın anahtarları: apartment, old stone
     "Earthquake collapses an apartment block": "🏢 Apartman bloğu çöküyor",
     "Earthquake collapses a row of old stone houses": "🧱 Eski sokak çöküyor",
+    # Meteor (29 Eki, Bahadır; TASLAK)
+    "Meteor slams into the sea off the coast": "☄️ Denize dev meteor düşer",
 }
 RANDOM_LABEL = "🎲 Rastgele"
 # Bölge görünümü menüsü (1 Eki, Bahadır): sadece REGION_VIEW_EVENTS (sel, kıyı dalga). Bayrak emojisi yok.
@@ -171,6 +174,8 @@ ESTIMATED_COST = "~175 Kie kredisi + birkaç GPT çağrısı"
 #   uret:t:<d|o>        → 🔍 Ayrıntı / ✋ Onay aç-kapa        uret:y:<ok|no> → yayın moduna geçiş onayı
 #   uret:ap:<token>:<y|n> → Kie gönderim onayı               uret:r:<sayfa>:<g|b> → 👍 / 👎 puan
 # Sıra değişirse eski butonun olayı kayar; onay mesajı olayı gösterdiği için fark edilmeden üretim başlamaz.
+# 29 Eki: pasif kategoriler (skeleton_pipeline.DISABLED_DOMAINS) menüde yok ve seçilemez; sıra numaraları değişmez (DOMAIN_KEYS
+# tüm kategoriler), yeni kategori sona eklenir.
 CALLBACK_PREFIX = "uret:"
 RANDOM_ID = "r"
 DOMAIN_KEYS = list(DOMAIN_LABELS)
@@ -248,7 +253,7 @@ def menu_text(cfg: dict) -> str:
 
 def domain_keyboard(cfg: dict | None = None) -> InlineKeyboardMarkup:
     buttons = [InlineKeyboardButton(label, callback_data=f"{CALLBACK_PREFIX}d:{i}")
-               for i, label in enumerate(DOMAIN_LABELS.values())]
+               for i, (d, label) in enumerate(DOMAIN_LABELS.items()) if domain_active(d)]   # 29 Eki: pasif yok
     rows = [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
     if cfg is not None:
         rows.append([InlineKeyboardButton(f"🔍 Ayrıntı: {_onoff(cfg['detail'])}", callback_data=f"{CALLBACK_PREFIX}t:d"),
@@ -361,6 +366,8 @@ def parse_selection(di_raw: str, eid: str | None = None) -> tuple[str, str | Non
     if not di_raw.isdigit() or int(di_raw) >= len(DOMAIN_KEYS):
         return None
     domain = DOMAIN_KEYS[int(di_raw)]
+    if not domain_active(domain):   # 29 Eki: pasif kategori (eski buton) seçilemez
+        return None
     if eid is None or eid == RANDOM_ID:
         return domain, None
     events = domain_events(domain)

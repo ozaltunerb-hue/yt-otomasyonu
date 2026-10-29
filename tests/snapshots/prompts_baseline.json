@@ -2658,11 +2658,11 @@
     "beats": "F1+G5",
     "environment": "E",
     "fit_guard": false,
-    "kadraj": "çatı",
+    "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": null,
+    "kamera_noktasi": "Balcony of a hillside house",
     "key_visual": "The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket.",
-    "on_plan": "parapet",
+    "on_plan": null,
     "people": 3,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -2671,8 +2671,8 @@
     "weather": "deep red sunset glow through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F1+G5|bystander_handheld",
-   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Three residents scramble downhill away from the fire. 4-9s: The water load slams into the flames, flattening a section of the wall into a cloud of white steam. 9-15s: The helicopter pulls up and away as the flames roar back behind it. Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Three residents scramble downhill away from the fire. 4-9s: The water load slams into the flames, flattening a section of the wall into a cloud of white steam. 9-15s: The helicopter pulls up and away as the flames roar back behind it. Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "10": {
    "axes": {
@@ -2681,7 +2681,7 @@
     "environment": "C",
     "fit_guard": false,
     "kadraj": "balkon",
-    "kamera_modu": "A",
+    "kamera_modu": null,
     "kamera_noktasi": "Balcony of a hillside house",
     "key_visual": "The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket.",
     "on_plan": null,
@@ -2693,8 +2693,8 @@
     "weather": "heavy smoke and scorching still air"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F4+G6|bystander_handheld",
-   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Four residents scramble downhill away from the fire. 4-9s: The helicopter roars low over the street, its downdraft bending the burning trees and scattering embers. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the firefighting helicopter; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the firefighting helicopter; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Four residents scramble downhill away from the fire. 4-9s: The helicopter roars low over the street, its downdraft bending the burning trees and scattering embers. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "11": {
    "axes": {
@@ -2706,7 +2706,7 @@
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "A firefighting helicopter sweeps in low and dumps its water straight onto the wall of flames behind the houses.",
-    "on_plan": "parapet",
+    "on_plan": null,
     "people": 4,
     "spot": "Embankment above the village road",
     "story_source": "fallback",
@@ -2715,8 +2715,8 @@
     "weather": "hot dry wind and thick smoke haze"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|embankment above the village road##F6+G3|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter sweeps in low and dumps its water straight onto the wall of flames behind the houses. Four villagers flee from the fire toward the road. 4-9s: The SUV brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: Thick white steam rolls over the street as the wall of flames sinks back toward the slope. Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter sweeps in low and dumps its water straight onto the wall of flames behind the houses. Four villagers flee from the fire toward the road. 4-9s: The SUV brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: Thick white steam rolls over the street as the wall of flames sinks back toward the slope. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "12": {
    "axes": {
@@ -2728,7 +2728,7 @@
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames.",
-    "on_plan": "boş",
+    "on_plan": null,
     "people": 6,
     "spot": "Embankment above the village road",
     "story_source": "fallback",
@@ -2737,8 +2737,8 @@
     "weather": "harsh bright midday sun through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|embankment above the village road##F5+G1|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Six residents run from the flames down the street. 4-9s: A wall of water falls on a burning house, the flames collapsing into thick white steam. 9-15s: The flames fight back, a fresh burst of fire swallowing trees beside the water line. Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Six residents run from the flames down the street. 4-9s: A wall of water falls on a burning house, the flames collapsing into thick white steam. 9-15s: The flames fight back, a fresh burst of fire swallowing trees beside the water line. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "13": {
    "axes": {
@@ -2750,7 +2750,7 @@
     "kamera_modu": null,
     "kamera_noktasi": "Balcony of a hillside house",
     "key_visual": "A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames.",
-    "on_plan": "boş",
+    "on_plan": null,
     "people": 4,
     "spot": "Embankment above the village road",
     "story_source": "fallback",
@@ -2759,8 +2759,8 @@
     "weather": "deep red sunset glow through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|embankment above the village road##F3+G2|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Four villagers flee from the fire toward the road. 4-9s: The delivery truck speeds down the street as the helicopter's downdraft whips smoke and embers across the road. 9-15s: The helicopter circles back and drops another huge load, extinguishing a row of burning trees in a cloud of steam. Handheld footage filmed on a balcony of a hillside house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a balcony of a hillside house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Four villagers flee from the fire toward the road. 4-9s: The delivery truck speeds down the street as the helicopter's downdraft whips smoke and embers across the road. 9-15s: The helicopter circles back and drops another huge load, extinguishing a row of burning trees in a cloud of steam. Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "14": {
    "axes": {
@@ -2768,11 +2768,11 @@
     "beats": "F6+G7",
     "environment": "A",
     "fit_guard": false,
-    "kadraj": "tepe",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "Embankment above the village road",
+    "kamera_noktasi": null,
     "key_visual": "A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames.",
-    "on_plan": "boş",
+    "on_plan": null,
     "people": 5,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -2781,8 +2781,8 @@
     "weather": "deep red sunset glow through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F6+G7|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Five villagers dash away from the burning slope. 4-9s: The delivery truck brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: Burning treetops erupt as the helicopter's water load hits the ridge above the houses. Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
-   "style_suffix": "Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Five villagers dash away from the burning slope. 4-9s: The delivery truck brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: Burning treetops erupt as the helicopter's water load hits the ridge above the houses. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "15": {
    "axes": {
@@ -2791,10 +2791,10 @@
     "environment": "E",
     "fit_guard": false,
     "kadraj": "balkon",
-    "kamera_modu": "B",
+    "kamera_modu": null,
     "kamera_noktasi": "Balcony of a hillside house",
     "key_visual": "A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames.",
-    "on_plan": "korkuluk",
+    "on_plan": null,
     "people": 4,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -2803,8 +2803,8 @@
     "weather": "hazy early-morning light through drifting smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F4+G7|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Four villagers flee from the fire toward the road. 4-9s: The helicopter roars low over the street, its downdraft bending the burning trees and scattering embers. 9-15s: Burning treetops erupt as the helicopter's water load hits the ridge above the houses. Handheld footage filmed on a balcony of a hillside house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a balcony of a hillside house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Four villagers flee from the fire toward the road. 4-9s: The helicopter roars low over the street, its downdraft bending the burning trees and scattering embers. 9-15s: Burning treetops erupt as the helicopter's water load hits the ridge above the houses. Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "16": {
    "axes": {
@@ -2812,11 +2812,11 @@
     "beats": "F6+G5",
     "environment": "C",
     "fit_guard": false,
-    "kadraj": "tepe",
-    "kamera_modu": "B",
-    "kamera_noktasi": "Embankment above the village road",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
     "key_visual": "A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames.",
-    "on_plan": "yaprak",
+    "on_plan": null,
     "people": 6,
     "spot": "Embankment above the village road",
     "story_source": "fallback",
@@ -2825,8 +2825,8 @@
     "weather": "heavy smoke and scorching still air"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|embankment above the village road##F6+G5|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Six villagers flee from the fire toward the road. 4-9s: The white van brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: The helicopter pulls up and away as the flames roar back behind it. Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Six villagers flee from the fire toward the road. 4-9s: The white van brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: The helicopter pulls up and away as the flames roar back behind it. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "17": {
    "axes": {
@@ -2838,7 +2838,7 @@
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket.",
-    "on_plan": "boş",
+    "on_plan": null,
     "people": 4,
     "spot": "Embankment above the village road",
     "story_source": "fallback",
@@ -2847,8 +2847,8 @@
     "weather": "harsh bright midday sun through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|embankment above the village road##F5+G2|bystander_handheld",
-   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Four villagers dash away from the burning slope. 4-9s: A wall of water falls on a burning house, the flames collapsing into thick white steam. 9-15s: The helicopter circles back and drops another huge load, extinguishing a row of burning trees in a cloud of steam. Handheld footage filmed on a flat rooftop above the hillside neighborhood, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the hillside neighborhood, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Four villagers dash away from the burning slope. 4-9s: A wall of water falls on a burning house, the flames collapsing into thick white steam. 9-15s: The helicopter circles back and drops another huge load, extinguishing a row of burning trees in a cloud of steam. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "18": {
    "axes": {
@@ -2856,11 +2856,11 @@
     "beats": "F6+G6",
     "environment": "E",
     "fit_guard": false,
-    "kadraj": "çatı",
+    "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": null,
+    "kamera_noktasi": "Balcony of a hillside house",
     "key_visual": "A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames.",
-    "on_plan": "boş",
+    "on_plan": null,
     "people": 5,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -2869,8 +2869,8 @@
     "weather": "hot dry wind and thick smoke haze"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F6+G6|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Five villagers flee from the fire toward the road. 4-9s: The SUV brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Five villagers flee from the fire toward the road. 4-9s: The SUV brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "19": {
    "axes": {
@@ -2878,11 +2878,11 @@
     "beats": "F1+G6",
     "environment": "A",
     "fit_guard": false,
-    "kadraj": "tepe",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "Embankment above the village road",
+    "kamera_noktasi": null,
     "key_visual": "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the wall of flames racing toward the houses.",
-    "on_plan": "boş",
+    "on_plan": null,
     "people": 6,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -2891,8 +2891,8 @@
     "weather": "gusty dry wind under an orange smoky sky"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F1+G6|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the wall of flames racing toward the houses. Six people sprint away from the flames. 4-9s: The water load slams into the flames, flattening a section of the wall into a cloud of white steam. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
-   "style_suffix": "Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+   "prompt": "0-4s: A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the wall of flames racing toward the houses. Six people sprint away from the flames. 4-9s: The water load slams into the flames, flattening a section of the wall into a cloud of white steam. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "2": {
    "axes": {
@@ -2900,11 +2900,11 @@
     "beats": "F1+G5",
     "environment": "B",
     "fit_guard": false,
-    "kadraj": "tepe",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "Embankment above the village road",
+    "kamera_noktasi": null,
     "key_visual": "The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket.",
-    "on_plan": "boş",
+    "on_plan": null,
     "people": 4,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -2913,8 +2913,8 @@
     "weather": "hot dry wind and thick smoke haze"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F1+G5|bystander_handheld",
-   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Four villagers dash away from the burning slope. 4-9s: The water load slams into the flames, flattening a section of the wall into a cloud of white steam. 9-15s: The helicopter pulls up and away as the flames roar back behind it. Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a canyon neighborhood of hillside villas with swimming pools and winding roads, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a canyon neighborhood of hillside villas with swimming pools and winding roads, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Four villagers dash away from the burning slope. 4-9s: The water load slams into the flames, flattening a section of the wall into a cloud of white steam. 9-15s: The helicopter pulls up and away as the flames roar back behind it. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a canyon neighborhood of hillside villas with swimming pools and winding roads, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a canyon neighborhood of hillside villas with swimming pools and winding roads, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "20": {
    "axes": {
@@ -2922,11 +2922,11 @@
     "beats": "F6+G6",
     "environment": "E",
     "fit_guard": false,
-    "kadraj": "çatı",
+    "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": null,
+    "kamera_noktasi": "Balcony of a hillside house",
     "key_visual": "A firefighting helicopter sweeps in low and dumps its water straight onto the wall of flames behind the houses.",
-    "on_plan": "boş",
+    "on_plan": null,
     "people": 5,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -2935,8 +2935,8 @@
     "weather": "deep red sunset glow through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F6+G6|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter sweeps in low and dumps its water straight onto the wall of flames behind the houses. Five people run from the flames. 4-9s: The pickup truck brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter sweeps in low and dumps its water straight onto the wall of flames behind the houses. Five people run from the flames. 4-9s: The pickup truck brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "3": {
    "axes": {
@@ -2948,7 +2948,7 @@
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket.",
-    "on_plan": "parapet",
+    "on_plan": null,
     "people": 5,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -2957,8 +2957,8 @@
     "weather": "harsh bright midday sun through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F6+G1|bystander_handheld",
-   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Five people run from the flames. 4-9s: The delivery truck brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: The flames fight back, a fresh burst of fire swallowing trees beside the water line. Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Five people run from the flames. 4-9s: The delivery truck brakes hard as a drenching cascade of water spills across the road in front of it. 9-15s: The flames fight back, a fresh burst of fire swallowing trees beside the water line. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "4": {
    "axes": {
@@ -2970,7 +2970,7 @@
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames.",
-    "on_plan": "boş",
+    "on_plan": null,
     "people": 6,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -2979,8 +2979,8 @@
     "weather": "deep red sunset glow through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F1+G6|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Six villagers flee from the fire toward the road. 4-9s: The water load slams into the flames, flattening a section of the wall into a cloud of white steam. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Six villagers flee from the fire toward the road. 4-9s: The water load slams into the flames, flattening a section of the wall into a cloud of white steam. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a valley village of farmhouses among vineyard rows on the slopes, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "5": {
    "axes": {
@@ -2988,11 +2988,11 @@
     "beats": "F5+G1",
     "environment": "D",
     "fit_guard": false,
-    "kadraj": "tepe",
-    "kamera_modu": "B",
-    "kamera_noktasi": "Embankment above the village road",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
     "key_visual": "A firefighting helicopter sweeps in low and dumps its water straight onto the wall of flames behind the houses.",
-    "on_plan": "yaprak",
+    "on_plan": null,
     "people": 6,
     "spot": "Embankment above the village road",
     "story_source": "fallback",
@@ -3001,8 +3001,8 @@
     "weather": "harsh bright midday sun through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|embankment above the village road##F5+G1|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter sweeps in low and dumps its water straight onto the wall of flames behind the houses. Six villagers flee from the fire toward the road. 4-9s: A wall of water falls on a burning house, the flames collapsing into thick white steam. 9-15s: The flames fight back, a fresh burst of fire swallowing trees beside the water line. Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter sweeps in low and dumps its water straight onto the wall of flames behind the houses. Six villagers flee from the fire toward the road. 4-9s: A wall of water falls on a burning house, the flames collapsing into thick white steam. 9-15s: The flames fight back, a fresh burst of fire swallowing trees beside the water line. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "6": {
    "axes": {
@@ -3011,10 +3011,10 @@
     "environment": "D",
     "fit_guard": false,
     "kadraj": "balkon",
-    "kamera_modu": "B",
+    "kamera_modu": null,
     "kamera_noktasi": "Balcony of a hillside house",
     "key_visual": "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the wall of flames racing toward the houses.",
-    "on_plan": "boş",
+    "on_plan": null,
     "people": 3,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -3023,8 +3023,8 @@
     "weather": "harsh bright midday sun through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F3+G5|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the wall of flames racing toward the houses. Three villagers flee from the fire toward the road. 4-9s: The pickup truck speeds down the street as the helicopter's downdraft whips smoke and embers across the road. 9-15s: The helicopter pulls up and away as the flames roar back behind it. Handheld footage filmed on a balcony of a hillside house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a balcony of a hillside house, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the wall of flames racing toward the houses. Three villagers flee from the fire toward the road. 4-9s: The pickup truck speeds down the street as the helicopter's downdraft whips smoke and embers across the road. 9-15s: The helicopter pulls up and away as the flames roar back behind it. Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on a high balcony of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a hillside town of white houses above a blue bay, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "7": {
    "axes": {
@@ -3032,11 +3032,11 @@
     "beats": "F5+G6",
     "environment": "C",
     "fit_guard": false,
-    "kadraj": "tepe",
-    "kamera_modu": "B",
-    "kamera_noktasi": "Embankment above the village road",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
     "key_visual": "The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket.",
-    "on_plan": "yaprak",
+    "on_plan": null,
     "people": 3,
     "spot": "Embankment above the village road",
     "story_source": "fallback",
@@ -3045,8 +3045,8 @@
     "weather": "gusty dry wind under an orange smoky sky"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|embankment above the village road##F5+G6|bystander_handheld",
-   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Three people run from the flames. 4-9s: A wall of water falls on a burning house, the flames collapsing into thick white steam. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Three people run from the flames. 4-9s: A wall of water falls on a burning house, the flames collapsing into thick white steam. 9-15s: A second helicopter swoops in and drops water on the flames along the road. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "8": {
    "axes": {
@@ -3054,11 +3054,11 @@
     "beats": "F4+G2",
     "environment": "C",
     "fit_guard": false,
-    "kadraj": "tepe",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "Embankment above the village road",
+    "kamera_noktasi": null,
     "key_visual": "The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket.",
-    "on_plan": "yaprak",
+    "on_plan": null,
     "people": 4,
     "spot": "Balcony of a hillside house",
     "story_source": "fallback",
@@ -3067,8 +3067,8 @@
     "weather": "deep red sunset glow through the smoke"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|balcony of a hillside house##F4+G2|bystander_handheld",
-   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Four villagers dash away from the burning slope. 4-9s: The helicopter roars low over the street, its downdraft bending the burning trees and scattering embers. 9-15s: The helicopter circles back and drops another huge load, extinguishing a row of burning trees in a cloud of steam. Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a roadside embankment above the village road, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a few leaves at the frame edge; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with its water bucket. Four villagers dash away from the burning slope. 4-9s: The helicopter roars low over the street, its downdraft bending the burning trees and scattering embers. 9-15s: The helicopter circles back and drops another huge load, extinguishing a row of burning trees in a cloud of steam. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "9": {
    "axes": {
@@ -3080,7 +3080,7 @@
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames.",
-    "on_plan": "parapet",
+    "on_plan": null,
     "people": 4,
     "spot": "Embankment above the village road",
     "story_source": "fallback",
@@ -3089,8 +3089,8 @@
     "weather": "gusty dry wind under an orange smoky sky"
    },
    "combo_key": "fire_disasters|none|firefighting helicopter drops water on the flames racing toward a hillside neighborhood|embankment above the village road##F5+G2|bystander_handheld",
-   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Four villagers flee from the fire toward the road. 4-9s: A wall of water falls on a burning house, the flames collapsing into thick white steam. 9-15s: The helicopter circles back and drops another huge load, extinguishing a row of burning trees in a cloud of steam. Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
-   "style_suffix": "Handheld footage filmed on a flat rooftop above the houses below, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the helicopter always in frame, a low parapet edge in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
+   "prompt": "0-4s: A firefighting helicopter comes in over the ridge and its water drop crashes down in a white curtain onto the flames. Four villagers flee from the fire toward the road. 4-9s: A wall of water falls on a burning house, the flames collapsing into thick white steam. 9-15s: The helicopter circles back and drops another huge load, extinguishing a row of burning trees in a cloud of steam. Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "style_suffix": "Handheld footage filmed on the rooftop terrace of a hillside house, high wide view of the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or face close to the camera. Setting: a lakeside town of houses below wooded hills, no readable signs, text or flags. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   }
  },
  "Flames race up a tower facade": {
@@ -3975,6 +3975,448 @@
    "combo_key": "urban_city_disasters|none|flash flooding in city streets|commercial city streets#north_european_seaside#V4+D3|bystander_handheld",
    "prompt": "0-4s: A surge of brown floodwater pours down the sloping street and drags a parked car along with it. People run for the doorways as the water hits. 4-9s: The large SUV is pushed onto the sidewalk and slams into a lamppost. 9-15s: Seconds later, in full view, a street tree is uprooted and carried along. Handheld footage filmed on a high balcony over a downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, parked SUVs and vans, no readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a high balcony over a downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, parked SUVs and vans, no readable signs, text or flags."
+  }
+ },
+ "Meteor slams into the sea off the coast": {
+  "1": {
+   "axes": {
+    "acilis": null,
+    "beats": "M1+N3",
+    "environment": "O3",
+    "fit_guard": true,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 5,
+    "spot": "Rooftop terrace of a hillside villa above the bay",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "overcast grey sky"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##M1+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five neighbours dash inland right below. 4-9s: A blast of wind hits the waterfront, bending palm trees flat and blowing loungers and umbrellas off the villa terraces. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "10": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N3",
+    "environment": "O1",
+    "fit_guard": false,
+    "kadraj": "tepe",
+    "kamera_modu": null,
+    "kamera_noktasi": "Hilltop terrace above a coastal town",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 6,
+    "spot": "Hilltop terrace above a coastal town",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "golden sunset"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##M6+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six residents flee in the street right below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "11": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N3",
+    "environment": "O2",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "High balcony of a seafront apartment",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 6,
+    "spot": "High balcony of a seafront apartment",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "overcast grey sky"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##M6+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six residents flee in the street right below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "12": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N6",
+    "environment": "O2",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "High balcony of a seafront apartment",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 5,
+    "spot": "High balcony of a seafront apartment",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "hazy midday light"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##M6+N6|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five neighbours dash inland right below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: The shockwave tears roof tiles and solar panels off the houses and sends them flying over the street. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "13": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N6",
+    "environment": "O2",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "High balcony of a seafront apartment",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 4,
+    "spot": "High balcony of a seafront apartment",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "hazy midday light"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##M6+N6|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four residents run from it just below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: The shockwave tears roof tiles and solar panels off the houses and sends them flying over the street. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "14": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N6",
+    "environment": "O3",
+    "fit_guard": false,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 4,
+    "spot": "Rooftop terrace of a hillside villa above the bay",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "overcast grey sky"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##M6+N6|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four people scatter in the street below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: The shockwave tears roof tiles and solar panels off the houses and sends them flying over the street. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "15": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N6",
+    "environment": "O2",
+    "fit_guard": false,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 3,
+    "spot": "Rooftop terrace of a hillside villa above the bay",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "golden sunset"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##M6+N6|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three residents run from it just below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: The shockwave tears roof tiles and solar panels off the houses and sends them flying over the street. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "16": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N3",
+    "environment": "O4",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "High balcony of a seafront apartment",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 5,
+    "spot": "High balcony of a seafront apartment",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "hazy midday light"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##M6+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five residents run from it just below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern seafront apartment towers and low houses along a promenade, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern seafront apartment towers and low houses along a promenade, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "17": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N3",
+    "environment": "O3",
+    "fit_guard": false,
+    "kadraj": "tepe",
+    "kamera_modu": null,
+    "kamera_noktasi": "Hilltop terrace above a coastal town",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 5,
+    "spot": "Hilltop terrace above a coastal town",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "hazy midday light"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##M6+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five residents flee in the street right below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "18": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N6",
+    "environment": "O3",
+    "fit_guard": false,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 6,
+    "spot": "Rooftop terrace of a hillside villa above the bay",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "golden sunset"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##M6+N6|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six residents run from it just below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: The shockwave tears roof tiles and solar panels off the houses and sends them flying over the street. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "19": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N6",
+    "environment": "O2",
+    "fit_guard": false,
+    "kadraj": "tepe",
+    "kamera_modu": null,
+    "kamera_noktasi": "Hilltop terrace above a coastal town",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 3,
+    "spot": "Hilltop terrace above a coastal town",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "golden sunset"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##M6+N6|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three neighbours dash inland right below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: The shockwave tears roof tiles and solar panels off the houses and sends them flying over the street. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "2": {
+   "axes": {
+    "acilis": null,
+    "beats": "M1+N3",
+    "environment": "O2",
+    "fit_guard": false,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 5,
+    "spot": "Rooftop terrace of a hillside villa above the bay",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "golden sunset"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##M1+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five neighbours dash inland right below. 4-9s: A blast of wind hits the waterfront, bending palm trees flat and blowing loungers and umbrellas off the villa terraces. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "20": {
+   "axes": {
+    "acilis": null,
+    "beats": "M1+N3",
+    "environment": "O3",
+    "fit_guard": true,
+    "kadraj": "tepe",
+    "kamera_modu": null,
+    "kamera_noktasi": "Hilltop terrace above a coastal town",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 5,
+    "spot": "Hilltop terrace above a coastal town",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "overcast grey sky"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##M1+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five people run off right below. 4-9s: A blast of wind hits the waterfront, bending palm trees flat and blowing loungers and umbrellas off the villa terraces. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "3": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N6",
+    "environment": "O3",
+    "fit_guard": false,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 4,
+    "spot": "Rooftop terrace of a hillside villa above the bay",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "overcast grey sky"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##M6+N6|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four neighbours dash inland right below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: The shockwave tears roof tiles and solar panels off the houses and sends them flying over the street. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined coastal suburb of modern homes, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "4": {
+   "axes": {
+    "acilis": null,
+    "beats": "M1+N3",
+    "environment": "O2",
+    "fit_guard": true,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 6,
+    "spot": "Rooftop terrace of a hillside villa above the bay",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "hazy midday light"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##M1+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Six people run off right below. 4-9s: A blast of wind hits the waterfront, bending palm trees flat and blowing loungers and umbrellas off the villa terraces. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "5": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N6",
+    "environment": "O1",
+    "fit_guard": false,
+    "kadraj": "tepe",
+    "kamera_modu": null,
+    "kamera_noktasi": "Hilltop terrace above a coastal town",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 5,
+    "spot": "Hilltop terrace above a coastal town",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "hazy midday light"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##M6+N6|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five neighbours dash inland right below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: The shockwave tears roof tiles and solar panels off the houses and sends them flying over the street. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "6": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N3",
+    "environment": "O1",
+    "fit_guard": false,
+    "kadraj": "tepe",
+    "kamera_modu": null,
+    "kamera_noktasi": "Hilltop terrace above a coastal town",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 5,
+    "spot": "Hilltop terrace above a coastal town",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "golden sunset"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|hilltop terrace above a coastal town##M6+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five people run off right below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "7": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N3",
+    "environment": "O1",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "High balcony of a seafront apartment",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 3,
+    "spot": "High balcony of a seafront apartment",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "golden sunset"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##M6+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Three people scatter in the street below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: white modern Mediterranean villas with glass railings and pools, golden sunset. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "8": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N3",
+    "environment": "O2",
+    "fit_guard": false,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a hillside villa above the bay",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 4,
+    "spot": "Rooftop terrace of a hillside villa above the bay",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "hazy midday light"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|rooftop terrace of a hillside villa above the bay##M6+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Four neighbours dash inland right below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront houses below; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, hazy midday light. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+  },
+  "9": {
+   "axes": {
+    "acilis": null,
+    "beats": "M6+N3",
+    "environment": "O2",
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "High balcony of a seafront apartment",
+    "key_visual": "A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam.",
+    "on_plan": null,
+    "people": 5,
+    "spot": "High balcony of a seafront apartment",
+    "story_source": "fallback",
+    "vehicle": null,
+    "view": null,
+    "weather": "overcast grey sky"
+   },
+   "combo_key": "meteor_disasters|none|meteor slams into the sea off the coast|high balcony of a seafront apartment##M6+N3|bystander_handheld",
+   "prompt": "0-4s: A blazing meteor tears across the sky trailing fire and smoke and slams into the sea just off the coast, erupting in a blinding flash and a towering column of water and steam. Five residents flee in the street right below. 4-9s: The blast rolls over the bay and hurls parked cars and palm trees across the coastal road. 9-15s: Flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street. Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea; the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed, never descending; no zoom, no cuts, no person or face close to the camera. Setting: modern glass houses stepped down a green hillside, overcast grey sky. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   }
  },
  "Mud and debris torrent tears through a hillside village": {

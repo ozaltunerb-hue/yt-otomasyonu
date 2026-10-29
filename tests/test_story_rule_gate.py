@@ -116,7 +116,7 @@ class TestLocks(unittest.TestCase):
 
     def test_required_covers_all_22_events_with_budget(self):
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(cp.EVENT_REQUIRED), 36)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
+        self.assertEqual(len(cp.EVENT_REQUIRED), 37)   # 29 Eki: + meteor; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
         for e, groups in cp.EVENT_REQUIRED.items():
             with self.subTest(event=e):
                 # yapılandırılmış olaylarda grup yok (olay terimleri event_structure'da)
@@ -398,7 +398,7 @@ class TestCityEventSwap(unittest.TestCase):
     def test_event_sets_equal(self):
         self.assertEqual(set(cp.EVENT_OUTCOMES), set(sk.EVENT_SKELETONS))
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(sk.EVENT_SKELETONS), 36)   # 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
+        self.assertEqual(len(sk.EVENT_SKELETONS), 37)   # 29 Eki: + meteor; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
         self.assertIn(TIDAL, sk.EVENT_SKELETONS)
         self.assertNotIn(SIGNS, sk.EVENT_SKELETONS)
         self.assertIn(SIGNS, sk.REMOVED_EVENTS)   # kod silinmedi: havuzda, iskelet dışında
@@ -723,7 +723,7 @@ class TestFlashFloodFix(unittest.TestCase):
         for e, s in sk.EVENT_SKELETONS.items():
             # 15 Eki (2): ateş hortumu kendi kamera cümlesinde (tests/test_fire_tornado_gate.py kilitler)
             if (e == FLOOD or e in es.VOLCANO_EVENTS or e in es.AVALANCHE_EVENTS or e in es.EARTHQUAKE_EVENTS
-                    or e == es.FIRE_TORNADO):   # 13 Eki: çığ; 14 Eki: deprem da sabit kamera
+                    or e == es.FIRE_TORNADO or e == es.METEOR):   # 13 Eki: çığ; 14 Eki: deprem; 29 Eki: meteor sabit kamera
                 continue
             ship = (s["ships"] or [None])[0]
             for spot in s["spots"]:

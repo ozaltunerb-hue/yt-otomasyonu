@@ -124,6 +124,10 @@ CAMERA_SPOTS = {
     # 🏚️ Deprem (14 Eki, Bahadır): karşı binada yüksekte; kamera cümlesi "Handheld footage from ..." (kısa adlar)
     "Rooftop terrace of a building across the street": "a rooftop terrace",
     "High-floor balcony across the street": "a high-floor balcony",
+    # ☄️ Meteor (29 Eki, Bahadır): kadraj K1-K3, hepsi yüksek; tam cümle METEOR_CAMERA'da (birebir)
+    "Rooftop terrace of a hillside villa above the bay": "the rooftop terrace of a modern hillside villa",
+    "High balcony of a seafront apartment": "a high balcony of a seafront apartment",
+    "Hilltop terrace above a coastal town": "a hilltop terrace above a coastal town",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -192,6 +196,8 @@ VOLC_SPOT_WEIGHTS = {"balkon": 2, "çatı": 1, "yamaç": 1}
 AVALANCHE_WEATHER = ["overcast winter daylight over snowy mountains"]
 # Deprem havası (14 Eki): sadece iskelet hattı ve pick_setting için; yapılandırılmış hatta ortam havuzundan gelir
 EARTHQUAKE_WEATHER = ["hazy dusty morning light"]
+# Meteor ışık ekseni (29 Eki, Bahadır; son 2 tekrar etmez). Yapılandırılmış hatta "Setting: ortam, ışık." satırına girer
+METEOR_WEATHER = ["golden sunset", "hazy midday light", "overcast grey sky"]
 FIRE_WEATHER = ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
                 "heavy smoke and scorching still air"]
 
@@ -603,6 +609,18 @@ EVENT_SKELETONS = {
                 "after another, dust and rubble bursting into the street. Roofs fall in as {n} {people} run from the "
                 "collapsing buildings. The collapse keeps running down the street, house after house.",
     },
+    # ── ☄️ Meteor (TASLAK, 29 Eki, Bahadır). Yapılandırılmış hatta; metin sadece PROMPT_PIPELINE=skeleton için. Kamera
+    # yüksekte, körfeze bakar; araç değil, ev ve insanlar. ──
+    "Meteor slams into the sea off the coast": {
+        "domain": "meteor_disasters", "ships": None,
+        "spots": {"Rooftop terrace of a hillside villa above the bay": "a hillside of modern villas above the bay",
+                  "High balcony of a seafront apartment": "a seafront promenade below modern apartments",
+                  "Hilltop terrace above a coastal town": "a coastal town around a wide bay"},
+        "people": ["residents", "people"], "weather": METEOR_WEATHER, "object": "impact",
+        "text": "Over {spot} in {weather}, a blazing meteor streaks down and slams into the sea just off the coast in a "
+                "blinding flash and a towering column of water. The blast tears across the waterfront as {n} {people} "
+                "run inland. Flaming debris keeps crashing onto the roofs of the houses.",
+    },
     # ── Plaj & sahil ──
     "Tornado approaching an open beach": {
         "domain": "open_beach_coastal_events", "ships": None,
@@ -756,6 +774,8 @@ PHENOMENA = {
     "Çığ": ["Avalanche slams into a mountain village", "Avalanche crashes down onto a ski lodge", "Avalanche rips through a pine forest into a valley"],
     # 14 Eki (TASLAK)
     "Deprem": ["Earthquake collapses an apartment block", "Earthquake collapses a row of old stone houses"],
+    # 29 Eki (TASLAK)
+    "Meteor": ["Meteor slams into the sea off the coast"],
     "Dev Dalga": ["Green wave breaks over the rail onto the vehicle deck", "Rogue wave breaks over the rail onto the pool deck",
                   "Large waves reaching the beach", "Storm surge wave lifts and buckles the floating pontoon",
                   "Tidal wave surges over a coastal city street"],
@@ -791,13 +811,16 @@ EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
                # TASLAK (13 Eki, Bahadır): çığ 3-6
                "Avalanche slams into a mountain village": (3, 6), "Avalanche crashes down onto a ski lodge": (3, 6), "Avalanche rips through a pine forest into a valley": (3, 6),
                # TASLAK (14 Eki, Bahadır): deprem 3-6
-               "Earthquake collapses an apartment block": (3, 6), "Earthquake collapses a row of old stone houses": (3, 6)}
+               "Earthquake collapses an apartment block": (3, 6), "Earthquake collapses a row of old stone houses": (3, 6),
+               # TASLAK (29 Eki, Bahadır): meteor 3-6
+               "Meteor slams into the sea off the coast": (3, 6)}
 # "No readable signs, text or flags" ayrı cümle olarak stil ekine girer (şehirde görünüm cümlesinin içinde)
 NO_SIGNS_DOMAINS = {"landslide_disasters",
                     "fire_disasters",   # 8 Eki: yangın (heyelan deseni, toplam 8 kısıt)
                     "volcano_disasters",   # 10 Eki: volkan
                     "avalanche_disasters",   # 13 Eki: çığ (yazı/tabela yok)
-                    "earthquake_disasters"}   # 14 Eki: deprem (yazı/tabela/bayrak yok)
+                    "earthquake_disasters",   # 14 Eki: deprem (yazı/tabela/bayrak yok)
+                    "meteor_disasters"}   # 29 Eki: meteor (yazı/tabela/bayrak yok)
 
 # Import anında kontrol: iskelet verisi havuzla uyumlu olmalı
 for _e, _s in EVENT_SKELETONS.items():
@@ -908,6 +931,26 @@ def earthquake_camera(spot: str) -> str:
             f"camera stays fixed and never descends; one continuous shot, no zoom, no cuts.")
 
 
+# ☄️ Meteor kamerası (29 Eki, Bahadır). Kadraj cümleleri K1-K3 ve tüm kadrajlara eklenen kuyruk birebir; Bahadır kararı
+# (29 Eki): kuyruğa sabitlik ifadesi eklendi ("the camera stays fixed, never descending"; K3 kuralı, diğer olaylarla
+# aynı). K1-K3 cümlesinin sonundaki nokta ";" oldu (en fazla 8 kısıt).
+METEOR_CAMERA = {
+    "Rooftop terrace of a hillside villa above the bay":
+        "Handheld footage from the rooftop terrace of a modern hillside villa, overlooking the bay and the seafront "
+        "houses below",
+    "High balcony of a seafront apartment":
+        "Handheld footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea",
+    "Hilltop terrace above a coastal town":
+        "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view",
+}
+METEOR_CAMERA_TAIL = ("the impact point is visible offshore from the first second; slight hand shake, the camera stays "
+                      "fixed, never descending; no zoom, no cuts.")
+
+
+def meteor_camera(spot: str) -> str:
+    return f"{METEOR_CAMERA[spot]}; {METEOR_CAMERA_TAIL}"
+
+
 # 🔥 Ateş hortumu kamerası (15 Eki (2), Bahadır): hortum dev ve kareyi dolduruyor. Yüksek bakış, hortuma yakın; gövde
 # karenin en az yarısı, tepesi ve bulutu kesilmez; önde 2-3 kişi kaçar. Takip (pan) ve el titremesi aynı. "eye level,
 # normal lens" çıktı (yüksek bakışla çelişiyordu). 175 kelime için giyim/ışık kısa (aynı kısıtlar, görevli satırı yok:
@@ -1009,6 +1052,18 @@ class SlotFillError(RuntimeError):
     """gpt-4o-mini boşlukları iki denemede de geçerli dolduramadı (sessiz yedek yok)."""
 
 
+# 29 Eki, Bahadır: deniz kategorileri (feribot, tersane, marina & yat) PASİF. Telegram menüsünde görünmez, otomatik
+# (LRU) seçime girmez; kod, havuzlar, iskeletler ve testler aynen durur. Açmak için SEA_CATEGORIES_ACTIVE = True (tek
+# satır). Kruvaziyer aktif.
+SEA_CATEGORIES_ACTIVE = False
+SEA_CATEGORIES = ("ferry_operations", "shipyard_and_drydock_engineering", "marina_and_yacht_operations")
+DISABLED_DOMAINS = set() if SEA_CATEGORIES_ACTIVE else set(SEA_CATEGORIES)
+
+
+def domain_active(domain: str) -> bool:
+    return domain not in DISABLED_DOMAINS
+
+
 # 18 Eki (2), Bahadır: DEVRE DIŞI olaylar. Telegram menüsünde görünmez, otomatik (LRU) seçime girmez; havuz, beat'ler,
 # iskelet, Notion kayıtları ve testler aynen durur (kombinasyon testleri ve havuz linti bu olayları da denetler). Yeniden
 # açmak için olayı bu kümeden çıkarmak yeter (tek satır). Şok dalgası: videolar gri, uzak ve sönük çıkıyordu.
@@ -1017,7 +1072,10 @@ DISABLED_EVENTS = {"Volcano erupts and a shockwave blows out windows"}
 
 def skeleton_events(domain: str) -> list[str]:
     """Domain'in bu hatta kullanılabilen olayları, havuz sırasıyla (Telegram menüsü bu listeyi gösterir). 18 Eki (2):
-    DISABLED_EVENTS listede yok (menü ve otomatik seçim). Kodla doğrudan olay vermek (kuru deneme betiği) yine çalışır."""
+    DISABLED_EVENTS listede yok (menü ve otomatik seçim). Kodla doğrudan olay vermek (kuru deneme betiği) yine çalışır.
+    29 Eki: pasif kategoride (DISABLED_DOMAINS) liste boş."""
+    if not domain_active(domain):
+        return []
     return [e for e in DOMAIN_ATTRIBUTES[domain]["events"] if e in EVENT_SKELETONS and e not in DISABLED_EVENTS]
 
 
@@ -1053,6 +1111,8 @@ def legacy_camera(event: str, spot: str, volc_env: str | None = None) -> str:
         camera = earthquake_camera(spot)
     if event == "Fire tornado tears across a burning roadside":
         camera = fire_tornado_camera(spot)
+    if s["domain"] == "meteor_disasters":   # 29 Eki: meteor, sabit yüksek kadraj (K1-K3)
+        camera = meteor_camera(spot)
     return camera
 
 

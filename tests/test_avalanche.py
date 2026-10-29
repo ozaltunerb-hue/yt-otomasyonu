@@ -582,7 +582,7 @@ class TestAvalanche(unittest.TestCase):
         # "carries", "signal"/"cartwheel" gibi kelimeler yasak sayılmaz; volkanda bu kapı yok
         self.assertEqual(es.find_terms(es._AVA_BANNED, "The avalanche carries the cabin, a cartwheel spins."), [])
         self.assertNotIn(es.ERUPTION, es.EVENT_BANNED_WORDS)
-        self.assertEqual(set(es.EVENT_BANNED_WORDS), set(AVA) | set(es.EARTHQUAKE_EVENTS))   # 14 Eki: + deprem
+        self.assertEqual(set(es.EVENT_BANNED_WORDS), set(AVA) | set(es.EARTHQUAKE_EVENTS) | {es.METEOR})   # 14 Eki: + deprem; 29 Eki: + meteor (durağan fiil)
 
     def test_failed_village_run_fixtures(self):
         # 14 Eki 01:30: A4 deneme 1 "crashes into ... ricocheting" reddedilmişti; şimdi hepsi geçer
