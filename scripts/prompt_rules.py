@@ -74,7 +74,9 @@ def check(event: str, item: dict) -> dict[str, str]:
         if rain:
             out["K4"] = ", ".join(rain)
     words = len(item["prompt"].split())
-    if words > MAX_WORDS:
+    import core.event_structure as es
+    cap = es.max_prompt_words(event)   # 29 Eki (2): meteor 195, diğerleri MAX_WORDS (175)
+    if words > cap:
         out["K5"] = f"{words} kelime"
     # 21 Eki (Aşama 4): mod A = kanıtlanmış bugünkü cümle (kelimesi kelimesine). K1-K3 orada izinli, ayrı kovada sayılır
     if (item.get("axes") or {}).get("kamera_modu") == "A":

@@ -698,6 +698,23 @@ _VOLC_CHIMNEY = ("chimney", "chimney stack", "chimneystack", "smokestack", "flue
 # _VOLC_LAVA) silindi, içerikleri EVENT_BEATS üstündeki ARŞİV notunda.
 # 13 Eki (3), Bahadır kararı: volkan Kie prompt'u (hikâye + stil eki) en fazla 175 kelime
 VOLC_MAX_PROMPT_WORDS = 175
+# 29 Eki (2), Bahadır: sadece meteor 195 kelime ve 11 kısıt (tek meteor / beyaz su / kalıcı hasar cümlesi ve kamera
+# kuyruğu stil ekini uzattı). Diğer olaylar 175 / 8 / 1400.
+PROMPT_WORDS_BY_EVENT = {"Meteor slams into the sea off the coast": 195}
+CONSTRAINTS_BY_EVENT = {"Meteor slams into the sea off the coast": 11}
+PROMPT_CHARS_BY_EVENT: dict[str, int] = {}
+
+
+def max_prompt_words(event: str) -> int:
+    return PROMPT_WORDS_BY_EVENT.get(event, VOLC_MAX_PROMPT_WORDS)
+
+
+def max_constraints(event: str) -> int:
+    return CONSTRAINTS_BY_EVENT.get(event, 8)
+
+
+def max_prompt_chars(event: str) -> int:
+    return PROMPT_CHARS_BY_EVENT.get(event, MAX_PROMPT_CHARS)
 # 13 Eki (4) yeni volkan maddeleri: çan kulesi (U5), oluklu sac çatı (P6), yol/krater (T5)
 _VOLC_TOWER = ("bell tower", "belfry", "church tower", "clock tower", "steeple", "campanile", "spire", "tower")
 _VOLC_METAL_ROOF = ("corrugated", "sheet metal", "metal sheet", "tin roof", "metal roof", "roofing sheet", "roof")
@@ -871,22 +888,38 @@ _FIRE_BURST = ("burst", "shatter", "crack", "explode", "split", "pop", "fly", "f
 # 17 Eki (Parti 1, madde 1 kuralı): kod yedeğinin 175 kelimeye sığmadığı çiftler hariç (beat silinmez). Ölçüm:
 # tests/test_story_fallback.py (FALLBACK_GAPS_EXCLUDED).
 # 18 Eki: kısa metinler ve kısa stil eki (96 kelime) ile sığmayan çift kalmadı (17 Eki: bombalar 7, şok dalgası 1)
-# ☄️ Meteor (29 Eki, Bahadır). Nesne grupları ev, araç, ağaç, insan temasını taşır (her beat'te büyük temas)
-_MET_BLAST = ("blast", "shockwave", "shock wave", "pressure wave", "wind", "gust")
-_MET_PALM = ("palm", "palm tree", "tree", "trunk")
-_MET_TERRACE = ("lounger", "sun lounger", "sunbed", "umbrella", "parasol", "terrace", "furniture", "chair")
-_MET_ROCK = ("rock", "chunk", "boulder", "fragment", "debris", "fireball", "stone", "ember")
-_MET_ROOF = ("roof", "rooftop", "house", "home", "villa")
-_MET_IGNITE = ("fire", "ablaze", "burn", "flame", "ignite", "alight", "blaze")
-_MET_CAR = ("car", "vehicle", "suv", "truck", "van")
-_MET_HURL = ("hurl", "fling", "flung", "toss", "throw", "threw", "thrown", "sweep", "swept", "blow", "blew", "blown",
-             "flip", "tumble", "send", "sent", "carry", "carried", "smash", "slam")
-_MET_WAVE = ("wave", "surge", "wall of water", "water")
-_MET_HOUSES = ("house", "home", "villa", "building", "seawall")
-_MET_GARDEN = ("garden", "villa", "house", "home", "yard")
-_MET_TILE = ("tile", "solar panel", "panel", "shingle", "roof")
-_MET_FLY = ("fly", "flies", "flew", "flying", "hurl", "fling", "flung", "scatter", "toss", "send", "sent", "rip", "tear",
-            "tore", "torn", "strip")
+# ☄️ Meteor (29 Eki (2), Bahadır): tek meteor, tek çarpma; sonuç zinciri şok dalgası + beyaz buhar, ardından alçak,
+# geniş, BEYAZ, köpüklü taşkın. Nesne koruma kapısı (METEOR_OBJECT_GATES): GPT'nin 4-9s / 9-15s cümlesi seçilen
+# maddenin İKİ ana nesnesini de taşır ("furniture scatters" gibi genelleme reddedilir). Gruplar beat terimleriyle aynı.
+_MET_PALM = ("palm", "palm tree")
+_MET_ROOFTILE = ("roof", "rooftop", "tile", "roof tile")
+_MET_STEAM = ("steam", "spray")
+_MET_HOUSE = ("house", "home", "villa")
+_MET_PERGOLA = ("pergola", "awning")
+_MET_SUNBED = ("sunbed", "sun lounger", "pool")
+_MET_FLOOD = ("flood",)
+_MET_PROMENADE = ("promenade",)
+_MET_SURGE = ("surge", "flood")
+_MET_CAR = ("car", "vehicle")
+_MET_GARDEN = ("garden",)
+_MET_FENCE = ("fence", "furniture")
+_MET_SURF = ("seawall", "surf")
+_MET_BAR = ("bar", "beach bar", "lounger")
+METEOR_OBJECT_GATES = {"W1": (_MET_PALM, _MET_ROOFTILE), "W2": (_MET_STEAM, _MET_HOUSE),
+                       "W3": (_MET_PERGOLA, _MET_SUNBED), "X1": (_MET_FLOOD, _MET_PROMENADE),
+                       "X2": (_MET_SURGE, _MET_CAR), "X3": (_MET_GARDEN, _MET_FENCE), "X4": (_MET_SURF, _MET_BAR)}
+# Tek meteor (kural 2): GPT'nin insan cümlesi, 4-9s ve 9-15s'te yasak (kod yedeği de aynı denetimden geçer)
+METEOR_ONE_BANNED = ("rain", "shower", "fragment", "debris", "ember", "fireball", "meteors", "meteorite", "second",
+                     "another", "streak", "chunk", "falling rock")
+# Tsunami değil (kural 3): beat lint + GPT ret
+METEOR_TSUNAMI_BANNED = ("tsunami", "wall of water", "towering wave", "giant wave", "tidal", "brown", "muddy",
+                         "rises up", "rising wall")
+# Suyun geçtiği dilimde beyaz su kelimesi zorunlu (kural 3)
+METEOR_WATER = ("water", "seawater", "sea", "surge", "flood", "surf", "spray", "wave", "foam")
+METEOR_WHITE = ("white", "foaming", "steaming")
+# Kalıcı hasar (kural 4): her W/X maddesinde ve GPT'nin 4-9s / 9-15s cümlesinde en az biri (çekimleriyle)
+METEOR_DAMAGE = ("snap", "rip", "tear", "tore", "torn", "flip", "smash", "shove", "knock over", "knocks over",
+                 "knocked over", "knocking over", "crush", "topple", "break", "broke", "broken")
 # Ek kural (29 Eki, Bahadır): sakin/atmosferik beat yok. Bu fiiller hiçbir meteor beat'inde (lint) ve GPT'nin yazdığı
 # dilimlerde (EVENT_BANNED_WORDS) geçmez. Çekimleri find_terms ile eşleşir (billows, drifting, stood, staring...)
 METEOR_STATIC = ("billow", "drift", "rolls slowly", "roll slowly", "rolling slowly", "rolled slowly", "watch", "stare",
@@ -894,7 +927,8 @@ METEOR_STATIC = ("billow", "drift", "rolls slowly", "roll slowly", "rolling slow
                  "linger", "gaze", "hover")
 # Ek kural (29 Eki): her beat'te ekranda büyük temas (ev, araç, insan, ağaç). Lint her meteor beat'inde birini arar
 METEOR_CONTACT = ("house", "home", "villa", "roof", "building", "garden", "terrace", "car", "vehicle", "people",
-                  "person", "resident", "palm", "tree")
+                  "person", "resident", "palm", "tree",
+                  "beach bar")   # 29 Eki (2): plaj barı yapı (X4)
 _VOLC_BOMBS_GAPS = set()
 _VOLC_ERUPTION_GAPS = set()
 EVENT_BEATS = {
@@ -1918,71 +1952,44 @@ EVENT_BEATS = {
         "excluded_views": {},
         "excluded_spots": {"R1": {"High-floor balcony across the street"}},
     },
-    # ── ☄️ Meteor (TASLAK, 29 Eki, Bahadır). Maddeler Bahadır'ın metni birebir. Ek kural: 6 ölçütte (büyüklük, kontrast,
-    # yakınlık, çizilebilirlik, aksiyon, farklılık) 3'ün altında kalan madde havuza girmez (METEOR_HELD_BEATS).
-    # [DALGA] maddeleri (N1, N2) METEOR_WAVE_ENABLED bayrağıyla açılır; kapalıyken seçilmez (DISABLED_BEATS).
+    # ── ☄️ Meteor (TASLAK, 29 Eki (2), Bahadır): yeni kurgu, maddeler Bahadır'ın metni birebir. Havuza girmeyenler
+    # (METEOR_HELD_BEATS): W2 ve X1 hasar fiili yok (kural 4), W3 "awnings" ve X3 "fences" kalıcı havuz lintinde ince
+    # hedef. Eski M/N havuzu RETIRED_BEATS'te.
     METEOR: {
         "slice_2": {
-            "M1": {"text": "a blast of wind hits the waterfront, bending palm trees flat and blowing loungers and "
-                           "umbrellas off the villa terraces",
-                   "terms": [_MET_BLAST, _MET_PALM, _MET_TERRACE]},
-            "M2": {"text": "burning chunks of rock crash down across the hillside, smashing into roofs and setting a "
-                           "parked car on fire",
-                   "terms": [_MET_ROCK, _MET_ROOF + ("car",), _MET_IGNITE]},
-            "M6": {"text": "the blast rolls over the bay and hurls parked cars and palm trees across the coastal road",
-                   "terms": [_MET_BLAST, _MET_CAR, _MET_HURL]},
+            "W1": {"text": "the shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas",
+                   "terms": [_MET_PALM, _MET_ROOFTILE]},
         },
         "slice_3": {
-            "N1": {"text": "a towering wave rises from the impact and races toward the coast, crashing over the "
-                           "seawall into the first row of modern houses",
-                   "terms": [_MET_WAVE, _MET_HOUSES]},
-            "N2": {"text": "the wave sweeps cars off the coastal road and drives them into the villa gardens",
-                   "terms": [_MET_WAVE, _MET_CAR, _MET_GARDEN]},
-            "N3": {"text": "flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street",
-                   "terms": [_MET_ROCK, _MET_ROOF, _MET_IGNITE]},
-            "N6": {"text": "the shockwave tears roof tiles and solar panels off the houses and sends them flying over "
-                           "the street",
-                   "terms": [_MET_BLAST, _MET_TILE, _MET_FLY]},
+            "X2": {"text": "a white, steaming surge floods the coastal road and shoves parked cars into the villa walls",
+                   "terms": [_MET_SURGE, _MET_CAR]},
+            "X4": {"text": "white surf bursts over the seawall and smashes the beach bars and loungers into the road",
+                   "terms": [_MET_SURF, _MET_BAR]},
         },
-        # yanan çatılar iki kez (M2: N3). Kod yedeği sığmayan çiftler (kilit cümle 33 + en kısa insan cümlesi 6 + çift >
-        # 75; madde 1 kuralı): M1+N6, M2+N6 ve N1'in (23 kelime) tüm eşleri. N1 bayrak açılsa da seçilemez (kısalma
-        # Bahadır kararı)
-        "excluded_pairs": {("M2", "N3"), ("M1", "N6"), ("M2", "N6"), ("M1", "N1"), ("M2", "N1"), ("M6", "N1")},
+        # Aynı nesne iki dilimde (W3 şezlong: X3 mobilya, X4 şezlong) dışlanırdı; W3 ve X3 havuzda olmadığı için kayıt yok
+        "excluded_pairs": set(),
         "excluded_views": {},
         "excluded_spots": {},
     },
 }
 
-# ── ☄️ Meteor [DALGA] bayrağı (29 Eki, Bahadır). Kapalıyken N1 ve N2 seçilmez (ilk üretimlerde 9-15s N3-N6'dan). Bahadır
-# kuralı: M3 (deniz çekilir) de bu bayrağa bağlı (dalga kapalıyken çekilip gelmeyen deniz mantıksız) ve M3 seçilirse
-# 9-15s'de sadece N3-N6; ama M3 ek kuraldaki puanlamada yakınlık 2 aldığı için havuzda hiç yok (METEOR_HELD_BEATS).
-# Açmak için: METEOR_WAVE_ENABLED = True (tek satır).
-METEOR_WAVE_ENABLED = False
-METEOR_WAVE_BEATS = {"N1", "N2"}
-# Olay -> seçilemeyen beat'ler (havuzda ve lint'te durur, çift seçiminde yok). Diğer olaylarda boş.
-DISABLED_BEATS = {METEOR: set() if METEOR_WAVE_ENABLED else set(METEOR_WAVE_BEATS)}
-# Ek kural (29 Eki, Bahadır): 6 ölçütte (1-5) 3'ün altında kalan maddeler havuza girmedi. Yerine yeni madde Bahadır'ın
-# kararıyla gelir. Puan sırası: büyüklük, kontrast, yakınlık, çizilebilirlik, aksiyon, farklılık.
+# Olay -> seçilemeyen beat'ler (havuzda ve lint'te durur, çift seçiminde yok). 29 Eki (2): meteor [DALGA] bayrağı
+# kaldırıldı; mekanizma boş.
+DISABLED_BEATS: dict[str, set[str]] = {}
+# 29 Eki (2), Bahadır: yeni W/X maddelerinden havuza girmeyenler (yerine yeni madde Bahadır'ın kararıyla). Puan sırası:
+# büyüklük, kontrast, yakınlık, çizilebilirlik, aksiyon, farklılık.
 METEOR_HELD_BEATS = {
-    "M3": ("The sea pulls back sharply from the beach, exposing the seabed as people on the promenade turn and run.",
-           (4, 3, 2, 3, 3, 5), "yakınlık 2: kumsal ve deniz tabanı kameradan uzak; ev/araç/ağaç teması yok; [DALGA] "
-                               "bayrağına bağlı"),
-    "M4": ("People on the terraces below are knocked to the ground by the shockwave, then scramble up and run inland.",
-           (2, 3, 4, 2, 4, 4), "büyüklük 2 (hedef sadece insanlar, küçük), çizilebilirlik 2 (şok dalgası görünmez, "
-                               "sebep ekranda değil); insana zarar"),
-    "M5": ("A second, smaller fireball streaks down and explodes on the hillside behind the houses.",
-           (3, 5, 2, 4, 3, 3), "yakınlık 2 (evlerin arkasında, uzak); ev/araç/insan/ağaç teması yok (boş yamaç)"),
-    "N4": ("A shower of seawater and burning fragments falls over the whole neighborhood as people run for cover "
-           "under the balconies.", (3, 3, 3, 2, 3, 3),
-           "çizilebilirlik 2 (dağınık yağış gibi, belirgin tek temas yok); büyük temas yok"),
-    "N5": ("A second, larger fireball slams into the sea closer to the shore, throwing a wall of spray over the "
-           "promenade.", (5, 4, 3, 4, 4, 2),
-           "farklılık 2 (kilit cümlenin tekrarı: ateş topu denize çarpar); ev/araç/insan/ağaç teması yok"),
+    "W2": ("a ring of white steam and spray races across the bay and engulfs the seafront houses", (5, 4, 3, 3, 4, 5),
+           "hasar fiili yok (kural 4: engulfs listede değil)"),
+    "W3": ("the blast tears pergolas and awnings off the villas and flips the sunbeds into the pools",
+           (3, 3, 4, 3, 4, 4), "kalıcı havuz linti: ince hedef 'awning'"),
+    "X1": ("the water column crashes down into a low, white, foaming flood that pours across the promenade",
+           (5, 4, 3, 4, 4, 3), "hasar fiili yok (kural 4: crashes / pours listede değil)"),
+    "X3": ("foaming seawater pours into the villa gardens right below, knocking over fences and furniture",
+           (3, 4, 5, 3, 4, 3), "kalıcı havuz linti: ince hedef 'fence'"),
 }
 # Havuzdaki maddelerin puanları (rapor ve test; hepsi en az 3)
-METEOR_BEAT_SCORES = {"M1": (3, 3, 4, 4, 4, 3), "M2": (4, 5, 3, 4, 5, 4), "M6": (5, 3, 3, 3, 5, 4),
-                      "N1": (5, 4, 4, 4, 5, 5), "N2": (5, 3, 4, 4, 5, 4), "N3": (4, 5, 4, 4, 4, 3),
-                      "N6": (3, 3, 4, 3, 4, 4)}
+METEOR_BEAT_SCORES = {"W1": (4, 3, 4, 4, 5, 4), "X2": (5, 4, 4, 4, 5, 4), "X4": (4, 4, 3, 4, 5, 4)}
 
 # ── 17 Eki 2026, Bahadır (temizlik turu): kurala göre çıkarılan beat'ler. Kural: denetimde (scratch/
 # asama3_havuz_denetimi.md) ZAYIF/ÇIKAR + en az biri: ince/uzak/küçük hedef, fizik ≤2, aksiyon ≤2, yakın ≤2, büyük ≤2,
@@ -2057,6 +2064,33 @@ RETIRED_BEATS = {
                             "ince (direk, kablo), büyük(1), fizik(2)")},
     EARTHQUAKE_OLD_STREET: {"T2": ("the collapse runs down the street, house after house, toward us",
                                    "fizik(2) (zincirleme çöküş); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı")},
+    # 29 Eki (2), Bahadır: meteor yeni kurgu (tek çarpma, beyaz taşkın). İlk test videosunda su sütunu dumana döndü,
+    # 5-9s boş, gökten ikinci meteorlar yağıp hasarsız söndü. M3-M5, N4, N5 ilk turda puanlamada düşmüştü (havuza hiç
+    # girmedi). Kimlikler tekrar kullanılmaz.
+    METEOR: {"M1": ("a blast of wind hits the waterfront, bending palm trees flat and blowing loungers and umbrellas off "
+                    "the villa terraces", "29 Eki (2) yeni kurgu"),
+             "M2": ("burning chunks of rock crash down across the hillside, smashing into roofs and setting a parked car "
+                    "on fire", "29 Eki (2): ikinci meteor / parça yağmuru"),
+             "M3": ("the sea pulls back sharply from the beach, exposing the seabed as people on the promenade turn and "
+                    "run", "puan: yakınlık 2"),
+             "M4": ("people on the terraces below are knocked to the ground by the shockwave, then scramble up and run "
+                    "inland", "puan: büyüklük 2, çizilebilirlik 2"),
+             "M5": ("a second, smaller fireball streaks down and explodes on the hillside behind the houses",
+                    "puan: yakınlık 2; ikinci meteor"),
+             "M6": ("the blast rolls over the bay and hurls parked cars and palm trees across the coastal road",
+                    "29 Eki (2) yeni kurgu"),
+             "N1": ("a towering wave rises from the impact and races toward the coast, crashing over the seawall into the "
+                    "first row of modern houses", "29 Eki (2): tsunami duvarı yasak"),
+             "N2": ("the wave sweeps cars off the coastal road and drives them into the villa gardens",
+                    "29 Eki (2) yeni kurgu"),
+             "N3": ("flaming debris sets the roofs of the hillside houses ablaze while people sprint up the street",
+                    "29 Eki (2): parça yağmuru"),
+             "N4": ("a shower of seawater and burning fragments falls over the whole neighborhood as people run for "
+                    "cover under the balconies", "puan: çizilebilirlik 2"),
+             "N5": ("a second, larger fireball slams into the sea closer to the shore, throwing a wall of spray over the "
+                    "promenade", "puan: farklılık 2; ikinci meteor"),
+             "N6": ("the shockwave tears roof tiles and solar panels off the houses and sends them flying over the "
+                    "street", "29 Eki (2) yeni kurgu")},
     AVALANCHE_FOREST: {"E5": ("the avalanche hits a stone farmhouse wall and the wall cracks open", "aksiyon(2); " + "çıkış bekliyordu; 18 Eki Parti 2 ile çıktı"),
                        "F3": ("the avalanche carries a pile of broken trunks across the valley floor into a stone house",
                               "uzak, yakın(2)")},
@@ -2096,8 +2130,8 @@ OBJECT_GROUPS = {
     AVALANCHE_FOREST: {"F7": 0, "E7": 0, "E1": 0, "E2": 0, "E3": 0, "E4": 0, "E6": 0, "F1": 0, "F2": 0, "F4": 0, "F5": 0, "F6": 0},
     EARTHQUAKE_APARTMENT: {"Q5": 0, "P1": 1, "P2": 0, "P3": 1, "P4": 0, "Q1": 1, "Q2": 0, "Q3": 0, "Q4": 1},
     EARTHQUAKE_OLD_STREET: {"T7": 0, "T5": 0, "R1": 0, "R2": 0, "R3": 0, "R4": 1, "T1": 1, "T3": 0, "T4": 0},   # 18 Eki: T2 çıktı
-    # 29 Eki: meteor nesneleri palmiye (M1), çatı/araç (M2), araç (M6), ev (N1), araç (N2), çatı (N3), kiremit (N6)
-    METEOR: {"M1": 1, "M2": 1, "M6": 1, "N1": 1, "N2": 1, "N3": 1, "N6": 1},
+    # 29 Eki (2): meteor nesneleri palmiye (W1), araç (X2), bar/şezlong (X4); iki nesne zorunluluğu METEOR_OBJECT_GATES
+    METEOR: {"W1": 0, "X2": 1, "X4": 1},
 }
 
 # Sert kurallara 16 Eki eklemeleri (yapılandırılmış hat, sadece GPT'nin yazdığı üç dilim; mevcut kurallar aynen durur):
@@ -2264,7 +2298,14 @@ EVENT_BANNED_WORDS.update({e: (("earthquake_banned", _EQ_BANNED, "depremde yasak
 # 29 Eki, Bahadır (ek kural): meteorda sakin/atmosferik fiil yok; 0. saniyeden 15. saniyeye aksiyon kesintisiz
 EVENT_BANNED_WORDS[METEOR] = (("meteor_no_static", METEOR_STATIC, "meteorda durağan/sakin fiil",
                                "Every second is violent, nonstop action: remove {words}. No one stands or watches; "
-                               "nothing drifts, billows or moves slowly."),)
+                               "nothing drifts, billows or moves slowly."),
+                              # 29 Eki (2): tek meteor, tsunami değil
+                              ("meteor_one_impact", METEOR_ONE_BANNED, "meteorda ikinci meteor / parça yağmuru",
+                               "There is only one meteor and one impact; nothing else falls from the sky: remove "
+                               "{words}."),
+                              ("meteor_no_tsunami", METEOR_TSUNAMI_BANNED, "meteorda tsunami / kahverengi su",
+                               "The water is a low, wide, white, foaming, steaming flood, never a tsunami or a brown "
+                               "rising wall: remove {words}."))
 # 175 kelime kapısı olan olaylar (13 Eki: volkan + çığ; 14 Eki: deprem)
 # ── Tüm eksenlerde tekrar önleme (21 Eki 2026, Gece 1 / Aşama 3) ──────────────────────────────────────────────────
 # Spot, ışık/hava, araç, kişi sayısı: son AXIS_BLOCK kullanılan değer seçilemez. 2 ya da daha az seçenekli eksende
@@ -3124,7 +3165,7 @@ def word_budget_line(spec: dict) -> str:
     key = len(spec["key_visual"].split())
     total = TOTAL_WORDS_BY_EVENT.get(event, TOTAL_WORDS)[1]
     if event in CAP_BUDGET_EVENTS:   # 18 Eki (3) / 21 Eki: prompt 175 kelimeye sığsın (3 = dilim etiketleri)
-        total = min(total, VOLC_MAX_PROMPT_WORDS - 3 - len(spec["suffix"].split()))
+        total = min(total, max_prompt_words(event) - 3 - len(spec["suffix"].split()))
     s1 = min(hi1, BUDGET_SLICE_1)
     s23 = max(lo2, min(BUDGET_SLICE_MAX, (total - key - s1) // 2))
     return (f"WORD BUDGET: the opening sentence has {key} words; slice_1_rest {lo1} to {s1} words, slice_2 {lo2} to "
@@ -3174,10 +3215,11 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
         if "\n" in text:
             out.append(_issue("slice_newline", f"{f}: satır sonu", f"Write '{f}' as one line."))
     prompt_len = len(assemble_prompt(spec, slices))
-    if prompt_len > MAX_PROMPT_CHARS:
-        out.append(_issue("prompt_chars", f"prompt {prompt_len} karakter (en fazla {MAX_PROMPT_CHARS})",
+    max_chars = max_prompt_chars(event)
+    if prompt_len > max_chars:
+        out.append(_issue("prompt_chars", f"prompt {prompt_len} karakter (en fazla {max_chars})",
                           f"The full prompt is {prompt_len} characters; shorten the three fields so it is at most "
-                          f"{MAX_PROMPT_CHARS}."))
+                          f"{max_chars}."))
     total = len(plain_story(spec, slices).split())
     tw = TOTAL_WORDS_BY_EVENT.get(event, TOTAL_WORDS)
     if not tw[0] <= total <= tw[1]:
@@ -3222,13 +3264,42 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
         if found:
             out.append(_issue(code, f"{missing} ({', '.join(found)})",
                               feedback.format(words=", ".join(repr(w) for w in found))))
+    if event in METEOR_EVENTS:   # 29 Eki (2): beyaz su, kalıcı hasar, nesne koruma
+        out += meteor_slice_issues(spec, slices)
     if event in WORD_CAP_EVENTS:   # 13 Eki (3): volkan (ve çığ) prompt'u en fazla 175 kelime
         n_words = len(assemble_prompt(spec, slices).split())
-        if n_words > VOLC_MAX_PROMPT_WORDS:
-            budget = VOLC_MAX_PROMPT_WORDS - (n_words - len(" ".join(slices[f] for f in SLICE_FIELDS).split()))
-            out.append(_issue("volcano_prompt_words", f"prompt {n_words} kelime (en fazla {VOLC_MAX_PROMPT_WORDS})",
+        cap = max_prompt_words(event)
+        if n_words > cap:
+            budget = cap - (n_words - len(" ".join(slices[f] for f in SLICE_FIELDS).split()))
+            out.append(_issue("volcano_prompt_words", f"prompt {n_words} kelime (en fazla {cap})",
                               f"The full prompt is {n_words} words; shorten the three fields to at most {budget} words "
                               f"in total."))
+    return out
+
+
+def meteor_slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
+    """29 Eki (2), Bahadır (sadece meteor; GPT çıktısı ve kod yedeği aynı denetim):
+    - suyun geçtiği her dilimde white / foaming / steaming,
+    - 4-9s ve 9-15s'te en az bir hasar fiili (METEOR_DAMAGE),
+    - 4-9s ve 9-15s seçilen maddenin iki ana nesnesini de taşır (METEOR_OBJECT_GATES)."""
+    out = []
+    for f in SLICE_FIELDS:
+        text = slices.get(f, "")
+        if find_terms(METEOR_WATER, text) and not find_terms(METEOR_WHITE, text):
+            out.append(_issue("meteor_white_water", f"{f}: su beyaz/köpüklü/buharlı değil",
+                              f"In '{f}' the water must be described as white, foaming or steaming."))
+    for slot, bid in (("slice_2", spec["beat_2"]), ("slice_3", spec["beat_3"])):
+        text = slices.get(slot, "")
+        label = "4-9s" if slot == "slice_2" else "9-15s"
+        if not find_terms(METEOR_DAMAGE, text):
+            out.append(_issue("meteor_damage", f"{label}: kalıcı hasar fiili yok",
+                              f"'{slot}' must show lasting damage with a verb like snap, rip, tear, flip, smash, shove, "
+                              f"knock over, crush, topple or break."))
+        missing = [g[0] for g in METEOR_OBJECT_GATES.get(bid, ()) if not find_terms(g, text)]
+        if missing:
+            out.append(_issue("meteor_objects", f"{label}: maddenin nesnesi yok ({bid}: {', '.join(missing)})",
+                              f"'{slot}' must keep the exact objects of this event: "
+                              f"{beat_text(spec['event'], slot, bid)}."))
     return out
 
 
@@ -3268,13 +3339,15 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
         out.append(_issue("labels", "zaman etiketleri eksik, fazla ya da sırası yanlış"))
     out += slice_issues(spec, slices)
     n_constraints = count_constraints(expected_suffix)[0]
-    if n_constraints > 8:
-        out.append(_issue("suffix_constraints", f"stil eki {n_constraints} kısıt (en fazla 8)"))
+    if n_constraints > max_constraints(spec["event"]):
+        out.append(_issue("suffix_constraints", f"stil eki {n_constraints} kısıt (en fazla "
+                                                f"{max_constraints(spec['event'])})"))
     suffix_wet = rain_words(expected_suffix, spec["event"] in WATER_DROP_EVENTS)
     if spec["event"] in NO_RAIN_EVENTS and suffix_wet:   # 8 Eki: yangında stil eki de yağmursuz
         out.append(_issue("fire_no_rain_suffix", f"stil ekinde yağmur/ıslaklık ({', '.join(suffix_wet)})"))
-    if len(prompt) > MAX_PROMPT_CHARS and not any(i["rule"] == "prompt_chars" for i in out):
-        out.append(_issue("prompt_chars", f"prompt {len(prompt)} karakter (en fazla {MAX_PROMPT_CHARS})"))
+    if len(prompt) > max_prompt_chars(spec["event"]) and not any(i["rule"] == "prompt_chars" for i in out):
+        out.append(_issue("prompt_chars", f"prompt {len(prompt)} karakter (en fazla "
+                                          f"{max_prompt_chars(spec['event'])})"))
     # 6 sabit kural (genel 40-60 "length" yerine TOTAL_WORDS; olay grupları ve çeşitlilik burada değil)
     fixed = set(STORY_RULES)
     for i in story_rule_issues(spec["event"], spec["ship"], plain_story(spec, slices), expected_suffix):
@@ -3396,9 +3469,9 @@ def _fallback_fits(spec: dict, slices: dict[str, str]) -> bool:
     if not lo <= len(plain_story(spec, slices).split()) <= hi:
         return False
     prompt = assemble_prompt(spec, slices)
-    if len(prompt.split()) > VOLC_MAX_PROMPT_WORDS:   # yedekte 175 kelime her olayda (Bahadır, 16 Eki)
+    if len(prompt.split()) > max_prompt_words(spec["event"]):   # yedekte 175 kelime (16 Eki); meteor 195 (29 Eki)
         return False
-    return len(prompt) <= MAX_PROMPT_CHARS
+    return len(prompt) <= max_prompt_chars(spec["event"])
 
 
 def fallback_candidates(spec: dict) -> list[dict[str, str]]:
@@ -3518,6 +3591,17 @@ def pool_lint_errors() -> list[str]:
                     out.append(f"{event}/{bid}: meteor beat'inde ev/araç/insan/ağaç teması yok")
                 if min(METEOR_BEAT_SCORES.get(bid, (0,))) < 3:
                     out.append(f"{event}/{bid}: meteor beat puanı 3'ün altında ya da puansız")
+                # 29 Eki (2): kalıcı hasar fiili, tsunami / ikinci meteor yok, su beyaz, nesne koruma kaydı var
+                if not find_terms(METEOR_DAMAGE, beat["text"]):
+                    out.append(f"{event}/{bid}: meteor beat'inde hasar fiili yok")
+                bad = find_terms(METEOR_TSUNAMI_BANNED + METEOR_ONE_BANNED, beat["text"])
+                if bad:
+                    out.append(f"{event}/{bid}: meteor beat'inde yasak kök ({', '.join(bad)})")
+                if find_terms(METEOR_WATER, beat["text"]) and not find_terms(METEOR_WHITE, beat["text"]):
+                    out.append(f"{event}/{bid}: meteor beat'inde su beyaz değil")
+                if bid not in METEOR_OBJECT_GATES or any(not find_terms(g, beat["text"])
+                                                         for g in METEOR_OBJECT_GATES[bid]):
+                    out.append(f"{event}/{bid}: meteor nesne koruma kaydı yok ya da metinle uyuşmuyor")
             for bid in METEOR_HELD_BEATS:
                 if bid in EVENT_BEATS[event][slot]:
                     out.append(f"{event}/{bid}: puanı düşük madde havuzda")

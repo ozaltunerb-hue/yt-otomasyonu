@@ -617,9 +617,11 @@ EVENT_SKELETONS = {
                   "High balcony of a seafront apartment": "a seafront promenade below modern apartments",
                   "Hilltop terrace above a coastal town": "a coastal town around a wide bay"},
         "people": ["residents", "people"], "weather": METEOR_WEATHER, "object": "impact",
-        "text": "Over {spot} in {weather}, a blazing meteor streaks down and slams into the sea just off the coast in a "
-                "blinding flash and a towering column of water. The blast tears across the waterfront as {n} {people} "
-                "run inland. Flaming debris keeps crashing onto the roofs of the houses.",
+        # 29 Eki (2): tek çarpma, beyaz taşkın (önceki: "...The blast tears across the waterfront as {n} {people} run
+        # inland. Flaming debris keeps crashing onto the roofs of the houses.")
+        "text": "Over {spot} in {weather}, a blazing meteor slams into the sea just off the coast in a blinding flash "
+                "and a towering column of water. The shockwave snaps palm trees as {n} {people} run inland. A white, "
+                "foaming flood keeps pouring across the promenade, smashing the beach bars.",
     },
     # ── Plaj & sahil ──
     "Tornado approaching an open beach": {
@@ -943,8 +945,13 @@ METEOR_CAMERA = {
     "Hilltop terrace above a coastal town":
         "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view",
 }
+# 29 Eki (2), Bahadır: test videosunda kamera 4.5-6 sn'de aşağı eğilip çatı terasına baktı. Önceki: "...the camera
+# stays fixed, never descending; no zoom, no cuts."
 METEOR_CAMERA_TAIL = ("the impact point is visible offshore from the first second; slight hand shake, the camera stays "
-                      "fixed, never descending; no zoom, no cuts.")
+                      "fixed on the bay, never tilting down or descending; no zoom, no cuts.")
+# 29 Eki (2), Bahadır (metin birebir): tek meteor, beyaz su, kalıcı hasar tek cümlede; stil ekinin sonunda
+METEOR_RULE = ("Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown "
+               "tsunami wall; every hit leaves lasting damage.")
 
 
 def meteor_camera(spot: str) -> str:
@@ -1029,7 +1036,8 @@ CAMERA_SHORTEN = (
     ("two or three people fleeing close below", "two or three people fleeing below"),
 )
 _THREAT_TWICE = re.compile(r"high vantage (?:looking )?down toward (?P<t>[^;,]+); (?P<rest>[^;]*?)(?P=t) always in frame")
-_FIXED_ON = re.compile(r"the camera stays fixed (?:on|at) the [\w-]+(?: [\w-]+)?,")
+# 29 Eki (2): "on the bay" (meteor) yer tekrarı değil, eğilmeme kuralı: kısaltılmaz
+_FIXED_ON = re.compile(r"the camera stays fixed (?:on|at) the (?!bay,)[\w-]+(?: [\w-]+)?,")
 _RAILING_CORNER = re.compile(r"a corner of the \w+ railing|a (?!railing\b)\w+ railing corner")
 
 
@@ -1156,6 +1164,8 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
         out += f" Setting: {view_district(event, view)}{clothing}, {NO_SIGNS}."
     elif s["domain"] in NO_SIGNS_DOMAINS and not scene_signs:
         out += f" {NO_SIGNS[0].upper()}{NO_SIGNS[1:]}."   # 2 Eki: heyelan (toplam 8 kısıt)
+    if s["domain"] == "meteor_disasters":   # 29 Eki (2): tek meteor / beyaz su / kalıcı hasar (meteorda 11 kısıt)
+        out += f" {METEOR_RULE}"
     return out
 
 

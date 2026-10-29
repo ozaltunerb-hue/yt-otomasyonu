@@ -25,6 +25,24 @@
 
 ---
 
+## 📋 DEVİR: ☄️ Meteor (2): tek çarpma zinciri, tsunami yasağı, kalıcı hasar (29 Eki 2026, PUSH EDİLMEDİ)
+
+Yerel dal `meteor-2-bekliyor` (main'e gitmedi; canlı hâlâ 285c4c0). Sebep: Bahadır'ın kuralı "195'e sığmayan kombinasyon
+olursa push etme". Kamera kuyruğu birebir ("the camera stays fixed on the bay, never tilting down or descending";
+ortak kısaltma `_FIXED_ON` "on the bay"i silmesin diye muaf) ve tek kural cümlesiyle (`sk.METEOR_RULE`) stil eki 125-129
+kelime; hikâye en az 70 (kilit 33 + insan 6 + W 15 + X 16). 195'te kod yedeği HİÇBİR kombinasyona sığmıyor (en kısa 198);
+tavan 202 olursa 288/288 sığıyor ve son denetimden geçiyor (karakter en fazla 1196).
+- Havuz: W1 / X2, X4 (2 çift). Havuza girmeyen (`es.METEOR_HELD_BEATS`): W2, X1 hasar fiili yok (engulfs, crashes/pours
+  listede değil); W3 "awnings", X3 "fences" kalıcı lintte ince hedef. Puanların hepsi ≥3. Eski M/N havuzu RETIRED_BEATS'te;
+  dalga bayrağı ve DISABLED_BEATS meteor kaydı kalktı.
+- Kapılar (GPT ve kod yedeği): `meteor_one_impact` (rain, shower, fragment, debris, ember, fireball, meteors, meteorite,
+  second, another, streak, chunk, falling rock), `meteor_no_tsunami`, `meteor_white_water`, `meteor_damage`,
+  `meteor_objects` (`es.METEOR_OBJECT_GATES`). Eski iki GPT cümlesi ret alıyor (test).
+- Sınırlar olaya göre: `es.PROMPT_WORDS_BY_EVENT` (meteor 195), `es.CONSTRAINTS_BY_EVENT` (11), diğerleri 175 / 8 / 1400.
+- Karar bekleyen: meteor tavanı 202 (tek satır) ya da metin kısaltma; W2/W3/X1/X3 için yeni metin.
+
+---
+
 ## 📋 DEVİR: ☄️ Meteor + deniz kategorileri pasif + helikopter kadrajı (29 Eki 2026)
 
 Kie ve gerçek GPT çağrısı yok (kuru deneme de yok). Meteor dışındaki aktif olayların promptu önce/sonra birebir aynı
