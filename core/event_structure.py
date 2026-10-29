@@ -698,9 +698,9 @@ _VOLC_CHIMNEY = ("chimney", "chimney stack", "chimneystack", "smokestack", "flue
 # _VOLC_LAVA) silindi, içerikleri EVENT_BEATS üstündeki ARŞİV notunda.
 # 13 Eki (3), Bahadır kararı: volkan Kie prompt'u (hikâye + stil eki) en fazla 175 kelime
 VOLC_MAX_PROMPT_WORDS = 175
-# 29 Eki (2), Bahadır: sadece meteor 195 kelime ve 11 kısıt (tek meteor / beyaz su / kalıcı hasar cümlesi ve kamera
+# 29 Eki (2), Bahadır: sadece meteor 205 kelime (29 Eki (3); önce 195, 202) ve 11 kısıt (tek meteor / beyaz su / kalıcı hasar cümlesi ve kamera
 # kuyruğu stil ekini uzattı). Diğer olaylar 175 / 8 / 1400.
-PROMPT_WORDS_BY_EVENT = {"Meteor slams into the sea off the coast": 195}
+PROMPT_WORDS_BY_EVENT = {"Meteor slams into the sea off the coast": 205}   # 29 Eki (3), Bahadır: 195 -> 202 -> 205
 CONSTRAINTS_BY_EVENT = {"Meteor slams into the sea off the coast": 11}
 PROMPT_CHARS_BY_EVENT: dict[str, int] = {}
 
@@ -894,20 +894,21 @@ _FIRE_BURST = ("burst", "shatter", "crack", "explode", "split", "pop", "fly", "f
 _MET_PALM = ("palm", "palm tree")
 _MET_ROOFTILE = ("roof", "rooftop", "tile", "roof tile")
 _MET_STEAM = ("steam", "spray")
-_MET_HOUSE = ("house", "home", "villa")
-_MET_PERGOLA = ("pergola", "awning")
-_MET_SUNBED = ("sunbed", "sun lounger", "pool")
-_MET_FLOOD = ("flood",)
-_MET_PROMENADE = ("promenade",)
-_MET_SURGE = ("surge", "flood")
 _MET_CAR = ("car", "vehicle")
+_MET_SUNBED = ("sunbed", "sun lounger")
+_MET_POOL = ("pool", "terrace")
+_MET_FLOOD = ("flood",)
+_MET_PROMENADE = ("promenade", "kiosk")
+_MET_SURGE = ("surge", "flood")
 _MET_GARDEN = ("garden",)
-_MET_FENCE = ("fence", "furniture")
+_MET_WALL = ("wall",)
 _MET_SURF = ("seawall", "surf")
 _MET_BAR = ("bar", "beach bar", "lounger")
-METEOR_OBJECT_GATES = {"W1": (_MET_PALM, _MET_ROOFTILE), "W2": (_MET_STEAM, _MET_HOUSE),
-                       "W3": (_MET_PERGOLA, _MET_SUNBED), "X1": (_MET_FLOOD, _MET_PROMENADE),
-                       "X2": (_MET_SURGE, _MET_CAR), "X3": (_MET_GARDEN, _MET_FENCE), "X4": (_MET_SURF, _MET_BAR)}
+# 29 Eki (3), Bahadır: W2, W3, X1, X3 yeni metin; nesneler W2 buhar/sprey + araç, W3 şezlong + havuz/teras, X1 taşkın +
+# promenat/büfe, X3 bahçe + duvar
+METEOR_OBJECT_GATES = {"W1": (_MET_PALM, _MET_ROOFTILE), "W2": (_MET_STEAM, _MET_CAR),
+                       "W3": (_MET_SUNBED, _MET_POOL), "X1": (_MET_FLOOD, _MET_PROMENADE),
+                       "X2": (_MET_SURGE, _MET_CAR), "X3": (_MET_GARDEN, _MET_WALL), "X4": (_MET_SURF, _MET_BAR)}
 # Tek meteor (kural 2): GPT'nin insan cümlesi, 4-9s ve 9-15s'te yasak (kod yedeği de aynı denetimden geçer)
 METEOR_ONE_BANNED = ("rain", "shower", "fragment", "debris", "ember", "fireball", "meteors", "meteorite", "second",
                      "another", "streak", "chunk", "falling rock")
@@ -928,7 +929,7 @@ METEOR_STATIC = ("billow", "drift", "rolls slowly", "roll slowly", "rolling slow
 # Ek kural (29 Eki): her beat'te ekranda büyük temas (ev, araç, insan, ağaç). Lint her meteor beat'inde birini arar
 METEOR_CONTACT = ("house", "home", "villa", "roof", "building", "garden", "terrace", "car", "vehicle", "people",
                   "person", "resident", "palm", "tree",
-                  "beach bar")   # 29 Eki (2): plaj barı yapı (X4)
+                  "beach bar", "kiosk")   # 29 Eki (2): plaj barı yapı (X4); 29 Eki (3): plaj büfesi (X1)
 _VOLC_BOMBS_GAPS = set()
 _VOLC_ERUPTION_GAPS = set()
 EVENT_BEATS = {
@@ -1959,15 +1960,25 @@ EVENT_BEATS = {
         "slice_2": {
             "W1": {"text": "the shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas",
                    "terms": [_MET_PALM, _MET_ROOFTILE]},
+            # 29 Eki (3), Bahadır: yeni metin (önceki "...engulfs the seafront houses": hasar fiili yoktu)
+            "W2": {"text": "a ring of white steam and spray races ashore and flips the cars on the seafront road",
+                   "terms": [_MET_STEAM, _MET_CAR]},
+            # 29 Eki (3), Bahadır: yeni metin (önceki "...pergolas and awnings...": ince hedef)
+            "W3": {"text": "the blast rips the sunbeds off the villa terraces and smashes them into the pools",
+                   "terms": [_MET_SUNBED, _MET_POOL]},
         },
         "slice_3": {
+            # 29 Eki (3), Bahadır: yeni metin (önceki "...pours across the promenade": hasar fiili yoktu)
+            "X1": {"text": "the falling water column crashes onto the promenade as a white, foaming flood, smashing the "
+                           "beach kiosks",
+                   "terms": [_MET_FLOOD, _MET_PROMENADE]},
             "X2": {"text": "a white, steaming surge floods the coastal road and shoves parked cars into the villa walls",
                    "terms": [_MET_SURGE, _MET_CAR]},
             "X4": {"text": "white surf bursts over the seawall and smashes the beach bars and loungers into the road",
                    "terms": [_MET_SURF, _MET_BAR]},
         },
-        # Aynı nesne iki dilimde (W3 şezlong: X3 mobilya, X4 şezlong) dışlanırdı; W3 ve X3 havuzda olmadığı için kayıt yok
-        "excluded_pairs": set(),
+        # Aynı nesne iki dilimde (29 Eki (3), Bahadır): araba (W2: X2), şezlong (W3: X4)
+        "excluded_pairs": {("W2", "X2"), ("W3", "X4")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1978,18 +1989,14 @@ EVENT_BEATS = {
 DISABLED_BEATS: dict[str, set[str]] = {}
 # 29 Eki (2), Bahadır: yeni W/X maddelerinden havuza girmeyenler (yerine yeni madde Bahadır'ın kararıyla). Puan sırası:
 # büyüklük, kontrast, yakınlık, çizilebilirlik, aksiyon, farklılık.
+# 29 Eki (3): W2, W3, X1 yeni metinle havuza girdi; X3'ün yeni metni de girmedi.
 METEOR_HELD_BEATS = {
-    "W2": ("a ring of white steam and spray races across the bay and engulfs the seafront houses", (5, 4, 3, 3, 4, 5),
-           "hasar fiili yok (kural 4: engulfs listede değil)"),
-    "W3": ("the blast tears pergolas and awnings off the villas and flips the sunbeds into the pools",
-           (3, 3, 4, 3, 4, 4), "kalıcı havuz linti: ince hedef 'awning'"),
-    "X1": ("the water column crashes down into a low, white, foaming flood that pours across the promenade",
-           (5, 4, 3, 4, 4, 3), "hasar fiili yok (kural 4: crashes / pours listede değil)"),
-    "X3": ("foaming seawater pours into the villa gardens right below, knocking over fences and furniture",
-           (3, 4, 5, 3, 4, 3), "kalıcı havuz linti: ince hedef 'fence'"),
+    "X3": ("white, foaming seawater bursts into the villa gardens right below, knocking down the garden walls",
+           (4, 4, 5, 4, 4, 4), "hasar fiili yok (kural 4: 'knock down' listede değil, listede 'knock over' var)"),
 }
 # Havuzdaki maddelerin puanları (rapor ve test; hepsi en az 3)
-METEOR_BEAT_SCORES = {"W1": (4, 3, 4, 4, 5, 4), "X2": (5, 4, 4, 4, 5, 4), "X4": (4, 4, 3, 4, 5, 4)}
+METEOR_BEAT_SCORES = {"W1": (4, 3, 4, 4, 5, 4), "W2": (5, 4, 4, 4, 5, 4), "W3": (4, 3, 4, 4, 5, 4),
+                      "X1": (5, 4, 3, 4, 5, 4), "X2": (5, 4, 4, 4, 5, 4), "X4": (4, 4, 3, 4, 5, 4)}
 
 # ── 17 Eki 2026, Bahadır (temizlik turu): kurala göre çıkarılan beat'ler. Kural: denetimde (scratch/
 # asama3_havuz_denetimi.md) ZAYIF/ÇIKAR + en az biri: ince/uzak/küçük hedef, fizik ≤2, aksiyon ≤2, yakın ≤2, büyük ≤2,
@@ -2131,7 +2138,7 @@ OBJECT_GROUPS = {
     EARTHQUAKE_APARTMENT: {"Q5": 0, "P1": 1, "P2": 0, "P3": 1, "P4": 0, "Q1": 1, "Q2": 0, "Q3": 0, "Q4": 1},
     EARTHQUAKE_OLD_STREET: {"T7": 0, "T5": 0, "R1": 0, "R2": 0, "R3": 0, "R4": 1, "T1": 1, "T3": 0, "T4": 0},   # 18 Eki: T2 çıktı
     # 29 Eki (2): meteor nesneleri palmiye (W1), araç (X2), bar/şezlong (X4); iki nesne zorunluluğu METEOR_OBJECT_GATES
-    METEOR: {"W1": 0, "X2": 1, "X4": 1},
+    METEOR: {"W1": 0, "W2": 1, "W3": 0, "X1": 1, "X2": 1, "X4": 1},
 }
 
 # Sert kurallara 16 Eki eklemeleri (yapılandırılmış hat, sadece GPT'nin yazdığı üç dilim; mevcut kurallar aynen durur):

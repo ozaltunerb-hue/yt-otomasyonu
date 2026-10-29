@@ -214,7 +214,9 @@ class TestCleanupRule(unittest.TestCase):
                FT: {"T3", "U3", "U4", "U5"}, es.HELICOPTER: {"G4"}, ER: {"S1", "U1"}, VB: {"R6", "T3", "T4"},
                es.AVALANCHE_FOREST: {"F3", "E5"},
                # 18 Eki (2): çıkış bekleyenler Parti 2 ile çıktı
-               es.MUDSLIDE: {"M1", "M2", "M5"}, es.EARTHQUAKE_OLD_STREET: {"T2"}}
+               es.MUDSLIDE: {"M1", "M2", "M5"}, es.EARTHQUAKE_OLD_STREET: {"T2"},
+               # 29 Eki (2), Bahadır: meteor yeni kurgu, eski M/N havuzu (tests/test_meteor.py)
+               es.METEOR: {"M1", "M2", "M3", "M4", "M5", "M6", "N1", "N2", "N3", "N4", "N5", "N6"}}
     # daha önce üretilmiş videoda kullanılan (Notion, 17 Eki anlık görüntü) ve kurala göre zayıf: havuzda kalır
     PROTECTED_WEAK = {es.FLOOD: {"D2"}, es.TIDAL: {"W1", "W2", "W6"}, es.MUDSLIDE: {"M3"}, es.SLOPE: {"R2", "S4"},
                       es.MARINA_TORNADO: {"Z6"}, es.AVENUE: {"P6", "Q3", "Q6"}, es.WILDFIRE: {"K5"},
@@ -252,9 +254,9 @@ class TestCleanupRule(unittest.TestCase):
         for e in es.structured_events():
             b = es.EVENT_BEATS[e]
             with self.subTest(event=e):
-                if e == es.METEOR:   # 29 Eki (ek kural): puanı 3'ün altındaki maddeler havuza girmedi, 3 + 4 madde;
+                if e == es.METEOR:   # 29 Eki (3): kurala takılan madde havuza girmez (X3), 3 + 3 madde;
                     # yerine yeni madde Bahadır'ın kararıyla gelir (tests/test_meteor.py)
-                    self.assertEqual((len(b["slice_2"]), len(b["slice_3"])), (3, 4))
+                    self.assertEqual((len(b["slice_2"]), len(b["slice_3"])), (3, 3))
                     continue
                 self.assertGreaterEqual(len(b["slice_2"]), 4)
                 self.assertGreaterEqual(len(b["slice_3"]), 4)

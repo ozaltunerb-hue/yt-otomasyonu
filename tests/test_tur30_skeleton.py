@@ -114,7 +114,8 @@ class TestSkeletonOutput(unittest.TestCase):
                     self.assertIn(sk.SHIP_PHRASES[ship], story)
                 suffix = sk.style_suffix(e, ship, slots["spot"])
                 total, negative = count_constraints(suffix)
-                self.assertLessEqual(total, 8, suffix)
+                import core.event_structure as es
+                self.assertLessEqual(total, es.max_constraints(e), suffix)   # 29 Eki (2): meteor 11, diğerleri 8
                 # 14 Eki (2): çığda kısa şablon "Handheld footage from ..." (175 kelime sınırı; TestAvalanche kilitler)
                 # 21 Eki (genel kalite): ortam olaylarında "shot by a person standing" -> "filmed"; gemi hattı aynı
                 env = sk.EVENT_SKELETONS[e]["domain"] in sk.ENV_CENTRIC_DOMAINS

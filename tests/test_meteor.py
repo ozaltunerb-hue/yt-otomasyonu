@@ -41,15 +41,17 @@ ENVS = {"O1": "white modern Mediterranean villas with glass railings and pools",
         "O3": "a palm-lined coastal suburb of modern homes",
         "O4": "modern seafront apartment towers and low houses along a promenade"}
 LIGHTS = ["golden sunset", "hazy midday light", "overcast grey sky"]
-W_POOL = {"W1": "the shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas"}
-X_POOL = {"X2": "a white, steaming surge floods the coastal road and shoves parked cars into the villa walls",
+W_POOL = {"W1": "the shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas",
+          # 29 Eki (3), Bahadır: yeni metinler
+          "W2": "a ring of white steam and spray races ashore and flips the cars on the seafront road",
+          "W3": "the blast rips the sunbeds off the villa terraces and smashes them into the pools"}
+X_POOL = {"X1": "the falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks",
+          "X2": "a white, steaming surge floods the coastal road and shoves parked cars into the villa walls",
           "X4": "white surf bursts over the seawall and smashes the beach bars and loungers into the road"}
-HELD = {"W2": "a ring of white steam and spray races across the bay and engulfs the seafront houses",
-        "W3": "the blast tears pergolas and awnings off the villas and flips the sunbeds into the pools",
-        "X1": "the water column crashes down into a low, white, foaming flood that pours across the promenade",
-        "X3": "foaming seawater pours into the villa gardens right below, knocking over fences and furniture"}
+HELD = {"X3": "white, foaming seawater bursts into the villa gardens right below, knocking down the garden walls"}
 OLD = {"M1", "M2", "M3", "M4", "M5", "M6", "N1", "N2", "N3", "N4", "N5", "N6"}
-ALLOWED = {("W1", "X2"), ("W1", "X4")}
+# aynı nesne: W2+X2 araba, W3+X4 şezlong (29 Eki (3), Bahadır)
+ALLOWED = {("W1", "X1"), ("W1", "X2"), ("W1", "X4"), ("W2", "X1"), ("W2", "X4"), ("W3", "X1"), ("W3", "X2")}
 # Test videosundaki gerçek GPT çıktısı (29 Eki): ikisi de yeni kapılardan RET almalı
 OLD_GPT_1 = "Burning fragments rain down, igniting rooftops as people race uphill in panic."
 OLD_GPT_2 = "A fierce wind levels palm trees and scatters furniture across villa terraces."
@@ -137,8 +139,8 @@ class TestMeteor(unittest.TestCase):
         self.assertEqual(bot.parse_selection(str(di), "0"), (DOMAIN, MET))
 
     def test_limits_only_meteor(self):
-        # 29 Eki (2), Bahadır: sadece meteor 195 kelime / 11 kısıt; diğer olaylar 175 / 8 / 1400
-        self.assertEqual(es.max_prompt_words(MET), 195)
+        # 29 Eki (2-3), Bahadır: sadece meteor 205 kelime / 11 kısıt; diğer olaylar 175 / 8 / 1400
+        self.assertEqual(es.max_prompt_words(MET), 205)
         self.assertEqual(es.max_constraints(MET), 11)
         self.assertEqual(es.max_prompt_chars(MET), es.MAX_PROMPT_CHARS)
         for e in es.structured_events():
@@ -170,11 +172,9 @@ class TestMeteor(unittest.TestCase):
         for bid, scores in list(es.METEOR_BEAT_SCORES.items()) + [(k, v[1]) for k, v in es.METEOR_HELD_BEATS.items()]:
             self.assertEqual(len(scores), 6)
             self.assertGreaterEqual(min(scores), 3, bid)   # 29 Eki (2): hiçbiri puandan düşmedi
-        # havuza girmeme sebepleri: W2/X1 hasar fiili yok, W3/X3 kalıcı lint (ince hedef)
-        for bid in ("W2", "X1"):
-            self.assertEqual(es.find_terms(es.METEOR_DAMAGE, HELD[bid]), [], bid)
-        self.assertIn("awning", es.find_terms(es.POOL_LINT_THIN, HELD["W3"]))
-        self.assertIn("fence", es.find_terms(es.POOL_LINT_THIN, HELD["X3"]))
+        # havuza girmeme sebebi: X3 hasar fiili yok ("knocking down"; listede "knock over")
+        self.assertEqual(es.find_terms(es.METEOR_DAMAGE, HELD["X3"]), [])
+        self.assertEqual(b["excluded_pairs"], {("W2", "X2"), ("W3", "X4")})
         for spot in (K1, K2, K3):
             self.assertEqual(set(es.allowed_pairs(MET, None, spot)), ALLOWED)
 
@@ -249,7 +249,7 @@ class TestMeteor(unittest.TestCase):
 
     def test_old_gpt_sentences_rejected(self):
         """Test videosundaki gerçek GPT çıktısı (29 Eki) yeni kapılardan geçmez."""
-        for b3 in ("X2", "X4"):
+        for b3 in ("X1", "X2", "X4"):
             spec = spec_of("W1", b3)
             for field in ("slice_1_rest", "slice_2", "slice_3"):
                 with self.subTest(text=1, field=field):
@@ -266,29 +266,22 @@ class TestMeteor(unittest.TestCase):
         for t in es.FALLBACK_PEOPLE[MET]:
             self.assertEqual(es.find_terms(es.METEOR_STATIC + es.METEOR_ONE_BANNED + es.METEOR_TSUNAMI_BANNED, t), [])
 
-    def test_fit_195(self):
-        """195 kelimede kod yedeğinin sığdığı kadraj/ortam/ışık kombinasyonları (29 Eki (2) raporu): her çiftte sadece
-        O3 + golden sunset. Tam kapsam için tavan en az 199 olmalı (Bahadır kararı bekliyor)."""
-        fitting = {}
+    def test_every_combination_fits_205(self):
+        """29 Eki (3): 205 kelimede her kadraj × ortam × ışık × çift × kişi sayısında kod yedeği sığar ve son denetimden
+        geçer (sığmayan 0). 202'de 204 / 1008 sığmıyordu."""
         for spot in (K1, K2, K3):
             for b2, b3 in ALLOWED:
                 for env in ENVS:
                     for light in LIGHTS:
-                        spec = spec_of(b2, b3, spot, env, light, 6)
-                        cands = es.fallback_candidates(spec)
-                        for sl in cands:
-                            prompt = es.assemble_prompt(spec, sl)
-                            self.assertEqual(es.final_prompt_issues(spec, sl, prompt, es.assemble_story(spec, sl)), [])
-                        if cands:
-                            fitting.setdefault((b2, b3), set()).add((spot, env, light))
-        for pair in ALLOWED:
-            self.assertEqual({(e, li) for _, e, li in fitting[pair]}, {("O3", "golden sunset")})
-        with patch.dict(es.PROMPT_WORDS_BY_EVENT, {MET: 199}):
-            for spot in (K1, K2, K3):
-                for b2, b3 in ALLOWED:
-                    for env in ENVS:
-                        for light in LIGHTS:
-                            self.assertTrue(es.fallback_candidates(spec_of(b2, b3, spot, env, light, 6)))
+                        for people in (3, 4, 5, 6):
+                            spec = spec_of(b2, b3, spot, env, light, people)
+                            cands = es.fallback_candidates(spec)
+                            self.assertTrue(cands, (spot, b2, b3, env, light, people))
+                            for sl in cands:
+                                prompt = es.assemble_prompt(spec, sl)
+                                self.assertEqual(es.final_prompt_issues(spec, sl, prompt,
+                                                                        es.assemble_story(spec, sl)), [])
+                                self.assertLessEqual(len(prompt.split()), 205)
 
     def test_productions_pass_final_check(self):
         import core.creative_pipeline as cp
@@ -300,7 +293,7 @@ class TestMeteor(unittest.TestCase):
             self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
             self.assertIn((spec["beat_2"], spec["beat_3"]), ALLOWED)
             self.assertTrue(scene["prompt"].startswith(f"0-4s: {KEY} "))
-            self.assertLessEqual(len(scene["prompt"].split()), 195)
+            self.assertLessEqual(len(scene["prompt"].split()), 205)
             self.assertTrue(scene["prompt"].endswith(RULE))
             self.assertIn("WORD BUDGET:", msgs[-1])
             prev = [s["trace"]["axes"] for s in scenes[-2:]]

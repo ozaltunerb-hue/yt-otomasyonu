@@ -92,8 +92,8 @@ class TestFallbackEveryCombination(unittest.TestCase):
                               f"{spec.get('people')}: {[x['missing'] for x in issues]}\n{prompt}")
                 self.assertEqual(es.strict_beat_issues(spec, sl), [])   # eski sıkı kapıdan da geçer
                 self.assertEqual(es.hard_extra_issues(sl), [])
-                self.assertLessEqual(len(prompt.split()), 175)
-                self.assertLessEqual(len(prompt), es.MAX_PROMPT_CHARS)
+                self.assertLessEqual(len(prompt.split()), es.max_prompt_words(event))   # 29 Eki: meteor 205, diğerleri 175
+                self.assertLessEqual(len(prompt), es.max_prompt_chars(event))
                 longest = max(longest, len(prompt.split()))
             self.assertEqual(gaps, FALLBACK_GAPS.get(event, set()), event)
             report[event] = {"kombinasyon": n, "hava_ve_ortam_dahil": n_weighted, "sigmayan_cift": sorted(gaps),
