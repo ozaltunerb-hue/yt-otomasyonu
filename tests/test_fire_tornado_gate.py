@@ -577,7 +577,9 @@ class TestFireTornadoGate(unittest.TestCase):
         self.assertEqual(b["slice_3"]["U1"].get("unless"), es._FIRE_TOR_ROW)
         self.assertTrue(all("unless" not in x for e, d in es.EVENT_BEATS.items() for sl in ("slice_2", "slice_3")
                             for k, x in d[sl].items()
-                            if (e, k) not in ((E, "U1"), (es.EARTHQUAKE_APARTMENT, "Q5"))))   # 18 Eki (2): deprem Q5 toz
+                            if (e, k) not in ((E, "U1"), (es.EARTHQUAKE_APARTMENT, "Q5"),   # 18 Eki (2): deprem Q5 toz
+                                              # 30 Eki: eski sokak R2 ve T1, baca cümlesi (yeni T3) sayılmasın
+                                              (es.EARTHQUAKE_OLD_STREET, "R2"), (es.EARTHQUAKE_OLD_STREET, "T1"))))
         # yeni maddeler açık arazi/kırsal değil, yerleşim: ev, çatı, ön duvar, veranda, garaj
         for bid in ("U7", "U8", "U9", "U10", "U11"):
             text = es.beat_text(E, "slice_3", bid)

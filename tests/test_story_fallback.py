@@ -155,7 +155,8 @@ class TestFallbackEveryCombination(unittest.TestCase):
         self.assertEqual(FALLBACK_GAPS, {})
 
     def test_gap_combination_raises(self):
-        spec = es.build_spec(es.AVALANCHE_VILLAGE, None, "Terrace at the edge of the village", None, "A2", "B2", None, 3)
+        # 30 Eki (2): yeni B2 kısa, A2+B2 artık sığıyor (dışlama anlam yüzünden duruyor); sığmayan örnek A2+B5
+        spec = es.build_spec(es.AVALANCHE_VILLAGE, None, "Terrace at the edge of the village", None, "A2", "B5", None, 3)
         with self.assertRaises(es.StructureError):
             es.build_fallback(spec)
 

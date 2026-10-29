@@ -58,7 +58,13 @@ REWRITTEN = {(es.MUDSLIDE, b) for b in ("H2", "H4", "H6", "M3", "M6")} | \
 # 23 Eki (hortum denetimi): karaya vurur ve marinada metni değişen beat'ler. Eski metne göre kaydedilen cümleler (ör. Z1
 # "awning") yeni maddeyi anlatmıyor; iki testte de atlanır, kayıt dosyada kalır.
 REWRITTEN_TORNADO = {(es.LANDFALL, b) for b in ("C1", "C2", "E1", "E2")} |                     {(es.MARINA_TORNADO, b) for b in ("Y1", "Y3", "Y5", "Z1", "Z2", "Z3", "Z6", "Z7")}
-REWRITTEN = REWRITTEN | REWRITTEN_TORNADO
+# 30 Eki (cadde P/Q onaylı + Aşama B zayıf beat değişimi): metni değişen beat'ler; eski metne göre kaydedilen cümleler
+# (ör. N5 "windows", Q3 "signs") yeni maddeyi anlatmıyor; iki testte de atlanır, kayıt dosyada kalır.
+REWRITTEN_30OCT = {(es.FLOOD, b) for b in ("V6", "V7", "V8")} | {(es.TIDAL, b) for b in ("T4", "T8")} |                   {(es.WILDFIRE, "K2"), (es.VOLCANIC_BOMBS, "T7"), (es.PYROCLASTIC, "Q6"), (es.AVALANCHE_VILLAGE, "A1"),
+                   (es.EARTHQUAKE_APARTMENT, "Q2"), (es.EARTHQUAKE_OLD_STREET, "T3"), (es.EARTHQUAKE_OLD_STREET, "T4")} |                   {(es.FACADE_FIRE, b) for b in ("M11", "N3", "N5")} |                   {(es.HELICOPTER, b) for b in ("F2", "F4", "F6", "G6", "G7")} |                   {(es.AVENUE, b) for b in ("P1", "P2", "P5", "Q3", "Q4", "Q6")} | \
+                  {(es.WILDFIRE, "K9"), (es.HELICOPTER, "G3"), (es.AVALANCHE_VILLAGE, "B2"),
+                   (es.EARTHQUAKE_OLD_STREET, "R3")} | {(es.AVALANCHE_SKI, b) for b in ("C4", "C6", "D5")}   # 30 Eki (2)
+REWRITTEN = REWRITTEN | REWRITTEN_TORNADO | REWRITTEN_30OCT
 
 
 def slot_of(event, bid):
@@ -99,7 +105,7 @@ class TestRejectedReal(unittest.TestCase):
         # 17 Eki: çıkarılan maddelerin kayıtları (ateş hortumu T3/U3/U4, heyelan S6 ...) atlanır, sayısı kilitli
         self.assertEqual(len(skipped), 30, sorted({(r["event"][:20], r["beat"]) for r in skipped}))
         for r in data:
-            if retired(r) or (r["event"], r["beat"]) in REWRITTEN_TORNADO:
+            if retired(r) or (r["event"], r["beat"]) in REWRITTEN_TORNADO | REWRITTEN_30OCT:
                 continue
             r = current(r)
             e, bid, text = r["event"], r["beat"], r["text"]

@@ -233,7 +233,8 @@ class TestVolcEnvPrompt(unittest.TestCase):
         # hariç çiftler 6f16609 ile aynı (kod yedeği ve hikâye kuralları değişmedi)
         self.assertEqual(es.EVENT_BEATS[VB]["excluded_pairs"],
                          {("R1", "T2"), ("R1", "T9"), ("R2", "T2"), ("R2", "T9"), ("R5", "T6"), ("R7", "T1"),
-                          ("R7", "T7"), ("R8", "T6"), ("R9", "T5")})
+                          ("R7", "T7"), ("R8", "T6"), ("R9", "T5"),
+                          ("R1", "T7"), ("R2", "T7")})   # 30 Eki (2), Bahadır: T7 araç (araç iki kez)
         self.assertEqual(es.EVENT_BEATS[PY]["excluded_pairs"],
                          {("P1", "Q1"), ("P1", "Q6"), ("P3", "Q3"), ("P3", "Q6"), ("P5", "Q1"), ("P5", "Q4"),
                           ("P6", "Q3"), ("P6", "Q6")})

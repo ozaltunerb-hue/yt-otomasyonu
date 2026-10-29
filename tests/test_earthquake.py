@@ -42,18 +42,20 @@ POOLS = {
            "P3": "the neighboring apartment block leans and its side wall collapses",
            "P4": "a huge concrete slab from the collapsing block slams into the road and breaks it apart"},
           {"Q1": "the building next door crumbles floor by floor into the same dust cloud",
-           "Q2": "the dust wave rolls down the street and the upper floors of the apartment blocks opposite cave in",
+           # 30 Eki, Bahadır (Aşama B): Q2, T3, T4 yeni metin
+           "Q2": "the corner of the block across the street breaks away and collapses onto the road",
            "Q3": "a row of low houses beside the block is flattened under falling concrete",
            "Q4": "a second apartment block across the street tilts and falls into the dust",
            # 18 Eki (2), Bahadır (Parti 2)
            "Q5": "the top floors of the apartment block across the street collapse straight down"}),
     OLD: ({"R1": "the facade of the nearest old stone house slides off in one piece and crashes down",
            "R2": "the stone walls of two houses fold inward and their roofs fall in",
-           "R3": "a thick dust cloud pours down the narrow street as the stone houses keep falling",
+           # 30 Eki (2), Bahadır: R3 yeni metin
+           "R3": "a two-story stone house folds in on itself and its stones spill across the street",
            "R4": "a corner stone house crumbles and its rubble spreads across the junction"},
           {"T1": "the next house in the row caves in and the dust cloud grows",
-           "T3": "the rubble heap of a fallen house slides out into the street",
-           "T4": "the roof of a stone house falls in and its walls collapse into the street",
+           "T3": "a heavy stone chimney topples off a roof and smashes through the house next door",
+           "T4": "the front wall of a stone house bursts outward into the street",
            # 18 Eki (2): T2 (zincirleme çöküş, fizik 2) çıktı; T5-T7 yeni (Parti 2)
            "T5": "the upper floor of a stone house slides off and crashes onto the street below",
            "T7": "a stone house across the street collapses sideways in a huge wall of dust and rubble"}),
@@ -61,12 +63,16 @@ POOLS = {
 # Aynı yapı/görüntü sınıfı: komşu blok (P3: Q1, Q4), toz dalgası (P1, Q2), çatı içe göçer (R2, T4), toz bulutu (R3, T1),
 # sokağa yayılan moloz (R4, T3)
 # 18 Eki (2): üst katlar çöker (P1: Q5), cephe/üst kat kayar (R1: T5), toz ve moloz (T7)
+# 30 Eki (Aşama B): Q2 blok köşesi, T3 baca, T4 ön duvar dışa patlar; eski sınıfları (toz, moloz, çatı) yok. Eski
+# dışlamalar (P1, Q2), (R4, T3), (R2, T4) Bahadır kararına kadar duruyor (LEGACY_PAIRS)
 STRUCT = {
     APT: {"P1": {"dust", "upper"}, "P2": set(), "P3": {"neighbor"}, "P4": set(),
-          "Q1": {"neighbor"}, "Q2": {"dust"}, "Q3": set(), "Q4": {"neighbor"}, "Q5": {"upper"}},
-    OLD: {"R1": {"slide"}, "R2": {"roof"}, "R3": {"dust"}, "R4": {"rubble"},
-          "T1": {"dust"}, "T3": {"rubble"}, "T4": {"roof"}, "T5": {"slide"}, "T7": {"dust", "rubble"}},
+          "Q1": {"neighbor"}, "Q2": set(), "Q3": set(), "Q4": {"neighbor"}, "Q5": {"upper"}},
+    # 30 Eki (2): R3 ev kendi içine çöker, taşları saçılır (moloz); R1 ve T4 cephe (dışlama onaylı)
+    OLD: {"R1": {"slide", "front"}, "R2": {"roof"}, "R3": {"rubble"}, "R4": {"rubble"},
+          "T1": {"dust"}, "T3": set(), "T4": {"front"}, "T5": {"slide"}, "T7": {"dust", "rubble"}},
 }
+LEGACY_PAIRS = {APT: {("P1", "Q2")}, OLD: {("R4", "T3"), ("R2", "T4"), ("R3", "T1")}}
 VALID = {
     "P1": ["The upper floors pancake onto the ones below as a wall of dust surges across the street.",
            "Floor after floor collapses onto the lower storeys, dust surging over the street.",
@@ -93,11 +99,11 @@ VALID = {
            "Next door, another apartment block caves in floor by floor.",
            "The adjacent building comes down one floor at a time into the dust cloud.",
            "The building next door crumbles floor by floor into the same dust cloud."],
-    "Q2": ["The dust wave sweeps down the street as the top floors of the blocks opposite cave in.",
-           "A wave of dust rolls along the street and the upper floors of the apartment blocks across collapse.",
-           "Dust surges down the street while the upper storeys of the buildings opposite give way.",
-           "The dust wave races down the street and the apartment blocks opposite crumble from the top floors.",
-           "The dust wave rolls down the street and the upper floors of the apartment blocks opposite cave in."],
+    "Q2": ["The corner of the block across the street breaks off and collapses onto the road.",
+           "The corner of the apartment block opposite shears away and crashes into the street.",
+           "A whole corner of the block across the street tears loose and falls onto the road.",
+           "The block opposite loses its corner, which breaks away and drops onto the street.",
+           "The corner of the block across the street breaks away and collapses onto the road."],
     "Q3": ["A row of low houses beside the block is crushed under falling concrete.",
            "Falling concrete flattens the low houses next to the block.",
            "The low houses beside the block cave in under the falling concrete.",
@@ -118,11 +124,11 @@ VALID = {
            "The walls of two old houses crumble inward and the roofs collapse.",
            "Two stone houses give way, their walls folding inward and their roofs dropping.",
            "The stone walls of two houses fold inward and their roofs fall in."],
-    "R3": ["A thick cloud of dust pours down the narrow street as the stone houses keep collapsing.",
-           "Dust floods the narrow street while the old stone houses keep falling.",
-           "A dense dust cloud rolls down the street as more stone houses crumble.",
-           "The narrow street fills with thick dust as the houses keep coming down.",
-           "A thick dust cloud pours down the narrow street as the stone houses keep falling."],
+    "R3": ["A two-story stone house folds in on itself and its stones spill across the street.",
+           "A tall stone house folds in on itself, its stones spilling into the street.",
+           "The two-story house implodes and its stones pour across the street.",
+           "A stone house folds inward on itself and its masonry spills over the street.",
+           "An old stone house implodes and its stones scatter across the road."],
     "R4": ["A corner stone house collapses and its rubble spills across the junction.",
            "The stone house on the corner crumbles, rubble spreading over the intersection.",
            "A corner house caves in and its stones scatter across the junction.",
@@ -133,16 +139,16 @@ VALID = {
            "The neighbouring house crumbles and the dust cloud swells.",
            "The next stone house in the row gives way and more dust rises.",
            "The next house in the row caves in and the dust cloud grows."],
-    "T3": ["The rubble heap of a collapsed house slides into the street.",
-           "A heap of rubble from a collapsed house spills across the street.",
-           "The debris of a fallen house pours out onto the road.",
-           "Piles of stones from a fallen house tumble out into the street.",
-           "The rubble heap of a fallen house slides out into the street."],
-    "T4": ["The roof of a stone house caves in and its walls collapse into the street.",
-           "A stone house's roof falls in and its walls crumble onto the street.",
-           "The roof of an old house drops in and the walls tumble into the street.",
-           "A house's roof collapses and its stone walls fall into the street.",
-           "The roof of a stone house falls in and its walls collapse into the street."],
+    "T3": ["A massive stone chimney breaks off a roof and crashes through the neighbouring house.",
+           "A tall chimney falls from the rooftop and punches through the house beside it.",
+           "A stone chimney crashes down off the roof and smashes into the next house.",
+           "A heavy chimney topples from one roof and smashes through the house next door.",
+           "A heavy stone chimney topples off a roof and smashes through the house next door."],
+    "T4": ["The front wall of a stone house bursts outward and spills into the street.",
+           "A stone house's front wall blows out into the street.",
+           "The front of an old stone house bursts open outward onto the road.",
+           "The outer wall of a stone house explodes outward across the street.",
+           "The front wall of a stone house bursts outward into the street."],
     # 18 Eki (2), Bahadır (Parti 2): yeni maddeler
     "Q5": ["The top floors of the apartment block across the street collapse straight down.",
            "The upper floors of the block across the street cave in straight down.",
@@ -188,11 +194,11 @@ FREE = {
            "The neighbouring tower crumbles floor after floor into the thick grey haze.",
            "The building alongside folds downward, storey after storey, into the thick dust.",
            "The structure next door gives way level by level into the dense dust."],
-    "Q2": ["A wave of dust surges along the street as the top storeys opposite give way.",
-           "Dust sweeps down the road as the upper levels of the blocks across the street crumble.",
-           "The cloud of dust races down the street and the apartments opposite collapse from the top.",
-           "A dust blast rolls through the street, caving in the upper storeys of the buildings across.",
-           "Billowing dust floods the street as the high floors of the facing blocks cave in."],
+    "Q2": ["Across the street, an entire corner of the apartment block shears off and crashes down.",
+           "The block opposite splits at its corner, which comes away and slams onto the road.",
+           "A huge corner of the building across the road breaks loose and falls.",
+           "With a roar the corner of the facing block tears away and smashes into the street.",
+           "One corner of the apartment block opposite gives way and drops onto the roadway."],
     "Q3": ["Falling chunks of concrete crush the small homes standing next to the block.",
            "The low houses at the foot of the block are smashed flat by the falling debris.",
            "Concrete rains onto the row of cottages beside the block and levels them completely.",
@@ -213,11 +219,11 @@ FREE = {
            "Two stone houses implode, their roofs crashing down through the broken walls.",
            "The walls of two cottages fold in on themselves and their roofs give way.",
            "Two old houses crumple inward as their roofs collapse into the rooms below."],
-    "R3": ["A thick cloud of dust surges along the narrow street as more houses fall.",
-           "Dense dust floods the lane while the old stone houses keep collapsing nearby.",
-           "A heavy plume of dust rolls through the narrow street toward the junction.",
-           "A choking cloud races down the alley as the old houses keep crumbling.",
-           "Thick dust billows down the street, swallowing the collapsing houses one after the other."],
+    "R3": ["With a roar the two-story stone house folds in on itself, stones pouring out.",
+           "The old two-story house implodes and its stones tumble across the narrow street.",
+           "Folding in on itself, a tall stone house sends its stones across the road.",
+           "One stone house simply folds in on itself and its masonry spills into the lane.",
+           "Its walls folding inward, the stone house implodes and its stones scatter over the street."],
     "R4": ["The house on the corner caves in and its stones spill over the junction.",
            "A corner house collapses, scattering rubble across the whole intersection.",
            "The old stone house at the crossroads crumbles and debris fans out across it.",
@@ -228,16 +234,16 @@ FREE = {
            "The adjacent house crumbles and the cloud of dust grows even larger.",
            "The following house in the row falls in as the dust keeps swelling.",
            "The next home along caves in, throwing up even more dust into the air."],
-    "T3": ["The pile of rubble from a fallen house spills out across the street.",
-           "A heap of debris slides off the ruined house into the middle of the road.",
-           "Broken stones from a collapsed house pour out into the narrow lane.",
-           "The debris of a fallen house slumps forward into the street below.",
-           "Masonry from a destroyed house tumbles out across the road in a heap."],
-    "T4": ["A stone house's roof drops in and its walls crumble onto the street.",
-           "The roof of an old house caves in and the walls fall into the road.",
-           "A house loses its roof inward and its stone walls topple into the street.",
-           "A cottage's roof collapses and its walls tumble outward into the street.",
-           "An old house's roof gives way and its walls come down in the street."],
+    "T3": ["Off one roof a huge stone chimney tumbles and smashes through the neighbouring house.",
+           "The chimney of a stone house snaps off and crashes down through the roof next door.",
+           "From the rooftop a thick chimney falls away and punches into the house beside it.",
+           "Breaking loose, the old stone chimney plunges down and smashes the adjacent house.",
+           "With a crash the tall chimney drops off the roof onto the next house."],
+    "T4": ["With a deep crack, a stone house's front wall bursts out across the street.",
+           "An old stone house blows out its whole front wall into the narrow street.",
+           "Stones fly as the facade of a house explodes outward over the road.",
+           "Bulging under the shaking, the front of a stone house bursts into the street.",
+           "A stone house's outer wall is pushed out and bursts across the lane."],
     # 18 Eki (2), Bahadır (Parti 2): yeni maddeler
     "Q5": ["Across the street the top floors of the apartment block drop straight down.",
            "The block opposite loses its upper floors as they cave in straight down.",
@@ -255,8 +261,10 @@ FREE = {
            "With a roar the house across the street topples over sideways into the dust.",
            "A stone house opposite collapses onto its side, dust and rubble flying."],
 }
-# 14 Eki 11:19 testinde reddedilen gerçek GPT cümleleri (geçmeli)
-REJECTED_REAL = {
+# 14 Eki 11:19 testinde reddedilen gerçek GPT cümleleri (geçmeli). 30 Eki (2): R3 yeni metin; eski toz bulutu
+# maddesinin kayıtları REJECTED_REAL_OLD'da (geçmiş, test edilmez)
+REJECTED_REAL = {}
+REJECTED_REAL_OLD = {
     "R3": ["A dense cloud of dust rushes along the narrow street as the houses continue collapsing.",
            "A thick dust cloud engulfs the narrow street as stones continue to crumble.",
            "A dense dust cloud cascades down the street, engulfing everything in its path."],
@@ -493,12 +501,12 @@ class TestEarthquake(unittest.TestCase):
             b = es.EVENT_BEATS[e]
             with self.subTest(event=e):
                 self.assertEqual(b["excluded_pairs"], {(v, d) for v in b["slice_2"] for d in b["slice_3"]
-                                                      if tags[v] & tags[d]})
+                                                      if tags[v] & tags[d]} | LEGACY_PAIRS[e])
                 for bid in list(b["slice_2"]) + list(b["slice_3"]):
                     spots = {ROOF, BAL} - b["excluded_spots"].get(bid, set())
                     self.assertEqual(spots, {ROOF} if bid in HIGH else {ROOF, BAL}, bid)
         counts = {e: [len(es.allowed_pairs(e, None, s)) for s in (ROOF, BAL)] for e in EQ}
-        self.assertEqual(counts, {APT: [16, 9], OLD: [14, 10]})   # 18 Eki (2): Parti 2 (Q5, T5, T7; T2 çıktı)
+        self.assertEqual(counts, {APT: [16, 9], OLD: [13, 10]})   # 18 Eki (2): Parti 2; 30 Eki (2): (R1, T4)
 
     def test_block_depth_two_with_fallback_never_runs_out(self):
         self.assertEqual({e: es.RECENT_BEAT_BLOCK_BY_EVENT[e] for e in EQ}, {APT: 2, OLD: 2})
@@ -550,7 +558,7 @@ class TestEarthquake(unittest.TestCase):
                             self.fail(f"{e}/{spot}/{b2}+{b3}/{env}: {issues}")
                         self.assertLessEqual(len(prompt.split()), 175)
                         n += 1
-        self.assertEqual(n, (16 + 9) * len(all_envs(APT)) + (14 + 10) * len(all_envs(OLD)))   # 18 Eki (2)
+        self.assertEqual(n, (16 + 9) * len(all_envs(APT)) + (13 + 10) * len(all_envs(OLD)))   # 18 Eki (2); 30 Eki (2)
 
     def test_environment_compatibility(self):
         self.assertEqual(es.EQ_ENV_AXES["light"], ("hazy dusty morning", "heavy grey overcast sky",

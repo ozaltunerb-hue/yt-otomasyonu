@@ -211,7 +211,8 @@ def env_compatible(event: str, letter: str, env: str | None) -> bool:
 # Açılış × beat çakışması (aynı hedef + aynı fiil): aynı üretimde seçilmez. Aday liste candidate_beat_conflicts ile
 # (terim gruplarının hepsi açılışta) çıkarıldı, elle süzüldü: sadece gerçekten aynı şeyi anlatanlar (rapor 21 Eki).
 BEAT_CONFLICTS = {
-    "Flash flooding in city streets": {"B": {"V5"}, "D": {"V1"}},          # araba yan yatar / yana süpürülür
+    # 30 Eki (2), Bahadır: B+V6, D+T7 (bombalar), D+N5 (cephe), B+T4 (eski sokak)
+    "Flash flooding in city streets": {"B": {"V5", "V6"}, "D": {"V1"}},    # araba yan yatar / yana süpürülür
     "Tidal wave surges over a coastal city street": {"B": {"T3"}},         # park hâlindeki arabalar itilir
     # 22 Eki (heyelan denetimi): M3 artık park arabaları sırası (B ilk park arabasını devirir); C+M3 (duvar) çıktı
     "Mudslide pours down a hillside street": {"B": {"H5", "M3"}},         # araba yan yatar / park arabaları
@@ -220,15 +221,16 @@ BEAT_CONFLICTS = {
     "Mud and debris torrent tears through a hillside village": {"C": {"L7"}},   # ev temelinden sökülür
     # 23 Eki (hortum denetimi): C+C2 araç yan yatar; D+E2 yeni E2 de çatı söker (E1 gibi)
     "Tornado making landfall": {"C": {"C2"}, "D": {"E1", "E2"}},           # araba yan yatar / çatı sökülür
-    "Tornado sweeps down a coastal avenue": {"C": {"Q6"}},                 # dükkân tentesi / sundurması sökülür
+    # 30 Eki, Bahadır: B+P6 araç havaya kalkar (B minibüsü havaya kaldırır)
+    "Tornado sweeps down a coastal avenue": {"B": {"P6"}, "C": {"Q6"}},    # dükkân önü sökülür
     "Wall of flames sweeps into a hillside neighborhood": {"C": {"K8", "L1"}},   # evin çatısı tutuşur
-    "Flames race up a tower facade": {"B": {"M8", "M11"}, "C": {"M10", "N5"}},  # cepheden yukarı / pencereden alev
-    "Volcanic bombs slam into a village street": {"B": {"R7"}, "C": {"R9"}, "D": {"T9", "R2"}},
+    "Flames race up a tower facade": {"B": {"M8", "M11"}, "C": {"M10", "N5"}, "D": {"N5"}},  # cepheden yukarı / pencereden alev
+    "Volcanic bombs slam into a village street": {"B": {"R7"}, "C": {"R9"}, "D": {"T9", "R2", "T7"}},
     "Avalanche slams into a mountain village": {"B": {"A4"}},              # ahıra çarpar
     "Avalanche crashes down onto a ski lodge": {"C": {"C1"}},              # kayak deposu / kiralama binası
     "Avalanche rips through a pine forest into a valley": {"D": {"F1"}},   # dağ evinin duvarına çarpar
     "Earthquake collapses an apartment block": {"B": {"P2"}, "C": {"P1", "Q5"}},   # ön cephe / üst katlar çöker
-    "Earthquake collapses a row of old stone houses": {"B": {"R1"}},       # eski taş evin cephesi kopar
+    "Earthquake collapses a row of old stone houses": {"B": {"R1", "T4"}},   # eski taş evin cephesi kopar
 }
 
 

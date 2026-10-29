@@ -30,7 +30,12 @@ def assert_frame_camera(tc, scene):
     tc.assertIn(suffix, scene["prompt"])
     pos = f.get("pos_spot")
     if pos and fx.SPOT_FRAME[spec["event"]][pos][2]:
-        tc.assertIn(fx.SPOT_FRAME[spec["event"]][pos][2], scene["prompt"])
+        # 30 Eki: mod A ve yerli nokta eski kamera cümlesini kullanır (frame_camera -> legacy). Ateş hortumunun iki
+        # noktasında o cümle 21 Eki'de bütçe için kısaldı ("above a wooded area"), kadraj tablosunun metnini içermez;
+        # test bu durumda yanlış kırmızı veriyordu (200 tohumda 15)
+        legacy = f.get("mode") == "A" or fx.native(spec["event"], pos)[1] == fx.NATIVE
+        tc.assertIn(sk.CAMERA_SPOTS[pos] if legacy and pos in sk.CAMERA_SPOTS else fx.SPOT_FRAME[spec["event"]][pos][2],
+                    scene["prompt"])
 
 FLOOD = es.FLOOD
 TIDAL = es.TIDAL
@@ -192,9 +197,10 @@ class TestLockedData(unittest.TestCase):
             "V3": "the {vehicle} is lifted off its wheels and spun around",
             "V4": "the {vehicle} is pushed onto the sidewalk and slams into a lamppost",
             "V5": "the {vehicle} tips over onto its side in the current",
-            "V6": "the {vehicle} is carried backwards down the street, bumping parked cars",
-            "V7": "the {vehicle} is rammed against a building wall",
-            "V8": "the {vehicle} and the car behind it are dragged away together, bumper to bumper",
+            # 30 Eki, Bahadır (Aşama B): V6, V7, V8 yeni metin
+            "V6": "the {vehicle} is shoved into the side of a parked city bus and crumples against it",   # 30 Eki (2)
+            "V7": "the {vehicle} is rammed against a building wall, crumpling its whole front end",
+            "V8": "the {vehicle} is swept into the front of a corner shop and the brick wall caves in",
         })
         self.assertEqual({k: v["text"] for k, v in B["slice_3"].items()}, {
             # 17 Eki (temizlik turu): D1, D6, D7 çıktı (es.RETIRED_BEATS)
@@ -262,15 +268,16 @@ class TestFlexibleTerms(unittest.TestCase):
                "The delivery van topples onto its side as the water hits it.",
                "The current flips the sedan and it rolls over in the flow.",
                "The SUV overturns in the brown water."],
-        "V6": ["The pickup truck is carried backwards down the street, bumping parked cars.",
-               "The current drags the hatchback in reverse down the street.",
-               "The small car slides rear-first down the road, knocking into parked cars."],
-        "V7": ["The delivery van is rammed against a building wall.",
-               "The current slams the sedan into the front of a house.",
-               "The water pins the SUV against a shopfront facade."],
-        "V8": ["The small car and the car behind it are dragged away together, bumper to bumper.",
-               "The current sweeps the sedan and the next car away side by side.",
-               "The hatchback and a parked van are pulled down the street together."],
+        # 30 Eki (Aşama B): V6, V7, V8 yeni metne göre
+        "V6": ["The pickup truck is shoved into the side of a parked city bus and crumples against it.",
+               "The current slams the sedan into a parked bus and its front crumples.",
+               "The water rams the SUV against the side of a city bus, crushing its hood."],
+        "V7": ["The delivery van is rammed against a building wall, crumpling its whole front end.",
+               "The current slams the sedan into the front of a house and its hood crumples.",
+               "The water smashes the SUV against a shopfront facade, crushing its front."],
+        "V8": ["The small car is swept into the front of a corner shop and the brick wall caves in.",
+               "The current hurls the sedan into a shopfront and the wall collapses.",
+               "The flood rams the hatchback into a corner store and its front wall gives way."],
         "D2": ["A lamppost topples into the current.",
                "A streetlight snaps and falls into the brown water.",
                "The light pole bends and goes down into the flood."],
@@ -594,11 +601,11 @@ class TestTidal(unittest.TestCase):
             "T1": "the {vehicle} is lifted and flung against a storefront",
             "T2": "the {vehicle} is carried down the street by the surge",   # 4 Eki: havalanma yok
             "T3": "the {vehicle} is slammed into the car parked ahead and both are shoved along",
-            "T4": "the {vehicle} is spun sideways and dragged along the street",
+            "T4": "the {vehicle} is hurled onto the roof of a parked car, crushing it flat",   # 30 Eki (Aşama B)
             "T5": "the {vehicle} tips over onto its side in the churning water",
             "T6": "the {vehicle} is pushed onto the sidewalk and slams into a lamppost",
             "T7": "the {vehicle} is carried backwards down the street, bumping parked cars",
-            "T8": "the {vehicle} and the car behind it are dragged away together, bumper to bumper",
+            "T8": "the {vehicle} is driven into the front of a house and the porch collapses onto it",   # 30 Eki
         })
         self.assertEqual({k: v["text"] for k, v in BT["slice_3"].items()}, {
             "W1": "a row of parked vehicles is ripped loose one by one and washed away",
@@ -645,7 +652,9 @@ class TestTidal(unittest.TestCase):
     def test_variants_and_wrong_event(self):
         ok = {"T1": "The surge heaves the sedan up and hurls it into a shop window.",
               "T2": "The surge sweeps the pickup truck along the street.",
-              "T4": "The SUV whirls broadside and is dragged along the road.",
+              # 30 Eki (Aşama B): T4, T8 yeni metne göre
+              "T4": "The surge hurls the SUV onto the roof of a parked car and crushes it.",
+              "T8": "The surge drives the sedan into the front of a house and the porch caves in.",
               "W1": "One after another, the parked cars are torn loose and washed away.",
               "W4": "A newsstand is ripped off its base and carried down the street.",
               "W8": "A green trash bin rolls through the water and slams into a car."}
@@ -1095,8 +1104,9 @@ class TestLandslideStructure(unittest.TestCase):
         # 4 Eki, Bahadır onayı: heyelana özel "birlikte" grubu; sel/tidal ortak _TOGETHER aynı
         self.assertEqual(es._TOGETHER, ("together", "bumper", "side by side", "in tandem", "locked", "both", "pair"))
         self.assertEqual(es._TOGETHER_LANDSLIDE, es._TOGETHER + ("the car behind it", "trailing", "following"))
-        self.assertIs(es.EVENT_BEATS[FLOOD]["slice_2"]["V8"]["terms"][0], es._TOGETHER)
-        self.assertIs(es.EVENT_BEATS[TIDAL]["slice_2"]["T8"]["terms"][0], es._TOGETHER)
+        # 30 Eki (Aşama B): V8 ve T8 yeni metin (köşe dükkânı / evin önü); "birlikte" grubunu kullanan madde kalmadı
+        self.assertNotIn(es._TOGETHER, es.EVENT_BEATS[FLOOD]["slice_2"]["V8"]["terms"])
+        self.assertNotIn(es._TOGETHER, es.EVENT_BEATS[TIDAL]["slice_2"]["T8"]["terms"])
         # 22 Eki (heyelan denetimi): H6 ve R6 artık "birlikte" beat'i değil (H6 evin basamaklarına, R6 geri sürüklenir)
         h6 = es.EVENT_BEATS[es.MUDSLIDE]["slice_2"]["H6"]["terms"]
         r6 = es.EVENT_BEATS[es.SLOPE]["slice_2"]["R6"]["terms"]
@@ -1294,20 +1304,21 @@ class TestTornadoStructure(unittest.TestCase):
         }, {("Y7", "Z4"), ("Y7", "Z1"), ("Y7", "Z3"), ("Y7", "Z7"), ("Y8", "Z2"), ("Y8", "Z6"), ("Y3", "Z4"),
             ("Y3", "Z2"), ("Y5", "Z3")}, {}),   # 29 Eki (4): Y5+Z3 (marina suyu iki kez)
         es.AVENUE: ({
-            "P1": "the {vehicle} is shoved sideways across the avenue by the wind",
-            "P2": "the {vehicle} tips over onto its side",   # 17 Eki: P3 çıktı
+            # 30 Eki, Bahadır (23 Eki önerileri): P1, P2, P5; Q3, Q4, Q6 yeni metin (Q2 altyazı sayı kuralına takıldı)
+            "P1": "the tornado shoves the {vehicle} sideways across the avenue into the opposite curb",
+            "P2": "the tornado tips the {vehicle} over onto its side in the middle of the avenue",   # 17 Eki: P3 çıktı
             "P4": "a falling palm tree crashes onto the {vehicle}, crushing its roof",
-            "P5": "the {vehicle} is lifted off the avenue and flung into a bus shelter, shattering its glass",
+            "P5": "the {vehicle} is lifted off the avenue and flung into the side of a parked city bus",
             "P6": "the {vehicle} is swept up into the air, spins, and crashes down across the avenue",
             # 18 Eki (2): Parti 2
             "P7": "the tornado flings a large truck across the avenue into the front of a building",
         }, {
             "Q1": "the tornado rips a row of palm trees out of the ground and flings them across the avenue",
             "Q2": "the tornado tears a billboard from its frame and sends it spinning away",
-            "Q3": "the tornado hurls a cloud of signs, branches and bins along the avenue",
-            "Q4": "the tornado tears the roof off a bus shelter and throws it aside",
-            "Q6": "the tornado rips the awnings off a row of shops and flings them high",   # 17 Eki: Q5 çıktı
-        }, {("P5", "Q4"), ("P4", "Q1")},
+            "Q3": "the tornado slams a parked city bus onto its side across the avenue",
+            "Q4": "the tornado tears the front wall off a corner café and hurls its tables across the avenue",
+            "Q6": "the tornado rips the whole front off a row of shops and hurls the debris across the avenue",   # 17 Eki: Q5 çıktı
+        }, {("P5", "Q4"), ("P4", "Q1"), ("P5", "Q3")},   # 30 Eki (2): (P5, Q3) şehir otobüsü iki kez
             {}),   # 10 Eki, Bahadır: kamera yüksek balkonda, Q5 dışlaması kalktı
     }
     SPOTS = {es.LANDFALL: ["Beachfront promenade", "Residential coastal district", "Downtown city center"],
@@ -1404,13 +1415,16 @@ class TestTornadoStructure(unittest.TestCase):
               (es.MARINA_TORNADO, "Z1"): "The tornado wrenches the roof off the harbor café and hurls it over the quay.",
               (es.MARINA_TORNADO, "Z3"): "The tornado rips through the terrace and flings its heavy tables into the "
                                          "harbor.",
-              (es.AVENUE, "P5"): "The wind heaves the small car off the road and hurls it into a bus stop.",
+              # 30 Eki: cadde P5, Q6 yeni metne göre
+              (es.AVENUE, "P5"): "The tornado heaves the white van off the road and hurls it into the side of a parked "
+                                 "bus.",
               (es.AVENUE, "P4"): "A falling palm tree crashes onto the white van, crushing its roof.",
               (es.LANDFALL, "C4"): "The SUV skids across the road and crashes into a stationary car.",
               (es.LANDFALL, "E5"): "The tornado shears the front off a small store, launching its shutters.",
               (es.LANDFALL, "C5"): "The wind lifts the white van off the road and hurls it down the street.",
               (es.MARINA_TORNADO, "Y1"): "The tornado pushes the white van broadside across the quay toward the water.",
-              (es.AVENUE, "Q6"): "The tornado tears the shop awnings away and they whirl high above the road."}
+              (es.AVENUE, "Q6"): "The tornado tears the whole front off a row of stores and flings the debris down "
+                                 "the avenue."}
         bad = {(es.LANDFALL, "E1"): "The tornado tears a billboard off its frame.",
                (es.MARINA_TORNADO, "Y3"): "The SUV is pushed along the quay into a stack of boxes.",
                (es.MARINA_TORNADO, "Z4"): "The marina office shakes in the wind.",
@@ -1450,7 +1464,7 @@ class TestTornadoStructure(unittest.TestCase):
         # 18 Eki (2): karaya vurma (19 + 16 + 19) × 4; marina 30 × 4; cadde 3 × 28 × 4
         # 23 Eki (hortum denetimi): karaya vurma 3 × 20 × 4 (C2+E1 ve E1 nokta dışlaması çıktı); marina 28 × 4 (Y3+Z4, Y3+Z2)
         # 29 Eki (4): marina 27 × 4 (Y5+Z3 dışlandı)
-        self.assertEqual(n, 240 + 108 + 336)
+        self.assertEqual(n, 240 + 108 + 324)   # 30 Eki (2): cadde (P5, Q3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -1761,12 +1775,12 @@ class TestFireStructure(unittest.TestCase):
     POOLS = {
         es.WILDFIRE: ({
             "K1": "the {vehicle} reverses hard down the road as a burning tree crashes across the lane in front of it",
-            "K2": "the {vehicle} skids to a stop as flames leap across the road and lick its hood",
+            "K2": "a burning tree crashes down onto the {vehicle} and crushes its roof",   # 30 Eki (2)
             "K5": "the {vehicle} U-turns in a cloud of smoke and speeds away as the flames close the road behind it",
             # 18 Eki (2): Parti 2
             "K7": "a wall of flames races up the slope and engulfs the first houses across the street",
             "K8": "the flames leap across the street and ignite the roof of a house",
-            "K9": "the {vehicle} speeds down the road past burning houses as flames lick the asphalt",
+            "K9": "the {vehicle} speeds past as the roof of a burning house collapses onto the road behind it",
         }, {
             # 17 Eki (temizlik turu): L2 (çit), L6 (direk/tel) çıktı; K3, K4, K6 çıkış bekliyor (grup 4'ün altına düşerdi)
             "L1": "the flames leap onto the roofs of the nearest houses and ignite them one after another",
@@ -1784,14 +1798,16 @@ class TestFireStructure(unittest.TestCase):
             "M8": "flames race up the facade, panel after panel igniting right beside the balcony",
             "M9": "a huge sheet of burning facade tears loose and crashes down the tower",
             "M10": "thick fire pours out of the windows of the floor below the balcony",
-            "M11": "the flames leap up the facade to the balconies above in a roaring wall",
+            "M11": "a burning balcony slab on the floor above breaks off and crashes down the facade",   # 30 Eki
         }, {
             # 17 Eki (temizlik turu): N2 (tente), N6 (küçük eşya) çıktı; araç maddeleri M1-M5 çıkış bekliyor
             "N1": "the flames climb floor after floor, blowing out window after window",
-            "N3": "burning panels peel off the facade and tumble down in a trail of sparks",
+            # 30 Eki, Bahadır (Aşama B): M11, N3, N5 yeni metin
+            "N3": "a whole burning balcony tears off the facade and smashes onto the pavement below",
             "N4": "a wall of smoke and fire pours out of the upper floors and rolls up the tower",
-            "N5": "a row of windows explodes outward, spraying glass and flames over the street",
-        }, {("M7", "N3"), ("M9", "N3"), ("M8", "N1"), ("M10", "N1"), ("M11", "N1"), ("M10", "N4"), ("M10", "N5")},
+            "N5": "the burning top floor caves in and flaming wreckage crashes onto the street",
+        }, {("M7", "N3"), ("M9", "N3"), ("M8", "N1"), ("M10", "N1"), ("M11", "N1"), ("M10", "N4"), ("M10", "N5"),
+            ("M11", "N3")},   # 30 Eki (2): balkon iki kez
             {}),
         es.FIRE_TORNADO: ({
             # 15 Eki (2), Bahadır: hortumun büyüklüğü her maddede; T2, T4, T5, U3, U5 yeni (büyük hedefler)
@@ -2012,8 +2028,8 @@ class TestFireStructure(unittest.TestCase):
 
     def test_variants_and_flame_contact(self):
         ok = {(es.WILDFIRE, "K1"): "The SUV backs up fast as a blazing pine topples across the lane ahead.",
-              (es.WILDFIRE, "K2"): "The white van screeches to a halt as flames sweep over the road and scorch its "
-                                   "bonnet.",
+              # 30 Eki (Aşama B): K2 yeni metne göre
+              (es.WILDFIRE, "K2"): "A blazing pine topples onto the white van and crushes its roof.",
               (es.WILDFIRE, "K5"): "The pickup truck whips around in the smoke and races off as the fire seals the road.",
               (es.FIRE_TORNADO, "T1"): "The swirling flames heave the van off the road and hurl it into a burning "
                                        "tree.",
@@ -2111,7 +2127,7 @@ class TestFireStructure(unittest.TestCase):
                         n += 1
         # 18 Eki (2): orman balkon 15 + set 23; cephe 4 nokta × 17; ateş hortumu 6 nokta × 44 (6 × 8 - 4 hariç çift);
         # × 4 araç
-        self.assertEqual(n, (15 + 23) * 4 + 17 * 4 * 4 + 44 * 6 * 4)
+        self.assertEqual(n, (15 + 23) * 4 + 16 * 4 * 4 + 44 * 6 * 4)   # 30 Eki (2): cephe (M11, N3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -2159,7 +2175,7 @@ class TestFireStructure(unittest.TestCase):
             "PEOPLE VISIBLE: 3 to 6\nVEHICLE: white van\n"
             "PEOPLE RUNNING AWAY: four (slice_1_rest must say that four people run away from the flames)\n"
             + es.word_budget_line(spec) +   # 18 Eki (2): bütçe satırı
-            "4-9s EVENT: the white van skids to a stop as flames leap across the road and lick its hood\n"
+            "4-9s EVENT: a burning tree crashes down onto the white van and crushes its roof\n"
             "9-15s EVENT: the fire races across a garden, engulfing a parked trailer and a woodpile\n"
             "RECENT STORIES:\n- (none)")
         self.assertEqual(es.rain_words(msg), [])
@@ -2306,22 +2322,22 @@ class TestHelicopter(unittest.TestCase):
            "of flames racing toward the houses.")
     S2 = {
         "F1": "the water load slams into the flames, flattening a section of the wall into a cloud of white steam",
-        "F2": "the helicopter drops a second load and the water crashes down onto burning rooftops, sending steam and "
-              "sparks billowing",
+        # 30 Eki, Bahadır (Aşama B): F2, F4, F6, G6, G7 yeni metin
+        "F2": "the water load crashes onto a burning roof and the charred roof caves in",
         "F3": "the {vehicle} speeds down the street as the helicopter's downdraft whips smoke and embers across the road",
-        "F4": "the helicopter roars low over the street, its downdraft bending the burning trees and scattering embers",
+        "F4": "the helicopter's downdraft rips burning branches off the trees and hurls them onto the street",
         "F5": "a wall of water falls on a burning house, the flames collapsing into thick white steam",
-        "F6": "the {vehicle} brakes hard as a drenching cascade of water spills across the road in front of it",
+        "F6": "a burning tree crashes across the road and the {vehicle} swerves into a garden wall, crumpling its front",
     }
     S3 = {
         "G1": "the flames fight back, a fresh burst of fire swallowing trees beside the water line",
         "G2": "the helicopter circles back and drops another huge load, extinguishing a row of burning trees in a cloud "
               "of steam",
-        "G3": "thick white steam rolls over the street as the wall of flames sinks back toward the slope",
+        "G3": "the downdraft topples a burning tree onto the house next door, smashing through its roof",   # 30 Eki (2)
         # 17 Eki (temizlik turu): G4 çıktı (küçük/belirsiz, yakın 2)
         "G5": "the helicopter pulls up and away as the flames roar back behind it",
-        "G6": "a second helicopter swoops in and drops water on the flames along the road",
-        "G7": "burning treetops erupt as the helicopter's water load hits the ridge above the houses",   # 18 Eki (2)
+        "G6": "the downdraft knocks a burning carport roof flat onto the cars beneath it",
+        "G7": "the water load hits a burning garage across the street and its walls collapse in steam",   # 18 Eki (2)
     }
     SPOTS = {"Balcony of a hillside house": "on a balcony of a hillside house overlooking the street and the burning "
                                             "slope",
@@ -2374,8 +2390,10 @@ class TestHelicopter(unittest.TestCase):
         self.assertEqual(b["excluded_pairs"], {("F1", "G3"), ("F2", "G2"), ("F5", "G3")})
         self.assertEqual(b["excluded_views"], {})
         # kamera evi: yanan çatıya/eve su (F2, F5) balkon noktasında seçilmez (17 Eki: G4 çıktı, kısıtı onunla gitti)
+        # 30 Eki (2): G3 yan eve devrilen ağaç aynı sebeple
         self.assertEqual(b["excluded_spots"], {"F2": {"Balcony of a hillside house"},
-                                               "F5": {"Balcony of a hillside house"}})
+                                               "F5": {"Balcony of a hillside house"},
+                                               "G3": {"Balcony of a hillside house"}})
 
     def test_cameras_high_and_weather(self):
         s = sk.EVENT_SKELETONS[self.E]
@@ -2412,9 +2430,10 @@ class TestHelicopter(unittest.TestCase):
     def test_variants_and_wrong_event(self):
         ok = {"F1": "The water crashes into the blaze, turning a stretch of flames into white vapor.",
               "F3": "The pickup truck races away as the rotor wash blasts smoke and sparks over the road.",
-              "F6": "The SUV stops short as a deluge of water spills over the street ahead.",
+              "F6": "A blazing tree falls across the road and the SUV veers into a garden wall, crumpling its "
+                    "front.",   # 30 Eki (Aşama B)
               "G2": "The chopper returns and dumps more water, dousing a line of burning pines in steam.",
-              "G3": "White steam drifts across the street as the flames recede toward the slope.",
+              "G3": "The rotor wash knocks a burning pine onto the neighbouring house and it smashes the roof.",
               "G5": "The helicopter climbs away as the fire flares again behind it."}
         bad = {"F1": "The helicopter flies over the neighborhood.",
                "F4": "The helicopter roars low over the street.",
@@ -2483,8 +2502,9 @@ class TestHelicopter(unittest.TestCase):
             return es.allowed_pairs(self.E, None, spot)
         balcony = pairs("Balcony of a hillside house")
         self.assertFalse({v for v, _ in balcony} & {"F2", "F5"})
-        # 17 Eki: G4 çıktı, 9-15s'de 5 madde
-        self.assertEqual(len(balcony), 4 * 6 - 1)
+        self.assertNotIn("G3", {d for _, d in balcony})   # 30 Eki (2)
+        # 17 Eki: G4 çıktı, 9-15s'de 5 madde. 30 Eki (2): G3 balkonda yok (F3, F4, F6 ile eşleşmesi düştü)
+        self.assertEqual(len(balcony), 4 * 6 - 1 - 3)
         self.assertEqual(len(pairs("Embankment above the village road")), 36 - 3)   # 18 Eki (2): G7
         n = 0
         for spot in self.SPOTS:
@@ -2495,7 +2515,7 @@ class TestHelicopter(unittest.TestCase):
                     if issues:
                         self.fail(f"{spot}/{b2}+{b3}/{v}: {issues}")
                     n += 1
-        self.assertEqual(n, (23 + 33) * 4)
+        self.assertEqual(n, (20 + 33) * 4)   # 30 Eki (2): G3 balkonda yok
         # 4-9s dışlaması helikopterden önceki olaylarda hiçbir şeyi değiştirmez (onların dışlamalarının hepsi 9-15s).
         # 10 Eki: volkanda da 4-9s kamera dışlaması var (TestVolcano)
         for e, b in es.EVENT_BEATS.items():
@@ -2628,7 +2648,7 @@ class TestVolcano(unittest.TestCase):
             "Q3": "a chimney topples and crashes through a roof as the cloud passes over",
             "Q4": "the cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street",
             "Q5": "the cloud blasts the front off a shop building and the brickwork falls into the street",
-            "Q6": "the cloud engulfs a house and its balcony and flat roof slab tear away",
+            "Q6": "the cloud flips a row of parked cars and piles them against a house wall",   # 30 Eki (Aşama B)
         }, {("P3", "Q3"), ("P1", "Q1"), ("P3", "Q6"), ("P6", "Q3"), ("P6", "Q6"), ("P1", "Q6"), ("P5", "Q1"),
             ("P5", "Q4")},
            {"P3": {RT, VB}, "Q3": {RT, VB}, "P6": {RT, VB}, "Q6": {RT, VB}}),
@@ -2649,11 +2669,11 @@ class TestVolcano(unittest.TestCase):
                   "rock",
             "T6": "a volcanic bomb hits a house's upper floor and a section of the wall bursts outward in flames",
             # 17 Eki: T3 (vitrin), T4 (direk) çıktı; T7-T9 yeni (Parti 1)
-            "T7": "glowing rocks hit a row of houses and set their roofs ablaze",
+            "T7": "a volcanic bomb slams into a parked van and flips it onto its side in a burst of sparks",   # 30 Eki
             "T8": "a huge glowing rock hits a house and its upper floor erupts in flames",
             "T9": "a glowing rock smashes into a large parked truck and flames wrap the cab",
         }, {("R2", "T2"), ("R1", "T2"), ("R5", "T6"), ("R7", "T1"), ("R7", "T7"), ("R8", "T6"), ("R9", "T5"),
-            ("R1", "T9"), ("R2", "T9")},   # 18 Eki: yedeği sığmayan çift kalmadı
+            ("R1", "T9"), ("R2", "T9"), ("R1", "T7"), ("R2", "T7")},   # 18 Eki: yedeği sığmayan çift kalmadı
            {"T1": {RT, VB}, "T7": {RT, VB}}),
     }
     VALID = {
@@ -2790,11 +2810,12 @@ class TestVolcano(unittest.TestCase):
                "The ash cloud tears away a store's facade and the brickwork tumbles down.",
                "A shop building's front wall collapses into the street as the cloud hits.",
                "The cloud front strips the storefront off a building and masonry falls onto the road."],
-        "Q6": ["The cloud engulfs a house and its balcony and flat roof slab tear away.",
-               "The cloud engulfs a house, tearing away its balcony and flat roof.",
-               "The surge swallows a house and rips off its balcony and roof slab.",
-               "As the ash cloud wraps a house, the balcony and concrete roof slab break loose.",
-               "The cloud front peels the balcony and the flat roof off a house."],
+        # 30 Eki (Aşama B): Q6 ve T7 yeni metne göre
+        "Q6": ["The cloud flips a row of parked cars and piles them against a house wall.",
+               "The ash cloud overturns the parked cars and shoves them against the wall of a house.",
+               "The surge tips a line of parked cars onto their sides and hurls them into a house.",
+               "The cloud front flips the cars along the curb and jams them against a garden wall.",
+               "The grey cloud flings the parked cars over and piles them up against a house."],
         "R5": ["A volcanic bomb punches through a stone wall and the wall bursts apart.",
                "A glowing boulder smashes through a stone wall, which bursts apart.",
                "A volcanic bomb slams into a garden wall and blasts it to pieces.",
@@ -2858,11 +2879,11 @@ class TestVolcano(unittest.TestCase):
                "A glowing volcanic bomb smashes onto the street ahead and the tarmac splits apart.",
                "A burning rock hits the road and blasts a hole in the asphalt, chunks flying everywhere.",
                "A glowing chunk of rock crashes into the street, breaking the road open."],
-        "T7": ["Glowing rocks rain onto a row of houses and set their roofs ablaze one after another.",
-               "Red-hot boulders crash onto a row of houses and their roofs catch fire one by one.",
-               "Glowing volcanic bombs pound the rooftops of the houses, setting them on fire.",
-               "Burning rocks slam onto a line of houses and the roofs burst into flames.",
-               "Glowing stones hit the roofs of the houses along the street and they go up in flames."],
+        "T7": ["A volcanic bomb slams into a parked van and flips it onto its side in a burst of sparks.",
+               "A glowing rock crashes into a parked van and tips it over in a shower of sparks.",
+               "A red-hot boulder hits a parked minivan and knocks it onto its side.",
+               "A volcanic bomb smashes into a van by the curb and rolls it over in sparks.",
+               "A huge glowing rock rams a parked van, overturning it in a burst of sparks."],
         "T8": ["A huge glowing rock hits a house and its whole upper floor erupts in flames, burning beams "
                "collapsing into the street.",
                "A red-hot boulder smashes into a house and the upper storey bursts into flames.",
@@ -3085,7 +3106,7 @@ class TestVolcano(unittest.TestCase):
                             break   # 13 Eki: kül bulutu araçsız (tek tur)
         # 18 Eki: patlama 43 + 31 + 31 ve bombalar 47 + 33 + 33 (× 4 araç; yedeği sığmayan çift kalmadı); kül bulutu
         # 28 + 13 + 13 (değişmedi)
-        self.assertEqual(n, (105 + 113) * 4 + 54)
+        self.assertEqual(n, (105 + 111) * 4 + 54)   # 30 Eki (2): bombalar (R1, T7), (R2, T7)
 
     def test_block_depth_and_never_runs_out(self):
         from itertools import combinations
@@ -3168,13 +3189,17 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         es.PYROCLASTIC: {"P1": {"house", "balcony"}, "P2": {"treepole"}, "P3": {"roof"}, "P4": {"treepole"},
                          "P5": {"wall"}, "P6": {"roof", "shed"},
                          "Q1": {"house", "wall"}, "Q2": {"window"}, "Q3": {"roof", "chimney"}, "Q4": {"wall"},
-                         "Q5": {"shop"}, "Q6": {"house", "balcony", "roof"}},
+                         "Q5": {"shop"}, "Q6": {"vehicle", "house"}},   # 30 Eki: Q6 park arabaları eve yığılır
         # 17 Eki (Parti 1): R7 çatı, R8 duvar, R9 yol; T7 çatı, T8 ev üst katı, T9 kamyon araç
         es.VOLCANIC_BOMBS: {"R1": {"vehicle"}, "R2": {"vehicle"}, "R3": {"shop"}, "R4": {"sign"}, "R5": {"wall"},
                             "R7": {"roof"}, "R8": {"wall"}, "R9": {"road"},
                             "T1": {"roof"}, "T2": {"vehicle"}, "T5": {"road"}, "T6": {"house", "wall"},
-                            "T7": {"roof"}, "T8": {"house", "floor"}, "T9": {"vehicle"}},
+                            "T7": {"vehicle"}, "T8": {"house", "floor"}, "T9": {"vehicle"}},   # 30 Eki: T7 minibüs
     }
+    # 30 Eki (Aşama B): T7 ve Q6 yeni metin; sebebi kalkmış ama duran eski dışlamalar (çatı: R7 + T7, P3/P6 + Q6).
+    # 30 Eki (2): araç iki kez (R1/R2 + T7) dışlaması onaylandı, bekleyen kalmadı
+    PENDING = {}
+    LEGACY = {es.VOLCANIC_BOMBS: {("R7", "T7")}, es.PYROCLASTIC: {("P3", "Q6"), ("P6", "Q6")}}
     NEW = {es.ERUPTION: ("S4", "S5", "U4", "U5", "U6"), es.PYROCLASTIC: ("P4", "P5", "P6", "Q4", "Q5", "Q6"),
            es.VOLCANIC_BOMBS: ("R5", "T5", "T6")}   # 17 Eki: R6 çıktı (Parti 1 yenileri TestPoolCleanup17Oct)
 
@@ -3259,7 +3284,7 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         self.assertEqual(sizes, {es.ERUPTION: (7, 7), es.PYROCLASTIC: (6, 6), es.VOLCANIC_BOMBS: (8, 7)})
         pairs = {e: [len(es.allowed_pairs(e, None, s)) for s in (self.HT, self.RT, self.VB)] for e in VOLC}
         self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [28, 13, 13],
-                                 es.VOLCANIC_BOMBS: [47, 33, 33]})   # 18 Eki: yedeği sığmayan çift kalmadı
+                                 es.VOLCANIC_BOMBS: [45, 33, 33]})   # 18 Eki: sığmayan yok; 30 Eki (2): (R1, T7), (R2, T7)
         for e in VOLC:   # araçsız kül bulutu; patlama ve bombalarda araç sadece eski maddelerde
             for slot in ("slice_2", "slice_3"):
                 for bid in self.NEW[e]:
@@ -3296,6 +3321,7 @@ class TestVolcanoClose13Oct(unittest.TestCase):
             # 17 Eki: kod yedeğinin sığmadığı çiftler de hariç (yapı kuralı dışında, test_story_fallback'te ölçülür)
             expected |= {es.ERUPTION: es._VOLC_ERUPTION_GAPS,
                          es.VOLCANIC_BOMBS: es._VOLC_BOMBS_GAPS}.get(e, set())
+            expected = (expected - self.PENDING.get(e, set())) | self.LEGACY.get(e, set())
             with self.subTest(event=e):
                 self.assertEqual(b["excluded_pairs"], expected)
         roof_rt_vb = {self.RT, self.VB}

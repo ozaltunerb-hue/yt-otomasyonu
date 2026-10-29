@@ -36,7 +36,8 @@ NEW_BEATS = {   # 18 Eki: kısa metinler (≤16 kelime; 17 Eki uzun metinleri co
     (VB, "slice_2", "R7"): "a huge glowing rock crashes through the roof of a house across the street",
     (VB, "slice_2", "R8"): "a glowing rock slams into a house across the street and its wall bursts apart",
     (VB, "slice_2", "R9"): "a glowing rock hits the road ahead and sends burning chunks across the street",
-    (VB, "slice_3", "T7"): "glowing rocks hit a row of houses and set their roofs ablaze",
+    # 30 Eki, Bahadır (Aşama B): T7 yeni metin (önceki "glowing rocks hit a row of houses and set their roofs ablaze")
+    (VB, "slice_3", "T7"): "a volcanic bomb slams into a parked van and flips it onto its side in a burst of sparks",
     (VB, "slice_3", "T8"): "a huge glowing rock hits a house and its upper floor erupts in flames",
     (VB, "slice_3", "T9"): "a glowing rock smashes into a large parked truck and flames wrap the cab",
     (ER, "slice_2", "S6"): "the shockwave hits the house across the street and its front wall bursts outward",
@@ -45,6 +46,9 @@ NEW_BEATS = {   # 18 Eki: kısa metinler (≤16 kelime; 17 Eki uzun metinleri co
     (ER, "slice_3", "U7"): "the shockwave rolls down the street and the houses on both sides collapse inward",
     (ER, "slice_3", "U8"): "the shockwave tears the upper floor off a stone house across the street",
 }
+# 30 Eki: Bahadır'ın onayladığı yeni T7 metni 19 kelime; kısaltılmadı, 16 sınırı bu maddede açık (Z7 gibi; bütçe
+# denetiminde bombaların tüm kombinasyonu 175'e sığıyor)
+NEW_BEATS_LONG = {(VB, "T7"): 19}
 # 18 Eki: seçilemeyen yeni beat kalmadı (17 Eki'de U10 24 kelimeydi)
 UNUSABLE = {}
 # GPT tarzı doğru anlatımlar (yumuşak kapıdan geçer) ve yanlış nesne (beat_object)
@@ -67,8 +71,8 @@ PARAPHRASE = {
            "A red-hot boulder smashes into a house wall, which bursts apart."],
     (VB, "R9"): ["A glowing rock slams into the road ahead and the asphalt splits open, burning chunks flying.",
            "A red-hot bomb hits the street and cracks the tarmac apart."],
-    (VB, "T7"): ["Glowing rocks pound a row of houses and their roofs catch fire one by one.",
-           "Red-hot stones crash onto the houses along the street, setting the roofs ablaze."],
+    (VB, "T7"): ["A red-hot boulder smashes into a parked van and tips it onto its side in sparks.",
+           "A glowing volcanic bomb hits a van at the curb and flips it over."],
     (VB, "T8"): ["A huge glowing rock smashes into a house and its upper floor bursts into flames.",
            "A red-hot boulder hits a home and the top storey goes up in flames, beams crashing down."],
     (VB, "T9"): ["A glowing rock slams into a big parked truck and fire engulfs its cab.",
@@ -93,7 +97,7 @@ WRONG_OBJECT = {   # olay doğru, ana nesne yanlış: yumuşak kapı reddeder
     (VB, "R7"): "A glowing rock bounces along the pavement in a shower of sparks.",
     (VB, "R8"): "A glowing rock bounces along the pavement in a shower of sparks.",
     (VB, "R9"): "A glowing rock crashes into a parked car in a burst of sparks.",
-    (VB, "T7"): "A glowing rock crashes into a parked car in a burst of sparks.",
+    (VB, "T7"): "A glowing rock crashes onto the roofs of the houses in a burst of sparks.",
     (VB, "T8"): "A glowing rock crashes into a parked car in a burst of sparks.",
     (VB, "T9"): "A glowing rock bounces along the pavement in a shower of sparks.",
     (ER, "S6"): "The shockwave bends the street trees flat in a burst of dust.",
@@ -181,7 +185,8 @@ class TestPoolLint(unittest.TestCase):
         # her muafiyetin gerekçesi var; havuzda olmayan ya da artık ihlal etmeyen beat muaf kalamaz
         # 18 Eki (2): çıkış bekleyen 6 lint muafiyeti çıktı. 22 Eki: yamaç R2, S4 ve köy K3 yeni metinle ihlal etmiyor
         # 23 Eki (hortum denetimi): marina Y3, Z1, Z2, Z6 yeni metin, korumaları kalktı
-        self.assertEqual(len(es.POOL_LINT_GRANDFATHERED), 18)
+        # 30 Eki: cadde P5, Q3, Q6 ve cephe N5 yeni metin, korumaları kalktı
+        self.assertEqual(len(es.POOL_LINT_GRANDFATHERED), 14)
         for (event, bid), why in es.POOL_LINT_GRANDFATHERED.items():
             with self.subTest(beat=(event, bid)):
                 self.assertTrue(why.startswith(("korunan", "denetimde", "çıkış bekliyor")), why)
@@ -310,7 +315,7 @@ class TestNewBeats(unittest.TestCase):
         # sığmayan çift ateş hortumunda sadece T6+U1, volkanda hiç yok; her yeni beat en az bir çiftte seçilebilir
         for (e, slot, bid), text in NEW_BEATS.items():
             with self.subTest(beat=(e, bid)):
-                self.assertLessEqual(len(text.replace("{vehicle}", "x").split()), 16)
+                self.assertLessEqual(len(text.replace("{vehicle}", "x").split()), NEW_BEATS_LONG.get((e, bid), 16))
                 self.assertTrue([p for s in sk.view_spots(e, None) for p in es.allowed_pairs(e, None, s)
                                  if p[0 if slot == "slice_2" else 1] == bid])
         pairs = {p for s in sk.view_spots(FT, None) for p in es.allowed_pairs(FT, None, s)}
@@ -483,8 +488,11 @@ PARTI2 = {   # (olay, dilim, kimlik): (metin, GPT tarzı doğru anlatım)
                                       "The wall of flames sweeps up the slope and engulfs the nearest houses."),
     (es.WILDFIRE, "slice_2", "K8"): ("the flames leap across the street and ignite the roof of a house",
                                       "Flames jump across the street and set the roof of a house ablaze."),
-    (es.WILDFIRE, "slice_2", "K9"): ("the {vehicle} speeds down the road past burning houses as flames lick the asphalt",
-                                      "The SUV races down the road past blazing houses as fire licks the asphalt."),
+    # 30 Eki (2), Bahadır: K9 yeni metin (önceki "the {vehicle} speeds down the road past burning houses as flames
+    # lick the asphalt"); 17 kelime, Parti 2 sınırı bu maddede 17 (PARTI2_LONG)
+    (es.WILDFIRE, "slice_2", "K9"): ("the {vehicle} speeds past as the roof of a burning house collapses onto the road "
+                                      "behind it",
+                                      "The SUV speeds past as a burning house's roof collapses onto the road behind it."),
     (es.WILDFIRE, "slice_3", "L7"): ("a house across the street is engulfed and its roof collapses in a burst of flames",
                                       "A house across the street is swallowed by fire and its roof caves in."),
     (es.FACADE_FIRE, "slice_2", "M7"): ("burning cladding panels peel off the facade beside the balcony and fall in flames",
@@ -495,10 +503,12 @@ PARTI2 = {   # (olay, dilim, kimlik): (metin, GPT tarzı doğru anlatım)
                                          "A huge burning sheet of cladding breaks loose and crashes down the tower."),
     (es.FACADE_FIRE, "slice_2", "M10"): ("thick fire pours out of the windows of the floor below the balcony",
                                           "Thick flames pour out of the windows on the floor below the balcony."),
-    (es.FACADE_FIRE, "slice_2", "M11"): ("the flames leap up the facade to the balconies above in a roaring wall",
-                                          "A roaring wall of flame leaps up the facade to the balconies above."),
-    (es.HELICOPTER, "slice_3", "G7"): ("burning treetops erupt as the helicopter's water load hits the ridge above the "
-                                       "houses", "Burning treetops flare up as the water load hits the ridge above the houses."),
+    # 30 Eki, Bahadır (Aşama B): M11 ve G7 yeni metin. Önceki M11 "the flames leap up the facade to the balconies above
+    # in a roaring wall", G7 "burning treetops erupt as the helicopter's water load hits the ridge above the houses"
+    (es.FACADE_FIRE, "slice_2", "M11"): ("a burning balcony slab on the floor above breaks off and crashes down the facade",
+                                          "A blazing balcony slab above breaks loose and plunges down the facade."),
+    (es.HELICOPTER, "slice_3", "G7"): ("the water load hits a burning garage across the street and its walls collapse in "
+                                       "steam", "The water drop slams into a burning garage opposite and its walls cave in."),
     (es.LANDFALL, "slice_3", "E7"): ("the tornado shreds the top floor of a building across the street, debris spiraling up",
                                       "The tornado rips the top floor off a building across the street, debris whirling up."),
     (es.MARINA_TORNADO, "slice_2", "Y7"): ("the tornado rips the roof off the café across the quay and hurls it away",
@@ -561,7 +571,7 @@ class TestParti2(unittest.TestCase):
 
 
 # 23 Eki (hortum denetimi): Bahadır'ın onayladığı yeni metin 16 kelimeyi aşıyor; kısaltılmadı, sınır bu maddede açık
-PARTI2_LONG = {(es.MARINA_TORNADO, "Z7"): 18}
+PARTI2_LONG = {(es.MARINA_TORNADO, "Z7"): 18, (es.WILDFIRE, "K9"): 17}   # 30 Eki (2): K9 onaylı metin 17 kelime
 
 
 def _make_parti2_test(event, slot, bid, text, para):
