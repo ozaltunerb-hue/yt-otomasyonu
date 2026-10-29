@@ -1292,7 +1292,7 @@ class TestTornadoStructure(unittest.TestCase):
             # 18 Eki (2): Parti 2
             "Z7": "the tornado lifts the café's heavy dark wooden pergola off the terrace and smashes it across the road",
         }, {("Y7", "Z4"), ("Y7", "Z1"), ("Y7", "Z3"), ("Y7", "Z7"), ("Y8", "Z2"), ("Y8", "Z6"), ("Y3", "Z4"),
-            ("Y3", "Z2")}, {}),
+            ("Y3", "Z2"), ("Y5", "Z3")}, {}),   # 29 Eki (4): Y5+Z3 (marina suyu iki kez)
         es.AVENUE: ({
             "P1": "the {vehicle} is shoved sideways across the avenue by the wind",
             "P2": "the {vehicle} tips over onto its side",   # 17 Eki: P3 çıktı
@@ -1449,7 +1449,8 @@ class TestTornadoStructure(unittest.TestCase):
                         n += 1
         # 18 Eki (2): karaya vurma (19 + 16 + 19) × 4; marina 30 × 4; cadde 3 × 28 × 4
         # 23 Eki (hortum denetimi): karaya vurma 3 × 20 × 4 (C2+E1 ve E1 nokta dışlaması çıktı); marina 28 × 4 (Y3+Z4, Y3+Z2)
-        self.assertEqual(n, 240 + 112 + 336)
+        # 29 Eki (4): marina 27 × 4 (Y5+Z3 dışlandı)
+        self.assertEqual(n, 240 + 108 + 336)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -3481,8 +3482,8 @@ class TestTornadoAudit23Oct(unittest.TestCase):
         self.assertEqual(ox.beat_conflicts(es.LANDFALL, "D"), {"E1", "E2"})
         self.assertEqual(ox.beat_conflicts(es.LANDFALL, "C"), ox.candidate_beat_conflicts(es.LANDFALL, "C"))
         m = es.EVENT_BEATS[es.MARINA_TORNADO]["excluded_pairs"]
-        self.assertTrue({("Y3", "Z4"), ("Y3", "Z2")} <= m)
-        self.assertEqual(len(m), 8)
+        self.assertTrue({("Y3", "Z4"), ("Y3", "Z2"), ("Y5", "Z3")} <= m)   # 29 Eki (4): + Y5+Z3
+        self.assertEqual(len(m), 9)
 
     def test_marina_opening_c_vehicle(self):
         import core.opening_axis as ox

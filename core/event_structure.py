@@ -1310,8 +1310,9 @@ EVENT_BEATS = {
         # 23 Eki: Y7/Y8 çiftleri yeni metinlerde de geçerli (Y7 kafe çatısı: Z1 kafe çatısı, Z3 kafe terası, Z4 çatı,
         # Z7 kafe pergolası; Y8 rıhtım binası cephesi: Z2 ofis cephesi, Z6 dükkân cephesi). Yeni: marina ofisi iki kez
         # (Y3: Z2, Z4)
+        # 29 Eki (4), Bahadır: marina suyuna fırlatma iki kez (Y5 araç: Z3 masalar)
         "excluded_pairs": {("Y7", "Z4"), ("Y7", "Z1"), ("Y7", "Z3"), ("Y7", "Z7"), ("Y8", "Z2"), ("Y8", "Z6"),
-                           ("Y3", "Z4"), ("Y3", "Z2")},
+                           ("Y3", "Z4"), ("Y3", "Z2"), ("Y5", "Z3")},
         "excluded_views": {},
         "excluded_spots": {},
     },
