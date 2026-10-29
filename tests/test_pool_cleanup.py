@@ -273,7 +273,11 @@ class TestCleanupRule(unittest.TestCase):
         koy = es.EVENT_BEATS[es.AVALANCHE_VILLAGE]
         for v in ("A2", "A4", "A5"):
             for d in ("B2", "B5"):
-                self.assertIn((v, d), koy["excluded_pairs"])
+                # 30 Eki (3), Bahadır: yeni B2 kısa; (A4, B2), (A5, B2) bütçe dışlaması kalktı
+                if d == "B2" and v != "A2":
+                    self.assertNotIn((v, d), koy["excluded_pairs"])
+                else:
+                    self.assertIn((v, d), koy["excluded_pairs"])
                 self.assertIn(v, koy["slice_2"])
                 self.assertIn(d, koy["slice_3"])
         # bombalar R6+T5: R6 kurala göre çıktı (fizik 2), çift onunla gitti

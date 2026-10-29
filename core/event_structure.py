@@ -821,8 +821,6 @@ _AVA_LIFT_UP = ("lift", "toss", "fling", "flung", "hurl", "throw", "threw", "thr
 # kelimeler de yasak (toz çığı saatte 100+ km). "calmly/gradually/softly/peacefully" Bahadır'ın örneklerine eklendi.
 _AVA_BANNED = ("rescue", "helicopter", "skier", "snowmobile", "vehicle", "truck", "car", "cargo", "tugboat", "ship",
                "boat", "siren", "text", "sign", "logo")
-# 30 Eki (2), Bahadır: kayak C6 kar ezme aracı ("vehicle" çığ yasak kelimesi, terimde yok)
-_AVA_GROOMER = ("snow groomer", "groomer", "snowcat", "snow cat", "piste machine", "piste basher", "piste groomer")
 _AVA_SLOW = ("slowly", "gently", "calm", "calmly", "gradually", "softly", "peacefully")
 # 🏚️ Deprem (14 Eki, Bahadır): _EQ_* listeleri. Nesne + fiil aranır. "wall" tek başına yok ("wall of dust" tozun
 # kendisi). Yasak: ölü/yaralı/gömülme/kurtarma, araç ve gemi, ülke/şehir adı, yavaşlatıcılar.
@@ -997,7 +995,8 @@ EVENT_BEATS = {
         # onlarla gitti (önceki: "excluded_views": {"D7": {"gulf_metropolis"}}, "excluded_spots": {"D7": {"High-rise
         # city district"}})
         # 18 Eki (2): D9 binanın zemin katı, V7 bina duvarı (aynı yapı)
-        "excluded_pairs": {("V3", "D8"), ("V4", "D2"), ("V7", "D9")},
+        # 30 Eki (3), Bahadır: (V6, D5) şehir otobüsü iki kez
+        "excluded_pairs": {("V3", "D8"), ("V4", "D2"), ("V7", "D9"), ("V6", "D5")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1371,11 +1370,12 @@ EVENT_BEATS = {
             # 30 Eki: önceki Q3 "the tornado hurls a cloud of signs, branches and bins along the avenue" (küçük), Q4 "the
             # tornado tears the roof off a bus shelter and throws it aside" (küçük, kadraj dışı), Q6 "the tornado rips
             # the awnings off a row of shops and flings them high" (ince: tente). Q4 metni Bahadır'ın (23 Eki önerisi
-            # yerine). Q2 değişmedi: iki yeni metin de ("...a two-story building...", 30 Eki (2) "...the whole upper
-            # floor off a two-story building...") altyazı sayı kuralına takıldı (caption.number_issues: "two story"
-            # kat sayısı, kat sayısına sadece deprem ve cephe yangınında izin var)
-            "Q2": {"text": "the tornado tears a billboard from its frame and sends it spinning away",
-                   "terms": [_SIGN, _TEAR + _FLING + _SPIN]},
+            # yerine). Q2: ilk iki öneri ("...a two-story building...") altyazı sayı kuralına takıldı
+            # (caption.number_issues: kat sayısı sadece deprem/cephe yangınında). 30 Eki (3), Bahadır: önceki Q2 "the
+            # tornado tears a billboard from its frame and sends it spinning away" (ince: reklam panosu, kadraj dışı)
+            "Q2": {"text": "the tornado rips the top floor off an office building and hurls it across the avenue",
+                   "terms": [("top floor", "upper floor", "floor", "storey", "story", "office building", "building",
+                              "office block", "tower"), _TEAR + _FLING]},
             "Q3": {"text": "the tornado slams a parked city bus onto its side across the avenue",
                    "terms": [("bus", "buses", "city bus"), _TIP + _FLING + _HIT]},
             "Q4": {"text": "the tornado tears the front wall off a corner café and hurls its tables across the avenue",
@@ -1566,9 +1566,11 @@ EVENT_BEATS = {
             "F3": {"text": "the {vehicle} speeds down the street as the helicopter's downdraft whips smoke and embers "
                            "across the road",
                    "terms": [_FIRE_SPEED, _FIRE_DOWNDRAFT, _FIRE_SMOKE_EMBER]},
-            "F4": {"text": "the helicopter's downdraft rips burning branches off the trees and hurls them onto the "
-                           "street",
-                   "terms": [_FIRE_HELI, _FIRE_DOWNDRAFT, _FIRE_HELI_TREE, _FIRE_PEEL + _FIRE_BEND + ("hurl",)]},
+            # 30 Eki (3), Bahadır: F4 ikinci metin (önceki "the helicopter's downdraft rips burning branches off the
+            # trees and hurls them onto the street": dallar boş sokağa, hasarsız)
+            "F4": {"text": "the downdraft fans the flames into a wooden house and its roof collapses in a burst of sparks",
+                   "terms": [_FIRE_DOWNDRAFT, _FIRE_HOUSE, _FIRE_FALL + ("cave", "cave in", "caves in", "give way",
+                                                                         "gives way"), _FIRE_FLAME]},
             "F5": {"text": "a wall of water falls on a burning house, the flames collapsing into thick white steam",
                    "terms": [_FIRE_WATER, _FIRE_HOUSE, _FIRE_STEAM]},
             "F6": {"text": "a burning tree crashes across the road and the {vehicle} swerves into a garden wall, "
@@ -1607,6 +1609,8 @@ EVENT_BEATS = {
         # ve alevin ıskalanan bir çatıya sıçraması (G4) kameranın durduğu ev gibi çizilebilir; o noktada seçilmez
         # 17 Eki: G4 çıktı (ince/uzak), nokta kısıtı onunla gitti
         # 30 Eki (2): G3 "the house next door" (ağaç yan eve devrilir) aynı sebeple
+        # 30 Eki (3): F4 (ahşap evin çatısı çöker) balkonda dışlanmadı: balkonda 4-9s'de F1/F3/F6 kalıyor, son beat
+        # engeli adayı bitiriyordu (TestHelicopter.test_no_candidates_never)
         "excluded_spots": {"F2": {"Balcony of a hillside house"}, "F5": {"Balcony of a hillside house"},
                            "G3": {"Balcony of a hillside house"}},
     },
@@ -1842,8 +1846,10 @@ EVENT_BEATS = {
         # duruyordu). Beat silinmedi.
         "excluded_pairs": {("A1", "B1"), ("A1", "B5"), ("A2", "B6"), ("A3", "B3"), ("A4", "B1"), ("A4", "B4"),
                            ("A5", "B6"), ("A6", "B1"), ("A6", "B2"), ("A6", "B5"),
-                           ("A2", "B2"), ("A2", "B5"), ("A4", "B2"), ("A4", "B5"), ("A5", "B2"), ("A5", "B5")},
-        # 30 Eki: A1+B2 köy kenarı terasında 175'e sığmamıştı ve dışlanmıştı; 30 Eki (2) yeni B2 ile sığıyor, dışlama kalktı
+                           ("A2", "B2"), ("A2", "B5"), ("A4", "B5"), ("A5", "B5")},
+        # 30 Eki: A1+B2 köy kenarı terasında 175'e sığmamıştı ve dışlanmıştı; 30 Eki (2) yeni B2 ile sığıyor, dışlama kalktı.
+        # 30 Eki (3), Bahadır: (A4, B2) ve (A5, B2) bütçe dışlamaları da kalktı (yeni B2 sığıyor); (A2, B2) anlam
+        # yüzünden duruyor (dağ evi iki kez temelinden kopar)
         "excluded_views": {},
         "excluded_spots": {"A3": {"Balcony of a chalet at the edge of the village"},
                            "A6": {"Balcony of a chalet at the edge of the village"},
@@ -1873,9 +1879,10 @@ EVENT_BEATS = {
             # 14 Eki, Bahadır: çam ormanı (beyaz üstüne beyaz) yerine koyu kütük yığını. Önceki: "the avalanche
             # rolls through a grove of pines and snaps them like matchsticks"
             # 30 Eki (2), Bahadır: önceki "the avalanche shoves a stack of dark timber logs down the slope into the
-            # lodge wall" (hasarsız temas)
-            "C6": {"text": "the avalanche hurls a parked snow groomer into the lodge wall and the wall caves in",
-                   "terms": [_AVA_GROOMER, _AVA_HURL + _AVA_SWEEP, _AVA_LODGE_TARGET, _AVA_COLLAPSE]},
+            # lodge wall" (hasarsız temas). 30 Eki (3): çığda araç yok, ikinci metin ("...hurls a parked snow groomer
+            # into the lodge wall and the wall caves in") çıktı
+            "C6": {"text": "the avalanche slams into the ski lodge and caves in its whole ground floor",
+                   "terms": [_AVA_LODGE_TARGET + ("ski lodge", "ground floor"), _AVA_IMPACT, _AVA_COLLAPSE]},
         },
         "slice_3": {
             # 14 Eki, Bahadır: pencere yerine büyük ahşap cephe. Önceki: "a second surge buries the lodge's ground

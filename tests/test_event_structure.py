@@ -212,7 +212,8 @@ class TestLockedData(unittest.TestCase):
             # 18 Eki (2): Parti 2
             "D9": "the flood bursts through the ground floor of a building across the street",
         })
-        self.assertEqual(B["excluded_pairs"], {("V3", "D8"), ("V4", "D2"), ("V7", "D9")})   # 18 Eki (2): D9
+        self.assertEqual(B["excluded_pairs"], {("V3", "D8"), ("V4", "D2"), ("V7", "D9"),   # 18 Eki (2): D9
+                                               ("V6", "D5")})   # 30 Eki (3): şehir otobüsü iki kez
         self.assertEqual(B["excluded_views"], {})
         self.assertEqual(B["excluded_spots"], {})
 
@@ -363,7 +364,7 @@ class TestExhaustive(unittest.TestCase):
                         self.assertEqual(i, sorted(i))
                         longest = max(longest, len(prompt))
                         n += 1
-        self.assertEqual(n, 18 * 45 * 3)   # 18 Eki (2): 18 görünüm×nokta × 45 çift (D9 eklendi) × 3 araç
+        self.assertEqual(n, 18 * 44 * 3)   # 18 Eki (2): D9 eklendi; 30 Eki (3): (V6, D5) çıktı, 44 çift × 3 araç
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_longest_realistic_story_fits(self):
@@ -446,7 +447,7 @@ class TestSelection(unittest.TestCase):
         # 18 Eki (2): 45 izinli çift (D9 eklendi). Son-3 engeli döngü sonunda birkaç çifti erteleyebilir; ölçüm (300
         # tohum): ilk tekrar en erken 34. üretimde, 45 üretimde en az 42 farklı çift. (17 Eki: 38 çift, 28 / 34.)
         pairs = es.allowed_pairs(FLOOD, "riviera", "Downtown city center")
-        self.assertEqual(len(pairs), 45)
+        self.assertEqual(len(pairs), 44)   # 30 Eki (3): (V6, D5) çıktı
         for seed in range(40):
             es._BEAT_MEMORY.clear()
             rng, hist, chosen = random.Random(seed), [], []
@@ -456,7 +457,8 @@ class TestSelection(unittest.TestCase):
                 hist.append(combo(tag=es.beat_tag(*p)))
             with self.subTest(seed=seed):
                 self.assertEqual(len(set(chosen[:33])), 33)
-                self.assertGreaterEqual(len(set(chosen)), 42)
+                # 30 Eki (3): 44 çift; ölçüm (300 tohum): ilk tekrar en erken 33., 44 üretimde en az 41 farklı çift
+                self.assertGreaterEqual(len(set(chosen)), 41)
 
     def test_memory_counts_unfinished(self):
         es.remember_beats(FLOOD, "V5+D5")
@@ -1314,7 +1316,7 @@ class TestTornadoStructure(unittest.TestCase):
             "P7": "the tornado flings a large truck across the avenue into the front of a building",
         }, {
             "Q1": "the tornado rips a row of palm trees out of the ground and flings them across the avenue",
-            "Q2": "the tornado tears a billboard from its frame and sends it spinning away",
+            "Q2": "the tornado rips the top floor off an office building and hurls it across the avenue",   # 30 Eki (3)
             "Q3": "the tornado slams a parked city bus onto its side across the avenue",
             "Q4": "the tornado tears the front wall off a corner café and hurls its tables across the avenue",
             "Q6": "the tornado rips the whole front off a row of shops and hurls the debris across the avenue",   # 17 Eki: Q5 çıktı
@@ -2325,7 +2327,7 @@ class TestHelicopter(unittest.TestCase):
         # 30 Eki, Bahadır (Aşama B): F2, F4, F6, G6, G7 yeni metin
         "F2": "the water load crashes onto a burning roof and the charred roof caves in",
         "F3": "the {vehicle} speeds down the street as the helicopter's downdraft whips smoke and embers across the road",
-        "F4": "the helicopter's downdraft rips burning branches off the trees and hurls them onto the street",
+        "F4": "the downdraft fans the flames into a wooden house and its roof collapses in a burst of sparks",   # 30 Eki (3)
         "F5": "a wall of water falls on a burning house, the flames collapsing into thick white steam",
         "F6": "a burning tree crashes across the road and the {vehicle} swerves into a garden wall, crumpling its front",
     }

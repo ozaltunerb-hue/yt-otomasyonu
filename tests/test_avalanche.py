@@ -91,7 +91,7 @@ POOLS = {
              "C3": "the avalanche rips the wooden terrace deck off the lodge and the dark planks fly",
              "C4": "the avalanche smashes into a wooden snack cabin by the slope and flattens it",
              "C5": "the avalanche hits a stone service building and its wall bursts apart",
-             "C6": "the avalanche hurls a parked snow groomer into the lodge wall and the wall caves in"},
+             "C6": "the avalanche slams into the ski lodge and caves in its whole ground floor"},   # 30 Eki (3)
             {"D1": "a second surge slams into the lodge and its whole wooden front bursts open, beams and planks "
                    "flying",
              "D2": "the snow wall tears a wooden annex off the lodge and carries it downhill",
@@ -116,7 +116,8 @@ POOLS = {
 }
 # 17 Eki, Bahadır (temizlik turu, madde 1): kod yedeğinin kelime sınırına sığmadığı köy çiftleri hariç (yapı kuralı
 # dışında; tests/test_story_fallback.py FALLBACK_GAPS_EXCLUDED)
-FIT_GAPS = {KOY: {("A2", "B2"), ("A2", "B5"), ("A4", "B2"), ("A4", "B5"), ("A5", "B2"), ("A5", "B5")}}
+# 30 Eki (3), Bahadır: (A4, B2), (A5, B2) kalktı (yeni B2 sığıyor); (A2, B2) yapı kuralıyla zaten dışlı
+FIT_GAPS = {KOY: {("A2", "B2"), ("A2", "B5"), ("A4", "B5"), ("A5", "B5")}}
 # 30 Eki (2): B2 (bütün dağ evi) ve D5 (istasyon çatısı) yeni metin; eski sınıflarından (balkon, kulübe) kalan dışlamalar
 # Bahadır kararına kadar duruyor
 LEGACY_PAIRS = {KOY: {("A6", "B2")}, KAYAK: {("C1", "D5"), ("C4", "D5")}}
@@ -218,11 +219,11 @@ VALID = {
            "The snow crashes into a stone building and its wall breaks open.",
            "The avalanche smashes a stone outbuilding and its masonry explodes outward.",
            "The avalanche hits a stone service building and its wall bursts apart."],
-    "C6": ["The avalanche flings a parked snow groomer into the lodge wall and the wall collapses.",
-           "A snow groomer is swept into the side of the lodge and the wall caves in.",
-           "The snow wall drives a parked snowcat into the lodge and the wall gives way.",
-           "The avalanche hurls the piste machine into the wall of the lodge building, which caves in.",
-           "The avalanche hurls a parked snow groomer into the lodge wall and the wall caves in."],
+    "C6": ["The avalanche crashes into the ski lodge and its whole ground floor caves in.",
+           "The snow wall slams into the lodge and the ground floor collapses.",
+           "The avalanche hits the lodge building and crushes its entire ground floor.",
+           "The snow mass rams the ski lodge and its ground floor gives way.",
+           "The avalanche slams into the ski lodge and caves in its whole ground floor."],
     "D1": ["A second surge hits the lodge and its whole wooden front bursts open, planks flying.",
            "Another wave slams into the lodge, blowing out its wooden facade in a spray of beams.",
            "The lodge's wooden front wall caves in and beams and boards scatter.",
@@ -345,7 +346,7 @@ IMPACT = {
  "C3": "The avalanche crashes into the lodge terrace, sending the deck planks flying.",
  "C4": "The avalanche crashes into a snack cabin, flattening it.",
  "C5": "The avalanche crashes into a stone service building, its wall bursting apart.",
- "C6": "The snow mass sends a parked snow groomer crashing into the lodge wall, which caves in.",
+ "C6": "The snow mass crashes into the ski lodge, sending its ground floor caving in.",
  "D1": "A second surge crashes into the lodge, its wooden front exploding open with beams and planks flying.",
  "D2": "The snow mass slams into the lodge's wooden annex, ripping it away and carrying it downhill.",
  "D3": "The avalanche crashes over the lodge, sending its roof deck flying aside.",
@@ -687,7 +688,8 @@ class TestAvalanche(unittest.TestCase):
         counts = {e: [len(es.allowed_pairs(e, None, s)) for s in sk.view_spots(e, None)] for e in AVA}
         # 17 Eki: köy 6 yeni hariç çift (yedek sığmıyor), orman F3 çıktı
         # 30 Eki (2): kayak D5 sadece köy kenarı terasında (teleferik + çatı)
-        self.assertEqual(counts, {KOY: [20, 7], KAYAK: [20, 16, 12], ORMAN: [19, 13]})   # 18 Eki (2): E7, F7
+        self.assertEqual(counts, {KOY: [22, 7], KAYAK: [20, 16, 12], ORMAN: [19, 13]})   # 18 Eki (2): E7, F7
+        # 30 Eki (3): köy kenarı terasında (A4, B2), (A5, B2) geri geldi
 
     def test_block_depth_never_runs_out(self):
         # 14 Eki (3): zayıf madde temizliğinden sonra köy 2, kayak 2, orman 1 (yasak çiftler arttı; her noktada en
@@ -722,7 +724,7 @@ class TestAvalanche(unittest.TestCase):
                     if issues:
                         self.fail(f"{e}/{spot}/{b2}+{b3}: {issues}")
                     n += 1
-        self.assertEqual(n, 20 + 7 + 20 + 16 + 12 + 19 + 13)   # 18 Eki (2): orman E5 -> E7, F7; 30 Eki (2): kayak D5
+        self.assertEqual(n, 22 + 7 + 20 + 16 + 12 + 19 + 13)   # 18 Eki (2): orman E5 -> E7, F7; 30 Eki (2)-(3)
 
     def test_100_productions_each_event(self):
         import core.creative_pipeline as cp
