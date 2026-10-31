@@ -92,11 +92,14 @@ CAMERA_SPOTS = {
     # 31 Eki, Bahadır (kamera-ortam tutarlılığı): ortamdan bağımsız nötr. Önceki "on a roadside embankment above the
     # village road" (orman yangını E "rural town" ortamıyla çelişiyordu)
     "Embankment above the village road": "on a roadside embankment above the road",
-    # 8 Eki (2), Bahadır: cephe yangını ve ateş hortumu balkonunda kamera yüksek; kaldırım noktaları çıktı
-    "Balcony across from a downtown tower": "on a high balcony across the street from the tower",
-    "Rooftop terrace across from a downtown tower": "on a rooftop terrace across the street from the tower",
-    "Balcony across from a coastal high-rise": "on a high balcony across the street from the tower",
-    "Rooftop terrace across from a coastal high-rise": "on a rooftop terrace across the street from the tower",
+    # 8 Eki (2), Bahadır: cephe yangını ve ateş hortumu balkonunda kamera yüksek; kaldırım noktaları çıktı.
+    # 31 Eki (3), spot-ortam tutarlılığı: "the tower" -> "the burning building" (cephe C "five-storey stone apartment
+    # buildings", E "1970s concrete housing estate" ortamlarında kule yok). Önceki "...across the street from the tower"
+    "Balcony across from a downtown tower": "on a high balcony across the street from the burning building",
+    "Rooftop terrace across from a downtown tower": "on a rooftop terrace across the street from the burning building",
+    "Balcony across from a coastal high-rise": "on a high balcony across the street from the burning building",
+    "Rooftop terrace across from a coastal high-rise": "on a rooftop terrace across the street from the burning "
+                                                       "building",
     # 16 Eki, Bahadır: ateş hortumu ortam ekseni (event_structure.FIRE_TOR_ENVS). Sahne her zaman ağaçlık bir yerleşim;
     # açık arazi yok. Önceki iki nokta: "Overlook above the burning valley road" ("on a roadside overlook above the
     # burning valley road"), "Balcony of a roadside house" ("on a high balcony of a roadside house overlooking the road")

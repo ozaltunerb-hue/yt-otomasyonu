@@ -86,7 +86,7 @@ ENV_LABELS = {ENV_A: "A (bugünkü)"}
 # Ortam seçilince kamera cümlesindeki sahne genel (ayrıntı Setting'den): frame_axis FRAME_EVENTS scene yerine
 GENERIC_SCENE = {AVENUE: "the avenue", HELICOPTER: "the houses below", WILDFIRE: "the burning slope",
                  MUDSLIDE: "the steep street", SLOPE: "the road", VILLAGE: "the village", LANDFALL: "the waterfront",
-                 MARINA: "the marina", FACADE: "the burning tower"}
+                 MARINA: "the marina", FACADE: "the burning building"}   # 31 Eki (3): önceki "the burning tower"
 
 # Spot × ortam uyumu: ortamda çelişen kamera noktaları (spot adı = sahne ve kamera yeri; "lib:<tip>" = kütüphane yeri)
 ENV_EXCLUDE = {
@@ -181,15 +181,28 @@ def depth(n: int) -> int:
 
 
 def choose_env(event: str, spot: str, used: list, rng: random.Random) -> tuple[str, list]:
-    """Ortam: seçilen spotla uyumlu ortamlardan, son 2 hariç (aday kalmazsa uyumlu hepsi)."""
-    options = compatible_envs(event, spot)
-    cands, excluded = _lru(options, used, depth(len(env_options(event))))
+    """Ortam: seçilen spotla uyumlu ortamlardan, son 2 hariç (aday kalmazsa uyumlu hepsi). 31 Eki (3): rotasyonda
+    sadece A + koruma ortamı (core.proven_axes)."""
+    import core.proven_axes as pa
+    options = pa.scene_envs(event, compatible_envs(event, spot))
+    g = pa.guards(event, "ortam")   # 31 Eki (3): koruma ortamı en fazla %20, art arda gelmez
+    guarded = pa.guard_lru(options, used, 2, g)
+    if guarded:
+        return pa.guard_pick(rng, guarded[0], g), guarded[1]
+    cands, excluded = _lru(options, used, depth(len(options)))   # 31 Eki (3): derinlik rotasyondaki ortam sayısıyla
     return rng.choice(cands), excluded
 
 
 def choose_light(event: str, options: list[str], used: list, rng: random.Random,
                  weights: dict[str, int] | None = None) -> tuple[str, list]:
-    """Işık: son 2 hariç, ağırlıklı (yangında gün batımı 2; volkanda mevcut ağırlıklar + eklenenler 1)."""
+    """Işık: son 2 hariç, ağırlıklı (yangında gün batımı 2; volkanda mevcut ağırlıklar + eklenenler 1). 31 Eki (3):
+    koruma ışığı (volkan, meteor) en fazla %20, art arda gelmez (core.proven_axes)."""
+    import core.proven_axes as pa
+    g = pa.guards(event, "light")
+    guarded = pa.guard_lru(options, used, depth(len(options)), g)
+    if guarded:
+        return pa.guard_pick(rng, guarded[0], g, {o: (weights or {}).get(o, light_weight(event, o))
+                                                  for o in guarded[0]}), guarded[1]
     cands, excluded = _lru(options, used, depth(len(options)))
     w = [(weights or {}).get(o, light_weight(event, o)) for o in cands]
     return rng.choices(cands, weights=w, k=1)[0], excluded

@@ -25,6 +25,25 @@
 
 ---
 
+## 📋 DEVİR: Kanıtlı formül kuralı + üretim günü düzeltmeleri (31 Eki 2026, üçüncü tur)
+
+Ders: hit formül (açılış A + orijinal kamera) 9/10; 21 Eki sonrası denenmemiş seçenekler (pencere, volkan açılış D +
+şafak, orman açılış C) sorun çıkardı.
+- **`core/proven_axes.py`**: KANITLI = 21 Eki öncesi orijinal değerler + paylaşılan videoda kullanılanlar (Notion
+  Paylaşımlar ↔ üretim "Eksenler"; eşleme modül başında). Rotasyon sadece KANITLI; DENEME kodda kalır. Eksende KANITLI
+  2'den azsa `GUARD` (gerekçeli) ya da kadraj/ön planda en az riskli deneme 2'ye tamamlar. Pencere ve volkan açılış D
+  hiçbir zaman. `ROTATION_ON = False` eski davranış (sadece mekanik testleri). Bağlantılar: `opening_axis.choose`,
+  `scene_env.choose_env`, `frame_axis.choose_frame`, `creative_pipeline` (ışık, volkan/meteor noktası, meteor ortamı,
+  K5 sığma koruması önce rotasyon). LRU derinliği rotasyondaki seçenek sayısıyla (2 seçenekte son 1).
+- **Volkan hit:** bombalar 10 Eki (çatı, hava "ash-grey ... plume"), kül bulutu 13 Eki 11:23 (yamaç terası, korkuluk).
+  Nokta = kadraj: bombalar çatı + balkon (18 Eki paylaşımı), kül bulutu yamaç + çatı (25 Eki paylaşımı). Hit'te
+  "bombs" var (kilit cümle): "volcanic bomb" ifadesine dokunulmadı.
+- **GPT kapısı ekleri** (`es.gpt_added_issues`): scramble (insan), volkan kökleri, insan yönü (heyelan/sel/dalga), ses,
+  soyut final, helikopter suyu, araç hareketi. Seçilen beat/kilit/açılış metni ve kod yedeğinin insan cümlesi muaf.
+- **Finaller:** heyelan M3 (minibüs evin önüne, nesne ev), M4 (köşe dükkânı); cephe N1 (çatı çöker); helikopter F5
+  (güverte). (H6,M3) benzer, (H6,M4) (H4,M4) bütçe dışlandı. Helikopter su tarifi "falling sheet" (kilit, B/C, F1/F2/G2/G7).
+- **Spot-ortam:** cephe kamerası "the tower" -> "the burning building"; açılış D cephe C/E ortamında seçilmez.
+
 ## 📋 DEVİR: GPT kapısı, hortum E5, volkan R9, kamera-ortam tutarlılığı (31 Eki 2026)
 
 31 Eki Onay bulguları (GPT kapıdan geçti ama zayıf yazdı) için koddaki kapılar; GPT'ye yeni hint yok, geri bildirim

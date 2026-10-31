@@ -85,10 +85,13 @@ OPENINGS = {
         "C": "A fireball bursts out of an apartment window and the facade around it bursts into flames.",
         "D": "The top floor of the tower bursts into flames and burning debris falls onto the street below."},
     "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood": {
-        "B": "A firefighting helicopter sweeps in low and dumps its water straight onto the wall of flames behind "
-             "the houses.",
-        "C": "A firefighting helicopter comes in over the ridge and its water drop crashes down in a white "
-             "curtain onto the flames.",
+        # 31 Eki (3), Bahadır (su tarifi): önceki B "...sweeps in low and dumps its water straight onto the wall of
+        # flames behind the houses.", C "...comes in over the ridge and its water drop crashes down in a white curtain
+        # onto the flames."
+        "B": "A firefighting helicopter sweeps in low and its bucket releases its whole load at once in a wide "
+             "falling sheet onto the flames behind the houses.",
+        "C": "A firefighting helicopter comes in over the ridge and its bucket releases its whole load at once in "
+             "a wide falling sheet onto the flames.",
         "D": "The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with "
              "its water bucket."},
     "Pyroclastic cloud races down into a village street": {
@@ -188,6 +191,8 @@ OPENING_ENV_EXCLUDE = {
     "Tornado crosses a marina quay": {"B": {"E"},       # "moored yachts": E göl marinası (motorlu tekne)
                                       "D": {"C"}},      # "wooden pier": C taş duvarlı liman
     "Tornado sweeps down a coastal avenue": {"C": {"E"}},   # "a row of shops": E depolar ve işçi evleri
+    # 31 Eki (3), spot-ortam tutarlılığı: "the top floor of the tower" C tarihi taş binalar, E 1970 sitesi (kule yok)
+    "Flames race up a tower facade": {"D": {"C", "E"}},
 }
 
 
@@ -264,11 +269,18 @@ def allowed(event: str, env: str | None, b2: str, b3: str) -> list[str]:
 
 
 def choose(event: str, env: str | None, b2: str, b3: str, used: list, rng: random.Random) -> tuple[str | None, list]:
-    """(harf, elenenler). Aday yoksa None (çağıran ortamı A'ya çeker; A ortamında A her zaman uyumlu)."""
-    cands = allowed(event, env, b2, b3)
+    """(harf, elenenler). Aday yoksa None (çağıran ortamı A'ya çeker; A ortamında A her zaman uyumlu). 31 Eki (3):
+    rotasyonda sadece A + koruma harfi (core.proven_axes; diğerleri DENEME, kodda durur)."""
+    import core.proven_axes as pa
+    cands = pa.openings(event, allowed(event, env, b2, b3))
     if not cands:
         return None, []
-    recent = [u for u in used if u not in (None, "", "-")][-2:]
+    # 31 Eki (3): A + koruma harfi: koruma en fazla %20, art arda gelmez; A tekrar edebilir (pa.guard_lru)
+    g = pa.guards(event, "acilis")
+    guarded = pa.guard_lru(cands, used, 2, g)
+    if guarded:
+        return pa.guard_pick(rng, guarded[0], g), guarded[1]
+    recent = [u for u in used if u not in (None, "", "-")][-(1 if len(cands) <= 2 else 2):]
     left = [o for o in cands if o not in set(recent)]
     if not left:
         left = cands

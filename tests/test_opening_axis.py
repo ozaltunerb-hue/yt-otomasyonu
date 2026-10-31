@@ -161,7 +161,9 @@ class TestPipeline(unittest.TestCase):
                 self.assertIn("açılış=", st["axes_line"])
                 self.assertEqual(json.loads(scene["axes_json"])["axes"]["acilis"], op)
                 self.assertEqual(es.final_prompt_issues(st["spec"], st["slices"], scene["prompt"], scene["story"]), [])
-            self.assertEqual(set(seen), {"A", "B", "C", "D"}, e)
+            # 31 Eki (3): rotasyonda A + koruma harfi (core.proven_axes); diğerleri DENEME
+            import core.proven_axes as pa
+            self.assertEqual(set(seen), {"A", pa.GUARD["acilis"][e][0]}, e)
         self.assertIn("acilis", ah.AXIS_KEYS)
 
     def test_notion_history_drives_opening(self):
@@ -169,10 +171,11 @@ class TestPipeline(unittest.TestCase):
         spot = sk.view_spots(e, None)[0]
         rec = lambda letter: {"combo_key": f"earthquake_disasters|none|{e.lower()}|{spot.lower()}##P1+Q1|c",
                               "eksenler": ah.axes_json(e, {"spot": spot, "acilis": letter}), "status": "❌ İptal"}
+        # 31 Eki (3): rotasyonda A + koruma B (en fazla %20); son açılış koruma ise sıradaki A, koruma art arda gelmez
         for seed in range(15):
             random.seed(seed)
-            scene = ps.build(e, axes_loader=lambda d: [rec("A"), rec("C")])
-            self.assertNotIn(scene["structure"]["axes"]["acilis"], ("A", "C"))
+            scene = ps.build(e, axes_loader=lambda d: [rec("A"), rec("B")])
+            self.assertEqual(scene["structure"]["axes"]["acilis"], "A")
 
     def test_fire_tornado_unchanged(self):
         random.seed(3)

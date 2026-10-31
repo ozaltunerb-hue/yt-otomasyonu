@@ -241,8 +241,9 @@ class TestSoftGate(unittest.TestCase):
         # 15 Eki canlı retleri; 2i kayıtları ("source") üretimleriyle birebir test_rejected_real.py'de. 17 Eki:
         # çıkarılan maddelerin kayıtları atlanır, eski araç adları bugünkü karşılığına çevrilir
         sys.path.insert(0, os.path.dirname(__file__))
-        from test_rejected_real import current, retired
-        for r in [current(x) for x in data if "source" not in x and not retired(x)]:
+        from test_rejected_real import REWRITTEN_31OCT, current, retired
+        for r in [current(x) for x in data if "source" not in x and not retired(x)
+                  and (x["event"], x["beat"]) not in REWRITTEN_31OCT]:   # 31 Eki (3): F5 yeni metin
             e, bid = r["event"], r["beat"]
             slot = "slice_2" if bid in es.EVENT_BEATS[e]["slice_2"] else "slice_3"
             view = es.structure_views(e)[0]

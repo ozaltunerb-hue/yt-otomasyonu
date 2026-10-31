@@ -193,11 +193,16 @@ class TestNotionSuccess(_Quiet):
         lights = list(sk.VOLCANO_WEATHER_WEIGHTS[e])
         records = [rec(e, {"env": "pastel_town", "spot": spots[0], "light": lights[0]}),
                    rec(e, {"env": "suburb", "spot": spots[1], "light": lights[1]})]
+        import core.proven_axes as pa
         for seed in range(15):
             ax = self.scene(e, records, seed=seed)["structure"]["axes"]
             self.assertNotIn(ax["env"], ("pastel_town", "suburb"))
-            self.assertEqual(ax["spot"], spots[2])
-            self.assertNotIn(ax["light"], lights[:2])
+            # 31 Eki (3): nokta ve ışık rotasyonda iki değer (KANITLI + koruma): son seçilen elenir
+            rot_spots = pa.spots(e, spots)
+            self.assertIn(ax["spot"], rot_spots)
+            if spots[1] in rot_spots:
+                self.assertNotEqual(ax["spot"], spots[1])
+            self.assertEqual(ax["light"], pa.VOLC_HIT_LIGHT)   # son ışık (lights[1]) koruma ışığıydı
 
     def test_region_view_from_notion(self):
         records = [rec(es.FLOOD, {"view": v, "spot": "Downtown city center"}) for v in list(sk.REGION_VIEWS)[:5]]
@@ -292,6 +297,7 @@ class TestDeployScenario(_Quiet):
 
     def test_every_lru_axis_no_consecutive_repeat(self):
         import core.frame_axis as fx
+        import core.proven_axes as pa
         import variety_report as vr
         for e in ps.active_events():
             with self.subTest(event=e):
@@ -301,8 +307,17 @@ class TestDeployScenario(_Quiet):
                 single = {a for a, n in vr.option_counts(e).items() if n == 1}
                 for axis in vr.LRU_AXES:
                     # kadraj: aşağıda (tek güvenli kadraj); ortam ve ön plan: aşağıda (uyum / bütçe zorunlu)
-                    if axis not in single and axis not in ("kadraj", "environment", "on_plan", "key_visual"):
+                    # 31 Eki (3): kamera modu rotasyonda tek değer (orijinal A; mod B DENEME)
+                    # 31 Eki (3): korumalı eksende (kanıtlı + koruma, koruma en fazla %20) kanıtlı değer tekrar
+                    # edebilir, koruma değeri art arda gelmez (aşağıda); volkan/meteor ışığı korumalı
+                    g = (pa.guards(e, "light") if axis == "weather" else pa.guards(e, "spot") if axis == "spot"
+                         else set())
+                    if axis not in single and axis not in ("kadraj", "environment", "on_plan", "key_visual",
+                                                           "kamera_modu") and not g:
                         self.assertEqual(m[f"rep_{axis}"], 0, axis)
+                    if g:
+                        ws = [r[axis] for r in rows]
+                        self.assertFalse([1 for x, y in zip(ws, ws[1:]) if x == y and x in g], (e, ws))
                 # 21 Eki (Aşama 5): ortam tekrarı sadece spotla uyumlu ortamlar son 2 elenince bitiyorsa; ön plan
                 # tekrarı sadece K5 sığma koruması devreye girdiyse (bütçe zorunlu)
                 import core.scene_env as sv
@@ -316,15 +331,17 @@ class TestDeployScenario(_Quiet):
                         env = rows[i]["environment"] if e in sv.SCENE_ENVS else None
                         letters = {(ox.text(e, o) or es.EVENT_KEY_VISUAL[e]): o for o in ox.options(e)}
                         recent = {letters[k] for k in keys[max(0, i - 2):i]}
-                        left = [o for o in ox.allowed(e, env, b2, b3) if o not in recent]
-                        self.assertEqual(left, [], (e, i, rows[i]["beats"], env))
+                        # 31 Eki (3): rotasyonda A + koruma; A tekrar edebilir (koruma en fazla %20), koruma art
+                        # arda gelmez
+                        self.assertNotIn(letters[keys[i]], pa.guards(e, "acilis"), (e, i, keys[i]))
                 for i in range(1, len(rows)):
                     a, b = rows[i - 1], rows[i]
-                    if e in sv.SCENE_ENVS and a["environment"] == b["environment"]:
-                        left = [x for x in sv.compatible_envs(e, b["spot"]) if x not in envs[max(0, i - 2):i]]
-                        self.assertEqual(left, [], (e, i, b["spot"], envs[:i + 1]))
-                    if a["on_plan"] == b["on_plan"] and b["on_plan"] != "—":
-                        self.assertTrue(b["fit_guard"], (e, i, a, b))
+                    if e in sv.SCENE_ENVS and a["environment"] == b["environment"] and not b["fit_guard"]:
+                        # 31 Eki (3): ortam A (kanıtlı) tekrar edebilir; koruma ortamı art arda gelmez
+                        self.assertNotIn(b["environment"], pa.guards(e, "ortam"), (e, i, envs[:i + 1]))
+                    if a["on_plan"] == b["on_plan"] and b["on_plan"] != "—" and not b["fit_guard"]:
+                        # 31 Eki (3): kanıtlı ön plan tekrar edebilir (koruması en fazla %20); koruma art arda gelmez
+                        self.assertIn(b["on_plan"], ("korkuluk", "parapet", "None", None), (e, i, a, b))
                 # 21 Eki (Aşama 4): kadraj tekrarı sadece seçilen beat'lerin dışlamaları tek güvenli kadraj bıraktıysa
                 beats = es.EVENT_BEATS[e]["excluded_spots"]
                 # 22 Eki: ön plandaki gibi K5 sığma koruması devreye girdiyse de (bütçe zorunlu; uzun heyelan beat'leri)
@@ -335,8 +352,12 @@ class TestDeployScenario(_Quiet):
                     risky = set(beats.get(b2, set())) | set(beats.get(b3, set()))
                     pool = (list(es.FIRE_TOR_ENVS[es.fire_env_of_spot(b["spot"])]["spots"]) if e == es.FIRE_TORNADO
                             else sk.view_spots(e, None if b["environment"] not in sk.REGION_VIEWS else b["environment"]))
-                    types = {f["type"] for f in fx.all_frames(e, b["spot"], pool, risky)}
-                    self.assertEqual(types, {b["kadraj"]}, (e, a, b))
+                    rot = pa.allowed_variants(e, b["spot"], fx.all_frames(e, b["spot"], pool, risky))
+                    types = {f["type"] for f in rot}
+                    # 31 Eki (3): kanıtlı kadraj tipi tekrar edebilir (koruma tipi en fazla %20); koruma tipi art arda
+                    # gelmez; rotasyonda tek tip varsa tekrar zorunlu
+                    if types != {b["kadraj"]}:
+                        self.assertNotIn(b["kadraj"], pa.frame_guards(e, b["spot"], rot)[0], (e, a, b))
 
 
 class TestPipelineOrder(_Quiet):

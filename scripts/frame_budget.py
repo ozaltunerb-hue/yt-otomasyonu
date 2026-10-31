@@ -44,6 +44,7 @@ def measure(event: str) -> dict:
     import core.event_structure as es
     import core.frame_axis as fx
     import core.opening_axis as ox
+    import core.proven_axes as pa
     import core.scene_env as sv
     import core.skeleton_pipeline as sk
     setting = _longest_setting(event)
@@ -51,7 +52,7 @@ def measure(event: str) -> dict:
     people = hi if es.has_people_rule(event) else None
     volc_envs = list(sk.VOLC_ENVS) if event in es.VOLC_ENV_EVENTS else [None]
     out = {"combos": 0, "before_fail": 0, "after_fail": 0, "variants": 0, "variant_fail": 0, "max_suffix": 0,
-           "gate_fail": 0, "env_reset": 0}
+           "gate_fail": 0, "env_reset": 0, "rot_fail": 0}
     beats = es.EVENT_BEATS[event]["excluded_spots"]
     for view in es.structure_views(event):
         for spot in sk.view_spots(event, view):
@@ -79,6 +80,11 @@ def measure(event: str) -> dict:
                                 if senv not in (None, "A"):   # üretimdeki koruma: en son ortam A'ya döner
                                     frames += [("A", f) for f in fx.all_frames(event, spot, pool, risky)]
                                 first = None
+                                # 31 Eki (3): rotasyondaki (KANITLI + koruma) kadrajlardan biri sığıyor mu
+                                rot = pa.allowed_variants(event, spot, fx.all_frames(
+                                    event, spot, pool, risky, sv.excluded_positions(event, senv)))
+                                rot_a = pa.allowed_variants(event, spot, fx.all_frames(event, spot, pool, risky))
+                                rot_fit = False
                                 for env_used, f in frames:
                                     spec = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv,
                                                          f, env_used, op)
@@ -88,7 +94,13 @@ def measure(event: str) -> dict:
                                     out["max_suffix"] = max(out["max_suffix"], len(spec["suffix"].split()))
                                     if cands and first is None:
                                         first = (spec, cands[0])
+                                    # üretimdeki gibi: rotasyon kadrajı önce bu ortamda, sonra ortam A'da
+                                    rot_fit = rot_fit or (bool(cands) and f in (rot if env_used == senv else rot_a))
                                 out["after_fail"] += first is None
+                                # sadece rotasyondaki ortam ve açılışla kurulan kombinasyonlar (deneme değerleri seçilmez)
+                                in_rot = ((senv0 is None or senv0 in pa.scene_envs(event, scene_envs))
+                                          and (op is None or op in pa.openings(event, openings)))
+                                out["rot_fail"] += in_rot and not rot_fit
                                 if first is not None:
                                     spec, sl = first
                                     prompt = es.assemble_prompt(spec, sl)
@@ -100,14 +112,15 @@ def measure(event: str) -> dict:
 def main(argv: list[str]) -> int:
     rows = {e: measure(e) for e in ps.active_events()}
     lines = ["| Olay | kombinasyon | kod yedeği sığmıyor: önce | sonra (koruma ile) | son denetimden kalan | "
-             "sığmayan kadraj varyantı | en uzun stil eki |", "|---|---|---|---|---|---|---|"]
+             "sığmayan kadraj varyantı | en uzun stil eki | rotasyon kadrajıyla sığmayan |",
+             "|---|---|---|---|---|---|---|---|"]
     for e, m in rows.items():
         lines.append(f"| {e} | {m['combos']} | {m['before_fail']} | {m['after_fail']} | {m['gate_fail']} | "
-                     f"{m['variant_fail']}/{m['variants']} | {m['max_suffix']} |")
+                     f"{m['variant_fail']}/{m['variants']} | {m['max_suffix']} | {m['rot_fail']} |")
     tot = {k: sum(m[k] for m in rows.values()) for k in ("combos", "before_fail", "after_fail", "variants",
-                                                          "variant_fail", "gate_fail")}
+                                                          "variant_fail", "gate_fail", "rot_fail")}
     lines.append(f"| **Toplam** | {tot['combos']} | {tot['before_fail']} | {tot['after_fail']} | {tot['gate_fail']} | "
-                 f"{tot['variant_fail']}/{tot['variants']} | |")
+                 f"{tot['variant_fail']}/{tot['variants']} | | {tot['rot_fail']} |")
     md = "\n".join(lines)
     print(md)
     if "--md" in argv:

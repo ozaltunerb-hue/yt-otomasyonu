@@ -790,6 +790,22 @@ def _axes_line(axes: dict, excluded: dict, source: str, warning: str | None) -> 
     return line
 
 
+def _proven_spot(event: str, spot: str, options: list[str], used: list | None) -> str:
+    """31 Eki (3): volkan/meteor kamera noktası (= kadraj) KANITLI değilse rotasyondaki noktalardan biri (son seçilen
+    hariç; ayrı rastgele akış, ana akış tüketilmez)."""
+    import core.proven_axes as pa
+    import core.scene_env as sv
+    rot = pa.spots(event, list(options))
+    g = pa.guards(event, "spot")
+    guarded = pa.guard_lru(rot, list(used or []), 1, g)
+    if guarded:   # koruma noktası (meteor K1) en fazla %20, art arda gelmez
+        return pa.guard_pick(sv.side_rng("spot"), guarded[0], g)
+    if spot in rot:
+        return spot
+    recent = [u for u in (used or []) if u][-1:]
+    return sv.side_rng("spot").choice([s for s in rot if s not in recent] or rot)
+
+
 async def build_creative_scene(domain: str | None, event: str | None, history: list[str], history_texts: list[str],
                                call_gpt, view: str | None = None, axes_loader=None,
                                caption_ctx: dict | None = None) -> dict:
@@ -851,6 +867,10 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
         excluded["spot"] = (es.lru_axis(spots, used_spot)[1] if used_spot is not None
                             else es.lru_axis(spots, es.volc_spot_history(event, history))[1])
         excluded["light"] = es.lru_axis(list(es.VOLCANO_WEATHER_WEIGHTS[event]), ah.values(ev_hist, "light"))[1]
+        # 31 Eki (3): kamera noktası (= kadraj) sadece KANITLI noktalardan (core.proven_axes); ana çekim aynen, deneme
+        # noktası çıkarsa ayrı akıştan rotasyondaki noktalardan (son seçilen hariç)
+        spot = _proven_spot(event, spot, spots, used_spot if used_spot is not None
+                            else es.volc_spot_history(event, history))
         es.remember_volc_env(event, volc_env)    # seçim anında: TEST/iptal/bitmemiş üretim de sayılsın
         es.remember_volc_spot(event, spot)
     if structured and event in sv.LIGHT_ADD:   # 21 Eki (Aşama 5): ışık kapsamı (sabah, öğle, gün batımı, kapalı)
@@ -861,8 +881,17 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
         else:
             base = list(EVENT_SKELETONS[event]["weather"])
         options = base + [x for x in sv.LIGHT_ADD[event] if x not in base]
+        import core.proven_axes as pa
+        options = pa.lights(event, options, base)   # 31 Eki (3): sadece KANITLI ışıklar (+ koruma)
         weather, excluded["light"] = sv.choose_light(event, options, ah.values(ev_hist, "light"), sv.side_rng("light"),
                                                      weights)
+    elif structured and event == es.METEOR:   # 31 Eki (3): meteor ışığı ve kamera noktası sadece KANITLI (+ koruma)
+        import core.proven_axes as pa
+        weathers = list(EVENT_SKELETONS[event]["weather"])
+        rot = pa.lights(event, weathers, weathers)
+        # koruma ışığı en fazla %20: rotasyonda her zaman ayrı akıştan yeniden seçilir (ana çekim tüketilmiş kalır)
+        weather, excluded["light"] = sv.choose_light(event, rot, used_light, sv.side_rng("light"))
+        spot = _proven_spot(event, spot, view_spots(event, view), used_spot)
     place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
     if volc_env:
         place = es.volc_place(event, volc_env)
@@ -942,6 +971,8 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
         axis = es.EQ_ENV_AXES["light"] if fam == "earthquake" else es.ENV_AXES["light"]
         lights = [li for li in list(axis) + list(sv.ENV_LIGHT_ADD[fam])
                   if len(es.setting_line({**env, "light": li}).split()) <= es.SETTING_MAX_WORDS]
+        import core.proven_axes as pa
+        lights = pa.env_lights(fam, lights, axis)   # 31 Eki (3): 21 Eki eklenen ışıklar DENEME
         used_light = (ah.values(cat_hist, "light") if cat_hist is not None
                       else [m.get("light") for m in (es._EQ_ENV_MEMORY if fam == "earthquake" else es._ENV_MEMORY)])
         light, excluded["light"] = sv.choose_light(event, lights, used_light, sv.side_rng("light"))
@@ -953,6 +984,15 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     if event == es.METEOR:   # 29 Eki: meteor ortamı (son 2 hariç); ışık = weather (spot ve ışık LRU'su yukarıda)
         used_env = ah.values(ev_hist, "env")
         met_env = _with_used(es.choose_meteor_env, used=used_env)
+        import core.proven_axes as pa
+        met_rot = pa.meteor_envs(list(es.METEOR_ENVS))   # 31 Eki (3): sadece KANITLI ortam (+ koruma en fazla %20)
+        g = pa.guards(event, "meteor_env")
+        guarded = pa.guard_lru(met_rot, list(used_env or []), 1, g)
+        if guarded:
+            met_env = pa.guard_pick(sv.side_rng("meteor_env"), guarded[0], g)
+        elif met_env not in met_rot:
+            met_env = sv.side_rng("meteor_env").choice([e for e in met_rot if e not in (used_env or [])[-1:]]
+                                                        or met_rot)
         excluded["env"] = es.lru_axis(list(es.METEOR_ENVS), used_env)[1]
         setting = es.meteor_setting(met_env, weather)
         env_label = f"Ortam: {es.METEOR_ENVS[met_env]} · ışık = {weather}"
@@ -1000,7 +1040,12 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
         used_env, used_light = ah.values(ev_hist, "env"), ah.values(ev_hist, "light")
         ok_envs = es.lru_axis(list(es.METEOR_ENVS), used_env)[0]
         ok_lights = es.lru_axis(list(EVENT_SKELETONS[event]["weather"]), used_light)[0]
-        tiers = ([(e, weather) for e in ok_envs], [(e, li) for e in ok_envs for li in ok_lights],
+        # 31 Eki (3): önce rotasyondaki (KANITLI + koruma) ortam ve ışıklar; en son hepsi (güvenlik)
+        met_rot = pa.meteor_envs(list(es.METEOR_ENVS))
+        light_rot = pa.lights(event, list(EVENT_SKELETONS[event]["weather"]), [])
+        tiers = ([(e, weather) for e in ok_envs if e in met_rot],
+                 [(e, li) for e in met_rot for li in light_rot],
+                 [(e, weather) for e in ok_envs], [(e, li) for e in ok_envs for li in ok_lights],
                  [(e, li) for e in es.METEOR_ENVS for li in EVENT_SKELETONS[event]["weather"]])
         for tier in tiers:
             fits = [(e, li) for e, li in tier if (e, li) != (met_env, weather) and es.fallback_candidates(
@@ -1029,7 +1074,11 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
             return set(vals[-depth:]) if depth else set()
         last_k = _recent_values("kadraj", fx.frame_depth(len(fx.FRAME_EVENTS[event]["types"])))
         last_fg, last_mode = _recent_values("on_plan", 1), _recent_values("kamera_modu", 1)
-        alternatives.sort(key=lambda a: (a[0] != scene_env, (a[1]["type"] in last_k) + (a[1].get("mode") in last_mode)
+        # 31 Eki (3): rotasyondaki (KANITLI + koruma) kadrajlar önce; deneme kadrajı sadece hiçbiri sığmazsa
+        import core.proven_axes as pa
+        rot = pa.allowed_variants(event, spot, fx.all_frames(event, spot, pool, risky, blocked))
+        alternatives.sort(key=lambda a: (a[1] not in rot, a[0] != scene_env,
+                                         (a[1]["type"] in last_k) + (a[1].get("mode") in last_mode)
                                          + (a[1].get("fg") in last_fg), a[1]["type"] in last_k))
         for alt_env, alt in alternatives:
             alt_spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, alt, alt_env,

@@ -167,9 +167,11 @@ EVENT_KEY_VISUAL = {
     # tornado, several times taller than the houses and trees, ..."
     FIRE_TORNADO: "A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, "
                   "tears out of a burning forest into a residential area, its wide base engulfing the houses.",
-    # 10 Eki, Bahadır onayı: helikopter kilit cümlesi birebir
-    HELICOPTER: "A firefighting helicopter swoops over a hillside neighborhood and drops a huge load of water onto the "
-                "wall of flames racing toward the houses.",
+    # 10 Eki, Bahadır onayı: helikopter kilit cümlesi birebir. 31 Eki (3), Bahadır (su tarifi: Seedance suyu ince,
+    # sürekli bir sütun gibi çiziyordu): önceki "...and drops a huge load of water onto the wall of flames racing toward
+    # the houses."
+    HELICOPTER: "A firefighting helicopter swoops over a hillside neighborhood and its bucket releases its whole load "
+                "at once in a wide falling sheet onto the wall of flames racing toward the houses.",
     # 10 Eki, Bahadır: volkan kilit cümleleri birebir
     ERUPTION: "The volcano erupts above a village, a shockwave blowing out windows along the street as an ash column "
               "towers into the sky.",
@@ -557,7 +559,8 @@ _FIRE_TOR_TOSS = _FIRE_TOR_RIP + ("tip", "topple", "overturn", "flip", "roll", "
 _FIRE_FUEL = ("trailer", "caravan", "camper", "woodpile", "wood pile", "firewood", "log pile", "log", "logs")
 _FIRE_TILE = ("tile", "shingle", "slate")
 # Helikopter (10 Eki, Bahadır): su, buhar, helikopter, rotor rüzgârı. Yeni listeler; mevcutlar değişmez.
-_FIRE_WATER = ("water", "deluge", "cascade", "torrent", "spray", "retardant", "slurry", "waterload")
+_FIRE_WATER = ("water", "deluge", "cascade", "torrent", "spray", "retardant", "slurry", "waterload",
+               "sheet", "load")   # 31 Eki (3): su tarifi "falling sheet", "whole load" (eş anlamlı ekleme)
 _FIRE_STEAM = ("steam", "vapor", "vapour", "mist", "white cloud", "white smoke")
 _FIRE_HELI = ("helicopter", "chopper", "rotorcraft", "aircraft", "heli")
 _FIRE_DROP = ("drop", "dump", "release", "unload", "pour", "spill", "fall", "fell", "crash", "slam", "douse",
@@ -1087,11 +1090,17 @@ EVENT_BEATS = {
         "slice_3": {
             # 22 Eki: önceki "a garden wall along the street collapses and its stones tumble downhill" (21 Eki: "a
             # low garden wall collapses and its stones tumble down the street"). Açılış B ile seçilmez (opening_axis).
-            "M3": {"text": "the mud shoves the row of parked cars along the curb downhill, one car after another",
-                   "terms": [_CAR, _ROW, _DRAG]},
-            # Önceki: "a tree is torn out of the slope and carried down with the mud" (yamaç kadrajda tanımlı değil)
-            "M4": {"text": "a tree along the street is torn out and swept downhill",
-                   "terms": [("tree", "trees"), _UPROOT]},
+            # 31 Eki (3), Bahadır (zayıf final): M3 ve M4 metni değişti, kodlar aynı. Önceki M3 "the mud shoves the row
+            # of parked cars along the curb downhill, one car after another" (sırayla itilen arabalar, kalıcı hasar yok)
+            "M3": {"text": "the mud rams a parked minibus into the front of a house and the wall caves in",
+                   "terms": [_CAR + ("minibus", "minibuses", "minivan", "bus"), _HOUSE,
+                             _HIT + _COLLAPSE + ("cave", "cave in", "caves in")]},
+            # Önceki: "a tree is torn out of the slope and carried down with the mud" (yamaç kadrajda tanımlı değil).
+            # 31 Eki (3): önceki "a tree along the street is torn out and swept downhill" (ağaç sökülür, zayıf final)
+            "M4": {"text": "the mud knocks a corner shop off its foundation and its walls fold into the street",
+                   "terms": [_SHOP + ("corner shop",), ("foundation", "foundations", "knock", "shove", "push", "tear",
+                                                        "tore", "torn", "rip", "sweep", "swept", "lift", "off its"),
+                             _COLLAPSE + ("fold", "cave", "cave in", "caves in", "crumple")]},
             # Önceki: "the mud rams a house corner and tears off its wooden porch" (21 Eki 17:39 testi H2+M6: 12. sn'de
             # kamera tanımsız "ev köşesi"ne döndü, gizli kesme)
             # 22 Eki: önceki "the mud rams the nearest house and tears off its wooden porch"
@@ -1114,7 +1123,9 @@ EVENT_BEATS = {
         # kez kuralı yeni H6'ya geçti (araç evin ön basamaklarına gömülür: M6 eve gömülür, M7, M8 eve itilir, M9)
         # 22 Eki: H4+M6 175 bütçesi (açılış B ile kod yedeği sığmıyor; metinler onaylı, kısaltılmadı)
         "excluded_pairs": {("H4", "M3"), ("H6", "M6"), ("H6", "M7"), ("H6", "M8"), ("H6", "M9"), ("H1", "M8"),
-                           ("H4", "M6")},
+                           ("H4", "M6"),
+                           ("H6", "M3"),    # 31 Eki (3): yeni M3 araç evin önüne (H6 ile aynı: araç ev önüne gömülür)
+                           ("H6", "M4"), ("H4", "M4")},   # 31 Eki (3): yeni M4 ile kod yedeği 175'e sığmıyor (frame_budget)
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1473,8 +1484,11 @@ EVENT_BEATS = {
                     "terms": [_FIRE_FLAME, _FIRE_BALCONY + ("balcony slab",), _FIRE_PEEL + _FIRE_FALL]},
         },
         "slice_3": {
-            "N1": {"text": "the flames climb floor after floor, blowing out window after window",
-                   "terms": [_FIRE_FLAME, _FIRE_FLOOR, _FIRE_GLASS, _FIRE_BLOWOUT]},
+            # 31 Eki (3), Bahadır (zayıf final): N1 metni değişti, kod aynı. Önceki "the flames climb floor after floor,
+            # blowing out window after window" (tırmanma + cam, kalıcı yapı hasarı yok)
+            "N1": {"text": "a burning section of the roof caves in and a column of flames shoots up from the top floor",
+                   "terms": [_FIRE_FLAME, ("roof", "rooftop", "roofs", "top floor", "upper floor"),
+                             _FIRE_FALL + ("cave", "cave in", "caves in", "give way", "gives way")]},
             # Önceki N3 "burning panels peel off the facade and tumble down in a trail of sparks" (farklılık 2: M7)
             # 30 Eki (2): cephe yangınında araç yok (önceki "...smashes onto the cars parked below")
             "N3": {"text": "a whole burning balcony tears off the facade and smashes onto the pavement below",
@@ -1563,15 +1577,18 @@ EVENT_BEATS = {
     # ── Helikopter (10 Eki, Bahadır: havuzlar ve yasak eşleşmeler ONAYLI, metin birebir) ──
     HELICOPTER: {
         "slice_2": {
-            "F1": {"text": "the water load slams into the flames, flattening a section of the wall into a cloud of white "
-                           "steam",
+            # 31 Eki (3), Bahadır (su tarifi: kova yükü bir anda geniş düşen bir tabaka, ince sütun değil): F1, F2, G2,
+            # G7 metninde su ifadesi değişti, kodlar aynı. Önceki F1 "the water load slams into the flames, ..."
+            "F1": {"text": "the falling sheet of water slams into the flames, flattening a section of the wall into "
+                           "white steam",
                    "terms": [_FIRE_WATER, _FIRE_FLAME, _FIRE_STEAM]},
             # 30 Eki, Bahadır (Aşama B): F2, F4, F6; G6, G7 metni değişti, kodlar aynı. Önceki F2 "the helicopter drops
             # a second load and the water crashes down onto burning rooftops, sending steam and sparks billowing"
             # (durağan), F4 "the helicopter roars low over the street, its downdraft bending the burning trees and
             # scattering embers" (hasarsız), F6 "the {vehicle} brakes hard as a drenching cascade of water spills
             # across the road in front of it" (hasarsız temas)
-            "F2": {"text": "the water load crashes onto a burning roof and the charred roof caves in",
+            # 31 Eki (3): önceki F2 "the water load crashes onto a burning roof and the charred roof caves in"
+            "F2": {"text": "the falling sheet of water crashes onto a burning roof and the charred roof caves in",
                    "terms": [_FIRE_WATER, _FIRE_HOUSE, ("cave", "cave in", "caves in", "caved in", "collapse", "fall in",
                                                         "falls in", "give way", "gives way", "crumble", "buckle")]},
             "F3": {"text": "the {vehicle} speeds down the street as the helicopter's downdraft whips smoke and embers "
@@ -1582,8 +1599,11 @@ EVENT_BEATS = {
             "F4": {"text": "the downdraft fans the flames into a wooden house and its roof collapses in a burst of sparks",
                    "terms": [_FIRE_DOWNDRAFT, _FIRE_HOUSE, _FIRE_FALL + ("cave", "cave in", "caves in", "give way",
                                                                          "gives way"), _FIRE_FLAME]},
-            "F5": {"text": "a wall of water falls on a burning house, the flames collapsing into thick white steam",
-                   "terms": [_FIRE_WATER, _FIRE_HOUSE, _FIRE_STEAM]},
+            # 31 Eki (3), Bahadır (zayıf final): F5 metni değişti, kod aynı. Önceki "a wall of water falls on a burning
+            # house, the flames collapsing into thick white steam" (söndürme, kalıcı hasar yok)
+            "F5": {"text": "the falling sheet of water smashes a burning wooden deck off the back of a house",
+                   "terms": [_FIRE_WATER, ("deck", "decks", "decking", "porch", "veranda", "verandah", "terrace"),
+                             _FIRE_FALL + ("knock", "rip", "tear", "tore", "torn", "break", "broke", "off")]},
             "F6": {"text": "a burning tree crashes across the road and the {vehicle} swerves into a garden wall, "
                            "crumpling its front",
                    "terms": [_FIRE_TREE, _FIRE_FALL, ("swerve", "veer", "skid", "slide", "slid", "swing", "swung"),
@@ -1592,8 +1612,9 @@ EVENT_BEATS = {
         "slice_3": {
             "G1": {"text": "the flames fight back, a fresh burst of fire swallowing trees beside the water line",
                    "terms": [_FIRE_FLAME, _FIRE_RETURN, _FIRE_HELI_TREE]},
-            "G2": {"text": "the helicopter circles back and drops another huge load, extinguishing a row of burning trees "
-                           "in a cloud of steam",
+            # 31 Eki (3): önceki G2 "the helicopter circles back and drops another huge load, extinguishing ..."
+            "G2": {"text": "the helicopter circles back and another falling sheet of water puts out a row of burning "
+                           "trees in steam",
                    "terms": [_FIRE_HELI, _FIRE_DROP + _FIRE_WATER, _FIRE_HELI_TREE, _FIRE_DOUSE]},
             # 30 Eki (2), Bahadır: önceki G3 "thick white steam rolls over the street as the wall of flames sinks back
             # toward the slope" (atmosferik, aksiyon 2)
@@ -1609,7 +1630,10 @@ EVENT_BEATS = {
                              ("knock", "flatten", "flat", "collapse", "crush", "crash", "cave", "fall", "fell",
                               "topple")]},
             # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
-            "G7": {"text": "the water load hits a burning garage across the street and its walls collapse in steam",
+            # 31 Eki (3): önceki G7 "the water load hits a burning garage across the street and its walls collapse in
+            # steam"
+            "G7": {"text": "the falling sheet of water hits a burning garage across the street and its walls collapse in "
+                           "steam",
                    "terms": [("garage", "garages", "outbuilding", "workshop", "shed"), _FIRE_WATER,
                              ("collapse", "cave", "cave in", "caves in", "crumble", "give way", "gives way", "fall",
                               "fell", "topple", "buckle")]},
@@ -2239,16 +2263,18 @@ OBJECT_GROUPS = {
     FLOOD: {"D9": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0, "D8": 0},
     TIDAL: {"W1": 1, "W2": 0, "W3": 0, "W4": 0, "W5": 0, "W6": 0, "W8": 0},
     # 18 Eki (2) kuru deneme: M8'in nesnesi ev (kamyon evin önüne; "house's facade" M7'ye benzetiliyordu)
-    MUDSLIDE: {"M9": 1, "M8": 2, "M7": 0, "M3": 0, "M4": 0, "M6": 0},   # 22 Eki: M3 park arabaları, M6 ev (M7 ile aynı)
+    # 22 Eki: M6 ev (M7 ile aynı). 31 Eki (3): M3 ev (minibüs evin önüne; nesne minibüs olunca "house, wall" M6'nın
+    # nesnesi sayılıyordu, kod yedeği M6'ya benzetildi), M4 dükkân
+    MUDSLIDE: {"M9": 1, "M8": 2, "M7": 0, "M3": 1, "M4": 0, "M6": 0},
     SLOPE: {"S7": 0, "S2": 0, "S3": 0, "S4": 0, "S5": 1},
     VILLAGE: {"L7": 0, "L1": 0, "L3": 0, "L4": 0, "L5": 0, "L6": 0},
     LANDFALL: {"E7": 0, "E1": 0, "E2": 0, "E4": 0, "E5": 0},
     MARINA_TORNADO: {"Z7": 0, "Y8": 0, "Y7": 0, "Z1": 0, "Z2": 0, "Z3": 0, "Z4": 0, "Z6": 0},
     AVENUE: {"P7": 0, "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q6": 0},
     WILDFIRE: {"L7": 0, "K8": 1, "K7": 1, "L1": 1, "L3": 1, "L4": 1, "L5": 0},
-    FACADE_FIRE: {"M11": 1, "M10": 1, "M9": 1, "M8": 1, "M7": 1, "N1": 2, "N3": 1, "N4": 0, "N5": 0},
+    FACADE_FIRE: {"M11": 1, "M10": 1, "M9": 1, "M8": 1, "M7": 1, "N1": 1, "N3": 1, "N4": 0, "N5": 0},   # 31 Eki (3): N1 çatı
     FIRE_TORNADO: {"U1": 0, "U2": 0, "U6": 0, "U7": 0, "U8": 0, "U9": 0, "U10": 0, "U11": 0},
-    HELICOPTER: {"G7": 0, "F1": 0, "F2": 1, "F4": 0, "F5": 1, "G1": 2, "G2": 0, "G3": 0, "G5": 0, "G6": 1},
+    HELICOPTER: {"G7": 0, "F1": 0, "F2": 1, "F4": 0, "F5": 1, "G1": 2, "G2": 0, "G3": 0, "G5": 0, "G6": 1},   # 31 Eki (3): F5 güverte
     ERUPTION: {"S3": 0, "S4": 0, "S5": 0, "S6": 1, "S7": 1, "S8": 1, "U2": 1, "U3": 0, "U4": 0, "U5": 0, "U6": 0,
                "U7": 1, "U8": 1},
     PYROCLASTIC: {"P1": 1, "P2": 0, "P3": 1, "P4": 0, "P5": 0, "P6": 0, "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q5": 0,
@@ -2279,7 +2305,7 @@ _ANCHOR_BUS = ("bus", "buses", "city bus")
 BEAT_ANCHORS = {
     FLOOD: {"V6": _ANCHOR_BUS, "V8": _ANCHOR_SHOP},
     TIDAL: {"T8": _ANCHOR_HOUSE},
-    MUDSLIDE: {"H6": _ANCHOR_HOUSE},
+    MUDSLIDE: {"H6": _ANCHOR_HOUSE, "M3": _ANCHOR_HOUSE},   # 31 Eki (3): M3 minibüs evin önüne
     VILLAGE: {"L6": _ANCHOR_HOUSE},
     MARINA_TORNADO: {"Y3": _MARINA_OFFICE},
     AVENUE: {"P5": ("bus", "buses"),   # 31 Eki (2): metin "parked bus" (önceki çapa _ANCHOR_BUS, "city bus" dahil)
@@ -2365,11 +2391,109 @@ def invented_vehicle_moves(text: str, pool_text: str) -> list[str]:
     return list(dict.fromkeys(out))
 
 
+# 31 Eki (3), Bahadır (üretim günü bulguları): GPT'nin EKLEDİĞİ zayıf kelimeler. Seçilen beat, kilit/açılış metninde
+# geçen kelime muaf (bizim metnimiz); kod yedeğinin insan cümlesi de muaf (kodun yazdığı, GPT değil). Kök eşleşmesi
+# kelime başından (\bkök\w*); çok kelimeli ifadeler birebir; "!" ile biten kök sadece kendi çekimleri ("trail!":
+# trails, trailing; "trailer" değil).
+# Volkan: kayalar füze gibi duman izli düşüyordu, Hollywood patlaması ("plummets", "streak", "crater of sparks")
+VOLC_GPT_BANNED = ("plummet", "streak", "trail!", "missile", "rocket", "explod", "crater of sparks", "shower of")
+# Ses yazılmaz (videoda görünmez): "with a loud thud"
+SOUND_GPT_BANNED = ("thud", "bang", "boom", "deafen", "loud", "screech", "rumbl")
+# Soyut final ("causing more destruction", "threatens further devastation"): görünen bir şey değil
+ABSTRACT_GPT_BANNED = ("destruct", "devastat", "chaos", "havoc", "further damage")
+# Helikopter: su ince, sürekli bir sütun/fışkırma gibi çiziliyordu (sonra yerden yukarı fışkırıyor gibi)
+HELI_WATER_GPT_BANNED = ("column", "stream", "jet!", "spray", "geyser", "pours continuously")
+# Araç hareketi (araç geçen cümlede): "lifts the pickup, spinning it", "cars cascading in waves"
+VEHICLE_MOTION_GPT_BANNED = ("spin", "spun", "lift", "cascad", "tumbl")
+# Heyelan/çamur/sel/dev dalga: insanlar çamura/suya doğru ya da yokuş yukarı koşmaz ("scramble to higher ground")
+UPHILL_EVENTS = (MUDSLIDE, SLOPE, VILLAGE, FLOOD, TIDAL)
+UPHILL_GPT_BANNED = ("uphill", "up the street", "up the hill", "up the lane", "higher ground", "toward the mud",
+                     "towards the mud", "toward the water", "towards the water")
+_PEOPLE_RX = r"\b(?:" + "|".join(re.escape(w) for w in _PEOPLE_SUBJECTS) + r")\b"
+_PEOPLE_SCRAMBLE_RE = re.compile(_PEOPLE_RX + r",?(?:\s+\w+ly){0,2}\s+scrambl\w*", re.IGNORECASE)
+
+
+def _root_rx(words) -> re.Pattern:
+    def one(w):
+        if w.endswith("!"):
+            return re.escape(w[:-1]) + r"(?:s|ed|ing)?\b"
+        return re.escape(w) + (r"\w*" if " " not in w else r"\b")
+    return re.compile(r"\b(?:" + "|".join(one(w) for w in words) + r")", re.IGNORECASE)
+
+
+def _added_words(words, text: str, pool: str) -> list[str]:
+    """text'te geçen yasak kelimeler (pool'da da geçen kök/ifade muaf)."""
+    rx = _root_rx(words)
+    pool_hits = {w for w in words if _root_rx((w,)).search(pool or "")}
+    return list(dict.fromkeys(m.group(0).lower() for m in rx.finditer(text or "")
+                              if not any(_root_rx((w,)).fullmatch(m.group(0)) for w in pool_hits)))
+
+
+def _sentences(text: str) -> list[str]:
+    return [x for x in re.split(r"(?<=[.!?;])\s+", text or "") if x]
+
+
+def _code_people_line(spec: dict, text: str) -> bool:
+    """Dilim kod yedeğinin kendi insan cümlesi mi (GPT yazmadı)."""
+    word = people_word(spec)   # kişi kuralı olmayan olayda boş (fallback_candidates ile aynı biçim)
+    lines = set()
+    for t in fallback_people_pool(spec):
+        line = clean_slice(t.format(N=word.capitalize()))
+        lines.add(line)
+        m = _MUD_RE.search(line)   # mud_texture'ın dokulu hâli (ilk "mud" ifadesi)
+        if m:
+            new = MUD_TEXTURE[0].upper() + MUD_TEXTURE[1:] if m.start() == 0 else MUD_TEXTURE
+            lines.add(line[:m.start()] + new + line[m.end():])
+    return (text or "") in lines
+
+
+def gpt_added_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
+    """31 Eki (3) kapı ekleri: sadece GPT'nin eklediği kelimeler (seçilen beat/kilit/açılış ve kod yedeği muaf)."""
+    event = spec["event"]
+    pool = " ".join([spec["key_visual"], beat_text(event, "slice_2", spec["beat_2"], spec.get("vehicle")),
+                     beat_text(event, "slice_3", spec["beat_3"])])
+    fields = [f for f in SLICE_FIELDS if not (f == "slice_1_rest" and _code_people_line(spec, slices.get(f, "")))]
+    text = " ".join(slices.get(f, "") for f in fields)
+    out = []
+
+    def add(code, words, missing, feedback):
+        if words:
+            out.append(_issue(code, f"{missing} ({', '.join(words)})",
+                              f"Remove {', '.join(repr(w) for w in words)}: {feedback}"))
+    scramble = [m.group(0) for m in _PEOPLE_SCRAMBLE_RE.finditer(text)
+                if not re.search(r"\bscrambl", pool, re.IGNORECASE)]
+    add("people_scramble", scramble, "insanlar 'scramble' etmez",
+        "people run, sprint or flee; they never scramble.")
+    if event in VOLC_ENV_EVENTS:
+        add("volcano_banned_root", _added_words(VOLC_GPT_BANNED, text, pool), "volkanda yasak kelime",
+            "rocks fall and smash; no missiles, trails, streaks, explosions or showers.")
+    if event in UPHILL_EVENTS:
+        people_sents = " ".join(x for x in _sentences(text) if re.search(_PEOPLE_RX, x, re.IGNORECASE))
+        add("people_uphill", _added_words(UPHILL_GPT_BANNED, people_sents, pool), "insan yönü (yokuş yukarı / akıntıya doğru)",
+            "people run away from the flow along the street, never uphill, up the street or toward the mud or water.")
+    add("sound_word", _added_words(SOUND_GPT_BANNED, text, pool), "ses kelimesi",
+        "write only what is visible, never sounds.")
+    add("abstract_final", _added_words(ABSTRACT_GPT_BANNED, text, pool), "soyut ifade",
+        "end on a concrete visible hit, not on destruction, devastation, chaos or havoc.")
+    if event in WATER_DROP_EVENTS:
+        add("heli_water_shape", _added_words(HELI_WATER_GPT_BANNED, text, pool), "su sütun/fışkırma gibi",
+            "the bucket releases its whole load at once in a wide falling sheet; never a column, stream, jet or spray.")
+    veh_sents = " ".join(x for x in _sentences(text) if re.search(rf"\b{_VEH_RX}\b|minibus", x, re.IGNORECASE))
+    moves = [w for w in _added_words(VEHICLE_MOTION_GPT_BANNED, veh_sents, pool)
+             # "cascading" sadece araç öznesiyle ("cars cascading"; "the deluge cascading over its path" su)
+             if not w.startswith("cascad") or re.search(rf"\b{_VEH_RX}\b(?:\W+\w+){{0,2}}\W+{w}", veh_sents,
+                                                        re.IGNORECASE)]
+    add("vehicle_motion", moves, "araca uydurma hareket",
+        "the vehicle only does what the given event says; no lifting, spinning, tumbling or cascading.")
+    return out
+
+
 def gpt_quality_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
     """31 Eki kapıları (GPT çıktısı ve kod yedeği aynı denetim): çapa, yangın kökleri, insan + scatter, uydurma araç
-    hareketi."""
+    hareketi. 31 Eki (3): gpt_added_issues (scramble, volkan kökleri, insan yönü, ses, soyut final, helikopter suyu,
+    araç hareketi)."""
     event = spec["event"]
-    out = beat_anchor_issues(spec, slices)
+    out = beat_anchor_issues(spec, slices) + gpt_added_issues(spec, slices)
     gpt_text = " ".join(slices.get(f, "") for f in SLICE_FIELDS)
     if event in FIRE_EVENTS:
         roots = fire_root_words(gpt_text)
@@ -3199,11 +3323,31 @@ def choose_beats(event: str, view: str | None, spot: str, history: list[str],
             break
     if not pairs:
         raise StructureError(f"{event}: seçilebilir olay çifti kalmadı (görünüm={view}, yer={spot}, son={recent})")
+    trial = TRIAL_FINALS.get(event, set())
+    import core.proven_axes as pa
+    if trial and pa.ROTATION_ON:
+        # 31 Eki (3): kalıcı hasarsız finaller DENEME. Sadece LRU ile aday tükenince kesin dışlama yerine %10 ağırlık:
+        # kalıcı hasarlı final varsa %90 onlardan; LRU hepsini elediyse onlarda derinlik 1 (son final tekrar etmez)
+        keep = [p for p in pairs if p[1] not in trial]
+        if not keep:
+            last3 = {t.split("+")[1] for t in seen[-1:]}
+            keep = [p for p in allowed_pairs(event, view, spot) if p[1] not in trial and p[1] not in last3
+                    and p[0] not in blocked2]
+        if keep and (rng.random() >= TRIAL_FINAL_SHARE or not [p for p in pairs if p[1] in trial]):
+            pairs = keep
+        elif keep:
+            pairs = [p for p in pairs if p[1] in trial]
 
     def last(p):
         return max((i for i, t in enumerate(seen) if t == beat_tag(*p)), default=-1)
     best = min(last(p) for p in pairs)
     return rng.choice([p for p in pairs if last(p) == best])
+
+
+# 31 Eki (3), Bahadır: helikopterde söndürmeyle / alev geri dönüşüyle biten finaller (kalıcı hasar yok) DENEME. Rotasyon
+# G3, G6, G7; LRU onları elediğinde %10 ağırlıkla deneme finali (kesin dışlama balkonda adayı bitiriyor: G3 balkonda yok)
+TRIAL_FINALS = {HELICOPTER: {"G1", "G2", "G5"}}
+TRIAL_FINAL_SHARE = 0.10
 
 
 def choose_vehicle(view: str, rng: random.Random | None = None, used: list[str] | None = None,
@@ -3216,7 +3360,8 @@ def choose_vehicle(view: str, rng: random.Random | None = None, used: list[str] 
 # 23 Eki, Bahadır (heyelan testi): seçilen çiftte sabit geçen araçla (M8 "a parked truck", S7 "a stopped truck") aynı
 # türdeki araç seçilmez ("the pickup truck ... a parked truck" iki kamyon). Şimdilik heyelan olaylarında; diğer
 # olaylarda (sel/dev dalga sedan + "car", hortum P7 ve volkan S8/T9 kamyon) davranış aynı.
-VEHICLE_KINDS = (("truck", "lorry", "pickup"), ("car", "sedan", "saloon", "hatchback"), ("van",), ("suv",))
+# 31 Eki (3): minibüs van türünden (heyelan M3 "parked minibus": seçilen araç beyaz van olmaz)
+VEHICLE_KINDS = (("truck", "lorry", "pickup"), ("car", "sedan", "saloon", "hatchback"), ("van", "minibus"), ("suv",))
 SAME_KIND_VEHICLE_EVENTS = {MUDSLIDE, SLOPE, VILLAGE}
 # 23 Eki, Bahadır (hortum denetimi): açılıştaki sabit araç da sayılır (marina C "drags a pickup truck along the quay").
 # Şimdilik sadece marina; diğer olayların açılış-araç çakışmaları raporda
@@ -3674,9 +3819,11 @@ FALLBACK_PEOPLE = {
               "{N} people flee from the mud.", "{N} residents dash away between the houses."),
     LANDFALL: _FB_TORNADO, MARINA_TORNADO: _FB_TORNADO, AVENUE: _FB_TORNADO,
     WILDFIRE: _FB_FLAMES, HELICOPTER: _FB_FLAMES,
-    FACADE_FIRE: ("{N} pedestrians run from the burning tower.", "{N} people flee from the flames across the street.",
-                  "{N} pedestrians sprint away from the tower.", "{N} residents scramble away from the falling debris.",
-                  "{N} people run from the flames.", "{N} pedestrians dash across the street away from the tower."),
+    # 31 Eki (3), Bahadır (spot-ortam): "tower" -> "building" (cephe C/E ortamında kule yok). Önceki "...from the burning
+    # tower.", "...sprint away from the tower.", "...dash across the street away from the tower."
+    FACADE_FIRE: ("{N} pedestrians run from the burning building.", "{N} people flee from the flames across the street.",
+                  "{N} pedestrians sprint away from the building.", "{N} residents scramble away from the falling debris.",
+                  "{N} people run from the flames.", "{N} pedestrians dash across the street away from the building."),
     # 31 Eki (2), Bahadır: volkan yedek insan cümlelerinde "villagers" -> "residents" (banliyö/kasaba ortamı). Önceki
     # metinler aynı, sadece "villagers" kelimesi
     ERUPTION: ("{N} residents run from the eruption down the street.", "{N} residents flee from the eruption toward the houses.",

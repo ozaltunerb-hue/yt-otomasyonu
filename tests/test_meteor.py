@@ -310,8 +310,10 @@ class TestMeteor(unittest.TestCase):
             self.assertLessEqual(len(scene["prompt"].split()), 205)
             self.assertTrue(scene["prompt"].endswith(RULE))
             self.assertIn("WORD BUDGET:", msgs[-1])
-            prev = [s["trace"]["axes"] for s in scenes[-2:]]
-            self.assertNotIn(t["axes"]["spot"], [p["spot"] for p in prev])
+            # 31 Eki (3): rotasyonda iki nokta (K2 KANITLI + K1 koruma, en fazla %20): koruma art arda gelmez
+            prev = [s["trace"]["axes"] for s in scenes[-1:]]
+            if t["axes"]["spot"] == "Rooftop terrace of a hillside villa above the bay":
+                self.assertNotIn(t["axes"]["spot"], [p["spot"] for p in prev])
             scenes.append(scene)
 
 

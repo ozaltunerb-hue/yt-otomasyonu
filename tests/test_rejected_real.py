@@ -65,7 +65,10 @@ REWRITTEN_30OCT = {(es.FLOOD, b) for b in ("V6", "V7", "V8")} | {(es.TIDAL, b) f
                   {(es.WILDFIRE, "K9"), (es.HELICOPTER, "G3"), (es.AVALANCHE_VILLAGE, "B2"),
                    (es.EARTHQUAKE_OLD_STREET, "R3")} | {(es.AVALANCHE_SKI, b) for b in ("C4", "C6", "D5")} | \
                   {(es.AVENUE, "Q2")}   # 30 Eki (2)-(3)
-REWRITTEN = REWRITTEN | REWRITTEN_TORNADO | REWRITTEN_30OCT
+# 31 Eki (3), Bahadır (zayıf finaller): heyelan M4, cephe N1, helikopter F5 yeni metin (M3 yukarıda). Eski metne göre
+# kaydedilen cümleler (F5 "cascade of water hits a burning house") yeni maddeyi anlatmıyor; atlanır, kayıt dosyada kalır.
+REWRITTEN_31OCT = {(es.MUDSLIDE, "M4"), (es.FACADE_FIRE, "N1"), (es.HELICOPTER, "F5")}
+REWRITTEN = REWRITTEN | REWRITTEN_TORNADO | REWRITTEN_30OCT | REWRITTEN_31OCT
 
 
 def slot_of(event, bid):
@@ -106,7 +109,7 @@ class TestRejectedReal(unittest.TestCase):
         # 17 Eki: çıkarılan maddelerin kayıtları (ateş hortumu T3/U3/U4, heyelan S6 ...) atlanır, sayısı kilitli
         self.assertEqual(len(skipped), 30, sorted({(r["event"][:20], r["beat"]) for r in skipped}))
         for r in data:
-            if retired(r) or (r["event"], r["beat"]) in REWRITTEN_TORNADO | REWRITTEN_30OCT:
+            if retired(r) or (r["event"], r["beat"]) in REWRITTEN_TORNADO | REWRITTEN_30OCT | REWRITTEN_31OCT:
                 continue
             r = current(r)
             e, bid, text = r["event"], r["beat"], r["text"]
@@ -140,15 +143,13 @@ class TestRejectedReal(unittest.TestCase):
             if retired(r):   # 18 Eki (2): deprem T2 çıktı (Parti 2); kaydı tarih olarak durur
                 self.assertEqual((r["event"], r["beat"]), (es.EARTHQUAKE_OLD_STREET, "T2"))
                 continue
+            if (r["event"], r["beat"]) in REWRITTEN_31OCT:   # 31 Eki (3): F5 yeni metin (güverte), kayıt tarih
+                continue
             spec, slices, sl = rebuild(current(r))
             with self.subTest(text=r["text"]):
                 self.assertEqual(es.soft_beat_issues(spec, slices), [])
-        # helikopter: kural kapatılırsa F5 cümlesi yine F1'e benzetilip reddedilir (düzeltmenin sebebi)
-        from unittest.mock import patch
-        f5 = next(r for r in fixed if r["beat"] == "F5")
-        spec, slices, _ = rebuild(current(f5))
-        with patch.object(es, "OWN_OBJECT_ENOUGH_EVENTS", ()):
-            self.assertIn("beat_other_object", {i["rule"] for i in es.soft_beat_issues(spec, slices)})
+        # helikopter: kural kapatılırsa F5 cümlesi yine F1'e benzetilip reddedilirdi (düzeltmenin sebebi). 31 Eki (3):
+        # F5 yeni metin (güverte), eski ev cümlesiyle bu ölçüm yapılamaz; kural aynen duruyor
         self.assertEqual(es.OWN_OBJECT_ENOUGH_EVENTS, (es.HELICOPTER,))   # diğer olaylarda benzerlik kontrolü aynen
         # "treetops" sadece helikopter listesinde; orman yangınının _FIRE_TREE listesi değişmedi
         self.assertTrue(es.find_terms(es._FIRE_HELI_TREE, "the treetops burn"))

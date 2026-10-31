@@ -124,8 +124,9 @@ FRAME_EVENTS = {
              "threat": "the tornado"},
     WILDFIRE: {"types": ("balkon", "çatı", "tepe"), "scene": "the burning slope",
                "threat": "the wall of flames"},
-    FACADE: {"types": ("balkon", "çatı", "pencere"), "scene": "the burning tower", "threat": "the burning facade",
-             "lib": {"pencere": ("of an apartment across from the burning tower", "window")}},
+    # 31 Eki (3), spot-ortam tutarlılığı: "the burning tower" -> "the burning building" (cephe C/E ortamında kule yok)
+    FACADE: {"types": ("balkon", "çatı", "pencere"), "scene": "the burning building", "threat": "the burning facade",
+             "lib": {"pencere": ("of an apartment across from the burning building", "window")}},
     FIRE_TORNADO: {"types": ("balkon", "çatı", "tepe"), "scene": None, "threat": "the fire tornado"},
     # 29 Eki, Bahadır: helikopter sadece yamaç evinin çatı terası ya da yüksek balkon (tepe/set çıktı); kamera cümlesi
     # helicopter_camera
@@ -192,14 +193,16 @@ SPOT_FRAME = {
                # 31 Eki (kamera-ortam tutarlılığı): önceki "...above the village road" (E "rural town" ortamı)
                "Embankment above the village road": ("tepe", AB, "on a roadside embankment above the road",
                                                      "embankment")},
+    # 31 Eki (3), spot-ortam tutarlılığı: "from the tower" -> "from the burning building" (cephe C/E ortamında kule yok)
     FACADE: {"Balcony across from a downtown tower": ("balkon", AB, "on a high balcony across the street from the "
-                                                                    "tower", "balcony"),
+                                                                    "burning building", "balcony"),
              "Rooftop terrace across from a downtown tower": ("çatı", AB, "on a rooftop terrace across the street from "
-                                                                          "the tower", "rooftop terrace"),
+                                                                          "the burning building", "rooftop terrace"),
              "Balcony across from a coastal high-rise": ("balkon", AB, "on a high balcony across the street from the "
-                                                                       "tower", "balcony"),
+                                                                       "burning building", "balcony"),
              "Rooftop terrace across from a coastal high-rise": ("çatı", AB, "on a rooftop terrace across the street "
-                                                                             "from the tower", "rooftop terrace")},
+                                                                             "from the burning building",
+                                                                 "rooftop terrace")},
     FIRE_TORNADO: {"High balcony at the edge of a wooded neighborhood": ("balkon", AB, "on a high balcony above the "
                                                                                        "wooded neighborhood", "balcony"),
                    "Rooftop terrace above a wooded residential area": ("çatı", AB, "on a rooftop terrace above a wooded "
@@ -297,8 +300,26 @@ def family_window(event: str, volc_env: str | None = None) -> str:
             "stays fixed and never descends; " + tail)
 
 
+# 31 Eki (3), Bahadır (spot-ortam tutarlılığı): ortamla çelişen yer kelimesi sadece o ortamda nötr. Ortam A'daki kamera
+# cümleleri (KANITLI; orman yangını balkonu 3M hit'in birebir cümlesi) aynen kalır.
+ENV_CAMERA_NEUTRAL = {
+    (HELICOPTER, "E"): (("high wide view of the neighborhood", "high wide view of the houses"),),   # bağ vadisi köyü
+    (WILDFIRE, "E"): (("of a hillside house", "of a house"),),                                       # kırsal kasaba
+    (VILLAGE, "E"): (("village square", "village lane"),),                                           # meydansız köy
+}
+
+
 def frame_camera(event: str, spot: str, frame: dict, volc_env: str | None = None, fire_env: str | None = None,
                  legacy=None, scene_env: str | None = None) -> str:
+    """Kadraja göre kamera cümlesi; ortamla çelişen yer kelimesi o ortamda nötr (ENV_CAMERA_NEUTRAL)."""
+    cam = _frame_camera(event, spot, frame, volc_env, fire_env, legacy, scene_env)
+    for old, new in ENV_CAMERA_NEUTRAL.get((event, scene_env), ()):
+        cam = cam.replace(old, new)
+    return cam
+
+
+def _frame_camera(event: str, spot: str, frame: dict, volc_env: str | None = None, fire_env: str | None = None,
+                  legacy=None, scene_env: str | None = None) -> str:
     """Kadraja göre kamera cümlesi. legacy(event, spot, volc_env) -> bugünkü cümle (skeleton_pipeline verir)."""
     ftype, pos_spot, fg, mode = frame["type"], frame.get("pos_spot"), frame.get("fg"), frame.get("mode")
     fam = family(event)
@@ -363,6 +384,14 @@ def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: 
     seçilen beat'lerin dışlandığı spotlar (orada kamera olmaz; pencere balkon riskini de taşır). blocked: 21 Eki
     (Aşama 5) ortamla çelişen kamera noktaları (spot adı ya da "lib:<tip>")."""
     blocked = blocked or set()
+    # 31 Eki (3): rotasyon sadece KANITLI kadraj/ön plan (+ yetersizlik koruması); pencere DENEME (core.proven_axes)
+    import core.proven_axes as pa
+    rot = pa.allowed_variants(event, spot, all_frames(event, spot, pool, risky, blocked))
+    g_types, g_fgs = pa.frame_guards(event, spot, rot)   # koruma tipleri / ön planları (en fazla %20)
+
+    def in_rot(t, ps="*", m="*", fg="*"):
+        return any(f["type"] == t and (ps == "*" or f.get("pos_spot") == ps) and (m == "*" or f.get("mode") == m)
+                   and (fg == "*" or f.get("fg") == fg) for f in rot)
     pool = [s for s in pool if s not in blocked]
     if family(event) in OWN_SPOT_ONLY:   # 29 Eki: meteor kadrajı kendi kamera noktası (ödünç yok)
         pool = [spot]
@@ -390,21 +419,39 @@ def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: 
     if not available:   # güvenlik: seçilen spotun kendi tipi her zaman vardır (izinli listede değilse bile)
         t = native(event, spot)[0]
         available, pos_for = [t], {t: [spot]}
+    # 31 Eki (3): rotasyon süzgeci (aday kalmazsa eski liste: aday hiç tükenmez)
+    available = [t for t in available if in_rot(t)] or available
+    pos_for = {t: ([p for p in ps if in_rot(t, p)] or ps) for t, ps in pos_for.items()}
     excluded = {}
-    cands, excluded["kadraj"] = _lru(available, [h.get("kadraj") for h in hist], frame_depth(len(types)))
-    ftype = _weighted(cands, rng)
+    # 31 Eki (3): derinlik rotasyondaki tip sayısıyla (2 tipte son 1; tüm tip sayısı ikisini de elerdi)
+    used_k = [h.get("kadraj") for h in hist]
+    guarded = pa.guard_lru(available, used_k, frame_depth(len(types)), g_types & set(available))
+    if guarded:   # 31 Eki (3): koruma tipi en fazla %20, art arda gelmez; kanıtlı tip tekrar edebilir
+        cands, excluded["kadraj"] = guarded
+        ftype = pa.guard_pick(rng, cands, g_types, FRAME_WEIGHTS)
+    else:
+        cands, excluded["kadraj"] = _lru(available, used_k, min(frame_depth(len(types)), frame_depth(len(available))))
+        ftype = _weighted(cands, rng)
     pos_spot = pos_for[ftype][0] if len(pos_for[ftype]) == 1 else rng.choice(pos_for[ftype])
     mode = None
     if pos_spot and native(event, pos_spot)[1] == AB:
         if pos_spot == spot:   # 21 Eki (Aşama 5): mod A sadece kendi spotunun kendi eski cümlesi
-            modes, excluded["kamera_modu"] = _lru(["A", "B"], [h.get("kamera_modu") for h in hist], 1)
+            modes = [m for m in ("A", "B") if in_rot(ftype, pos_spot, m)] or ["A", "B"]
+            modes, excluded["kamera_modu"] = _lru(modes, [h.get("kamera_modu") for h in hist], 1 if len(modes) > 1 else 0)
             mode = rng.choice(modes)
         # ödünç nokta: mod ekseni yok (None), cümle her zaman yeni sabit-yüksek şablon (mod A ödünç alınmaz)
     fgs = list(fg_options(event, ftype, pos_spot, mode))
+    fgs = [g for g in fgs if in_rot(ftype, pos_spot, mode, g)] or fgs
     fg = None
     if fgs:
-        fgs, excluded["on_plan"] = _lru(fgs, [h.get("on_plan") for h in hist], 1 if len(fgs) > 1 else 0)
-        fg = rng.choice(fgs)
+        g_fg = {g for g in fgs if (ftype, pos_spot, mode, g) in g_fgs}
+        guarded = pa.guard_lru(fgs, [h.get("on_plan") for h in hist], 1, g_fg)
+        if guarded:   # 31 Eki (3): koruma ön planı en fazla %20
+            fgs, excluded["on_plan"] = guarded
+            fg = pa.guard_pick(rng, fgs, g_fg)
+        else:
+            fgs, excluded["on_plan"] = _lru(fgs, [h.get("on_plan") for h in hist], 1 if len(fgs) > 1 else 0)
+            fg = rng.choice(fgs)
     return {"type": ftype, "pos_spot": pos_spot, "fg": fg, "mode": mode}, excluded
 
 

@@ -206,6 +206,17 @@ class TestModeAndNative(unittest.TestCase):
 
 
 class TestSelection(unittest.TestCase):
+    # 31 Eki (3): seçim mekaniği (LRU, ağırlık, mod) tüm kadraj tipleriyle sınanır: kanıtlı rotasyon kapalı
+    # (rotasyonun kendisi tests/test_proven_31oct.py)
+    def setUp(self):
+        import core.proven_axes as pa
+        self._rot = pa.ROTATION_ON
+        pa.ROTATION_ON = False
+
+    def tearDown(self):
+        import core.proven_axes as pa
+        pa.ROTATION_ON = self._rot
+
     def test_side_rng_does_not_consume_main_stream(self):
         random.seed(11)
         before = random.getstate()
@@ -288,10 +299,15 @@ class TestNotionAndApproval(unittest.TestCase):
         spot = next(iter(sk.EVENT_SKELETONS[e]["spots"]))
         rec = lambda k: {"combo_key": f"coastal_tornado_landfall|none|{e.lower()}|{spot.lower()}##C1+E1|c",
                          "eksenler": ah.axes_json(e, {"spot": spot, "kadraj": k}), "status": "❌ İptal"}
+        # 31 Eki (3): marinada rotasyon 2 tip (balkon mod A KANITLI + çatı kütüphane koruması): son 1 elenir
         for seed in range(15):
             random.seed(seed)
-            scene = ps.build(e, axes_loader=lambda d: [rec("balkon"), rec("direk")])
-            self.assertNotIn(scene["structure"]["axes"]["kadraj"], ("balkon", "direk"))
+            scene = ps.build(e, axes_loader=lambda d: [rec("direk"), rec("çatı")])
+            self.assertEqual(scene["structure"]["axes"]["kadraj"], "balkon")
+            # son kadraj kanıtlı balkon: koruma çatı en fazla %20, balkon tekrar edebilir
+            random.seed(seed)
+            scene = ps.build(e, axes_loader=lambda d: [rec("direk"), rec("balkon")])
+            self.assertIn(scene["structure"]["axes"]["kadraj"], ("balkon", "çatı"))
 
     def test_spec_frame_rebuilt_by_final_check(self):
         random.seed(5)

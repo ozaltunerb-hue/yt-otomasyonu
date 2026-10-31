@@ -146,7 +146,8 @@ class TestEnvSelection(_Quiet):
             self.assertEqual(data["axes"]["ortam"], ax["ortam"])
             self.assertEqual(es.final_prompt_issues(scene["structure"]["spec"], scene["structure"]["slices"],
                                                     scene["prompt"], scene["story"]), [])
-        self.assertEqual(len(seen), 5)
+        import core.proven_axes as pa
+        self.assertEqual(set(seen), {"A", pa.GUARD["ortam"][es.WILDFIRE][0]})   # 31 Eki (3): A + koruma
         self.assertIn("ortam", ah.AXIS_KEYS)
 
     def test_notion_history_drives_env(self):
@@ -154,10 +155,11 @@ class TestEnvSelection(_Quiet):
         spot = "Balcony of a hillside house"
         rec = lambda letter: {"combo_key": f"fire_disasters|none|{e.lower()}|{spot.lower()}##F1+G1|c",
                               "eksenler": ah.axes_json(e, {"spot": spot, "ortam": letter}), "status": "❌ İptal"}
+        # 31 Eki (3): rotasyonda A + koruma C (en fazla %20); son ortam koruma ise sıradaki A
         for seed in range(15):
             random.seed(seed)
-            scene = ps.build(e, axes_loader=lambda d: [rec("D"), rec("A")])
-            self.assertNotIn(scene["structure"]["axes"]["ortam"], ("D", "A"))
+            scene = ps.build(e, axes_loader=lambda d: [rec("D"), rec("C")])
+            self.assertEqual(scene["structure"]["axes"]["ortam"], "A")
 
 
 class TestLight(_Quiet):

@@ -515,8 +515,10 @@ PARTI2 = {   # (olay, dilim, kimlik): (metin, GPT tarzı doğru anlatım)
     # in a roaring wall", G7 "burning treetops erupt as the helicopter's water load hits the ridge above the houses"
     (es.FACADE_FIRE, "slice_2", "M11"): ("a burning balcony slab on the floor above breaks off and crashes down the facade",
                                           "A blazing balcony slab above breaks loose and plunges down the facade."),
-    (es.HELICOPTER, "slice_3", "G7"): ("the water load hits a burning garage across the street and its walls collapse in "
-                                       "steam", "The water drop slams into a burning garage opposite and its walls cave in."),
+    # 31 Eki (3): su tarifi (önceki "the water load hits ...")
+    (es.HELICOPTER, "slice_3", "G7"): ("the falling sheet of water hits a burning garage across the street and its walls "
+                                       "collapse in steam",
+                                       "The water drop slams into a burning garage opposite and its walls cave in."),
     (es.LANDFALL, "slice_3", "E7"): ("the tornado shreds the top floor of a building across the street, debris spiraling up",
                                       "The tornado rips the top floor off a building across the street, debris whirling up."),
     (es.MARINA_TORNADO, "slice_2", "Y7"): ("the tornado rips the roof off the café across the quay and hurls it away",
@@ -579,7 +581,8 @@ class TestParti2(unittest.TestCase):
 
 
 # 23 Eki (hortum denetimi): Bahadır'ın onayladığı yeni metin 16 kelimeyi aşıyor; kısaltılmadı, sınır bu maddede açık
-PARTI2_LONG = {(es.MARINA_TORNADO, "Z7"): 18, (es.WILDFIRE, "K9"): 17}   # 30 Eki (2): K9 onaylı metin 17 kelime
+PARTI2_LONG = {(es.MARINA_TORNADO, "Z7"): 18, (es.WILDFIRE, "K9"): 17,
+               (es.HELICOPTER, "G7"): 18}   # 31 Eki (3): su tarifi "the falling sheet of water" (bütçe 0 sığmayan)   # 30 Eki (2): K9 onaylı metin 17 kelime
 
 
 def _make_parti2_test(event, slot, bid, text, para):
