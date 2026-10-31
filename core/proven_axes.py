@@ -30,6 +30,7 @@ Seçimler mevcut ayrı rastgele akışlarda yapılır; bu modül sadece aday lis
 from __future__ import annotations
 
 PROVEN, TRIAL = "KANITLI", "DENEME"
+LOW = "ALÇAK"   # 31 Eki (4): alçak/takip eden kamera; hiçbir zaman rotasyonda değil (DENEME'nin de dışında)
 # Rotasyon anahtarı: True = normal üretim (sadece KANITLI + koruma). False = eski davranış (tüm değerler; deneme
 # üretimi ya da eksen mekaniğini tüm seçeneklerle sınayan testler)
 ROTATION_ON = True
@@ -252,9 +253,13 @@ def frame_status(event: str, spot: str, f: dict) -> str:
         kind = fx.native(event, ps)[1]
         if kind == fx.NATIVE:   # volkan/çığ/deprem/meteor: noktanın orijinal cümlesi (ödünçte de aynı cümle)
             return PROVEN if ps in PROVEN_SPOTS.get(event, {ps}) else TRIAL
-        if ps == spot and kind == fx.AB and mode == "A":
-            return PROVEN   # kendi noktasının orijinal cümlesi (AB mod A)
-    return TRIAL           # mod B, sabit-yüksek taşınmış nokta (21 Eki), ödünç şablon, kütüphane, direk
+        if ps == spot and kind == fx.AB:
+            # 31 Eki (4), Bahadır: "kamera her zaman yüksek ve sabit" kuralı kanıtlı/deneme kuralının üstünde. Mod A
+            # (eski cümle) her AB noktasında alçak ya da takip eden kamera ("eye level, normal lens", "pans to follow",
+            # "the camera follows the ...": 3M orman yangını hit'i dahil); hiçbir rotasyona, korumaya, son çareye girmez.
+            # Aynı noktanın mod B'si (yüksek, sabit şablon) KANITLI.
+            return LOW if mode == "A" else PROVEN
+    return TRIAL           # sabit-yüksek taşınmış nokta (21 Eki), ödünç şablon, kütüphane, direk
 
 
 def fg_status(event: str, spot: str, f: dict) -> str:
@@ -294,8 +299,9 @@ def rotation_frames(event: str, spot: str, variants: list[dict]) -> tuple[list[d
         proven += [f for f in trial if f["type"] == t0 and _frame_rank(event, spot, f)[:2] == best]
         types.append(t0)
         notes.append(f"kadraj koruması: {t0} ({('kendi noktası', 'ödünç nokta', 'kütüphane', 'direk')[best[1]]})")
-    if not proven:   # son çare: sadece pencere var
-        proven = [f for f in variants if f["type"] == WINDOW] or list(variants)
+    if not proven:   # son çare: sadece pencere var (alçak/takip eden kamera hiçbir zaman)
+        high = [f for f in variants if frame_status(event, spot, f) != LOW]
+        proven = [f for f in high if f["type"] == WINDOW] or high or list(variants)
         notes.append("kadraj: pencereden başka varyant yok (son çare)")
     # ön plan: her (tip, nokta, mod) için
     out = []

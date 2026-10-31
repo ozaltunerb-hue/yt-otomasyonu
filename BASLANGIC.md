@@ -43,6 +43,10 @@ Ders: hit formül (açılış A + orijinal kamera) 9/10; 21 Eki sonrası denenme
 - **Finaller:** heyelan M3 (minibüs evin önüne, nesne ev), M4 (köşe dükkânı); cephe N1 (çatı çöker); helikopter F5
   (güverte). (H6,M3) benzer, (H6,M4) (H4,M4) bütçe dışlandı. Helikopter su tarifi "falling sheet" (kilit, B/C, F1/F2/G2/G7).
 - **Spot-ortam:** cephe kamerası "the tower" -> "the burning building"; açılış D cephe C/E ortamında seçilmez.
+- **31 Eki (4) yüksek-sabit kamera kuralı kanıtlı/deneme kuralının ÜSTÜNDE:** AB noktalarının mod A eski cümlesi
+  (eye level / normal lens / pans to follow / "the camera follows the ...") `proven_axes.LOW`: hiçbir rotasyonda,
+  korumada, son çarede yok. 3M orman yangını hit'inin kamerası da buydu (balkon, eye level, pans to follow). Aynı noktanın
+  mod B'si KANITLI. Koruma payı %20 (`GUARD_SHARE`), helikopter G1/G2/G5 deneme finali %10 (`es.TRIAL_FINALS`).
 
 ## 📋 DEVİR: GPT kapısı, hortum E5, volkan R9, kamera-ortam tutarlılığı (31 Eki 2026)
 

@@ -266,5 +266,46 @@ class TestGuardShare(unittest.TestCase):
             self.assertNotIn("tower", t)
 
 
+class TestHighFixedCamera(unittest.TestCase):
+    """31 Eki (4), Bahadır: "kamera her zaman yüksek ve sabit" kuralı kanıtlı/deneme kuralının üstünde. Alçak ya da
+    takip eden kamera (mod A eski cümleleri; 3M orman yangını hit'i dahil) hiçbir rotasyonda yok; aynı noktanın mod B'si
+    KANITLI; her olay × nokta × beat çiftinde rotasyonda en az bir yüksek-sabit kamera kalır."""
+    LOW = __import__("re").compile(r"eye level|street level|ground level|normal lens|pans? to follow|follows the|"
+                                   r"following the", __import__("re").I)
+
+    def test_no_low_camera_in_rotation(self):
+        for e in es.structured_events():
+            if e in sk.DISABLED_EVENTS:
+                continue
+            for view in es.structure_views(e):
+                spots = sk.view_spots(e, view)
+                for spot in spots:
+                    pool = (list(es.FIRE_TOR_ENVS[es.fire_env_of_spot(spot)]["spots"]) if e == es.FIRE_TORNADO
+                            else spots)
+                    fenv = es.fire_env_of_spot(spot) if e == es.FIRE_TORNADO else None
+                    venv = list(sk.VOLC_ENVS)[0] if e in es.VOLC_ENV_EVENTS else None
+                    exs = es.EVENT_BEATS[e]["excluded_spots"]
+                    for b2, b3 in es.allowed_pairs(e, view, spot):
+                        risky = set(exs.get(b2, set())) | set(exs.get(b3, set()))
+                        allv = fx.all_frames(e, spot, pool, risky, set())
+                        rot = pa.allowed_variants(e, spot, allv)
+                        cams = [sk.style_suffix(e, None, spot, view, None, venv, f, fenv, None) for f in rot]
+                        with self.subTest(event=e, spot=spot, pair=(b2, b3)):
+                            self.assertTrue(cams)
+                            self.assertFalse([c for c in cams if self.LOW.search(c)])
+                        for f in allv:   # alçak kamera = tam olarak AB noktalarının mod A'sı
+                            low = bool(self.LOW.search(sk.style_suffix(e, None, spot, view, None, venv, f, fenv,
+                                                                       None)))
+                            self.assertEqual(low, pa.frame_status(e, spot, f) == pa.LOW, (e, spot, f))
+
+    def test_mode_b_proven(self):
+        spot = "Balcony across a steep hillside street"
+        b = {"type": "balkon", "pos_spot": spot, "fg": "korkuluk", "mode": "B"}
+        self.assertEqual(pa.frame_status(MUD, spot, b), pa.PROVEN)
+        self.assertEqual(pa.frame_status(MUD, spot, {**b, "mode": "A", "fg": None}), pa.LOW)
+        bal = "Balcony of a hillside house"   # 3M hit kamerası (eye level, pans to follow) rotasyon dışı
+        self.assertEqual(pa.frame_status(WF, bal, {"type": "balkon", "pos_spot": bal, "fg": None, "mode": "A"}), pa.LOW)
+
+
 if __name__ == "__main__":
     unittest.main()
