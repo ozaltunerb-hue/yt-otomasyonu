@@ -430,7 +430,7 @@ class TestEarthquake(unittest.TestCase):
         self.assertTrue(sk.style_suffix(es.AVALANCHE_SKI, None, "Terrace of the lift station")
                         .startswith("Handheld footage from the lift station terrace, high vantage up a snowy slope"))
         self.assertTrue(sk.style_suffix(es.ERUPTION, None, "Hillside terrace facing the erupting volcano")
-                        .startswith("Handheld footage filmed on a hillside terrace above the village"))
+                        .startswith("Handheld footage filmed on a hillside terrace above the houses"))   # 31 Eki
 
     def test_term_lists_earthquake_only(self):
         import ast

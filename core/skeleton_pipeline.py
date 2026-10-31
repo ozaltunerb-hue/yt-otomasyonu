@@ -89,7 +89,9 @@ CAMERA_SPOTS = {
     "Upper-floor balcony of a village house": "on the upper-floor balcony of a village house, facing up the slope",
     # Yangın (8 Eki, Bahadır; TASLAK): olay başına 2 kamera, Bahadır'ın kamera cümleleri birebir
     "Balcony of a hillside house": "on a balcony of a hillside house overlooking the street and the burning slope",
-    "Embankment above the village road": "on a roadside embankment above the village road",
+    # 31 Eki, Bahadır (kamera-ortam tutarlılığı): ortamdan bağımsız nötr. Önceki "on a roadside embankment above the
+    # village road" (orman yangını E "rural town" ortamıyla çelişiyordu)
+    "Embankment above the village road": "on a roadside embankment above the road",
     # 8 Eki (2), Bahadır: cephe yangını ve ateş hortumu balkonunda kamera yüksek; kaldırım noktaları çıktı
     "Balcony across from a downtown tower": "on a high balcony across the street from the tower",
     "Rooftop terrace across from a downtown tower": "on a rooftop terrace across the street from the tower",
@@ -111,9 +113,12 @@ CAMERA_SPOTS = {
     "High balcony of a village house": "on a high balcony of a village house",
     # 🌋 Volkan (10 Eki, Bahadır): hepsi yüksek ve dağa bakıyor. 13 Eki: "facing the erupting volcano" volkan kamera
     # cümlesine taşındı (VOLCANO_CAMERA_PERCH); önceki metinler "..., facing the erupting volcano (across the street)"
-    "Hillside terrace facing the erupting volcano": "on a hillside terrace above the village",
+    # 31 Eki, Bahadır (kamera-ortam tutarlılığı): yer cümlesi ortamdan bağımsız nötr (suburb ortamında "village",
+    # kasaba ortamlarında köy çelişkisi). Önceki "on a hillside terrace above the village", "on a village house balcony
+    # across the street" (21 Eki: 175; daha önce "on the balcony of a village house...")
+    "Hillside terrace facing the erupting volcano": "on a hillside terrace above the houses",
     "Rooftop terrace facing the erupting volcano": "on a rooftop terrace across the street",
-    "Balcony of a village house facing the erupting volcano": "on a village house balcony across the street",   # 21 Eki: 175 (önceki "on the balcony of a village house...")
+    "Balcony of a village house facing the erupting volcano": "on a house balcony across the street",
     # ❄️ Çığ (13 Eki, Bahadır): hepsi yüksek; yön kamera cümlesinde. 14 Eki: köyün/tesisin kenarına, çığın yoluna
     # taşındı. 14 Eki (2): kısa adlar, kamera cümlesi "Handheld footage from ..." (175 kelime sınırı). Önceki: "on a
     # terrace at the edge of the village", "on the balcony of a chalet at the edge of the village", "on the terrace
@@ -127,7 +132,7 @@ CAMERA_SPOTS = {
     # ☄️ Meteor (29 Eki, Bahadır): kadraj K1-K3, hepsi yüksek; tam cümle METEOR_CAMERA'da (birebir)
     "Rooftop terrace of a hillside villa above the bay": "the rooftop terrace of a modern hillside villa",
     "High terrace of a seafront villa": "the high terrace of a seafront villa",   # 29 Eki (3): K2
-    "Hilltop terrace above a coastal town": "a hilltop terrace above a coastal town",
+    "Hilltop terrace above a coastal town": "a hilltop terrace above the coast",   # 31 Eki: önceki "...above a coastal town"
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -944,8 +949,10 @@ METEOR_CAMERA = {
     # footage from a high balcony of a seafront apartment, looking out over the promenade and the open sea"
     "High terrace of a seafront villa":
         "Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open sea",
+    # 31 Eki, Bahadır (kamera-ortam tutarlılığı): O3 "coastal suburb" ortamıyla "coastal town" çelişiyordu. Önceki
+    # "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view"
     "Hilltop terrace above a coastal town":
-        "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view",
+        "Handheld footage from a hilltop terrace above the coast, the whole bay and the rooftops below in view",
 }
 # 29 Eki (2), Bahadır: test videosunda kamera 4.5-6 sn'de aşağı eğilip çatı terasına baktı. Önceki: "...the camera
 # stays fixed, never descending; no zoom, no cuts."

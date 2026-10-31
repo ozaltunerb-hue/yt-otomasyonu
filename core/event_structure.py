@@ -1245,9 +1245,11 @@ EVENT_BEATS = {
                    "terms": [("roof", "roofs", "roofing"), _TEAR + _FLING + ("rip off",)]},
             "E4": {"text": "the tornado uproots a large tree and flings it through the air",
                    "terms": [("tree", "trees"), _UPROOT + _FLING]},
-            "E5": {"text": "the tornado rips the front off a small shop, sending shutters and signs flying",
-                   "terms": [("shop", "store", "storefront", "shopfront", "shop front", "shutter", "shutters"),
-                             _TEAR + _AIRBORNE + _FLING + ("shear",)]},
+            # 31 Eki, Bahadır (üretim bulgusu d): E5 metni değişti, kod aynı. Önceki "the tornado rips the front off a
+            # small shop, sending shutters and signs flying" (ince hedef: GPT sadece kepenk ve tabelayı yazdı)
+            "E5": {"text": "the tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall",
+                   "terms": [("kiosk", "kiosks", "beach kiosk", "beach hut", "booth", "stall", "beach bar"),
+                             _LIFT_AIR + _TEAR + _FLING, _HIT]},
             # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
             "E7": {"text": "the tornado shreds the top floor of a building across the street, debris spiraling up",
                    "terms": [("floor", "storey", "story", "top floor", "building", "upper floor"),
@@ -1747,8 +1749,14 @@ EVENT_BEATS = {
                    "terms": [_VOLC_ROCK, _VOLC_HOUSE + _VOLC_ROOF, _VOLC_SMASH]},
             "R8": {"text": "a glowing rock slams into a house across the street and its wall bursts apart",
                    "terms": [_VOLC_ROCK, _VOLC_HOUSE + _VOLC_WALL, _VOLC_BURST + _VOLC_SMASH]},
-            "R9": {"text": "a glowing rock hits the road ahead and sends burning chunks across the street",
-                   "terms": [_VOLC_ROCK, _VOLC_ROAD, _VOLC_CRATER + _VOLC_SNAP + _VOLC_SMASH]},
+            # 31 Eki, Bahadır (üretim bulgusu f): R9 metni değişti, kod aynı. Önceki "a glowing rock hits the road ahead
+            # and sends burning chunks across the street" (kalıcı hasar yok). "corner shop down the street": açılış B
+            # ("roof of the house across the street") ile aynı yapı olmasın
+            "R9": {"text": "a glowing rock crashes through the front of a corner shop down the street and its wall "
+                           "caves in",
+                   # nesne grubu duvar (_VOLC_WALL), dükkân çapada (BEAT_ANCHORS). Nesne _VOLC_SHOP olsaydı "corner ...
+                   # wall" R7'nin ev grubuna, korunan R3/R4'ün dükkân cümleleri de R9'a benzetiliyordu
+                   "terms": [_VOLC_ROCK, _VOLC_WALL, _VOLC_SHOP, _VOLC_COLLAPSE + _VOLC_SMASH]},
         },
         "slice_3": {
             "T1": {"text": "glowing rocks slam into the roofs, sending tiles flying as flames rise",
@@ -2247,6 +2255,133 @@ OBJECT_GROUPS = {
     # 29 Eki (2): meteor nesneleri palmiye (W1), araç (X2), bar/şezlong (X4); iki nesne zorunluluğu METEOR_OBJECT_GATES
     METEOR: {"W1": 0, "W2": 1, "W3": 0, "X1": 1, "X2": 1, "X3": 0, "X4": 1},
 }
+
+# 31 Eki, Bahadır (üretim bulgusu a): birleşik hedefli beat'lerde ("roof of a burning house", "front of a corner shop")
+# asıl hedef (çapa) GPT cümlesinde zorunlu. Sebep: K9'da {vehicle} var, nesnesi araç; yumuşak kapı sadece aracı arıyor
+# ("delivery truck" geçti), "burning house" hiç denetlenmiyordu. Eski terim grubu da kurtarmazdı: _FIRE_HOUSE "roof"
+# içeriyor, "the collapsing roof" o grubu karşılıyor. Çapa = ilk kelimeyi (roof/front/side) tutup asıl hedefi düşürme
+# riski olan beat'ler (31 Eki taraması). Kod yedeği beat metnini aynen kullanır: her çapa kendi metninde geçer (lint).
+# Araç-üstüne-araç beat'leri (gelgit T4 "roof of a parked car") çapasız: hedef terimi seçilen aracın terimiyle çakışır.
+_ANCHOR_HOUSE = ("house", "home", "cottage", "cabin", "bungalow", "chalet", "villa", "building", "dwelling")
+_ANCHOR_SHOP = ("shop", "store", "storefront", "shopfront", "shop front", "corner shop", "boutique", "bakery", "café",
+                "cafe")
+_ANCHOR_BUS = ("bus", "buses", "city bus")
+BEAT_ANCHORS = {
+    FLOOD: {"V6": _ANCHOR_BUS, "V8": _ANCHOR_SHOP},
+    TIDAL: {"T8": _ANCHOR_HOUSE},
+    MUDSLIDE: {"H6": _ANCHOR_HOUSE},
+    VILLAGE: {"L6": _ANCHOR_HOUSE},
+    MARINA_TORNADO: {"Y3": _MARINA_OFFICE},
+    AVENUE: {"P5": _ANCHOR_BUS,
+             "P7": _ANCHOR_HOUSE + _ANCHOR_SHOP + ("facade", "façade", "office", "hotel", "restaurant")},
+    WILDFIRE: {"K8": _ANCHOR_HOUSE, "K9": ("burning house", "burning home")},
+    VOLCANIC_BOMBS: {"R9": _ANCHOR_SHOP},
+}
+
+
+def beat_anchor_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
+    """31 Eki: seçilen beat'in çapası (BEAT_ANCHORS) kendi diliminde geçmeli."""
+    out = []
+    for slot, bid in (("slice_2", spec["beat_2"]), ("slice_3", spec["beat_3"])):
+        anchor = BEAT_ANCHORS.get(spec["event"], {}).get(bid)
+        if anchor and not find_terms(anchor, slices.get(slot, "")):
+            label = "4-9s" if slot == "slice_2" else "9-15s"
+            out.append(_issue("beat_anchor", f"{label}: maddenin asıl hedefi ({bid}: {anchor[0]}) yok",
+                              f"'{slot}' must keep the exact target '{anchor[0]}' of this event: "
+                              f"{beat_text(spec['event'], slot, bid, spec['vehicle'])}."))
+    return out
+
+
+# 31 Eki, Bahadır (üretim bulgusu b, c): yangın olaylarında GPT çıktısında yasak kökler. torrent ("the fiery torrent"),
+# disintegrat ("the trailer disintegrates"), explod ("its roof exploding": videoda havai fişek gibi kıvılcım). Dört
+# yangın olayının havuz, kilit, açılış, ortam ve yedek insan metinlerinde bu kökler yok (31 Eki taraması; lint havuz,
+# kilit ve yedek insan metnini denetler).
+FIRE_BANNED_ROOTS = ("torrent", "disintegrat", "explod")
+_FIRE_ROOT_RE = re.compile(r"\b(?:" + "|".join(FIRE_BANNED_ROOTS) + r")\w*", re.IGNORECASE)
+
+
+def fire_root_words(text: str) -> list[str]:
+    return list(dict.fromkeys(m.group(0).lower() for m in _FIRE_ROOT_RE.finditer(text or "")))
+
+
+# 31 Eki, Bahadır (üretim bulgusu c): insanlar dağılmaz, koşar ("Three people scatter in panic"). Sadece insan öznesi:
+# insan sözcüğü (ya da they/everyone) + en fazla iki -ly zarfı + scatter. Enkaz cümleleri ("scatters the pieces",
+# "the stones scatter") etkilenmez.
+_PEOPLE_SUBJECTS = ("people", "residents", "villagers", "onlookers", "pedestrians", "bystanders", "tourists", "drivers",
+                    "neighbors", "neighbours", "guests", "skiers", "locals", "families", "figures", "children",
+                    "workers", "crowd", "crowds", "passersby", "passers-by", "spectators", "beachgoers", "shoppers",
+                    "diners", "everyone", "they")
+_PEOPLE_SCATTER_RE = re.compile(r"\b(?:" + "|".join(re.escape(w) for w in _PEOPLE_SUBJECTS) + r")\b,?"
+                                r"(?:\s+\w+ly){0,2}\s+scatter(?:s|ed|ing)?\b", re.IGNORECASE)
+
+
+def people_scatter(text: str) -> list[str]:
+    return [m.group(0) for m in _PEOPLE_SCATTER_RE.finditer(text or "")]
+
+
+# 31 Eki, Bahadır (üretim bulgusu g): GPT araca havuzda olmayan bir hareket ekleyemez ("engulfs a truck ... as it rolls
+# downhill"). Özne araç sözcüğü ya da (aynı cümlede araç geçiyorsa) it/they. Hareket o dilimin havuz metninde (0-4s'de
+# kilit cümlede) aynı gruptan bir fiille geçiyorsa serbest: eş anlamlı serbest (T7 "races away" -> GPT "speeds away";
+# K9 "speeds past", K1 "reverses", K5 "U-turns ... speeds away"). Sadece ayrılma ve yuvarlanma: "slides", "is shoved",
+# "spins" gibi olayın kendi itişleri listede yok.
+_MOVE_VEHICLES = ("car", "cars", "truck", "trucks", "van", "vans", "suv", "suvs", "pickup", "pickups", "sedan", "sedans",
+                  "bus", "vehicle", "vehicles", "lorry", "jeep", "taxi", "trailer", "minivan")
+# grup -> (havuzda serbest bırakan kökler, GPT çıktısında aranan hareketler)
+_MOVE_GROUPS = {
+    "roll": (("roll",), (r"roll(?:s|ed|ing)?\s+(?:down|downhill|away|off|back|backwards?)",)),
+    "depart": (("speed", "race", "drive", "pull", "accelerat", "careen", "revers", "u-turn", "swerv", "flee", "escape"),
+               (r"(?:drives?|drove|driving|driven)\s+(?:off|away)", r"(?:speeds?|sped|speeding)\s+(?:off|away)",
+                r"rac(?:es?|ed|ing)\s+(?:off|away)", r"pull(?:s|ed|ing)?\s+(?:away|off)",
+                r"accelerat(?:es?|ed|ing)\s+(?:away|off)", r"careen(?:s|ed|ing)?")),
+}
+_VEH_RX = r"(?:" + "|".join(_MOVE_VEHICLES) + r")"
+_MOVE_RES = {g: re.compile(rf"\b(?P<subj>{_VEH_RX}|it|they)\s+(?:\w+ly\s+)?(?P<move>{'|'.join(rxs)})\b", re.IGNORECASE)
+             for g, (_, rxs) in _MOVE_GROUPS.items()}
+
+
+def invented_vehicle_moves(text: str, pool_text: str) -> list[str]:
+    """Araç öznesiyle havuzda olmayan ayrılma/yuvarlanma hareketleri (cümle cümle)."""
+    pool = (pool_text or "").lower()
+    out = []
+    for sentence in re.split(r"(?<=[.!?;])\s+", text or ""):
+        has_vehicle = re.search(rf"\b{_VEH_RX}\b", sentence, re.IGNORECASE)
+        for group, rx in _MOVE_RES.items():
+            if any(root in pool for root in _MOVE_GROUPS[group][0]):
+                continue
+            for m in rx.finditer(sentence):
+                if m.group("subj").lower() in ("it", "they") and not has_vehicle:
+                    continue
+                out.append(m.group("move"))
+    return list(dict.fromkeys(out))
+
+
+def gpt_quality_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
+    """31 Eki kapıları (GPT çıktısı ve kod yedeği aynı denetim): çapa, yangın kökleri, insan + scatter, uydurma araç
+    hareketi."""
+    event = spec["event"]
+    out = beat_anchor_issues(spec, slices)
+    gpt_text = " ".join(slices.get(f, "") for f in SLICE_FIELDS)
+    if event in FIRE_EVENTS:
+        roots = fire_root_words(gpt_text)
+        if roots:
+            out.append(_issue("fire_banned_root", f"yangında yasak kök ({', '.join(roots)})",
+                              f"Remove {', '.join(repr(w) for w in roots)}: fire burns, spreads, engulfs and collapses "
+                              f"things; nothing explodes, disintegrates or flows like a torrent."))
+    scattered = people_scatter(gpt_text)
+    if scattered:
+        out.append(_issue("people_scatter", f"insanlar dağılmaz, koşar ({'; '.join(scattered)})",
+                          "People never 'scatter': write that they run, sprint or flee."))
+    pools = {"slice_1_rest": spec["key_visual"],
+             "slice_2": EVENT_BEATS[event]["slice_2"][spec["beat_2"]]["text"],
+             "slice_3": EVENT_BEATS[event]["slice_3"][spec["beat_3"]]["text"]}
+    for f in SLICE_FIELDS:
+        moves = invented_vehicle_moves(slices.get(f, ""), pools[f])
+        if moves:
+            label = SLICE_LABELS[SLICE_FIELDS.index(f)]
+            out.append(_issue("invented_vehicle_move", f"{label}: araca havuzda olmayan hareket ({', '.join(moves)})",
+                              f"In '{f}' remove {', '.join(repr(w) for w in moves)}: the vehicle only does what the "
+                              f"given event says."))
+    return out
 
 # Sert kurallara 16 Eki eklemeleri (yapılandırılmış hat, sadece GPT'nin yazdığı üç dilim; mevcut kurallar aynen durur):
 # çekim/kayıt kelimeleri (b kuralının "camera/video/phone/footage" listesine ek), ülke/bölge adı, can kaybı. Eski hat
@@ -3351,6 +3486,7 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
     # (araç adı + tüm terim grupları) strict_beat_issues'ta, sadece raporda.
     out += soft_beat_issues(spec, slices)
     out += hard_extra_issues(slices)   # 16 Eki: çekim kelimesi, ülke/bölge adı, can kaybı
+    out += gpt_quality_issues(spec, slices)   # 31 Eki: çapa, yangın kökleri, insan + scatter, uydurma araç hareketi
     # Yangın (8 Eki): yağmur/ıslaklık yasağı (kilit cümle dahil tüm hikâye) ve 4-9s'de araç havalanmaz
     if event in NO_RAIN_EVENTS:
         wet = rain_words(plain_story(spec, slices), event in WATER_DROP_EVENTS)
@@ -3489,11 +3625,14 @@ _FB_FLAMES = ("{N} residents run from the flames down the street.", "{N} village
               "{N} people sprint away from the flames.", "{N} residents scramble downhill away from the fire.",
               "{N} people run from the flames.", "{N} villagers dash away from the burning slope.")
 # 22 Eki (genel kalite devam): korkuluk / teras / balkon geçen insan cümleleri "in the street right below" oldu
+# 31 Eki, Bahadır (insan + scatter yasağı): "scatter" geçen yedek insan cümleleri "flee" oldu (kelime sayısı aynı).
+# Önceki: "{N} people scatter in the street below." (çığ köy/orman, kayak, meteor), "{N} residents scatter in the
+# street below." (deprem)
 _FB_AVA_NEAR = ("{N} villagers run away right below.", "{N} people flee in the street right below.",
                 "{N} villagers sprint off right below.", "{N} residents run from it just below.",
-                "{N} people scatter in the street below.", "{N} villagers dash away just beneath.")
+                "{N} people flee in the street below.", "{N} villagers dash away just beneath.")
 _FB_EQ_NEAR = ("{N} residents run away in the street below.", "{N} neighbours flee in the street right below.",
-               "{N} people sprint off right below.", "{N} residents scatter in the street below.",
+               "{N} people sprint off right below.", "{N} residents flee in the street below.",
                "{N} people run away in the street right below.", "{N} neighbours dash away just below.")
 FALLBACK_PEOPLE = {
     FLOOD: ("Pedestrians scramble onto steps and ledges as it hits.", "People run for the doorways as the water hits.",
@@ -3540,12 +3679,12 @@ FALLBACK_PEOPLE = {
     AVALANCHE_VILLAGE: _FB_AVA_NEAR, AVALANCHE_FOREST: _FB_AVA_NEAR,
     AVALANCHE_SKI: ("{N} guests run away right below.", "{N} guests flee in the street right below.",
                     "{N} people sprint off right below.", "{N} guests run from it just below.",
-                    "{N} people scatter in the street below.", "{N} guests dash away just beneath."),
+                    "{N} people flee in the street below.", "{N} guests dash away just beneath."),
     EARTHQUAKE_APARTMENT: _FB_EQ_NEAR, EARTHQUAKE_OLD_STREET: _FB_EQ_NEAR,
     # 29 Eki: meteor (kilit cümle 33 kelime; en kısa cümle 6 kelime, sığma çiftleri ona göre)
     METEOR: ("{N} people run off right below.", "{N} residents flee in the street right below.",
              "{N} people sprint inland in the street below.", "{N} residents run from it just below.",
-             "{N} people scatter in the street below.", "{N} neighbours dash inland right below."),
+             "{N} people flee in the street below.", "{N} neighbours dash inland right below."),
 }
 # 🔥 Ateş hortumu: ortama göre (kilit cümle 28-29 kelime, en uzun beat çifti 39: insan cümlesi 6-7 kelime)
 FALLBACK_PEOPLE_FIRE_ENV = {
@@ -3663,7 +3802,7 @@ _WAITING = "çıkış bekliyor: grup 4'ün altına düşerdi, yerine yeni beat s
 POOL_LINT_GRANDFATHERED = {
     (FLOOD, "V4"): _KEPT + " (özne araç, direk ikincil)", (FLOOD, "D2"): _PROTECTED + " (3 Eki Kie sel testi V6+D2)",
     (TIDAL, "T6"): _PROTECTED, (TIDAL, "W2"): _PROTECTED, (TIDAL, "W6"): _PROTECTED,
-    (LANDFALL, "E5"): _KEPT + " (özne dükkân önü)",
+    # 31 Eki, Bahadır: karaya vurur E5 yeni metin (plaj büfesi), koruması kalktı
     # 23 Eki, Bahadır: marina Y3, Z1, Z2, Z6 yeni metin, korumaları kalktı (lint'ten korumasız geçer)
     # 30 Eki, Bahadır: cadde P5, Q3, Q6 ve cephe N5 yeni metin, korumaları kalktı
     (FACADE_FIRE, "M6"): _PROTECTED,
@@ -3727,6 +3866,22 @@ def pool_lint_errors() -> list[str]:
                 rain = [t for t in re.findall(r"[a-z]+", beat["text"].lower()) if t in _RAIN_TOKENS]
                 if rain:
                     out.append(f"{event}/{bid}: volkan beat'inde 'rain' fiili ({', '.join(rain)})")
+    # 31 Eki: çapa kendi beat metninde geçer; yangın kökleri yangın havuzunda, insan + scatter yedek insan cümlesinde yok
+    for event, anchors in BEAT_ANCHORS.items():
+        for bid, anchor in anchors.items():
+            beat = EVENT_BEATS[event]["slice_2"].get(bid) or EVENT_BEATS[event]["slice_3"].get(bid)
+            if beat is None or not find_terms(anchor, beat["text"]):
+                out.append(f"{event}/{bid}: çapa kaydı havuzda yok ya da metinle uyuşmuyor")
+    for event in FIRE_EVENTS:
+        texts = [b["text"] for s in ("slice_2", "slice_3") for b in EVENT_BEATS[event][s].values()]
+        texts += [EVENT_KEY_VISUAL[event]] + list(FALLBACK_PEOPLE.get(event, ()))
+        roots = fire_root_words(" ".join(texts))
+        if roots:
+            out.append(f"{event}: yangın havuzunda yasak kök ({', '.join(roots)})")
+    for event, pool in list(FALLBACK_PEOPLE.items()) + list(FALLBACK_PEOPLE_FIRE_ENV.items()):
+        for t in pool:
+            if people_scatter(t):
+                out.append(f"{event}: yedek insan cümlesinde scatter ({t})")
     for event, bid in POOL_LINT_GRANDFATHERED:
         if bid not in EVENT_BEATS.get(event, {}).get("slice_2", {}) and bid not in EVENT_BEATS.get(event, {}).get(
                 "slice_3", {}):

@@ -35,7 +35,10 @@ NEW_BEATS = {   # 18 Eki: kısa metinler (≤16 kelime; 17 Eki uzun metinleri co
                             "up",
     (VB, "slice_2", "R7"): "a huge glowing rock crashes through the roof of a house across the street",
     (VB, "slice_2", "R8"): "a glowing rock slams into a house across the street and its wall bursts apart",
-    (VB, "slice_2", "R9"): "a glowing rock hits the road ahead and sends burning chunks across the street",
+    # 31 Eki, Bahadır: R9 yeni metin (önceki "a glowing rock hits the road ahead and sends burning chunks across the
+    # street": kalıcı hasar yok)
+    (VB, "slice_2", "R9"): "a glowing rock crashes through the front of a corner shop down the street and its wall caves "
+                           "in",
     # 30 Eki, Bahadır (Aşama B): T7 yeni metin (önceki "glowing rocks hit a row of houses and set their roofs ablaze")
     (VB, "slice_3", "T7"): "a volcanic bomb slams into a parked van and flips it onto its side in a burst of sparks",
     (VB, "slice_3", "T8"): "a huge glowing rock hits a house and its upper floor erupts in flames",
@@ -48,7 +51,7 @@ NEW_BEATS = {   # 18 Eki: kısa metinler (≤16 kelime; 17 Eki uzun metinleri co
 }
 # 30 Eki: Bahadır'ın onayladığı yeni T7 metni 19 kelime; kısaltılmadı, 16 sınırı bu maddede açık (Z7 gibi; bütçe
 # denetiminde bombaların tüm kombinasyonu 175'e sığıyor)
-NEW_BEATS_LONG = {(VB, "T7"): 19}
+NEW_BEATS_LONG = {(VB, "T7"): 19, (VB, "R9"): 19}   # 31 Eki: R9 onaylı metin 19 kelime (bütçe denetimi 0 sığmayan)
 # 18 Eki: seçilemeyen yeni beat kalmadı (17 Eki'de U10 24 kelimeydi)
 UNUSABLE = {}
 # GPT tarzı doğru anlatımlar (yumuşak kapıdan geçer) ve yanlış nesne (beat_object)
@@ -69,8 +72,8 @@ PARAPHRASE = {
            "A glowing bomb punches through a house's roof across the street, burning timbers bursting upward."],
     (VB, "R8"): ["A glowing rock hits the side of a house and the wall explodes in sparks and stone.",
            "A red-hot boulder smashes into a house wall, which bursts apart."],
-    (VB, "R9"): ["A glowing rock slams into the road ahead and the asphalt splits open, burning chunks flying.",
-           "A red-hot bomb hits the street and cracks the tarmac apart."],
+    (VB, "R9"): ["A glowing rock smashes into a corner shop down the street and its front wall caves in.",   # 31 Eki
+           "A red-hot bomb punches through a corner store's front and the brick wall collapses."],
     (VB, "T7"): ["A red-hot boulder smashes into a parked van and tips it onto its side in sparks.",
            "A glowing volcanic bomb hits a van at the curb and flips it over."],
     (VB, "T8"): ["A huge glowing rock smashes into a house and its upper floor bursts into flames.",
@@ -186,7 +189,8 @@ class TestPoolLint(unittest.TestCase):
         # 18 Eki (2): çıkış bekleyen 6 lint muafiyeti çıktı. 22 Eki: yamaç R2, S4 ve köy K3 yeni metinle ihlal etmiyor
         # 23 Eki (hortum denetimi): marina Y3, Z1, Z2, Z6 yeni metin, korumaları kalktı
         # 30 Eki: cadde P5, Q3, Q6 ve cephe N5 yeni metin, korumaları kalktı
-        self.assertEqual(len(es.POOL_LINT_GRANDFATHERED), 14)
+        # 31 Eki: karaya vurur E5 yeni metin (plaj büfesi), koruması kalktı
+        self.assertEqual(len(es.POOL_LINT_GRANDFATHERED), 13)
         for (event, bid), why in es.POOL_LINT_GRANDFATHERED.items():
             with self.subTest(beat=(event, bid)):
                 self.assertTrue(why.startswith(("korunan", "denetimde", "çıkış bekliyor")), why)

@@ -526,11 +526,12 @@ class TestAvalanche(unittest.TestCase):
         # volkan ve diğer kategorilerin kamera satırı çığdan bağımsız (18 Eki: patlama/bombalar kısa şablon, kül bulutu
         # eski şablon)
         # 21 Eki (genel kalite): ortak kamera kısaltmaları ("filmed", "high vantage over", "toward the volcano")
+        # 31 Eki: volkan yer cümlesi nötr ("above the houses"; önceki "above the village")
         self.assertTrue(sk.style_suffix(es.PYROCLASTIC, None, "Hillside terrace facing the erupting volcano")
-                        .startswith("Handheld footage filmed on a hillside terrace above the village, "
+                        .startswith("Handheld footage filmed on a hillside terrace above the houses, "
                                     "high vantage over the village street toward the volcano;"))
         self.assertTrue(sk.style_suffix(es.ERUPTION, None, "Hillside terrace facing the erupting volcano")
-                        .startswith("Handheld footage filmed on a hillside terrace above the village, "
+                        .startswith("Handheld footage filmed on a hillside terrace above the houses, "
                                     "high vantage over the village street toward the volcano;"))
         self.assertIn("the camera pans to follow the", sk.style_suffix(es.MUDSLIDE, None, list(
             sk.EVENT_SKELETONS[es.MUDSLIDE]["spots"])[0]))

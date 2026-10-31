@@ -180,14 +180,17 @@ SPOT_FRAME = {
     LANDFALL: {"Beachfront promenade": ("balkon", FIXED, "on a high balcony of a seafront hotel above the promenade",
                                         "balcony"),
                "Residential coastal district": ("pencere", FIXED, "across from a residential coastal street", "window"),
-               "Downtown city center": ("çatı", FIXED, "on a flat rooftop above the downtown waterfront", "rooftop")},
+               # 31 Eki (kamera-ortam tutarlılığı): önceki "...above the downtown waterfront" (C liman kasabası ortamı
+               # ve konut noktasının ödünç çatı kadrajıyla çelişiyordu)
+               "Downtown city center": ("çatı", FIXED, "on a flat rooftop above the waterfront", "rooftop")},
     MARINA: {"High marina balcony": ("balkon", AB, "on a high balcony overlooking the marina", "balcony")},
     AVENUE: {"High balcony over a downtown avenue": ("balkon", AB, "on a high balcony across the street", "balcony"),
              "Upper-floor balcony over a residential avenue": ("balkon", AB, "on an upper-floor balcony across the "
                                                                              "street", "balcony"),
              "High balcony over a high-rise avenue": ("balkon", AB, "on a high balcony across the street", "balcony")},
     WILDFIRE: {"Balcony of a hillside house": ("balkon", AB, "on a balcony of a hillside house", "balcony"),
-               "Embankment above the village road": ("tepe", AB, "on a roadside embankment above the village road",
+               # 31 Eki (kamera-ortam tutarlılığı): önceki "...above the village road" (E "rural town" ortamı)
+               "Embankment above the village road": ("tepe", AB, "on a roadside embankment above the road",
                                                      "embankment")},
     FACADE: {"Balcony across from a downtown tower": ("balkon", AB, "on a high balcony across the street from the "
                                                                     "tower", "balcony"),
@@ -211,8 +214,8 @@ SPOT_FRAME = {
                    "High balcony of a village house": ("balkon", AB, "on a high balcony of a village house", "balcony")},
     # 29 Eki: balkon mod A (eye level, pans to follow) çıktı: sabit, yüksek balkon
     HELICOPTER: {"Balcony of a hillside house": ("balkon", FIXED, "on a high balcony of a hillside house", "balcony"),
-                 "Embankment above the village road": ("tepe", AB, "on a roadside embankment above the village road",
-                                                       "embankment")},
+                 "Embankment above the village road": ("tepe", AB, "on a roadside embankment above the road",
+                                                       "embankment")},   # 31 Eki: önceki "...above the village road"
 }
 for _e in VOLCANO:
     SPOT_FRAME[_e] = {"Hillside terrace facing the erupting volcano": ("tepe", NATIVE, None, "terrace"),

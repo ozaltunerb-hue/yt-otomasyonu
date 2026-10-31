@@ -25,6 +25,21 @@
 
 ---
 
+## 📋 DEVİR: GPT kapısı, hortum E5, volkan R9, kamera-ortam tutarlılığı (31 Eki 2026)
+
+31 Eki Onay bulguları (GPT kapıdan geçti ama zayıf yazdı) için koddaki kapılar; GPT'ye yeni hint yok, geri bildirim
+mekanizması aynı (`es.gpt_quality_issues`, `slice_issues` içinde; GPT çıktısı ve kod yedeği aynı denetim):
+- **Çapa** (`es.BEAT_ANCHORS`): K9 araçlı olduğu için yumuşak kapının nesnesi araçtı ("burning house" denetlenmiyordu;
+  eski sıkı grup `_FIRE_HOUSE` de "roof" içeriyor). Birleşik hedefli 11 beat'e çapa: sel V6/V8, gelgit T8, çamur H6,
+  köy L6, marina Y3, cadde P5/P7, orman K8/K9, bombalar R9. Gelgit T4 ("roof of a parked car") çapasız: hedef araç terimiyle çakışır.
+- **Yangın kökleri** (`es.FIRE_BANNED_ROOTS`: torrent, disintegrat, explod) dört yangın olayında. Havuz/kilit/açılış/ortam/yedek metinlerinde yok.
+- **İnsan + scatter** (`es.people_scatter`): tüm olaylar; enkaz cümleleri serbest. Yedek insan cümlelerindeki 5 "scatter" -> "flee".
+- **Uydurma araç hareketi** (`es.invented_vehicle_moves`): ayrılma/yuvarlanma; havuzda aynı gruptan fiil varsa serbest (eş anlamlı).
+  Son 15 Onay'da 1 red (bombalar T9 "rolls downhill"), yanlış red 0; 100 hikâyede ilk sürümün tek yanlış reddi (ateş hortumu T7) grupla kalktı.
+- **Havuz:** karaya vurur E5 plaj büfesi (koruması kalktı), bombalar R9 köşe dükkânı (19 kelime, testte istisna; nesne grubu duvar, dükkân çapada).
+- **Kamera nötr:** volkan "above the houses" / "a house balcony", orman+helikopter set "above the road", karaya vurur çatı "above the
+  waterfront", meteor K3 "above the coast". Kalan yerleşim çelişkileri kilit/açılış/havuz metninde (rapor; dokunulmadı).
+
 ## 📋 DEVİR: ☄️ Meteor (4): O4 pasif, K2 villa terası, ön planda yüksek bina yok, X3 (29 Eki 2026)
 
 2. test videosu: kameranın yanındaki dev kule ve O4'ün yüksek binaları sebepsiz yer/şekil değiştirdi. O4 pasif

@@ -75,7 +75,7 @@ class TestVolcEnvData(unittest.TestCase):
         self.assertEqual({sp: es.volc_spot_weight(sp) for sp in (BAL, RT, HT)}, {BAL: 2, RT: 1, HT: 1})
         for e in es.VOLC_ENV_EVENTS:
             self.assertEqual(set(sk.EVENT_SKELETONS[e]["spots"]), {BAL, RT, HT})
-        self.assertEqual(sk.CAMERA_SPOTS[BAL], "on a village house balcony across the street")   # 21 Eki: kısa
+        self.assertEqual(sk.CAMERA_SPOTS[BAL], "on a house balcony across the street")   # 31 Eki: nötr (önceki "village house")
 
 
 class TestVolcEnvSelection(unittest.TestCase):
@@ -199,7 +199,7 @@ class TestVolcEnvPrompt(unittest.TestCase):
                                     self.assertLessEqual(len(prompt.split()), 175)
                                 self.assertEqual(es.final_prompt_issues(spec, cands[0], es.assemble_prompt(
                                     spec, cands[0]), es.assemble_story(spec, cands[0])), [])
-        self.assertEqual(worst, 173)   # 21 Eki (genel kalite): önceki 174
+        self.assertEqual(worst, 172)   # 21 Eki (genel kalite): önceki 174 -> 173. 31 Eki: nötr balkon cümlesi (-1)
 
     def test_word_budget_keeps_gpt_prompt_within_175(self):
         """Bahadır kararı (18 Eki (3)): GPT'ye söylenen toplam = 175 - stil eki - 3 (en fazla kapının 75'i)."""
@@ -221,8 +221,9 @@ class TestVolcEnvPrompt(unittest.TestCase):
                           "slice_3": " ".join(["y"] * (rest - 6 - (rest // 2 - 3)))}
                     self.assertLessEqual(len(es.assemble_prompt(spec, sl).split()), 175)
         # 21 Eki (genel kalite): gerçek zaman + ön plan yüzü eklendi, ortak kısaltmalarla en uzun ek 102 (iki olayda)
-        self.assertIn((PY, 70), seen)   # en uzun kül bulutu eki (102; önceki 113 -> 59)
-        self.assertIn((VB, 70), seen)   # en uzun bombalar eki (102; önceki 103 -> 69)
+        # 31 Eki: nötr balkon cümlesi bir kelime kısa: en uzun ek 101, bütçe 71 (önceki 102 -> 70)
+        self.assertIn((PY, 71), seen)   # en uzun kül bulutu eki (101; önceki 113 -> 59)
+        self.assertIn((VB, 71), seen)   # en uzun bombalar eki (101; önceki 103 -> 69)
         self.assertEqual(es.word_budget_line({"event": ER, "key_visual": "x"}), "")
 
     def test_pools_pairs_unchanged(self):

@@ -30,8 +30,8 @@ FRAMES = {K1: "Handheld footage from the rooftop terrace of a modern hillside vi
               "seafront houses below",
           K2: "Handheld footage from the high terrace of a seafront villa, looking out over the promenade and the open "
               "sea",
-          K3: "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in "
-              "view"}
+          # 31 Eki (kamera-ortam tutarlılığı): önceki "...above a coastal town..." (O3 kıyı banliyösüyle çelişiyordu)
+          K3: "Handheld footage from a hilltop terrace above the coast, the whole bay and the rooftops below in view"}
 TAIL = ("the impact point is visible offshore from the first second; slight hand shake, the camera stays fixed on the "
         "bay, never tilting down or descending; no zoom, no cuts")
 RULE = ("Only one meteor and nothing else falls; the water stays white, foaming and steaming, never a brown tsunami "

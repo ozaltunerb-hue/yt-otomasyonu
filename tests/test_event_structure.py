@@ -1282,7 +1282,7 @@ class TestTornadoStructure(unittest.TestCase):
             "E1": "the tornado tears the roof off a waterfront building and scatters the pieces across the street",
             "E2": "the tornado tears the roof off a waterfront restaurant and flings it across the road",   # 17 Eki: E3, E6
             "E4": "the tornado uproots a large tree and flings it through the air",
-            "E5": "the tornado rips the front off a small shop, sending shutters and signs flying",
+            "E5": "the tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall",   # 31 Eki
             # 18 Eki (2): Parti 2
             "E7": "the tornado shreds the top floor of a building across the street, debris spiraling up",
         }, set(), {}),
@@ -1422,7 +1422,9 @@ class TestTornadoStructure(unittest.TestCase):
                                  "bus.",
               (es.AVENUE, "P4"): "A falling palm tree crashes onto the white van, crushing its roof.",
               (es.LANDFALL, "C4"): "The SUV skids across the road and crashes into a stationary car.",
-              (es.LANDFALL, "E5"): "The tornado shears the front off a small store, launching its shutters.",
+              # 31 Eki: E5 yeni metne göre (önceki "The tornado shears the front off a small store, launching its
+              # shutters.")
+              (es.LANDFALL, "E5"): "The tornado rips a beach kiosk loose and hurls it against the hotel facade.",
               (es.LANDFALL, "C5"): "The wind lifts the white van off the road and hurls it down the street.",
               (es.MARINA_TORNADO, "Y1"): "The tornado pushes the white van broadside across the quay toward the water.",
               (es.AVENUE, "Q6"): "The tornado tears the whole front off a row of stores and flings the debris down "
@@ -1842,7 +1844,8 @@ class TestFireStructure(unittest.TestCase):
         es.WILDFIRE: {
             "Balcony of a hillside house": ("on a balcony of a hillside house overlooking the street and the burning "
                                             "slope", "a hillside village neighborhood"),
-            "Embankment above the village road": ("on a roadside embankment above the village road",
+            # 31 Eki (kamera-ortam tutarlılığı): önceki "on a roadside embankment above the village road"
+            "Embankment above the village road": ("on a roadside embankment above the road",
                                                   "a hillside village neighborhood"),
         },
         es.FACADE_FIRE: {
@@ -2343,7 +2346,7 @@ class TestHelicopter(unittest.TestCase):
     }
     SPOTS = {"Balcony of a hillside house": "on a balcony of a hillside house overlooking the street and the burning "
                                             "slope",
-             "Embankment above the village road": "on a roadside embankment above the village road"}
+             "Embankment above the village road": "on a roadside embankment above the road"}   # 31 Eki
     VEHICLES = ["pickup truck", "delivery truck", "white van", "SUV"]
 
     def setUp(self):
@@ -2614,9 +2617,11 @@ class TestVolcano(unittest.TestCase):
     HT, RT, VB = ("Hillside terrace facing the erupting volcano", "Rooftop terrace facing the erupting volcano",
                   "Balcony of a village house facing the erupting volcano")
     # 13 Eki: "facing the erupting volcano" kamera cümlesine taşındı
-    CAMS = {HT: "on a hillside terrace above the village",
+    # 31 Eki (kamera-ortam tutarlılığı): yer cümlesi ortamdan bağımsız. Önceki HT "on a hillside terrace above the
+    # village", VB "on a village house balcony across the street" (21 Eki: kısa, 175)
+    CAMS = {HT: "on a hillside terrace above the houses",
             RT: "on a rooftop terrace across the street",
-            VB: "on a village house balcony across the street"}   # 21 Eki (genel kalite): kısa (175)
+            VB: "on a house balcony across the street"}
     PERCH = {HT: "terrace", RT: "rooftop", VB: "balcony"}
     POOLS = {
         es.ERUPTION: ({   # 17 Eki: S1 (vitrin camı) ve U1 (tabela/tente) çıktı; S6-S8, U7-U8 yeni (Parti 1)
@@ -2663,7 +2668,7 @@ class TestVolcano(unittest.TestCase):
             # 17 Eki: R6 çıktı (fizik 2); R7-R9 yeni (Parti 1)
             "R7": "a huge glowing rock crashes through the roof of a house across the street",
             "R8": "a glowing rock slams into a house across the street and its wall bursts apart",
-            "R9": "a glowing rock hits the road ahead and sends burning chunks across the street",
+            "R9": "a glowing rock crashes through the front of a corner shop down the street and its wall caves in",   # 31 Eki
         }, {
             "T1": "glowing rocks slam into the roofs, sending tiles flying as flames rise",
             "T2": "a glowing rock bounces along the road and slams into a parked car",
@@ -2875,12 +2880,12 @@ class TestVolcano(unittest.TestCase):
                "A glowing volcanic bomb smashes into a house wall, blasting it apart in sparks.",
                "A burning rock strikes the side wall of a house and the stones burst out.",
                "A glowing chunk of rock crashes into a house and its side wall shatters."],
-        "R9": ["A glowing rock hits the road ahead, splitting the asphalt and sending burning chunks flying across "
-               "the street.",
-               "A red-hot boulder slams into the road, cracking the asphalt open.",
-               "A glowing volcanic bomb smashes onto the street ahead and the tarmac splits apart.",
-               "A burning rock hits the road and blasts a hole in the asphalt, chunks flying everywhere.",
-               "A glowing chunk of rock crashes into the street, breaking the road open."],
+        # 31 Eki: R9 yeni metne göre (köşe dükkânının önü, duvarı çöker)
+        "R9": ["A glowing rock crashes through the front of a corner shop down the street and its wall caves in.",
+               "A red-hot boulder smashes into a corner shop and its front wall collapses onto the sidewalk.",
+               "A glowing volcanic bomb punches through a corner store and the brick wall gives way.",
+               "A burning rock slams into the shopfront down the street and the wall crumbles inward.",
+               "A glowing chunk of rock hits a small bakery on the corner and its wall caves in."],
         "T7": ["A volcanic bomb slams into a parked van and flips it onto its side in a burst of sparks.",
                "A glowing rock crashes into a parked van and tips it over in a shower of sparks.",
                "A red-hot boulder hits a parked minivan and knocks it onto its side.",
@@ -3194,14 +3199,15 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                          "Q5": {"shop"}, "Q6": {"vehicle", "house"}},   # 30 Eki: Q6 park arabaları eve yığılır
         # 17 Eki (Parti 1): R7 çatı, R8 duvar, R9 yol; T7 çatı, T8 ev üst katı, T9 kamyon araç
         es.VOLCANIC_BOMBS: {"R1": {"vehicle"}, "R2": {"vehicle"}, "R3": {"shop"}, "R4": {"sign"}, "R5": {"wall"},
-                            "R7": {"roof"}, "R8": {"wall"}, "R9": {"road"},
+                            "R7": {"roof"}, "R8": {"wall"}, "R9": {"shop"},   # 31 Eki: R9 köşe dükkânı (önceki yol)
                             "T1": {"roof"}, "T2": {"vehicle"}, "T5": {"road"}, "T6": {"house", "wall"},
                             "T7": {"vehicle"}, "T8": {"house", "floor"}, "T9": {"vehicle"}},   # 30 Eki: T7 minibüs
     }
     # 30 Eki (Aşama B): T7 ve Q6 yeni metin; sebebi kalkmış ama duran eski dışlamalar (çatı: R7 + T7, P3/P6 + Q6).
     # 30 Eki (2): araç iki kez (R1/R2 + T7) dışlaması onaylandı, bekleyen kalmadı
     PENDING = {}
-    LEGACY = {es.VOLCANIC_BOMBS: {("R7", "T7")}, es.PYROCLASTIC: {("P3", "Q6"), ("P6", "Q6")}}
+    # 31 Eki: R9 yeni metin (köşe dükkânı); (R9, T5) yol iki kez gerekçesi kalktı, dışlama duruyor
+    LEGACY = {es.VOLCANIC_BOMBS: {("R7", "T7"), ("R9", "T5")}, es.PYROCLASTIC: {("P3", "Q6"), ("P6", "Q6")}}
     NEW = {es.ERUPTION: ("S4", "S5", "U4", "U5", "U6"), es.PYROCLASTIC: ("P4", "P5", "P6", "Q4", "Q5", "Q6"),
            es.VOLCANIC_BOMBS: ("R5", "T5", "T6")}   # 17 Eki: R6 çıktı (Parti 1 yenileri TestPoolCleanup17Oct)
 
@@ -3338,7 +3344,9 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         # 18 Eki: patlama ve bombalarda en uzun stil eki 96 kelime; 75 kelimelik hikâye + 3 etiket ile en fazla 174
         for e in (es.ERUPTION, es.VOLCANIC_BOMBS):
             longest = max(len(sk.style_suffix(e, None, s).split()) for s in sk.view_spots(e, None))
-            self.assertEqual(longest, 95)   # 21 Eki (genel kalite): gerçek zaman + ön plan yüzü, ortak kısaltmalar (önceki 96)
+            # 21 Eki (genel kalite): gerçek zaman + ön plan yüzü, ortak kısaltmalar (önceki 96). 31 Eki: nötr balkon
+            # cümlesi bir kelime kısa (önceki 95)
+            self.assertEqual(longest, 94)
             self.assertLessEqual(longest + 75 + 3, 175)
         # kapı yine durur: kül bulutu balkonda bütçeyi aşan hikâye -> 175 üstü -> kısaltma geri bildirimi. 21 Eki (genel
         # kalite): kül bulutu eki kısaldı (106 -> 95), aşım için hikâye 75 yerine 80 kelime
