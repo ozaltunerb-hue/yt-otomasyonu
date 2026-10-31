@@ -170,8 +170,8 @@ class TestLockedData(unittest.TestCase):
             # 10 Eki, Bahadır: volkan (TestVolcano ayrıca kilitler)
             es.ERUPTION: "The volcano erupts above a village, a shockwave blowing out windows along the street as an ash "
                          "column towers into the sky.",
-            es.PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
-            es.VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village "
+            es.PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into the street.",   # 31 Eki (2)
+            es.VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into the "
                                "street, punching through roofs and igniting cars.",
             # 13 Eki, Bahadır: çığ (tests/test_avalanche.py ayrıca kilitler)
             es.AVALANCHE_VILLAGE: es.EVENT_KEY_VISUAL[es.AVALANCHE_VILLAGE],
@@ -1282,7 +1282,7 @@ class TestTornadoStructure(unittest.TestCase):
             "E1": "the tornado tears the roof off a waterfront building and scatters the pieces across the street",
             "E2": "the tornado tears the roof off a waterfront restaurant and flings it across the road",   # 17 Eki: E3, E6
             "E4": "the tornado uproots a large tree and flings it through the air",
-            "E5": "the tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall",   # 31 Eki
+            "E5": "the tornado lifts a wooden kiosk off the waterfront and smashes it into the building across the street",   # 31 Eki (2)
             # 18 Eki (2): Parti 2
             "E7": "the tornado shreds the top floor of a building across the street, debris spiraling up",
         }, set(), {}),
@@ -1310,14 +1310,14 @@ class TestTornadoStructure(unittest.TestCase):
             "P1": "the tornado shoves the {vehicle} sideways across the avenue into the opposite curb",
             "P2": "the tornado tips the {vehicle} over onto its side in the middle of the avenue",   # 17 Eki: P3 çıktı
             "P4": "a falling palm tree crashes onto the {vehicle}, crushing its roof",
-            "P5": "the {vehicle} is lifted off the avenue and flung into the side of a parked city bus",
+            "P5": "the {vehicle} is lifted off the avenue and flung into the side of a parked bus",
             "P6": "the {vehicle} is swept up into the air, spins, and crashes down across the avenue",
             # 18 Eki (2): Parti 2
             "P7": "the tornado flings a large truck across the avenue into the front of a building",
         }, {
             "Q1": "the tornado rips a row of palm trees out of the ground and flings them across the avenue",
             "Q2": "the tornado rips the top floor off an office building and hurls it across the avenue",   # 30 Eki (3)
-            "Q3": "the tornado slams a parked city bus onto its side across the avenue",
+            "Q3": "the tornado slams a parked bus onto its side across the avenue",
             "Q4": "the tornado tears the front wall off a corner café and hurls its tables across the avenue",
             "Q6": "the tornado rips the whole front off a row of shops and hurls the debris across the avenue",   # 17 Eki: Q5 çıktı
         }, {("P5", "Q4"), ("P4", "Q1"), ("P5", "Q3")},   # 30 Eki (2): (P5, Q3) şehir otobüsü iki kez
@@ -2610,8 +2610,8 @@ class TestVolcano(unittest.TestCase):
     KEY = {
         es.ERUPTION: "The volcano erupts above a village, a shockwave blowing out windows along the street as an ash "
                      "column towers into the sky.",
-        es.PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
-        es.VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, "
+        es.PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into the street.",   # 31 Eki (2)
+        es.VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into the street, "
                            "punching through roofs and igniting cars.",
     }
     HT, RT, VB = ("Hillside terrace facing the erupting volcano", "Rooftop terrace facing the erupting volcano",
@@ -2679,7 +2679,7 @@ class TestVolcano(unittest.TestCase):
             "T7": "a volcanic bomb slams into a parked van and flips it onto its side in a burst of sparks",   # 30 Eki
             "T8": "a huge glowing rock hits a house and its upper floor erupts in flames",
             "T9": "a glowing rock smashes into a large parked truck and flames wrap the cab",
-        }, {("R2", "T2"), ("R1", "T2"), ("R5", "T6"), ("R7", "T1"), ("R7", "T7"), ("R8", "T6"), ("R9", "T5"),
+        }, {("R2", "T2"), ("R1", "T2"), ("R5", "T6"), ("R7", "T1"), ("R7", "T7"), ("R8", "T6"),
             ("R1", "T9"), ("R2", "T9"), ("R1", "T7"), ("R2", "T7")},   # 18 Eki: yedeği sığmayan çift kalmadı
            {"T1": {RT, VB}, "T7": {RT, VB}}),
     }
@@ -3113,7 +3113,7 @@ class TestVolcano(unittest.TestCase):
                             break   # 13 Eki: kül bulutu araçsız (tek tur)
         # 18 Eki: patlama 43 + 31 + 31 ve bombalar 47 + 33 + 33 (× 4 araç; yedeği sığmayan çift kalmadı); kül bulutu
         # 28 + 13 + 13 (değişmedi)
-        self.assertEqual(n, (105 + 111) * 4 + 54)   # 30 Eki (2): bombalar (R1, T7), (R2, T7)
+        self.assertEqual(n, (105 + 111) * 4 + 54 + 12)   # 30 Eki (2): bombalar (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) +12
 
     def test_block_depth_and_never_runs_out(self):
         from itertools import combinations
@@ -3206,8 +3206,8 @@ class TestVolcanoClose13Oct(unittest.TestCase):
     # 30 Eki (Aşama B): T7 ve Q6 yeni metin; sebebi kalkmış ama duran eski dışlamalar (çatı: R7 + T7, P3/P6 + Q6).
     # 30 Eki (2): araç iki kez (R1/R2 + T7) dışlaması onaylandı, bekleyen kalmadı
     PENDING = {}
-    # 31 Eki: R9 yeni metin (köşe dükkânı); (R9, T5) yol iki kez gerekçesi kalktı, dışlama duruyor
-    LEGACY = {es.VOLCANIC_BOMBS: {("R7", "T7"), ("R9", "T5")}, es.PYROCLASTIC: {("P3", "Q6"), ("P6", "Q6")}}
+    # 31 Eki (2), Bahadır: (R9, T5) kaldırıldı (gerekçesi yol idi)
+    LEGACY = {es.VOLCANIC_BOMBS: {("R7", "T7")}, es.PYROCLASTIC: {("P3", "Q6"), ("P6", "Q6")}}
     NEW = {es.ERUPTION: ("S4", "S5", "U4", "U5", "U6"), es.PYROCLASTIC: ("P4", "P5", "P6", "Q4", "Q5", "Q6"),
            es.VOLCANIC_BOMBS: ("R5", "T5", "T6")}   # 17 Eki: R6 çıktı (Parti 1 yenileri TestPoolCleanup17Oct)
 
@@ -3292,7 +3292,7 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         self.assertEqual(sizes, {es.ERUPTION: (7, 7), es.PYROCLASTIC: (6, 6), es.VOLCANIC_BOMBS: (8, 7)})
         pairs = {e: [len(es.allowed_pairs(e, None, s)) for s in (self.HT, self.RT, self.VB)] for e in VOLC}
         self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [28, 13, 13],
-                                 es.VOLCANIC_BOMBS: [45, 33, 33]})   # 18 Eki: sığmayan yok; 30 Eki (2): (R1, T7), (R2, T7)
+                                 es.VOLCANIC_BOMBS: [46, 34, 34]})   # 18 Eki: sığmayan yok; 30 Eki (2): (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) açıldı
         for e in VOLC:   # araçsız kül bulutu; patlama ve bombalarda araç sadece eski maddelerde
             for slot in ("slice_2", "slice_3"):
                 for bid in self.NEW[e]:

@@ -5323,7 +5323,7 @@
     "weather": "warm orange dusk sky glowing from the eruption"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|balcony of a village house facing the erupting volcano##P4+Q1|bystander_handheld",
-   "prompt": "0-4s: The ash cloud spreads across the valley and engulfs the houses on both sides of the street at once. Six villagers scramble away from the cloud. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: A house wall across the street collapses as the cloud engulfs it. Handheld footage filmed on a house balcony across the street, high vantage over a village street of wooden and stone houses among trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: The ash cloud spreads across the valley and engulfs the houses on both sides of the street at once. Six residents scramble away from the cloud. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: A house wall across the street collapses as the cloud engulfs it. Handheld footage filmed on a house balcony across the street, high vantage over a village street of wooden and stone houses among trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a house balcony across the street, high vantage over a village street of wooden and stone houses among trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "10": {
@@ -5335,7 +5335,7 @@
     "kadraj": "tepe",
     "kamera_modu": null,
     "kamera_noktasi": "Hillside terrace facing the erupting volcano",
-    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
+    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into the street.",
     "on_plan": "korkuluk",
     "people": 5,
     "spot": "Balcony of a village house facing the erupting volcano",
@@ -5345,7 +5345,7 @@
     "weather": "warm orange dusk sky glowing from the eruption"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|balcony of a village house facing the erupting volcano##P4+Q1|bystander_handheld",
-   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into a village street. Five residents dash down the street away from it. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: A house wall across the street collapses as the cloud engulfs it. Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the street. Five residents dash down the street away from it. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: A house wall across the street collapses as the cloud engulfs it. Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "11": {
@@ -5357,7 +5357,7 @@
     "kadraj": "tepe",
     "kamera_modu": null,
     "kamera_noktasi": "Hillside terrace facing the erupting volcano",
-    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second.",
+    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second.",
     "on_plan": "korkuluk",
     "people": 4,
     "spot": "Balcony of a village house facing the erupting volcano",
@@ -5367,7 +5367,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|balcony of a village house facing the erupting volcano##P4+Q4|bystander_handheld",
-   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second. Four residents flee from the cloud between the houses. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: The cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street. Handheld footage filmed on a hillside terrace above the houses, high vantage over a village street of wooden and stone houses among trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second. Four residents flee from the cloud between the houses. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: The cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street. Handheld footage filmed on a hillside terrace above the houses, high vantage over a village street of wooden and stone houses among trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a hillside terrace above the houses, high vantage over a village street of wooden and stone houses among trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "12": {
@@ -5389,7 +5389,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|balcony of a village house facing the erupting volcano##P1+Q2|bystander_handheld",
-   "prompt": "0-4s: A blast of hot air ahead of the cloud bends the trees, and the grey wall of ash surges into the street right behind it. Five villagers scramble away from the cloud. 4-9s: The cloud front slams into the houses across the street and tears the balconies off their facades. 9-15s: The cloud engulfs a whole block and the upper-floor windows burst outward in a shower of glass. Handheld footage filmed through an open upper-floor window, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the edge of the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: A blast of hot air ahead of the cloud bends the trees, and the grey wall of ash surges into the street right behind it. Five residents scramble away from the cloud. 4-9s: The cloud front slams into the houses across the street and tears the balconies off their facades. 9-15s: The cloud engulfs a whole block and the upper-floor windows burst outward in a shower of glass. Handheld footage filmed through an open upper-floor window, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the edge of the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the edge of the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "13": {
@@ -5423,7 +5423,7 @@
     "kadraj": "balkon",
     "kamera_modu": null,
     "kamera_noktasi": "Balcony of a village house facing the erupting volcano",
-    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
+    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into the street.",
     "on_plan": "boş",
     "people": 5,
     "spot": "Balcony of a village house facing the erupting volcano",
@@ -5433,7 +5433,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|balcony of a village house facing the erupting volcano##P2+Q2|bystander_handheld",
-   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into a village street. Five people sprint away from the cloud. 4-9s: The cloud snaps a row of street trees and power poles and they crash across the street. 9-15s: The cloud engulfs a whole block and the upper-floor windows burst outward in a shower of glass. Handheld footage filmed on a house balcony across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the street. Five people sprint away from the cloud. 4-9s: The cloud snaps a row of street trees and power poles and they crash across the street. 9-15s: The cloud engulfs a whole block and the upper-floor windows burst outward in a shower of glass. Handheld footage filmed on a house balcony across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a house balcony across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "15": {
@@ -5445,7 +5445,7 @@
     "kadraj": "balkon",
     "kamera_modu": null,
     "kamera_noktasi": "Balcony of a village house facing the erupting volcano",
-    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second.",
+    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second.",
     "on_plan": "korkuluk",
     "people": 3,
     "spot": "Hillside terrace facing the erupting volcano",
@@ -5455,7 +5455,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace facing the erupting volcano##P2+Q4|bystander_handheld",
-   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second. Three villagers run from the cloud down the street. 4-9s: The cloud snaps a row of street trees and power poles and they crash across the street. 9-15s: The cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street. Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second. Three residents run from the cloud down the street. 4-9s: The cloud snaps a row of street trees and power poles and they crash across the street. 9-15s: The cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street. Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "16": {
@@ -5467,7 +5467,7 @@
     "kadraj": "balkon",
     "kamera_modu": null,
     "kamera_noktasi": "Balcony of a village house facing the erupting volcano",
-    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second.",
+    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second.",
     "on_plan": "boş",
     "people": 5,
     "spot": "Rooftop terrace facing the erupting volcano",
@@ -5477,7 +5477,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|rooftop terrace facing the erupting volcano##P2+Q5|bystander_handheld",
-   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second. Five residents flee from the cloud between the houses. 4-9s: The cloud snaps a row of street trees and power poles and they crash across the street. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second. Five residents flee from the cloud between the houses. 4-9s: The cloud snaps a row of street trees and power poles and they crash across the street. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "17": {
@@ -5489,7 +5489,7 @@
     "kadraj": "pencere",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second.",
+    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second.",
     "on_plan": "pencere",
     "people": 5,
     "spot": "Balcony of a village house facing the erupting volcano",
@@ -5499,7 +5499,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|balcony of a village house facing the erupting volcano##P5+Q5|bystander_handheld",
-   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second. Five villagers run from the cloud down the street. 4-9s: The cloud front shoves a stone garden wall over and rolls on across the street. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed through an open upper-floor window, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the edge of the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second. Five residents run from the cloud down the street. 4-9s: The cloud front shoves a stone garden wall over and rolls on across the street. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed through an open upper-floor window, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the edge of the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the edge of the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "18": {
@@ -5533,7 +5533,7 @@
     "kadraj": "balkon",
     "kamera_modu": null,
     "kamera_noktasi": "Balcony of a village house facing the erupting volcano",
-    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
+    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into the street.",
     "on_plan": "boş",
     "people": 5,
     "spot": "Balcony of a village house facing the erupting volcano",
@@ -5543,7 +5543,7 @@
     "weather": "bright hazy daylight under a dark ash sky"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|balcony of a village house facing the erupting volcano##P2+Q5|bystander_handheld",
-   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into a village street. Five people run from the cloud. 4-9s: The cloud snaps a row of street trees and power poles and they crash across the street. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a house balcony across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the street. Five people run from the cloud. 4-9s: The cloud snaps a row of street trees and power poles and they crash across the street. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a house balcony across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a house balcony across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "2": {
@@ -5555,7 +5555,7 @@
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": "Rooftop terrace facing the erupting volcano",
-    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
+    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into the street.",
     "on_plan": "korkuluk",
     "people": 5,
     "spot": "Balcony of a village house facing the erupting volcano",
@@ -5565,7 +5565,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|balcony of a village house facing the erupting volcano##P4+Q5|bystander_handheld",
-   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into a village street. Five people sprint away from the cloud. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a rooftop terrace across the street, high vantage over a street of colorful concrete houses with parked trucks toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the street. Five people sprint away from the cloud. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a rooftop terrace across the street, high vantage over a street of colorful concrete houses with parked trucks toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a rooftop terrace across the street, high vantage over a street of colorful concrete houses with parked trucks toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "20": {
@@ -5599,7 +5599,7 @@
     "kadraj": "tepe",
     "kamera_modu": null,
     "kamera_noktasi": "Hillside terrace facing the erupting volcano",
-    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second.",
+    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second.",
     "on_plan": "boş",
     "people": 3,
     "spot": "Rooftop terrace facing the erupting volcano",
@@ -5609,7 +5609,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|rooftop terrace facing the erupting volcano##P4+Q5|bystander_handheld",
-   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second. Three people run from the cloud. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second. Three people run from the cloud. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "4": {
@@ -5621,7 +5621,7 @@
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": "Rooftop terrace facing the erupting volcano",
-    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
+    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into the street.",
     "on_plan": "boş",
     "people": 3,
     "spot": "Rooftop terrace facing the erupting volcano",
@@ -5631,7 +5631,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|rooftop terrace facing the erupting volcano##P1+Q4|bystander_handheld",
-   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into a village street. Three villagers scramble away from the cloud. 4-9s: The cloud front slams into the houses across the street and tears the balconies off their facades. 9-15s: The cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street. Handheld footage filmed on a rooftop terrace across the street, high vantage over a street of colorful concrete houses with parked trucks toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the street. Three residents scramble away from the cloud. 4-9s: The cloud front slams into the houses across the street and tears the balconies off their facades. 9-15s: The cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street. Handheld footage filmed on a rooftop terrace across the street, high vantage over a street of colorful concrete houses with parked trucks toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a rooftop terrace across the street, high vantage over a street of colorful concrete houses with parked trucks toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "5": {
@@ -5643,7 +5643,7 @@
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": "Rooftop terrace facing the erupting volcano",
-    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second.",
+    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second.",
     "on_plan": "boş",
     "people": 3,
     "spot": "Balcony of a village house facing the erupting volcano",
@@ -5653,7 +5653,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|balcony of a village house facing the erupting volcano##P5+Q2|bystander_handheld",
-   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second. Three villagers scramble away from the cloud. 4-9s: The cloud front shoves a stone garden wall over and rolls on across the street. 9-15s: The cloud engulfs a whole block and the upper-floor windows burst outward in a shower of glass. Handheld footage filmed on a rooftop terrace across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second. Three residents scramble away from the cloud. 4-9s: The cloud front shoves a stone garden wall over and rolls on across the street. 9-15s: The cloud engulfs a whole block and the upper-floor windows burst outward in a shower of glass. Handheld footage filmed on a rooftop terrace across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a rooftop terrace across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "6": {
@@ -5665,7 +5665,7 @@
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": "Rooftop terrace facing the erupting volcano",
-    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
+    "key_visual": "A pyroclastic cloud races down the volcano’s flank and slams into the street.",
     "on_plan": "boş",
     "people": 6,
     "spot": "Rooftop terrace facing the erupting volcano",
@@ -5675,7 +5675,7 @@
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|rooftop terrace facing the erupting volcano##P4+Q5|bystander_handheld",
-   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into a village street. Six residents dash down the street away from it. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a rooftop terrace across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the street. Six residents dash down the street away from it. 4-9s: The cloud front flattens a row of palm trees and hurls their fronds ahead of it. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a rooftop terrace across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a rooftop terrace across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "7": {
@@ -5687,7 +5687,7 @@
     "kadraj": "tepe",
     "kamera_modu": null,
     "kamera_noktasi": "Hillside terrace facing the erupting volcano",
-    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second.",
+    "key_visual": "The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second.",
     "on_plan": "boş",
     "people": 5,
     "spot": "Hillside terrace facing the erupting volcano",
@@ -5697,7 +5697,7 @@
     "weather": "bright hazy daylight under a dark ash sky"
    },
    "combo_key": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace facing the erupting volcano##P1+Q5|bystander_handheld",
-   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses of the village in the first second. Five people run from the cloud. 4-9s: The cloud front slams into the houses across the street and tears the balconies off their facades. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the first second. Five people run from the cloud. 4-9s: The cloud front slams into the houses across the street and tears the balconies off their facades. 9-15s: The cloud blasts the front off a shop building and the brickwork falls into the street. Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "8": {
@@ -7091,7 +7091,7 @@
     "weather": "stormy late-afternoon light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C2+E5|bystander_handheld",
-   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Six pedestrians scramble for cover as the tornado hits. 4-9s: The tornado tips the pickup truck over onto its side in the middle of the street. 9-15s: The tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Six pedestrians scramble for cover as the tornado hits. 4-9s: The tornado tips the pickup truck over onto its side in the middle of the street. 9-15s: The tornado lifts a wooden kiosk off the waterfront and smashes it into the building across the street. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "10": {
@@ -7113,7 +7113,7 @@
     "weather": "stormy late-afternoon light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C4+E5|bystander_handheld",
-   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Three onlookers run inland away from the tornado. 4-9s: The SUV slides along the street and slams into a parked car. 9-15s: The tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Three onlookers run inland away from the tornado. 4-9s: The SUV slides along the street and slams into a parked car. 9-15s: The tornado lifts a wooden kiosk off the waterfront and smashes it into the building across the street. Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony of a seafront hotel above the promenade, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "11": {
@@ -7201,7 +7201,7 @@
     "weather": "heavy rain under black clouds"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C2+E5|bystander_handheld",
-   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Five onlookers dash away from the swirling debris. 4-9s: The tornado tips the white van over onto its side in the middle of the street. 9-15s: The tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Five onlookers dash away from the swirling debris. 4-9s: The tornado tips the white van over onto its side in the middle of the street. 9-15s: The tornado lifts a wooden kiosk off the waterfront and smashes it into the building across the street. Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from a residential coastal street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "15": {
@@ -7355,7 +7355,7 @@
     "weather": "heavy rain under black clouds"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado making landfall|downtown city center##C2+E5|bystander_handheld",
-   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Five people run from the tornado. 4-9s: The tornado tips the pickup truck over onto its side in the middle of the street. 9-15s: The tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall. Handheld footage filmed on a flat rooftop above the waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air. Five people run from the tornado. 4-9s: The tornado tips the pickup truck over onto its side in the middle of the street. 9-15s: The tornado lifts a wooden kiosk off the waterfront and smashes it into the building across the street. Handheld footage filmed on a flat rooftop above the waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a flat rooftop above the waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a palm-lined seafront boulevard of pastel hotels and beach bars. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "3": {
@@ -7399,7 +7399,7 @@
     "weather": "harsh bright midday sun under a towering storm cloud"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado making landfall|beachfront promenade##C1+E5|bystander_handheld",
-   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Six onlookers run inland away from the tornado. 4-9s: The tornado shoves the SUV sideways across the street and slams it into the far curb. 9-15s: The tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall. Handheld footage filmed on a flat rooftop above the waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Six onlookers run inland away from the tornado. 4-9s: The tornado shoves the SUV sideways across the street and slams it into the far curb. 9-15s: The tornado lifts a wooden kiosk off the waterfront and smashes it into the building across the street. Handheld footage filmed on a flat rooftop above the waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a flat rooftop above the waterfront, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a modern waterfront district of glass apartment towers and a wide promenade. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "5": {
@@ -7509,7 +7509,7 @@
     "weather": "harsh bright midday sun under a towering storm cloud"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado making landfall|residential coastal district##C2+E5|bystander_handheld",
-   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Four onlookers dash away from the swirling debris. 4-9s: The tornado tips the delivery truck over onto its side in the middle of the street. 9-15s: The tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado roars ashore and hurls chairs, umbrellas and debris from the waterfront into the air. Four onlookers dash away from the swirling debris. 4-9s: The tornado tips the delivery truck over onto its side in the middle of the street. 9-15s: The tornado lifts a wooden kiosk off the waterfront and smashes it into the building across the street. Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the waterfront, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   }
  },
@@ -7577,7 +7577,7 @@
     "weather": "stormy late-afternoon light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado sweeps down a coastal avenue|upper-floor balcony over a residential avenue##P5+Q1|bystander_handheld",
-   "prompt": "0-4s: The tornado tears the metal canopy off a row of shops and hurls it across the avenue. Four people run from the tornado. 4-9s: The delivery truck is lifted off the avenue and flung into the side of a parked city bus. 9-15s: The tornado rips a row of palm trees out of the ground and flings them across the avenue. Handheld footage filmed on an upper-floor balcony across the street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a wide suburban avenue of low strip malls and a petrol station. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado tears the metal canopy off a row of shops and hurls it across the avenue. Four people run from the tornado. 4-9s: The delivery truck is lifted off the avenue and flung into the side of a parked bus. 9-15s: The tornado rips a row of palm trees out of the ground and flings them across the avenue. Handheld footage filmed on an upper-floor balcony across the street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a wide suburban avenue of low strip malls and a petrol station. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on an upper-floor balcony across the street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a wide suburban avenue of low strip malls and a petrol station. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "12": {
@@ -7665,7 +7665,7 @@
     "weather": "howling wind and rain"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado sweeps down a coastal avenue|high balcony over a downtown avenue##P5+Q6|bystander_handheld",
-   "prompt": "0-4s: The tornado sweeps down to the intersection and flings the cars there into one another. Four onlookers run inland away from the tornado. 4-9s: The pickup truck is lifted off the avenue and flung into the side of a parked city bus. 9-15s: The tornado rips the whole front off a row of shops and hurls the debris across the avenue. Handheld footage filmed on a high balcony across the street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado sweeps down to the intersection and flings the cars there into one another. Four onlookers run inland away from the tornado. 4-9s: The pickup truck is lifted off the avenue and flung into the side of a parked bus. 9-15s: The tornado rips the whole front off a row of shops and hurls the debris across the avenue. Handheld footage filmed on a high balcony across the street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a high balcony across the street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "16": {
@@ -7687,7 +7687,7 @@
     "weather": "howling wind and rain"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado sweeps down a coastal avenue|upper-floor balcony over a residential avenue##P5+Q2|bystander_handheld",
-   "prompt": "0-4s: The tornado tears the metal canopy off a row of shops and hurls it across the avenue. Six onlookers run inland away from the tornado. 4-9s: The white van is lifted off the avenue and flung into the side of a parked city bus. 9-15s: The tornado rips the top floor off an office building and hurls it across the avenue. Footage from a fixed high security camera on a tall pole above the avenue, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado tears the metal canopy off a row of shops and hurls it across the avenue. Six onlookers run inland away from the tornado. 4-9s: The white van is lifted off the avenue and flung into the side of a parked bus. 9-15s: The tornado rips the top floor off an office building and hurls it across the avenue. Footage from a fixed high security camera on a tall pole above the avenue, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the avenue, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "17": {
@@ -7775,7 +7775,7 @@
     "weather": "a dark green storm light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado sweeps down a coastal avenue|high balcony over a downtown avenue##P1+Q3|bystander_handheld",
-   "prompt": "0-4s: The tornado sweeps down to the intersection and flings the cars there into one another. Four onlookers dash away from the swirling debris. 4-9s: The tornado shoves the white van sideways across the avenue into the opposite curb. 9-15s: The tornado slams a parked city bus onto its side across the avenue. Handheld footage filmed through an open upper-floor window across from the avenue, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado sweeps down to the intersection and flings the cars there into one another. Four onlookers dash away from the swirling debris. 4-9s: The tornado shoves the white van sideways across the avenue into the opposite curb. 9-15s: The tornado slams a parked bus onto its side across the avenue. Handheld footage filmed through an open upper-floor window across from the avenue, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window across from the avenue, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "20": {
@@ -7819,7 +7819,7 @@
     "weather": "eerie yellow early-morning storm light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado sweeps down a coastal avenue|high balcony over a downtown avenue##P4+Q3|bystander_handheld",
-   "prompt": "0-4s: The tornado enters the far end of the avenue and lifts a parked minibus into the air. Three people run from the tornado. 4-9s: A falling palm tree crashes onto the SUV, crushing its roof. 9-15s: The tornado slams a parked city bus onto its side across the avenue. Handheld footage filmed on a flat rooftop above the avenue, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: The tornado enters the far end of the avenue and lifts a parked minibus into the air. Three people run from the tornado. 4-9s: A falling palm tree crashes onto the SUV, crushing its roof. 9-15s: The tornado slams a parked bus onto its side across the avenue. Handheld footage filmed on a flat rooftop above the avenue, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Handheld footage filmed on a flat rooftop above the avenue, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Setting: a Mediterranean town avenue of cream apartment blocks with balconies and plane trees. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "4": {
@@ -7885,7 +7885,7 @@
     "weather": "stormy late-afternoon light"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado sweeps down a coastal avenue|high balcony over a high-rise avenue##P5+Q2|bystander_handheld",
-   "prompt": "0-4s: A violent tornado sweeps down a palm-lined coastal avenue, hurling signs, branches and debris along the road. Three people sprint for cover from the tornado. 4-9s: The white van is lifted off the avenue and flung into the side of a parked city bus. 9-15s: The tornado rips the top floor off an office building and hurls it across the avenue. Footage from a fixed high security camera on a tall pole above the coastal avenue, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
+   "prompt": "0-4s: A violent tornado sweeps down a palm-lined coastal avenue, hurling signs, branches and debris along the road. Three people sprint for cover from the tornado. 4-9s: The white van is lifted off the avenue and flung into the side of a parked bus. 9-15s: The tornado rips the top floor off an office building and hurls it across the avenue. Footage from a fixed high security camera on a tall pole above the coastal avenue, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed.",
    "style_suffix": "Footage from a fixed high security camera on a tall pole above the coastal avenue, slightly wide lens, no hand shake, no on-screen text or timestamp, high vantage; the camera stays fixed, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed."
   },
   "7": {
@@ -7975,19 +7975,19 @@
     "weather": "warm orange dusk sky glowing from the eruption"
    },
    "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|rooftop terrace facing the erupting volcano##R7+T9|bystander_handheld",
-   "prompt": "0-4s: Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt. Three villagers scramble for cover from the rocks. 4-9s: A huge glowing rock crashes through the roof of a house across the street. 9-15s: A glowing rock smashes into a large parked truck and flames wrap the cab. Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt. Three residents scramble for cover from the rocks. 4-9s: A huge glowing rock crashes through the roof of a house across the street. 9-15s: A glowing rock smashes into a large parked truck and flames wrap the cab. Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "10": {
    "axes": {
-    "acilis": "D",
-    "beats": "R9+T8",
+    "acilis": "C",
+    "beats": "R9+T6",
     "environment": "hillside_town",
     "fit_guard": false,
     "kadraj": "pencere",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "A volcanic bomb smashes into a large parked truck and the truck bursts into flames.",
+    "key_visual": "Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt.",
     "on_plan": "pencere",
     "people": 4,
     "spot": "Balcony of a village house facing the erupting volcano",
@@ -7996,20 +7996,20 @@
     "view": null,
     "weather": "warm orange dusk sky glowing from the eruption"
    },
-   "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|balcony of a village house facing the erupting volcano##R9+T8|bystander_handheld",
-   "prompt": "0-4s: A volcanic bomb smashes into a large parked truck and the truck bursts into flames. Four villagers run from the falling rocks. 4-9s: A glowing rock crashes through the front of a corner shop down the street and its wall caves in. 9-15s: A huge glowing rock hits a house and its upper floor erupts in flames. Handheld footage filmed through an open upper-floor window, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the open window frame edge at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|balcony of a village house facing the erupting volcano##R9+T6|bystander_handheld",
+   "prompt": "0-4s: Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt. Four residents run from the falling rocks. 4-9s: A glowing rock crashes through the front of a corner shop down the street and its wall caves in. 9-15s: A volcanic bomb hits a house's upper floor and a section of the wall bursts outward in flames. Handheld footage filmed through an open upper-floor window, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the open window frame edge at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the open window frame edge at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "11": {
    "axes": {
-    "acilis": "B",
-    "beats": "R9+T9",
+    "acilis": "C",
+    "beats": "R9+T8",
     "environment": "hillside_town",
     "fit_guard": false,
     "kadraj": "çatı",
     "kamera_modu": null,
     "kamera_noktasi": "Rooftop terrace facing the erupting volcano",
-    "key_visual": "A single huge glowing rock from the volcano punches straight through the roof of the house across the street.",
+    "key_visual": "Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt.",
     "on_plan": "boş",
     "people": 4,
     "spot": "Balcony of a village house facing the erupting volcano",
@@ -8018,8 +8018,8 @@
     "view": null,
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
-   "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|balcony of a village house facing the erupting volcano##R9+T9|bystander_handheld",
-   "prompt": "0-4s: A single huge glowing rock from the volcano punches straight through the roof of the house across the street. Four villagers run from the falling rocks. 4-9s: A glowing rock crashes through the front of a corner shop down the street and its wall caves in. 9-15s: A glowing rock smashes into a large parked truck and flames wrap the cab. Handheld footage filmed on a rooftop terrace across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|balcony of a village house facing the erupting volcano##R9+T8|bystander_handheld",
+   "prompt": "0-4s: Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt. Four residents run from the falling rocks. 4-9s: A glowing rock crashes through the front of a corner shop down the street and its wall caves in. 9-15s: A huge glowing rock hits a house and its upper floor erupts in flames. Handheld footage filmed on a rooftop terrace across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a rooftop terrace across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "12": {
@@ -8156,14 +8156,14 @@
   },
   "18": {
    "axes": {
-    "acilis": "B",
-    "beats": "R9+T8",
+    "acilis": "C",
+    "beats": "R9+T6",
     "environment": "suburb",
     "fit_guard": false,
     "kadraj": "pencere",
     "kamera_modu": null,
     "kamera_noktasi": null,
-    "key_visual": "A single huge glowing rock from the volcano punches straight through the roof of the house across the street.",
+    "key_visual": "Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt.",
     "on_plan": "pencere",
     "people": 4,
     "spot": "Rooftop terrace facing the erupting volcano",
@@ -8172,8 +8172,8 @@
     "view": null,
     "weather": "ash-grey sky lit orange by a distant eruption plume"
    },
-   "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|rooftop terrace facing the erupting volcano##R9+T8|bystander_handheld",
-   "prompt": "0-4s: A single huge glowing rock from the volcano punches straight through the roof of the house across the street. Four villagers scramble for cover from the rocks. 4-9s: A glowing rock crashes through the front of a corner shop down the street and its wall caves in. 9-15s: A huge glowing rock hits a house and its upper floor erupts in flames. Handheld footage filmed through an open upper-floor window, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the open window frame edge at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|rooftop terrace facing the erupting volcano##R9+T6|bystander_handheld",
+   "prompt": "0-4s: Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt. Four residents scramble for cover from the rocks. 4-9s: A glowing rock crashes through the front of a corner shop down the street and its wall caves in. 9-15s: A volcanic bomb hits a house's upper floor and a section of the wall bursts outward in flames. Handheld footage filmed through an open upper-floor window, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the open window frame edge at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed through an open upper-floor window, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the open window frame edge at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "19": {
@@ -8185,7 +8185,7 @@
     "kadraj": "tepe",
     "kamera_modu": null,
     "kamera_noktasi": "Hillside terrace facing the erupting volcano",
-    "key_visual": "Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, punching through roofs and igniting cars.",
+    "key_visual": "Glowing volcanic bombs streak down from the erupting volcano and slam into the street, punching through roofs and igniting cars.",
     "on_plan": "korkuluk",
     "people": 5,
     "spot": "Balcony of a village house facing the erupting volcano",
@@ -8195,7 +8195,7 @@
     "weather": "dark night sky lit by glowing lava and fires"
    },
    "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|balcony of a village house facing the erupting volcano##R8+T2|bystander_handheld",
-   "prompt": "0-4s: Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, punching through roofs and igniting cars. Five people run for cover from it. 4-9s: A glowing rock slams into a house across the street and its wall bursts apart. 9-15s: A glowing rock bounces along the road and slams into a parked car. Handheld footage filmed on a hillside terrace above the houses, high vantage over a village street of wooden and stone houses among trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: Glowing volcanic bombs streak down from the erupting volcano and slam into the street, punching through roofs and igniting cars. Five people run for cover from it. 4-9s: A glowing rock slams into a house across the street and its wall bursts apart. 9-15s: A glowing rock bounces along the road and slams into a parked car. Handheld footage filmed on a hillside terrace above the houses, high vantage over a village street of wooden and stone houses among trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a hillside terrace above the houses, high vantage over a village street of wooden and stone houses among trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "2": {
@@ -8239,7 +8239,7 @@
     "weather": "pink-orange dawn light under a dark ash sky"
    },
    "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|balcony of a village house facing the erupting volcano##R7+T2|bystander_handheld",
-   "prompt": "0-4s: Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt. Three villagers scramble for cover from the rocks. 4-9s: A huge glowing rock crashes through the roof of a house across the street. 9-15s: A glowing rock bounces along the road and slams into a parked car. Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt. Three residents scramble for cover from the rocks. 4-9s: A huge glowing rock crashes through the roof of a house across the street. 9-15s: A glowing rock bounces along the road and slams into a parked car. Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a hillside terrace above the houses, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "3": {
@@ -8288,36 +8288,36 @@
   },
   "5": {
    "axes": {
-    "acilis": "B",
-    "beats": "R1+T6",
+    "acilis": "A",
+    "beats": "R9+T9",
     "environment": "suburb",
     "fit_guard": false,
-    "kadraj": "çatı",
+    "kadraj": "pencere",
     "kamera_modu": null,
-    "kamera_noktasi": "Rooftop terrace facing the erupting volcano",
-    "key_visual": "A single huge glowing rock from the volcano punches straight through the roof of the house across the street.",
-    "on_plan": "boş",
-    "people": 4,
+    "kamera_noktasi": null,
+    "key_visual": "Glowing volcanic bombs streak down from the erupting volcano and slam into the street, punching through roofs and igniting cars.",
+    "on_plan": "pencere",
+    "people": 6,
     "spot": "Balcony of a village house facing the erupting volcano",
     "story_source": "fallback",
-    "vehicle": "SUV",
+    "vehicle": "pickup truck",
     "view": null,
     "weather": "warm orange dusk sky glowing from the eruption"
    },
-   "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|balcony of a village house facing the erupting volcano##R1+T6|bystander_handheld",
-   "prompt": "0-4s: A single huge glowing rock from the volcano punches straight through the roof of the house across the street. Four residents dash away between the houses. 4-9s: A glowing rock punches through the roof of the SUV. 9-15s: A volcanic bomb hits a house's upper floor and a section of the wall bursts outward in flames. Handheld footage filmed on a rooftop terrace across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
-   "style_suffix": "Handheld footage filmed on a rooftop terrace across the street, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+   "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|balcony of a village house facing the erupting volcano##R9+T9|bystander_handheld",
+   "prompt": "0-4s: Glowing volcanic bombs streak down from the erupting volcano and slam into the street, punching through roofs and igniting cars. Six residents flee down the street from the rocks. 4-9s: A glowing rock crashes through the front of a corner shop down the street and its wall caves in. 9-15s: A glowing rock smashes into a large parked truck and flames wrap the cab. Handheld footage filmed through an open upper-floor window, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the open window frame edge at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "style_suffix": "Handheld footage filmed through an open upper-floor window, high vantage over a suburban street of detached houses, garages and palm trees toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, the open window frame edge at one side; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "6": {
    "axes": {
-    "acilis": "B",
-    "beats": "R9+T6",
+    "acilis": "C",
+    "beats": "R9+T5",
     "environment": "hillside_town",
     "fit_guard": false,
     "kadraj": "balkon",
     "kamera_modu": null,
     "kamera_noktasi": "Balcony of a village house facing the erupting volcano",
-    "key_visual": "A single huge glowing rock from the volcano punches straight through the roof of the house across the street.",
+    "key_visual": "Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt.",
     "on_plan": "boş",
     "people": 5,
     "spot": "Rooftop terrace facing the erupting volcano",
@@ -8326,8 +8326,8 @@
     "view": null,
     "weather": "warm orange dusk sky glowing from the eruption"
    },
-   "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|rooftop terrace facing the erupting volcano##R9+T6|bystander_handheld",
-   "prompt": "0-4s: A single huge glowing rock from the volcano punches straight through the roof of the house across the street. Five villagers run from the falling rocks. 4-9s: A glowing rock crashes through the front of a corner shop down the street and its wall caves in. 9-15s: A volcanic bomb hits a house's upper floor and a section of the wall bursts outward in flames. Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|rooftop terrace facing the erupting volcano##R9+T5|bystander_handheld",
+   "prompt": "0-4s: Glowing rocks slam into the street one after another, throwing sparks and smoke off the asphalt. Five residents run from the falling rocks. 4-9s: A glowing rock crashes through the front of a corner shop down the street and its wall caves in. 9-15s: A volcanic bomb lands in the middle of the street and the road blasts apart in a crater of sparks and rock. Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   },
   "7": {
@@ -8383,7 +8383,7 @@
     "kadraj": "balkon",
     "kamera_modu": null,
     "kamera_noktasi": "Balcony of a village house facing the erupting volcano",
-    "key_visual": "Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, punching through roofs and igniting cars.",
+    "key_visual": "Glowing volcanic bombs streak down from the erupting volcano and slam into the street, punching through roofs and igniting cars.",
     "on_plan": "korkuluk",
     "people": 3,
     "spot": "Hillside terrace facing the erupting volcano",
@@ -8393,7 +8393,7 @@
     "weather": "dark night sky lit by glowing lava and fires"
    },
    "combo_key": "volcano_disasters|none|volcanic bombs slam into a village street|hillside terrace facing the erupting volcano##R4+T9|bystander_handheld",
-   "prompt": "0-4s: Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, punching through roofs and igniting cars. Three people sprint away from the falling rocks. 4-9s: A glowing rock slams into a shop sign, which crashes onto the sidewalk. 9-15s: A glowing rock smashes into a large parked truck and flames wrap the cab. Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+   "prompt": "0-4s: Glowing volcanic bombs streak down from the erupting volcano and slam into the street, punching through roofs and igniting cars. Three people sprint away from the falling rocks. 4-9s: A glowing rock slams into a shop sign, which crashes onto the sidewalk. 9-15s: A glowing rock smashes into a large parked truck and flames wrap the cab. Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
    "style_suffix": "Handheld footage filmed on a house balcony across the street, high vantage over a wide hillside-town street of stone and painted houses toward the volcano; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the volcano always in the upper third, a railing corner in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
   }
  },

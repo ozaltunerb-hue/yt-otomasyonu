@@ -42,9 +42,9 @@ WEATHER = {
          "bright hazy daylight under a dark ash sky": 1},
 }
 # Değişmemesi gerekenler (18 Eki (3) öncesi, 6f16609)
-KEYS = {VB: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, punching "
+KEYS = {VB: "Glowing volcanic bombs streak down from the erupting volcano and slam into the street, punching "
             "through roofs and igniting cars.",
-        PY: "A pyroclastic cloud races down the volcano’s flank and slams into a village street."}
+        PY: "A pyroclastic cloud races down the volcano’s flank and slams into the street."}   # 31 Eki (2), Bahadır: ortam nötr
 
 
 class TestVolcEnvData(unittest.TestCase):
@@ -199,7 +199,7 @@ class TestVolcEnvPrompt(unittest.TestCase):
                                     self.assertLessEqual(len(prompt.split()), 175)
                                 self.assertEqual(es.final_prompt_issues(spec, cands[0], es.assemble_prompt(
                                     spec, cands[0]), es.assemble_story(spec, cands[0])), [])
-        self.assertEqual(worst, 172)   # 21 Eki (genel kalite): önceki 174 -> 173. 31 Eki: nötr balkon cümlesi (-1)
+        self.assertEqual(worst, 174)   # 21 Eki (genel kalite): önceki 174 -> 173. 31 Eki: nötr balkon cümlesi (-1). 31 Eki (2): (R9, T5) açıldı (+2), sınır 175 aynı
 
     def test_word_budget_keeps_gpt_prompt_within_175(self):
         """Bahadır kararı (18 Eki (3)): GPT'ye söylenen toplam = 175 - stil eki - 3 (en fazla kapının 75'i)."""
@@ -234,7 +234,7 @@ class TestVolcEnvPrompt(unittest.TestCase):
         # hariç çiftler 6f16609 ile aynı (kod yedeği ve hikâye kuralları değişmedi)
         self.assertEqual(es.EVENT_BEATS[VB]["excluded_pairs"],
                          {("R1", "T2"), ("R1", "T9"), ("R2", "T2"), ("R2", "T9"), ("R5", "T6"), ("R7", "T1"),
-                          ("R7", "T7"), ("R8", "T6"), ("R9", "T5"),
+                          ("R7", "T7"), ("R8", "T6"),   # 31 Eki (2): (R9, T5) kaldırıldı
                           ("R1", "T7"), ("R2", "T7")})   # 30 Eki (2), Bahadır: T7 araç (araç iki kez)
         self.assertEqual(es.EVENT_BEATS[PY]["excluded_pairs"],
                          {("P1", "Q1"), ("P1", "Q6"), ("P3", "Q3"), ("P3", "Q6"), ("P5", "Q1"), ("P5", "Q4"),

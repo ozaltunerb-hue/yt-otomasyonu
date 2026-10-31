@@ -151,7 +151,7 @@ class TestRules(unittest.TestCase):
 class TestPoolTexts(unittest.TestCase):
     def test_new_texts(self):
         self.assertEqual(es.EVENT_BEATS[LF]["slice_3"]["E5"]["text"],
-                         "the tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall")
+                         "the tornado lifts a wooden kiosk off the waterfront and smashes it into the building across the street")   # 31 Eki (2)
         self.assertEqual(es.EVENT_BEATS[VB]["slice_2"]["R9"]["text"],
                          "a glowing rock crashes through the front of a corner shop down the street and its wall caves in")
         self.assertNotIn((LF, "E5"), es.POOL_LINT_GRANDFATHERED)

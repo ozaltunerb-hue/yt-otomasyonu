@@ -92,7 +92,8 @@ OPENINGS = {
         "D": "The flames reach the back gardens as a firefighting helicopter passes just above the rooftops with "
              "its water bucket."},
     "Pyroclastic cloud races down into a village street": {
-        "B": "The ash cloud races down the volcano's slope and swallows the highest houses of the village in the "
+        # 31 Eki (2), Bahadır: ortam nötr. Önceki "...swallows the highest houses of the village in the first second."
+        "B": "The ash cloud races down the volcano's slope and swallows the highest houses on the slope in the "
              "first second.",
         "C": "A blast of hot air ahead of the cloud bends the trees, and the grey wall of ash surges into the "
              "street right behind it.",
@@ -225,7 +226,8 @@ BEAT_CONFLICTS = {
     "Tornado sweeps down a coastal avenue": {"B": {"P6"}, "C": {"Q6"}},    # dükkân önü sökülür
     "Wall of flames sweeps into a hillside neighborhood": {"C": {"K8", "L1"}},   # evin çatısı tutuşur
     "Flames race up a tower facade": {"B": {"M8", "M11"}, "C": {"M10", "N5"}, "D": {"N5"}},  # cepheden yukarı / pencereden alev
-    "Volcanic bombs slam into a village street": {"B": {"R7"}, "C": {"R9"}, "D": {"T9", "R2", "T7"}},
+    # 31 Eki (2), Bahadır: C+R9 kaldırıldı (gerekçesi yol idi; yeni R9 köşe dükkânı). Önceki "C": {"R9"}
+    "Volcanic bombs slam into a village street": {"B": {"R7"}, "D": {"T9", "R2", "T7"}},
     "Avalanche slams into a mountain village": {"B": {"A4"}},              # ahıra çarpar
     "Avalanche crashes down onto a ski lodge": {"C": {"C1"}},              # kayak deposu / kiralama binası
     "Avalanche rips through a pine forest into a valley": {"D": {"F1"}},   # dağ evinin duvarına çarpar

@@ -173,8 +173,10 @@ EVENT_KEY_VISUAL = {
     # 10 Eki, Bahadır: volkan kilit cümleleri birebir
     ERUPTION: "The volcano erupts above a village, a shockwave blowing out windows along the street as an ash column "
               "towers into the sky.",
-    PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into a village street.",
-    VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into a village street, "
+    # 31 Eki (2), Bahadır: ortam nötr ("a village street" -> "the street"; banliyö/kasaba ortamıyla çelişiyordu).
+    # Önceki kül bulutu "...and slams into a village street.", bombalar "...and slam into a village street, punching..."
+    PYROCLASTIC: "A pyroclastic cloud races down the volcano’s flank and slams into the street.",
+    VOLCANIC_BOMBS: "Glowing volcanic bombs streak down from the erupting volcano and slam into the street, "
                     "punching through roofs and igniting cars.",
     # 13 Eki, Bahadır: çığ kilit cümleleri birebir. 14 Eki (ilk test dersi): ilk temas ilk 2 saniyede, kameranın hemen
     # altındaki yapıya (köy testinde ilk ev ~5. sn'de vuruldu). Bahadır kararı (14 Eki): b kuralı (hikâyede "camera"
@@ -1246,8 +1248,11 @@ EVENT_BEATS = {
             "E4": {"text": "the tornado uproots a large tree and flings it through the air",
                    "terms": [("tree", "trees"), _UPROOT + _FLING]},
             # 31 Eki, Bahadır (üretim bulgusu d): E5 metni değişti, kod aynı. Önceki "the tornado rips the front off a
-            # small shop, sending shutters and signs flying" (ince hedef: GPT sadece kepenk ve tabelayı yazdı)
-            "E5": {"text": "the tornado lifts a beach kiosk off the promenade and smashes it into the hotel wall",
+            # small shop, sending shutters and signs flying" (ince hedef: GPT sadece kepenk ve tabelayı yazdı).
+            # 31 Eki (2), Bahadır: her ortamda geçerli (otel/promenat yok). Önceki "the tornado lifts a beach kiosk off
+            # the promenade and smashes it into the hotel wall" (promenat kamerası otel balkonunda; C/D'de otel yok)
+            "E5": {"text": "the tornado lifts a wooden kiosk off the waterfront and smashes it into the building across "
+                           "the street",
                    "terms": [("kiosk", "kiosks", "beach kiosk", "beach hut", "booth", "stall", "beach bar"),
                              _LIFT_AIR + _TEAR + _FLING, _HIT]},
             # 18 Eki (2), Bahadır (Parti 2): yeni beat'ler (≤16 kelime)
@@ -1356,7 +1361,9 @@ EVENT_BEATS = {
             # 4 Eki, Bahadır onayı: uçma güncellemesi (eski P5 "slides into a bus shelter, shattering its glass",
             # eski P6 "and the car behind it are pushed along the avenue together"). 30 Eki: önceki P5 "the {vehicle} is
             # lifted off the avenue and flung into a bus shelter, shattering its glass" (ince: durak camı)
-            "P5": {"text": "the {vehicle} is lifted off the avenue and flung into the side of a parked city bus",
+            # 31 Eki (2), Bahadır: "city bus" -> "bus" (kasaba/banliyö ortamı). Önceki "...into the side of a parked
+            # city bus"
+            "P5": {"text": "the {vehicle} is lifted off the avenue and flung into the side of a parked bus",
                    "terms": [_LIFT_AIR, _FLING + ("slam", "smash", "crash", "hurtle"), ("bus", "buses", "city bus")]},
             # 30 Eki: P6 metni aynı; açılış B (minibüs havalanır) ile seçilmez (opening_axis.BEAT_CONFLICTS)
             "P6": {"text": "the {vehicle} is swept up into the air, spins, and crashes down across the avenue",
@@ -1378,7 +1385,9 @@ EVENT_BEATS = {
             "Q2": {"text": "the tornado rips the top floor off an office building and hurls it across the avenue",
                    "terms": [("top floor", "upper floor", "floor", "storey", "story", "office building", "building",
                               "office block", "tower"), _TEAR + _FLING]},
-            "Q3": {"text": "the tornado slams a parked city bus onto its side across the avenue",
+            # 31 Eki (2), Bahadır: "parked city bus" -> "parked bus". Önceki "the tornado slams a parked city bus onto
+            # its side across the avenue"
+            "Q3": {"text": "the tornado slams a parked bus onto its side across the avenue",
                    "terms": [("bus", "buses", "city bus"), _TIP + _FLING + _HIT]},
             "Q4": {"text": "the tornado tears the front wall off a corner café and hurls its tables across the avenue",
                    "terms": [("café", "cafe", "restaurant", "bar", "coffee shop", "corner café", "corner cafe"),
@@ -1784,9 +1793,10 @@ EVENT_BEATS = {
         # (13 Eki kuralı; çatı ve cephe/kat aynı yapı sayılmaz): çatı (R7: T1, T7), duvar (R8: T6), yol (R9: T5), araç
         # (R1, R2: T9 kamyon)
         "excluded_pairs": {("R2", "T2"), ("R1", "T2"), ("R5", "T6"),
-                           ("R7", "T1"), ("R7", "T7"), ("R8", "T6"), ("R9", "T5"), ("R1", "T9"), ("R2", "T9"),
+                           ("R7", "T1"), ("R7", "T7"), ("R8", "T6"), ("R1", "T9"), ("R2", "T9"),
                            ("R1", "T7"), ("R2", "T7")}   # 30 Eki (2), Bahadır: T7 araç (araç iki kez)
                           | _VOLC_BOMBS_GAPS,
+        # 31 Eki (2), Bahadır: ("R9", "T5") kaldırıldı (gerekçesi "yol iki kez" idi; yeni R9 köşe dükkânı, yol değil)
         "excluded_views": {},
         # Kamera evinin/terasın çatısı: "taşlar çatılara çarpar" çatı terasında ve köy evi balkonunda seçilmez.
         # 17 Eki: T7 (bir sıra evin çatısı) aynı sebeple
@@ -2272,7 +2282,7 @@ BEAT_ANCHORS = {
     MUDSLIDE: {"H6": _ANCHOR_HOUSE},
     VILLAGE: {"L6": _ANCHOR_HOUSE},
     MARINA_TORNADO: {"Y3": _MARINA_OFFICE},
-    AVENUE: {"P5": _ANCHOR_BUS,
+    AVENUE: {"P5": ("bus", "buses"),   # 31 Eki (2): metin "parked bus" (önceki çapa _ANCHOR_BUS, "city bus" dahil)
              "P7": _ANCHOR_HOUSE + _ANCHOR_SHOP + ("facade", "façade", "office", "hotel", "restaurant")},
     WILDFIRE: {"K8": _ANCHOR_HOUSE, "K9": ("burning house", "burning home")},
     VOLCANIC_BOMBS: {"R9": _ANCHOR_SHOP},
@@ -3667,14 +3677,16 @@ FALLBACK_PEOPLE = {
     FACADE_FIRE: ("{N} pedestrians run from the burning tower.", "{N} people flee from the flames across the street.",
                   "{N} pedestrians sprint away from the tower.", "{N} residents scramble away from the falling debris.",
                   "{N} people run from the flames.", "{N} pedestrians dash across the street away from the tower."),
-    ERUPTION: ("{N} villagers run from the eruption down the street.", "{N} residents flee from the eruption toward the houses.",
-               "{N} people sprint away from the eruption.", "{N} villagers scramble down the street away from it.",
+    # 31 Eki (2), Bahadır: volkan yedek insan cümlelerinde "villagers" -> "residents" (banliyö/kasaba ortamı). Önceki
+    # metinler aynı, sadece "villagers" kelimesi
+    ERUPTION: ("{N} residents run from the eruption down the street.", "{N} residents flee from the eruption toward the houses.",
+               "{N} people sprint away from the eruption.", "{N} residents scramble down the street away from it.",
                "{N} people run from the eruption.", "{N} residents dash away along the village street."),
-    PYROCLASTIC: ("{N} villagers run from the cloud down the street.", "{N} residents flee from the cloud between the houses.",
-                  "{N} people sprint away from the cloud.", "{N} villagers scramble away from the cloud.",
+    PYROCLASTIC: ("{N} residents run from the cloud down the street.", "{N} residents flee from the cloud between the houses.",
+                  "{N} people sprint away from the cloud.", "{N} residents scramble away from the cloud.",
                   "{N} people run from the cloud.", "{N} residents dash down the street away from it."),
-    VOLCANIC_BOMBS: ("{N} villagers run from the falling rocks.", "{N} residents flee down the street from the rocks.",
-                     "{N} people sprint away from the falling rocks.", "{N} villagers scramble for cover from the rocks.",
+    VOLCANIC_BOMBS: ("{N} residents run from the falling rocks.", "{N} residents flee down the street from the rocks.",
+                     "{N} people sprint away from the falling rocks.", "{N} residents scramble for cover from the rocks.",
                      "{N} people run for cover from it.", "{N} residents dash away between the houses."),
     AVALANCHE_VILLAGE: _FB_AVA_NEAR, AVALANCHE_FOREST: _FB_AVA_NEAR,
     AVALANCHE_SKI: ("{N} guests run away right below.", "{N} guests flee in the street right below.",
