@@ -731,7 +731,7 @@ class TestFireTornadoShape(unittest.TestCase):
 
 class TestDisabledEvents(unittest.TestCase):
     def test_shockwave_disabled_single_flag(self):
-        self.assertEqual(sk.DISABLED_EVENTS, {ER})
+        self.assertEqual(sk.DISABLED_EVENTS, {ER, es.EARTHQUAKE_OLD_STREET})   # 3 Kas (Aşama 7): eski sokak
         self.assertNotIn(ER, sk.skeleton_events("volcano_disasters"))
         self.assertEqual(sk.skeleton_events("volcano_disasters"), [es.PYROCLASTIC, VB])
         # havuz, iskelet, kilit cümle, kombinasyon denetimi duruyor

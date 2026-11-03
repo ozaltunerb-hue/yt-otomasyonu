@@ -39,6 +39,12 @@ def setUpModule():
     p = patch.object(pg, "_get_openai_client", side_effect=AssertionError("Testte gerçek GPT istemcisi istendi"))
     p.start()
     _GUARDS.append(p)
+    # 3 Kas 2026 (toplu düzeltme): bu modül GPT'nin yazdığı dilim metnini kapılara sokar; birebir dilim kapısı
+    # (es.VERBATIM_SLICES, tests/test_toplu_3kas.py) modül boyunca KAPALI (HEAD davranışı)
+    import core.event_structure as _ves
+    p = patch.dict(_ves.VERBATIM_SLICES, {e: False for e in _ves.VERBATIM_SLICES})
+    p.start()
+    _GUARDS.append(p)
 
 
 def tearDownModule():
@@ -666,7 +672,9 @@ class TestLandslide(unittest.TestCase):
                 self.assertIn(sk.CAMERA_SPOTS[spot], suffix)
                 text = (suffix.replace("No readable signs, text or flags.", "") + " " + s["spots"][spot]).lower()
                 self.assertFalse(set(re.findall(r"[a-z]+", text)) & set(self.PLACES), text)
-        self.assertEqual(sk.count_range("Flash flooding in city streets", None), (2, 10))   # diğer env-centric aynı
+        self.assertEqual(sk.count_range("Flash flooding in city streets", None), (3, 6))   # 3 Kas: sel insan ekseni
+        self.assertEqual(sk.count_range("Storm gust rips umbrellas and beach chairs into the air", None),
+                         (2, 10))   # diğer env-centric aynı
         self.assertNotIn("No readable signs", sk.style_suffix("Large waves reaching the beach", None, "Open sandy beach"))
 
     def test_bridge_spot_removed_only_from_road_collapse(self):
@@ -793,7 +801,8 @@ class TestStructuredScene(unittest.TestCase):
         sk._VIEW_MEMORY.clear()
 
     def slices(self, vehicle, s2=None, s3=None):
-        return {"slice_1_rest": "It swallows the curbs and pours between the parked cars.",
+        # 3 Kas (Aşama 3): selde kaçan kişi sayısı (run_scene 5 sabitler)
+        return {"slice_1_rest": "It swallows the curbs as five pedestrians run from the water.",
                 "slice_2": s2 or f"The {vehicle} is caught by the current, turns sideways and is dragged down the street.",
                 "slice_3": s3 or "A lamppost topples into the current and crashes into the churning brown water."}
 
@@ -809,6 +818,7 @@ class TestStructuredScene(unittest.TestCase):
         import core.opening_axis as ox   # 21 Eki (Aşama 6): sahte GPT dilimleri bugünkü kilit cümleye göre yazıldı
         with patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
                 patch.object(es, "choose_vehicle", lambda v, rng=None: "pickup truck"), \
+                patch.object(es, "choose_people", lambda *a, **k: 5), \
                 patch.object(ox, "choose", lambda *a, **k: ("A", [])):
             scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", FLOOD, [], [], gpt, view=view))
         return scene, calls
@@ -856,7 +866,7 @@ class TestStructuredScene(unittest.TestCase):
             self.assertNotIn(word, low)
 
     def test_vehicle_is_given_detail_and_checked(self):
-        spec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van")
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van", 5)
         msg = cp._slices_message(spec, "x", "heavy rain", 2, 10, [], None)
         self.assertIn("\nVEHICLE: delivery van\n", msg)
         self.assertIn("4-9s EVENT: the delivery van is swept into another parked car", msg)
@@ -890,8 +900,10 @@ class TestStructuredScene(unittest.TestCase):
         bad = self.slices("pickup truck", s3="A low wall collapses into the brown water as more debris arrives.")
         scene, calls = self.run_scene([bad, self.slices("pickup truck")])
         self.assertEqual(len(calls), 2)
-        self.assertIn("YOUR PREVIOUS ANSWER WAS REJECTED: 'slice_3' must clearly show this event: a lamppost topples "
-                      "into the current.", calls[1]["user"])
+        # 3 Kas (Aşama 3): selde de dilim kapısı var -> birikimli geri bildirim biçimi (dev dalgayla aynı)
+        self.assertIn("YOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already "
+                      "correct: 'slice_3' must clearly show this event: a lamppost topples into the current.",
+                      calls[1]["user"])
         self.assertEqual(len(scene["trace"]["attempts"]), 2)
         # 16 Eki (hibrit hikâye): yumuşak kapı, D2'nin nesnesi (direk) yok
         self.assertIn("9-15s: seçilen olayın nesnesi (D2: lamppost) yok", scene["trace"]["attempts"][0]["missing"])
@@ -913,12 +925,15 @@ class TestStructuredScene(unittest.TestCase):
         self.assertEqual(st["slices"]["slice_2"], "The pickup truck is caught by the current, turns sideways and is "
                                                   "dragged down the street.")
         self.assertEqual(st["slices"]["slice_3"], "Seconds later, in full view, a lamppost topples into the current.")
-        self.assertIn(st["slices"]["slice_1_rest"], es.FALLBACK_PEOPLE[FLOOD])
+        # 3 Kas (Aşama 3): sel insan cümlesi kişi sayılı ({N}) ve insan ekseninden
+        self.assertIn(st["slices"]["slice_1_rest"], [es.clean_slice(t.format(N="Five"))
+                                                     for t in es.FALLBACK_PEOPLE[FLOOD]])
+        self.assertIn(st["axes"]["insan"], [es.people_line_id(i) for i in range(len(es.FALLBACK_PEOPLE[FLOOD]))])
         self.assertEqual(es.final_prompt_issues(st["spec"], st["slices"], scene["prompt"], scene["story"]), [])
         self.assertNotIn("gently", scene["prompt"])
 
     def test_diversity_ignores_shared_key_visual(self):
-        spec = es.build_spec(FLOOD, None, "Downtown city center", "us_coastal_town", "V1", "D2", "pickup truck")
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "us_coastal_town", "V1", "D2", "pickup truck", 5)
         sl = es.parse_slices(self.slices("pickup truck"))
         other = es.parse_slices(self.slices("pickup truck", s2="The pickup truck spins side-on and slides along the "
                                             "road past the low wooden houses.",

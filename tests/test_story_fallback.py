@@ -69,6 +69,23 @@ def combos(event):
                         yield es.build_spec(event, None, spot, view, b2, b3, veh, p, setting), n_env
 
 
+# 3 Kas 2026 (toplu düzeltme): bu modül GPT'nin yazdığı dilim metnini (eş anlamlı / serbest anlatım) kapılara sokar.
+# Kilitsiz olaylarda üretimde 4-9s / 9-15s artık birebir havuz metni (es.VERBATIM_SLICES; tests/test_toplu_3kas.py
+# sınar); burada diğer kapıların GPT metnine davranışı ölçüldüğü için birebir dilim kapısı modül boyunca KAPALI (HEAD
+# davranışı).
+from unittest.mock import patch as _vpatch   # noqa: E402
+import core.event_structure as _ves   # noqa: E402
+_VERBATIM_OFF = _vpatch.dict(_ves.VERBATIM_SLICES, {e: False for e in _ves.VERBATIM_SLICES})
+
+
+def setUpModule():
+    _VERBATIM_OFF.start()
+
+
+def tearDownModule():
+    _VERBATIM_OFF.stop()
+
+
 class TestFallbackEveryCombination(unittest.TestCase):
     def test_every_combination_builds_a_valid_fallback(self):
         report, n_total = {}, 0
@@ -137,7 +154,7 @@ class TestFallbackEveryCombination(unittest.TestCase):
                 self.assertEqual(es.find_terms(es.FIRE_TOR_OPEN_LAND, t), [])
 
     def test_transition_only_when_needed(self):
-        spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D2", "large SUV")
+        spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D2", "large SUV", 5)
         self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),
                          "Seconds later, in full view, a lamppost topples into the current.")
         self.assertEqual(es.fallback_beat_slice(spec, "slice_2"),
@@ -191,8 +208,10 @@ RIGHT = [
 
 class TestSoftGate(unittest.TestCase):
     def spec(self, event, b2, b3):
-        spot = next(s for v in es.structure_views(event) for s in sk.view_spots(event, v)
-                    if (b2, b3) in es.allowed_pairs(event, es.structure_views(event)[0], s))
+        # 3 Kas (Aşama 2): pasif beat (sel D2) hiçbir çiftte yok; yumuşak kapı metni yine sınanır (ilk nokta)
+        spot = next((s for v in es.structure_views(event) for s in sk.view_spots(event, v)
+                     if (b2, b3) in es.allowed_pairs(event, es.structure_views(event)[0], s)),
+                    sk.view_spots(event, es.structure_views(event)[0])[0])
         view = es.structure_views(event)[0]
         veh = "SUV" if es.uses_vehicle(event) and view is None else (
             [v for v, _ in es.event_vehicles(event, view)][0] if es.uses_vehicle(event) else None)

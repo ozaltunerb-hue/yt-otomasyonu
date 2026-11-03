@@ -30,7 +30,8 @@ MOTION = {"per_second": [2.0, 3.0], "opening_avg": 2.5, "rest_avg": 3.0, "openin
 
 
 def slices(s2=None, s3=None, s1=None):
-    return {"slice_1_rest": s1 or "It swallows the curbs and pours between the parked cars.",
+    # 3 Kas (Aşama 3): selde kaçan kişi sayısı (Harness 5 sabitler)
+    return {"slice_1_rest": s1 or "It swallows the curbs as five pedestrians run from the water.",
             "slice_2": s2 or f"The {VEHICLE} is caught by the current, turns sideways and is dragged down the street.",
             "slice_3": s3 or "A lamppost topples into the current and crashes into the churning brown water."}
 
@@ -53,6 +54,23 @@ def preflight_seq(*results):
 
 
 import core.opening_axis as ox   # noqa: E402
+
+
+# 3 Kas 2026 (toplu düzeltme): bu modül GPT'nin yazdığı dilim metnini (eş anlamlı / serbest anlatım) kapılara sokar.
+# Kilitsiz olaylarda üretimde 4-9s / 9-15s artık birebir havuz metni (es.VERBATIM_SLICES; tests/test_toplu_3kas.py
+# sınar); burada diğer kapıların GPT metnine davranışı ölçüldüğü için birebir dilim kapısı modül boyunca KAPALI (HEAD
+# davranışı).
+from unittest.mock import patch as _vpatch   # noqa: E402
+import core.event_structure as _ves   # noqa: E402
+_VERBATIM_OFF = _vpatch.dict(_ves.VERBATIM_SLICES, {e: False for e in _ves.VERBATIM_SLICES})
+
+
+def setUpModule():
+    _VERBATIM_OFF.start()
+
+
+def tearDownModule():
+    _VERBATIM_OFF.stop()
 
 
 class Harness:
@@ -118,6 +136,7 @@ class Harness:
             patch.object(client, "get_credit", AsyncMock(return_value=100.0)),
             patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")),
             patch.object(es, "choose_vehicle", lambda v, rng=None, used=None: VEHICLE),
+            patch.object(es, "choose_people", lambda *a, **k: 5),   # 3 Kas (Aşama 3): selde kişi sayısı
             # 21 Eki (Aşama 6): sahte GPT dilimleri bugünkü kilit cümleye (açılış A) göre yazıldı
             patch.object(ox, "choose", lambda *a, **k: ("A", [])),
         ]
@@ -139,7 +158,7 @@ class Harness:
 
 
 def expected_prompt(sl=None):
-    spec = es.build_spec(FLOOD, None, "Downtown city center", VIEW, "V1", "D2", VEHICLE)
+    spec = es.build_spec(FLOOD, None, "Downtown city center", VIEW, "V1", "D2", VEHICLE, 5)
     return spec, es.parse_slices(sl or slices())
 
 
@@ -254,7 +273,7 @@ class TestNothingReachesKie(unittest.TestCase):
     def test_kie_reject_rewrite_attempts_written_to_notion(self):
         # 10 Eki, Bahadır: yeniden yazım denemelerinin tam metni (dilimler + kapı retleri) Notion gövdesine
         bad = slices(s2="The sedan rocks gently in the water as the rain keeps falling.")
-        good = slices(s1="It rushes over the curbs and floods the low porches.")
+        good = slices(s1="It rushes over the curbs as five pedestrians run from the water.")
         h = Harness(gpt=[slices(), bad, good], create=AsyncMock(side_effect=[ContentFilterError("flagged"),
                                                                              "task-2"])).run()
         self.assertTrue(h.result.get("success"), h.result)
@@ -266,7 +285,7 @@ class TestNothingReachesKie(unittest.TestCase):
         self.assertIn("Deneme 1 · ❌ eksik: ", rw[0])
         self.assertIn("The sedan rocks gently in the water", rw[0])          # reddedilen denemenin tam metni
         self.assertIn("Deneme 2 · ✅ geçti", rw[0])
-        self.assertIn("It rushes over the curbs and floods the low porches.", rw[0])
+        self.assertIn("It rushes over the curbs as five pedestrians run from the water.", rw[0])
 
     def test_kie_reject_rewrite_failure_also_written_to_notion(self):
         bad = slices(s2="The sedan rocks gently in the water as the rain keeps falling.")
@@ -281,7 +300,7 @@ class TestNothingReachesKie(unittest.TestCase):
 
     def test_kie_rejects_twice_stops(self):
         create = AsyncMock(side_effect=[ContentFilterError("flagged"), ContentFilterError("flagged")])
-        h = Harness(gpt=[slices(), slices(s1="It rushes over the curbs and floods the low porches.")],
+        h = Harness(gpt=[slices(), slices(s1="It rushes over the curbs as five pedestrians run from the water.")],
                     create=create).run()
         self.assertEqual(create.call_count, 2)                 # ilk gönderim + tek yeniden yazım
         for p in h.sent_prompts:
@@ -295,14 +314,14 @@ class TestNothingReachesKie(unittest.TestCase):
     def test_kie_reject_rewrite_passes_on_third_attempt(self):
         # Kie reddeder; yeniden yazım kalite kapısında 2 kez kalır, 3.'de geçer -> Kie'ye toplam 2 istek
         bad = slices(s2="The sedan rocks gently in the water as the rain keeps falling.")
-        good = slices(s1="It rushes over the curbs and floods the low porches.")
+        good = slices(s1="It rushes over the curbs as five pedestrians run from the water.")
         create = AsyncMock(side_effect=[ContentFilterError("flagged"), "task-2"])
         h = Harness(gpt=[slices(), bad, bad, good], create=create).run()
         self.assertTrue(h.result.get("success"), h.result)
         self.assertEqual(create.call_count, 2)
         self.assertEqual(len(h.gpt_calls), 4)
         self.assertIn("The video safety check rejected the previous text", h.gpt_calls[1]["user"])
-        self.assertIn("YOUR PREVIOUS ANSWER WAS REJECTED", h.gpt_calls[2]["user"])
+        self.assertIn("YOUR PREVIOUS ANSWERS WERE REJECTED", h.gpt_calls[2]["user"])   # 3 Kas: selde birikimli
         self.assertTrue(h.sent_prompts[1].startswith(f"0-4s: {KEY} It rushes over the curbs"))
         h.free_rewriter.assert_not_called()
 
@@ -320,7 +339,7 @@ class TestNothingReachesKie(unittest.TestCase):
 
     def test_kie_rejects_once_then_ok(self):
         create = AsyncMock(side_effect=[ContentFilterError("flagged"), "task-2"])
-        h = Harness(gpt=[slices(), slices(s1="It rushes over the curbs and floods the low porches.")],
+        h = Harness(gpt=[slices(), slices(s1="It rushes over the curbs as five pedestrians run from the water.")],
                     create=create).run()
         self.assertTrue(h.result.get("success"), h.result)
         self.assertEqual(create.call_count, 2)
@@ -407,6 +426,7 @@ class TestReporting(unittest.TestCase):
             return slices()
         with patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
                 patch.object(es, "choose_vehicle", lambda v, rng=None: VEHICLE), \
+                patch.object(es, "choose_people", lambda *a, **k: 5), \
                 patch.object(ox, "choose", lambda *a, **k: ("A", [])):
             # 22 Eki: açılış A'ya sabit (sahte GPT bugünkü kilit cümleye göre yazıldı; açılış ayrı rastgele akışta,
             # sıraya göre B/C/D gelip test düşüyordu)
@@ -468,6 +488,7 @@ class TestReporting(unittest.TestCase):
         with patch.object(pg, "_call_gpt", fake), patch.object(settings, "IS_DRY_RUN", False), \
                 patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
                 patch.object(es, "choose_vehicle", vehicle), \
+                patch.object(es, "choose_people", lambda *a, **k: 5), \
                 patch.object(ox, "choose", lambda *a, **k: ("A", [])):   # 21 Eki (Aşama 6): açılış A (KEY)
             asyncio.run(dr.main_creative(out, only=[FLOOD], per_event=1, max_calls=3))
         row = json.load(open(out, encoding="utf-8"))["rows"][0]

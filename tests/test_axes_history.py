@@ -213,9 +213,12 @@ class TestNotionSuccess(_Quiet):
         scene = self.scene(es.EARTHQUAKE_OLD_STREET, [])
         data = json.loads(scene["structure"]["axes_json"])
         self.assertEqual(data["event"], es.EARTHQUAKE_OLD_STREET)
-        self.assertEqual(set(data["axes"]), set(ah.AXIS_KEYS))
+        # 3 Kas (Aşama 3): "insan" ekseni sadece sel / dev dalgada (es.PEOPLE_AXIS_EVENTS)
+        self.assertEqual(set(data["axes"]), set(ah.AXIS_KEYS) - {"insan"})
         self.assertIn("excluded", data)
-        self.assertEqual(ah.parse_record({"eksenler": scene["axes_json"]})["axes"], data["axes"])
+        parsed = ah.parse_record({"eksenler": scene["axes_json"]})["axes"]
+        self.assertIsNone(parsed.pop("insan"))   # 3 Kas: insan ekseni olmayan olayda boş
+        self.assertEqual(parsed, data["axes"])
 
 
 class TestNotionFailure(_Quiet):

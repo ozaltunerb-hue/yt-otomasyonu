@@ -56,7 +56,7 @@ ONAY = {
         "slice_2": "The downdraft intensifies the flames, engulfing a wooden house whose roof collapses in a fiery "
                    "cascade.",
         "slice_3": "Raging flames consume nearby trees as a fresh surge threatens further devastation."},
-        {"abstract_final"}),
+        {"abstract_final", "vague_target"}),   # 3 Kas (Aşama 4): "away from the approaching danger", "threatens"
     "volkan_R8_T5": (VB, "D", "R8", "T5", "SUV", 3, {
         "slice_1_rest": "Three people run away from the falling rocks.",
         "slice_2": "A glowing rock plummets into a house, shattering the wall and flinging debris outward.",
@@ -162,7 +162,7 @@ class TestProvenRotation(unittest.TestCase):
         f = {"type": "çatı", "pos_spot": None, "fg": "parapet", "mode": None}
         self.assertEqual(pa.frame_status(WF, "Embankment above the village road", f), pa.PROVEN)
         self.assertEqual(pa.fg_status(WF, "Embankment above the village road", f), pa.PROVEN)
-        self.assertEqual(pa.meteor_envs(list(es.METEOR_ENVS)), ["O2", "O3"])
+        self.assertEqual(pa.meteor_envs(list(es.METEOR_ENVS)), ["O2", "O3", "O5"])   # 3 Kas: O5 DENEME
 
 
 class TestTexts(unittest.TestCase):

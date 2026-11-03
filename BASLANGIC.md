@@ -25,6 +25,38 @@
 
 ---
 
+## 📋 DEVİR: 3 Kasım toplu düzeltme (kilit kuralı + 8 aşama)
+
+Kie/GPT çağrısı yok; doğrulama offline (sahte GPT, snapshot, unit test: `tests/test_toplu_3kas.py`).
+- **KİLİT:** kanıtlanmış 5 olay (`es.LOCKED_EVENTS`: orman yangını, helikopter, hortum karaya vurur, volkan bombaları,
+  heyelan köy) prompt_snapshot farkı 0 (20 ve 40 tohum). Bu olaylara pasif/deneme/insan ekseni eklenmez (testli).
+- **1 Birebir dilim** (`es.VERBATIM_SLICES`, kilitsiz olaylarda AÇIK, kilitli 5 olayda KAPALI: GPT dilimi HEAD'deki
+  gibi): 4-9s ve 9-15s seçilen beat'in kod metninden
+  (`fallback_beat_slice`) kelimesi kelimesine; GPT'nin slice_2/slice_3'ü atılır (denemede `gpt_slices` olarak kayıtlı),
+  GPT sadece 0-4s insan cümlesini yazar. Son denetim `verbatim_slice` ile doğrular. System prompt değişmedi. GPT
+  metnini sınayan eski test modülleri bayrağı modül boyunca kapatır (setUpModule), birebir yol test_toplu_3kas'ta.
+- **2 Zayıf öğeler pasif** (`es.DISABLED_BEATS`): sel D2, D4, V4; dev dalga W2, W6, W8, T6; cephe N4, M6 (cephede artık
+  `uses_vehicle` pasif beat'i saymaz). Yeni DENEME öğeler (`es.TRIAL_BEATS`, en fazla %20, art arda yok): sel D10, dev
+  dalga W9, cephe N7 ve M12 (park hâlindeki araç alevler içinde; araç ekseni geri geldi).
+- **3 İnsan ekseni** sel + dev dalga (`es.PEOPLE_AXIS_EVENTS`, eksen "insan" I1-I6): selde kişi kuralı ve 3-6 kişi;
+  I1-I2 KANITLI (eski kalıp), I3-I6 DENEME. Eski havuzlar `es.FALLBACK_PEOPLE_RETIRED`.
+- **4 Kapı ekleri** (`es.gpt_added_issues`, havuz/kilit/kod yedeği muaf): rolling away / before rolling / as it rolls /
+  lifted effortlessly, bombardment / obliterat / fiery hail / fiery downfall, insan + dash, danger / threat / safety, ses
+  ekleri (roar, thunder, crash sound, scream, echo, hiss). Dev dalga "on top of the seawall" kamera noktası pasif
+  (`fx.RETIRED_CAMERA_SPOTS`).
+- **5 Çamur seli kilit cümlesi** (A): "...is already bursting down the drenched steep street in pouring rain."
+- **6 Meteor**: K4 "Rooftop terrace of a modern seafront building", O5, ışık "clear early-morning light" DENEME
+  (`pa.EXTRA_TRIALS`; koruma+deneme toplam %20, art arda yok). İnsanlar kıyı yolu/promenat/teraslarda (`es._MET_NEAR`,
+  GPT satırı "on the coastal road and terraces right below"). Kapı `es.meteor_cgi_issues` (spiky, column of water, frozen
+  trail, wall of white; drift/pan/tilt/follow; kilit cümle muaf DEĞİL).
+- **7 Deprem**: "Eski sokak" olayı pasif (`sk.DISABLED_EVENTS`), eski taş şehirler pasif (`es.EQ_PASSIVE_CITIES`),
+  yeni modern şehir/sokak DENEME (`es.EQ_TRIAL_VALUES`).
+- **8**: menü eşlemesi doğru. 🚢 Kruvaziyer ve 🏖️ Plaj & Sahil PASİF (`sk.CAMERA_RULE_DISABLED_DOMAINS`: 6 olayın
+  kamerası göz hizası + takip). Tersane pasif. Meteor GPT satırı ("on the coastal road and terraces right below")
+  sadece meteorda; diğer olayların satırı HEAD ile aynı (`tests/fixtures/people_line_head.json`), sel Aşama 3 ile yeni.
+- Kilitli olayların zayıf öğeleri (helikopter G7, bombalar T5, orman L4) dokunulmadı; L4 9 Eki 21:52 K5+L4 üretiminde
+  (orman paylaşımının tek tamamlanmış üretimi), G7 hiç üretilmedi, T5 üretildi (13 Eki) ama paylaşılmadı.
+
 ## 📋 DEVİR: Kanıtlı formül kuralı + üretim günü düzeltmeleri (31 Eki 2026, üçüncü tur)
 
 Ders: hit formül (açılış A + orijinal kamera) 9/10; 21 Eki sonrası denenmemiş seçenekler (pencere, volkan açılış D +

@@ -63,17 +63,18 @@ class TestEventPool(unittest.TestCase):
         counts = {d: len(sk.skeleton_events(d)) for d in DOMAIN_ATTRIBUTES}
         # 29 Eki: feribot, tersane, marina & yat pasif (sk.DISABLED_DOMAINS; açıkken 3, 5, 2)
         self.assertEqual(counts, {"ferry_operations": 0, "shipyard_and_drydock_engineering": 0,
-                                  "marina_and_yacht_operations": 0, "cruise_ship_operations": 3,
+                                  "marina_and_yacht_operations": 0, "cruise_ship_operations": 0,   # 3 Kas (devam): pasif
                                   "coastal_tornado_landfall": 3, "urban_city_disasters": 2,
-                                  "open_beach_coastal_events": 3, "landslide_disasters": 3,   # 2 Eki: heyelan
+                                  "open_beach_coastal_events": 0, "landslide_disasters": 3,   # 2 Eki: heyelan; 3 Kas: plaj pasif
                                   "fire_disasters": 4,   # 8 Eki: yangın; 10 Eki: + helikopter
                                   "volcano_disasters": 2,   # 10 Eki: volkan; 13 Eki: lav nehri çıktı; + 3 çığ; 18 Eki (2): şok dalgası devre dışı
                                   "avalanche_disasters": 3,   # 13 Eki: çığ
-                                  "earthquake_disasters": 2,   # 14 Eki: deprem
+                                  "earthquake_disasters": 1,   # 14 Eki: deprem; 3 Kas: eski sokak pasif
                                   "meteor_disasters": 1})   # 29 Eki: meteor
-        self.assertEqual(sum(counts.values()), 26)   # 18 Eki (2): şok dalgası devre dışı; 29 Eki: -10 deniz, +1 meteor
-        with patch.object(sk, "DISABLED_DOMAINS", set()):   # bayrak açılınca deniz olayları geri gelir
-            self.assertEqual(sum(len(sk.skeleton_events(d)) for d in DOMAIN_ATTRIBUTES), 36)
+        # 18 Eki (2): şok dalgası devre dışı; 29 Eki: -10 deniz, +1 meteor. 3 Kas: kruvaziyer, plaj (-6), eski sokak (-1)
+        self.assertEqual(sum(counts.values()), 19)
+        with patch.object(sk, "DISABLED_DOMAINS", set()):   # bayrak açılınca deniz + kruvaziyer + plaj geri gelir
+            self.assertEqual(sum(len(sk.skeleton_events(d)) for d in DOMAIN_ATTRIBUTES), 35)
 
     def test_removed_events(self):
         # 30 Eyl: + tabela/iskele (aksiyonsuz video); 1 Eki: + halat, kontrolsüz yat; 4 Eki (TASLAK): + hortum kıyıya
@@ -326,7 +327,8 @@ class TestRecoveryQuery(unittest.TestCase):
 class TestMenu(unittest.TestCase):
     def test_menu_follows_pipeline(self):
         with patch.object(settings, "PROMPT_PIPELINE", "skeleton"):
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 26)   # 29 Eki: deniz pasif, + meteor; 18 Eki (2): şok dalgası devre dışı; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
+            # 3 Kas: kruvaziyer (-3), plaj & sahil (-3), eski sokak (-1) pasif
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 19)   # 29 Eki: deniz pasif, + meteor; 18 Eki (2): şok dalgası devre dışı; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
         with patch.object(settings, "PROMPT_PIPELINE", "legacy"):
             # 30 Eyl: dev dalga baskını havuza eklendi (tabela/iskele havuzda kaldı, sadece iskeletten çıktı)
             # 1 Eki: kontrolsüz yat havuza eklendi (halat havuzda kaldı, sadece iskeletten çıktı)

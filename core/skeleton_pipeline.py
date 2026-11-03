@@ -136,6 +136,7 @@ CAMERA_SPOTS = {
     "Rooftop terrace of a hillside villa above the bay": "the rooftop terrace of a modern hillside villa",
     "High terrace of a seafront villa": "the high terrace of a seafront villa",   # 29 Eki (3): K2
     "Hilltop terrace above a coastal town": "a hilltop terrace above the coast",   # 31 Eki: önceki "...above a coastal town"
+    "Rooftop terrace of a modern seafront building": "the rooftop terrace of a modern seafront building",   # 3 Kas: K4 (deneme)
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -205,7 +206,8 @@ AVALANCHE_WEATHER = ["overcast winter daylight over snowy mountains"]
 # Deprem havası (14 Eki): sadece iskelet hattı ve pick_setting için; yapılandırılmış hatta ortam havuzundan gelir
 EARTHQUAKE_WEATHER = ["hazy dusty morning light"]
 # Meteor ışık ekseni (29 Eki, Bahadır; son 2 tekrar etmez). Yapılandırılmış hatta "Setting: ortam, ışık." satırına girer
-METEOR_WEATHER = ["golden sunset", "hazy midday light", "overcast grey sky"]
+METEOR_WEATHER = ["golden sunset", "hazy midday light", "overcast grey sky",
+                  "clear early-morning light"]   # 3 Kas (Aşama 6): yeni ışık DENEME (proven_axes.EXTRA_TRIALS)
 FIRE_WEATHER = ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
                 "heavy smoke and scorching still air"]
 
@@ -623,7 +625,9 @@ EVENT_SKELETONS = {
         "domain": "meteor_disasters", "ships": None,
         "spots": {"Rooftop terrace of a hillside villa above the bay": "a hillside of modern villas above the bay",
                   "High terrace of a seafront villa": "a seafront promenade below modern villas",
-                  "Hilltop terrace above a coastal town": "a coastal town around a wide bay"},
+                  "Hilltop terrace above a coastal town": "a coastal town around a wide bay",
+                  # 3 Kas (Aşama 6): K4 DENEME (proven_axes.EXTRA_TRIALS)
+                  "Rooftop terrace of a modern seafront building": "a coastal road and beach below modern seafront buildings"},
         "people": ["residents", "people"], "weather": METEOR_WEATHER, "object": "impact",
         # 29 Eki (2): tek çarpma, beyaz taşkın (önceki: "...The blast tears across the waterfront as {n} {people} run
         # inland. Flaming debris keeps crashing onto the roofs of the houses.")
@@ -799,6 +803,7 @@ ENV_CENTRIC_COUNT = (2, 10)
 ENV_CENTRIC_COUNT_BY_DOMAIN = {"landslide_disasters": (2, 8)}
 # Olaya özel kişi aralığı (domain'den önce gelir). 4 Eki, Bahadır: kıyı dev dalgada küçük, belirli sayı 3-6
 EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
+               "Flash flooding in city streets": (3, 6),   # 3 Kas (Aşama 3): selde insan ekseni, dev dalgayla aynı
                # 4 Eki, Bahadır onayı (canlı, 5c9ca3d): heyelan 3-6
                "Mudslide pours down a hillside street": (3, 6),
                "Rain-soaked slope collapses onto a roadside": (3, 6),
@@ -956,6 +961,10 @@ METEOR_CAMERA = {
     # "Handheld footage from a hilltop terrace above a coastal town, the whole bay and the rooftops below in view"
     "Hilltop terrace above a coastal town":
         "Handheld footage from a hilltop terrace above the coast, the whole bay and the rooftops below in view",
+    # 3 Kas 2026, Bahadır (Aşama 6): K4 DENEME. Yüksek, sabit, geniş: kıyıdaki modern binanın çatı terası (kuyruk aynı:
+    # sabit, eğilmez, inmez)
+    "Rooftop terrace of a modern seafront building":
+        "Handheld footage from the rooftop of a modern seafront building, high and wide over the beach and open sea",
 }
 # 29 Eki (2), Bahadır: test videosunda kamera 4.5-6 sn'de aşağı eğilip çatı terasına baktı. Önceki: "...the camera
 # stays fixed, never descending; no zoom, no cuts."
@@ -1082,6 +1091,11 @@ class SlotFillError(RuntimeError):
 SEA_CATEGORIES_ACTIVE = False
 SEA_CATEGORIES = ("ferry_operations", "shipyard_and_drydock_engineering", "marina_and_yacht_operations")
 DISABLED_DOMAINS = set() if SEA_CATEGORIES_ACTIVE else set(SEA_CATEGORIES)
+# 3 Kas 2026, Bahadır (toplu düzeltme devam): 🚢 Kruvaziyer ve 🏖️ Plaj & Sahil PASİF (6 olayın kamerası göz hizası +
+# takip: mutlak "yüksek ve sabit kamera" kuralına aykırı). Kod, iskeletler ve testler yerinde; menüde yok, seçilemez,
+# rastgele kategori seçimine girmez. Açmak: bu kümeden çıkar.
+CAMERA_RULE_DISABLED_DOMAINS = {"cruise_ship_operations", "open_beach_coastal_events"}
+DISABLED_DOMAINS |= CAMERA_RULE_DISABLED_DOMAINS
 
 
 def domain_active(domain: str) -> bool:
@@ -1091,7 +1105,10 @@ def domain_active(domain: str) -> bool:
 # 18 Eki (2), Bahadır: DEVRE DIŞI olaylar. Telegram menüsünde görünmez, otomatik (LRU) seçime girmez; havuz, beat'ler,
 # iskelet, Notion kayıtları ve testler aynen durur (kombinasyon testleri ve havuz linti bu olayları da denetler). Yeniden
 # açmak için olayı bu kümeden çıkarmak yeter (tek satır). Şok dalgası: videolar gri, uzak ve sönük çıkıyordu.
-DISABLED_EVENTS = {"Volcano erupts and a shockwave blows out windows"}
+DISABLED_EVENTS = {"Volcano erupts and a shockwave blows out windows",
+                   # 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 7): deprem ortamları modern olsun; "Eski sokak" (eski taş
+                   # evler) PASİF. Havuz, beat'ler, iskelet ve testler yerinde (açmak: bu satırı sil)
+                   "Earthquake collapses a row of old stone houses"}
 
 
 def skeleton_events(domain: str) -> list[str]:

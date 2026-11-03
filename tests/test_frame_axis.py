@@ -149,7 +149,8 @@ class TestModeAndNative(unittest.TestCase):
                     self.assertNotEqual(other, sk.style_suffix(e, None, spot, volc_env=venv))
                     self.assertNotIn("railing", pr.camera_sentence(other))
                     n += 1
-        self.assertEqual(n, 2 * 3 * 4 + 7 + 4)
+        # 3 Kas (Aşama 7): "Eski sokak" pasif (aktif deprem olayı 1, 2 nokta)
+        self.assertEqual(n, 2 * 3 * 4 + 7 + 2)
 
     def test_low_spots_never_use_todays_camera(self):
         fixed = [(e, s) for e in ps.active_events() for s, v in fx.SPOT_FRAME[e].items() if v[1] == fx.FIXED]

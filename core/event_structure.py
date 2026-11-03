@@ -135,8 +135,14 @@ EVENT_KEY_VISUAL = {
     # 21 Eki (genel kalite), Bahadır: çamur gri lapa gibi çıktı; "mud" geçen ilk ifadeye doku. Önceki: "A massive wall
     # of brown mud and rocks tears loose...", "...a fast torrent of brown mud and rocks surges across the road.", "A
     # massive torrent of brown mud, logs and rocks bursts through the drenched hillside village."
-    MUDSLIDE: "A massive wall of thick brown mud full of rocks, branches and debris tears loose from the saturated "
-              "hillside and pours down the steep street.",
+    # 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 5): açılış A testi kuru, eski bir heyelan izi üretti (yağmur ve çamur
+    # yok, aksiyon 1/10). Kilitli köy olayının kilit cümlesine ve hit prompt'lara (1 Eki 22:09 köy, 425K+; yamaç 296K+)
+    # yaklaştırıldı: "torrent" (akan), "drenched" + "in pouring rain" (ıslak, yağmur görünür), "is already bursting"
+    # (hareket ilk karede; çığ/deprem kanıtlı kalıbı "is already ..."), kopma anı ("tears loose from the saturated
+    # hillside") yok. Önceki A: "A massive wall of thick brown mud full of rocks, branches and debris tears loose from
+    # the saturated hillside and pours down the steep street." (25 kelime; yeni 24)
+    MUDSLIDE: "A massive torrent of thick brown mud full of rocks, branches and debris is already bursting down the "
+              "drenched steep street in pouring rain.",
     SLOPE: "The saturated slope collapses and a fast torrent of thick brown mud full of rocks, branches and debris "
            "surges across the road.",
     VILLAGE: "A massive torrent of thick brown mud full of rocks, branches and debris bursts through the drenched "
@@ -994,6 +1000,12 @@ EVENT_BEATS = {
                    "terms": [("building", "house", "shop", "storefront", "shopfront", "facade", "façade",
                              "ground floor", "doorway", "entrance"), ("burst", "smash", "crash", "pour", "flood",
                              "break", "broke", "sweep", "swept", "surge", "rush", "cave", "give way", "gives way")]},
+            # 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 2): D2 (lamba direği) ve D4 (çöp konteyneri) pasif; yerine güçlü,
+            # somut, büyük hedefli final. DENEME (TRIAL_BEATS: en fazla %20, art arda gelmez)
+            "D10": {"text": "the current shoves a row of parked cars into the front of a shop and its wall caves in",
+                    "terms": [_CAR + ("row", "vehicles"), _SHOP + ("front", "wall", "brick wall"),
+                              ("cave", "cave in", "caves in", "caved in", "collapse", "crumble", "give way",
+                               "gives way", "burst", "break", "smash", "crush")]},
         },
         # Aynı videoda tekrar/çelişki (Bahadır onayı, 3 Eki)
         # 17 Eki (temizlik turu): D1, D6, D7 çıktı; (V7,D6) (V6,D1) (V8,D1) çiftleri ve D7'nin görünüm/nokta kısıtı
@@ -1001,7 +1013,8 @@ EVENT_BEATS = {
         # city district"}})
         # 18 Eki (2): D9 binanın zemin katı, V7 bina duvarı (aynı yapı)
         # 30 Eki (3), Bahadır: (V6, D5) şehir otobüsü iki kez
-        "excluded_pairs": {("V3", "D8"), ("V4", "D2"), ("V7", "D9"), ("V6", "D5")},
+        "excluded_pairs": {("V3", "D8"), ("V4", "D2"), ("V7", "D9"), ("V6", "D5"),
+                           ("V8", "D10"), ("V2", "D10")},   # 3 Kas: dükkân duvarı iki kez (V8), park arabaları (V2)
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -1059,8 +1072,15 @@ EVENT_BEATS = {
                               "garbage container", "trash container", "container", "bin"),
                              ("tumble", "roll", "smash", "slam", "crash", "barrel", "bounce", "hurtle", "careen",
                               "ram")]},
+            # 3 Kas 2026, Bahadır (Aşama 2): W2 (lamba direği), W6 (alçak duvar), W8 (çöp konteyneri) pasif; yerine
+            # güçlü final. DENEME (TRIAL_BEATS)
+            "W9": {"text": "the surge rams a floating car through the front of a seafront café and its wall caves in",
+                   "terms": [_CAR, ("café", "cafe", "shop", "storefront", "shopfront", "front", "wall"),
+                             ("cave", "cave in", "caves in", "caved in", "collapse", "crumble", "give way",
+                              "gives way", "burst", "break", "smash", "crush")]},
         },
-        "excluded_pairs": {("T6", "W2"), ("T2", "W1"), ("T8", "W1"), ("T3", "W8")},   # 17 Eki: (T1,W7) W7 ile gitti
+        "excluded_pairs": {("T6", "W2"), ("T2", "W1"), ("T8", "W1"), ("T3", "W8"),
+                           ("T1", "W9"), ("T8", "W9"), ("T3", "W9")},   # 17 Eki: (T1,W7) W7 ile gitti. 3 Kas: bina önü / araç iki kez
         "excluded_views": {},
         # Kamera seawall'un üstünde duruyor: "alçak duvar çöker" olayı kameranın durduğu duvar gibi çizilir
         "excluded_spots": {"W6": {"Coastal avenue behind a seawall"}},
@@ -1482,6 +1502,10 @@ EVENT_BEATS = {
             # facade to the balconies above in a roaring wall" (farklılık 2: M8)
             "M11": {"text": "a burning balcony slab on the floor above breaks off and crashes down the facade",
                     "terms": [_FIRE_FLAME, _FIRE_BALCONY + ("balcony slab",), _FIRE_PEEL + _FIRE_FALL]},
+            # 3 Kas (devam), Bahadır: M6 pasif kalınca araç ekseni boştu. Büyük, sabit, somut hedef: park hâlindeki
+            # araç; araç hareket etmez (spin/lift/roll yok). DENEME (TRIAL_BEATS)
+            "M12": {"text": "burning wreckage from the facade crashes onto the {vehicle} parked below and flames engulf it",
+                    "terms": [_FIRE_FLAME, _FIRE_DEBRIS, _FIRE_IGNITE + ("engulf", "swallow", "wrap")]},
         },
         "slice_3": {
             # 31 Eki (3), Bahadır (zayıf final): N1 metni değişti, kod aynı. Önceki "the flames climb floor after floor,
@@ -1499,12 +1523,19 @@ EVENT_BEATS = {
             "N5": {"text": "the burning top floor caves in and flaming wreckage crashes onto the street",
                    "terms": [_FIRE_FLOOR + ("top floor",), _FIRE_FALL + ("cave", "cave in", "caves in", "give way",
                                                                          "gives way"), _FIRE_FLAME]},
+            # 3 Kas 2026, Bahadır (Aşama 2): N4 (duman ve ateş tırmanır, kalıcı yapı hasarı yok: antiklimaks) pasif;
+            # yerine güçlü final. DENEME (TRIAL_BEATS). N6 kimliği RETIRED_BEATS'te (tekrar kullanılmaz)
+            "N7": {"text": "a whole burning corner of the building breaks away and crashes onto the street below",
+                   "terms": [_FIRE_FLAME, ("corner", "building", "facade", "façade", "tower"),
+                             _FIRE_FALL + ("break away", "breaks away", "broke away", "cave", "collapse")]},
         },
         # 17 Eki: (M5,N2) N2 ile gitti. 18 Eki (2): M1-M5 çıktı; panel/cephe parçası iki kez (M7, M9: N3), pencereden
         # ateş/kat kat tırmanma iki kez (M8, M10, M11: N1; M10: N4, N5)
         "excluded_pairs": {("M7", "N3"), ("M9", "N3"), ("M8", "N1"), ("M10", "N1"), ("M11", "N1"), ("M10", "N4"),
                            ("M10", "N5"),
-                           ("M11", "N3")},   # 30 Eki (2), Bahadır: balkon iki kez
+                           ("M11", "N3"),   # 30 Eki (2), Bahadır: balkon iki kez
+                           ("M7", "N7"), ("M9", "N7"), ("M11", "N7"),   # 3 Kas: cephe parçası düşer iki kez
+                           ("M12", "N7"), ("M12", "N5")},   # 3 Kas (devam): enkaz yere/araca iki kez; iki deneme birlikte yok
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -2137,7 +2168,24 @@ EVENT_BEATS = {
 
 # Olay -> seçilemeyen beat'ler (havuzda ve lint'te durur, çift seçiminde yok). 29 Eki (2): meteor [DALGA] bayrağı
 # kaldırıldı; mekanizma boş.
-DISABLED_BEATS: dict[str, set[str]] = {}
+# 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 2): kilitsiz olaylarda zayıf öğeler PASİF (silinmedi). Kilitli olaylara
+# (LOCKED_EVENTS) dokunulmaz.
+#   sel D2 (lamba direği), D4 (çöp konteyneri), V4 (4-9s: lamba direği, ince hedef)
+#   dev dalga W2 (lamba direği), W6 (alçak duvar), W8 (çöp konteyneri), T6 (4-9s: lamba direği)
+#   cephe N4 (duman ve ateş tırmanır, kalıcı hasar yok: antiklimaks), M6 (4-9s: ön cam + fren: ince hedef, antiklimaks)
+DISABLED_BEATS: dict[str, set[str]] = {
+    FLOOD: {"D2", "D4", "V4"},
+    TIDAL: {"W2", "W6", "W8", "T6"},
+    FACADE_FIRE: {"N4", "M6"},
+}
+# 3 Kas (Aşama 2): pasif öğelerin yerine gelen yeni öğeler DENEME: aday çiftlerin en fazla %20'si (TRIAL_BEAT_SHARE),
+# son üretimde deneme öğesi geçtiyse bu üretimde gelmez (art arda iki kez yok). Kilitli olaylarda kayıt yok.
+TRIAL_BEATS: dict[str, set[str]] = {
+    FLOOD: {"D10"},
+    TIDAL: {"W9"},
+    FACADE_FIRE: {"N7", "M12"},   # 3 Kas (devam): M12 araç öğesi
+}
+TRIAL_BEAT_SHARE = 0.20
 # 29 Eki (2), Bahadır: yeni W/X maddelerinden havuza girmeyenler (yerine yeni madde Bahadır'ın kararıyla). Puan sırası:
 # büyüklük, kontrast, yakınlık, çizilebilirlik, aksiyon, farklılık.
 # 29 Eki (3): W2, W3, X1 yeni metinle, X3 "knocking over" ile havuza girdi; bekleyen madde yok.
@@ -2260,8 +2308,8 @@ RETIRED_BEATS = {
 # beat'lerde ana nesne seçilen araçtır (araç adı terimleri); diğerlerinde aşağıdaki tablo, mevcut terim gruplarından
 # nesne grubunun sırasını verir (eylem grupları artık kapı değil, sadece eski kapı raporunda: strict_beat_issues).
 OBJECT_GROUPS = {
-    FLOOD: {"D9": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0, "D8": 0},
-    TIDAL: {"W1": 1, "W2": 0, "W3": 0, "W4": 0, "W5": 0, "W6": 0, "W8": 0},
+    FLOOD: {"D9": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0, "D8": 0, "D10": 1},   # 3 Kas: D10 dükkân
+    TIDAL: {"W1": 1, "W2": 0, "W3": 0, "W4": 0, "W5": 0, "W6": 0, "W8": 0, "W9": 1},   # 3 Kas: W9 kafe
     # 18 Eki (2) kuru deneme: M8'in nesnesi ev (kamyon evin önüne; "house's facade" M7'ye benzetiliyordu)
     # 22 Eki: M6 ev (M7 ile aynı). 31 Eki (3): M3 ev (minibüs evin önüne; nesne minibüs olunca "house, wall" M6'nın
     # nesnesi sayılıyordu, kod yedeği M6'ya benzetildi), M4 dükkân
@@ -2272,7 +2320,7 @@ OBJECT_GROUPS = {
     MARINA_TORNADO: {"Z7": 0, "Y8": 0, "Y7": 0, "Z1": 0, "Z2": 0, "Z3": 0, "Z4": 0, "Z6": 0},
     AVENUE: {"P7": 0, "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q6": 0},
     WILDFIRE: {"L7": 0, "K8": 1, "K7": 1, "L1": 1, "L3": 1, "L4": 1, "L5": 0},
-    FACADE_FIRE: {"M11": 1, "M10": 1, "M9": 1, "M8": 1, "M7": 1, "N1": 1, "N3": 1, "N4": 0, "N5": 0},   # 31 Eki (3): N1 çatı
+    FACADE_FIRE: {"M11": 1, "M10": 1, "M9": 1, "M8": 1, "M7": 1, "N1": 1, "N3": 1, "N4": 0, "N5": 0, "N7": 1},   # 31 Eki (3): N1 çatı
     FIRE_TORNADO: {"U1": 0, "U2": 0, "U6": 0, "U7": 0, "U8": 0, "U9": 0, "U10": 0, "U11": 0},
     HELICOPTER: {"G7": 0, "F1": 0, "F2": 1, "F4": 0, "F5": 1, "G1": 2, "G2": 0, "G3": 0, "G5": 0, "G6": 1},   # 31 Eki (3): F5 güverte
     ERUPTION: {"S3": 0, "S4": 0, "S5": 0, "S6": 1, "S7": 1, "S8": 1, "U2": 1, "U3": 0, "U4": 0, "U5": 0, "U6": 0,
@@ -2303,8 +2351,8 @@ _ANCHOR_SHOP = ("shop", "store", "storefront", "shopfront", "shop front", "corne
                 "cafe")
 _ANCHOR_BUS = ("bus", "buses", "city bus")
 BEAT_ANCHORS = {
-    FLOOD: {"V6": _ANCHOR_BUS, "V8": _ANCHOR_SHOP},
-    TIDAL: {"T8": _ANCHOR_HOUSE},
+    FLOOD: {"V6": _ANCHOR_BUS, "V8": _ANCHOR_SHOP, "D10": _ANCHOR_SHOP},   # 3 Kas: D10 dükkân önü
+    TIDAL: {"T8": _ANCHOR_HOUSE, "W9": _ANCHOR_SHOP},                      # 3 Kas: W9 kafe önü
     MUDSLIDE: {"H6": _ANCHOR_HOUSE, "M3": _ANCHOR_HOUSE},   # 31 Eki (3): M3 minibüs evin önüne
     VILLAGE: {"L6": _ANCHOR_HOUSE},
     MARINA_TORNADO: {"Y3": _MARINA_OFFICE},
@@ -2411,6 +2459,20 @@ UPHILL_GPT_BANNED = ("uphill", "up the street", "up the hill", "up the lane", "h
                      "towards the mud", "toward the water", "towards the water")
 _PEOPLE_RX = r"\b(?:" + "|".join(re.escape(w) for w in _PEOPLE_SUBJECTS) + r")\b"
 _PEOPLE_SCRAMBLE_RE = re.compile(_PEOPLE_RX + r",?(?:\s+\w+ly){0,2}\s+scrambl\w*", re.IGNORECASE)
+# 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 4): kapı ekleri. Hepsi global ve gpt_added_issues mantığıyla: seçilen
+# beat/kilit/açılış metninde ve kod yedeğinin insan cümlesinde geçen kök muaf (prompt metni değişmez, sadece GPT'nin
+# eklediği kötü çıktı reddedilir). Kök eşleşmesi kelime başından, büyük/küçük harf duyarsız.
+# Uydurma yuvarlanma/kaldırma: "rolling away", "before rolling", "as it rolls", "lifted effortlessly"
+MOTION_GPT_BANNED = ("rolling away", "before rolling", "as it rolls", "lifted effortlessly")
+# Hollywood / abartı: "bombardment", "obliterates", "fiery hail", "fiery downfall"
+HYPE_GPT_BANNED = ("bombardment", "obliterat", "fiery hail", "fiery downfall")
+# Belirsiz kaçış hedefi ("run to safety", "away from danger", "from the threat"): hedef somut olmalı
+VAGUE_TARGET_GPT_BANNED = ("danger", "threat", "safety")
+# Ses kelimeleri (SOUND_GPT_BANNED'e ek). "thunder" sadece ses anlamında: thunder/thunders/thundered/thundering/
+# thunderous; "thunderstorm", "thundercloud" hava durumu, serbest.
+SOUND_GPT_BANNED_EXTRA = ("roar", "thunder!", "thunderous", "crash sound", "scream", "echo", "hiss")
+# İnsan fiili "dash" (insan öznesi + dash/dashes/dashed/dashing); scramble gibi
+_PEOPLE_DASH_RE = re.compile(_PEOPLE_RX + r",?(?:\s+\w+ly){0,2}\s+dash(?:es|ed|ing)?\b", re.IGNORECASE)
 
 
 def _root_rx(words) -> re.Pattern:
@@ -2464,6 +2526,16 @@ def gpt_added_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
                 if not re.search(r"\bscrambl", pool, re.IGNORECASE)]
     add("people_scramble", scramble, "insanlar 'scramble' etmez",
         "people run, sprint or flee; they never scramble.")
+    # 3 Kas (Aşama 4): insan + dash, uydurma hareket, abartı, belirsiz kaçış hedefi, ek ses kelimeleri
+    dash = [m.group(0) for m in _PEOPLE_DASH_RE.finditer(text) if not re.search(r"\bdash", pool, re.IGNORECASE)]
+    add("people_dash", dash, "insanlar 'dash' etmez", "people run or sprint; they never dash.")
+    add("invented_motion", _added_words(MOTION_GPT_BANNED, text, pool), "uydurma hareket",
+        "things only move the way the given event says; nothing rolls away or is lifted effortlessly.")
+    add("hype_word", _added_words(HYPE_GPT_BANNED, text, pool), "abartı kelimesi",
+        "describe the concrete hit plainly; no bombardment, obliteration, fiery hail or fiery downfall.")
+    add("vague_target", _added_words(VAGUE_TARGET_GPT_BANNED, text, pool), "belirsiz kaçış hedefi",
+        "name a concrete place people run to, like a building entrance, a stairway or the back of a truck; never "
+        "safety, danger or a threat.")
     if event in VOLC_ENV_EVENTS:
         add("volcano_banned_root", _added_words(VOLC_GPT_BANNED, text, pool), "volkanda yasak kelime",
             "rocks fall and smash; no missiles, trails, streaks, explosions or showers.")
@@ -2471,7 +2543,7 @@ def gpt_added_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
         people_sents = " ".join(x for x in _sentences(text) if re.search(_PEOPLE_RX, x, re.IGNORECASE))
         add("people_uphill", _added_words(UPHILL_GPT_BANNED, people_sents, pool), "insan yönü (yokuş yukarı / akıntıya doğru)",
             "people run away from the flow along the street, never uphill, up the street or toward the mud or water.")
-    add("sound_word", _added_words(SOUND_GPT_BANNED, text, pool), "ses kelimesi",
+    add("sound_word", _added_words(SOUND_GPT_BANNED + SOUND_GPT_BANNED_EXTRA, text, pool), "ses kelimesi",
         "write only what is visible, never sounds.")
     add("abstract_final", _added_words(ABSTRACT_GPT_BANNED, text, pool), "soyut ifade",
         "end on a concrete visible hit, not on destruction, devastation, chaos or havoc.")
@@ -2766,21 +2838,34 @@ _ENV_LOCK = threading.Lock()
 # - Eski sokak: tuğla-taş konutlar ve yamaçta eski taş evler (Bahadır: "taş evlerle uyumlu ifade"); "wide avenue" yok.
 # - "apartment blocks lining a wide avenue" sadece meydan kenarıyla (sakin sokakla çelişir, "wide avenue" tekrar olur).
 # - Beyaz üstüne beyaz: "hazy dusty morning" seçilince şehir koyu tonlu ifadesiyle yazılır (EQ_DARK_CITY).
+# 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 7): deprem ortamlarında modern yapılar (cam cepheli ofis blokları, beton
+# apartmanlar, modern caddeler). Çok eski taş yapı ortamları PASİF (EQ_PASSIVE_CITIES; silinmedi), "Eski sokak" olayı
+# pasif (skeleton_pipeline.DISABLED_EVENTS). Mevcut modern/nötr ortamlar KANITLI; yeni modern ortamlar DENEME
+# (EQ_TRIAL_VALUES: aday üçlülerin en fazla %20'si, son üretimde deneme değeri geçtiyse gelmez).
 EQ_ENV_AXES = {
     "city": ("concrete mid-rise apartment blocks", "old brick-and-stone residential buildings",
              "a dense hillside neighbourhood of apartment blocks", "apartment blocks lining a wide avenue",
-             "a dense hillside neighbourhood of old stone houses"),
+             "a dense hillside neighbourhood of old stone houses",
+             "glass-fronted office blocks beside modern apartments", "modern concrete apartment blocks and offices"),
     "light": ("hazy dusty morning", "heavy grey overcast sky", "late-afternoon low sun", "blue dawn light"),
-    "street": ("wide avenue", "narrow residential street", "tree-lined square edge", "quiet residential street"),
+    "street": ("wide avenue", "narrow residential street", "tree-lined square edge", "quiet residential street",
+               "busy modern boulevard"),
 }
+EQ_PASSIVE_CITIES = ("old brick-and-stone residential buildings", "a dense hillside neighbourhood of old stone houses")
+EQ_TRIAL_VALUES = {"glass-fronted office blocks beside modern apartments", "modern concrete apartment blocks and offices",
+                   "busy modern boulevard"}
+EQ_TRIAL_SHARE = 0.20
 EQ_EVENT_CITIES = {
     EARTHQUAKE_APARTMENT: ("concrete mid-rise apartment blocks", "a dense hillside neighbourhood of apartment blocks",
-                           "apartment blocks lining a wide avenue"),
+                           "apartment blocks lining a wide avenue",
+                           "glass-fronted office blocks beside modern apartments",   # 3 Kas: DENEME
+                           "modern concrete apartment blocks and offices"),          # 3 Kas: DENEME
     EARTHQUAKE_OLD_STREET: ("old brick-and-stone residential buildings",
                             "a dense hillside neighbourhood of old stone houses"),
 }
 EQ_EVENT_STREETS = {
-    EARTHQUAKE_APARTMENT: ("wide avenue", "tree-lined square edge", "quiet residential street"),
+    EARTHQUAKE_APARTMENT: ("wide avenue", "tree-lined square edge", "quiet residential street",
+                           "busy modern boulevard"),   # 3 Kas: DENEME
     EARTHQUAKE_OLD_STREET: ("narrow residential street", "tree-lined square edge", "quiet residential street"),
 }
 EQ_AVENUE_CITY = "apartment blocks lining a wide avenue"
@@ -2792,6 +2877,8 @@ EQ_DARK_CITY = {
     "apartment blocks lining a wide avenue": "dark-toned apartment blocks lining a wide avenue",
     "old brick-and-stone residential buildings": "dark old brick-and-stone residential buildings",
     "a dense hillside neighbourhood of old stone houses": "a dense hillside neighbourhood of dark stone houses",
+    "glass-fronted office blocks beside modern apartments": "dark glass-fronted office blocks beside modern apartments",
+    "modern concrete apartment blocks and offices": "dark modern concrete apartment blocks and offices",
 }
 _EQ_ENV_MEMORY: list[dict] = []
 
@@ -2883,11 +2970,19 @@ def _choose_eq_environment(event: str, spot: str, rng, mem: list[dict] | None = 
         with _ENV_LOCK:
             mem = list(_EQ_ENV_MEMORY)
     mem = [m for m in mem if m and all(m.get(a) for a in ("city", "street", "light"))]
-    for depth in (ENV_BLOCK, 1, 0):
+
+    def is_trial(env):   # 3 Kas (Aşama 7): yeni modern ortamlar DENEME
+        return bool({env["city"], env["street"]} & EQ_TRIAL_VALUES)
+
+    def candidates(depth):
         recent = mem[-depth:] if depth else []
         blocked = {a: {m[a] for m in recent} for a in ("city", "street", "light")}
         combos = []
         for c in EQ_EVENT_CITIES[event]:
+            # 3 Kas (Aşama 7): eski taş yapı ortamları pasif. Olayın tüm şehirleri pasifse (pasif "Eski sokak" olayı koddan
+            # doğrudan çağrılırsa) eski hâli: olay zaten menüde ve rotasyonda yok
+            if c in EQ_PASSIVE_CITIES and not set(EQ_EVENT_CITIES[event]) <= set(EQ_PASSIVE_CITIES):
+                continue
             for st in EQ_EVENT_STREETS[event]:
                 for li in EQ_ENV_AXES["light"]:
                     if c in blocked["city"] or st in blocked["street"] or li in blocked["light"]:
@@ -2897,8 +2992,17 @@ def _choose_eq_environment(event: str, spot: str, rng, mem: list[dict] | None = 
                     env = {"city": c, "street": st, "light": li}
                     if len(setting_line(env).split()) <= SETTING_MAX_WORDS:
                         combos.append(env)
-        if combos:
-            return {**rng.choice(combos), "spot": spot}
+        return combos
+    has_trial = any(is_trial(e) for e in candidates(0))
+    # Deneme kararı önce (en fazla %20; son üretim deneme ise hayır), sonra derinlik döngüsü o grupta; grupta aday
+    # kalmazsa diğer grup (aday tükenmez). Deneme değeri olmayan olayda eski yol (rastgele çekim sırası aynı).
+    want_trial = has_trial and not (mem and is_trial(mem[-1])) and rng.random() < EQ_TRIAL_SHARE
+    groups = ((lambda e: is_trial(e) == want_trial), (lambda e: True)) if has_trial else ((lambda e: True),)
+    for keep in groups:
+        for depth in (ENV_BLOCK, 1, 0):
+            combos = [e for e in candidates(depth) if keep(e)]
+            if combos:
+                return {**rng.choice(combos), "spot": spot}
     raise StructureError(f"{event}: deprem ortam adayı kalmadı")
 
 
@@ -2914,7 +3018,9 @@ def remember_environment(env: dict) -> None:
 # Stil ekine "Setting: ortam, ışık." satırı, GPT'ye PLACE satırı olarak gider.
 METEOR_ENVS = {"O1": "white modern Mediterranean villas with glass railings and pools",
                "O2": "modern glass houses stepped down a green hillside",
-               "O3": "a palm-lined coastal suburb of modern homes"}
+               "O3": "a palm-lined coastal suburb of modern homes",
+               # 3 Kas 2026, Bahadır (Aşama 6): farklı kıyı, DENEME (proven_axes.EXTRA_TRIALS); yüksek kule yok (O4 dersi)
+               "O5": "a sandy bay lined with low modern beach hotels"}
 # 29 Eki (3), Bahadır: O4 pasif (2. test videosunda yüksek kuleler sebepsiz yer ve şekil değiştirdi). Kimlik tekrar
 # kullanılmaz; eski Notion kaydındaki "O4" tekrar önlemede zararsız.
 METEOR_RETIRED_ENVS = {"O4": "modern seafront apartment towers and low houses along a promenade"}
@@ -3173,8 +3279,18 @@ _FIRE_TOR_NEAR = _AVA_NEAR + ("between the houses", "between the nearby houses",
                               "across the street below", "through the street below", "street right below",
                               "street just below")
 _FIRE_TOR_NEAR_RULE = {**_AVA_NEAR_RULE, "terms": _FIRE_TOR_NEAR}
+# ☄️ Meteor (3 Kas 2026, Bahadır, Aşama 6): koşan insanlar kameraya yakın, kıyı yolunda / promenatta / teraslarda,
+# hemen aşağıda. Yakınlık kuralı (slice_near_camera) meteorda yer + "below" ifadeleriyle (önceki: _AVA_NEAR_RULE,
+# "in the street right below")
+_MET_PLACES = ("terraces", "terrace", "terrace steps", "promenade", "coastal road", "seafront road")
+_MET_NEAR = tuple(f"{p} {b}" for p in _MET_PLACES for b in ("below", "right below", "just below"))
+_MET_NEAR_RULE = {**_AVA_NEAR_RULE, "terms": _MET_NEAR,
+                  "missing": "0-4s: insanlar aşağıdaki kıyı yolunda / teraslarda değil",
+                  "feedback": "'slice_1_rest' must place the running people on the coastal road, the promenade or the "
+                              "terraces right below, in the lower half of the frame (never use the word camera)."}
 
 SLICE_RULES = {
+    FLOOD: _people_rules("the water"),   # 3 Kas (Aşama 3): selde de kaçan kişi sayısı (insan ekseni)
     TIDAL: _people_rules("the wave"),
     # TASLAK (4 Eki, heyelan)
     MUDSLIDE: _people_rules("the mud"),
@@ -3204,7 +3320,8 @@ SLICE_RULES = {
     EARTHQUAKE_APARTMENT: _people_rules("the collapsing buildings") + [_AVA_NEAR_RULE],
     EARTHQUAKE_OLD_STREET: _people_rules("the collapsing buildings") + [_AVA_NEAR_RULE],
     # 29 Eki: meteor, kamera yüksekte; insanlar aşağıdaki sokakta kaçar (her karede insan, ön planda yüz yok)
-    METEOR: _people_rules("the impact") + [_AVA_NEAR_RULE],
+    # 3 Kas (Aşama 6): insanlar kıyı yolunda ya da teraslarda (kameraya yakın, hemen aşağıda)
+    METEOR: _people_rules("the impact") + [_MET_NEAR_RULE],
 }
 
 
@@ -3323,8 +3440,26 @@ def choose_beats(event: str, view: str | None, spot: str, history: list[str],
             break
     if not pairs:
         raise StructureError(f"{event}: seçilebilir olay çifti kalmadı (görünüm={view}, yer={spot}, son={recent})")
-    trial = TRIAL_FINALS.get(event, set())
+    new_trial = TRIAL_BEATS.get(event, set())
     import core.proven_axes as pa
+    if new_trial and pa.ROTATION_ON:
+        # 3 Kas (Aşama 2): deneme öğeleri en fazla %20 (aday çiftlerde hem kanıtlı hem deneme varsa), art arda gelmez
+        # (son üretimde deneme öğesi geçtiyse sadece kanıtlı çiftler). Sadece TRIAL_BEATS olan (kilitsiz) olaylarda.
+        def is_trial(p):
+            return p[0] in new_trial or p[1] in new_trial
+        last_tag = seen[-1] if seen else ""
+        last_trial = any(x in new_trial for x in last_tag.split("+"))
+        proven_pairs = [p for p in pairs if not is_trial(p)]
+        trial_pairs = [p for p in pairs if is_trial(p)]
+        if not proven_pairs:
+            # LRU kanıtlı çiftlerin hepsini elediyse kanıtlı çiftlerde derinlik 1 (son çift tekrar etmez); deneme payı
+            # yine en fazla %20 kalır (aday tükenmez)
+            proven_pairs = [p for p in allowed_pairs(event, view, spot) if not is_trial(p) and beat_tag(*p) != last_tag]
+        if proven_pairs and (last_trial or not trial_pairs or rng.random() >= TRIAL_BEAT_SHARE):
+            pairs = proven_pairs
+        elif trial_pairs and not last_trial:
+            pairs = trial_pairs
+    trial = TRIAL_FINALS.get(event, set())
     if trial and pa.ROTATION_ON:
         # 31 Eki (3): kalıcı hasarsız finaller DENEME. Sadece LRU ile aday tükenince kesin dışlama yerine %10 ağırlık:
         # kalıcı hasarlı final varsa %90 onlardan; LRU hepsini elediyse onlarda derinlik 1 (son final tekrar etmez)
@@ -3417,7 +3552,9 @@ def choose_event_vehicle(event: str, rng: random.Random | None = None, used: lis
 def uses_vehicle(event: str) -> bool:
     """Olay havuzunda {vehicle} geçen madde var mı. Yoksa (13 Eki: lav, kül bulutu) araç seçilmez, GPT'ye gitmez."""
     b = EVENT_BEATS[event]
-    return any("{vehicle}" in beat["text"] for slot in ("slice_2", "slice_3") for beat in b[slot].values())
+    off = DISABLED_BEATS.get(event, set())   # 3 Kas: pasif beat sayılmaz (cephe M6 pasif: cephe yangınında araç yok)
+    return any("{vehicle}" in beat["text"] for slot in ("slice_2", "slice_3") for bid, beat in b[slot].items()
+               if bid not in off)
 
 
 def spec_vehicle_terms(spec: dict) -> tuple[str, ...]:
@@ -3533,7 +3670,10 @@ def people_line(spec: dict) -> str:
     # cümlede)
     # 22 Eki (genel kalite devam): önceki ipucu ", close by: near the railing or in the street right below"
     near = (", in the street right below, in the lower half of the frame"
-            if spec["event"] in AVALANCHE_EVENTS + EARTHQUAKE_EVENTS + (FIRE_TORNADO,) + METEOR_EVENTS else "")
+            if spec["event"] in AVALANCHE_EVENTS + EARTHQUAKE_EVENTS + (FIRE_TORNADO,) else "")
+    # 3 Kas (Aşama 6): meteorda mevcut yakınlık satırının yeri kıyı yolu / teraslar (önceki "in the street right below")
+    if spec["event"] in METEOR_EVENTS:
+        near = ", on the coastal road and terraces right below, in the lower half of the frame"
     return (f"PEOPLE RUNNING AWAY: {w} (slice_1_rest must say that {w} people run away from "
             f"{rule['away_from']}{near})\n")
 
@@ -3673,6 +3813,7 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
                               feedback.format(words=", ".join(repr(w) for w in found))))
     if event in METEOR_EVENTS:   # 29 Eki (2): beyaz su, kalıcı hasar, nesne koruma
         out += meteor_slice_issues(spec, slices)
+        out += meteor_cgi_issues(spec, slices)   # 3 Kas (Aşama 6): CGI kökleri, kamera hareketi
     if event in WORD_CAP_EVENTS:   # 13 Eki (3): volkan (ve çığ) prompt'u en fazla 175 kelime
         n_words = len(assemble_prompt(spec, slices).split())
         cap = max_prompt_words(event)
@@ -3681,6 +3822,33 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             out.append(_issue("volcano_prompt_words", f"prompt {n_words} kelime (en fazla {cap})",
                               f"The full prompt is {n_words} words; shorten the three fields to at most {budget} words "
                               f"in total."))
+    out += verbatim_issues(spec, slices)   # 3 Kas (Aşama 1): 4-9s / 9-15s birebir havuz metni
+    return out
+
+
+# ☄️ 3 Kas 2026, Bahadır (Aşama 6): 2. meteor videosundaki CGI hissi. GPT çıktısında yasak kökler ve kamera hareketi
+# kelimeleri. Muafiyet sadece seçilen beat metni (kilit cümle muaf DEĞİL: "towering column of water" kilit cümlede var,
+# GPT'nin tekrarlaması reddedilir; kilit cümlenin kendisi dilimlerde değil).
+METEOR_CGI_BANNED = ("spiky", "column of water", "frozen trail", "wall of white")
+METEOR_CAMERA_MOVES = ("drift!", "pan!", "pans", "panned", "panning", "tilt!", "follow!")
+
+
+def meteor_cgi_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
+    event = spec["event"]
+    pool = " ".join([beat_text(event, "slice_2", spec["beat_2"]), beat_text(event, "slice_3", spec["beat_3"])])
+    fields = [f for f in SLICE_FIELDS if not (f == "slice_1_rest" and _code_people_line(spec, slices.get(f, "")))]
+    text = " ".join(slices.get(f, "") for f in fields)
+    out = []
+    cgi = _added_words(METEOR_CGI_BANNED, text, pool)
+    if cgi:
+        out.append(_issue("meteor_cgi", f"CGI hissi ({', '.join(cgi)})",
+                          f"Remove {', '.join(repr(w) for w in cgi)}: describe real water, spray and smoke, no stylized "
+                          f"shapes."))
+    moves = _added_words(METEOR_CAMERA_MOVES, text, pool)
+    if moves:
+        out.append(_issue("meteor_camera_move", f"kamera hareketi kelimesi ({', '.join(moves)})",
+                          f"Remove {', '.join(repr(w) for w in moves)}: describe only the scene, never camera "
+                          f"movement."))
     return out
 
 
@@ -3789,7 +3957,15 @@ _FB_AVA_NEAR = ("{N} villagers run away right below.", "{N} people flee in the s
 _FB_EQ_NEAR = ("{N} residents run away in the street below.", "{N} neighbours flee in the street right below.",
                "{N} people sprint off right below.", "{N} residents flee in the street below.",
                "{N} people run away in the street right below.", "{N} neighbours dash away just below.")
-FALLBACK_PEOPLE = {
+# 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 3): sel ve dev dalgada insan ekseni (diğer olaylardaki kişi ekseniyle aynı
+# biçim: kaçan kişi sayısı {N} + insan cümlesi). Kaçış hedefi somut (bina girişi, merdiven, otopark merdiveni), fiil
+# "run" ya da "sprint" (scatter/scramble/dash yok), yokuş yukarı / higher ground yok. Cümle LRU ile döner
+# (PEOPLE_AXIS_EVENTS, eksen "insan"): I1-I2 KANITLI (eski kalıp), I3-I6 DENEME (en fazla %20, art arda gelmez).
+# Önceki havuzlar FALLBACK_PEOPLE_RETIRED'da (pasif, silinmedi).
+FALLBACK_PEOPLE_RETIRED = {
+    METEOR: ("{N} people run off right below.", "{N} residents flee in the street right below.",
+             "{N} people sprint inland in the street below.", "{N} residents run from it just below.",
+             "{N} people flee in the street below.", "{N} neighbours dash inland right below."),
     FLOOD: ("Pedestrians scramble onto steps and ledges as it hits.", "People run for the doorways as the water hits.",
             "Pedestrians flee up the steps of the nearest buildings.",
             "Residents climb onto high ledges as the water spreads.",
@@ -3798,6 +3974,22 @@ FALLBACK_PEOPLE = {
     TIDAL: ("{N} pedestrians run from the wave toward the buildings.", "{N} residents sprint away from the wave up the street.",
             "{N} people flee from the wave toward higher steps.", "{N} pedestrians scramble up the steps away from the wave.",
             "{N} people run inland as the wave hits.", "{N} residents dash away from the wave."),
+}
+FALLBACK_PEOPLE = {
+    # I1 eski "People run for the doorways as the water hits.", I2 eski "Pedestrians flee up the steps of the nearest
+    # buildings." (kişi sayısı ve "run" ile)
+    FLOOD: ("{N} pedestrians run for the doorways as the water hits.",
+            "{N} people run up the steps of the nearest building.",
+            "{N} people sprint into the entrance of an office building.",
+            "{N} pedestrians run for the stairway of a parking garage.",
+            "{N} people sprint into a hotel lobby across the street.",
+            "{N} pedestrians run up the stairs of a shopping arcade."),
+    # I1, I2 eski cümleler (1. ve 5.) birebir
+    TIDAL: ("{N} pedestrians run from the wave toward the buildings.", "{N} people run inland as the wave hits.",
+            "{N} people sprint into the entrance of a seafront hotel.",
+            "{N} pedestrians run up the stairs of an apartment building.",
+            "{N} residents sprint for the stairway of a parking garage.",
+            "{N} people run for the doorway of a seafront café."),
     # 23 Eki, Bahadır (heyelan testi): çamur yukarıdan geliyor; "uphill" / "up the street" insanları çamura doğru
     # koşturuyordu. Önceki: "{N} residents run uphill away from the mud.", "{N} people flee from the mud up the
     # street.", "{N} pedestrians scramble uphill as the mud hits.", "{N} pedestrians dash uphill away from the flow."
@@ -3841,9 +4033,13 @@ FALLBACK_PEOPLE = {
                     "{N} people flee in the street below.", "{N} guests dash away just beneath."),
     EARTHQUAKE_APARTMENT: _FB_EQ_NEAR, EARTHQUAKE_OLD_STREET: _FB_EQ_NEAR,
     # 29 Eki: meteor (kilit cümle 33 kelime; en kısa cümle 6 kelime, sığma çiftleri ona göre)
-    METEOR: ("{N} people run off right below.", "{N} residents flee in the street right below.",
-             "{N} people sprint inland in the street below.", "{N} residents run from it just below.",
-             "{N} people flee in the street below.", "{N} neighbours dash inland right below."),
+    # 3 Kas 2026, Bahadır (Aşama 6): insanlar kameraya yakın: kıyı yolunda ve teraslarda, hemen aşağıda koşar (önceki
+    # havuz FALLBACK_PEOPLE_RETIRED'da). Fiil run/sprint; "no person or face close to the camera" ile çelişmesin diye
+    # "right below" / "just below" (kameranın dibinde değil, karenin alt kısmında)
+    # 205 tavanında pay 0-1 kelime: en kısa cümle eskisi gibi 6 kelime
+    METEOR: ("{N} people run on terraces below.", "{N} residents sprint across terraces below.",
+             "{N} people run along the promenade below.", "{N} residents run down terrace steps below.",
+             "{N} people sprint along the coastal road below.", "{N} residents run on the coastal road right below."),
 }
 # 🔥 Ateş hortumu: ortama göre (kilit cümle 28-29 kelime, en uzun beat çifti 39: insan cümlesi 6-7 kelime)
 FALLBACK_PEOPLE_FIRE_ENV = {
@@ -3857,6 +4053,15 @@ FALLBACK_PEOPLE_FIRE_ENV = {
                       "{N} people sprint away right below.", "{N} villagers run through the yard below.",
                       "{N} people run away in the street right below.", "{N} villagers dash in the gardens below."),
 }
+
+
+PEOPLE_AXIS_EVENTS = (FLOOD, TIDAL)
+PEOPLE_AXIS_PROVEN = ("I1", "I2")
+PEOPLE_AXIS_TRIAL_SHARE = 0.20
+
+
+def people_line_id(i: int) -> str:
+    return f"I{i + 1}"
 
 
 def fallback_people_pool(spec: dict) -> tuple[str, ...]:
@@ -3889,19 +4094,46 @@ def _fallback_fits(spec: dict, slices: dict[str, str]) -> bool:
     return len(prompt) <= max_prompt_chars(spec["event"])
 
 
-def fallback_candidates(spec: dict) -> list[dict[str, str]]:
-    """Kelime sınırlarına sığan yedek dilim takımları (her biri havuzdan bir insan cümlesiyle)."""
+def fallback_candidates_ids(spec: dict) -> list[tuple[str, dict[str, str]]]:
+    """Kelime sınırlarına sığan yedek dilim takımları, insan cümlesinin eksen kimliğiyle (I1, I2, ...)."""
     word = people_word(spec).capitalize()
     s2, s3 = fallback_beat_slice(spec, "slice_2"), fallback_beat_slice(spec, "slice_3")
     out = []
-    for t in fallback_people_pool(spec):
+    for i, t in enumerate(fallback_people_pool(spec)):
         sl = {"slice_1_rest": clean_slice(t.format(N=word)), "slice_2": s2, "slice_3": s3}
         textured = mud_texture(spec, sl)   # 21 Eki (genel kalite): sığarsa dokulu hâl
         if textured is not None and _fallback_fits(spec, textured):
-            out.append(textured)
+            out.append((people_line_id(i), textured))
         elif _fallback_fits(spec, sl):
-            out.append(sl)
+            out.append((people_line_id(i), sl))
     return out
+
+
+def fallback_candidates(spec: dict) -> list[dict[str, str]]:
+    """Kelime sınırlarına sığan yedek dilim takımları (her biri havuzdan bir insan cümlesiyle)."""
+    return [sl for _, sl in fallback_candidates_ids(spec)]
+
+
+def choose_people_line(spec: dict, used: list | None, rng: random.Random) -> tuple[str | None, list]:
+    """3 Kas (Aşama 3): insan ekseni (PEOPLE_AXIS_EVENTS). Sığan cümleler içinden: KANITLI (I1, I2) LRU ile; DENEME
+    (I3+) en fazla %20 ve son üretim deneme ise gelmez. (kimlik, elenenler). Diğer olaylarda (None, [])."""
+    if spec["event"] not in PEOPLE_AXIS_EVENTS:
+        return None, []
+    opts = [i for i, _ in fallback_candidates_ids(spec)]
+    if not opts:
+        return None, []
+    recent = [u for u in (used or []) if u]
+    proven = [i for i in opts if i in PEOPLE_AXIS_PROVEN]
+    trial = [i for i in opts if i not in PEOPLE_AXIS_PROVEN]
+    last_trial = bool(recent) and recent[-1] not in PEOPLE_AXIS_PROVEN
+    use_trial = bool(trial) and not last_trial and (not proven or rng.random() < PEOPLE_AXIS_TRIAL_SHARE)
+    group = trial if use_trial else (proven or trial)
+
+    def last_seen(v):
+        return max((k for k, u in enumerate(recent) if u == v), default=-1)
+    best = min(last_seen(v) for v in group)
+    pick = rng.choice([v for v in group if last_seen(v) == best])
+    return pick, [v for v in opts if v != pick and v in recent[-1:]]
 
 
 # 21 Eki (genel kalite), Bahadır: heyelanda çamur gri lapa gibi çıktı. Kilit cümlede "mud" yoksa (yamaç C, köy C/D) kod
@@ -3923,8 +4155,65 @@ def mud_texture(spec: dict, slices: dict[str, str]) -> dict[str, str] | None:
     return None
 
 
-def build_fallback(spec: dict, rng: random.Random | None = None) -> dict[str, str]:
-    """Kod yedeği dilimleri. Sığan insan cümlesi yoksa StructureError (kelime sınırı; kombinasyon raporda)."""
+# ── BİREBİR DİLİM (3 Kas 2026, Bahadır: toplu düzeltme, Aşama 1) ─────────────────────────────────────────────────
+# Ders: GPT onaylı havuz cümlelerini yeniden yazıyordu ("rolling away", "fiery hail", uydurma araç hareketi, soyut
+# final); kelime kara listesi eş anlamlıyla aşılıyordu. Kod yedeği metinleri hep temiz çıktı. Bayrak açık olayda 4-9s
+# ve 9-15s dilimleri seçilen beat'in kod metninden (kod yedeğiyle aynı biçim: fallback_beat_slice) KELİMESİ KELİMESİNE
+# gelir; GPT'nin döndürdüğü slice_2/slice_3 kullanılmaz, GPT sadece 0-4s insan cümlesini yazar. GPT'nin system
+# prompt'u ve mesajı değişmedi (yeni kural/ipucu yok). Dilimler arası bağlaç: kısa beat'te kodun sabit geçişi
+# (FALLBACK_TRANSITION). Son denetim (final_prompt_issues -> slice_issues) dilimlerin birebir havuz metni olduğunu
+# doğrular; değilse ret.
+# Kilitli (kanıtlanmış) olaylar: orman yangını, helikopter, hortum karaya vurur, volkan bombaları, heyelan köy.
+LOCKED_EVENTS = (WILDFIRE, HELICOPTER, LANDFALL, VOLCANIC_BOMBS, VILLAGE)
+# 3 Kas (devam), Bahadır kararı: kilitli 5 olayda KAPALI (GPT dilimleri HEAD'deki gibi kullanılır; snapshot farkı 0
+# olsa da GPT yolu değişmesin). Kilitsiz olaylarda AÇIK.
+VERBATIM_SLICES = {e: e not in LOCKED_EVENTS for e in EVENT_KEY_VISUAL}
+
+
+def verbatim_on(event: str) -> bool:
+    return bool(VERBATIM_SLICES.get(event))
+
+
+def verbatim_forms(spec: dict, slot: str) -> set[str]:
+    """Dilimin kabul edilen birebir hâlleri: beat'in kod metni (kod yedeğiyle aynı biçim) ve heyelanda çamur dokulu
+    hâli (mud_texture kod yedeğinde ilk "mud" ifadesine dokuyu ekler)."""
+    text = fallback_beat_slice(spec, slot)
+    forms = {text}
+    m = _MUD_RE.search(text)
+    if spec["event"] in LANDSLIDE_EVENTS and m:
+        new = MUD_TEXTURE[0].upper() + MUD_TEXTURE[1:] if m.start() == 0 else MUD_TEXTURE
+        forms.add(text[:m.start()] + new + text[m.end():])
+    return forms
+
+
+def apply_verbatim(spec: dict, slices: dict[str, str]) -> dict[str, str]:
+    """Bayrak açıksa 4-9s ve 9-15s dilimleri seçilen beat'in kod metniyle değiştirilir (GPT metni atılır)."""
+    if not verbatim_on(spec["event"]):
+        return slices
+    return {**slices, "slice_2": fallback_beat_slice(spec, "slice_2"),
+            "slice_3": fallback_beat_slice(spec, "slice_3")}
+
+
+def verbatim_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
+    """Bayrak açıksa 4-9s ve 9-15s seçilen havuz metniyle birebir aynı olmalı."""
+    if not verbatim_on(spec["event"]):
+        return []
+    out = []
+    for slot in ("slice_2", "slice_3"):
+        if slices.get(slot, "") not in verbatim_forms(spec, slot):
+            label = "4-9s" if slot == "slice_2" else "9-15s"
+            out.append(_issue("verbatim_slice", f"{label}: havuz metniyle birebir aynı değil",
+                              f"'{slot}' must be exactly: {fallback_beat_slice(spec, slot)}"))
+    return out
+
+
+def build_fallback(spec: dict, rng: random.Random | None = None, line: str | None = None) -> dict[str, str]:
+    """Kod yedeği dilimleri. Sığan insan cümlesi yoksa StructureError (kelime sınırı; kombinasyon raporda).
+    line: 3 Kas (Aşama 3), insan ekseninin seçtiği cümle kimliği (sığıyorsa o kullanılır)."""
+    if line is not None:
+        chosen = [sl for i, sl in fallback_candidates_ids(spec) if i == line]
+        if chosen:
+            return chosen[0]
     cands = fallback_candidates(spec)
     if not cands:
         raise StructureError(f"Kod yedeği kelime sınırına sığmadı: {spec['event']} / {spec['spot']} / "
@@ -4106,7 +4395,10 @@ def _validate_data() -> None:
         elif b["excluded_views"]:
             raise StructureError(f"Görünümsüz olayda görünüm kısıtı var: {event}")
         elif not uses_vehicle(event):   # 13 Eki: araçsız olayın araç listesi olmaz
-            if event in EVENT_VEHICLES:
+            # 3 Kas: araçlı beat'leri pasif olan olay (cephe M6) listesini korur (pasif öğe geri açılırsa kullanılır)
+            has_off_vehicle = any("{vehicle}" in b[s][bid]["text"] for s in ("slice_2", "slice_3")
+                                  for bid in DISABLED_BEATS.get(event, set()) if bid in b[s])
+            if event in EVENT_VEHICLES and not has_off_vehicle:
                 raise StructureError(f"Araçsız olayda araç listesi var: {event}")
         elif not EVENT_VEHICLES.get(event) or any(not t for _, t in EVENT_VEHICLES[event]):
             raise StructureError(f"Görünümsüz olayın araç listesi yok: {event}")

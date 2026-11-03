@@ -28,7 +28,8 @@ HISTORY_LIMIT = 10   # olay başına okunan son kayıt (görev: "o olayın son 1
 AXIS_KEYS = ("spot", "view", "env", "light", "vehicle", "people", "key", "beats",
              "kadraj", "on_plan", "kamera_modu", "kamera_noktasi",
              "ortam",   # 21 Eki (Aşama 5): 9 olayın ortam ekseni (A-E); eski kayıtta boş
-             "acilis")  # 21 Eki (Aşama 6): açılış ekseni (A-D); eski kayıtta boş   # 21 Eki (Aşama 4): kadraj ekseni; eski kayıtta boş
+             "acilis",  # 21 Eki (Aşama 6): açılış ekseni (A-D); eski kayıtta boş   # 21 Eki (Aşama 4): kadraj ekseni; eski kayıtta boş
+             "insan")   # 3 Kas (Aşama 3): sel / dev dalga insan cümlesi (I1-I6); diğer olaylarda yok
 
 _EVENTS_LOWER = {e.lower(): e for e in EVENT_SKELETONS}
 _VOLC_LABEL = {v["label"]: k for k, v in VOLC_ENVS.items()}

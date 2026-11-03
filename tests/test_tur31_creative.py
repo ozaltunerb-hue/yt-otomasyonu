@@ -285,7 +285,8 @@ class TestPipelineCreative(unittest.TestCase):
 class TestMenuAndHistory(unittest.TestCase):
     def test_menu_22_in_creative(self):
         with patch.object(settings, "PROMPT_PIPELINE", "creative"):
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 26)   # 29 Eki: deniz pasif (-10), + meteor; 18 Eki (2): şok dalgası devre dışı; 1 Eki: 2 marina çıktı, 1 girdi; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
+            # 3 Kas: kruvaziyer (-3), plaj & sahil (-3), eski sokak (-1) pasif
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 19)   # 29 Eki: deniz pasif (-10), + meteor; 18 Eki (2): şok dalgası devre dışı; 1 Eki: 2 marina çıktı, 1 girdi; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
 
     def test_recent_history_limit(self):
         from infrastructure import notion_logger as nl

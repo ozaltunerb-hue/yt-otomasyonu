@@ -36,8 +36,9 @@ EVENTS = [e for e in ps.active_events() if e not in (es.FIRE_TORNADO, es.METEOR)
 
 class TestData(unittest.TestCase):
     def test_eighteen_events_fire_tornado_excluded(self):
-        self.assertEqual(set(ox.OPENINGS), set(EVENTS))
-        self.assertEqual(len(EVENTS), 18)
+        # 3 Kas (Aşama 7): "Eski sokak" pasif (açılışları kodda duruyor), aktif açılışlı olay 17
+        self.assertEqual(set(ox.OPENINGS), set(EVENTS) | {es.EARTHQUAKE_OLD_STREET})
+        self.assertEqual(len(EVENTS), 17)
         self.assertNotIn(es.FIRE_TORNADO, ox.OPENINGS)
         for e in EVENTS:
             self.assertEqual(ox.options(e), ["A", "B", "C", "D"])

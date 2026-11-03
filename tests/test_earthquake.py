@@ -351,7 +351,9 @@ class TestEarthquake(unittest.TestCase):
                                                                 encoding="utf-8").read())
         self.assertEqual({e: bot.EVENT_LABELS[e] for e in EQ},
                          {APT: "🏢 Apartman bloğu çöküyor", OLD: "🧱 Eski sokak çöküyor"})
-        self.assertEqual(sk.skeleton_events("earthquake_disasters"), list(EQ))
+        # 3 Kas (Aşama 7): "Eski sokak" pasif (sk.DISABLED_EVENTS): menüde yok, etiketi ve havuzu duruyor
+        self.assertEqual(sk.skeleton_events("earthquake_disasters"), [APT])
+        self.assertIn(OLD, sk.DISABLED_EVENTS)
         self.assertEqual(DOMAIN_ATTRIBUTES["earthquake_disasters"]["environments"], [ROOF, BAL])
         self.assertEqual(DOMAIN_ATTRIBUTES["earthquake_disasters"]["ships"], [])
         self.assertIn("earthquake_disasters", MARITIME_INSPIRATION_DOMAINS)
@@ -380,8 +382,9 @@ class TestEarthquake(unittest.TestCase):
         self.assertIn("🏚️ Deprem", texts)
         markup = bot.event_keyboard(bot.DOMAIN_KEYS.index("earthquake_disasters"))
         labels = [b.text for row in markup.inline_keyboard for b in row]
-        for label in ("🏢 Apartman bloğu çöküyor", "🧱 Eski sokak çöküyor", "🎲 Rastgele"):
+        for label in ("🏢 Apartman bloğu çöküyor", "🎲 Rastgele"):
             self.assertIn(label, labels)
+        self.assertNotIn("🧱 Eski sokak çöküyor", labels)   # 3 Kas (Aşama 7): pasif
         self.assertTrue(any("Geri" in t for t in labels))
         for row in markup.inline_keyboard:
             for b in row:
@@ -563,8 +566,14 @@ class TestEarthquake(unittest.TestCase):
     def test_environment_compatibility(self):
         self.assertEqual(es.EQ_ENV_AXES["light"], ("hazy dusty morning", "heavy grey overcast sky",
                                                    "late-afternoon low sun", "blue dawn light"))
+        # 3 Kas (Aşama 7): modern sokak ve şehirler DENEME (es.EQ_TRIAL_VALUES), eski taş şehirler pasif
         self.assertEqual(set(es.EQ_ENV_AXES["street"]), {"wide avenue", "narrow residential street",
-                                                        "tree-lined square edge", "quiet residential street"})
+                                                        "tree-lined square edge", "quiet residential street",
+                                                        "busy modern boulevard"})
+        self.assertEqual(es.EQ_TRIAL_VALUES, {"glass-fronted office blocks beside modern apartments",
+                                              "modern concrete apartment blocks and offices", "busy modern boulevard"})
+        self.assertEqual(set(es.EQ_PASSIVE_CITIES), {"old brick-and-stone residential buildings",
+                                                     "a dense hillside neighbourhood of old stone houses"})
         self.assertNotIn("narrow residential street", es.EQ_EVENT_STREETS[APT])
         self.assertNotIn("wide avenue", es.EQ_EVENT_STREETS[OLD])
         self.assertTrue(all("apartment" in c for c in es.EQ_EVENT_CITIES[APT]))

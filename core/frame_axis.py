@@ -234,9 +234,19 @@ for _e in EARTHQUAKE:
 SPOT_FRAME[METEOR] = {"Rooftop terrace of a hillside villa above the bay": ("çatı", NATIVE, None, None),
                       # 29 Eki (3): K2 villa terası (yüksek apartman yok); kadraj tipi balkon kaldı
                       "High terrace of a seafront villa": ("balkon", NATIVE, None, None),
-                      "Hilltop terrace above a coastal town": ("tepe", NATIVE, None, None)}
+                      "Hilltop terrace above a coastal town": ("tepe", NATIVE, None, None),
+                      # 3 Kas (Aşama 6): K4 DENEME, çatı terası
+                      "Rooftop terrace of a modern seafront building": ("çatı", NATIVE, None, None)}
 # Kadrajı sadece kendi kamera noktası olan aileler (kütüphane yeri, pencere ve ön plan ekseni yok)
 OWN_SPOT_ONLY = ("meteor",)
+# 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 4): PASİF kamera noktaları (kadraj rotasyonundan çıktı; spot sahne olarak
+# seçilmeye devam eder, kamera başka bir noktadan/kütüphaneden gelir). Silinmedi: SPOT_FRAME'de durur.
+# Dev dalga "on top of the seawall": kötü sonuç verdi.
+RETIRED_CAMERA_SPOTS = {TIDAL: {"Coastal avenue behind a seawall"}}
+
+
+def retired_positions(event: str) -> set[str]:
+    return set(RETIRED_CAMERA_SPOTS.get(event, set()))
 
 # Volkan/çığ/deprem ön planı: (bugünkü metin, "boş" metni). Volkanda bugünkü metin perch'li ({perch} doldurulur).
 NATIVE_FG = {"volcano": ("a {perch} railing corner in the foreground", "nothing in the foreground"),
@@ -383,7 +393,7 @@ def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: 
     """(frame, elenenler). pool: bu üretimde kamera yeri ödünç alınabilecek spotlar (görünüm/ortam süzülmüş). risky:
     seçilen beat'lerin dışlandığı spotlar (orada kamera olmaz; pencere balkon riskini de taşır). blocked: 21 Eki
     (Aşama 5) ortamla çelişen kamera noktaları (spot adı ya da "lib:<tip>")."""
-    blocked = blocked or set()
+    blocked = (blocked or set()) | retired_positions(event)   # 3 Kas: pasif kamera noktaları
     # 31 Eki (3): rotasyon sadece KANITLI kadraj/ön plan (+ yetersizlik koruması); pencere DENEME (core.proven_axes)
     import core.proven_axes as pa
     rot = pa.allowed_variants(event, spot, all_frames(event, spot, pool, risky, blocked))
@@ -402,7 +412,7 @@ def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: 
         risky_types.add("pencere")
     available, pos_for = [], {}
     for t in types:
-        if native(event, spot)[0] == t:
+        if native(event, spot)[0] == t and spot not in blocked:
             available.append(t)
             pos_for[t] = [spot]
             continue
@@ -419,6 +429,11 @@ def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: 
     if not available:   # güvenlik: seçilen spotun kendi tipi her zaman vardır (izinli listede değilse bile)
         t = native(event, spot)[0]
         available, pos_for = [t], {t: [spot]}
+        # 3 Kas: kendi noktası pasifse ve başka aday yoksa ilk pasif olmayan nokta (yoksa eski davranış)
+        alt = [s for s in SPOT_FRAME[event] if s not in blocked]
+        if spot in blocked and alt:
+            t = native(event, alt[0])[0]
+            available, pos_for = [t], {t: [alt[0]]}
     # 31 Eki (3): rotasyon süzgeci (aday kalmazsa eski liste: aday hiç tükenmez)
     available = [t for t in available if in_rot(t)] or available
     pos_for = {t: ([p for p in ps if in_rot(t, p)] or ps) for t, ps in pos_for.items()}
@@ -468,7 +483,7 @@ def all_frames(event: str, spot: str, pool: list[str], risky: set[str] | None = 
     """Bu spotta olası tüm kadraj varyantları (testler, kural denetimi, K5 sığma koruması). risky verilirse seçilen
     beat'lerin dışlandığı spotlar ödünç alınmaz; blocked: ortamla çelişen noktalar (choose_frame ile aynı süzgeç)."""
     risky = risky or set()
-    blocked = blocked or set()
+    blocked = (blocked or set()) | retired_positions(event)   # 3 Kas: pasif kamera noktaları (choose_frame ile aynı)
     pool = [s for s in pool if s not in blocked]
     if family(event) in OWN_SPOT_ONLY:   # 29 Eki: choose_frame ile aynı
         pool = [spot]
@@ -477,7 +492,7 @@ def all_frames(event: str, spot: str, pool: list[str], risky: set[str] | None = 
         risky_types.add("pencere")
     out = []
     for t in FRAME_EVENTS[event]["types"]:
-        if native(event, spot)[0] == t:
+        if native(event, spot)[0] == t and spot not in blocked:
             spots = [spot]
         else:
             natives = [s for s in pool if s in SPOT_FRAME[event] and native(event, s)[0] == t]

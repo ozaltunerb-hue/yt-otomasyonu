@@ -444,6 +444,23 @@ POOL = ({"T1": "the towering fire tornado lifts the {vehicle} off the road and f
 FIT_GAPS = {("T6", "U2"), ("T6", "U6")}   # 18 Eki (2): kilit cümle 32-33 kelime
 
 
+# 3 Kas 2026 (toplu düzeltme): bu modül GPT'nin yazdığı dilim metnini (eş anlamlı / serbest anlatım) kapılara sokar.
+# Kilitsiz olaylarda üretimde 4-9s / 9-15s artık birebir havuz metni (es.VERBATIM_SLICES; tests/test_toplu_3kas.py
+# sınar); burada diğer kapıların GPT metnine davranışı ölçüldüğü için birebir dilim kapısı modül boyunca KAPALI (HEAD
+# davranışı).
+from unittest.mock import patch as _vpatch   # noqa: E402
+import core.event_structure as _ves   # noqa: E402
+_VERBATIM_OFF = _vpatch.dict(_ves.VERBATIM_SLICES, {e: False for e in _ves.VERBATIM_SLICES})
+
+
+def setUpModule():
+    _VERBATIM_OFF.start()
+
+
+def tearDownModule():
+    _VERBATIM_OFF.stop()
+
+
 class TestFireTornadoGate(unittest.TestCase):
     def test_key_camera_pool_locked(self):
         # 15 Eki (2), Bahadır: dev hortum (ölçek kıyası), yüksek ve yakın kamera, ön planda 2-3 kaçan kişi

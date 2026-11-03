@@ -123,6 +123,18 @@ GUARD = {
 }
 # Hiçbir zaman koruma adayı olmayanlar
 NEVER = {("acilis", BOMBS, "D")}
+# 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 6): yeni eklenen DENEME değerleri (koruma değeriyle aynı kural: kanıtlı
+# değerle birlikte aday olduğunda korumalar + denemeler toplam en fazla %20 (GUARD_SHARE), son üretim koruma/deneme ise
+# hiçbiri gelmez). Sadece kilitsiz olaylar.
+EXTRA_TRIALS = {
+    "spot": {METEOR: ("Rooftop terrace of a modern seafront building",)},   # yüksek, sabit, geniş: kıyıdaki modern binanın çatı terası
+    "meteor_env": {METEOR: ("O5",)},                                    # farklı kıyı: düşük modern oteller
+    "light": {METEOR: ("clear early-morning light",)},                         # farklı ışık
+}
+
+
+def extra_trials(event: str, axis: str) -> tuple:
+    return tuple(EXTRA_TRIALS.get(axis, {}).get(event, ())) if ROTATION_ON else ()
 
 
 # Koruma payı (31 Eki (3), Bahadır): kanıtlı ve koruma değeri birlikte aday olduğunda koruma(lar) en fazla %20
@@ -138,8 +150,12 @@ def guard_lru(options: list, used: list, depth: int, guards: set) -> tuple[list,
         return None
     recent = [u for u in used if u not in (None, "", "-")]
     prov_recent = set(recent[-depth:]) if depth else set()
+    # 3 Kas: birden çok koruma/deneme değeri varsa (EXTRA_TRIALS) son üretim bunlardan biriyse hiçbiri gelmez (art
+    # arda deneme yok); tek koruma değerinde eski davranış (son 1)
+    multi_last = len(guards) > 1 and bool(recent) and recent[-1] in guards
     cands = ([o for o in prov if o not in prov_recent] or prov) + [o for o in options
-                                                                 if o in guards and o not in recent[-1:]]
+                                                                 if o in guards and o not in recent[-1:]
+                                                                 and not multi_last]
     return cands, [o for o in options if o not in cands]
 
 
@@ -158,7 +174,7 @@ def guard_pick(rng, cands: list, guards: set, weights: dict | None = None):
 def guards(event: str, axis: str) -> set:
     """Eksenin koruma değerleri (GUARD; kadraj/ön plan seçim anında: frame_guards)."""
     g = _guard(axis, event)
-    return {g} if (g is not None and ROTATION_ON) else set()
+    return ({g} if (g is not None and ROTATION_ON) else set()) | set(extra_trials(event, axis))   # 3 Kas
 
 
 def frame_guards(event: str, spot: str, variants: list[dict]) -> tuple[set, set]:
@@ -187,6 +203,7 @@ def rotation(event: str, axis: str, options: list, proven: set) -> list:
         g = _guard(axis, event)
         if g is not None and g in options and g not in keep and (axis, event, g) not in NEVER:
             keep.append(g)
+    keep += [o for o in extra_trials(event, axis) if o in options and o not in keep]   # 3 Kas: yeni DENEME değerleri
     return keep or list(options)   # güvenlik: hiç kalmazsa eski liste (aday hiç tükenmez)
 
 
@@ -252,6 +269,8 @@ def frame_status(event: str, spot: str, f: dict) -> str:
     if ps and ps in fx.SPOT_FRAME.get(event, {}):
         kind = fx.native(event, ps)[1]
         if kind == fx.NATIVE:   # volkan/çığ/deprem/meteor: noktanın orijinal cümlesi (ödünçte de aynı cümle)
+            if ps in extra_trials(event, "spot"):   # 3 Kas: meteor K4 deneme (kadraj = kamera noktası)
+                return PROVEN
             return PROVEN if ps in PROVEN_SPOTS.get(event, {ps}) else TRIAL
         if ps == spot and kind == fx.AB:
             # 31 Eki (4), Bahadır: "kamera her zaman yüksek ve sabit" kuralı kanıtlı/deneme kuralının üstünde. Mod A

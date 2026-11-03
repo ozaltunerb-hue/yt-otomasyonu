@@ -87,7 +87,8 @@ def spec_of(b2="W1", b3="X2", spot=K2, env="O3", light="golden sunset", people=5
 
 
 def good_slices(b2="W1", b3="X2"):
-    return {"slice_1_rest": "Five people run off right below.",
+    # 3 Kas (Aşama 6): insanlar kıyı yolunda / teraslarda (önceki "Five people run off right below.")
+    return {"slice_1_rest": "Five people run across the terraces right below.",
             "slice_2": cap(es.beat_text(MET, "slice_2", b2)) + ".", "slice_3": cap(es.beat_text(MET, "slice_3", b3)) + "."}
 
 
@@ -98,6 +99,23 @@ def rules(spec, sl):
 def history_loader(scenes):
     """Önceki üretimlerin Notion "Eksenler" kaydı (eskiden yeniye): üretimdeki tekrar önleme yolu."""
     return lambda domain: [{"eksenler": s["axes_json"]} for s in scenes]
+
+
+# 3 Kas 2026 (toplu düzeltme): bu modül GPT'nin yazdığı dilim metnini (eş anlamlı / serbest anlatım) kapılara sokar.
+# Kilitsiz olaylarda üretimde 4-9s / 9-15s artık birebir havuz metni (es.VERBATIM_SLICES; tests/test_toplu_3kas.py
+# sınar); burada diğer kapıların GPT metnine davranışı ölçüldüğü için birebir dilim kapısı modül boyunca KAPALI (HEAD
+# davranışı).
+from unittest.mock import patch as _vpatch   # noqa: E402
+import core.event_structure as _ves   # noqa: E402
+_VERBATIM_OFF = _vpatch.dict(_ves.VERBATIM_SLICES, {e: False for e in _ves.VERBATIM_SLICES})
+
+
+def setUpModule():
+    _VERBATIM_OFF.start()
+
+
+def tearDownModule():
+    _VERBATIM_OFF.stop()
 
 
 class TestMeteor(unittest.TestCase):
@@ -114,7 +132,8 @@ class TestMeteor(unittest.TestCase):
         self.assertEqual(bot.EVENT_LABELS[MET], "☄️ Denize dev meteor düşer")
         self.assertIn('meteor_disasters: "☄️ Meteor",', open(os.path.join(ROOT, "dashboard.html"), encoding="utf-8").read())
         self.assertEqual(sk.skeleton_events(DOMAIN), [MET])
-        self.assertEqual(DOMAIN_ATTRIBUTES[DOMAIN]["environments"], [K1, K2, K3])
+        # 3 Kas (Aşama 6): K4 DENEME kadraj (proven_axes.EXTRA_TRIALS)
+        self.assertEqual(DOMAIN_ATTRIBUTES[DOMAIN]["environments"], [K1, K2, K3, "Rooftop terrace of a modern seafront building"])
         self.assertEqual(DOMAIN_ATTRIBUTES[DOMAIN]["ships"], [])
         self.assertIn(DOMAIN, MARITIME_INSPIRATION_DOMAINS)
         self.assertIn(DOMAIN, ENV_CENTRIC_DOMAINS)
@@ -154,11 +173,12 @@ class TestMeteor(unittest.TestCase):
         self.assertEqual(es.EVENT_KEY_VISUAL[MET], KEY)
         found = {i["rule"] for i in cp.story_rule_issues(MET, None, KEY)}
         self.assertFalse(found & {"a_trigger_first", "b_no_camera_words", "e_event_and_ship_named"})
-        self.assertEqual(list(sk.EVENT_SKELETONS[MET]["spots"]), [K1, K2, K3])
-        self.assertEqual(sk.METEOR_CAMERA, FRAMES)
+        # 3 Kas (Aşama 6): K4 kadraj, O5 ortam, yeni ışık DENEME; K1-K3 / O1-O3 metinleri aynı
+        self.assertEqual(list(sk.EVENT_SKELETONS[MET]["spots"]), [K1, K2, K3, "Rooftop terrace of a modern seafront building"])
+        self.assertEqual({k: v for k, v in sk.METEOR_CAMERA.items() if k != "Rooftop terrace of a modern seafront building"}, FRAMES)
         self.assertEqual(sk.METEOR_RULE, RULE)
-        self.assertEqual(es.METEOR_ENVS, ENVS)
-        self.assertEqual(sk.EVENT_SKELETONS[MET]["weather"], LIGHTS)
+        self.assertEqual({k: v for k, v in es.METEOR_ENVS.items() if k != "O5"}, ENVS)
+        self.assertEqual(sk.EVENT_SKELETONS[MET]["weather"], LIGHTS + ["clear early-morning light"])   # 3 Kas: DENEME
 
     def test_pool_retired_and_held(self):
         b = es.EVENT_BEATS[MET]
@@ -237,7 +257,8 @@ class TestMeteor(unittest.TestCase):
     def test_gpt_gates(self):
         spec = spec_of()
         self.assertEqual(es.slice_issues(spec, good_slices()), [])
-        ok_paraphrase = {"slice_1_rest": "Six residents run off right below.",
+        # 3 Kas (Aşama 6): insanlar kıyı yolunda / teraslarda (önceki "Six residents run off right below.")
+        ok_paraphrase = {"slice_1_rest": "Six residents run across the terraces right below.",
                          "slice_2": "The shockwave slams into the shore, snapping the palm trees and tearing roof tiles "
                                     "off the villas.",
                          "slice_3": "A white, foaming surge floods the road and shoves the parked cars into the walls."}
@@ -322,18 +343,20 @@ class TestSeaCategoriesPassive(unittest.TestCase):
         import bot
         from core.creative_engine import DOMAIN_ATTRIBUTES
         self.assertFalse(sk.SEA_CATEGORIES_ACTIVE)
-        self.assertEqual(sk.DISABLED_DOMAINS, set(SEA))
+        # 3 Kas (devam): kruvaziyer ve plaj & sahil de pasif (kamera kuralı)
+        self.assertEqual(sk.DISABLED_DOMAINS, set(SEA) | {"cruise_ship_operations", "open_beach_coastal_events"})
         texts = [b.text for row in bot.domain_keyboard().inline_keyboard for b in row]
         for label in ("⛴️ Feribot", "🏗️ Tersane", "⛵ Marina & Yat"):
             self.assertNotIn(label, texts)
-        self.assertIn("🚢 Kruvaziyer", texts)
+        self.assertNotIn("🚢 Kruvaziyer", texts)   # 3 Kas (devam): pasif
+        self.assertNotIn("🏖️ Plaj & Sahil", texts)
         for d in SEA:
             with self.subTest(domain=d):
                 self.assertEqual(sk.skeleton_events(d), [])
                 self.assertIsNone(bot.parse_selection(str(bot.DOMAIN_KEYS.index(d)), "0"))
                 self.assertIsNone(bot.parse_selection(str(bot.DOMAIN_KEYS.index(d)), "r"))
                 self.assertTrue(DOMAIN_ATTRIBUTES[d]["events"])
-        self.assertTrue(sk.skeleton_events("cruise_ship_operations"))
+        self.assertEqual(sk.skeleton_events("cruise_ship_operations"), [])   # 3 Kas (devam): pasif
         for _ in range(50):
             domain, event, _ = sk.choose_event_and_ship(None, None, [])
             self.assertNotIn(domain, SEA)
@@ -355,7 +378,9 @@ class TestSeaCategoriesPassive(unittest.TestCase):
                                                 "coastal_tornado_landfall", "urban_city_disasters",
                                                 "open_beach_coastal_events", "landslide_disasters", "fire_disasters",
                                                 "volcano_disasters", "avalanche_disasters", "earthquake_disasters"])
-        cruise = [b for row in bot.domain_keyboard().inline_keyboard for b in row if b.text == "🚢 Kruvaziyer"][0]
+        # 3 Kas (devam): kruvaziyer pasif; numarası aynı kalır, açılınca düğmesi yine 3
+        with patch.object(sk, "DISABLED_DOMAINS", set()):
+            cruise = [b for row in bot.domain_keyboard().inline_keyboard for b in row if b.text == "🚢 Kruvaziyer"][0]
         self.assertEqual(cruise.callback_data, "uret:d:3")
 
 

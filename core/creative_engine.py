@@ -456,7 +456,8 @@ DOMAIN_ATTRIBUTES = {
     "meteor_disasters": {
         "ships": [],
         "environments": ["Rooftop terrace of a hillside villa above the bay", "High terrace of a seafront villa",
-                         "Hilltop terrace above a coastal town"],
+                         "Hilltop terrace above a coastal town",
+                         "Rooftop terrace of a modern seafront building"],   # 3 Kas: K4 DENEME
         "events": [
             "Meteor slams into the sea off the coast",
         ]

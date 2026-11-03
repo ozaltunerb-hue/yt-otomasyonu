@@ -624,7 +624,9 @@ async def write_slices(spec: dict, place: str, weather: str, recent: list[str], 
         raw = await call_gpt(SLICES_SYSTEM, _slices_message(spec, place, weather, lo, hi, recent, feedback,
                                                             caption_ctx),
                              temperature=0.9, model="gpt-4o", json_schema=es.SLICE_SCHEMA)
-        slices = es.parse_slices(raw)
+        gpt_slices = es.parse_slices(raw)
+        # 3 Kas (Aşama 1): bayrak açık olayda 4-9s / 9-15s koddan (seçilen havuz metni birebir); GPT'nin dilimi atılır
+        slices = es.apply_verbatim(spec, gpt_slices)
         from core.caption import extract_candidates
         caption_raw = extract_candidates(raw)   # 21 Eki (Aşama 7): hikâye kapılarına girmez
         found = structured_issues(spec, slices, recent)
@@ -632,7 +634,8 @@ async def write_slices(spec: dict, place: str, weather: str, recent: list[str], 
         issues = [i["feedback"] for i in found if i["feedback"]]
         attempts.append({"attempt": attempt + 1, "story": story, "slices": slices,
                          "words": len(es.plain_story(spec, slices).split()), "issues": issues,
-                         "missing": [i["missing"] for i in found], "caption": caption_raw})
+                         "missing": [i["missing"] for i in found], "caption": caption_raw,
+                         **({"gpt_slices": gpt_slices} if gpt_slices != slices else {})})
         if not found:
             return slices, attempts
         # Dilim kapısı olan olaylarda önceki tüm ret nedenleri (tekrarsız) birikir; diğerlerinde sadece son ret
@@ -780,9 +783,12 @@ def _axes_line(axes: dict, excluded: dict, source: str, warning: str | None) -> 
     shown = {"spot": axes.get("spot"), "ortam": env, "ışık": axes.get("light"), "araç": axes.get("vehicle"),
              "kişi": axes.get("people"), "kadraj": axes.get("kadraj"), "ön plan": axes.get("on_plan"),
              "kamera modu": mode, "açılış": axes.get("acilis")}
+    if "insan" in axes:   # 3 Kas (Aşama 3): sadece insan eksenli olaylarda (sel, dev dalga)
+        shown["insan"] = axes.get("insan")
     line = "Eksenler: " + " · ".join(f"{k}={v if v not in (None, '') else '-'}" for k, v in shown.items())
     names = {"spot": "spot", "env": "ortam", "view": "ortam", "light": "ışık", "vehicle": "araç", "people": "kişi",
-             "kadraj": "kadraj", "on_plan": "ön plan", "kamera_modu": "kamera modu", "acilis": "açılış"}
+             "kadraj": "kadraj", "on_plan": "ön plan", "kamera_modu": "kamera modu", "acilis": "açılış",
+             "insan": "insan"}
     gone = [f"{names[k]}: {', '.join(str(x) for x in v)}" for k, v in excluded.items() if v and k in names]
     line += f"\nTekrar önleme ({source}): " + ("elenen " + " · ".join(gone) if gone else "elenen yok")
     if warning:
@@ -1099,6 +1105,9 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
             "key": spec.get("fire_env") or "default", "beats": tag,
             "kadraj": frame["type"], "on_plan": frame.get("fg"), "kamera_modu": frame.get("mode"),
             "kamera_noktasi": frame.get("pos_spot"), "ortam": scene_env, "acilis": opening}
+    if event in es.PEOPLE_AXIS_EVENTS:   # 3 Kas (Aşama 3): insan cümlesi ekseni (sel, dev dalga); ayrı akış
+        axes["insan"], excluded["insan"] = es.choose_people_line(spec, ah.values(ev_hist, "insan"),
+                                                                 sv.side_rng("insan"))
     es.remember_axes(event, axes)
     axes_line = _axes_line(axes, excluded, hist["source"], hist["warning"])
     lo, hi = count_range(event, ship)
@@ -1132,7 +1141,7 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
         source = {"kind": "gpt", "attempt": len(attempts), "reason": ""}
     except CreativeStoryError as e:
         attempts = e.attempts
-        slices = es.build_fallback(spec)
+        slices = es.build_fallback(spec, line=axes.get("insan"))   # 3 Kas: insan ekseni (sel, dev dalga)
         source = {"kind": "fallback", "attempt": len(attempts), "reason": fallback_reason(attempts)}
         log.warning(f"🧩 Kod yedeği: {event} | {tag} | {source['reason']}")
     source["label"] = story_source_label(source)

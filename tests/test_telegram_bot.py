@@ -233,8 +233,10 @@ class TestKeyboard(unittest.TestCase):
         buttons = _buttons(bot.domain_keyboard())
         # 2 Eki: + ⛰️ Heyelan; 8 Eki: + 🔥 Yangın; 10 Eki: + 🌋 Volkan; 13 Eki: + ❄️ Çığ; 14 Eki: + 🏚️ Deprem
         # 29 Eki: + ☄️ Meteor; feribot, tersane, marina & yat pasif (menüde yok, numaralar değişmedi)
-        self.assertEqual(len(buttons), 10)
-        self.assertEqual([b.callback_data for b in buttons], [f"{bot.CALLBACK_PREFIX}d:{i}" for i in range(3, 13)])
+        # 3 Kas (devam): kruvaziyer (3) ve plaj & sahil (6) pasif (kamera kuralı); numaralar değişmedi
+        self.assertEqual(len(buttons), 8)
+        self.assertEqual([b.callback_data for b in buttons], [f"{bot.CALLBACK_PREFIX}d:{i}"
+                                                              for i in (4, 5, 7, 8, 9, 10, 11, 12)])
 
     def test_event_labels_match_pool(self):
         pool = [e for a in DOMAIN_ATTRIBUTES.values() for e in a["events"]]

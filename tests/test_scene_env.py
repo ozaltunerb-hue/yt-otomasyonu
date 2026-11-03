@@ -175,10 +175,8 @@ class TestLight(_Quiet):
 
     def test_every_event_covers_four_conditions(self):
         for e in ps.active_events():
-            if e == es.METEOR:   # 29 Eki: 3 ışık birebir Bahadır'ın (gün batımı, öğle, kapalı; sabah yok), raporda
-                self.assertEqual(set().union(*(sv.light_category(t) for t in self.full_lights(e))),
-                                 set(sv.LIGHT_CATEGORIES) - {"sabah"})
-                continue
+            # 29 Eki: meteorda 3 ışık birebir Bahadır'ın (sabah yok). 3 Kas (Aşama 6): "clear early-morning light"
+            # DENEME ile sabah da var (dört koşul)
             cats = set().union(*(sv.light_category(t) for t in self.full_lights(e)))
             self.assertEqual(cats, set(sv.LIGHT_CATEGORIES), e)
 
