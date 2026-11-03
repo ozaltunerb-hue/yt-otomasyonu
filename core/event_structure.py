@@ -84,6 +84,15 @@ TOTAL_WORDS_BY_EVENT = {"Tornado crosses a marina quay": (40, 75),
                         "Earthquake collapses an apartment block": (40, 70), "Earthquake collapses a row of old stone houses": (40, 70),
                         # 29 Eki, Bahadır: meteor 40-75 (diğer yapılandırılmış olaylarla aynı; kilit cümle 33 kelime)
                         "Meteor slams into the sea off the coast": (40, 75)}
+# 3 Kas 2026, Bahadır (sel su kontrolü, seçim c): VERBATIM su seviyesi cümleleri 4-9s ve 9-15s'ye eklendi; SADECE selde
+# hikâye 40-80, 4-9s en fazla 26, 9-15s en fazla 30 kelime, son prompt 185 (PROMPT_WORDS_BY_EVENT). Diğer olaylar aynı.
+TOTAL_WORDS_BY_EVENT[FLOOD] = (40, 80)
+SLICE_WORDS_BY_EVENT = {FLOOD: {"slice_2": (10, 26), "slice_3": (10, 30)}}
+
+
+def slice_words(event: str, field: str) -> tuple[int, int]:
+    """Dilimin kelime aralığı (olaya özel aralık yoksa SLICE_WORDS)."""
+    return SLICE_WORDS_BY_EVENT.get(event, {}).get(field, SLICE_WORDS[field])
 # Kie seedance-2-fast prompt sınırı 20000 karakter (docs.kie.ai/market/bytedance/seedance-2-fast, 4 Eki doğrulandı).
 # Bizim sınırımız onun çok altında: en uzun stil eki 742 + 60 kelimelik hikâye (kelime başına 8 karakterle ~480)
 # ≈ 1224; 1200 bu hikâyeyi haksız reddederdi. Tam kapsam testinde ölçülen en uzun prompt 1062. 70 kelimelik
@@ -224,16 +233,27 @@ EVENT_KEY_VISUAL = {
 # 17 Eki, Bahadır (temizlik turu): küçük araç yok (küçük araba, hatchback, kompakt, küçük van videoda kayboluyor).
 # Önceki: north_african_coast small hatchback / small car, north_european_seaside small car / hatchback, riviera
 # small car / hatchback, east_asian_coast small boxy car / compact car / small van. Eski adlar RETIRED_VEHICLES'ta.
+# 3 Kas 2026, Bahadır (sel su kontrolü): sahnede tek kahraman araç; her araç arka plandan ayrışan tek renkte (sel + dev
+# dalga ortak liste). Önceki adlar: white SUV / large SUV / SUV, pickup truck, sedan, delivery van, box truck, delivery
+# truck (eski kayıtlar REGION_VEHICLE_COLOR_RENAMES ile okunur). Notion combo key sıfırlanması kabul edildi.
 REGION_VEHICLES = {
-    "gulf_metropolis": [("white SUV", ("suv",)), ("pickup truck", ("pickup", "truck")), ("sedan", ("sedan", "saloon"))],
-    "north_african_coast": [("large SUV", ("suv",)), ("pickup truck", ("pickup", "truck")),
-                            ("delivery van", ("van",))],
-    "us_coastal_town": [("pickup truck", ("pickup", "truck")), ("SUV", ("suv",)), ("sedan", ("sedan", "saloon"))],
-    "north_european_seaside": [("large SUV", ("suv",)), ("delivery truck", ("truck", "lorry")),
-                               ("delivery van", ("van",))],
-    "riviera": [("large SUV", ("suv",)), ("pickup truck", ("pickup", "truck")), ("delivery van", ("van",))],
-    "east_asian_coast": [("large SUV", ("suv",)), ("box truck", ("truck", "lorry")), ("delivery van", ("van",))],
+    "gulf_metropolis": [("red SUV", ("suv",)), ("yellow pickup truck", ("pickup", "truck")),
+                        ("blue sedan", ("sedan", "saloon"))],
+    "north_african_coast": [("red SUV", ("suv",)), ("yellow pickup truck", ("pickup", "truck")),
+                            ("green delivery van", ("van",))],
+    "us_coastal_town": [("yellow pickup truck", ("pickup", "truck")), ("red SUV", ("suv",)),
+                        ("blue sedan", ("sedan", "saloon"))],
+    "north_european_seaside": [("red SUV", ("suv",)), ("orange delivery truck", ("truck", "lorry")),
+                               ("green delivery van", ("van",))],
+    "riviera": [("red SUV", ("suv",)), ("yellow pickup truck", ("pickup", "truck")),
+                ("green delivery van", ("van",))],
+    "east_asian_coast": [("red SUV", ("suv",)), ("orange box truck", ("truck", "lorry")),
+                         ("green delivery van", ("van",))],
 }
+REGION_VEHICLE_COLOR_RENAMES = {"white SUV": "red SUV", "large SUV": "red SUV", "SUV": "red SUV",
+                                "pickup truck": "yellow pickup truck", "sedan": "blue sedan",
+                                "delivery van": "green delivery van", "box truck": "orange box truck",
+                                "delivery truck": "orange delivery truck"}
 # ── Olay araçları: bölge görünümü olmayan olaylarda (TASLAK, 4 Eki, heyelan). Görünümlü olaylar REGION_VEHICLES. ─
 # 17 Eki: "small car" -> "delivery truck"; köyde "small van" / "old hatchback" -> "white van" / "large SUV"
 _BIG_VEHICLES = [("pickup truck", ("pickup", "truck")), ("delivery truck", ("truck", "lorry")), ("white van", ("van",)),
@@ -259,13 +279,14 @@ EVENT_VEHICLES = {
 # 17 Eki: çıkarılan küçük araç adları -> yerine gelen büyük araç (eski kayıt/fixture okunurken; üretimde seçilmez).
 # Görünümlü olaylarda karşılık görünümün listesinden (RETIRED_VEHICLES_BY_VIEW), diğerlerinde olayın listesinden.
 RETIRED_VEHICLES = {"small car": "delivery truck", "small hatchback": "large SUV", "hatchback": "large SUV",
-                    "small boxy car": "large SUV", "compact car": "box truck", "small van": "white van",
+                    "small boxy car": "large SUV", "compact car": "orange box truck", "small van": "white van",
                     "old hatchback": "large SUV"}
-RETIRED_VEHICLES_BY_VIEW = {
-    "north_african_coast": {"small hatchback": "large SUV", "small car": "pickup truck"},
-    "north_european_seaside": {"small car": "large SUV", "hatchback": "delivery truck"},
-    "riviera": {"small car": "large SUV", "hatchback": "pickup truck"},
-    "east_asian_coast": {"small boxy car": "large SUV", "compact car": "box truck", "small van": "delivery van"},
+RETIRED_VEHICLES_BY_VIEW = {   # 3 Kas: karşılıklar renkli adlarla (REGION_VEHICLE_COLOR_RENAMES)
+    "north_african_coast": {"small hatchback": "red SUV", "small car": "yellow pickup truck"},
+    "north_european_seaside": {"small car": "red SUV", "hatchback": "orange delivery truck"},
+    "riviera": {"small car": "red SUV", "hatchback": "yellow pickup truck"},
+    "east_asian_coast": {"small boxy car": "red SUV", "compact car": "orange box truck",
+                         "small van": "green delivery van"},
 }
 
 
@@ -714,7 +735,8 @@ _VOLC_CHIMNEY = ("chimney", "chimney stack", "chimneystack", "smokestack", "flue
 VOLC_MAX_PROMPT_WORDS = 175
 # 29 Eki (2), Bahadır: sadece meteor 205 kelime (29 Eki (3); önce 195, 202) ve 11 kısıt (tek meteor / beyaz su / kalıcı hasar cümlesi ve kamera
 # kuyruğu stil ekini uzattı). Diğer olaylar 175 / 8 / 1400.
-PROMPT_WORDS_BY_EVENT = {"Meteor slams into the sea off the coast": 205}   # 29 Eki (3), Bahadır: 195 -> 202 -> 205
+PROMPT_WORDS_BY_EVENT = {"Meteor slams into the sea off the coast": 205,   # 29 Eki (3), Bahadır: 195 -> 202 -> 205
+                         "Flash flooding in city streets": 185}   # 3 Kas, Bahadır (sel su cümleleri, seçim c)
 CONSTRAINTS_BY_EVENT = {"Meteor slams into the sea off the coast": 11}
 PROMPT_CHARS_BY_EVENT: dict[str, int] = {}
 
@@ -977,6 +999,19 @@ EVENT_BEATS = {
                    "terms": [_SHOP + ("corner shop", "wall", "brick wall", "brickwork"), _HIT,
                              ("cave", "cave in", "caves in", "caved in", "collapse", "crumble", "give way", "gives way",
                               "gave way", "burst", "break", "broke", "topple", "fall in", "falls in")]},
+            # 3 Kas 2026, Bahadır (sel su kontrolü): su gücüne uygun yeni öğeler, DENEME (TRIAL_BEATS). V9 V6'nın, V10
+            # V7'nin yerine (araç kendi kendine ezilmez: "crumples" yok), V11 V8'in yerine (duvar yıkılmaz, kapı patlar)
+            "V9": {"text": "the {vehicle} is shoved hard against the side of a parked city bus and pinned there",
+                   "terms": [_HIT, ("bus", "buses", "city bus"), ("pin", "pinned", "trap", "wedge", "stuck", "held",
+                                                                  "jam")]},
+            "V10": {"text": "the {vehicle} is rammed against a building front and pinned there by the current",
+                    "terms": [("wall", "building", "facade", "façade", "house", "shopfront", "storefront", "front"),
+                              _HIT, ("pin", "pinned", "trap", "wedge", "stuck", "held", "jam")]},
+            "V11": {"text": "the {vehicle} is swept into a corner shop and its doors burst open as water pours inside",
+                    "terms": [_SHOP + ("corner shop",), ("door", "doors", "doorway", "entrance"),
+                              ("burst", "break", "broke", "smash", "pour", "flood", "rush", "gush")]},
+            "V12": {"text": "the {vehicle} floats free and is carried fast down the middle of the street",
+                    "terms": [("float", "drift", "bob", "adrift", "buoyant"), _DRAG]},
         },
         "slice_3": {
             "D2": {"text": "a lamppost topples into the current",
@@ -1002,9 +1037,37 @@ EVENT_BEATS = {
                              "break", "broke", "sweep", "swept", "surge", "rush", "cave", "give way", "gives way")]},
             # 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 2): D2 (lamba direği) ve D4 (çöp konteyneri) pasif; yerine güçlü,
             # somut, büyük hedefli final. DENEME (TRIAL_BEATS: en fazla %20, art arda gelmez)
-            "D10": {"text": "the current shoves a row of parked cars into the front of a shop and its wall caves in",
+            # 3 Kas (sel su kontrolü), Bahadır: D10 kısaldı, anlam aynı (9-15s ikinci dalga ilk kat yüksekliğinde: çöküş
+            # artık fiziksel olarak açıklanıyor). Önceki "the current shoves a row of parked cars into the front of a shop
+            # and its wall caves in"
+            "D10": {"text": "the current shoves parked cars into a shopfront and its wall caves in",
                     "terms": [_CAR + ("row", "vehicles"), _SHOP + ("front", "wall", "brick wall"),
                               ("cave", "cave in", "caves in", "caved in", "collapse", "crumble", "give way",
+                               "gives way", "burst", "break", "smash", "crush")]},
+            # 3 Kas (sel su kontrolü), Bahadır: yeni güçlü finaller, DENEME. D11 eklenmedi ("glass doors": havuz
+            # lint'inde ince hedef)
+            "D12": {"text": "the current piles a row of parked cars against the front of a shop",
+                    "terms": [_CAR + ("row", "vehicles"), _SHOP + ("front",),
+                              ("pile", "piled", "stack", "jam", "wedge", "shove", "push", "pin", "heap")]},
+            "D13": {"text": "the street becomes a fast brown river and the {vehicle} is carried away toward the "
+                            "intersection",
+                    "terms": [("river", "torrent", "flood", "current", "water"), _DRAG + ("away",)]},
+            "D14": {"text": "the current pushes a parked city bus against a shopfront and floodwater pours in through "
+                            "its doors",
+                    "terms": [("bus", "buses"), _SHOP + ("front",),
+                              ("pour", "flood", "rush", "surge", "burst", "gush", "stream")]},
+            "D15": {"text": "the flood bursts open a row of shop shutters and pours into the stores",
+                    "terms": [_SHOP + ("shutter", "shutters"), ("burst", "break", "broke", "smash", "rip", "tear",
+                                                               "force"),
+                              ("pour", "flood", "rush", "surge", "gush", "stream")]},
+            "D16": {"text": "the surge tears the ground-floor fronts off the shops across the street",
+                    "terms": [_SHOP + ("ground floor", "ground-floor", "front", "fronts"),
+                              ("tear", "tore", "torn", "rip", "wrench", "strip", "smash", "burst", "break", "broke")]},
+            "D17": {"text": "the surge tips a city bus onto its side and pushes it along the street",
+                    "terms": [("bus", "buses"), ("tip", "topple", "overturn", "on its side", "onto its side",
+                                                 "keel over", "roll over"), _DRAG]},
+            "D18": {"text": "the surge slams the {vehicle} into a building front and the shopfront caves in around it",
+                    "terms": [_HIT, _SHOP + ("building", "front", "wall"), ("cave", "cave in", "caves in", "caved in", "collapse", "crumble", "give way",
                                "gives way", "burst", "break", "smash", "crush")]},
         },
         # Aynı videoda tekrar/çelişki (Bahadır onayı, 3 Eki)
@@ -1014,7 +1077,13 @@ EVENT_BEATS = {
         # 18 Eki (2): D9 binanın zemin katı, V7 bina duvarı (aynı yapı)
         # 30 Eki (3), Bahadır: (V6, D5) şehir otobüsü iki kez
         "excluded_pairs": {("V3", "D8"), ("V4", "D2"), ("V7", "D9"), ("V6", "D5"),
-                           ("V8", "D10"), ("V2", "D10")},   # 3 Kas: dükkân duvarı iki kez (V8), park arabaları (V2)
+                           ("V8", "D10"), ("V2", "D10"),   # 3 Kas: dükkân duvarı iki kez (V8), park arabaları (V2)
+                           # 3 Kas (sel su kontrolü): aynı hedef iki kez. Otobüs (V9), dükkân (V11), bina önü (V10),
+                           # kahraman araç iki kez sürüklenir (V12), park arabaları (V2)
+                           ("V9", "D5"), ("V9", "D14"), ("V9", "D17"),
+                           ("V11", "D10"), ("V11", "D12"), ("V11", "D14"), ("V11", "D15"), ("V11", "D16"),
+                           ("V11", "D18"), ("V10", "D18"), ("V12", "D13"), ("V2", "D12"),
+                           ("V11", "D13")},   # 3 Kas: bütçe 185 (Doğu Asya + açılış D, ortam metni kısaldıktan sonra)
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -2176,8 +2245,11 @@ EVENT_BEATS = {
 # 3 Kas 2026, KİLİT İSTİSNASI (tek seferlik, Bahadır onaylı): kilitli iki olayda birer zayıf öğe PASİF (silinmedi):
 #   helikopter G7 (buhar finali), volkan bombaları T5 ("crater of sparks"). Kilitli olaylarda başka pasif öğe yok;
 #   orman L4 aynen kalır. LOCKED_PASSIVE_EXCEPTION testle kilitli (tests/test_toplu_3kas.py).
+# 3 Kas (sel su kontrolü), Bahadır: V3 ve D8 (kaldırma + dönme: araç şekil değiştiriyor), V5 (4-9s'de yan yatmaya
+#   yetecek su yok), V6 ve V7 ("crumples": yerine V9, V10), V8 (tuğla duvar çöker; yerine V11), D3 (uproot), D9 ("bursts
+#   through": duvar delme) PASİF. D10 aktif (9-15s ikinci dalga çöküşü açıklıyor)
 DISABLED_BEATS: dict[str, set[str]] = {
-    FLOOD: {"D2", "D4", "V4"},
+    FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8", "D9"},
     TIDAL: {"W2", "W6", "W8", "T6"},
     FACADE_FIRE: {"N4", "M6"},
     HELICOPTER: {"G7"},
@@ -2187,11 +2259,19 @@ LOCKED_PASSIVE_EXCEPTION: dict[str, set[str]] = {HELICOPTER: {"G7"}, VOLCANIC_BO
 # 3 Kas (Aşama 2): pasif öğelerin yerine gelen yeni öğeler DENEME: aday çiftlerin en fazla %20'si (TRIAL_BEAT_SHARE),
 # son üretimde deneme öğesi geçtiyse bu üretimde gelmez (art arda iki kez yok). Kilitli olaylarda kayıt yok.
 TRIAL_BEATS: dict[str, set[str]] = {
-    FLOOD: {"D10"},
+    FLOOD: {"D10", "V9", "V10", "V11", "V12", "D12", "D13", "D14", "D15", "D16", "D17", "D18"},   # 3 Kas: sel su kontrolü
     TIDAL: {"W9"},
     FACADE_FIRE: {"N7", "M12"},   # 3 Kas (devam): M12 araç öğesi
 }
 TRIAL_BEAT_SHARE = 0.20
+# SEL_DOGRULAMA — 2 iyi videodan sonra %20'ye dönecek. 3 Kas 2026, Bahadır (sel su kontrolü): selde kanıtlı öğe 3 (V1,
+# V2, D5), deneme payı geçici olarak en fazla %50 (LRU ve "art arda deneme yok" aynen). Diğer olaylar TRIAL_BEAT_SHARE.
+SEL_DOGRULAMA = True
+TRIAL_BEAT_SHARE_BY_EVENT = {FLOOD: 0.50} if SEL_DOGRULAMA else {}
+
+
+def trial_beat_share(event: str) -> float:
+    return TRIAL_BEAT_SHARE_BY_EVENT.get(event, TRIAL_BEAT_SHARE)
 # 29 Eki (2), Bahadır: yeni W/X maddelerinden havuza girmeyenler (yerine yeni madde Bahadır'ın kararıyla). Puan sırası:
 # büyüklük, kontrast, yakınlık, çizilebilirlik, aksiyon, farklılık.
 # 29 Eki (3): W2, W3, X1 yeni metinle, X3 "knocking over" ile havuza girdi; bekleyen madde yok.
@@ -2314,7 +2394,8 @@ RETIRED_BEATS = {
 # beat'lerde ana nesne seçilen araçtır (araç adı terimleri); diğerlerinde aşağıdaki tablo, mevcut terim gruplarından
 # nesne grubunun sırasını verir (eylem grupları artık kapı değil, sadece eski kapı raporunda: strict_beat_issues).
 OBJECT_GROUPS = {
-    FLOOD: {"D9": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0, "D8": 0, "D10": 1},   # 3 Kas: D10 dükkân
+    FLOOD: {"D9": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0, "D8": 0, "D10": 1,   # 3 Kas: D10 dükkân
+            "D12": 1, "D14": 0, "D15": 0, "D16": 0, "D17": 0},   # 3 Kas (sel su kontrolü): dükkân, otobüs
     TIDAL: {"W1": 1, "W2": 0, "W3": 0, "W4": 0, "W5": 0, "W6": 0, "W8": 0, "W9": 1},   # 3 Kas: W9 kafe
     # 18 Eki (2) kuru deneme: M8'in nesnesi ev (kamyon evin önüne; "house's facade" M7'ye benzetiliyordu)
     # 22 Eki: M6 ev (M7 ile aynı). 31 Eki (3): M3 ev (minibüs evin önüne; nesne minibüs olunca "house, wall" M6'nın
@@ -2357,7 +2438,10 @@ _ANCHOR_SHOP = ("shop", "store", "storefront", "shopfront", "shop front", "corne
                 "cafe")
 _ANCHOR_BUS = ("bus", "buses", "city bus")
 BEAT_ANCHORS = {
-    FLOOD: {"V6": _ANCHOR_BUS, "V8": _ANCHOR_SHOP, "D10": _ANCHOR_SHOP},   # 3 Kas: D10 dükkân önü
+    FLOOD: {"V6": _ANCHOR_BUS, "V8": _ANCHOR_SHOP, "D10": _ANCHOR_SHOP,   # 3 Kas: D10 dükkân önü
+            # 3 Kas (sel su kontrolü): otobüs ve dükkân hedefli yeni öğeler
+            "V9": _ANCHOR_BUS, "V11": _ANCHOR_SHOP, "D12": _ANCHOR_SHOP, "D14": _ANCHOR_BUS, "D16": _ANCHOR_SHOP,
+            "D18": _ANCHOR_SHOP},
     TIDAL: {"T8": _ANCHOR_HOUSE, "W9": _ANCHOR_SHOP},                      # 3 Kas: W9 kafe önü
     MUDSLIDE: {"H6": _ANCHOR_HOUSE, "M3": _ANCHOR_HOUSE},   # 31 Eki (3): M3 minibüs evin önüne
     VILLAGE: {"L6": _ANCHOR_HOUSE},
@@ -2392,6 +2476,51 @@ _FIRE_ROOT_RE = re.compile(r"\b(?:" + "|".join(FIRE_BANNED_ROOTS) + r")\w*", re.
 
 def fire_root_words(text: str) -> list[str]:
     return list(dict.fromkeys(m.group(0).lower() for m in _FIRE_ROOT_RE.finditer(text or "")))
+
+
+# 3 Kas 2026, Bahadır (sel su kontrolü): selde araç dönmez, ters dönmez, havaya kalkmaz, burnunun üstüne dikilmez, ağaç
+# sökülmez (FLOOD_BANNED_ROOTS, her dilimde). Çöküş ve yan yatma (FLOOD_COLLAPSE_ROOTS) sadece 9-15s VERBATIM havuz
+# metninde serbest (ikinci dalga ilk kat yüksekliğinde); GPT kendi çöküşünü yazamaz. Sadece sel (dev dalga açılış D'deki
+# suyun "collapses" ifadesi reddedilmesin diye dev dalgaya genişletilmedi).
+FLOOD_GATE_EVENTS = (FLOOD,)
+FLOOD_BANNED_ROOTS = (r"spin\w*", r"spun", r"flip\w*", r"upside[\s-]+down", r"lift(?:s|ed|ing)?\s+off",
+                      r"off\s+its\s+wheels", r"off\s+the\s+road", r"on(?:to)?\s+its\s+nose", r"uproot\w*")
+FLOOD_COLLAPSE_ROOTS = (r"collaps\w*", r"cav(?:e|es|ed|ing)\s+in", r"crumbl\w*", r"tip(?:s|ped|ping)?\s+over",
+                        r"onto\s+its\s+side")
+_FLOOD_ROOT_RE = re.compile(r"\b(?:" + "|".join(FLOOD_BANNED_ROOTS) + r")\b", re.IGNORECASE)
+_FLOOD_COLLAPSE_RE = re.compile(r"\b(?:" + "|".join(FLOOD_COLLAPSE_ROOTS) + r")\b", re.IGNORECASE)
+
+
+def flood_root_words(text: str, collapse: bool = True) -> list[str]:
+    found = [m.group(0).lower() for m in _FLOOD_ROOT_RE.finditer(text or "")]
+    if collapse:
+        found += [m.group(0).lower() for m in _FLOOD_COLLAPSE_RE.finditer(text or "")]
+    return list(dict.fromkeys(found))
+
+
+def _without_pool_text(spec: dict, slot: str, text: str) -> str:
+    """Dilimden seçilen beat'in havuz metni (ve su cümlesi) çıkarılmış hâli: kalan kısım koddan gelmeyen metindir."""
+    pool = beat_text(spec["event"], slot, spec["beat_2"] if slot == "slice_2" else spec["beat_3"], spec["vehicle"])
+    level = WATER_LEVEL_LINES.get(spec["event"], {}).get(slot, "")
+    rest = re.sub(re.escape(pool.rstrip(".")), " ", text, flags=re.IGNORECASE)
+    return rest.replace(level, " ") if level else rest
+
+
+def flood_root_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
+    """Selde yasak kökler. Çöküş kökleri sadece seçilen 9-15s havuz metninde serbest (GPT kendi çöküşünü yazamaz)."""
+    out = []
+    for f in SLICE_FIELDS:
+        text = slices.get(f, "")
+        roots = flood_root_words(text, collapse=False)
+        roots += [w for w in flood_root_words(_without_pool_text(spec, "slice_3", text) if f == "slice_3" else text)
+                  if w not in roots]
+        if roots:
+            label = SLICE_LABELS[SLICE_FIELDS.index(f)]
+            out.append(_issue("flood_banned_root", f"{label}: selde yasak kök ({', '.join(roots)})",
+                              f"In '{f}' remove {', '.join(repr(w) for w in roots)}: floodwater pushes, drags, floats "
+                              f"and piles vehicles; it never spins, flips or lifts them, and nothing collapses unless "
+                              f"the given event says so."))
+    return out
 
 
 # 31 Eki, Bahadır (üretim bulgusu c): insanlar dağılmaz, koşar ("Three people scatter in panic"). Sadece insan öznesi:
@@ -2579,6 +2708,8 @@ def gpt_quality_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             out.append(_issue("fire_banned_root", f"yangında yasak kök ({', '.join(roots)})",
                               f"Remove {', '.join(repr(w) for w in roots)}: fire burns, spreads, engulfs and collapses "
                               f"things; nothing explodes, disintegrates or flows like a torrent."))
+    if event in FLOOD_GATE_EVENTS:   # 3 Kas (sel su kontrolü): yasak kökler
+        out += flood_root_issues(spec, slices)
     scattered = people_scatter(gpt_text)
     if scattered:
         out.append(_issue("people_scatter", f"insanlar dağılmaz, koşar ({'; '.join(scattered)})",
@@ -2685,8 +2816,17 @@ def soft_beat_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             continue
         if event in OWN_OBJECT_ENOUGH_EVENTS:   # 17 Eki: kendi nesnesi varsa benzerlik kontrolü yok (helikopter)
             continue
+        if event not in LOCKED_EVENTS and text in verbatim_forms(spec, slot):
+            # 3 Kas (sel su kontrolü): VERBATIM dilim seçilen havuz metninin kendisi; "başka olaya benziyor" kıyası
+            # GPT'nin başka olayı anlatmasını yakalamak için (sel D18 havuz metni D10'a benzetiliyordu)
+            continue
         own_ratio = _group_match_ratio(beats[slot][bid], text)
+        # 3 Kas (sel su kontrolü): kilitsiz olaylarda pasif öğe (DISABLED_BEATS, seçilemez) benzerlik adayı değil (sel
+        # D18 pasif D9'a benzetiliyordu). Kilitli olaylarda davranış aynı.
+        off = DISABLED_BEATS.get(event, set()) if event not in LOCKED_EVENTS else set()
         for other in beats[slot]:
+            if other in off:
+                continue
             terms = beat_object_terms(spec, slot, other)
             if other == bid or set(terms) == set(own):
                 continue
@@ -3461,7 +3601,7 @@ def choose_beats(event: str, view: str | None, spot: str, history: list[str],
             # LRU kanıtlı çiftlerin hepsini elediyse kanıtlı çiftlerde derinlik 1 (son çift tekrar etmez); deneme payı
             # yine en fazla %20 kalır (aday tükenmez)
             proven_pairs = [p for p in allowed_pairs(event, view, spot) if not is_trial(p) and beat_tag(*p) != last_tag]
-        if proven_pairs and (last_trial or not trial_pairs or rng.random() >= TRIAL_BEAT_SHARE):
+        if proven_pairs and (last_trial or not trial_pairs or rng.random() >= trial_beat_share(event)):
             pairs = proven_pairs
         elif trial_pairs and not last_trial:
             pairs = trial_pairs
@@ -3533,7 +3673,7 @@ def _vehicle_options(vehicles, exclude) -> list[str]:
 
 def vehicle_terms(view: str, vehicle: str) -> tuple[str, ...]:
     for v, terms in REGION_VEHICLES.get(view, []):
-        if v == vehicle:
+        if v in (vehicle, REGION_VEHICLE_COLOR_RENAMES.get(vehicle)):   # 3 Kas: eski renksiz ad
             return terms
     raise StructureError(f"Araç görünümde yok: {vehicle} / {view}")
 
@@ -3566,8 +3706,9 @@ def uses_vehicle(event: str) -> bool:
 def spec_vehicle_terms(spec: dict) -> tuple[str, ...]:
     if spec["vehicle"] is None:
         return ()
+    renamed = REGION_VEHICLE_COLOR_RENAMES.get(spec["vehicle"]) if spec["view"] is not None else None
     for v, terms in event_vehicles(spec["event"], spec["view"]):
-        if v == spec["vehicle"]:
+        if v in (spec["vehicle"], renamed):   # 3 Kas: eski renksiz ad (deploy öncesi başlamış üretim)
             return terms
     raise StructureError(f"Araç listede yok: {spec['vehicle']} / {spec['event']} / {spec['view']}")
 
@@ -3628,7 +3769,8 @@ def clean_slice(text: str) -> str:
 # ── Birleştirme ve spec ─────────────────────────────────────────────────────────────────────────────────────
 def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: str, b3: str, vehicle: str,
                people: int | None = None, setting: str | None = None, volc_env: str | None = None,
-               frame: dict | None = None, scene_env: str | None = None, opening: str | None = None) -> dict:
+               frame: dict | None = None, scene_env: str | None = None, opening: str | None = None,
+               light: str | None = None) -> dict:
     """Kie'ye gidecek prompt'u kuran ve denetleyen her şey (slices hariç). people: kaçan kişi sayısı N (sadece
     kişi kuralı olan olaylarda, zorunlu)."""
     if not is_structured(event):
@@ -3644,7 +3786,9 @@ def build_spec(event: str, ship: str | None, spot: str, view: str | None, b2: st
     fire_env = fire_env_of_spot(spot) if event == FIRE_TORNADO else None
     spec = {"event": event, "ship": ship, "spot": spot, "view": view, "beat_2": b2, "beat_3": b3,
             "vehicle": vehicle, "key_visual": expected_key_visual(event, spot, opening),
-            "suffix": style_suffix(event, ship, spot, view, setting, volc_env, frame, fire_env, scene_env)}
+            "suffix": style_suffix(event, ship, spot, view, setting, volc_env, frame, fire_env, scene_env, light)}
+    if light is not None:
+        spec["view_light"] = light   # 3 Kas: sel / dev dalga ışığı Setting satırında (VIEW_LIGHT_EVENTS)
     if scene_env is not None:
         spec["scene_env"] = scene_env   # 21 Eki (Aşama 5): ortam ekseni (9 olay)
     if opening is not None:
@@ -3756,7 +3900,7 @@ def slice_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
     out = []
     for f in SLICE_FIELDS:
         text = slices.get(f, "")
-        lo, hi = SLICE_WORDS[f]
+        lo, hi = slice_words(event, f)   # 3 Kas: selde 4-9s 26, 9-15s 30
         n = len(text.split())
         if not lo <= n <= hi:
             out.append(_issue("slice_words", f"{f}: {lo}-{hi} kelime ({n} kelime)",
@@ -3891,7 +4035,7 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
     expected_suffix = style_suffix(spec["event"], spec["ship"], spec["spot"], spec["view"], spec.get("setting"),
                                    spec.get("volc_env"), spec.get("frame"),
                                    fire_env_of_spot(spec["spot"]) if spec["event"] == FIRE_TORNADO else None,
-                                   spec.get("scene_env"))
+                                   spec.get("scene_env"), spec.get("view_light"))
     expected_key = expected_key_visual(spec["event"], spec["spot"], spec.get("opening"))
     if spec.get("key_visual") != expected_key:
         out.append(_issue("key_visual", "kilit görsel spec'te değişmiş"))
@@ -3931,10 +4075,28 @@ def final_prompt_issues(spec: dict, slices: dict[str, str], prompt: str, story: 
                                           f"{max_prompt_chars(spec['event'])})"))
     # 6 sabit kural (genel 40-60 "length" yerine TOTAL_WORDS; olay grupları ve çeşitlilik burada değil)
     fixed = set(STORY_RULES)
-    for i in story_rule_issues(spec["event"], spec["ship"], plain_story(spec, slices), expected_suffix):
+    for i in verbatim_story_exempt(spec, slices, story_rule_issues(spec["event"], spec["ship"],
+                                                                   plain_story(spec, slices), expected_suffix)):
         if i["rule"] in fixed:
             out.append(i)
     return out
+
+
+# 3 Kas 2026, Bahadır (sel su kontrolü): selde yüzdürme izinli etki (V12 "floats free and is carried fast"). d kuralının
+# (ölçek küçültücü) "floats" eşleşmesi sadece VERBATIM havuz dilimlerinden geliyorsa ret yok; GPT'nin yazdığı dilimde
+# (kişi cümlesi ya da bayrak kapalıyken) aynı kelime yine reddedilir.
+FLOAT_EXEMPT_EVENTS = (FLOOD,)
+
+
+def verbatim_story_exempt(spec: dict, slices: dict[str, str], issues: list[dict]) -> list[dict]:
+    if spec["event"] not in FLOAT_EXEMPT_EVENTS:
+        return issues
+    from core.creative_pipeline import SCALE_REDUCERS
+    rest = [spec["key_visual"], slices.get("slice_1_rest", "")] + [_without_pool_text(spec, f, slices.get(f, ""))
+                                                                    for f in ("slice_2", "slice_3")]
+    if find_terms(SCALE_REDUCERS, " ".join(rest)):
+        return issues
+    return [i for i in issues if i["rule"] != "d_no_scale_reducers"]
 
 
 # ── KOD YEDEĞİ (16 Eki 2026, Bahadır: hibrit hikâye) ─────────────────────────────────────────────────────────
@@ -4076,19 +4238,28 @@ def fallback_people_pool(spec: dict) -> tuple[str, ...]:
     return FALLBACK_PEOPLE[spec["event"]]
 
 
+# 3 Kas 2026, Bahadır (sel su kontrolü): su seviyesi profili koddan, dilimin başında birebir (VERBATIM ve kod yedeği aynı
+# metin; GPT değiştiremez). 0-4s açılış A aynen (bel hizası). Sadece sel.
+WATER_LEVEL_LINES = {FLOOD: {"slice_2": "Water rises past the car windows.",
+                             "slice_3": "A second surge, first-floor high, slams in."}}
+
+
 def fallback_beat_slice(spec: dict, slot: str) -> str:
-    """Seçilen beat'in kod metni; dilim alt sınırından kısaysa sabit geçiş kalıbıyla."""
+    """Seçilen beat'in kod metni; dilim alt sınırından kısaysa sabit geçiş kalıbıyla. 3 Kas: selde su seviyesi cümlesi
+    başta (WATER_LEVEL_LINES)."""
     bid = spec["beat_2"] if slot == "slice_2" else spec["beat_3"]
     text = beat_text(spec["event"], slot, bid, spec["vehicle"])
-    if len(text.split()) < SLICE_WORDS[slot][0]:
+    level = WATER_LEVEL_LINES.get(spec["event"], {}).get(slot)
+    if len(text.split()) + (len(level.split()) if level else 0) < SLICE_WORDS[slot][0]:
         text = FALLBACK_TRANSITION + text
-    return clean_slice(text[0].upper() + text[1:])
+    text = clean_slice(text[0].upper() + text[1:])
+    return f"{level} {text}" if level else text
 
 
 def _fallback_fits(spec: dict, slices: dict[str, str]) -> bool:
     """Kelime/karakter sınırları (dilim aralıkları, toplam aralık, 175 kelime, karakter)."""
     for f in SLICE_FIELDS:
-        lo, hi = SLICE_WORDS[f]
+        lo, hi = slice_words(spec["event"], f)
         if not lo <= len(slices[f].split()) <= hi:
             return False
     lo, hi = TOTAL_WORDS_BY_EVENT.get(spec["event"], TOTAL_WORDS)

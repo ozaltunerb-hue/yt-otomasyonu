@@ -23,7 +23,12 @@ OPENINGS = {
              "their sides.",
         "C": "A surge of brown floodwater pours down the sloping street and drags a parked car along with it.",
         "D": "Floodwater bursts over the low wall of a canal and spills straight into the street, sweeping parked "
-             "cars sideways."},
+             "cars sideways.",
+        # 3 Kas 2026, Bahadır (sel su kontrolü): B ve C PASİF (DISABLED_OPENINGS). E = B' (araçlar yan yatmaz, yana
+        # itilir; koruma harfi B'den E'ye geçti), F = C' (tekil park arabası yerine park arabaları: kahramandan önce
+        # ikinci tekil araç yok). İkisi de DENEME.
+        "E": "A wall of brown floodwater swings around the corner of an intersection and shoves parked cars sideways.",
+        "F": "A surge of brown floodwater pours down the sloping street and drags parked cars along with it."},
     "Tidal wave surges over a coastal city street": {
         "B": "A towering wave rolls over the harbor breakwater and slams onto the coastal road, shoving parked "
              "cars in the first second.",
@@ -196,8 +201,13 @@ OPENING_ENV_EXCLUDE = {
 }
 
 
+# 3 Kas 2026, Bahadır (sel su kontrolü): pasif açılışlar (silinmedi, seçilmez)
+DISABLED_OPENINGS = {"Flash flooding in city streets": {"B", "C"}}
+
+
 def options(event: str) -> list[str]:
-    return [A] + list(OPENINGS.get(event, {}))
+    off = DISABLED_OPENINGS.get(event, set())
+    return [A] + [o for o in OPENINGS.get(event, {}) if o not in off]
 
 
 def text(event: str, letter: str | None) -> str | None:
@@ -218,7 +228,8 @@ def env_compatible(event: str, letter: str, env: str | None) -> bool:
 # (terim gruplarının hepsi açılışta) çıkarıldı, elle süzüldü: sadece gerçekten aynı şeyi anlatanlar (rapor 21 Eki).
 BEAT_CONFLICTS = {
     # 30 Eki (2), Bahadır: B+V6, D+T7 (bombalar), D+N5 (cephe), B+T4 (eski sokak)
-    "Flash flooding in city streets": {"B": {"V5", "V6"}, "D": {"V1"}},    # araba yan yatar / yana süpürülür
+    "Flash flooding in city streets": {"B": {"V5", "V6"}, "D": {"V1"},    # araba yan yatar / yana süpürülür
+                                       "E": {"V1"}},   # 3 Kas: E park arabalarını yana iter (V1 yana döner, sürüklenir)
     "Tidal wave surges over a coastal city street": {"B": {"T3"}},         # park hâlindeki arabalar itilir
     # 22 Eki (heyelan denetimi): M3 artık park arabaları sırası (B ilk park arabasını devirir); C+M3 (duvar) çıktı
     "Mudslide pours down a hillside street": {"B": {"H5", "M3"}},         # araba yan yatar / park arabaları

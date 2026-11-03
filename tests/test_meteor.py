@@ -164,9 +164,12 @@ class TestMeteor(unittest.TestCase):
         self.assertEqual(es.max_constraints(MET), 11)
         self.assertEqual(es.max_prompt_chars(MET), es.MAX_PROMPT_CHARS)
         for e in es.structured_events():
-            if e != MET:
+            if e not in (MET, es.FLOOD):
                 self.assertEqual((es.max_prompt_words(e), es.max_constraints(e), es.max_prompt_chars(e)),
                                  (175, 8, 1400), e)
+        # 3 Kas (sel su kontrolü), Bahadır: sel 185 kelime (su seviyesi cümleleri)
+        self.assertEqual((es.max_prompt_words(es.FLOOD), es.max_constraints(es.FLOOD), es.max_prompt_chars(es.FLOOD)),
+                         (185, 8, 1400))
 
     def test_key_frames_envs_lights_locked(self):
         import core.creative_pipeline as cp

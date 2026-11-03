@@ -210,7 +210,8 @@ class TestNothingReachesKie(unittest.TestCase):
         self.assertTrue(p.startswith(f"0-4s: {KEY} "))
         # 22 Eki: kamera cümlesi "Handheld footage" ya da (sabit kamera modu) "Footage from" ile başlar
         self.assertNotIn("camera", p.split(" Handheld footage")[0].split(" Footage from")[0].lower())
-        self.assertIn(" 9-15s: Seconds later, in full view, a lamppost topples into the current.", p)
+        # 3 Kas (sel su kontrolü): dilim başında su seviyesi cümlesi (geçiş kalıbı gerekmez)
+        self.assertIn(" 9-15s: A second surge, first-floor high, slams in. A lamppost topples into the current.", p)
         h.free_rewriter.assert_not_called()
 
     def test_beat_missing_twice_falls_back(self):

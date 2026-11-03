@@ -37,6 +37,18 @@ def _longest_setting(event: str) -> str | None:
     return max(lines, key=lambda x: len(x.split()))
 
 
+def _longest_view_light(event: str) -> str | None:
+    """3 Kas: sel ve dev dalgada üretimde seçilebilen (rotasyondaki) en uzun ışık metni; diğer olaylarda None."""
+    import core.proven_axes as pa
+    import core.scene_env as sv
+    import core.skeleton_pipeline as sk
+    if event not in sk.VIEW_LIGHT_EVENTS:
+        return None
+    base = list(sk.EVENT_SKELETONS[event]["weather"])
+    opts = pa.lights(event, base + [x for x in sv.LIGHT_ADD.get(event, ()) if x not in base], base)
+    return max(opts, key=lambda x: len(x.split()))
+
+
 def measure(event: str) -> dict:
     """Kombinasyon = görünüm × spot × beat çifti × araç × (volkan ortamı) × (ortam) × (açılış: Aşama 6). Her kombinasyonda
     kadraj varyantlarından en az biri kod yedeğini 175'e sığdırmalı (üretimdeki sığma koruması) ve sığan ilk varyantın
@@ -51,6 +63,7 @@ def measure(event: str) -> dict:
     lo, hi = sk.count_range(event, None)
     people = hi if es.has_people_rule(event) else None
     volc_envs = list(sk.VOLC_ENVS) if event in es.VOLC_ENV_EVENTS else [None]
+    light = _longest_view_light(event)   # 3 Kas: sel / dev dalga ışığı Setting satırında (en uzun rotasyon ışığı)
     out = {"combos": 0, "before_fail": 0, "after_fail": 0, "variants": 0, "variant_fail": 0, "max_suffix": 0,
            "gate_fail": 0, "env_reset": 0, "rot_fail": 0}
     beats = es.EVENT_BEATS[event]["excluded_spots"]
@@ -73,7 +86,7 @@ def measure(event: str) -> dict:
                             for op in openings:
                                 out["combos"] += 1
                                 base = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv,
-                                                     None, None, op)
+                                                     None, None, op, light)
                                 out["before_fail"] += not es.fallback_candidates(base)
                                 frames = [(senv, f) for f in fx.all_frames(event, spot, pool, risky,
                                                                            sv.excluded_positions(event, senv))]
@@ -87,7 +100,7 @@ def measure(event: str) -> dict:
                                 rot_fit = False
                                 for env_used, f in frames:
                                     spec = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv,
-                                                         f, env_used, op)
+                                                         f, env_used, op, light)
                                     cands = es.fallback_candidates(spec)
                                     out["variants"] += 1
                                     out["variant_fail"] += not cands

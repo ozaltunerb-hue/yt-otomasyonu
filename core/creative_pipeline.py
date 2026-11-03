@@ -29,6 +29,7 @@ from core.skeleton_pipeline import (
     REGION_VIEWS,
     SKELETON_CAMERA,
     SHIP_PHRASES,
+    VIEW_LIGHT_EVENTS,
     choose_event_and_ship,
     choose_region_view,
     count_range,
@@ -607,7 +608,9 @@ def structured_issues(spec: dict, slices: dict, recent: list[str]) -> list[dict]
     çeşitlilik (GPT metni üzerinde). Genel 40-60 "length" kuralı burada yok: yerini es.TOTAL_WORDS aldı."""
     out = es.slice_issues(spec, slices)
     fixed = set(STORY_RULES)
-    out += [i for i in story_rule_issues(spec["event"], spec["ship"], es.plain_story(spec, slices)) if i["rule"] in fixed]
+    out += [i for i in es.verbatim_story_exempt(spec, slices, story_rule_issues(spec["event"], spec["ship"],
+                                                                                es.plain_story(spec, slices)))
+            if i["rule"] in fixed]   # 3 Kas: selde VERBATIM yüzdürme (es.verbatim_story_exempt)
     gpt_only = " ".join(slices[f] for f in es.SLICE_FIELDS)
     out += diversity_issues(gpt_only, [_gpt_text(spec, r) for r in recent])
     return out
@@ -1038,7 +1041,10 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     frame_rng = fx.side_rng()
     frame, frame_excluded = fx.choose_frame(event, spot, pool, risky, ev_hist, frame_rng, blocked)
     excluded.update(frame_excluded)
-    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, frame, scene_env, opening)
+    # 3 Kas (sel su kontrolü): sel ve dev dalgada seçilen ışık Setting satırına birebir girer
+    view_light = weather if event in VIEW_LIGHT_EVENTS else None
+    spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, frame, scene_env, opening,
+                         view_light)
     if met_env and not es.fallback_candidates(spec):
         # 29 Eki: meteor sığma koruması. Kadraj kamera noktasının kendisi (alternatif yok); en uzun ortam satırı (O4/O1)
         # öğle/kapalı ışıkla en uzun çiftte (M1+N3, M6+N6) kod yedeğini 175'i 1-2 kelime aşırıyor. Sığan bir ortam/ışık
@@ -1088,7 +1094,7 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
                                          + (a[1].get("fg") in last_fg), a[1]["type"] in last_k))
         for alt_env, alt in alternatives:
             alt_spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, alt, alt_env,
-                                     opening)
+                                     opening, view_light)
             if es.fallback_candidates(alt_spec):
                 log.info(f"🎞️ Kadraj sığmadı ({fx.frame_label(frame)}, ortam {scene_env}), yerine: "
                          f"{fx.frame_label(alt)}, ortam {alt_env}")

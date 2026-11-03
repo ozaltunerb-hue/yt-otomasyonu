@@ -595,8 +595,10 @@ def _make_parti2_test(event, slot, bid, text, para):
         for code, terms, *_ in es.EVENT_BANNED_WORDS.get(event, ()):
             self.assertEqual(es.find_terms(terms, text), [], code)
         if bid in es.DISABLED_BEATS.get(event, set()):
-            # 3 Kas kilit istisnası: helikopter G7 pasif (havuzda duruyor, çift seçiminde yok)
-            self.assertIn(bid, es.LOCKED_PASSIVE_EXCEPTION.get(event, set()))
+            # 3 Kas kilit istisnası: helikopter G7 pasif (havuzda duruyor, çift seçiminde yok). Kilitsiz olayda pasif
+            # öğe (3 Kas sel su kontrolü: D9) serbest
+            if event in es.LOCKED_EVENTS:
+                self.assertIn(bid, es.LOCKED_PASSIVE_EXCEPTION.get(event, set()))
             self.assertFalse([p for s in sk.view_spots(event, es.structure_views(event)[0])
                               for p in es.allowed_pairs(event, es.structure_views(event)[0], s) if bid in p])
             return
@@ -652,9 +654,9 @@ class TestParti2WordBudget(unittest.TestCase):
                 ppl = sk.count_range(e, None)[0] if es.has_people_rule(e) else None
                 spec = es.build_spec(e, None, spot, view, p2, p3, veh, ppl)
                 line = es.word_budget_line(spec)
-                if e in es.CAP_BUDGET_EVENTS:   # 21 Eki (Aşama 5): sel 175 tavanlı (toplam stil ekine göre)
+                if e in es.CAP_BUDGET_EVENTS:   # 21 Eki (Aşama 5): sel 175 tavanlı (3 Kas: 185)
                     total = min(es.TOTAL_WORDS_BY_EVENT.get(e, es.TOTAL_WORDS)[1],
-                                es.VOLC_MAX_PROMPT_WORDS - 3 - len(spec["suffix"].split()))
+                                es.max_prompt_words(e) - 3 - len(spec["suffix"].split()))
                 key = len(spec["key_visual"].split())
                 self.assertIn(f"the opening sentence has {key} words; slice_1_rest 6 to 10 words", line)
                 self.assertIn(f"must total at most {total} words", line)

@@ -672,28 +672,33 @@ REMOVED_EVENTS = [e for e in ALL_EVENTS if e not in EVENT_SKELETONS]
 REGION_VIEW_EVENTS = ("Flash flooding in city streets", "Tidal wave surges over a coastal city street")
 REGION_VIEWS = {
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Körfez metropolü (BAE, Katar)
-    "gulf_metropolis": "glass towers behind palm-lined boulevards, sand-colored low buildings, white SUVs",   # 21 Eki: -"multi-lane" (175)
+    # 3 Kas 2026, Bahadır (sel su kontrolü): ortam metinlerinde araç tarifi yok (sahnede tek kahraman araç). Önceki
+    # son parçalar: white SUVs, large SUVs, pickup trucks, parked SUVs and vans, scooters, delivery vans
+    "gulf_metropolis": "glass towers behind palm-lined boulevards, sand-colored low buildings",   # 3 Kas: bütçe 185   # 21 Eki: -"multi-lane" (175)
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Kuzey Afrika kıyısı (Fas, Tunus)
     # 17 Eki, Bahadır (temizlik turu): küçük araç yok. Önceki: "small hatchback cars"
-    "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, large SUVs",
+    "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: ABD kıyı kasabası (Florida, Carolina)
-    "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, power lines",   # 21 Eki: -"overhead" (175)
+    "us_coastal_town": "wide asphalt roads, low wooden and brick houses, power lines",   # 3 Kas: bütçe 185   # 21 Eki: -"overhead" (175)
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Kuzey Avrupa sahil kasabası (Hollanda, İngiltere)
     # 17 Eki: küçük araç yok. Önceki: "small parked cars"
-    "north_european_seaside": "brick terraced houses, narrow streets, parked SUVs and vans",
+    "north_european_seaside": "brick terraced houses, narrow streets, bay windows, wet slate roofs",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Riviera (Fransa, İtalya)
     # 4 Eki, Bahadır: "cobbled promenade" GPT'ye caddeyi "promenade" diye yazdırıyordu (sel kuru provası, olay adı
     # kuralından ret); "cobbled streets" oldu. Kıyı dev dalga da bu görünümü kullanır.
-    "riviera": "cream stone buildings with shuttered windows, cobbled streets, scooters, plane trees",
+    "riviera": "cream stone buildings with shuttered windows, cobbled streets, plane trees",
     # 1 Eki, Bahadır: aynı ortamda tekrar eden videolar. İlham: Doğu Asya kıyısı (Japonya, Tayvan)
     # 1 Eki (2): videoda Akdeniz çıktı; "covered arcade entrances" Akdeniz çağrışımı yaptı, klima ve kablo eklendi
     # 17 Eki: küçük araç yok. Önceki son parça: "small boxy cars and scooters"
     # 21 Eki (genel kalite): 175 kelime için kısa. Önceki: "...and tangled overhead wires, narrow lanes, delivery vans
     # and box trucks"
-    "east_asian_coast": "dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, "
-                        "delivery vans",
+    # 3 Kas (sel su kontrolü, bütçe 185): araç tarifi çıktı, yerine bir şey eklenmedi
+    "east_asian_coast": "dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes",
 }
 REGION_VIEW_CLOTHING = "people in light everyday clothes suited to the climate"
+# 3 Kas 2026, Bahadır (sel su kontrolü): seçilen ışık (hava) metni Setting satırına birebir girer (önceden son prompta
+# hiç girmiyordu). Sadece kilitsiz sel ve dev dalga.
+VIEW_LIGHT_EVENTS = REGION_VIEW_EVENTS
 NO_SIGNS = "no readable signs, text or flags"
 # Spot ile görünüm cümlede çakışmasın: yüksek bina yeri alçak yapılı görünümlerle, alçak dükkanlı sokak yoğun orta
 # katlı görünümle, yoğun şehir merkezi küçük kasaba görünümüyle eşleşmez. Kamera konumu yine spot'tan gelir.
@@ -1159,7 +1164,7 @@ def legacy_camera(event: str, spot: str, volc_env: str | None = None) -> str:
 
 def style_suffix(event: str, ship: str | None, spot: str, view: str | None = None, setting: str | None = None,
                  volc_env: str | None = None, frame: dict | None = None, fire_env: str | None = None,
-                 scene_env: str | None = None) -> str:
+                 scene_env: str | None = None, light: str | None = None) -> str:
     """Tek kamera satırı + kıyafet + ışık (+ şehirde görünüm satırı; en fazla 8 kısıt). Eski ekten kaldırılanlar:
     TUR 30 notu. setting: 14 Eki (4), çığ ortam satırı ("Setting: dağ, yerleşim, ışık."), kamera cümlesinden sonra.
     frame: 21 Eki (Aşama 4) kadraj ekseni (core/frame_axis.py); None ise bugünkü kamera (legacy_camera)."""
@@ -1196,7 +1201,8 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8). 21 Eki (genel kalite):
         # giyim ifadesi çıktı (giyim satırı "ordinary civilians in everyday clothes" diyor; 175 kelime)
         clothing = "" if env_centric else f", {REGION_VIEW_CLOTHING}"
-        out += f" Setting: {view_district(event, view)}{clothing}, {NO_SIGNS}."
+        lit = f", in {light}" if light and event in VIEW_LIGHT_EVENTS else ""   # 3 Kas: ışık birebir
+        out += f" Setting: {view_district(event, view)}{clothing}{lit}, {NO_SIGNS}."
     elif s["domain"] in NO_SIGNS_DOMAINS and not scene_signs:
         out += f" {NO_SIGNS[0].upper()}{NO_SIGNS[1:]}."   # 2 Eki: heyelan (toplam 8 kısıt)
     if s["domain"] == "meteor_disasters":   # 29 Eki (2): tek meteor / beyaz su / kalıcı hasar (meteorda 11 kısıt)

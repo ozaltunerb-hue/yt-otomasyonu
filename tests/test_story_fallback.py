@@ -154,11 +154,18 @@ class TestFallbackEveryCombination(unittest.TestCase):
                 self.assertEqual(es.find_terms(es.FIRE_TOR_OPEN_LAND, t), [])
 
     def test_transition_only_when_needed(self):
-        spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D2", "large SUV", 5)
+        # 3 Kas (sel su kontrolü): selde dilim başında su seviyesi cümlesi var, geçiş kalıbı gerekmez; kısa beat'li dev
+        # dalgada geçiş kalıbı aynen
+        spec = es.build_spec(es.TIDAL, None, "Coastal street of low shopfronts", "riviera", "T2", "W5", "red SUV", 5)
         self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),
-                         "Seconds later, in full view, a lamppost topples into the current.")
+                         "Seconds later, in full view, a city bus is shoved sideways by the surge.")
+        self.assertEqual(es.fallback_beat_slice(spec, "slice_2"), "The red SUV is carried down the street by the surge.")
+        spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D5", "red SUV", 5)
+        self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),
+                         "A second surge, first-floor high, slams in. A city bus is shoved sideways by the current.")
         self.assertEqual(es.fallback_beat_slice(spec, "slice_2"),
-                         "The large SUV is caught by the current, turns sideways and is dragged down the street.")
+                         "Water rises past the car windows. The red SUV is caught by the current, turns sideways and "
+                         "is dragged down the street.")
         self.assertEqual(es.FALLBACK_TRANSITION, "Seconds later, in full view, ")
 
     def test_former_gaps_are_excluded_pairs(self):

@@ -464,15 +464,16 @@ class TestRegionViews(unittest.TestCase):
         self.assertEqual(sk.REGION_VIEW_EVENTS, (FLOOD, TIDAL))
         self.assertEqual(sk.REGION_VIEWS, {
             # 21 Eki (genel kalite): 175 için kısa ("multi-lane", "overhead", "units", "and box trucks" çıktı)
-            "gulf_metropolis": "glass towers behind palm-lined boulevards, sand-colored low buildings, white SUVs",
-            # 17 Eki, Bahadır (temizlik turu): küçük araç yok ("small hatchback cars", "small parked cars", "small
-            # boxy cars and scooters" yerine büyük araçlar)
-            "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, large SUVs",
-            "us_coastal_town": "wide asphalt roads, pickup trucks, low wooden and brick houses, power lines",
-            "north_european_seaside": "brick terraced houses, narrow streets, parked SUVs and vans",
-            "riviera": "cream stone buildings with shuttered windows, cobbled streets, scooters, plane trees",
+            # 17 Eki, Bahadır (temizlik turu): küçük araç yok
+            # 3 Kas (sel su kontrolü): araç tarifi yok (tek kahraman araç); bütçe 185 için gulf, us ve Doğu Asya'da
+            # yerine bir şey eklenmedi
+            "gulf_metropolis": "glass towers behind palm-lined boulevards, sand-colored low buildings",
+            "north_african_coast": "sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways",
+            "us_coastal_town": "wide asphalt roads, low wooden and brick houses, power lines",
+            "north_european_seaside": "brick terraced houses, narrow streets, bay windows, wet slate roofs",
+            "riviera": "cream stone buildings with shuttered windows, cobbled streets, plane trees",
             "east_asian_coast": "dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow "
-                                "lanes, delivery vans"})
+                                "lanes"})
         self.assertEqual(sk.REGION_VIEW_CLOTHING, "people in light everyday clothes suited to the climate")
         self.assertEqual(sk.NO_SIGNS, "no readable signs, text or flags")
 
@@ -782,7 +783,7 @@ class TestRivieraStreets(unittest.TestCase):
             with self.subTest(spot=spot):
                 suffix = sk.style_suffix(TIDAL, None, spot, "riviera")
                 self.assertIn("seafront district with cream stone buildings with shuttered windows, cobbled streets, "
-                              "scooters, plane trees", suffix)
+                              "plane trees", suffix)   # 3 Kas: "scooters" çıktı
                 place = sk.view_place(TIDAL, sk.EVENT_SKELETONS[TIDAL]["spots"][spot], "riviera")
                 self.assertIn("cobbled streets", place)
                 self.assertNotIn("cobbled promenade", suffix + place)
@@ -922,9 +923,11 @@ class TestStructuredScene(unittest.TestCase):
         self.assertTrue(scene["trace"]["story_source"].startswith("Hikâye: kod yedeği (neden: deneme 1: "))
         st = scene["structure"]
         self.assertEqual(st["story_source_kind"], "fallback")
-        self.assertEqual(st["slices"]["slice_2"], "The pickup truck is caught by the current, turns sideways and is "
-                                                  "dragged down the street.")
-        self.assertEqual(st["slices"]["slice_3"], "Seconds later, in full view, a lamppost topples into the current.")
+        # 3 Kas (sel su kontrolü): dilim başında su seviyesi cümlesi
+        self.assertEqual(st["slices"]["slice_2"], "Water rises past the car windows. The pickup truck is caught by the "
+                                                  "current, turns sideways and is dragged down the street.")
+        self.assertEqual(st["slices"]["slice_3"], "A second surge, first-floor high, slams in. A lamppost topples into "
+                                                  "the current.")
         # 3 Kas (Aşama 3): sel insan cümlesi kişi sayılı ({N}) ve insan ekseninden
         self.assertIn(st["slices"]["slice_1_rest"], [es.clean_slice(t.format(N="Five"))
                                                      for t in es.FALLBACK_PEOPLE[FLOOD]])

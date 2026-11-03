@@ -246,7 +246,7 @@ class TestWordCap(unittest.TestCase):
         spec = scene["structure"]["spec"]
         line = es.word_budget_line(spec)
         cap = min(es.TOTAL_WORDS_BY_EVENT.get(es.FLOOD, es.TOTAL_WORDS)[1],
-                  es.VOLC_MAX_PROMPT_WORDS - 3 - len(spec["suffix"].split()))
+                  es.max_prompt_words(es.FLOOD) - 3 - len(spec["suffix"].split()))   # 3 Kas: selde 185
         self.assertIn(f"must total at most {cap} words", line)
 
 
