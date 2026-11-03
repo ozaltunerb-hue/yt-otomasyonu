@@ -196,7 +196,7 @@ class TestWeakPassive(_Quiet):
     def test_disabled_and_trial_sets(self):
         # 3 Kas (sel su kontrolü): sel pasif ve deneme listeleri test_sel_su_3kas'ta
         self.assertEqual(es.DISABLED_BEATS, {es.FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8",
-                                                        "D9"}, es.TIDAL: {"W2", "W6", "W8", "T6"},
+                                                        "D9"}, es.TIDAL: {"W2", "W6", "W8", "T6", "T4"},
                                              es.FACADE_FIRE: {"N4", "M6"},
                                              es.HELICOPTER: {"G7"}, es.VOLCANIC_BOMBS: {"T5"}})   # kilit istisnası
         self.assertEqual(es.TRIAL_BEATS, {es.FLOOD: {"D10", "V9", "V10", "V11", "V12", "D12", "D13", "D14", "D15",
@@ -224,6 +224,8 @@ class TestWeakPassive(_Quiet):
 
     def test_trial_share_and_no_repeat(self):
         for e in es.TRIAL_BEATS:
+            if es.sel_dogrulama_on(e):   # 3 Kas: SEL_DOGRULAMA açıkken selde deneme mekanizması yok (test_sel_su_3kas)
+                continue
             rows = _sequence(e, 60, 11)
             flags = [any(x in es.TRIAL_BEATS[e] for x in r["trace"]["beats"].split("+")) for r in rows]
             # beklenen ~%17 (en fazla %20 olasılık); 3 Kas SEL_DOGRULAMA: selde en fazla %50 (art arda yok: ~%33)

@@ -442,8 +442,9 @@ class TestExhaustive(unittest.TestCase):
                         longest = max(longest, len(prompt))
                         n += 1
         # 18 Eki (2): D9 eklendi; 30 Eki (3): (V6, D5) çıktı, 44 çift. 3 Kas (Aşama 2): V4, D2, D4 pasif, D10 + 2
-        # hariç çift: 30 çift × 3 araç. 3 Kas (sel su kontrolü): 6 × 9 aktif öğe, 14 hariç çift: 40 çift
-        self.assertEqual(n, 18 * 40 * 3)
+        # hariç çift: 30 çift × 3 araç. 3 Kas (sel su kontrolü): 6 × 9 aktif öğe, 14 hariç çift: 40 çift.
+        # 3 Kas (sel doğrulama): SEL_DOGRULAMA açıkken D5 pasif (5 çift az): 35 çift
+        self.assertEqual(n, 18 * (35 if es.sel_dogrulama_on(FLOOD) else 40) * 3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_longest_realistic_story_fits(self):
@@ -543,7 +544,8 @@ class TestSelection(unittest.TestCase):
         # kanıtlı). Kanıtlı final 4 (son-3 engeli 3'ünü eler): ölçüm (300 tohum) ilk tekrar en erken 12., 30 üretimde
         # en az 24 farklı çift
         # 3 Kas (sel su kontrolü): 6 × 9 aktif öğe, 14 hariç çift: 40 çift (rotasyon kapalı: saf LRU)
-        self.assertEqual(len(pairs), 40)
+        # 3 Kas (sel doğrulama): SEL_DOGRULAMA açıkken D5 pasif: 35 çift
+        self.assertEqual(len(pairs), 35 if es.sel_dogrulama_on(FLOOD) else 40)
         for seed in range(40):
             es._BEAT_MEMORY.clear()
             rng, hist, chosen = random.Random(seed), [], []
@@ -989,7 +991,8 @@ class TestTidal(unittest.TestCase):
         # 17 Eki (W7 çıktı): 11 görünüm×spot × 52 çift + 6 seawall × 44 çift = 572 + 264 = 836 çift; × 3 araç
         # (W6 dışlaması artık noktayla: seawall'da W6 yok)
         # 3 Kas (Aşama 2): T6, W2, W6, W8 pasif, W9 + 3 hariç çift: 17 görünüm×spot × 30 çift × 3 araç
-        self.assertEqual(n, 17 * 30 * 3)
+        # 3 Kas (sel doğrulama ayarı): T4 pasif (5 çift az)
+        self.assertEqual(n, 17 * 25 * 3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_w6_never_on_seawall(self):

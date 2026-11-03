@@ -2248,14 +2248,34 @@ EVENT_BEATS = {
 # 3 Kas (sel su kontrolü), Bahadır: V3 ve D8 (kaldırma + dönme: araç şekil değiştiriyor), V5 (4-9s'de yan yatmaya
 #   yetecek su yok), V6 ve V7 ("crumples": yerine V9, V10), V8 (tuğla duvar çöker; yerine V11), D3 (uproot), D9 ("bursts
 #   through": duvar delme) PASİF. D10 aktif (9-15s ikinci dalga çöküşü açıklıyor)
+# 3 Kas (sel doğrulama ayarı), Bahadır: dev dalga T4 PASİF (kaldırma + ezilme: araç şekil değiştiriyor); T8, W3, W9 aktif
 DISABLED_BEATS: dict[str, set[str]] = {
     FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8", "D9"},
-    TIDAL: {"W2", "W6", "W8", "T6"},
+    TIDAL: {"W2", "W6", "W8", "T6", "T4"},
     FACADE_FIRE: {"N4", "M6"},
     HELICOPTER: {"G7"},
     VOLCANIC_BOMBS: {"T5"},
 }
 LOCKED_PASSIVE_EXCEPTION: dict[str, set[str]] = {HELICOPTER: {"G7"}, VOLCANIC_BOMBS: {"T5"}}
+# SEL_DOGRULAMA — 2 iyi videodan sonra %20'ye dönecek. Bayrak otomatik kapanmaz; sadece Bahadır'ın talimatıyla kapanır.
+# 3 Kas 2026, Bahadır (sel su kontrolü + sel doğrulama ayarı). Bayrak açıkken selde:
+#   - D5 PASİF (ikinci dalga cümlesinden sonra antiklimaks). D5 kanıtlı statüsünü korur (TRIAL_BEATS'te değil), sadece
+#     seçilmez (SEL_DOGRULAMA_PASSIVE, disabled_beats)
+#   - deneme mekanizması (%20 tavan + "art arda deneme yok") devre dışı: seçim LRU ile tüm aktif öğeler arasında eşit
+# Bayrak kapanınca eski davranış aynen geri gelir: D5 aktif, deneme payı TRIAL_BEAT_SHARE (%20), art arda deneme yok.
+# Bayrak çalışma anında okunur (testler açıp kapatabilir).
+SEL_DOGRULAMA = True
+SEL_DOGRULAMA_PASSIVE: dict[str, set[str]] = {FLOOD: {"D5"}}
+
+
+def sel_dogrulama_on(event: str) -> bool:
+    return SEL_DOGRULAMA and event in SEL_DOGRULAMA_PASSIVE
+
+
+def disabled_beats(event: str) -> set[str]:
+    """Olayın seçilemeyen beat'leri: kalıcı pasifler (DISABLED_BEATS) + SEL_DOGRULAMA açıkken geçici pasifler."""
+    off = set(DISABLED_BEATS.get(event, set()))
+    return off | SEL_DOGRULAMA_PASSIVE.get(event, set()) if sel_dogrulama_on(event) else off
 # 3 Kas (Aşama 2): pasif öğelerin yerine gelen yeni öğeler DENEME: aday çiftlerin en fazla %20'si (TRIAL_BEAT_SHARE),
 # son üretimde deneme öğesi geçtiyse bu üretimde gelmez (art arda iki kez yok). Kilitli olaylarda kayıt yok.
 TRIAL_BEATS: dict[str, set[str]] = {
@@ -2264,10 +2284,9 @@ TRIAL_BEATS: dict[str, set[str]] = {
     FACADE_FIRE: {"N7", "M12"},   # 3 Kas (devam): M12 araç öğesi
 }
 TRIAL_BEAT_SHARE = 0.20
-# SEL_DOGRULAMA — 2 iyi videodan sonra %20'ye dönecek. 3 Kas 2026, Bahadır (sel su kontrolü): selde kanıtlı öğe 3 (V1,
-# V2, D5), deneme payı geçici olarak en fazla %50 (LRU ve "art arda deneme yok" aynen). Diğer olaylar TRIAL_BEAT_SHARE.
-SEL_DOGRULAMA = True
-TRIAL_BEAT_SHARE_BY_EVENT = {FLOOD: 0.50} if SEL_DOGRULAMA else {}
+# Olaya özel deneme payı (boş: her olayda TRIAL_BEAT_SHARE). 3 Kas (sel doğrulama ayarı): selin geçici %50'si kalktı;
+# SEL_DOGRULAMA açıkken selde deneme mekanizması hiç çalışmaz (choose_beats), kapanınca %20.
+TRIAL_BEAT_SHARE_BY_EVENT: dict[str, float] = {}
 
 
 def trial_beat_share(event: str) -> float:
@@ -2823,7 +2842,7 @@ def soft_beat_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
         own_ratio = _group_match_ratio(beats[slot][bid], text)
         # 3 Kas (sel su kontrolü): kilitsiz olaylarda pasif öğe (DISABLED_BEATS, seçilemez) benzerlik adayı değil (sel
         # D18 pasif D9'a benzetiliyordu). Kilitli olaylarda davranış aynı.
-        off = DISABLED_BEATS.get(event, set()) if event not in LOCKED_EVENTS else set()
+        off = disabled_beats(event) if event not in LOCKED_EVENTS else set()
         for other in beats[slot]:
             if other in off:
                 continue
@@ -3563,7 +3582,7 @@ def allowed_pairs(event: str, view: str | None, spot: str) -> list[tuple[str, st
 
     def ok2(v):   # 10 Eki: kamera noktası dışlaması 4-9s maddesinde de olabilir (helikopter F2/F5)
         return spot not in b["excluded_spots"].get(v, set())
-    off = DISABLED_BEATS.get(event, set())   # 29 Eki: bayrakla kapalı beat'ler (meteor [DALGA])
+    off = disabled_beats(event)   # 29 Eki: bayrakla kapalı beat'ler (meteor [DALGA]); 3 Kas: + SEL_DOGRULAMA
     return [(v, d) for v in b["slice_2"] for d in b["slice_3"]
             if (v, d) not in b["excluded_pairs"] and ok2(v) and ok3(d) and v not in off and d not in off]
 
@@ -3588,7 +3607,8 @@ def choose_beats(event: str, view: str | None, spot: str, history: list[str],
         raise StructureError(f"{event}: seçilebilir olay çifti kalmadı (görünüm={view}, yer={spot}, son={recent})")
     new_trial = TRIAL_BEATS.get(event, set())
     import core.proven_axes as pa
-    if new_trial and pa.ROTATION_ON:
+    # 3 Kas (sel doğrulama ayarı): SEL_DOGRULAMA açıkken selde deneme payı ve "art arda deneme yok" yok (eşit LRU)
+    if new_trial and pa.ROTATION_ON and not sel_dogrulama_on(event):
         # 3 Kas (Aşama 2): deneme öğeleri en fazla %20 (aday çiftlerde hem kanıtlı hem deneme varsa), art arda gelmez
         # (son üretimde deneme öğesi geçtiyse sadece kanıtlı çiftler). Sadece TRIAL_BEATS olan (kilitsiz) olaylarda.
         def is_trial(p):
@@ -3698,7 +3718,7 @@ def choose_event_vehicle(event: str, rng: random.Random | None = None, used: lis
 def uses_vehicle(event: str) -> bool:
     """Olay havuzunda {vehicle} geçen madde var mı. Yoksa (13 Eki: lav, kül bulutu) araç seçilmez, GPT'ye gitmez."""
     b = EVENT_BEATS[event]
-    off = DISABLED_BEATS.get(event, set())   # 3 Kas: pasif beat sayılmaz (cephe M6 pasif: cephe yangınında araç yok)
+    off = disabled_beats(event)   # 3 Kas: pasif beat sayılmaz (cephe M6 pasif: cephe yangınında araç yok)
     return any("{vehicle}" in beat["text"] for slot in ("slice_2", "slice_3") for bid, beat in b[slot].items()
                if bid not in off)
 
@@ -4574,7 +4594,7 @@ def _validate_data() -> None:
         elif not uses_vehicle(event):   # 13 Eki: araçsız olayın araç listesi olmaz
             # 3 Kas: araçlı beat'leri pasif olan olay (cephe M6) listesini korur (pasif öğe geri açılırsa kullanılır)
             has_off_vehicle = any("{vehicle}" in b[s][bid]["text"] for s in ("slice_2", "slice_3")
-                                  for bid in DISABLED_BEATS.get(event, set()) if bid in b[s])
+                                  for bid in disabled_beats(event) if bid in b[s])
             if event in EVENT_VEHICLES and not has_off_vehicle:
                 raise StructureError(f"Araçsız olayda araç listesi var: {event}")
         elif not EVENT_VEHICLES.get(event) or any(not t for _, t in EVENT_VEHICLES[event]):
@@ -4611,7 +4631,7 @@ def _validate_data() -> None:
         pools = (FALLBACK_PEOPLE_FIRE_ENV.values() if event == FIRE_TORNADO else [FALLBACK_PEOPLE.get(event, ())])
         if any(len(p) < 6 for p in pools):
             raise StructureError(f"Yedek insan cümlesi havuzu 6'dan az: {event}")
-    for event, off in DISABLED_BEATS.items():   # 29 Eki: kapalı beat'ler havuzda olmalı
+    for event, off in list(DISABLED_BEATS.items()) + list(SEL_DOGRULAMA_PASSIVE.items()):   # 29 Eki: kapalı beat'ler havuzda olmalı
         if off - set(EVENT_BEATS[event]["slice_2"]) - set(EVENT_BEATS[event]["slice_3"]):
             raise StructureError(f"Kapalı beat havuzda yok: {event}/{off}")
     for light in EVENT_SKELETONS[METEOR]["weather"]:   # 29 Eki: meteor ortam satırı her ışıkla en fazla 15 kelime

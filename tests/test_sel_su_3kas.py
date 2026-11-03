@@ -6,9 +6,12 @@
 - Araç renkleri (sel + dev dalga ortak liste), ortam metinlerinde araç tarifi yok.
 - Işık: sel ve dev dalgada seçilen ışık Setting satırında birebir.
 - Sel kapısı: yasak kökler GPT çıktısında; çöküş kökleri sadece 9-15s VERBATIM havuz metninde serbest.
-- SEL_DOGRULAMA: selde deneme payı en fazla %50, art arda deneme yok.
+- SEL_DOGRULAMA (açık): D5 pasif (kanıtlı statüsü durur), deneme payı ve "art arda deneme yok" devre dışı, eşit LRU.
+  Bayrak kapanınca eski davranış: D5 aktif, %20 tavan, art arda deneme yok.
+- Dev dalga: sadece T4 pasif (3 Kas, sel doğrulama ayarı); T8, W3, W9 aktif.
 - Kod yedeği her çiftte son denetimden geçer. Dev dalga pasifleri UYGULANMADI (9-15s aktif öğe 4'ün altına düşerdi).
 """
+import collections
 import logging
 import os
 import random
@@ -111,6 +114,8 @@ class TestWaterProfile(_Quiet):
 class TestPassiveAndActive(_Quiet):
     def test_sets(self):
         self.assertEqual(es.DISABLED_BEATS[F], PASSIVE)
+        self.assertEqual(es.disabled_beats(F), PASSIVE | {"D5"})   # SEL_DOGRULAMA açık: D5 de seçilmez
+        self.assertNotIn("D5", es.TRIAL_BEATS[F])                  # kanıtlı statüsü durur
         self.assertEqual(es.TRIAL_BEATS[F], TRIAL)
         b = es.EVENT_BEATS[F]
         self.assertEqual(set(b["slice_2"]) - PASSIVE, ACTIVE_2)
@@ -127,7 +132,7 @@ class TestPassiveAndActive(_Quiet):
             for spot in sk.view_spots(F, view):
                 pairs = es.allowed_pairs(F, view, spot)
                 self.assertTrue(pairs)
-                self.assertFalse([p for p in pairs if set(p) & PASSIVE])
+                self.assertFalse([p for p in pairs if set(p) & (PASSIVE | {"D5"})])
 
     def test_openings(self):
         self.assertEqual(ox.DISABLED_OPENINGS, {F: {"B", "C"}})
@@ -141,12 +146,17 @@ class TestPassiveAndActive(_Quiet):
         self.assertEqual(pa.GUARD["acilis"][F][0], "E")
         self.assertEqual(ox.options(T), ["A", "B", "C", "D"])   # dev dalga aynı
 
-    def test_tidal_passives_not_applied(self):
-        """9-15s aktif öğe 4'ün altına düşeceği için dev dalga pasifleri (T4, T8, W9, W3) uygulanmadı."""
-        self.assertEqual(es.DISABLED_BEATS[T], {"W2", "W6", "W8", "T6"})
+    def test_tidal_only_t4_passive(self):
+        """3 Kas (sel doğrulama ayarı): dev dalgada sadece T4 pasif; T8, W3, W9 aktif."""
+        self.assertEqual(es.DISABLED_BEATS[T], {"W2", "W6", "W8", "T6", "T4"})
+        self.assertEqual(es.disabled_beats(T), es.DISABLED_BEATS[T])
         self.assertEqual(es.TRIAL_BEATS[T], {"W9"})
-        active_3 = set(es.EVENT_BEATS[T]["slice_3"]) - es.DISABLED_BEATS[T]
-        self.assertLess(len(active_3 - {"W3", "W9"}), 4)
+        self.assertIn("T4", es.EVENT_BEATS[T]["slice_2"])   # silinmedi
+        self.assertEqual(set(es.EVENT_BEATS[T]["slice_2"]) - es.DISABLED_BEATS[T], {"T1", "T2", "T3", "T5", "T7", "T8"})
+        self.assertEqual(set(es.EVENT_BEATS[T]["slice_3"]) - es.DISABLED_BEATS[T], {"W1", "W3", "W4", "W5", "W9"})
+        for view in es.structure_views(T):
+            for spot in sk.view_spots(T, view):
+                self.assertFalse([p for p in es.allowed_pairs(T, view, spot) if "T4" in p])
 
 
 class TestColorsAndSettings(_Quiet):
@@ -239,24 +249,53 @@ class TestFloodGate(_Quiet):
 
 
 class TestTrialShare(_Quiet):
-    def test_flag(self):
-        self.assertTrue(es.SEL_DOGRULAMA)
-        self.assertEqual(es.trial_beat_share(F), 0.50)
-        for e in es.EVENT_KEY_VISUAL:
-            if e != F:
-                self.assertEqual(es.trial_beat_share(e), es.TRIAL_BEAT_SHARE)
-        self.assertEqual(es.TRIAL_BEAT_SHARE, 0.20)
+    """SEL_DOGRULAMA açık (bugünkü hâl) ve kapalı (eski davranış geri gelir)."""
 
-    def test_share_lru_no_repeat(self):
+    def tearDown(self):
+        es.SEL_DOGRULAMA = True
+        super().tearDown()
+
+    def test_flag(self):
+        self.assertTrue(es.SEL_DOGRULAMA)   # otomatik kapanmaz; sadece Bahadır'ın talimatıyla
+        self.assertEqual(es.SEL_DOGRULAMA_PASSIVE, {F: {"D5"}})
+        self.assertTrue(es.sel_dogrulama_on(F))
+        self.assertEqual(es.TRIAL_BEAT_SHARE_BY_EVENT, {})
+        self.assertEqual(es.TRIAL_BEAT_SHARE, 0.20)
+        for e in es.EVENT_KEY_VISUAL:
+            self.assertEqual(es.trial_beat_share(e), 0.20)
+            if e != F:
+                self.assertFalse(es.sel_dogrulama_on(e))
+                self.assertEqual(es.disabled_beats(e), es.DISABLED_BEATS.get(e, set()))
+
+    def test_flag_on_equal_lru(self):
+        """Bayrak açık: deneme payı ve art arda kuralı yok; 9-15s öğeleri eşite yakın, aynı çift art arda yok."""
+        c3, n, consecutive_trial = collections.Counter(), 0, 0
+        for seed in (1, 2, 3):
+            rows = _sequence(F, 100, seed)
+            tags = [r["trace"]["beats"] for r in rows]
+            self.assertFalse([1 for a, b in zip(tags, tags[1:]) if a == b])   # LRU
+            flags = [bool(set(t.split("+")) & TRIAL) for t in tags]
+            consecutive_trial += sum(a and b for a, b in zip(flags, flags[1:]))
+            for t in tags:
+                self.assertFalse(set(t.split("+")) & (PASSIVE | {"D5"}))
+                c3[t.split("+")[1]] += 1
+                n += 1
+        self.assertEqual(set(c3), ACTIVE_3 - {"D5"})
+        for bid, k in c3.items():   # 8 öğe, eşit pay %12,5
+            self.assertTrue(0.08 <= k / n <= 0.18, (bid, k / n))
+        self.assertGreater(consecutive_trial, 0)   # "art arda deneme yok" devre dışı
+
+    def test_flag_off_restores_old_behavior(self):
+        """Bayrak kapanınca: D5 aktif, deneme payı en fazla %20, art arda deneme yok."""
+        es.SEL_DOGRULAMA = False
+        self.assertFalse(es.sel_dogrulama_on(F))
+        self.assertEqual(es.disabled_beats(F), PASSIVE)
+        self.assertTrue(any("D5" in p for p in es.allowed_pairs(F, "riviera", "Commercial city streets")))
         rows = _sequence(F, 100, 7)
         flags = [bool(set(r["trace"]["beats"].split("+")) & TRIAL) for r in rows]
-        self.assertLessEqual(sum(flags) / len(flags), 0.55)
-        self.assertGreater(sum(flags) / len(flags), 0.20)   # %20'den belirgin yüksek
+        self.assertLessEqual(sum(flags) / len(flags), 0.25)   # beklenen ~%17 (en fazla %20 olasılık)
         self.assertFalse(any(a and b for a, b in zip(flags, flags[1:])))   # art arda deneme yok
-        tags = [r["trace"]["beats"] for r in rows]
-        self.assertFalse([1 for a, b in zip(tags, tags[1:]) if a == b])   # LRU: aynı çift art arda yok
-        for r in rows:
-            self.assertFalse(set(r["trace"]["beats"].split("+")) & PASSIVE)
+        self.assertIn("D5", {r["trace"]["beats"].split("+")[1] for r in rows})
 
 
 class TestFallbackEveryPair(_Quiet):
