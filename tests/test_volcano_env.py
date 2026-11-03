@@ -199,7 +199,7 @@ class TestVolcEnvPrompt(unittest.TestCase):
                                     self.assertLessEqual(len(prompt.split()), 175)
                                 self.assertEqual(es.final_prompt_issues(spec, cands[0], es.assemble_prompt(
                                     spec, cands[0]), es.assemble_story(spec, cands[0])), [])
-        self.assertEqual(worst, 174)   # 21 Eki (genel kalite): önceki 174 -> 173. 31 Eki: nötr balkon cümlesi (-1). 31 Eki (2): (R9, T5) açıldı (+2), sınır 175 aynı
+        self.assertEqual(worst, 171)   # 3 Kas kilit istisnası: T5 pasif (en uzun T5'li çiftti, 174 -> 171). 21 Eki (genel kalite): önceki 174 -> 173. 31 Eki: nötr balkon cümlesi (-1). 31 Eki (2): (R9, T5) açıldı (+2), sınır 175 aynı
 
     def test_word_budget_keeps_gpt_prompt_within_175(self):
         """Bahadır kararı (18 Eki (3)): GPT'ye söylenen toplam = 175 - stil eki - 3 (en fazla kapının 75'i)."""

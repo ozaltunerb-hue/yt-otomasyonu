@@ -242,9 +242,31 @@ class TestGuardShare(unittest.TestCase):
                 finals.append(b3)
             with self.subTest(spot=spot):
                 share = sum(f in es.TRIAL_FINALS[HELI] for f in finals) / len(finals)
-                self.assertLessEqual(share, 0.15)
+                # 3 Kas kilit istisnası (Bahadır onaylı): G7 pasif; balkonda kanıtlı final sadece G6 (G3 balkonda yok),
+                # sabit balkonda LRU G6'yı her ikinci çekişte eler (pay ~%52). Üretimde nokta döner: pay aşağıda.
+                if spot != "Balcony of a hillside house":
+                    self.assertLessEqual(share, 0.15)
                 self.assertFalse([1 for a, b in zip(finals, finals[1:]) if a == b])
+                self.assertNotIn("G7", finals)
         es._BEAT_MEMORY.clear()
+
+    def test_helicopter_trial_share_production_path(self):
+        """3 Kas: üretim yolu (nokta dönüşümlü, sahte Notion eksen geçmişi), 3 × 100 üretim: deneme finali ≤%15."""
+        sys.path.insert(0, os.path.join(ROOT, "scripts"))
+        import prompt_snapshot as ps
+        for seed in (1, 2, 3):
+            ps.reset_memory()
+            random.seed(seed)
+            hist, recs, finals = [], [], []
+            for _ in range(100):
+                sc = ps.build(HELI, history=list(hist), axes_loader=lambda d: list(recs))
+                recs.append({"eksenler": sc["axes_json"], "combo_key": sc["combo_key"], "prompt": sc["prompt"]})
+                hist.append(sc["combo_key"])
+                finals.append(sc["trace"]["beats"].split("+")[1])
+            with self.subTest(seed=seed):
+                self.assertLessEqual(sum(f in es.TRIAL_FINALS[HELI] for f in finals) / 100, 0.15)
+                self.assertNotIn("G7", finals)
+        ps.reset_memory()
 
     def test_env_neutral_words(self):
         spots = list(sk.EVENT_SKELETONS[HELI]["spots"])

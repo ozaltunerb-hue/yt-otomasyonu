@@ -2573,8 +2573,8 @@ class TestHelicopter(unittest.TestCase):
         self.assertFalse({v for v, _ in balcony} & {"F2", "F5"})
         self.assertNotIn("G3", {d for _, d in balcony})   # 30 Eki (2)
         # 17 Eki: G4 çıktı, 9-15s'de 5 madde. 30 Eki (2): G3 balkonda yok (F3, F4, F6 ile eşleşmesi düştü)
-        self.assertEqual(len(balcony), 4 * 6 - 1 - 3)
-        self.assertEqual(len(pairs("Embankment above the village road")), 36 - 3)   # 18 Eki (2): G7
+        self.assertEqual(len(balcony), 4 * 6 - 1 - 3 - 4)   # 3 Kas kilit istisnası: G7 pasif (-4)
+        self.assertEqual(len(pairs("Embankment above the village road")), 36 - 3 - 6)   # 18 Eki (2): G7; 3 Kas: G7 pasif (-6)
         n = 0
         for spot in self.SPOTS:
             for b2, b3 in pairs(spot):
@@ -2584,7 +2584,7 @@ class TestHelicopter(unittest.TestCase):
                     if issues:
                         self.fail(f"{spot}/{b2}+{b3}/{v}: {issues}")
                     n += 1
-        self.assertEqual(n, (20 + 33) * 4)   # 30 Eki (2): G3 balkonda yok
+        self.assertEqual(n, (16 + 27) * 4)   # 30 Eki (2): G3 balkonda yok; 3 Kas kilit istisnası: G7 pasif (önceki 20 + 33)
         # 4-9s dışlaması helikopterden önceki olaylarda hiçbir şeyi değiştirmez (onların dışlamalarının hepsi 9-15s).
         # 10 Eki: volkanda da 4-9s kamera dışlaması var (TestVolcano)
         for e, b in es.EVENT_BEATS.items():
@@ -3177,7 +3177,8 @@ class TestVolcano(unittest.TestCase):
                             break   # 13 Eki: kül bulutu araçsız (tek tur)
         # 18 Eki: patlama 43 + 31 + 31 ve bombalar 47 + 33 + 33 (× 4 araç; yedeği sığmayan çift kalmadı); kül bulutu
         # 28 + 13 + 13 (değişmedi)
-        self.assertEqual(n, (105 + 111) * 4 + 54 + 12)   # 30 Eki (2): bombalar (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) +12
+        self.assertEqual(n, (105 + 111) * 4 + 54 + 12 - 96)   # 3 Kas kilit istisnası: bombalar T5 pasif (-24 çift x 4 araç)
+        # önceki: 30 Eki (2): bombalar (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) +12
 
     def test_block_depth_and_never_runs_out(self):
         from itertools import combinations
@@ -3356,7 +3357,8 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         self.assertEqual(sizes, {es.ERUPTION: (7, 7), es.PYROCLASTIC: (6, 6), es.VOLCANIC_BOMBS: (8, 7)})
         pairs = {e: [len(es.allowed_pairs(e, None, s)) for s in (self.HT, self.RT, self.VB)] for e in VOLC}
         self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [28, 13, 13],
-                                 es.VOLCANIC_BOMBS: [46, 34, 34]})   # 18 Eki: sığmayan yok; 30 Eki (2): (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) açıldı
+                                 es.VOLCANIC_BOMBS: [38, 26, 26]})   # 3 Kas kilit istisnası: T5 pasif (-8 her noktada)
+        # önceki bombalar [46, 34, 34]; 18 Eki: sığmayan yok; 30 Eki (2): (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) açıldı
         for e in VOLC:   # araçsız kül bulutu; patlama ve bombalarda araç sadece eski maddelerde
             for slot in ("slice_2", "slice_3"):
                 for bid in self.NEW[e]:

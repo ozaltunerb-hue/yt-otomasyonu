@@ -87,9 +87,10 @@ class TestLockedSnapshot(_Quiet):
         self.assertEqual(set(es.LOCKED_EVENTS), set(LOCKED))
 
     def test_locked_pools_untouched(self):
-        """Kilitli olaylarda pasif/deneme öğe ya da insan ekseni yok."""
+        """Kilitli olaylarda pasif/deneme öğe ya da insan ekseni yok. Tek istisna (3 Kas, Bahadır onaylı): helikopter G7,
+        bombalar T5 pasif (TestLockPassiveException)."""
         for e in LOCKED:
-            self.assertNotIn(e, es.DISABLED_BEATS)
+            self.assertEqual(es.DISABLED_BEATS.get(e, set()), es.LOCKED_PASSIVE_EXCEPTION.get(e, set()))
             self.assertNotIn(e, es.TRIAL_BEATS)
             self.assertNotIn(e, es.PEOPLE_AXIS_EVENTS)
             for axis in pa.EXTRA_TRIALS.values():
@@ -194,7 +195,8 @@ class TestVerbatimSlices(_Quiet):
 class TestWeakPassive(_Quiet):
     def test_disabled_and_trial_sets(self):
         self.assertEqual(es.DISABLED_BEATS, {es.FLOOD: {"D2", "D4", "V4"}, es.TIDAL: {"W2", "W6", "W8", "T6"},
-                                             es.FACADE_FIRE: {"N4", "M6"}})
+                                             es.FACADE_FIRE: {"N4", "M6"},
+                                             es.HELICOPTER: {"G7"}, es.VOLCANIC_BOMBS: {"T5"}})   # kilit istisnası
         self.assertEqual(es.TRIAL_BEATS, {es.FLOOD: {"D10"}, es.TIDAL: {"W9"}, es.FACADE_FIRE: {"N7", "M12"}})
         for e, off in es.DISABLED_BEATS.items():   # silinmedi: havuzda duruyor
             pool = set(es.EVENT_BEATS[e]["slice_2"]) | set(es.EVENT_BEATS[e]["slice_3"])
@@ -527,6 +529,62 @@ class TestMenuMapping(_Quiet):
                                                  got[b.text])
         self.assertEqual(got["🌊 Caddelerde ani sel"], es.FLOOD)
         self.assertEqual(got["🌊 Kıyı şehrinde dev dalga baskını"], es.TIDAL)
+
+
+
+# ── KİLİT İSTİSNASI (3 Kas, Bahadır onaylı, tek seferlik) ───────────────────────────────────────────────────────────
+G7_TEXT = "the falling sheet of water hits a burning garage across the street and its walls collapse in steam"
+T5_HEAD = "a volcanic bomb lands in the middle of the street and the road blasts apart in a crater of sparks"
+
+
+class TestLockPassiveException(_Quiet):
+    """Helikopter G7 (buhar finali) ve bombalar T5 ("crater of sparks") PASİF, silinmedi. Biri yanlışlıkla
+    aktifleştirirse ya da kilitli olaylara başka pasif öğe eklerse bu test kırılır. Orman L4 aktif kalır."""
+
+    def test_exception_exact(self):
+        self.assertEqual(es.LOCKED_PASSIVE_EXCEPTION, {es.HELICOPTER: {"G7"}, es.VOLCANIC_BOMBS: {"T5"}})
+        self.assertEqual(es.DISABLED_BEATS[es.HELICOPTER], {"G7"})
+        self.assertEqual(es.DISABLED_BEATS[es.VOLCANIC_BOMBS], {"T5"})
+        for e in (es.WILDFIRE, es.LANDFALL, es.VILLAGE):
+            self.assertNotIn(e, es.DISABLED_BEATS)
+
+    def test_kept_in_pool(self):
+        """Silinmedi: metin havuzda aynen duruyor."""
+        self.assertEqual(es.EVENT_BEATS[es.HELICOPTER]["slice_3"]["G7"]["text"], G7_TEXT)
+        self.assertTrue(es.EVENT_BEATS[es.VOLCANIC_BOMBS]["slice_3"]["T5"]["text"].startswith(T5_HEAD))
+        self.assertIn("L4", es.EVENT_BEATS[es.WILDFIRE]["slice_3"])
+
+    def test_never_selectable(self):
+        for e, bid in ((es.HELICOPTER, "G7"), (es.VOLCANIC_BOMBS, "T5")):
+            for view in es.structure_views(e):
+                for spot in sk.view_spots(e, view):
+                    pairs = es.allowed_pairs(e, view, spot)
+                    self.assertTrue(pairs, (e, spot))
+                    self.assertFalse([p for p in pairs if bid in p], (e, spot))
+        # orman L4 hâlâ seçilebilir
+        spots = sk.view_spots(es.WILDFIRE, None)
+        self.assertTrue(any(p[1] == "L4" for s in spots for p in es.allowed_pairs(es.WILDFIRE, None, s)))
+
+    def test_not_in_prompts(self):
+        """20 tohumda (baseline tohumları) ve 100 ardışık üretimde G7/T5 ne izde ne promptta."""
+        snap = ps.snapshot_all([es.HELICOPTER, es.VOLCANIC_BOMBS])
+        for e, bid, text in ((es.HELICOPTER, "G7", G7_TEXT), (es.VOLCANIC_BOMBS, "T5", T5_HEAD)):
+            for seed, r in snap[e].items():
+                self.assertNotIn("error", r, (e, seed))
+                self.assertNotIn(bid, r["axes"]["beats"].split("+"))
+                self.assertNotIn(text.lower(), r["prompt"].lower())
+                self.assertNotIn("crater of sparks", r["prompt"].lower())
+        for r in _sequence(es.HELICOPTER, 100, 1):
+            self.assertNotIn("G7", r["trace"]["beats"].split("+"))
+            self.assertNotIn(G7_TEXT.lower(), r["prompt"].lower())
+
+    def test_helicopter_trial_finals_unchanged(self):
+        """G1/G2/G5 deneme statüsü ve %10 payı aynı; 100 üretimde pay %20'yi aşmaz."""
+        self.assertEqual(es.TRIAL_FINALS, {es.HELICOPTER: {"G1", "G2", "G5"}})
+        self.assertEqual(es.TRIAL_FINAL_SHARE, 0.10)
+        rows = _sequence(es.HELICOPTER, 100, 1)
+        share = sum(r["trace"]["beats"].split("+")[1] in es.TRIAL_FINALS[es.HELICOPTER] for r in rows) / len(rows)
+        self.assertLessEqual(share, 0.20)
 
 
 if __name__ == "__main__":

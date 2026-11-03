@@ -2173,11 +2173,17 @@ EVENT_BEATS = {
 #   sel D2 (lamba direği), D4 (çöp konteyneri), V4 (4-9s: lamba direği, ince hedef)
 #   dev dalga W2 (lamba direği), W6 (alçak duvar), W8 (çöp konteyneri), T6 (4-9s: lamba direği)
 #   cephe N4 (duman ve ateş tırmanır, kalıcı hasar yok: antiklimaks), M6 (4-9s: ön cam + fren: ince hedef, antiklimaks)
+# 3 Kas 2026, KİLİT İSTİSNASI (tek seferlik, Bahadır onaylı): kilitli iki olayda birer zayıf öğe PASİF (silinmedi):
+#   helikopter G7 (buhar finali), volkan bombaları T5 ("crater of sparks"). Kilitli olaylarda başka pasif öğe yok;
+#   orman L4 aynen kalır. LOCKED_PASSIVE_EXCEPTION testle kilitli (tests/test_toplu_3kas.py).
 DISABLED_BEATS: dict[str, set[str]] = {
     FLOOD: {"D2", "D4", "V4"},
     TIDAL: {"W2", "W6", "W8", "T6"},
     FACADE_FIRE: {"N4", "M6"},
+    HELICOPTER: {"G7"},
+    VOLCANIC_BOMBS: {"T5"},
 }
+LOCKED_PASSIVE_EXCEPTION: dict[str, set[str]] = {HELICOPTER: {"G7"}, VOLCANIC_BOMBS: {"T5"}}
 # 3 Kas (Aşama 2): pasif öğelerin yerine gelen yeni öğeler DENEME: aday çiftlerin en fazla %20'si (TRIAL_BEAT_SHARE),
 # son üretimde deneme öğesi geçtiyse bu üretimde gelmez (art arda iki kez yok). Kilitli olaylarda kayıt yok.
 TRIAL_BEATS: dict[str, set[str]] = {

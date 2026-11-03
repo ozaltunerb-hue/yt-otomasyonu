@@ -594,6 +594,12 @@ def _make_parti2_test(event, slot, bid, text, para):
         self.assertNotIn(bid, es.RETIRED_BEATS.get(event, {}))
         for code, terms, *_ in es.EVENT_BANNED_WORDS.get(event, ()):
             self.assertEqual(es.find_terms(terms, text), [], code)
+        if bid in es.DISABLED_BEATS.get(event, set()):
+            # 3 Kas kilit istisnası: helikopter G7 pasif (havuzda duruyor, çift seçiminde yok)
+            self.assertIn(bid, es.LOCKED_PASSIVE_EXCEPTION.get(event, set()))
+            self.assertFalse([p for s in sk.view_spots(event, es.structure_views(event)[0])
+                              for p in es.allowed_pairs(event, es.structure_views(event)[0], s) if bid in p])
+            return
         view = es.structure_views(event)[0]
         found = 0
         for s in sk.view_spots(event, view):
