@@ -1123,7 +1123,8 @@ EVENT_BEATS = {
                            # 4 Kas (2): D14/D18 kısaldıktan sonra yeniden ölçüldü; sığmayan kombinasyonu kalanlar
                            # (V9, D13) 18, (V9, D12) 6, (V11, D17) 6. Sığan 8 çiftin dışlaması kalktı.
                            ("V9", "D13"), ("V9", "D12"),
-                           ("V2", "D13")},   # 4 Kas (2), Bahadır: aynı araç iki kez sürükleniyor
+                           ("V2", "D13"),   # 4 Kas (2), Bahadır: aynı araç iki kez sürükleniyor
+                           ("V11", "D18")},   # 4 Kas (3), Bahadır: aynı araç iki dilimde de duvara/dükkâna çarpıyor
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -2312,7 +2313,10 @@ EVENT_BEATS = {
         },
         # B5 çift dışlamaları (Bahadır): (B4, C6) aynı araç iki kez itiliyor, (B6, C3) iki ağır araç üst üste.
         # 4 Kas (2): (B2, C1) iki dilimde de ağaç sökülüyor
-        "excluded_pairs": {("B4", "C6"), ("B6", "C3"), ("B2", "C1")},
+        # 4 Kas (3), Bahadır: (B1, C2) iki dilimde de çatı söküp fırlatma; C6 sadece B5 ile (büyük 4-9s olaylarından
+        # sonra tek araçlık final antiklimaks: B1 B2 B3 B6 dışlı, B4 zaten dışlı)
+        "excluded_pairs": {("B4", "C6"), ("B6", "C3"), ("B2", "C1"),
+                           ("B1", "C2"), ("B1", "C6"), ("B2", "C6"), ("B3", "C6"), ("B6", "C6")},
         "excluded_views": {},
         "excluded_spots": {},
     },

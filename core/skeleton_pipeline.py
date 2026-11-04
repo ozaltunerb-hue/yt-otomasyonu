@@ -1027,8 +1027,13 @@ LIBERTY_CAMERA = {
         f"Handheld footage from {CAMERA_SPOTS['Top-floor terrace of a waterfront hotel next to Battery Park']}, "
         f"high and wide, {LIBERTY_STATUE}",
 }
-LIBERTY_CAMERA_TAIL = ("slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one "
-                       "continuous shot, no zoom, no cuts.")
+# 4 Kas (3), Bahadır: "the tornado always in frame" -> "the camera never pans, turns or follows" (4 Kas 04:13 videosunda
+# kamera 10. sn'den sonra ~90° sağa döndü, anıt kadrajdan çıktı: ifade Seedance'i hortumu takibe itiyordu). Sadece bu
+# olay (kuyruk zaten bu olaya ait, ortak değil). Önceki hâl LIBERTY_CAMERA_TAIL_4KAS.
+LIBERTY_CAMERA_TAIL_4KAS = ("slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one "
+                            "continuous shot, no zoom, no cuts.")
+LIBERTY_CAMERA_TAIL = ("slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or "
+                       "follows; one continuous shot, no zoom, no cuts.")
 # Ortam metni; ışık (L1-L3) yazı yasağından önce birebir girer. 4 Kas (2), Bahadır kararı (bütçe, tavan 205): kısa hâl
 # (anıt kilit cümlede ve her kadrajda var). B10 birebir hâli LIBERTY_SETTING_B10 (175'e hiçbir hâlde sığmadı).
 LIBERTY_SETTING_B10 = ("Setting: the southern tip of Manhattan, Battery Park and the harbor waterfront, with the Statue "

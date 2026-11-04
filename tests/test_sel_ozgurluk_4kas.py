@@ -49,8 +49,8 @@ FINALS = {
 # 4 Kas (2/3): yeniden ölçümden sonra dışlı kalan bütçe çiftleri; sığan 8'i ve V11'in tüm dışlamaları kalktı
 BUDGET_PAIRS = {("V9", "D13"), ("V9", "D12")}
 FREED_PAIRS = {("V9", "D18"), ("V1", "D18"), ("V1", "D14"), ("V12", "D18"), ("V10", "D14"), ("V12", "D14"),
-               ("V2", "D18"), ("V2", "D14")} | {("V11", d) for d in ("D10", "D12", "D13", "D14", "D15", "D16", "D17",
-                                                                    "D18")}
+               ("V2", "D18"), ("V2", "D14")} | {("V11", d) for d in ("D10", "D12", "D13", "D14", "D15", "D16", "D17")}
+# 4 Kas (3): (V11, D18) yeniden dışlandı (aynı araç iki dilimde de çarpıyor); test_sel_ozgurluk_4kas_3.py
 K = ("Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
      "High apartment balcony in Battery Park City looking across the harbor",
      "Top-floor terrace of a waterfront hotel next to Battery Park")
@@ -396,6 +396,8 @@ class TestB2Flag(_Quiet):
         self.assertEqual(set(c2), set(B_POOL))
         self.assertEqual(set(c3), set(C_POOL))
         self.assertEqual(set(cp_), {"P1", "P2", "P3"})
+        # 4 Kas (3): C6 sadece B5 ile eşleşir (tek çift), eşit pay bandının dışında; ayrı kontrol
+        self.assertGreater(c3.pop("C6"), 0)
         for c in (c2, c3):
             n = sum(c.values())
             for k, v in c.items():
@@ -420,7 +422,7 @@ class TestB3toB10Texts(_Quiet):
         self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, want3)
         self.assertEqual(set(es.LIBERTY_HELD_BEATS), {"C5"})   # 4 Kas (2): B4, B6 yeni metinle havuzda
         self.assertEqual(set(es.LIBERTY_RETIRED_TEXTS), {"B4", "B6"})
-        self.assertEqual(b["excluded_pairs"], {("B4", "C6"), ("B6", "C3"), ("B2", "C1")})
+        self.assertTrue({("B4", "C6"), ("B6", "C3"), ("B2", "C1")} <= b["excluded_pairs"])   # 4 Kas (3): ek dışlamalar
 
     def test_frames(self):
         self.assertEqual(set(sk.EVENT_SKELETONS[L]["spots"]), set(K))

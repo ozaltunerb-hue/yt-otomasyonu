@@ -263,7 +263,8 @@ class TestLockedData(unittest.TestCase):
                                                ("V10", "D18"), ("V12", "D13"), ("V2", "D12"),
                                                # 4 Kas: A2, bütçe 215 (kalan 2), (V2, D13); V11 yeni metinle dükkân
                                                # dışlamaları kalktı
-                                               ("V1", "D13"), ("V9", "D13"), ("V9", "D12"), ("V2", "D13")})
+                                               ("V1", "D13"), ("V9", "D13"), ("V9", "D12"), ("V2", "D13"),
+                                               ("V11", "D18")})   # 4 Kas (3): aynı araç iki kez çarpıyor
         self.assertEqual(B["excluded_views"], {})
         self.assertEqual(B["excluded_spots"], {})
 
@@ -453,7 +454,7 @@ class TestExhaustive(unittest.TestCase):
         # hariç çift: 30 çift × 3 araç. 3 Kas (sel su kontrolü): 6 × 9 aktif öğe, 14 hariç çift: 40 çift.
         # 3 Kas (sel doğrulama): SEL_DOGRULAMA açıkken D5 pasif (5 çift az): 35 çift
         # 4 Kas (3): 38 çift (bayrak kapalı 43)
-        self.assertEqual(n, 18 * (38 if es.sel_dogrulama_on(FLOOD) else 43) * 3)
+        self.assertEqual(n, 18 * (37 if es.sel_dogrulama_on(FLOOD) else 42) * 3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_longest_realistic_story_fits(self):
@@ -554,7 +555,7 @@ class TestSelection(unittest.TestCase):
         # en az 24 farklı çift
         # 3 Kas (sel su kontrolü): 6 × 9 aktif öğe, 14 hariç çift: 40 çift (rotasyon kapalı: saf LRU)
         # 3 Kas (sel doğrulama): SEL_DOGRULAMA açıkken D5 pasif: 35 çift
-        self.assertEqual(len(pairs), 38 if es.sel_dogrulama_on(FLOOD) else 43)   # 4 Kas (3)
+        self.assertEqual(len(pairs), 37 if es.sel_dogrulama_on(FLOOD) else 42)   # 4 Kas (3); (V11, D18) dışlı
         for seed in range(40):
             es._BEAT_MEMORY.clear()
             rng, hist, chosen = random.Random(seed), [], []
@@ -565,8 +566,10 @@ class TestSelection(unittest.TestCase):
             with self.subTest(seed=seed):
                 # 4 Kas (3): 38 çift; ölçüm (300 tohum): ilk tekrar en erken 29. üretimde, 38 üretimde en az 34
                 # farklı çift (önceki 35 çiftte 11 / 30)
-                self.assertEqual(len(set(chosen[:28])), 28)
-                self.assertGreaterEqual(len(set(chosen)), 34)
+                # 4 Kas (3, ikinci tur): (V11, D18) dışlı, 37 çift; ölçüm (300 tohum): ilk tekrar en erken 28., 37
+                # üretimde en az 33 farklı çift
+                self.assertEqual(len(set(chosen[:27])), 27)
+                self.assertGreaterEqual(len(set(chosen)), 33)
 
     def test_memory_counts_unfinished(self):
         es.remember_beats(FLOOD, "V9+D5")   # 3 Kas (sel su kontrolü): V5 pasif, V9 ile
