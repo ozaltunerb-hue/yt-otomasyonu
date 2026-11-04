@@ -311,7 +311,11 @@ DOMAIN_ATTRIBUTES = {
             "High marina balcony",
             # 10 Eki, Bahadır: "Tornado sweeps down a coastal avenue" yüksek balkon noktaları
             "High balcony over a downtown avenue", "Upper-floor balcony over a residential avenue",
-            "High balcony over a high-rise avenue"
+            "High balcony over a high-rise avenue",
+            # 4 Kas 2026, Bahadır: "🗽 Özgürlük Anıtı hortumu" kadrajları K1-K3
+            "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
+            "High apartment balcony in Battery Park City looking across the harbor",
+            "Top-floor terrace of a waterfront hotel next to Battery Park"
         ],
         "events": [
             "Tornado forming offshore",
@@ -324,7 +328,9 @@ DOMAIN_ATTRIBUTES = {
             "Marina equipment reacting to severe weather",
             # 4 Eki, Bahadır (TASLAK): yapılandırılmış hat hortum olayları
             "Tornado crosses a marina quay",
-            "Tornado sweeps down a coastal avenue"
+            "Tornado sweeps down a coastal avenue",
+            # 4 Kas 2026, Bahadır: yapılandırılmış hat, kilitsiz (sona eklendi: menü sıra numaraları değişmez)
+            "Tornado tears past the Statue of Liberty into Battery Park"
         ]
     },
     "urban_city_disasters": {

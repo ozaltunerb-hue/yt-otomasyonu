@@ -201,7 +201,9 @@ class TestWeakPassive(_Quiet):
                                              es.HELICOPTER: {"G7"}, es.VOLCANIC_BOMBS: {"T5"}})   # kilit istisnası
         self.assertEqual(es.TRIAL_BEATS, {es.FLOOD: {"D10", "V9", "V10", "V11", "V12", "D12", "D13", "D14", "D15",
                                                      "D16", "D17", "D18"},
-                                          es.TIDAL: {"W9"}, es.FACADE_FIRE: {"N7", "M12"}})
+                                          es.TIDAL: {"W9"}, es.FACADE_FIRE: {"N7", "M12"},
+                                          # 4 Kas (B2): Özgürlük Anıtı tüm öğeler DENEME
+                                          es.LIBERTY: {"B1", "B2", "B3", "B4", "B5", "B6", "C1", "C2", "C3", "C4", "C6"}})
         for e, off in es.DISABLED_BEATS.items():   # silinmedi: havuzda duruyor
             pool = set(es.EVENT_BEATS[e]["slice_2"]) | set(es.EVENT_BEATS[e]["slice_3"])
             self.assertTrue(off <= pool)
@@ -224,8 +226,8 @@ class TestWeakPassive(_Quiet):
 
     def test_trial_share_and_no_repeat(self):
         for e in es.TRIAL_BEATS:
-            if es.sel_dogrulama_on(e):   # 3 Kas: SEL_DOGRULAMA açıkken selde deneme mekanizması yok (test_sel_su_3kas)
-                continue
+            if es.dogrulama_on(e):   # 3 Kas: SEL_DOGRULAMA açıkken selde deneme mekanizması yok (test_sel_su_3kas)
+                continue   # 4 Kas: OZGURLUK_DOGRULAMA da (test_sel_ozgurluk_4kas)
             rows = _sequence(e, 60, 11)
             flags = [any(x in es.TRIAL_BEATS[e] for x in r["trace"]["beats"].split("+")) for r in rows]
             # beklenen ~%17 (en fazla %20 olasılık); 3 Kas SEL_DOGRULAMA: selde en fazla %50 (art arda yok: ~%33)
@@ -261,8 +263,10 @@ class TestWeakPassive(_Quiet):
 # ── AŞAMA 3 ───────────────────────────────────────────────────────────────────────────────────────────────────────
 class TestPeopleAxis(_Quiet):
     def test_people_rule_and_lines(self):
+        # 4 Kas (A4): selde kişi sayısı kuralı yok (hikâye ekseni); I1-I6 pasif ama metinleri aynı ve kurala uygun
+        self.assertFalse(es.has_people_rule(es.FLOOD))
         for e in (es.FLOOD, es.TIDAL):
-            self.assertTrue(es.has_people_rule(e))
+            self.assertTrue(es.has_people_rule(e) or e == es.FLOOD)
             self.assertEqual(sk.count_range(e, None), (3, 6))
             lines = es.FALLBACK_PEOPLE[e]
             self.assertGreaterEqual(len(lines), 6)
@@ -276,7 +280,7 @@ class TestPeopleAxis(_Quiet):
                                                             es.FALLBACK_PEOPLE_RETIRED[es.TIDAL][4]))
 
     def test_rotation(self):
-        for e in (es.FLOOD, es.TIDAL):
+        for e in (es.TIDAL,):   # 4 Kas (A4): selin hikâye ekseni test_sel_ozgurluk_4kas'ta
             rows = _sequence(e, 60, 3)
             ids = [r["trace"]["axes"]["insan"] for r in rows]
             self.assertTrue(all(ids))
@@ -292,9 +296,12 @@ class TestPeopleAxis(_Quiet):
                                  es.clean_slice(es.FALLBACK_PEOPLE[e][i].format(N=word)))
 
     def test_axes_line_shows_person(self):
-        rows = _sequence(es.FLOOD, 2, 1)
+        rows = _sequence(es.TIDAL, 2, 1)
         self.assertRegex(rows[-1]["structure"]["axes_line"], r"kişi=\d")
         self.assertIn("insan=I", rows[-1]["structure"]["axes_line"])
+        rows = _sequence(es.FLOOD, 2, 1)   # 4 Kas (A4): selde kişi sayısı yok, insan = hikâye
+        self.assertIn("kişi=-", rows[-1]["structure"]["axes_line"])
+        self.assertIn("insan=H", rows[-1]["structure"]["axes_line"])
 
 
 # ── AŞAMA 4 ───────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -461,7 +468,8 @@ class TestMeteor(_Quiet):
             e, n = key.rsplit("|", 1)
             if es.people_line({"event": e, "people": int(n)}) != line:
                 changed.add(e)
-        self.assertEqual(changed, {es.METEOR, es.FLOOD})
+        # 4 Kas (A4): selde kişi satırı yine yok (HEAD gibi); Özgürlük Anıtı fixture'da yok (yeni olay)
+        self.assertEqual(changed, {es.METEOR})
         self.assertNotIn("street right below", es.people_line({"event": es.METEOR, "people": 4}))
 
     def test_cgi_and_camera_gate(self):

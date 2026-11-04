@@ -31,7 +31,7 @@ import prompt_snapshot as ps   # noqa: E402
 from core.prompt_generator import _event_stems, text_event_stems   # noqa: E402
 
 # 29 Eki: meteorda açılış ekseni yok (kilit cümle Bahadır'ın metni birebir, her üretimde aynı)
-EVENTS = [e for e in ps.active_events() if e not in (es.FIRE_TORNADO, es.METEOR)]
+EVENTS = [e for e in ps.active_events() if e not in (es.FIRE_TORNADO, es.METEOR, es.LIBERTY)]   # 4 Kas: anıt tek açılış
 
 
 class TestData(unittest.TestCase):

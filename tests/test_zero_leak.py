@@ -136,7 +136,7 @@ class Harness:
             patch.object(client, "get_credit", AsyncMock(return_value=100.0)),
             patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")),
             patch.object(es, "choose_vehicle", lambda v, rng=None, used=None: VEHICLE),
-            patch.object(es, "choose_people", lambda *a, **k: 5),   # 3 Kas (Aşama 3): selde kişi sayısı
+            patch.object(es, "choose_people", lambda e, *a, **k: 5 if es.has_people_rule(e) else None),   # 3 Kas (Aşama 3): selde kişi sayısı
             # 21 Eki (Aşama 6): sahte GPT dilimleri bugünkü kilit cümleye (açılış A) göre yazıldı
             patch.object(ox, "choose", lambda *a, **k: ("A", [])),
         ]
@@ -158,7 +158,8 @@ class Harness:
 
 
 def expected_prompt(sl=None):
-    spec = es.build_spec(FLOOD, None, "Downtown city center", VIEW, "V1", "D2", VEHICLE, 5)
+    spec = es.build_spec(FLOOD, None, "Downtown city center", VIEW, "V1", "D2", VEHICLE,
+                         5 if es.has_people_rule(FLOOD) else None)   # 4 Kas: selde kişi sayısı ekseni yok
     return spec, es.parse_slices(sl or slices())
 
 
@@ -209,7 +210,11 @@ class TestNothingReachesKie(unittest.TestCase):
         p = h.sent_prompts[0]
         self.assertTrue(p.startswith(f"0-4s: {KEY} "))
         # 22 Eki: kamera cümlesi "Handheld footage" ya da (sabit kamera modu) "Footage from" ile başlar
-        self.assertNotIn("camera", p.split(" Handheld footage")[0].split(" Footage from")[0].lower())
+        # 4 Kas (A4/A5): hikâyede "camera" sadece koddan birebir cümlelerde ("right below the camera", "races toward
+        # the camera"); reddedilen GPT dilimi ("the camera shows") prompt'ta yok
+        story = p.split(" Handheld footage")[0].split(" Footage from")[0]
+        self.assertNotIn("the camera shows", story)
+        self.assertNotIn("At 9-15s", story)
         # 3 Kas (sel su kontrolü): dilim başında su seviyesi cümlesi (geçiş kalıbı gerekmez)
         self.assertIn(" 9-15s: A second surge, first-floor high, slams in. A lamppost topples into the current.", p)
         h.free_rewriter.assert_not_called()
@@ -427,7 +432,7 @@ class TestReporting(unittest.TestCase):
             return slices()
         with patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
                 patch.object(es, "choose_vehicle", lambda v, rng=None: VEHICLE), \
-                patch.object(es, "choose_people", lambda *a, **k: 5), \
+                patch.object(es, "choose_people", lambda e, *a, **k: 5 if es.has_people_rule(e) else None), \
                 patch.object(ox, "choose", lambda *a, **k: ("A", [])):
             # 22 Eki: açılış A'ya sabit (sahte GPT bugünkü kilit cümleye göre yazıldı; açılış ayrı rastgele akışta,
             # sıraya göre B/C/D gelip test düşüyordu)
@@ -489,7 +494,7 @@ class TestReporting(unittest.TestCase):
         with patch.object(pg, "_call_gpt", fake), patch.object(settings, "IS_DRY_RUN", False), \
                 patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
                 patch.object(es, "choose_vehicle", vehicle), \
-                patch.object(es, "choose_people", lambda *a, **k: 5), \
+                patch.object(es, "choose_people", lambda e, *a, **k: 5 if es.has_people_rule(e) else None), \
                 patch.object(ox, "choose", lambda *a, **k: ("A", [])):   # 21 Eki (Aşama 6): açılış A (KEY)
             asyncio.run(dr.main_creative(out, only=[FLOOD], per_event=1, max_calls=3))
         row = json.load(open(out, encoding="utf-8"))["rows"][0]

@@ -342,12 +342,13 @@ POOL_OF = {cap.FLOOD: "sel", cap.TIDAL: "dalga", cap.MUDSLIDE: "heyelan", cap.SL
            cap.AVENUE: "hortum", cap.MARINA: "hortum", cap.LANDFALL: "hortum", cap.WILDFIRE: "yangın",
            cap.FACADE: "yangın", cap.FIRE_TORNADO: "yangın", cap.HELICOPTER: "yangın", cap.PYRO: "volkan",
            cap.BOMBS: "volkan", cap.AVA_V: "çığ", cap.AVA_S: "çığ", cap.AVA_F: "çığ", cap.EQ_A: "deprem",
-           cap.EQ_O: "deprem", cap.METEOR: "meteor"}   # 29 Eki: meteor
+           cap.EQ_O: "deprem", cap.METEOR: "meteor", cap.LIBERTY: "hortum"}   # 29 Eki: meteor; 4 Kas: Özgürlük Anıtı
 SHARE_OF = {cap.FLOOD: "Sel", cap.TIDAL: "Dev dalga", cap.MUDSLIDE: "Heyelan", cap.SLOPE: "Heyelan",
             cap.VILLAGE: "Heyelan", cap.AVENUE: "Hortum", cap.MARINA: "Su hortumu", cap.LANDFALL: "Su hortumu",
             cap.WILDFIRE: "Yangın", cap.FACADE: "Yangın", cap.FIRE_TORNADO: "Yangın", cap.HELICOPTER: "Yangın",
             cap.PYRO: "Volkan", cap.BOMBS: "Volkan", cap.AVA_V: "Çığ", cap.AVA_S: "Çığ", cap.AVA_F: "Çığ",
-            cap.EQ_A: "Deprem", cap.EQ_O: "Deprem", cap.METEOR: "Meteor"}   # 29 Eki: meteor
+            cap.EQ_A: "Deprem", cap.EQ_O: "Deprem", cap.METEOR: "Meteor",
+            cap.LIBERTY: "Hortum"}   # 29 Eki: meteor; 4 Kas: Özgürlük Anıtı
 EVENT_ONLY = {"#firetornado": {cap.FIRE_TORNADO}, "#waterspout": {cap.MARINA, cap.LANDFALL},
               "#skiresort": {cap.AVA_S}, "#aerialfirefighting": {cap.HELICOPTER}, "#pyroclasticflow": {cap.PYRO},
               "#lavabombs": {cap.BOMBS}, "#mountainroad": {cap.SLOPE}, "#rockfall": {cap.SLOPE},
@@ -366,7 +367,7 @@ def _sim(gpt: bool, runs: int = 10, seed: int = 11):
 
 class TestCategoryMapping(unittest.TestCase):
     def test_mapping_tables(self):
-        self.assertEqual(len(cap.SHARE_CATEGORY), 20)   # 29 Eki: + meteor
+        self.assertEqual(len(cap.SHARE_CATEGORY), 21)   # 29 Eki: + meteor; 4 Kas: + Özgürlük Anıtı
         self.assertEqual(cap.SHARE_CATEGORY, SHARE_OF)
         self.assertEqual(cap.TAG_POOL, POOL_OF)
         # Paylaşımlar "Kategori" seçenekleri: hepsi gerçek tabloda var (fixture = salt okuma kopyası)

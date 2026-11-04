@@ -42,6 +42,8 @@ def _longest_view_light(event: str) -> str | None:
     import core.proven_axes as pa
     import core.scene_env as sv
     import core.skeleton_pipeline as sk
+    if event == sk.LIBERTY:   # 4 Kas: Özgürlük Anıtı ışığı Setting satırında (en uzun L1-L3)
+        return max(sk.LIBERTY_WEATHER, key=lambda x: len(x.split()))
     if event not in sk.VIEW_LIGHT_EVENTS:
         return None
     base = list(sk.EVENT_SKELETONS[event]["weather"])
@@ -101,12 +103,16 @@ def measure(event: str) -> dict:
                                 for env_used, f in frames:
                                     spec = es.build_spec(event, None, spot, view, b2, b3, veh, people, setting, venv,
                                                          f, env_used, op, light)
-                                    cands = es.fallback_candidates(spec)
+                                    cands = es.fallback_candidates_ids(spec)
                                     out["variants"] += 1
                                     out["variant_fail"] += not cands
                                     out["max_suffix"] = max(out["max_suffix"], len(spec["suffix"].split()))
                                     if cands and first is None:
-                                        first = (spec, cands[0])
+                                        # 4 Kas: üretimdeki gibi seçilen insan/hikâye öğesi spec'te (VERBATIM 0-4s,
+                                        # sel hikâyesi b/c cümleleri son denetimde bundan kurulur)
+                                        pid, sl0 = cands[0]
+                                        first = ({**spec, "people_line": pid} if event in es.PEOPLE_AXIS_EVENTS
+                                                 else spec, sl0)
                                     # üretimdeki gibi: rotasyon kadrajı önce bu ortamda, sonra ortam A'da
                                     rot_fit = rot_fit or (bool(cands) and f in (rot if env_used == senv else rot_a))
                                 out["after_fail"] += first is None

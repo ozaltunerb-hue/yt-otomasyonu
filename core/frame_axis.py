@@ -100,6 +100,7 @@ AVA_FOREST = "Avalanche rips through a pine forest into a valley"
 EQ_APT = "Earthquake collapses an apartment block"
 EQ_OLD = "Earthquake collapses a row of old stone houses"
 METEOR = "Meteor slams into the sea off the coast"
+LIBERTY = "Tornado tears past the Statue of Liberty into Battery Park"   # 4 Kas
 VOLCANO = (ERUPTION, PYROCLASTIC, BOMBS)
 AVALANCHE = (AVA_VILLAGE, AVA_SKI, AVA_FOREST)
 EARTHQUAKE = (EQ_APT, EQ_OLD)
@@ -145,6 +146,9 @@ FRAME_EVENTS = {
     # 29 Eki: meteor kadrajı kamera noktasının kendisi (K1 çatı terası, K2 yüksek balkon, K3 tepe terası); ödünç ve
     # kütüphane yeri yok, ön plan ekseni yok
     METEOR: {"types": ("çatı", "balkon", "tepe")},
+    # 4 Kas: Özgürlük Anıtı kadrajı kamera noktasının kendisi (K1 çatı terası, K2 yüksek balkon, K3 otel terası);
+    # meteor gibi ödünç, kütüphane, pencere ve ön plan ekseni yok
+    LIBERTY: {"types": ("çatı", "balkon", "teras")},
 }
 # Ateş hortumu sahnesi ortamdan (event_structure.FIRE_TOR_ENVS)
 FIRE_SCENE = {"forest_edge": "the wooded neighborhood", "tree_street": "the tree-lined street",
@@ -237,8 +241,12 @@ SPOT_FRAME[METEOR] = {"Rooftop terrace of a hillside villa above the bay": ("ça
                       "Hilltop terrace above a coastal town": ("tepe", NATIVE, None, None),
                       # 3 Kas (Aşama 6): K4 DENEME, çatı terası
                       "Rooftop terrace of a modern seafront building": ("çatı", NATIVE, None, None)}
+SPOT_FRAME[LIBERTY] = {"Rooftop terrace of a Lower Manhattan high-rise facing the harbor": ("çatı", NATIVE, None, None),
+                       "High apartment balcony in Battery Park City looking across the harbor":
+                           ("balkon", NATIVE, None, None),
+                       "Top-floor terrace of a waterfront hotel next to Battery Park": ("teras", NATIVE, None, None)}
 # Kadrajı sadece kendi kamera noktası olan aileler (kütüphane yeri, pencere ve ön plan ekseni yok)
-OWN_SPOT_ONLY = ("meteor",)
+OWN_SPOT_ONLY = ("meteor", "liberty")   # 4 Kas: Özgürlük Anıtı
 # 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 4): PASİF kamera noktaları (kadraj rotasyonundan çıktı; spot sahne olarak
 # seçilmeye devam eder, kamera başka bir noktadan/kütüphaneden gelir). Silinmedi: SPOT_FRAME'de durur.
 # Dev dalga "on top of the seawall": kötü sonuç verdi.
@@ -268,6 +276,8 @@ def family(event: str) -> str | None:
         return "fire_tornado"
     if event == METEOR:
         return "meteor"
+    if event == LIBERTY:
+        return "liberty"
     return None
 
 

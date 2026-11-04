@@ -137,6 +137,13 @@ CAMERA_SPOTS = {
     "High terrace of a seafront villa": "the high terrace of a seafront villa",   # 29 Eki (3): K2
     "Hilltop terrace above a coastal town": "a hilltop terrace above the coast",   # 31 Eki: önceki "...above a coastal town"
     "Rooftop terrace of a modern seafront building": "the rooftop terrace of a modern seafront building",   # 3 Kas: K4 (deneme)
+    # 🗽 Özgürlük Anıtı (4 Kas 2026, Bahadır, B6): kadraj K1-K3, hepsi yüksek, sabit, geniş; tam cümle LIBERTY_CAMERA
+    "Rooftop terrace of a Lower Manhattan high-rise facing the harbor":
+        "the rooftop terrace of a Lower Manhattan high-rise facing the harbor",
+    "High apartment balcony in Battery Park City looking across the harbor":
+        "a high apartment balcony in Battery Park City looking across the harbor",
+    "Top-floor terrace of a waterfront hotel next to Battery Park":
+        "the top-floor terrace of a waterfront hotel next to Battery Park",
     "Open sandy beach": "at the top of the beach",
     "Wide public beach": "at the top of the beach",
     "Beachfront promenade": "further along the promenade",
@@ -210,6 +217,9 @@ METEOR_WEATHER = ["golden sunset", "hazy midday light", "overcast grey sky",
                   "clear early-morning light"]   # 3 Kas (Aşama 6): yeni ışık DENEME (proven_axes.EXTRA_TRIALS)
 FIRE_WEATHER = ["hot dry wind and thick smoke haze", "gusty dry wind under an orange smoky sky",
                 "heavy smoke and scorching still air"]
+# 🗽 Özgürlük Anıtı ışık ekseni (4 Kas, Bahadır, B7: L1-L3 birebir). Son prompta Setting satırında birebir girer
+LIBERTY_WEATHER = ["dark overcast storm afternoon", "green-tinted storm sky",
+                   "low late-afternoon sun under black storm clouds"]
 
 _CITY_SPOTS = {"Downtown city center": "the downtown city center", "Dense urban downtown": "a dense downtown street",
                "Commercial city streets": "a commercial street", "High-rise city district": "a high-rise district"}
@@ -380,6 +390,18 @@ EVENT_SKELETONS = {
         "text": "In {weather}, a tornado crosses the shoreline and makes landfall at {spot}, ripping roofs and signs "
                 "into the air. Sand and debris whirl around its base as {n} {people} sprint for cover. The tornado keeps "
                 "moving inland, still hurling debris across the street.",
+    },
+    # 🗽 Özgürlük Anıtı hortumu (4 Kas 2026, Bahadır, Bölüm B). Yapılandırılmış hatta; metin sadece
+    # PROMPT_PIPELINE=skeleton için. Kamera yüksek, sabit, geniş; anıt her kadrajda uzakta, sağlam
+    "Tornado tears past the Statue of Liberty into Battery Park": {
+        "domain": "coastal_tornado_landfall", "ships": None,
+        "spots": {"Rooftop terrace of a Lower Manhattan high-rise facing the harbor": "Battery Park and the harbor",
+                  "High apartment balcony in Battery Park City looking across the harbor": "the Battery Park waterfront",
+                  "Top-floor terrace of a waterfront hotel next to Battery Park": "Battery Park and the waterfront avenue"},
+        "people": ["people", "pedestrians"], "weather": LIBERTY_WEATHER, "object": "tornado",
+        "text": "In {weather}, a colossal wedge tornado tears across the harbor past the Statue of Liberty and slams into "
+                "{spot}, ripping trees and roofs loose. Debris whirls across the lawn as {n} {people} sprint for the "
+                "buildings. The tornado keeps moving inland, still hurling debris across the avenue.",
     },
     # ÇIKARILDI (4 Eki, Bahadır; TASLAK, onay bekliyor): yukarıdaki notla aynı
     # "Tornado rain bands and flying debris lash the waterfront": {
@@ -777,7 +799,8 @@ def view_place(event: str, place: str, view: str | None) -> str:
 PHENOMENA = {
     # 4 Eki (TASLAK): kıyıya yaklaşma ve yağmur bantları menüden çıktı, marina ve sahil caddesi eklendi
     "Hortum": ["Tornado making landfall", "Tornado crosses a marina quay", "Tornado sweeps down a coastal avenue",
-               "Tornado approaching an open beach"],
+               "Tornado approaching an open beach",
+               "Tornado tears past the Statue of Liberty into Battery Park"],   # 4 Kas
     "Tsunami": [],
     "Sel": ["Flash flooding in city streets"],
     "Heyelan": ["Mudslide pours down a hillside street", "Rain-soaked slope collapses onto a roadside", "Mud and debris torrent tears through a hillside village"],
@@ -817,6 +840,7 @@ EVENT_COUNT = {"Tidal wave surges over a coastal city street": (3, 6),
                "Tornado making landfall": (3, 6),
                "Tornado crosses a marina quay": (3, 6),
                "Tornado sweeps down a coastal avenue": (3, 6),
+               "Tornado tears past the Statue of Liberty into Battery Park": (3, 6),   # 4 Kas (B9): {N} = 3-6
                # TASLAK (8 Eki, Bahadır): yangın 3-6
                "Wall of flames sweeps into a hillside neighborhood": (3, 6),
                "Flames race up a tower facade": (3, 6),
@@ -986,6 +1010,39 @@ METEOR_NO_FACE = "no person, face or tall building close to the camera"
 
 def meteor_camera(spot: str) -> str:
     return f"{METEOR_CAMERA[spot]}; {METEOR_CAMERA_TAIL}"
+
+
+# 🗽 Özgürlük Anıtı kamerası (4 Kas 2026, Bahadır, B6). Kadraj = kamera noktası (K1-K3; ödünç, kütüphane, pencere ve ön
+# plan ekseni yok: frame_axis.OWN_SPOT_ONLY). Hepsi yüksek, sabit, geniş; her kadraj anıtı uzakta, sağlam söyler.
+LIBERTY_STATUE = "the Statue of Liberty standing intact in the distance across the harbor"
+LIBERTY = "Tornado tears past the Statue of Liberty into Battery Park"
+LIBERTY_CAMERA = {
+    "Rooftop terrace of a Lower Manhattan high-rise facing the harbor":
+        f"Handheld footage from {CAMERA_SPOTS['Rooftop terrace of a Lower Manhattan high-rise facing the harbor']}, "
+        f"high and wide, {LIBERTY_STATUE}",
+    "High apartment balcony in Battery Park City looking across the harbor":
+        f"Handheld footage from {CAMERA_SPOTS['High apartment balcony in Battery Park City looking across the harbor']}, "
+        f"high and wide, {LIBERTY_STATUE}",
+    "Top-floor terrace of a waterfront hotel next to Battery Park":
+        f"Handheld footage from {CAMERA_SPOTS['Top-floor terrace of a waterfront hotel next to Battery Park']}, "
+        f"high and wide, {LIBERTY_STATUE}",
+}
+LIBERTY_CAMERA_TAIL = ("slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one "
+                       "continuous shot, no zoom, no cuts.")
+# Ortam metni; ışık (L1-L3) yazı yasağından önce birebir girer. 4 Kas (2), Bahadır kararı (bütçe, tavan 205): kısa hâl
+# (anıt kilit cümlede ve her kadrajda var). B10 birebir hâli LIBERTY_SETTING_B10 (175'e hiçbir hâlde sığmadı).
+LIBERTY_SETTING_B10 = ("Setting: the southern tip of Manhattan, Battery Park and the harbor waterfront, with the Statue "
+                       "of Liberty on its island across the water")
+LIBERTY_SETTING = "Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan"
+LIBERTY_NO_SIGNS = "no readable signs, text or flags."
+
+
+def liberty_camera(spot: str) -> str:
+    return f"{LIBERTY_CAMERA[spot]}; {LIBERTY_CAMERA_TAIL}"
+
+
+def liberty_setting(light: str | None) -> str:
+    return f"{LIBERTY_SETTING}, {light}, {LIBERTY_NO_SIGNS}" if light else f"{LIBERTY_SETTING}, {LIBERTY_NO_SIGNS}"
 
 
 # 🔥 Ateş hortumu kamerası (15 Eki (2), Bahadır): hortum dev ve kareyi dolduruyor. Yüksek bakış, hortuma yakın; gövde
@@ -1159,6 +1216,8 @@ def legacy_camera(event: str, spot: str, volc_env: str | None = None) -> str:
         camera = fire_tornado_camera(spot)
     if s["domain"] == "meteor_disasters":   # 29 Eki: meteor, sabit yüksek kadraj (K1-K3)
         camera = meteor_camera(spot)
+    if event == LIBERTY:   # 4 Kas: Özgürlük Anıtı, sabit yüksek geniş kadraj (K1-K3)
+        camera = liberty_camera(spot)
     return camera
 
 
@@ -1205,6 +1264,8 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
         out += f" Setting: {view_district(event, view)}{clothing}{lit}, {NO_SIGNS}."
     elif s["domain"] in NO_SIGNS_DOMAINS and not scene_signs:
         out += f" {NO_SIGNS[0].upper()}{NO_SIGNS[1:]}."   # 2 Eki: heyelan (toplam 8 kısıt)
+    if event == LIBERTY:   # 4 Kas (B7, B10): ortam metni + ışık birebir + yazı yasağı (tek kısıt)
+        out += f" {liberty_setting(light)}"
     if s["domain"] == "meteor_disasters":   # 29 Eki (2): tek meteor / beyaz su / kalıcı hasar (meteorda 11 kısıt)
         out += f" {METEOR_RULE}"
     return out

@@ -25,6 +25,28 @@
 
 ---
 
+## 📋 DEVİR: 4 Kasım sel hikâye ekseni + 🗽 Özgürlük Anıtı hortumu
+
+Kie/GPT çağrısı yok; test `tests/test_sel_ozgurluk_4kas.py`. Kilitli 5 olay 40 tohumda fark 0; baseline'da sadece sel,
+dev dalga (prompt aynı, hikâye kaynağı etiketi) ve yeni olay değişti.
+- **A1** `{vehicle}` boşluğu: `beat_text(... slice_3 ...)` araçsız çağrılıyordu (Onay "Seçim" satırı, GPT mesajı, kapı
+  havuzu). Sadece sel D13/D18'de etkiliydi (kilitli olaylarda 9-15s'te araç yok). Kod yedeği / VERBATIM zaten doluydu.
+- **A2** (V1, D13) dışlı; (V12, D13) 3 Kas'tan beri dışlı.
+- **A3/A4** 0-4s insan cümlesi VERBATIM (`es.VERBATIM_PEOPLE_EVENTS`: sel, dev dalga, anıt; `spec["people_line"]`). Selde
+  `es.FLOOD_STORIES` H1-H5 (kısa hâl, Bahadır 4 Kas (2)): a 0-4s, b 4-9s sonu, c 9-15s sonu. I1-I6 pasif, selde kişi sayısı
+  ekseni yok (`SLICE_RULES[FLOOD] = []`, eskisi `SLICE_RULES_RETIRED`), eksen anahtarı "insan" = H1-H5. Kapı
+  `es.flood_people_loss_issues`. Koddan gelen "camera" b kuralından muaf (`es.CAMERA_EXEMPT_EVENTS`).
+- **A5** su 4-9s "…and races toward the camera."; D10 D12 D13 D14 D17 D18 "right below the camera". D15/D16, D5 ve pasifler aynı.
+- **A6** sel tavanı 215, karakter 1400, 4-9s 43, 9-15s 45, hikâye 40-116. 4 Kas (2/3): D14, D18 kısaldı; V11 yeni metin
+  ("swept up onto the sidewalk and slammed against a stone wall", dükkân dışlamaları kalktı). Bütçe dışlaması kalan:
+  (V9, D13), (V9, D12); ayrıca (V2, D13) aynı araç iki kez. Aktif çift 38 (V11 8, D14 5, D18 5).
+- **B** `es.LIBERTY` "Tornado tears past the Statue of Liberty into Battery Park" (Hortum menüsünde sona eklendi). Veri
+  karaya vurur'dan ayrı. `es.OZGURLUK_DOGRULAMA` açık (eşit LRU, hepsi deneme; sadece Bahadır kapatır). Havuz B1-B6 /
+  C1 C2 C3 C4 C6 (B4, B6 yeni metinle; ilk hâlleri `es.LIBERTY_RETIRED_TEXTS`), C5 puan → `es.LIBERTY_HELD_BEATS`.
+  Dışlı: (B4, C6), (B6, C3), (B2, C1); 27 çift. Kadraj K1-K3 kendi noktası
+  (`fx.OWN_SPOT_ONLY`), ışık L1-L3 birebir Setting satırında, ortam kısa hâl (Bahadır kararı), tavan 205, hikâye 40-85.
+  Kapı `es.liberty_gate_issues`.
+
 ## 📋 DEVİR: 3 Kasım toplu düzeltme (kilit kuralı + 8 aşama)
 
 Kie/GPT çağrısı yok; doğrulama offline (sahte GPT, snapshot, unit test: `tests/test_toplu_3kas.py`).

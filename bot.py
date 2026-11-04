@@ -107,6 +107,7 @@ EVENT_LABELS = {
     # 4 Eki (TASLAK): yapılandırılmış hat hortum olayları
     "Tornado crosses a marina quay": "🌪️ Hortum marina rıhtımını geçer",
     "Tornado sweeps down a coastal avenue": "🌪️ Hortum sahil caddesini süpürür",
+    "Tornado tears past the Statue of Liberty into Battery Park": "🗽 Özgürlük Anıtı hortumu",   # 4 Kas, Bahadır
     "Coastal debris movement": "🪨 Kıyıda enkaz savrulur",
     "Marina equipment reacting to severe weather": "⚓ Marina ekipmanı savrulur",
     # Şehir Afeti

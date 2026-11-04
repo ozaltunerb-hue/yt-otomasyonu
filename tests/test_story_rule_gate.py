@@ -122,7 +122,7 @@ class TestLocks(unittest.TestCase):
 
     def test_required_covers_all_22_events_with_budget(self):
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(cp.EVENT_REQUIRED), 37)   # 29 Eki: + meteor; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
+        self.assertEqual(len(cp.EVENT_REQUIRED), 38)   # 4 Kas: + Özgürlük Anıtı   # 29 Eki: + meteor; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
         for e, groups in cp.EVENT_REQUIRED.items():
             with self.subTest(event=e):
                 # yapılandırılmış olaylarda grup yok (olay terimleri event_structure'da)
@@ -404,7 +404,7 @@ class TestCityEventSwap(unittest.TestCase):
     def test_event_sets_equal(self):
         self.assertEqual(set(cp.EVENT_OUTCOMES), set(sk.EVENT_SKELETONS))
         self.assertEqual(set(cp.EVENT_REQUIRED), set(sk.EVENT_SKELETONS))
-        self.assertEqual(len(sk.EVENT_SKELETONS), 37)   # 29 Eki: + meteor; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
+        self.assertEqual(len(sk.EVENT_SKELETONS), 38)   # 4 Kas: + Özgürlük Anıtı   # 29 Eki: + meteor; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
         self.assertIn(TIDAL, sk.EVENT_SKELETONS)
         self.assertNotIn(SIGNS, sk.EVENT_SKELETONS)
         self.assertIn(SIGNS, sk.REMOVED_EVENTS)   # kod silinmedi: havuzda, iskelet dışında
@@ -732,7 +732,7 @@ class TestFlashFloodFix(unittest.TestCase):
         for e, s in sk.EVENT_SKELETONS.items():
             # 15 Eki (2): ateş hortumu kendi kamera cümlesinde (tests/test_fire_tornado_gate.py kilitler)
             if (e == FLOOD or e in es.VOLCANO_EVENTS or e in es.AVALANCHE_EVENTS or e in es.EARTHQUAKE_EVENTS
-                    or e == es.FIRE_TORNADO or e == es.METEOR):   # 13 Eki: çığ; 14 Eki: deprem; 29 Eki: meteor sabit kamera
+                    or e == es.FIRE_TORNADO or e == es.METEOR or e == es.LIBERTY):   # 4 Kas: anıt sabit kamera   # 13 Eki: çığ; 14 Eki: deprem; 29 Eki: meteor sabit kamera
                 continue
             ship = (s["ships"] or [None])[0]
             for spot in s["spots"]:
@@ -819,7 +819,7 @@ class TestStructuredScene(unittest.TestCase):
         import core.opening_axis as ox   # 21 Eki (Aşama 6): sahte GPT dilimleri bugünkü kilit cümleye göre yazıldı
         with patch.object(es, "choose_beats", lambda *a, **k: ("V1", "D2")), \
                 patch.object(es, "choose_vehicle", lambda v, rng=None: "pickup truck"), \
-                patch.object(es, "choose_people", lambda *a, **k: 5), \
+                patch.object(es, "choose_people", lambda e, *a, **k: 5 if es.has_people_rule(e) else None), \
                 patch.object(ox, "choose", lambda *a, **k: ("A", [])):
             scene = asyncio.run(cp.build_creative_scene("urban_city_disasters", FLOOD, [], [], gpt, view=view))
         return scene, calls
@@ -867,7 +867,7 @@ class TestStructuredScene(unittest.TestCase):
             self.assertNotIn(word, low)
 
     def test_vehicle_is_given_detail_and_checked(self):
-        spec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van", 5)
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van", None)
         msg = cp._slices_message(spec, "x", "heavy rain", 2, 10, [], None)
         self.assertIn("\nVEHICLE: delivery van\n", msg)
         self.assertIn("4-9s EVENT: the delivery van is swept into another parked car", msg)
@@ -923,20 +923,22 @@ class TestStructuredScene(unittest.TestCase):
         self.assertTrue(scene["trace"]["story_source"].startswith("Hikâye: kod yedeği (neden: deneme 1: "))
         st = scene["structure"]
         self.assertEqual(st["story_source_kind"], "fallback")
-        # 3 Kas (sel su kontrolü): dilim başında su seviyesi cümlesi
-        self.assertEqual(st["slices"]["slice_2"], "Water rises past the car windows. The pickup truck is caught by the "
-                                                  "current, turns sideways and is dragged down the street.")
+        # 3 Kas (sel su kontrolü): dilim başında su seviyesi cümlesi. 4 Kas (A4/A5): su kameraya yaklaşır, sonda
+        # seçilen hikâyenin b/c cümlesi
+        a, b, c = es.FLOOD_STORIES[st["axes"]["insan"]]
+        self.assertEqual(st["slices"]["slice_2"], "Water rises past the car windows and races toward the camera. The "
+                                                  "pickup truck is caught by the current, turns sideways and is dragged "
+                                                  "down the street. " + b)
         self.assertEqual(st["slices"]["slice_3"], "A second surge, first-floor high, slams in. A lamppost topples into "
-                                                  "the current.")
-        # 3 Kas (Aşama 3): sel insan cümlesi kişi sayılı ({N}) ve insan ekseninden
-        self.assertIn(st["slices"]["slice_1_rest"], [es.clean_slice(t.format(N="Five"))
-                                                     for t in es.FALLBACK_PEOPLE[FLOOD]])
-        self.assertIn(st["axes"]["insan"], [es.people_line_id(i) for i in range(len(es.FALLBACK_PEOPLE[FLOOD]))])
+                                                  "the current. " + c)
+        # 4 Kas (A4): sel insan cümlesi hikâyenin a cümlesi (I1-I6 pasif)
+        self.assertEqual(st["slices"]["slice_1_rest"], a)
+        self.assertIn(st["axes"]["insan"], list(es.FLOOD_STORIES))
         self.assertEqual(es.final_prompt_issues(st["spec"], st["slices"], scene["prompt"], scene["story"]), [])
         self.assertNotIn("gently", scene["prompt"])
 
     def test_diversity_ignores_shared_key_visual(self):
-        spec = es.build_spec(FLOOD, None, "Downtown city center", "us_coastal_town", "V1", "D2", "pickup truck", 5)
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "us_coastal_town", "V1", "D2", "pickup truck", None)
         sl = es.parse_slices(self.slices("pickup truck"))
         other = es.parse_slices(self.slices("pickup truck", s2="The pickup truck spins side-on and slides along the "
                                             "road past the low wooden houses.",

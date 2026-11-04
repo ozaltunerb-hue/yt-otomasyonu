@@ -175,6 +175,8 @@ EVENT_OUTCOMES = {
     "Earthquake collapses a row of old stone houses": "the collapse keeps running down the street, old stone houses caving in one after another",
     # Meteor (TASLAK, 29 Eki, Bahadır): yapılandırılmış hatta; trace/rapor için
     "Meteor slams into the sea off the coast": "the blast keeps tearing across the waterfront, flaming debris crashing onto the roofs of the houses",
+    # Özgürlük Anıtı hortumu (4 Kas, Bahadır): yapılandırılmış hatta; trace/rapor için
+    "Tornado tears past the Statue of Liberty into Battery Park": "the tornado keeps tearing through Battery Park, hurling trees and roofs across the avenue",
     # Plaj
     "Tornado approaching an open beach":
         "the tornado reaches the sand, hurling umbrellas, chairs and sand high into the air",
@@ -338,6 +340,7 @@ EVENT_REQUIRED = {
     "Avalanche slams into a mountain village": [], "Avalanche crashes down onto a ski lodge": [], "Avalanche rips through a pine forest into a valley": [],   # 13 Eki: çığ (yapılandırılmış hat kapıları)
     "Earthquake collapses an apartment block": [], "Earthquake collapses a row of old stone houses": [],   # 14 Eki: deprem (yapılandırılmış hat kapıları)
     "Meteor slams into the sea off the coast": [],   # 29 Eki: meteor (yapılandırılmış hat kapıları)
+    "Tornado tears past the Statue of Liberty into Battery Park": [],   # 4 Kas: Özgürlük Anıtı (yapılandırılmış hat)
     # ── Plaj (TASLAK) ──
     "Tornado approaching an open beach": [("tornado", "twister", "funnel"), ("umbrella", "chair", "sand")],
     "Storm gust rips umbrellas and beach chairs into the air": [("umbrella", "chair"),
@@ -580,12 +583,13 @@ def _slices_message(spec: dict, place: str, weather: str, lo: int, hi: int, rece
            + es.people_line(spec)
            + es.word_budget_line(spec)   # 14 Eki (2): çığda dilim kelime bütçesi
            + f"4-9s EVENT: {es.beat_text(event, 'slice_2', spec['beat_2'], spec['vehicle'])}\n"
-           f"9-15s EVENT: {es.beat_text(event, 'slice_3', spec['beat_3'])}\n"
+           # 4 Kas (A1): 9-15s metni de araçla (sel D13/D18 {vehicle} taşır; önceki çağrı aracı boş bırakıyordu)
+           f"9-15s EVENT: {es.beat_text(event, 'slice_3', spec['beat_3'], spec['vehicle'])}\n"
            "RECENT STORIES:\n" + ("\n".join(f"- {s}" for s in recent) or "- (none)"))
     if caption_ctx is not None:   # 21 Eki (Aşama 7): caption alanları aynı yanıtta (ek GPT çağrısı yok)
         from core.caption import instruction_block
         msg += "\n\n" + instruction_block(caption_ctx).rstrip("\n")
-    if feedback and es.SLICE_RULES.get(event):
+    if feedback and es.cumulative_feedback(event):   # 4 Kas: sel kişi kuralı kalksa da birikimli
         # 4 Eki, Bahadır: birikimli geri bildirim; düzeltilen madde sonraki denemede silinmesin
         msg += ("\n\nYOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already "
                 "correct: " + " ".join(feedback))
@@ -642,7 +646,7 @@ async def write_slices(spec: dict, place: str, weather: str, recent: list[str], 
         if not found:
             return slices, attempts
         # Dilim kapısı olan olaylarda önceki tüm ret nedenleri (tekrarsız) birikir; diğerlerinde sadece son ret
-        feedback = list(dict.fromkeys((feedback or []) + issues)) if es.SLICE_RULES.get(spec["event"]) else issues
+        feedback = list(dict.fromkeys((feedback or []) + issues)) if es.cumulative_feedback(spec["event"]) else issues
     raise CreativeStoryError(f"Hikâye {max_attempts} denemede kural kapısından geçmedi, Kie'ye gönderilmedi.",
                              attempts)
 
@@ -1042,7 +1046,8 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     frame, frame_excluded = fx.choose_frame(event, spot, pool, risky, ev_hist, frame_rng, blocked)
     excluded.update(frame_excluded)
     # 3 Kas (sel su kontrolü): sel ve dev dalgada seçilen ışık Setting satırına birebir girer
-    view_light = weather if event in VIEW_LIGHT_EVENTS else None
+    # 4 Kas (B7): Özgürlük Anıtı ışığı da birebir (Setting satırında)
+    view_light = weather if event in VIEW_LIGHT_EVENTS or event == es.LIBERTY else None
     spec = es.build_spec(event, ship, spot, view, b2, b3, vehicle, people, setting, volc_env, frame, scene_env, opening,
                          view_light)
     if met_env and not es.fallback_candidates(spec):
@@ -1114,6 +1119,9 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
     if event in es.PEOPLE_AXIS_EVENTS:   # 3 Kas (Aşama 3): insan cümlesi ekseni (sel, dev dalga); ayrı akış
         axes["insan"], excluded["insan"] = es.choose_people_line(spec, ah.values(ev_hist, "insan"),
                                                                  sv.side_rng("insan"))
+        if axes["insan"] is not None:
+            # 4 Kas (A3/A4): seçilen öğe spec'te; VERBATIM insan cümlesi / sel hikâyesi bundan kurulur (GPT yolu da)
+            spec["people_line"] = axes["insan"]
     es.remember_axes(event, axes)
     axes_line = _axes_line(axes, excluded, hist["source"], hist["warning"])
     lo, hi = count_range(event, ship)
@@ -1121,7 +1129,8 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
              "camera": SKELETON_CAMERA, "spot": spot, "view": view, "view_source": view_source, "place": place,
              "weather": weather, "count_range": [lo, hi], "key_visual": spec["key_visual"], "beats": tag,
              "vehicle": vehicle, "people_running": people, "beat_2_text": es.beat_text(event, "slice_2", b2, vehicle),
-             "beat_3_text": es.beat_text(event, "slice_3", b3), "outcome": EVENT_OUTCOMES[event],
+             # 4 Kas (A1): Onay "Seçim" satırı; önceki çağrı aracı boş bırakıyordu ("and the  is carried away")
+             "beat_3_text": es.beat_text(event, "slice_3", b3, vehicle), "outcome": EVENT_OUTCOMES[event],
              "recent_count": len(recent), "attempts": [], "story": "", "story_words": 0}
     trace["axes"] = axes
     trace["place"] = place

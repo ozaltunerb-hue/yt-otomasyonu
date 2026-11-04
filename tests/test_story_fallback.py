@@ -97,12 +97,14 @@ class TestFallbackEveryCombination(unittest.TestCase):
                 n_weighted += n_env * n_weather
                 b = es.EVENT_BEATS[event]
                 self.assertNotIn((spec["beat_2"], spec["beat_3"]), b["excluded_pairs"])
-                cands = es.fallback_candidates(spec)
+                cands = es.fallback_candidates_ids(spec)
                 if not cands:
                     gaps.add((spec["beat_2"], spec["beat_3"]))
                     continue
-                sl = cands[i % len(cands)]   # insan cümleleri kombinasyonlar boyunca dönüşümlü denetlenir
+                pid, sl = cands[i % len(cands)]   # insan cümleleri kombinasyonlar boyunca dönüşümlü denetlenir
                 i += 1
+                if event in es.PEOPLE_AXIS_EVENTS:   # 4 Kas: üretimdeki gibi seçilen öğe spec'te
+                    spec = {**spec, "people_line": pid}
                 prompt = es.assemble_prompt(spec, sl)
                 issues = es.final_prompt_issues(spec, sl, prompt, es.assemble_story(spec, sl))
                 if issues:
@@ -117,7 +119,8 @@ class TestFallbackEveryCombination(unittest.TestCase):
             report[event] = {"kombinasyon": n, "hava_ve_ortam_dahil": n_weighted, "sigmayan_cift": sorted(gaps),
                              "en_uzun_prompt": longest}
             n_total += n
-        self.assertGreater(n_total, 24000)   # 17 Eki: temizlik turu ve yedeği sığmayan çiftler hariç (16 Eki: > 30000)
+        # 4 Kas (A2/A6): selde 12 çift daha dışlı (35 -> 23), Özgürlük Anıtı eklendi: ~21100
+        self.assertGreater(n_total, 20000)   # 17 Eki: temizlik turu ve yedeği sığmayan çiftler hariç (16 Eki: > 30000)
         sys.stderr.write("\n🧩 YEDEK KOMBİNASYONLARI: " + json.dumps(report, ensure_ascii=False) + "\n")
 
     def test_every_people_sentence_passes_slice_one_rules(self):
@@ -133,7 +136,9 @@ class TestFallbackEveryCombination(unittest.TestCase):
                 for p in peoples:
                     spec = es.build_spec(event, None, spot, view, b2, b3, veh, p)
                     pool = es.fallback_people_pool(spec)
-                    self.assertGreaterEqual(len(pool), 6)
+                    # 4 Kas: sel hikâye ekseni 5 (H1-H5), Özgürlük Anıtı 3 (P1-P3; Bahadır'ın metni)
+                    self.assertGreaterEqual(len(pool), es.PEOPLE_POOL_MIN_EXEMPT.get(
+                        event, 5 if es.story_axis_on(event) else 6))
                     for t in pool:
                         s1 = es.clean_slice(t.format(N=es.people_word(spec).capitalize()))
                         sl = {"slice_1_rest": s1, "slice_2": es.fallback_beat_slice(spec, "slice_2"),
@@ -160,11 +165,11 @@ class TestFallbackEveryCombination(unittest.TestCase):
         self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),
                          "Seconds later, in full view, a city bus is shoved sideways by the surge.")
         self.assertEqual(es.fallback_beat_slice(spec, "slice_2"), "The red SUV is carried down the street by the surge.")
-        spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D5", "red SUV", 5)
+        spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D5", "red SUV", None)
         self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),
                          "A second surge, first-floor high, slams in. A city bus is shoved sideways by the current.")
-        self.assertEqual(es.fallback_beat_slice(spec, "slice_2"),
-                         "Water rises past the car windows. The red SUV is caught by the current, turns sideways and "
+        self.assertEqual(es.fallback_beat_slice(spec, "slice_2"),   # 4 Kas (A5): su kameraya yaklaşır
+                         "Water rises past the car windows and races toward the camera. The red SUV is caught by the current, turns sideways and "
                          "is dragged down the street.")
         self.assertEqual(es.FALLBACK_TRANSITION, "Seconds later, in full view, ")
 
