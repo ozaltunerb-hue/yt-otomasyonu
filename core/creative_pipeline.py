@@ -905,6 +905,8 @@ async def build_creative_scene(domain: str | None, event: str | None, history: l
         # koruma ışığı en fazla %20: rotasyonda her zaman ayrı akıştan yeniden seçilir (ana çekim tüketilmiş kalır)
         weather, excluded["light"] = sv.choose_light(event, rot, used_light, sv.side_rng("light"))
         spot = _proven_spot(event, spot, view_spots(event, view), used_spot)
+    if structured and event == es.LIBERTY:   # 4 Kas (4): anıt kadrajı K1 KANITLI, K2 DENEME (≤%20, art arda yok), K3 PASİF
+        spot = _proven_spot(event, spot, view_spots(event, view), used_spot)
     place = view_place(event, EVENT_SKELETONS[event]["spots"][spot], view)
     if volc_env:
         place = es.volc_place(event, volc_env)

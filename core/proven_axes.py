@@ -74,6 +74,17 @@ VOLC_RT = "Rooftop terrace facing the erupting volcano"
 VOLC_VB = "Balcony of a village house facing the erupting volcano"
 PROVEN_SPOTS = {BOMBS: {VOLC_RT, VOLC_VB}, PYROCLASTIC: {VOLC_HT, VOLC_RT},
                 METEOR: {"High terrace of a seafront villa"}}   # 30 Eki paylaşımı (K2)
+# 🗽 Özgürlük Anıtı kadrajı (4 Kas (4), Bahadır): kadraj = kamera noktası (ödünç yok). K1 KANITLI (04:13 iyi video,
+# 8/10); K2 DENEME (EXTRA_TRIALS: en fazla %20, art arda yok); K3 PASİF (04:56 videosu 3/10: alçak, yan bakış, cam
+# korkuluk kadrajı kapattı, anıt kenara kaydı). OZGURLUK_DOGRULAMA sadece beat/insan eksenini eşitler; kadrajı etkilemez.
+LIBERTY = "Tornado tears past the Statue of Liberty into Battery Park"
+LIBERTY_K1 = "Rooftop terrace of a Lower Manhattan high-rise facing the harbor"
+LIBERTY_K2 = "High apartment balcony in Battery Park City looking across the harbor"
+LIBERTY_K3 = "Top-floor terrace of a waterfront hotel next to Battery Park"
+PROVEN_SPOTS[LIBERTY] = {LIBERTY_K1}
+# PASİF kamera noktaları (silinmedi: SPOT_FRAME, CAMERA_SPOTS ve iskelette durur; kadraj rotasyonuna hiç girmez,
+# ROTATION_ON kapalıyken de)
+PASSIVE_SPOTS = {LIBERTY: {LIBERTY_K3}}
 # Meteor ortamı (29 Eki, yeni): sadece paylaşılan
 PROVEN_METEOR_ENVS = {"O2"}
 # Paylaşılan kadraj varyantları: (olay, tip, kamera noktası (None = kütüphane), mod) ve ön planı
@@ -128,7 +139,8 @@ NEVER = {("acilis", BOMBS, "D")}
 # değerle birlikte aday olduğunda korumalar + denemeler toplam en fazla %20 (GUARD_SHARE), son üretim koruma/deneme ise
 # hiçbiri gelmez). Sadece kilitsiz olaylar.
 EXTRA_TRIALS = {
-    "spot": {METEOR: ("Rooftop terrace of a modern seafront building",)},   # yüksek, sabit, geniş: kıyıdaki modern binanın çatı terası
+    "spot": {METEOR: ("Rooftop terrace of a modern seafront building",),   # yüksek, sabit, geniş: kıyıdaki modern binanın çatı terası
+             LIBERTY: (LIBERTY_K2,)},   # 4 Kas (4): Özgürlük Anıtı K2 balkon DENEME
     "meteor_env": {METEOR: ("O5",)},                                    # farklı kıyı: düşük modern oteller
     "light": {METEOR: ("clear early-morning light",)},                         # farklı ışık
 }
@@ -245,7 +257,9 @@ def env_lights(fam: str, options: list[str], base) -> list[str]:
 
 
 def spots(event: str, options: list[str]) -> list[str]:
-    """Volkan ve meteor kamera noktası (= kadraj) adayları."""
+    """Volkan, meteor ve Özgürlük Anıtı kamera noktası (= kadraj) adayları. PASİF noktalar hiç gelmez (4 Kas (4))."""
+    off = PASSIVE_SPOTS.get(event, set())
+    options = [o for o in options if o not in off] or list(options)
     if event not in PROVEN_SPOTS:
         return list(options)
     return rotation(event, "spot", options, PROVEN_SPOTS[event])

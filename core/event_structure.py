@@ -141,8 +141,10 @@ RECENT_BEAT_BLOCK_BY_EVENT = {PYROCLASTIC: 2,
 # 17 Eki'de 23 çiftle eklenmişti)
 # 18 Eki (2): cephe yangını da (Parti 2 sonrası 6 + 4 madde, 7 hariç çift: 3 derinlikte en kötü durumda aday biter,
 # 1 derinlikte 9 çift kalır)
+# 4 Kas (4): Özgürlük Anıtı da (B4, B6 pasif: 4-9s'te 4 madde, 15 çift; 3 derinlikte 48 geçerli sırada aday biter,
+# ör. B1+C3, B3+C2, B5+C4 sonrası sadece B2 kalır ve B2'nin C1/C6 eşi dışlı; 1 derinlikte her zaman aday var)
 BEAT_BLOCK_FALLBACK_EVENTS = (EARTHQUAKE_APARTMENT, EARTHQUAKE_OLD_STREET, LANDFALL, WILDFIRE, AVALANCHE_VILLAGE,
-                              FACADE_FIRE)
+                              FACADE_FIRE, LIBERTY)
 
 # ── Kilit görsel (0-4s'nin ilk cümlesi, kod yazar) ──────────────────────────────────────────────────────────
 EVENT_KEY_VISUAL = {
@@ -2361,6 +2363,11 @@ DISABLED_BEATS: dict[str, set[str]] = {
     FACADE_FIRE: {"N4", "M6"},
     HELICOPTER: {"G7"},
     VOLCANIC_BOMBS: {"T5"},
+    # 4 Kas (4), Bahadır: 4-9s'te araç YOK. Hortum karaya ~11. sn'de ulaşıyor; B4 aracı 4-9s'te ittirdiği için Seedance
+    # aracı suya koydu (önce tekne, karaya yaklaşınca araba; yoldaki araba da şekil değiştirdi, 04:56 videosu 3/10).
+    # B4 (sedan seawall'a) ve B6 (otobüs terminale) PASİF. Araçlar sadece 9-15s'te (C3 kamyon, C6 sedan yalnız B5 ile).
+    # (B4, C6) ve (B6, C3) dışlamaları boşta kaldı, kayıtta durur. Kilit: tests/test_ozgurluk_kadraj_4kas.py
+    LIBERTY: {"B4", "B6"},
 }
 LOCKED_PASSIVE_EXCEPTION: dict[str, set[str]] = {HELICOPTER: {"G7"}, VOLCANIC_BOMBS: {"T5"}}
 # SEL_DOGRULAMA — 2 iyi videodan sonra %20'ye dönecek. Bayrak otomatik kapanmaz; sadece Bahadır'ın talimatıyla kapanır.

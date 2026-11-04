@@ -198,7 +198,8 @@ class TestWeakPassive(_Quiet):
         self.assertEqual(es.DISABLED_BEATS, {es.FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8",
                                                         "D9"}, es.TIDAL: {"W2", "W6", "W8", "T6", "T4"},
                                              es.FACADE_FIRE: {"N4", "M6"},
-                                             es.HELICOPTER: {"G7"}, es.VOLCANIC_BOMBS: {"T5"}})   # kilit istisnası
+                                             es.HELICOPTER: {"G7"}, es.VOLCANIC_BOMBS: {"T5"},   # kilit istisnası
+                                             es.LIBERTY: {"B4", "B6"}})   # 4 Kas (4): 4-9s'te araç yok
         self.assertEqual(es.TRIAL_BEATS, {es.FLOOD: {"D10", "V9", "V10", "V11", "V12", "D12", "D13", "D14", "D15",
                                                      "D16", "D17", "D18"},
                                           es.TIDAL: {"W9"}, es.FACADE_FIRE: {"N7", "M12"},

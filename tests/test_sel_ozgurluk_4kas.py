@@ -393,7 +393,8 @@ class TestB2Flag(_Quiet):
                 c2[a] += 1
                 c3[b] += 1
             cp_.update(r["structure"]["axes"]["insan"] for r in rows)
-        self.assertEqual(set(c2), set(B_POOL))
+        # 4 Kas (4): B4, B6 PASİF (4-9s'te araç yok; tests/test_ozgurluk_kadraj_4kas.py)
+        self.assertEqual(set(c2), set(B_POOL) - {"B4", "B6"})
         self.assertEqual(set(c3), set(C_POOL))
         self.assertEqual(set(cp_), {"P1", "P2", "P3"})
         # 4 Kas (3): C6 sadece B5 ile eşleşir (tek çift), eşit pay bandının dışında; ayrı kontrol

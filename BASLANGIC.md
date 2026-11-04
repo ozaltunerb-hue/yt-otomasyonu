@@ -25,6 +25,21 @@
 
 ---
 
+## 📋 DEVİR: 4 Kasım (4) 🗽 Özgürlük Anıtı kadraj + 4-9s araç düzeltmesi
+
+Kie/GPT çağrısı yok; test `tests/test_ozgurluk_kadraj_4kas.py` (KİLİT: B4, B6, K3 pasif; K1 kanıtlı; mutasyon
+testleriyle). Sebep: 04:56 videosu 3/10 (K3 + B4 + C1): hortum karaya ~11. sn'de ulaştı, 4-9s'te itilen sedan suda
+tekneye dönüştü; K3 alçak, yan bakıyor, cam korkuluk kadrajı kapatıyor. Kayıt `tests/fixtures/liberty_good_videos.json`
+(`bad_videos`). Kilitli 5 ve diğer 14 olay 40 tohumda fark 0; baseline'da sadece anıt değişti.
+- **4-9s'te araç yok:** B4, B6 PASİF (`es.DISABLED_BEATS`). Aktif 4-9s B1 B2 B3 B5; araç sadece 9-15s'te (C3 kamyon,
+  C6 sedan yalnız B5 ile). (B4, C6), (B6, C3) dışlamaları boşta, kayıtta. 15 çift. Küçük havuz 3 derinlikte bazı
+  sıralarda adayı bitirdiği için anıt `es.BEAT_BLOCK_FALLBACK_EVENTS`'te (aday kalmazsa 1'e düşer; normal akış aynı).
+- **Kadraj:** K1 KANITLI (`pa.PROVEN_SPOTS`), K2 DENEME (`pa.EXTRA_TRIALS["spot"]`: en fazla %20, art arda yok), K3
+  PASİF (`pa.PASSIVE_SPOTS`; silinmedi). Seçim `cp._proven_spot` (meteorla aynı yol). OZGURLUK_DOGRULAMA açık; sadece
+  beat/insan eksenini eşitler, kadrajı etkilemez. 5×100 üretimde K1 %80-84, art arda K2 0.
+- Bilinen (dokunulmadı): sel baseline'ı seed 10/12'de HEAD kodundan farklı (a39d616 (V11, D18) dışlaması sonrası
+  yenilenmemiş); bu değişiklikten değil.
+
 ## 📋 DEVİR: 4 Kasım sel hikâye ekseni + 🗽 Özgürlük Anıtı hortumu
 
 Kie/GPT çağrısı yok; test `tests/test_sel_ozgurluk_4kas.py`. Kilitli 5 olay 40 tohumda fark 0; baseline'da sadece sel,

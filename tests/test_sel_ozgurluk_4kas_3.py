@@ -83,10 +83,10 @@ class TestLibertyPairs(_Quiet):
     def test_pair_count(self):
         for spot in sk.view_spots(L, None):
             pairs = es.allowed_pairs(L, None, spot)
-            self.assertEqual(len(pairs), 22, spot)
+            self.assertEqual(len(pairs), 15, spot)   # 4 Kas (4): B4, B6 pasif (önce 22)
             self.assertEqual([p for p in pairs if p[1] == "C6"], [("B5", "C6")])
             self.assertNotIn(("B1", "C2"), pairs)
-            for bid in B + C:   # her öğe en az bir çiftte
+            for bid in [x for x in B + C if x not in ("B4", "B6")]:   # her aktif öğe en az bir çiftte
                 self.assertTrue(any(bid in p for p in pairs), bid)
 
 

@@ -1,5 +1,5 @@
 {
- "_not": "4 Kas 2026, Bahadır (3): Özgürlük Anıtı hortumunun iyi videoları. Statü değişmez (OZGURLUK_DOGRULAMA açık kalır); sadece kayıt.",
+ "_not": "4 Kas 2026, Bahadır (3): Özgürlük Anıtı hortumunun iyi videoları. Statü değişmez (OZGURLUK_DOGRULAMA açık kalır); sadece kayıt. 4 Kas (4): kötü örnekler bad_videos altında (statü değiştirmez).",
  "videos": [
   {
    "date": "2026-11-04 04:13",
@@ -13,6 +13,17 @@
    "lock_sentence": true,
    "score": "8/10",
    "note": "Özgürlük Anıtı'nın ilk iyi videosu. Kusur: 10. sn'den sonra kamera ~90° sağa döndü (kamera eki düzeltildi, 4 Kas (3))"
+  }
+ ],
+ "bad_videos": [
+  {
+   "date": "2026-11-04 04:56",
+   "event": "Tornado tears past the Statue of Liberty into Battery Park",
+   "spot": "Top-floor terrace of a waterfront hotel next to Battery Park",
+   "frame": "K3",
+   "beats": "B4+C1",
+   "score": "3/10",
+   "note": "KÖTÜ örnek. Hortum karaya ancak ~11. sn'de ulaştı; B4 sedanı 4-9s'te ittirdiği için Seedance aracı suya koydu: önce tekne gibi göründü, karaya yaklaşınca arabaya dönüştü (suda araç→tekne dönüşümü); yoldaki araba da şekil değiştirdi. K3 açısı kötü: alçak, yan bakıyor, cam korkuluk kadrajı kapatıyor, anıt kenara kayıyor. Sonuç (4 Kas (4)): B4, B6, K3 PASİF; K1 KANITLI, K2 DENEME."
   }
  ]
 }

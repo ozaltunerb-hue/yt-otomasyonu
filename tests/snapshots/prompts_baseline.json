@@ -7533,35 +7533,35 @@
     "weather": "low late-afternoon sun under black storm clouds"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B5+C4|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people sprint across the park lawn toward the subway entrance. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people sprint across the park lawn toward the subway entrance. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
   },
   "10": {
    "axes": {
     "acilis": null,
-    "beats": "B3+C6",
+    "beats": "B3+C1",
     "environment": null,
     "fit_guard": false,
-    "kadraj": "teras",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "Top-floor terrace of a waterfront hotel next to Battery Park",
+    "kamera_noktasi": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
     "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
     "on_plan": null,
     "people": 3,
-    "spot": "Top-floor terrace of a waterfront hotel next to Battery Park",
+    "spot": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
     "story_source": "gpt",
     "vehicle": "red SUV",
     "view": null,
     "weather": "dark overcast storm afternoon"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|top-floor terrace of a waterfront hotel next to battery park##B3+C6|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people sprint across the park lawn toward the subway entrance. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado drives the red SUV along the avenue and slams it into the building corner below. Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B3+C1|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people sprint across the park lawn toward the subway entrance. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado crosses onto the avenue directly below the camera, tearing out the street trees and blasting debris against the building fronts. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
   },
   "11": {
    "axes": {
     "acilis": null,
-    "beats": "B5+C3",
+    "beats": "B5+C4",
     "environment": null,
     "fit_guard": false,
     "kadraj": "balkon",
@@ -7576,55 +7576,33 @@
     "view": null,
     "weather": "low late-afternoon sun under black storm clouds"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B5+C3|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Six people run into the lobby of the building below. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B5+C4|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Six people run into the lobby of the building below. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
   },
   "12": {
    "axes": {
     "acilis": null,
-    "beats": "B6+C6",
+    "beats": "B5+C1",
     "environment": null,
     "fit_guard": false,
-    "kadraj": "balkon",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "High apartment balcony in Battery Park City looking across the harbor",
+    "kamera_noktasi": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
     "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
     "on_plan": null,
     "people": 5,
-    "spot": "High apartment balcony in Battery Park City looking across the harbor",
+    "spot": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
     "story_source": "gpt",
     "vehicle": "blue sedan",
     "view": null,
     "weather": "green-tinted storm sky"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B6+C6|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people sprint across the park lawn toward the subway entrance. 4-9s: The tornado shoves a city bus across the road and slams it into the side of the ferry terminal. 9-15s: The tornado drives the blue sedan along the avenue and slams it into the building corner below. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B5+C1|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people sprint across the park lawn toward the subway entrance. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado crosses onto the avenue directly below the camera, tearing out the street trees and blasting debris against the building fronts. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
   },
   "13": {
-   "axes": {
-    "acilis": null,
-    "beats": "B6+C6",
-    "environment": null,
-    "fit_guard": false,
-    "kadraj": "balkon",
-    "kamera_modu": null,
-    "kamera_noktasi": "High apartment balcony in Battery Park City looking across the harbor",
-    "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
-    "on_plan": null,
-    "people": 4,
-    "spot": "High apartment balcony in Battery Park City looking across the harbor",
-    "story_source": "gpt",
-    "vehicle": "blue sedan",
-    "view": null,
-    "weather": "green-tinted storm sky"
-   },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B6+C6|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Four people sprint across the park lawn toward the subway entrance. 4-9s: The tornado shoves a city bus across the road and slams it into the side of the ferry terminal. 9-15s: The tornado drives the blue sedan along the avenue and slams it into the building corner below. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
-  },
-  "14": {
    "axes": {
     "acilis": null,
     "beats": "B5+C1",
@@ -7640,16 +7618,38 @@
     "story_source": "gpt",
     "vehicle": "blue sedan",
     "view": null,
-    "weather": "low late-afternoon sun under black storm clouds"
+    "weather": "green-tinted storm sky"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B5+C1|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Four people run into the lobby of the building below. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado crosses onto the avenue directly below the camera, tearing out the street trees and blasting debris against the building fronts. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Four people sprint across the park lawn toward the subway entrance. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado crosses onto the avenue directly below the camera, tearing out the street trees and blasting debris against the building fronts. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
+  },
+  "14": {
+   "axes": {
+    "acilis": null,
+    "beats": "B5+C2",
+    "environment": null,
+    "fit_guard": false,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
+    "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
+    "on_plan": null,
+    "people": 4,
+    "spot": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
+    "story_source": "gpt",
+    "vehicle": "blue sedan",
+    "view": null,
+    "weather": "low late-afternoon sun under black storm clouds"
+   },
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B5+C2|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Four people run into the lobby of the building below. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado tears the entire roof off the low brick building below and hurls it across the avenue. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
   },
   "15": {
    "axes": {
     "acilis": null,
-    "beats": "B4+C3",
+    "beats": "B3+C3",
     "environment": null,
     "fit_guard": false,
     "kadraj": "çatı",
@@ -7664,14 +7664,36 @@
     "view": null,
     "weather": "dark overcast storm afternoon"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B4+C3|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people run into the lobby of the building below. 4-9s: The tornado shoves the blue sedan across the road and slams it into the seawall. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B3+C3|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people run into the lobby of the building below. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
   },
   "16": {
    "axes": {
     "acilis": null,
-    "beats": "B4+C2",
+    "beats": "B3+C2",
+    "environment": null,
+    "fit_guard": false,
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
+    "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
+    "on_plan": null,
+    "people": 6,
+    "spot": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
+    "story_source": "gpt",
+    "vehicle": "red SUV",
+    "view": null,
+    "weather": "green-tinted storm sky"
+   },
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B3+C2|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Six people sprint across the park lawn toward the subway entrance. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado tears the entire roof off the low brick building below and hurls it across the avenue. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
+  },
+  "17": {
+   "axes": {
+    "acilis": null,
+    "beats": "B5+C3",
     "environment": null,
     "fit_guard": false,
     "kadraj": "balkon",
@@ -7679,43 +7701,21 @@
     "kamera_noktasi": "High apartment balcony in Battery Park City looking across the harbor",
     "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
     "on_plan": null,
-    "people": 6,
+    "people": 5,
     "spot": "High apartment balcony in Battery Park City looking across the harbor",
     "story_source": "gpt",
     "vehicle": "red SUV",
     "view": null,
     "weather": "green-tinted storm sky"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B4+C2|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Six people sprint across the park lawn toward the subway entrance. 4-9s: The tornado shoves the red SUV across the road and slams it into the seawall. 9-15s: The tornado tears the entire roof off the low brick building below and hurls it across the avenue. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
-  },
-  "17": {
-   "axes": {
-    "acilis": null,
-    "beats": "B5+C4",
-    "environment": null,
-    "fit_guard": false,
-    "kadraj": "teras",
-    "kamera_modu": null,
-    "kamera_noktasi": "Top-floor terrace of a waterfront hotel next to Battery Park",
-    "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
-    "on_plan": null,
-    "people": 5,
-    "spot": "Top-floor terrace of a waterfront hotel next to Battery Park",
-    "story_source": "gpt",
-    "vehicle": "red SUV",
-    "view": null,
-    "weather": "green-tinted storm sky"
-   },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|top-floor terrace of a waterfront hotel next to battery park##B5+C4|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people sprint across the park lawn toward the subway entrance. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B5+C3|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people sprint across the park lawn toward the subway entrance. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
   },
   "18": {
    "axes": {
     "acilis": null,
-    "beats": "B6+C6",
+    "beats": "B5+C1",
     "environment": null,
     "fit_guard": false,
     "kadraj": "çatı",
@@ -7730,31 +7730,31 @@
     "view": null,
     "weather": "dark overcast storm afternoon"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B6+C6|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people run into the lobby of the building below. 4-9s: The tornado shoves a city bus across the road and slams it into the side of the ferry terminal. 9-15s: The tornado drives the red SUV along the avenue and slams it into the building corner below. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B5+C1|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people run into the lobby of the building below. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado crosses onto the avenue directly below the camera, tearing out the street trees and blasting debris against the building fronts. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
   },
   "19": {
    "axes": {
     "acilis": null,
-    "beats": "B5+C4",
+    "beats": "B5+C3",
     "environment": null,
     "fit_guard": false,
-    "kadraj": "teras",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "Top-floor terrace of a waterfront hotel next to Battery Park",
+    "kamera_noktasi": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
     "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
     "on_plan": null,
     "people": 3,
-    "spot": "Top-floor terrace of a waterfront hotel next to Battery Park",
+    "spot": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
     "story_source": "gpt",
     "vehicle": "blue sedan",
     "view": null,
     "weather": "dark overcast storm afternoon"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|top-floor terrace of a waterfront hotel next to battery park##B5+C4|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people sprint across the park lawn toward the subway entrance. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B5+C3|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people sprint across the park lawn toward the subway entrance. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
   },
   "2": {
    "axes": {
@@ -7775,57 +7775,57 @@
     "weather": "dark overcast storm afternoon"
    },
    "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B1+C3|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Four people run into the lobby of the building below. 4-9s: The tornado tears the roof off the ferry terminal and hurls the metal sheets across the road. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Four people run into the lobby of the building below. 4-9s: The tornado tears the roof off the ferry terminal and hurls the metal sheets across the road. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
   },
   "20": {
    "axes": {
     "acilis": null,
-    "beats": "B5+C4",
+    "beats": "B5+C3",
     "environment": null,
     "fit_guard": false,
-    "kadraj": "teras",
+    "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": "Top-floor terrace of a waterfront hotel next to Battery Park",
+    "kamera_noktasi": "High apartment balcony in Battery Park City looking across the harbor",
     "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
     "on_plan": null,
     "people": 5,
-    "spot": "Top-floor terrace of a waterfront hotel next to Battery Park",
+    "spot": "High apartment balcony in Battery Park City looking across the harbor",
     "story_source": "gpt",
     "vehicle": "yellow taxi",
     "view": null,
     "weather": "low late-afternoon sun under black storm clouds"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|top-floor terrace of a waterfront hotel next to battery park##B5+C4|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people sprint off the waterfront promenade into the building entrances below. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B5+C3|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people sprint off the waterfront promenade into the building entrances below. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
   },
   "3": {
    "axes": {
     "acilis": null,
-    "beats": "B4+C4",
+    "beats": "B3+C3",
     "environment": null,
     "fit_guard": false,
-    "kadraj": "çatı",
+    "kadraj": "balkon",
     "kamera_modu": null,
-    "kamera_noktasi": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
+    "kamera_noktasi": "High apartment balcony in Battery Park City looking across the harbor",
     "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
     "on_plan": null,
     "people": 5,
-    "spot": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
+    "spot": "High apartment balcony in Battery Park City looking across the harbor",
     "story_source": "gpt",
     "vehicle": "yellow taxi",
     "view": null,
     "weather": "low late-afternoon sun under black storm clouds"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B4+C4|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people sprint off the waterfront promenade into the building entrances below. 4-9s: The tornado shoves the yellow taxi across the road and slams it into the seawall. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B3+C3|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Five people sprint off the waterfront promenade into the building entrances below. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
   },
   "4": {
    "axes": {
     "acilis": null,
-    "beats": "B1+C4",
+    "beats": "B1+C3",
     "environment": null,
     "fit_guard": false,
     "kadraj": "çatı",
@@ -7840,9 +7840,9 @@
     "view": null,
     "weather": "green-tinted storm sky"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B1+C4|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Six people sprint off the waterfront promenade into the building entrances below. 4-9s: The tornado tears the roof off the ferry terminal and hurls the metal sheets across the road. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B1+C3|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Six people sprint off the waterfront promenade into the building entrances below. 4-9s: The tornado tears the roof off the ferry terminal and hurls the metal sheets across the road. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
   },
   "5": {
    "axes": {
@@ -7850,48 +7850,26 @@
     "beats": "B5+C2",
     "environment": null,
     "fit_guard": false,
-    "kadraj": "teras",
+    "kadraj": "çatı",
     "kamera_modu": null,
-    "kamera_noktasi": "Top-floor terrace of a waterfront hotel next to Battery Park",
+    "kamera_noktasi": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
     "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
     "on_plan": null,
     "people": 3,
-    "spot": "Top-floor terrace of a waterfront hotel next to Battery Park",
+    "spot": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
     "story_source": "gpt",
     "vehicle": "red SUV",
     "view": null,
     "weather": "green-tinted storm sky"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|top-floor terrace of a waterfront hotel next to battery park##B5+C2|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people sprint across the park lawn toward the subway entrance. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado tears the entire roof off the low brick building below and hurls it across the avenue. Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B5+C2|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people sprint across the park lawn toward the subway entrance. 4-9s: The tornado strips the scaffolding off a building front and throws it into the street. 9-15s: The tornado tears the entire roof off the low brick building below and hurls it across the avenue. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
   },
   "6": {
    "axes": {
     "acilis": null,
-    "beats": "B4+C2",
-    "environment": null,
-    "fit_guard": false,
-    "kadraj": "teras",
-    "kamera_modu": null,
-    "kamera_noktasi": "Top-floor terrace of a waterfront hotel next to Battery Park",
-    "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
-    "on_plan": null,
-    "people": 3,
-    "spot": "Top-floor terrace of a waterfront hotel next to Battery Park",
-    "story_source": "gpt",
-    "vehicle": "red SUV",
-    "view": null,
-    "weather": "dark overcast storm afternoon"
-   },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|top-floor terrace of a waterfront hotel next to battery park##B4+C2|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people run into the lobby of the building below. 4-9s: The tornado shoves the red SUV across the road and slams it into the seawall. 9-15s: The tornado tears the entire roof off the low brick building below and hurls it across the avenue. Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the top-floor terrace of a waterfront hotel next to Battery Park, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
-  },
-  "7": {
-   "axes": {
-    "acilis": null,
-    "beats": "B3+C4",
+    "beats": "B3+C2",
     "environment": null,
     "fit_guard": false,
     "kadraj": "balkon",
@@ -7902,18 +7880,18 @@
     "people": 3,
     "spot": "High apartment balcony in Battery Park City looking across the harbor",
     "story_source": "gpt",
-    "vehicle": "blue sedan",
+    "vehicle": "red SUV",
     "view": null,
     "weather": "dark overcast storm afternoon"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B3+C4|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people sprint across the park lawn toward the subway entrance. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B3+C2|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people run into the lobby of the building below. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado tears the entire roof off the low brick building below and hurls it across the avenue. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
   },
-  "8": {
+  "7": {
    "axes": {
     "acilis": null,
-    "beats": "B3+C4",
+    "beats": "B3+C1",
     "environment": null,
     "fit_guard": false,
     "kadraj": "çatı",
@@ -7921,21 +7899,43 @@
     "kamera_noktasi": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
     "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
     "on_plan": null,
-    "people": 4,
+    "people": 3,
     "spot": "Rooftop terrace of a Lower Manhattan high-rise facing the harbor",
+    "story_source": "gpt",
+    "vehicle": "blue sedan",
+    "view": null,
+    "weather": "dark overcast storm afternoon"
+   },
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B3+C1|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Three people sprint across the park lawn toward the subway entrance. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado crosses onto the avenue directly below the camera, tearing out the street trees and blasting debris against the building fronts. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, dark overcast storm afternoon, no readable signs, text or flags."
+  },
+  "8": {
+   "axes": {
+    "acilis": null,
+    "beats": "B3+C1",
+    "environment": null,
+    "fit_guard": false,
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "High apartment balcony in Battery Park City looking across the harbor",
+    "key_visual": "A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade.",
+    "on_plan": null,
+    "people": 4,
+    "spot": "High apartment balcony in Battery Park City looking across the harbor",
     "story_source": "gpt",
     "vehicle": "yellow taxi",
     "view": null,
     "weather": "green-tinted storm sky"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|rooftop terrace of a lower manhattan high-rise facing the harbor##B3+C4|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Four people sprint off the waterfront promenade into the building entrances below. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from the rooftop terrace of a Lower Manhattan high-rise facing the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B3+C1|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Four people sprint off the waterfront promenade into the building entrances below. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado crosses onto the avenue directly below the camera, tearing out the street trees and blasting debris against the building fronts. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, green-tinted storm sky, no readable signs, text or flags."
   },
   "9": {
    "axes": {
     "acilis": null,
-    "beats": "B3+C3",
+    "beats": "B2+C4",
     "environment": null,
     "fit_guard": false,
     "kadraj": "balkon",
@@ -7950,9 +7950,9 @@
     "view": null,
     "weather": "low late-afternoon sun under black storm clouds"
    },
-   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B3+C3|bystander_handheld",
-   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Four people run into the lobby of the building below. 4-9s: The tornado smashes the waterfront café pavilion apart and flings its walls into the street. 9-15s: The tornado tips a delivery truck onto its side in the middle of the avenue and drags it along. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
-   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the tornado always in frame; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
+   "combo_key": "coastal_tornado_landfall|none|tornado tears past the statue of liberty into battery park|high apartment balcony in battery park city looking across the harbor##B2+C4|bystander_handheld",
+   "prompt": "0-4s: A colossal wedge tornado, far wider than Liberty Island, tears across New York Harbor past the Statue of Liberty, ripping spray off the water, and slams into the Battery Park waterfront promenade. Four people run into the lobby of the building below. 4-9s: The tornado rips the tall park trees out by the roots and throws them across the lawn. 9-15s: The tornado collapses the front wall of the old waterfront warehouse into the street. Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags.",
+   "style_suffix": "Handheld footage from a high apartment balcony in Battery Park City looking across the harbor, high and wide, the Statue of Liberty standing intact in the distance across the harbor; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: Battery Park and the harbor waterfront at the southern tip of Manhattan, low late-afternoon sun under black storm clouds, no readable signs, text or flags."
   }
  },
  "Volcanic bombs slam into a village street": {
