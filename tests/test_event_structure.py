@@ -81,8 +81,7 @@ S1_FLOOD = "It swallows the curbs as {word} pedestrians run from the water."
 
 
 def s1_flood(people):
-    # 4 Kas (A4): selde kişi sayısı ekseni yok (hikâye ekseni); sayısız GPT tarzı cümle
-    return S1_FLOOD.format(word=es.NUMBER_WORDS[people]) if people else S1
+    return S1_FLOOD.format(word=es.NUMBER_WORDS[people])
 
 
 def fake_slices(b2, b3, vehicle, event=FLOOD, s1=S1):
@@ -229,7 +228,7 @@ class TestLockedData(unittest.TestCase):
             # 3 Kas (sel su kontrolü): yeni öğeler (DENEME)
             "V9": "the {vehicle} is shoved hard against the side of a parked city bus and pinned there",
             "V10": "the {vehicle} is rammed against a building front and pinned there by the current",
-            "V11": "the {vehicle} is swept up onto the sidewalk and slammed against a stone wall",   # 4 Kas (3)
+            "V11": "the {vehicle} is swept into a corner shop and its doors burst open as water pours inside",
             "V12": "the {vehicle} floats free and is carried fast down the middle of the street",
         })
         self.assertEqual({k: v["text"] for k, v in B["slice_3"].items()}, {
@@ -243,28 +242,23 @@ class TestLockedData(unittest.TestCase):
             "D9": "the flood bursts through the ground floor of a building across the street",
             # 3 Kas (Aşama 2): D2, D4, V4 pasif (es.DISABLED_BEATS); D10 deneme
             # 3 Kas (sel su kontrolü): D10 kısaldı; yeni öğeler (DENEME)
-            "D10": "the current shoves parked cars into a shopfront in the street right below the camera and its "
-                   "wall caves in",   # 4 Kas (A5): kameraya yakınlık
-            "D12": "the current piles a row of parked cars against the front of a shop in the street right below "
-                   "the camera",
-            "D13": "the street right below the camera becomes a fast brown river and the {vehicle} is carried away "
-                   "toward the intersection",
-            "D14": "the current shoves a city bus into a shopfront right below the camera",   # 4 Kas (2)
+            "D10": "the current shoves parked cars into a shopfront and its wall caves in",
+            "D12": "the current piles a row of parked cars against the front of a shop",
+            "D13": "the street becomes a fast brown river and the {vehicle} is carried away toward the intersection",
+            "D14": "the current pushes a parked city bus against a shopfront and floodwater pours in through its doors",
             "D15": "the flood bursts open a row of shop shutters and pours into the stores",
             "D16": "the surge tears the ground-floor fronts off the shops across the street",
-            "D17": "the surge tips a city bus onto its side in the street right below the camera and pushes it along",
-            "D18": "the surge slams the {vehicle} into the shopfront right below the camera",   # 4 Kas (2)
+            "D17": "the surge tips a city bus onto its side and pushes it along the street",
+            "D18": "the surge slams the {vehicle} into a building front and the shopfront caves in around it",
         })
         self.assertEqual(B["excluded_pairs"], {("V3", "D8"), ("V4", "D2"), ("V7", "D9"),   # 18 Eki (2): D9
                                                ("V6", "D5"),   # 30 Eki (3): şehir otobüsü iki kez
                                                ("V8", "D10"), ("V2", "D10"),   # 3 Kas
-                                               # 3 Kas (sel su kontrolü): aynı hedef iki kez
-                                               ("V9", "D5"), ("V9", "D14"), ("V9", "D17"),
-                                               ("V10", "D18"), ("V12", "D13"), ("V2", "D12"),
-                                               # 4 Kas: A2, bütçe 215 (kalan 2), (V2, D13); V11 yeni metinle dükkân
-                                               # dışlamaları kalktı
-                                               ("V1", "D13"), ("V9", "D13"), ("V9", "D12"), ("V2", "D13"),
-                                               ("V11", "D18")})   # 4 Kas (3): aynı araç iki kez çarpıyor
+                                               # 3 Kas (sel su kontrolü): aynı hedef iki kez + bütçe (V11, D13)
+                                               ("V9", "D5"), ("V9", "D14"), ("V9", "D17"), ("V11", "D10"),
+                                               ("V11", "D12"), ("V11", "D14"), ("V11", "D15"), ("V11", "D16"),
+                                               ("V11", "D18"), ("V10", "D18"), ("V12", "D13"), ("V2", "D12"),
+                                               ("V11", "D13")})
         self.assertEqual(B["excluded_views"], {})
         self.assertEqual(B["excluded_spots"], {})
 
@@ -360,9 +354,8 @@ class TestFlexibleTerms(unittest.TestCase):
                "The current slams the sedan into a parked bus and holds it trapped there."],
         "V10": ["The van is rammed against a building front and pinned there by the current.",
                 "The water crashes the sedan into a shopfront and keeps it wedged there."],
-        # 4 Kas (3): V11 yeni metin (kaldırım + taş duvar)
-        "V11": ["The SUV is swept up onto the sidewalk and slammed against a stone wall.",
-                "The current drives the van onto the pavement and smashes it into a stone wall."],
+        "V11": ["The SUV is swept into a corner shop and its doors burst open as water pours inside.",
+                "The current drives the van into a store and the doors break as the flood rushes in."],
         "V12": ["The truck floats free and is carried fast down the middle of the street.",
                 "The sedan drifts loose and is swept along the street."],
         "D12": ["The current piles a row of parked cars against the front of a shop.",
@@ -453,13 +446,12 @@ class TestExhaustive(unittest.TestCase):
         # 18 Eki (2): D9 eklendi; 30 Eki (3): (V6, D5) çıktı, 44 çift. 3 Kas (Aşama 2): V4, D2, D4 pasif, D10 + 2
         # hariç çift: 30 çift × 3 araç. 3 Kas (sel su kontrolü): 6 × 9 aktif öğe, 14 hariç çift: 40 çift.
         # 3 Kas (sel doğrulama): SEL_DOGRULAMA açıkken D5 pasif (5 çift az): 35 çift
-        # 4 Kas (3): 38 çift (bayrak kapalı 43)
-        self.assertEqual(n, 18 * (37 if es.sel_dogrulama_on(FLOOD) else 42) * 3)
+        self.assertEqual(n, 18 * (35 if es.sel_dogrulama_on(FLOOD) else 40) * 3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_longest_realistic_story_fits(self):
         # 70 kelime, kelime başına 7 harf (ölçülen ortalama 5,58) + en uzun stil eki: sınırın altında
-        spec = es.build_spec(FLOOD, None, "Downtown city center", "east_asian_coast", "V1", "D3", "large SUV", None)
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "east_asian_coast", "V1", "D3", "large SUV", 5)
         w = "abcdefg"
         slices = {"slice_1_rest": es.clean_slice(" ".join([w] * 18)),
                   "slice_2": es.clean_slice("the large SUV sideways dragged " + " ".join([w] * 15)),
@@ -469,7 +461,7 @@ class TestExhaustive(unittest.TestCase):
 
     def test_total_words_replace_general_length_rule(self):
         import core.creative_pipeline as cp
-        spec = es.build_spec(FLOOD, None, "Downtown city center", "us_coastal_town", "V1", "D2", "pickup truck", None)
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "us_coastal_town", "V1", "D2", "pickup truck", 5)
         pad = " ".join(["brown"] * 8)
         sl = {"slice_1_rest": es.clean_slice("It swallows the curbs as five pedestrians run from the " + pad),
               "slice_2": es.clean_slice("The pickup truck is caught by the current, turns sideways and is dragged "
@@ -487,11 +479,11 @@ class TestExhaustive(unittest.TestCase):
         self.assertIn("length", [i["rule"] for i in cp.story_rule_issues(
             "Rogue wave breaks over the rail onto the pool deck", None, " ".join(["wave"] * 65))])
         # 70 üstü yapılandırılmış olayda kalır (3 Kas: selde 80 üstü)
-        sl2 = {**sl, "slice_3": es.clean_slice(sl["slice_3"] + " " + " ".join(["water"] * 60))}   # 4 Kas: selde 116
+        sl2 = {**sl, "slice_3": es.clean_slice(sl["slice_3"] + " " + " ".join(["water"] * 16))}
         self.assertIn("total_words", [i["rule"] for i in es.final_prompt_issues(spec, sl2, es.assemble_prompt(spec, sl2))])
 
     def test_prompt_chars_feedback_in_quality_gate(self):
-        spec = es.build_spec(FLOOD, None, "Downtown city center", "east_asian_coast", "V1", "D2", "large SUV", None)
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "east_asian_coast", "V1", "D2", "large SUV", 5)
         long = "extraordinarilyextraordinarily"
         sl = {"slice_1_rest": es.clean_slice(" ".join([long] * 8)),
               "slice_2": es.clean_slice("The large SUV turns sideways and is dragged " + " ".join([long] * 8)),
@@ -555,7 +547,7 @@ class TestSelection(unittest.TestCase):
         # en az 24 farklı çift
         # 3 Kas (sel su kontrolü): 6 × 9 aktif öğe, 14 hariç çift: 40 çift (rotasyon kapalı: saf LRU)
         # 3 Kas (sel doğrulama): SEL_DOGRULAMA açıkken D5 pasif: 35 çift
-        self.assertEqual(len(pairs), 37 if es.sel_dogrulama_on(FLOOD) else 42)   # 4 Kas (3); (V11, D18) dışlı
+        self.assertEqual(len(pairs), 35 if es.sel_dogrulama_on(FLOOD) else 40)
         for seed in range(40):
             es._BEAT_MEMORY.clear()
             rng, hist, chosen = random.Random(seed), [], []
@@ -564,12 +556,10 @@ class TestSelection(unittest.TestCase):
                 chosen.append(p)
                 hist.append(combo(tag=es.beat_tag(*p)))
             with self.subTest(seed=seed):
-                # 4 Kas (3): 38 çift; ölçüm (300 tohum): ilk tekrar en erken 29. üretimde, 38 üretimde en az 34
-                # farklı çift (önceki 35 çiftte 11 / 30)
-                # 4 Kas (3, ikinci tur): (V11, D18) dışlı, 37 çift; ölçüm (300 tohum): ilk tekrar en erken 28., 37
-                # üretimde en az 33 farklı çift
-                self.assertEqual(len(set(chosen[:27])), 27)
-                self.assertGreaterEqual(len(set(chosen)), 33)
+                self.assertEqual(len(set(chosen[:11])), 11)
+                self.assertGreaterEqual(len(set(chosen)), 30)
+                # 30 Eki (3): 44 çift; ölçüm (300 tohum): ilk tekrar en erken 33., 44 üretimde en az 41 farklı çift
+                self.assertGreaterEqual(len(set(chosen)), 24)
 
     def test_memory_counts_unfinished(self):
         es.remember_beats(FLOOD, "V9+D5")   # 3 Kas (sel su kontrolü): V5 pasif, V9 ile
@@ -666,10 +656,10 @@ class TestFinalCheckNegatives(unittest.TestCase):
         c = self.codes(spec, sl, es.assemble_prompt(spec, sl))
         self.assertIn("slice_words", c)
         # 3 Kas (sel su kontrolü): selde 4-9s en fazla 26 kelime
-        sl = {**slices, "slice_2": es.clean_slice("The pickup truck turns sideways and is dragged " + "far " * 36)}
-        self.assertIn("slice_words", self.codes(spec, sl, es.assemble_prompt(spec, sl)))   # 44 kelime (4 Kas: 43)
-        sl = {**slices, "slice_2": es.clean_slice("The pickup truck turns sideways and is dragged " + "far " * 35)}
-        self.assertNotIn("slice_words", self.codes(spec, sl, es.assemble_prompt(spec, sl)))   # 43 kelime sınırda
+        sl = {**slices, "slice_2": es.clean_slice("The pickup truck turns sideways and is dragged " + "far " * 19)}
+        self.assertIn("slice_words", self.codes(spec, sl, es.assemble_prompt(spec, sl)))   # 27 kelime
+        sl = {**slices, "slice_2": es.clean_slice("The pickup truck turns sideways and is dragged " + "far " * 18)}
+        self.assertNotIn("slice_words", self.codes(spec, sl, es.assemble_prompt(spec, sl)))   # 26 kelime sınırda
 
     def test_beat_and_vehicle_missing(self):
         spec, slices, _ = build("V4", "D3", vehicle="SUV")
@@ -818,7 +808,6 @@ class TestTidal(unittest.TestCase):
                                                *es.AVALANCHE_EVENTS,   # 13 Eki: çığ
                                                *es.EARTHQUAKE_EVENTS,   # 14 Eki: deprem
                                                es.METEOR, es.LIBERTY})   # 29 Eki: meteor; 4 Kas: anıt
-        self.assertEqual(es.SLICE_RULES[FLOOD], [])   # 4 Kas (A4): hikâye ekseni
         r = {x["rule"]: x for x in es.SLICE_RULES[TIDAL]}
         self.assertEqual(set(r), {"slice_flee", "slice_count"})
         self.assertEqual(r["slice_flee"]["terms"], ("run", "ran", "running", "flee", "fled", "fleeing", "sprint",
@@ -837,16 +826,14 @@ class TestTidal(unittest.TestCase):
         seen = {es.choose_people(TIDAL, None, rng) for _ in range(300)}
         self.assertEqual(seen, {3, 4, 5, 6})
         # 3 Kas (Aşama 3): selde de kişi sayısı koddan (3-6)
-        self.assertEqual({es.choose_people(FLOOD, None, rng) for _ in range(300)}, {None})   # 4 Kas: hikâye ekseni
+        self.assertEqual({es.choose_people(FLOOD, None, rng) for _ in range(300)}, {3, 4, 5, 6})
         spec = es.build_spec(TIDAL, None, "Coastal avenue behind a seawall", "riviera", "T2", "W3", "large SUV", 4)
         self.assertEqual(spec["people"], 4)
-        self.assertNotIn("people", build()[0])   # 4 Kas: selde kişi sayısı yok
+        self.assertEqual(build()[0]["people"], 5)
         with self.assertRaises(es.StructureError):
             es.build_spec(TIDAL, None, "Coastal avenue behind a seawall", "riviera", "T2", "W3", "large SUV")
-        # 4 Kas (A4): selde kişi sayısı yok (hikâye ekseni); verilirse hata
-        es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V1", "D2", "large SUV")
-        with self.assertRaises(es.StructureError):
-            es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V1", "D2", "large SUV", 5)
+        with self.assertRaises(es.StructureError):   # 3 Kas: selde kişi sayısı zorunlu
+            es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V1", "D2", "large SUV")
 
     def test_people_line_in_message(self):
         import core.creative_pipeline as cp
@@ -945,13 +932,14 @@ class TestTidal(unittest.TestCase):
     def test_flood_feedback_and_message_unchanged(self):
         import asyncio
         import core.creative_pipeline as cp
-        spec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van", None)
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van", 5)
         self.assertEqual(cp._slices_message(spec, "PLACE X", "heavy rain", 3, 6, ["old story one", "old story two"],
                                             None),
                          "OPENING SENTENCE (fixed, already written): A waist-high wall of brown muddy floodwater "
                          "surges into the street.\nPLACE: PLACE X\nWEATHER: heavy rain\nPEOPLE VISIBLE: 3 to 6\n"
                          "VEHICLE: delivery van\n"
-                         # 4 Kas (A4): selde kaçan kişi satırı yok (hikâye ekseni; 3 Kas'ta vardı)
+                         # 3 Kas (Aşama 3): selde kaçan kişi satırı
+                         "PEOPLE RUNNING AWAY: five (slice_1_rest must say that five people run away from the water)\n"
                          + es.word_budget_line(spec) +   # 18 Eki (2): bütçe satırı
                          "4-9s EVENT: the delivery van is swept into another parked car and "
                          "both are shoved along\n9-15s EVENT: a city bus is shoved sideways by the current\n"
@@ -974,15 +962,14 @@ class TestTidal(unittest.TestCase):
         # 3 Kas (Aşama 3): selde de birikimli geri bildirim ve kaçan kişi satırı (önceden: tekil, satır yok)
         self.assertIn("YOUR PREVIOUS ANSWERS WERE REJECTED", users[2])
         self.assertIn("'slice_3' must clearly show", users[2])
-        self.assertNotIn("PEOPLE RUNNING AWAY", users[0])   # 4 Kas (A4)
+        self.assertIn("PEOPLE RUNNING AWAY", users[0])
 
     def test_flood_has_people_gates(self):
         # 3 Kas (Aşama 3): selde de kaçış ve kişi sayısı kapısı (önceki test: "selde dilim kapısı yok")
         spec, slices, prompt = build()
         sl = {**slices, "slice_1_rest": es.clean_slice("It swallows the curbs and pours between the parked cars.")}
         rules = {i["rule"] for i in es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl))}
-        # 4 Kas (A4): selde kişi kapısı yok; 0-4s hikâye cümlesi birebir (verbatim_issues, VERBATIM açıkken)
-        self.assertEqual(rules & {"slice_flee", "slice_count"}, set())
+        self.assertEqual(rules & {"slice_flee", "slice_count"}, {"slice_flee", "slice_count"})
 
     def test_all_combinations_pass_final_check(self):
         n, longest = 0, 0
@@ -1008,7 +995,7 @@ class TestTidal(unittest.TestCase):
         # (W6 dışlaması artık noktayla: seawall'da W6 yok)
         # 3 Kas (Aşama 2): T6, W2, W6, W8 pasif, W9 + 3 hariç çift: 17 görünüm×spot × 30 çift × 3 araç
         # 3 Kas (sel doğrulama ayarı): T4 pasif (5 çift az)
-        self.assertEqual(n, 17 * 25 * 3)
+        self.assertEqual(n, 17 * 22 * 3)   # 6 Kas: W9 pasif, 22 çift
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_w6_never_on_seawall(self):
@@ -1394,9 +1381,9 @@ class TestLandslideStructure(unittest.TestCase):
             "9-15s EVENT: a street tree is uprooted and carried along\nRECENT STORIES:\n- old\n\n"
             "YOUR PREVIOUS ANSWERS WERE REJECTED. Fix ALL of these and keep everything that was already correct: Fix A.")
         # 3 Kas (Aşama 3): selde de kaçan kişi satırı (dev dalgayla aynı biçim)
-        fspec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van", None)
-        # 4 Kas (A4): selde kişi sayısı satırı yok (hikâye ekseni)
-        self.assertNotIn("PEOPLE RUNNING AWAY", cp._slices_message(fspec, "P", "W", 3, 6, [], None))
+        fspec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van", 5)
+        self.assertIn("PEOPLE RUNNING AWAY: five (slice_1_rest must say that five people run away from the water)\n",
+                      cp._slices_message(fspec, "P", "W", 3, 6, [], None))
 
 
 TORNADO = (es.LANDFALL, es.MARINA_TORNADO, es.AVENUE)
@@ -1603,7 +1590,7 @@ class TestTornadoStructure(unittest.TestCase):
         # 18 Eki (2): karaya vurma (19 + 16 + 19) × 4; marina 30 × 4; cadde 3 × 28 × 4
         # 23 Eki (hortum denetimi): karaya vurma 3 × 20 × 4 (C2+E1 ve E1 nokta dışlaması çıktı); marina 28 × 4 (Y3+Z4, Y3+Z2)
         # 29 Eki (4): marina 27 × 4 (Y5+Z3 dışlandı)
-        self.assertEqual(n, 240 + 108 + 324)   # 30 Eki (2): cadde (P5, Q3)
+        self.assertEqual(n, 240 + 88 + 228)   # 30 Eki (2): cadde (P5, Q3); 6 Kas: marina Y5 pasif 22 çift, cadde P5 P7 pasif 19 çift
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -1776,7 +1763,7 @@ class TestMarinaRedesign(unittest.TestCase):
                                                    **{e: (40, 70) for e in es.AVALANCHE_EVENTS},   # 13 Eki: çığ; 14 Eki (5): 40-70
                                                    **{e: (40, 70) for e in es.EARTHQUAKE_EVENTS},   # 14 Eki: deprem
                                                    es.METEOR: (40, 75),   # 29 Eki: meteor
-                                                   FLOOD: (40, 116),   # 3 Kas: sel su cümleleri; 4 Kas: hikâye
+                                                   FLOOD: (40, 80),   # 3 Kas: sel su cümleleri; 6 Kas kilit: 4 Kas hikâye sınırı pasif
                                                    es.LIBERTY: (40, 85)})   # 4 Kas: Özgürlük Anıtı
         w = "abcd"
 
@@ -2278,7 +2265,7 @@ class TestFireStructure(unittest.TestCase):
         # 18 Eki (2): orman balkon 15 + set 23; cephe 4 nokta × 17; ateş hortumu 6 nokta × 44 (6 × 8 - 4 hariç çift);
         # × 4 araç
         # 30 Eki (2): cephe (M11, N3). 3 Kas: cephe M6, N4 pasif, M12 + N7 deneme (5 hariç çift): 12 çift
-        self.assertEqual(n, (15 + 23) * 4 + 12 * 4 * 4 + 44 * 6 * 4)
+        self.assertEqual(n, (15 + 23) * 4 + 12 * 4 * 4 + 22 * 6 * 4)   # 6 Kas: T5, T6, U6, U10 pasif, 22 çift
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -3260,7 +3247,7 @@ class TestVolcano(unittest.TestCase):
                             break   # 13 Eki: kül bulutu araçsız (tek tur)
         # 18 Eki: patlama 43 + 31 + 31 ve bombalar 47 + 33 + 33 (× 4 araç; yedeği sığmayan çift kalmadı); kül bulutu
         # 28 + 13 + 13 (değişmedi)
-        self.assertEqual(n, (105 + 111) * 4 + 54 + 12 - 96)   # 3 Kas kilit istisnası: bombalar T5 pasif (-24 çift x 4 araç)
+        self.assertEqual(n, (105 + 111) * 4 + 40 + 12 - 96)   # 3 Kas kilit istisnası: bombalar T5 pasif (-24 çift x 4 araç)
         # önceki: 30 Eki (2): bombalar (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) +12
 
     def test_block_depth_and_never_runs_out(self):
@@ -3270,6 +3257,8 @@ class TestVolcano(unittest.TestCase):
         self.assertEqual(es.RECENT_BEAT_BLOCK, 3)                  # diğer olaylar değişmedi
         for e in VOLC:
             b, k = es.EVENT_BEATS[e], es.RECENT_BEAT_BLOCK_BY_EVENT.get(e, es.RECENT_BEAT_BLOCK)
+            if e in es.BEAT_BLOCK_FALLBACK_EVENTS:   # 6 Kas: kül bulutu Q2 pasif, aday bitince 1
+                k = 1
             for spot in sk.view_spots(e, None):
                 ps_ = es.allowed_pairs(e, None, spot)
                 worst = min(sum(1 for v, d in ps_ if v not in x2 and d not in x3)
@@ -3439,7 +3428,7 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         # 17 Eki (temizlik + Parti 1): patlama 7 + 7, bombalar 8 + 7; kül bulutu dokunulmadı
         self.assertEqual(sizes, {es.ERUPTION: (7, 7), es.PYROCLASTIC: (6, 6), es.VOLCANIC_BOMBS: (8, 7)})
         pairs = {e: [len(es.allowed_pairs(e, None, s)) for s in (self.HT, self.RT, self.VB)] for e in VOLC}
-        self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [28, 13, 13],
+        self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [22, 9, 9],
                                  es.VOLCANIC_BOMBS: [38, 26, 26]})   # 3 Kas kilit istisnası: T5 pasif (-8 her noktada)
         # önceki bombalar [46, 34, 34]; 18 Eki: sığmayan yok; 30 Eki (2): (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) açıldı
         for e in VOLC:   # araçsız kül bulutu; patlama ve bombalarda araç sadece eski maddelerde
@@ -3529,7 +3518,8 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                     self.assertNotIn(pair, b["excluded_pairs"])
                     for x in pair:
                         self.assertNotIn(t["spot"], b["excluded_spots"].get(x, set()))
-                    for prev in tags[-depth:]:
+                    # 6 Kas: kül bulutu aday bitince derinlik 1 (BEAT_BLOCK_FALLBACK_EVENTS)
+                    for prev in tags[-(1 if e in es.BEAT_BLOCK_FALLBACK_EVENTS else depth):]:
                         self.assertNotEqual(pair[0], prev[0])
                         self.assertNotEqual(pair[1], prev[1])
                     n = len(scene["prompt"].split())

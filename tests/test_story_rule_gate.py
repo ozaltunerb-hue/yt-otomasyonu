@@ -867,7 +867,7 @@ class TestStructuredScene(unittest.TestCase):
             self.assertNotIn(word, low)
 
     def test_vehicle_is_given_detail_and_checked(self):
-        spec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van", None)
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "riviera", "V2", "D5", "delivery van", 5)
         msg = cp._slices_message(spec, "x", "heavy rain", 2, 10, [], None)
         self.assertIn("\nVEHICLE: delivery van\n", msg)
         self.assertIn("4-9s EVENT: the delivery van is swept into another parked car", msg)
@@ -923,22 +923,20 @@ class TestStructuredScene(unittest.TestCase):
         self.assertTrue(scene["trace"]["story_source"].startswith("Hikâye: kod yedeği (neden: deneme 1: "))
         st = scene["structure"]
         self.assertEqual(st["story_source_kind"], "fallback")
-        # 3 Kas (sel su kontrolü): dilim başında su seviyesi cümlesi. 4 Kas (A4/A5): su kameraya yaklaşır, sonda
-        # seçilen hikâyenin b/c cümlesi
-        a, b, c = es.FLOOD_STORIES[st["axes"]["insan"]]
-        self.assertEqual(st["slices"]["slice_2"], "Water rises past the car windows and races toward the camera. The "
-                                                  "pickup truck is caught by the current, turns sideways and is dragged "
-                                                  "down the street. " + b)
+        # 3 Kas (sel su kontrolü): dilim başında su seviyesi cümlesi
+        self.assertEqual(st["slices"]["slice_2"], "Water rises past the car windows. The pickup truck is caught by the "
+                                                  "current, turns sideways and is dragged down the street.")
         self.assertEqual(st["slices"]["slice_3"], "A second surge, first-floor high, slams in. A lamppost topples into "
-                                                  "the current. " + c)
-        # 4 Kas (A4): sel insan cümlesi hikâyenin a cümlesi (I1-I6 pasif)
-        self.assertEqual(st["slices"]["slice_1_rest"], a)
-        self.assertIn(st["axes"]["insan"], list(es.FLOOD_STORIES))
+                                                  "the current.")
+        # 3 Kas (Aşama 3): sel insan cümlesi kişi sayılı ({N}) ve insan ekseninden
+        self.assertIn(st["slices"]["slice_1_rest"], [es.clean_slice(t.format(N="Five"))
+                                                     for t in es.FALLBACK_PEOPLE[FLOOD]])
+        self.assertIn(st["axes"]["insan"], [es.people_line_id(i) for i in range(len(es.FALLBACK_PEOPLE[FLOOD]))])
         self.assertEqual(es.final_prompt_issues(st["spec"], st["slices"], scene["prompt"], scene["story"]), [])
         self.assertNotIn("gently", scene["prompt"])
 
     def test_diversity_ignores_shared_key_visual(self):
-        spec = es.build_spec(FLOOD, None, "Downtown city center", "us_coastal_town", "V1", "D2", "pickup truck", None)
+        spec = es.build_spec(FLOOD, None, "Downtown city center", "us_coastal_town", "V1", "D2", "pickup truck", 5)
         sl = es.parse_slices(self.slices("pickup truck"))
         other = es.parse_slices(self.slices("pickup truck", s2="The pickup truck spins side-on and slides along the "
                                             "road past the low wooden houses.",

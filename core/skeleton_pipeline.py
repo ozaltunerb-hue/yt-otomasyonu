@@ -1133,6 +1133,12 @@ _FIXED_ON = re.compile(r"the camera stays fixed (?:on|at) the (?!bay,)[\w-]+(?: 
 _RAILING_CORNER = re.compile(r"a corner of the \w+ railing|a (?!railing\b)\w+ railing corner")
 
 
+# 6 Kas 2026, Bahadır: dev dalga kamera eki. "always in frame" Seedance'i tehdidi takibe itiyor (Özgürlük Anıtı 4 Kas (3)
+# ile aynı ders). Sadece "the tidal wave" tehdidi: bu tehdit yalnız dev dalgada var, diğer olayların şablonu aynen.
+TIDAL_FRAME_OLD = "the tidal wave always in frame"
+TIDAL_FRAME_NEW = "the camera never pans, turns or follows"
+
+
 def camera_rules(camera: str) -> str:
     """Kamera cümlesine ortak kurallar: kısaltmalar ("shot by a person standing" -> "filmed"...); sonuna ön plan yüzü
     yasağı."""
@@ -1143,6 +1149,7 @@ def camera_rules(camera: str) -> str:
     camera = _THREAT_TWICE.sub(r"high vantage; \g<rest>\g<t> always in frame", camera)
     # mod B: yer cümlenin başında söyleniyor ("filmed on a high balcony…"); "stays fixed on the balcony" tekrarı çıktı
     camera = _FIXED_ON.sub("the camera stays fixed,", camera)
+    camera = camera.replace(TIDAL_FRAME_OLD, TIDAL_FRAME_NEW)
     if camera.endswith("no cuts."):
         return camera[:-1] + f", {NO_FACE}."
     return camera.rstrip(".") + f"; {NO_FACE}."

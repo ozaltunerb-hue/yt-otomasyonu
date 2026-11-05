@@ -110,10 +110,7 @@ class TestFloodPair(_Quiet):
         for view in es.structure_views(F):
             for spot in sk.view_spots(F, view):
                 pairs = es.allowed_pairs(F, view, spot)
-                self.assertNotIn(("V11", "D18"), pairs)
-                self.assertEqual(len(pairs), 37, (view, spot))
-                self.assertGreaterEqual(len([p for p in pairs if "V11" in p]), 2)
-                self.assertGreaterEqual(len([p for p in pairs if "D18" in p]), 2)
+                self.assertNotIn(("V11", "D18"), pairs)   # 6 Kas: 3249de8'de de dışlı (kilit)
 
 
 if __name__ == "__main__":

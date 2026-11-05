@@ -141,10 +141,9 @@ class TestA1VehiclePlaceholder(_Quiet):
         self.assertGreater(n, 100)
 
     def test_selection_line_and_message(self):
-        spec = es.build_spec(F, None, "Downtown city center", "riviera", "V10", "D13", "red SUV", None)
+        spec = es.build_spec(F, None, "Downtown city center", "riviera", "V10", "D13", "red SUV", 4)
         msg = cp._slices_message(spec, "p", "w", 3, 6, [], None)
-        self.assertIn("9-15s EVENT: the street right below the camera becomes a fast brown river and the red SUV is "
-                      "carried away", msg)
+        self.assertIn("9-15s EVENT: the street becomes a fast brown river and the red SUV is carried away", msg)
         for seed in range(1, 41):
             r = _scene(F, seed) if seed <= 3 else None
             if r is None:
@@ -155,21 +154,8 @@ class TestA1VehiclePlaceholder(_Quiet):
 
     def test_locked_have_no_vehicle_in_slice_3(self):
         """Kilitli olaylarda aynı hata var mı (rapor): 9-15s'te {vehicle} taşıyan öğe yok (hata kilitlilerde yoktu)."""
-        for e in es.LOCKED_EVENTS:
+        for e in es.VERBATIM_OFF_EVENTS:   # 6 Kas: ilk 5 kilitli olay (sel ve anıt 9-15s'te araç taşır, A1 ile dolu)
             self.assertFalse([b for b, x in es.EVENT_BEATS[e]["slice_3"].items() if "{vehicle}" in x["text"]], e)
-
-
-class TestA2Pairs(_Quiet):
-    def test_excluded(self):
-        ex = es.EVENT_BEATS[F]["excluded_pairs"]
-        self.assertIn(("V1", "D13"), ex)
-        self.assertIn(("V12", "D13"), ex)
-        self.assertIn(("V2", "D13"), ex)   # 4 Kas (2): aynı araç iki kez sürükleniyor
-        for view in es.structure_views(F):
-            for spot in sk.view_spots(F, view):
-                pairs = es.allowed_pairs(F, view, spot)
-                self.assertNotIn(("V1", "D13"), pairs)
-                self.assertNotIn(("V12", "D13"), pairs)
 
 
 class TestA3VerbatimPeople(_Quiet):
@@ -191,12 +177,14 @@ class TestA3VerbatimPeople(_Quiet):
             self.assertEqual(sl["slice_1_rest"], es.people_line_text(spec, sc["structure"]["axes"]["insan"]))
 
     def test_locked_unchanged(self):
-        for e in es.LOCKED_EVENTS:
+        for e in es.VERBATIM_OFF_EVENTS:   # 6 Kas: ilk 5 kilitli olay
             self.assertNotIn(e, es.VERBATIM_PEOPLE_EVENTS)
             self.assertNotIn(e, es.PEOPLE_AXIS_EVENTS)
-        self.assertEqual(set(es.VERBATIM_PEOPLE_EVENTS), {F, T, L})
+        self.assertEqual(set(es.VERBATIM_PEOPLE_EVENTS), {T, L, es.PYROCLASTIC})   # 6 Kas: sel çıktı, kül bulutu girdi
 
 
+# 6 Kas 2026, Bahadır (kilit): sel 3249de8 hâline döndü, 4 Kas A2/A4/A5/A6 PASİF (metinler kayıtta; yeni kilit testi
+# tests/test_kilit_6kas.py). Burada sadece kayıtlı metinler kaldı.
 class TestA4FloodStories(_Quiet):
     def test_texts(self):
         self.assertEqual(list(es.FLOOD_STORIES), ["H1", "H2", "H3", "H4", "H5"])
@@ -208,39 +196,6 @@ class TestA4FloodStories(_Quiet):
                                                   "They climb the stone steps as the surge bursts the first-floor windows."))
         self.assertIn("H5", es.FLOOD_STORIES_LONG)   # ilk hâller silinmedi
 
-    def test_slices_carry_story(self):
-        spec = es.build_spec(F, None, "Downtown city center", "riviera", "V2", "D17", "red SUV", None)
-        for hid, (a, b, c) in es.FLOOD_STORIES.items():
-            sp = {**spec, "people_line": hid}
-            s2, s3 = es.fallback_beat_slice(sp, "slice_2"), es.fallback_beat_slice(sp, "slice_3")
-            self.assertTrue(s2.startswith(L2 + " ") and s2.endswith(" " + b))
-            self.assertTrue(s3.startswith(L3 + " ") and s3.endswith(" " + c))
-            out = es.apply_verbatim(sp, {"slice_1_rest": "People are swept away.", "slice_2": "x", "slice_3": "x"})
-            self.assertEqual(out, {"slice_1_rest": a, "slice_2": s2, "slice_3": s3})
-            self.assertEqual(es.final_prompt_issues(sp, out, es.assemble_prompt(sp, out), es.assemble_story(sp, out)),
-                             [], hid)
-
-    def test_old_people_axis_passive(self):
-        self.assertEqual(len(es.FALLBACK_PEOPLE[F]), 6)   # I1-I6 silinmedi
-        spec = es.build_spec(F, None, "Downtown city center", "riviera", "V2", "D17", "red SUV", None)
-        self.assertEqual(es.fallback_people_pool(spec), tuple(s[0] for s in es.FLOOD_STORIES.values()))
-        self.assertFalse(es.has_people_rule(F))
-        self.assertIn(F, es.SLICE_RULES_RETIRED)
-
-    def test_lru_equal_all_trial(self):
-        self.assertTrue(es.SEL_DOGRULAMA)
-        c = collections.Counter()
-        for seed in (1, 2):
-            rows = _sequence(F, 60, seed)
-            ids = [r["structure"]["axes"]["insan"] for r in rows]
-            self.assertFalse([1 for a, b in zip(ids, ids[1:]) if a == b])
-            c.update(ids)
-        self.assertEqual(set(c), set(es.FLOOD_STORIES))
-        for h, k in c.items():
-            self.assertTrue(0.10 <= k / sum(c.values()) <= 0.30, (h, k))
-        for h in es.FLOOD_STORIES:
-            self.assertNotIn(h, es.PEOPLE_AXIS_PROVEN)
-
     def test_story_lint_exception(self):
         for a, b, c in es.FLOOD_STORIES.values():
             for t in (a, b, c):
@@ -249,80 +204,6 @@ class TestA4FloodStories(_Quiet):
                 self.assertEqual(hits, [], t)
                 self.assertEqual(es.people_scatter(t), [])
                 self.assertEqual(es.flood_root_words(t), [], t)
-
-    def test_people_loss_gate(self):
-        spec = es.build_spec(F, None, "Downtown city center", "riviera", "V10", "D13", "red SUV", None,
-                             light="heavy rain")
-        sp = {**spec, "people_line": "H3"}
-        sl = es.apply_verbatim(sp, {"slice_1_rest": "x", "slice_2": "x", "slice_3": "x"})
-        self.assertIn("carried away", sl["slice_3"])   # D13: araç (koddan), insan değil
-        self.assertEqual(es.flood_people_loss_issues(sp, sl), [])
-        for bad in ("Two people are swept away by the water.", "They are carried away down the street.",
-                    "A man drowns in the current.", "The group vanishes under the water.",
-                    "Three pedestrians disappear into the flood."):
-            with self.subTest(bad=bad):
-                self.assertTrue(es.flood_people_loss_issues(sp, {**sl, "slice_1_rest": bad}))
-        self.assertEqual(es.flood_people_loss_issues(sp, {**sl, "slice_1_rest": "The red SUV is swept down the street."}),
-                         [])
-
-
-class TestA5Proximity(_Quiet):
-    def test_water_lines(self):
-        self.assertEqual(es.WATER_LEVEL_LINES[F], {"slice_2": L2, "slice_3": L3})
-        self.assertEqual(ox.OPENINGS[F]["A"] if "A" in ox.OPENINGS[F] else es.EVENT_KEY_VISUAL[F],
-                         es.EVENT_KEY_VISUAL[F])
-        self.assertEqual(es.EVENT_KEY_VISUAL[F], "A waist-high wall of brown muddy floodwater surges into the street.")
-
-    def test_finals(self):
-        for bid, text in FINALS.items():
-            self.assertEqual(es.EVENT_BEATS[F]["slice_3"][bid]["text"], text)
-        self.assertEqual(es.EVENT_BEATS[F]["slice_3"]["D5"]["text"], "a city bus is shoved sideways by the current")
-
-    def test_camera_word_only_from_code(self):
-        spec = {**es.build_spec(F, None, "Downtown city center", "riviera", "V2", "D17", "red SUV", None),
-                "people_line": "H1"}
-        sl = es.apply_verbatim(spec, {"slice_1_rest": "x", "slice_2": "x", "slice_3": "x"})
-        story = es.plain_story(spec, sl)
-        self.assertIn("camera", story)
-        rules = {i["rule"] for i in es.verbatim_story_exempt(spec, sl, cp.story_rule_issues(F, None, story))}
-        self.assertNotIn("b_no_camera_words", rules)
-        bad = {**sl, "slice_1_rest": "Two people run as the camera shakes."}
-        rules = {i["rule"] for i in es.verbatim_story_exempt(spec, bad, cp.story_rule_issues(
-            F, None, es.plain_story(spec, bad)))}
-        self.assertIn("b_no_camera_words", rules)
-
-
-class TestA6Budget(_Quiet):
-    def test_limits(self):
-        self.assertEqual(es.max_prompt_words(F), 215)
-        self.assertEqual(es.max_prompt_chars(F), 1400)
-        self.assertEqual(es.slice_words(F, "slice_2"), (10, 43))
-        self.assertEqual(es.slice_words(F, "slice_3"), (10, 45))
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[F], (40, 116))
-        for e in es.EVENT_KEY_VISUAL:
-            if e not in (F, L):
-                self.assertEqual(es.slice_words(e, "slice_2"), es.SLICE_WORDS["slice_2"])
-        self.assertEqual(es.max_prompt_words(T), 175)
-
-    def test_budget_pairs_excluded(self):
-        self.assertTrue(BUDGET_PAIRS <= es.EVENT_BEATS[F]["excluded_pairs"])
-        self.assertFalse(FREED_PAIRS & es.EVENT_BEATS[F]["excluded_pairs"])
-        pairs = es.allowed_pairs(F, "riviera", "Downtown city center")
-        for bid in ("V11", "D14", "D18"):   # 4 Kas (2/3): her birinin en az 2 seçilebilir çifti
-            self.assertGreaterEqual(len([p for p in pairs if bid in p]), 2, bid)
-        self.assertEqual(es.EVENT_BEATS[F]["slice_2"]["V11"]["text"],
-                         "the {vehicle} is swept up onto the sidewalk and slammed against a stone wall")
-        self.assertFalse(es.pool_lint_hits("the vehicle is swept up onto the sidewalk and slammed against a stone wall"))
-
-    def test_snapshot_fits(self):
-        for seed, r in ps.snapshot_all([F], seeds=range(1, 41))[F].items():
-            self.assertNotIn("error", r, seed)
-            self.assertLessEqual(len(r["prompt"].split()), 215)
-            self.assertLessEqual(len(r["prompt"]), 1400)
-            self.assertIn(f"4-9s: {L2} ", r["prompt"])
-            self.assertIn(f"9-15s: {L3} ", r["prompt"])
-            self.assertTrue(any(a in r["prompt"] for a, _, _ in es.FLOOD_STORIES.values()), seed)
-
 
 class TestA7Record(_Quiet):
     def test_fixture(self):
@@ -344,7 +225,7 @@ class TestB1Structure(_Quiet):
         self.assertTrue(es.verbatim_on(L))
         self.assertIn(L, es.VERBATIM_PEOPLE_EVENTS)
         self.assertIn(L, es.PEOPLE_AXIS_EVENTS)
-        self.assertNotIn(L, es.LOCKED_EVENTS)
+        self.assertIn(L, es.LOCKED_EVENTS)   # 6 Kas: kilide girdi
         self.assertEqual(bot.EVENT_LABELS[L], "🗽 Özgürlük Anıtı hortumu")
         self.assertEqual(sk.skeleton_events("coastal_tornado_landfall"),
                          ["Tornado making landfall", "Tornado crosses a marina quay",

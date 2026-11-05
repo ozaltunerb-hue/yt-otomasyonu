@@ -94,10 +94,12 @@ SLICE_WORDS_BY_EVENT = {FLOOD: {"slice_2": (10, 26), "slice_3": (10, 30)}}
 # 4 Kas (A6), Bahadır kararı: sel insan hikâyesi ekseni (b/c cümleleri 4-9s / 9-15s'e ekleniyor). Sadece selde: tavan
 # 215 kelime (PROMPT_WORDS_BY_EVENT), karakter 1400 aynen; sınırlar frame_budget ölçümünün en büyükleri: 4-9s 43, 9-15s
 # 45, hikâye 40-116. Önceki 26 / 30 / 40-80 / 185.
-TOTAL_WORDS_BY_EVENT[FLOOD] = (40, 116)
+# 6 Kas 2026, Bahadır (KİLİT, Aşama 0): sel 3249de8 hâline döndü (4 Kas 02:00, 8/10). 4 Kas sınırları PASİF (bu sözlük
+# okunmaz, kayıt). Sel üç sınır da 3 Kas değerinde: yukarıdaki (40, 80) ve (10, 26) / (10, 30), prompt 185.
+FLOOD_4KAS_PASSIVE_LIMITS = {"prompt_words": 215, "total": (40, 116),
+                             "slices": {"slice_2": (10, 43), "slice_3": (10, 45)}}
 # 4 Kas (2), Bahadır kararı: Özgürlük Anıtı hikâyesi 40-85 (kilit cümle 32 kelime; ölçülen 71-83)
 TOTAL_WORDS_BY_EVENT[LIBERTY] = (40, 85)
-SLICE_WORDS_BY_EVENT[FLOOD] = {"slice_2": (10, 43), "slice_3": (10, 45)}
 
 
 def slice_words(event: str, field: str) -> tuple[int, int]:
@@ -144,7 +146,8 @@ RECENT_BEAT_BLOCK_BY_EVENT = {PYROCLASTIC: 2,
 # 4 Kas (4): Özgürlük Anıtı da (B4, B6 pasif: 4-9s'te 4 madde, 15 çift; 3 derinlikte 48 geçerli sırada aday biter,
 # ör. B1+C3, B3+C2, B5+C4 sonrası sadece B2 kalır ve B2'nin C1/C6 eşi dışlı; 1 derinlikte her zaman aday var)
 BEAT_BLOCK_FALLBACK_EVENTS = (EARTHQUAKE_APARTMENT, EARTHQUAKE_OLD_STREET, LANDFALL, WILDFIRE, AVALANCHE_VILLAGE,
-                              FACADE_FIRE, LIBERTY)
+                              FACADE_FIRE, LIBERTY,
+                              PYROCLASTIC)   # 6 Kas, Bahadır kararı: Q2 pasif (çatı terası/balkon 3 final)
 
 # ── Kilit görsel (0-4s'nin ilk cümlesi, kod yazar) ──────────────────────────────────────────────────────────
 EVENT_KEY_VISUAL = {
@@ -753,8 +756,9 @@ VOLC_MAX_PROMPT_WORDS = 175
 # 29 Eki (2), Bahadır: sadece meteor 205 kelime (29 Eki (3); önce 195, 202) ve 11 kısıt (tek meteor / beyaz su / kalıcı hasar cümlesi ve kamera
 # kuyruğu stil ekini uzattı). Diğer olaylar 175 / 8 / 1400.
 PROMPT_WORDS_BY_EVENT = {"Meteor slams into the sea off the coast": 205,   # 29 Eki (3), Bahadır: 195 -> 202 -> 205
-                         # 3 Kas, Bahadır (sel su cümleleri, seçim c): 185. 4 Kas (A6), Bahadır: 215 (hikâye ekseni)
-                         "Flash flooding in city streets": 215,
+                         # 3 Kas, Bahadır (sel su cümleleri, seçim c): 185. 4 Kas (A6) 215 PASİF (6 Kas kilit:
+                         # FLOOD_4KAS_PASSIVE_LIMITS)
+                         "Flash flooding in city streets": 185,
                          # 4 Kas (2), Bahadır kararı: Özgürlük Anıtı 205 (kilit cümle 32 kelime; 175'e hiçbir
                          # kombinasyon sığmıyordu), kısa ortam metniyle
                          LIBERTY: 205}
@@ -1028,10 +1032,10 @@ EVENT_BEATS = {
             "V10": {"text": "the {vehicle} is rammed against a building front and pinned there by the current",
                     "terms": [("wall", "building", "facade", "façade", "house", "shopfront", "storefront", "front"),
                               _HIT, ("pin", "pinned", "trap", "wedge", "stuck", "held", "jam")]},
-            # 4 Kas (3), Bahadır (yol 1): V11 yeni metin, DENEME; hedef artık dükkân değil (3 Kas dükkân dışlamaları
-            # kalktı). Önceki "the {vehicle} is swept into a corner shop and its doors burst open as water pours inside"
-            "V11": {"text": "the {vehicle} is swept up onto the sidewalk and slammed against a stone wall",
-                    "terms": [_CURB, ("wall", "stone wall"), _HIT]},
+            # 6 Kas (kilit): 3249de8 metni. 4 Kas (3) metni PASİF: FLOOD_4KAS_PASSIVE_TEXTS
+            "V11": {"text": "the {vehicle} is swept into a corner shop and its doors burst open as water pours inside",
+                    "terms": [_SHOP + ("corner shop",), ("door", "doors", "doorway", "entrance"),
+                              ("burst", "break", "broke", "smash", "pour", "flood", "rush", "gush")]},
             "V12": {"text": "the {vehicle} floats free and is carried fast down the middle of the street",
                     "terms": [("float", "drift", "bob", "adrift", "buoyant"), _DRAG]},
         },
@@ -1062,34 +1066,24 @@ EVENT_BEATS = {
             # 3 Kas (sel su kontrolü), Bahadır: D10 kısaldı, anlam aynı (9-15s ikinci dalga ilk kat yüksekliğinde: çöküş
             # artık fiziksel olarak açıklanıyor). Önceki "the current shoves a row of parked cars into the front of a shop
             # and its wall caves in"
-            # 4 Kas (A5), Bahadır: kameraya yakınlık. Yer belirtmeyen aktif finallere "in the street right below the
-            # camera" (D15, D16 aynen; D5 kanıtlı ve geçici pasif, diğer pasifler aynen). Önceki metinler:
-            # D10 "the current shoves parked cars into a shopfront and its wall caves in", D12 "the current piles a
-            # row of parked cars against the front of a shop", D13 "the street becomes a fast brown river and the
-            # {vehicle} is carried away toward the intersection", D14 "the current pushes a parked city bus against a
-            # shopfront and floodwater pours in through its doors", D17 "the surge tips a city bus onto its side and
-            # pushes it along the street", D18 "the surge slams the {vehicle} into a building front and the shopfront
-            # caves in around it"
-            "D10": {"text": "the current shoves parked cars into a shopfront in the street right below the camera and "
-                            "its wall caves in",
+            # 6 Kas (kilit): D10, D12, D13, D14, D17, D18 3249de8 metinleri. 4 Kas (A5) "right below the camera" hâlleri
+            # PASİF: FLOOD_4KAS_PASSIVE_TEXTS
+            "D10": {"text": "the current shoves parked cars into a shopfront and its wall caves in",
                     "terms": [_CAR + ("row", "vehicles"), _SHOP + ("front", "wall", "brick wall"),
                               ("cave", "cave in", "caves in", "caved in", "collapse", "crumble", "give way",
                                "gives way", "burst", "break", "smash", "crush")]},
             # 3 Kas (sel su kontrolü), Bahadır: yeni güçlü finaller, DENEME. D11 eklenmedi ("glass doors": havuz
             # lint'inde ince hedef)
-            "D12": {"text": "the current piles a row of parked cars against the front of a shop in the street right "
-                            "below the camera",
+            "D12": {"text": "the current piles a row of parked cars against the front of a shop",
                     "terms": [_CAR + ("row", "vehicles"), _SHOP + ("front",),
                               ("pile", "piled", "stack", "jam", "wedge", "shove", "push", "pin", "heap")]},
-            "D13": {"text": "the street right below the camera becomes a fast brown river and the {vehicle} is carried "
-                            "away toward the intersection",
+            "D13": {"text": "the street becomes a fast brown river and the {vehicle} is carried away toward the "
+                            "intersection",
                     "terms": [("river", "torrent", "flood", "current", "water"), _DRAG + ("away",)]},
-            # 4 Kas (2), Bahadır: D14 ve D18 kısaldı (anlam aynı, DENEME; bütçe). Önceki D14 "the current pushes a
-            # parked city bus against a shopfront in the street right below the camera and floodwater pours in through
-            # its doors", D18 "the surge slams the {vehicle} into a building front in the street right below the camera
-            # and the shopfront caves in around it"
-            "D14": {"text": "the current shoves a city bus into a shopfront right below the camera",
-                    "terms": [("bus", "buses"), _SHOP + ("front",), _HIT + ("shove", "push")]},
+            "D14": {"text": "the current pushes a parked city bus against a shopfront and floodwater pours in through "
+                            "its doors",
+                    "terms": [("bus", "buses"), _SHOP + ("front",),
+                              ("pour", "flood", "rush", "surge", "burst", "gush", "stream")]},
             "D15": {"text": "the flood bursts open a row of shop shutters and pours into the stores",
                     "terms": [_SHOP + ("shutter", "shutters"), ("burst", "break", "broke", "smash", "rip", "tear",
                                                                "force"),
@@ -1097,12 +1091,12 @@ EVENT_BEATS = {
             "D16": {"text": "the surge tears the ground-floor fronts off the shops across the street",
                     "terms": [_SHOP + ("ground floor", "ground-floor", "front", "fronts"),
                               ("tear", "tore", "torn", "rip", "wrench", "strip", "smash", "burst", "break", "broke")]},
-            "D17": {"text": "the surge tips a city bus onto its side in the street right below the camera and pushes it "
-                            "along",
+            "D17": {"text": "the surge tips a city bus onto its side and pushes it along the street",
                     "terms": [("bus", "buses"), ("tip", "topple", "overturn", "on its side", "onto its side",
                                                  "keel over", "roll over"), _DRAG]},
-            "D18": {"text": "the surge slams the {vehicle} into the shopfront right below the camera",
-                    "terms": [_HIT, _SHOP + ("building", "front", "wall")]},
+            "D18": {"text": "the surge slams the {vehicle} into a building front and the shopfront caves in around it",
+                    "terms": [_HIT, _SHOP + ("building", "front", "wall"), ("cave", "cave in", "caves in", "caved in", "collapse", "crumble", "give way",
+                               "gives way", "burst", "break", "smash", "crush")]},
         },
         # Aynı videoda tekrar/çelişki (Bahadır onayı, 3 Eki)
         # 17 Eki (temizlik turu): D1, D6, D7 çıktı; (V7,D6) (V6,D1) (V8,D1) çiftleri ve D7'nin görünüm/nokta kısıtı
@@ -1115,18 +1109,11 @@ EVENT_BEATS = {
                            # 3 Kas (sel su kontrolü): aynı hedef iki kez. Otobüs (V9), dükkân (V11), bina önü (V10),
                            # kahraman araç iki kez sürüklenir (V12), park arabaları (V2)
                            ("V9", "D5"), ("V9", "D14"), ("V9", "D17"),
-                           # 4 Kas (3): V11'in dükkân dışlamaları (D10 D12 D14 D15 D16 D18) ve 3 Kas bütçe dışlaması
-                           # (D13) kalktı: V11 yeni metin, yeniden ölçüldü
-                           ("V10", "D18"), ("V12", "D13"), ("V2", "D12"),
-                           # 4 Kas (A2), Bahadır: araç iki kez sürüklenir, zirve yok ((V12, D13) 3 Kas'tan beri dışlı)
-                           ("V1", "D13"),
-                           # 4 Kas (A6), Bahadır kuralı (önce çift dışla): hikâye ekseniyle 215 kelimeye hiçbir kadraj/
-                           # hikâyeyle sığmayan kombinasyonu olan çiftler (frame_budget, en uzun ışık dahil)
-                           # 4 Kas (2): D14/D18 kısaldıktan sonra yeniden ölçüldü; sığmayan kombinasyonu kalanlar
-                           # (V9, D13) 18, (V9, D12) 6, (V11, D17) 6. Sığan 8 çiftin dışlaması kalktı.
-                           ("V9", "D13"), ("V9", "D12"),
-                           ("V2", "D13"),   # 4 Kas (2), Bahadır: aynı araç iki kez sürükleniyor
-                           ("V11", "D18")},   # 4 Kas (3), Bahadır: aynı araç iki dilimde de duvara/dükkâna çarpıyor
+                           # 6 Kas (kilit): 3249de8 dışlamaları geri. 4 Kas çift değişiklikleri PASİF:
+                           # FLOOD_4KAS_PASSIVE_PAIRS
+                           ("V11", "D10"), ("V11", "D12"), ("V11", "D14"), ("V11", "D15"), ("V11", "D16"),
+                           ("V11", "D18"), ("V10", "D18"), ("V12", "D13"), ("V2", "D12"),
+                           ("V11", "D13")},   # 3 Kas: bütçe 185 (Doğu Asya + açılış D, ortam metni kısaldıktan sonra)
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -2343,6 +2330,23 @@ LIBERTY_BEAT_SCORES = {"B1": (4, 4, 3, 4, 5, 4), "B2": (4, 3, 4, 4, 5, 4), "B3":
                        "C1": (5, 4, 5, 4, 5, 3), "C2": (5, 4, 4, 4, 5, 4), "C3": (4, 4, 4, 4, 5, 4),
                        "C4": (4, 4, 3, 4, 5, 4), "C5": (4, 2, 4, 2, 3, 3), "C6": (4, 4, 4, 4, 5, 3)}
 
+# 6 Kas 2026, Bahadır (KİLİT, Aşama 0): sel 3249de8 hâline döndü (4 Kas 02:00, 8/10 videonun kodu). 4 Kas'ta eklenenler
+# PASİF, silinmedi; hiçbir üretim yolu okumaz. Tek istisna A1 ({vehicle} boşluk düzeltmesi, Seçim satırı/GPT mesajı).
+FLOOD_4KAS_PASSIVE_TEXTS = {
+    "V11": "the {vehicle} is swept up onto the sidewalk and slammed against a stone wall",
+    "D10": "the current shoves parked cars into a shopfront in the street right below the camera and its wall caves in",
+    "D12": "the current piles a row of parked cars against the front of a shop in the street right below the camera",
+    "D13": "the street right below the camera becomes a fast brown river and the {vehicle} is carried away toward the "
+           "intersection",
+    "D14": "the current shoves a city bus into a shopfront right below the camera",
+    "D17": "the surge tips a city bus onto its side in the street right below the camera and pushes it along",
+    "D18": "the surge slams the {vehicle} into the shopfront right below the camera",
+}
+FLOOD_4KAS_PASSIVE_PAIRS = {"added": {("V1", "D13"), ("V9", "D13"), ("V9", "D12"), ("V2", "D13")},
+                            "removed": {("V11", "D10"), ("V11", "D12"), ("V11", "D14"), ("V11", "D15"), ("V11", "D16"),
+                                        ("V11", "D13")}}
+FLOOD_4KAS_PASSIVE_WATER = "Water rises past the car windows and races toward the camera."
+
 # Olay -> seçilemeyen beat'ler (havuzda ve lint'te durur, çift seçiminde yok). 29 Eki (2): meteor [DALGA] bayrağı
 # kaldırıldı; mekanizma boş.
 # 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 2): kilitsiz olaylarda zayıf öğeler PASİF (silinmedi). Kilitli olaylara
@@ -2359,8 +2363,22 @@ LIBERTY_BEAT_SCORES = {"B1": (4, 4, 3, 4, 5, 4), "B2": (4, 3, 4, 4, 5, 4), "B3":
 # 3 Kas (sel doğrulama ayarı), Bahadır: dev dalga T4 PASİF (kaldırma + ezilme: araç şekil değiştiriyor); T8, W3, W9 aktif
 DISABLED_BEATS: dict[str, set[str]] = {
     FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8", "D9"},
-    TIDAL: {"W2", "W6", "W8", "T6", "T4"},
+    # 6 Kas: W9 (ikinci araç riski)
+    TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9"},
     FACADE_FIRE: {"N4", "M6"},
+    # 6 Kas 2026, Bahadır (havuz temizliği): dönen, takla atan, havaya kalkan, fırlatılan aracı Seedance şekil değiştirerek
+    # çiziyor (3-5 Kas videoları); küçük final antiklimaks. Ateş hortumu T6 (araç döner), U10 (küçük final), T5 (ters döner),
+    # U6 (römork savrulur). T5 ve U6 15 Eki 10,7K videosunda geçmiş olabilir, hit değil: Bahadır pasif dedi. Kilitten ÖNCE
+    # pasif (kilit baseline'ı bu hâl, kilit istisnası değil). T4, U11 (5 Kas 9/10) aynen.
+    FIRE_TORNADO: {"T5", "T6", "U6", "U10"},
+    # Kül bulutu Q2: ince cam hedefi, tozda kayboluyor (hit değil: hit P2+Q1 yamaç terası). Çatı terası ve balkonda 9-15s'te
+    # Q1 Q4 Q5 kalır (Q3, Q6 orada dışlı), 2 derinlikte 8/646 sırada aday biter: BEAT_BLOCK_FALLBACK_EVENTS'te (Bahadır kararı)
+    PYROCLASTIC: {"Q2"},
+    # Hortum marina Y5: araç havalanır, suya fırlar
+    MARINA_TORNADO: {"Y5"},
+    # Hortum cadde P5 (araç havalanır, fırlar), P7 (kamyon fırlatılır). P6 AKTİF: 17 Eki 684K hitinde kullanılmış (Bahadır kararı)
+    AVENUE: {"P5", "P7"},
+    # Meteor W2 ("flips the cars") bu turda AKTİF (Bahadır kararı; 4-9s'te sadece 3 öğe var)
     HELICOPTER: {"G7"},
     VOLCANIC_BOMBS: {"T5"},
     # 4 Kas (4), Bahadır: 4-9s'te araç YOK. Hortum karaya ~11. sn'de ulaşıyor; B4 aracı 4-9s'te ittirdiği için Seedance
@@ -2586,7 +2604,7 @@ _ANCHOR_BUS = ("bus", "buses", "city bus")
 BEAT_ANCHORS = {
     FLOOD: {"V6": _ANCHOR_BUS, "V8": _ANCHOR_SHOP, "D10": _ANCHOR_SHOP,   # 3 Kas: D10 dükkân önü
             # 3 Kas (sel su kontrolü): otobüs ve dükkân hedefli yeni öğeler
-            "V9": _ANCHOR_BUS, "V11": ("wall", "stone wall"), "D12": _ANCHOR_SHOP, "D14": _ANCHOR_BUS, "D16": _ANCHOR_SHOP,
+            "V9": _ANCHOR_BUS, "V11": _ANCHOR_SHOP, "D12": _ANCHOR_SHOP, "D14": _ANCHOR_BUS, "D16": _ANCHOR_SHOP,
             "D18": _ANCHOR_SHOP},
     TIDAL: {"T8": _ANCHOR_HOUSE, "W9": _ANCHOR_SHOP},                      # 3 Kas: W9 kafe önü
     MUDSLIDE: {"H6": _ANCHOR_HOUSE, "M3": _ANCHOR_HOUSE},   # 31 Eki (3): M3 minibüs evin önüne
@@ -2932,7 +2950,7 @@ def gpt_quality_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
                               f"things; nothing explodes, disintegrates or flows like a torrent."))
     if event in FLOOD_GATE_EVENTS:   # 3 Kas (sel su kontrolü): yasak kökler
         out += flood_root_issues(spec, slices)
-        out += flood_people_loss_issues(spec, slices)   # 4 Kas (A4): insanlar suda kaybolmaz
+        # 6 Kas (kilit): 4 Kas (A4) flood_people_loss_issues PASİF (hikâye ekseniyle birlikte; fonksiyon duruyor)
     out += liberty_gate_issues(spec, slices)   # 4 Kas (B11): sadece Özgürlük Anıtı
     scattered = people_scatter(gpt_text)
     if scattered:
@@ -3040,14 +3058,14 @@ def soft_beat_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             continue
         if event in OWN_OBJECT_ENOUGH_EVENTS:   # 17 Eki: kendi nesnesi varsa benzerlik kontrolü yok (helikopter)
             continue
-        if event not in LOCKED_EVENTS and text in verbatim_forms(spec, slot):
+        if event not in VERBATIM_OFF_EVENTS and text in verbatim_forms(spec, slot):
             # 3 Kas (sel su kontrolü): VERBATIM dilim seçilen havuz metninin kendisi; "başka olaya benziyor" kıyası
             # GPT'nin başka olayı anlatmasını yakalamak için (sel D18 havuz metni D10'a benzetiliyordu)
             continue
         own_ratio = _group_match_ratio(beats[slot][bid], text)
         # 3 Kas (sel su kontrolü): kilitsiz olaylarda pasif öğe (DISABLED_BEATS, seçilemez) benzerlik adayı değil (sel
         # D18 pasif D9'a benzetiliyordu). Kilitli olaylarda davranış aynı.
-        off = disabled_beats(event) if event not in LOCKED_EVENTS else set()
+        off = disabled_beats(event) if event not in VERBATIM_OFF_EVENTS else set()
         for other in beats[slot]:
             if other in off:
                 continue
@@ -3661,10 +3679,8 @@ _MET_NEAR_RULE = {**_AVA_NEAR_RULE, "terms": _MET_NEAR,
                               "terraces right below, in the lower half of the frame (never use the word camera)."}
 
 SLICE_RULES = {
-    # 3 Kas (Aşama 3): selde de kaçan kişi sayısı (insan ekseni). 4 Kas (A4): hikâye ekseni (FLOOD_STORIES) kişi sayısını
-    # ve kaçışı kendi metniyle söyler ("Two people", "A small group", "A man pulls a woman"); kişi sayısı ekseni ve
-    # bu iki kural selde yok (SLICE_RULES_RETIRED). 0-4s insan cümlesi verbatim_issues ile birebir denetlenir.
-    FLOOD: [],
+    # 3 Kas (Aşama 3): selde de kaçan kişi sayısı (insan ekseni). 6 Kas (kilit): 4 Kas (A4) hikâye ekseni PASİF, kural geri
+    FLOOD: _people_rules("the water"),
     TIDAL: _people_rules("the wave"),
     # TASLAK (4 Eki, heyelan)
     MUDSLIDE: _people_rules("the mud"),
@@ -3701,7 +3717,7 @@ SLICE_RULES = {
 }
 
 
-SLICE_RULES_RETIRED = {FLOOD: _people_rules("the water")}   # 4 Kas (A4): selin eski kişi kuralları (pasif)
+SLICE_RULES_RETIRED: dict = {}   # 4 Kas (A4)'te selin kişi kuralları buradaydı; 6 Kas (kilit) SLICE_RULES'a döndü
 
 
 def cumulative_feedback(event: str) -> bool:
@@ -4333,7 +4349,7 @@ FLOAT_EXEMPT_EVENTS = (FLOOD,)
 # 4 Kas 2026, Bahadır (A5, A4, B5): koddan birebir gelen metinde kameraya yakınlık ("races toward the camera", "right
 # below the camera"). b kuralı (hikâyede kamera kelimesi yok) sadece GPT'nin yazdığı kısımda geçerli: kamera kelimesi
 # yalnızca birebir kod cümlelerinden geliyorsa ret yok.
-CAMERA_EXEMPT_EVENTS = (FLOOD, LIBERTY)
+CAMERA_EXEMPT_EVENTS = (LIBERTY,)   # 6 Kas (kilit): sel çıktı (3249de8 metinlerinde kamera kelimesi yok)
 
 
 def verbatim_story_exempt(spec: dict, slices: dict[str, str], issues: list[dict]) -> list[dict]:
@@ -4444,9 +4460,11 @@ FALLBACK_PEOPLE = {
     ERUPTION: ("{N} residents run from the eruption down the street.", "{N} residents flee from the eruption toward the houses.",
                "{N} people sprint away from the eruption.", "{N} residents scramble down the street away from it.",
                "{N} people run from the eruption.", "{N} residents dash away along the village street."),
-    PYROCLASTIC: ("{N} residents run from the cloud down the street.", "{N} residents flee from the cloud between the houses.",
-                  "{N} people sprint away from the cloud.", "{N} residents scramble away from the cloud.",
-                  "{N} people run from the cloud.", "{N} residents dash down the street away from it."),
+    # 6 Kas 2026, Bahadır (Aşama 4): kül bulutu insan ekseni P1-P3 birebir (VERBATIM, {N} = 3-6), hepsi DENEME. Önceki
+    # havuz FALLBACK_PEOPLE_RETIRED'da. 6'dan az: bilerek (PEOPLE_POOL_MIN_EXEMPT)
+    PYROCLASTIC: ("{N} people sprint into the open doorway of the house right below.",
+                  "{N} people run for the garage of a house across the street below.",
+                  "{N} people sprint down the street toward a stone archway below."),
     VOLCANIC_BOMBS: ("{N} residents run from the falling rocks.", "{N} residents flee down the street from the rocks.",
                      "{N} people sprint away from the falling rocks.", "{N} residents scramble for cover from the rocks.",
                      "{N} people run for cover from it.", "{N} residents dash away between the houses."),
@@ -4469,7 +4487,11 @@ FALLBACK_PEOPLE = {
               "{N} people sprint across the park lawn toward the subway entrance.",
               "{N} people run into the lobby of the building below."),
 }
-PEOPLE_POOL_MIN_EXEMPT = {LIBERTY: 3}
+PEOPLE_POOL_MIN_EXEMPT = {LIBERTY: 3, PYROCLASTIC: 3}
+FALLBACK_PEOPLE_RETIRED[PYROCLASTIC] = (   # 6 Kas: kül bulutunun önceki yedek insan cümleleri (pasif, silinmedi)
+    "{N} residents run from the cloud down the street.", "{N} residents flee from the cloud between the houses.",
+    "{N} people sprint away from the cloud.", "{N} residents scramble away from the cloud.",
+    "{N} people run from the cloud.", "{N} residents dash down the street away from it.")
 # 🔥 Ateş hortumu: ortama göre (kilit cümle 28-29 kelime, en uzun beat çifti 39: insan cümlesi 6-7 kelime)
 FALLBACK_PEOPLE_FIRE_ENV = {
     "forest_edge": ("{N} people run between the houses below.", "{N} neighbors flee in the yard below.",
@@ -4484,7 +4506,7 @@ FALLBACK_PEOPLE_FIRE_ENV = {
 }
 
 
-PEOPLE_AXIS_EVENTS = (FLOOD, TIDAL, LIBERTY)   # 4 Kas (B9): Özgürlük Anıtı P1-P3
+PEOPLE_AXIS_EVENTS = (FLOOD, TIDAL, LIBERTY, PYROCLASTIC)   # 4 Kas (B9): Özgürlük Anıtı P1-P3; 6 Kas: kül bulutu P1-P3
 PEOPLE_AXIS_PROVEN = ("I1", "I2")
 PEOPLE_AXIS_TRIAL_SHARE = 0.20
 
@@ -4532,15 +4554,18 @@ FLOOD_STORIES_LONG = {
            "They hold the railing of a building's steps as a shop window bursts next to them.",
            "They pull each other up the steps and through the door as the surge hits the windows below."),
 }
-STORY_AXIS = {FLOOD: FLOOD_STORIES}
+# 6 Kas 2026, Bahadır (KİLİT, Aşama 0): hikâye ekseni PASİF (H1-H5 ve uzun hâlleri kayıtta), sel I1-I6'ya döndü. Sel
+# kilitli (LOCKED_EVENTS): açılırsa snapshot farkı 0 kuralı kırılır.
+STORY_AXIS: dict[str, dict] = {}
 STORY_SLICE_INDEX = {"slice_1_rest": 0, "slice_2": 1, "slice_3": 2}
 # Hikâye ekseni lintinde ince hedef sayılmayan detaylar (insanların yanındaki tehlike / tutunma yeri, ana beat değil)
 STORY_LINT_THIN_OK = ("glass", "shop window", "pane", "window pane", "windowpane", "railing")
 # 4 Kas (A3/A4/B9): 0-4s insan cümlesi VERBATIM olan olaylar (GPT'nin insan cümlesi atılır, seçilen eksen öğesi birebir).
 # Dev dalga I1-I6 ({N} dolu), sel hikâye a cümlesi, Özgürlük Anıtı P1-P3 ({N} dolu). Kilitli olaylar yok.
-VERBATIM_PEOPLE_EVENTS = (FLOOD, TIDAL, LIBERTY)
-# Eksen öğesi kimlik öneki (sel hikâyesi H, Özgürlük Anıtı P, diğerleri I)
-PEOPLE_ID_PREFIX = {FLOOD: "H", LIBERTY: "P"}
+# 6 Kas (kilit): sel çıktı (3249de8'de selin 0-4s insan cümlesini GPT yazar, kod yedeğinde I1-I6)
+VERBATIM_PEOPLE_EVENTS = (TIDAL, LIBERTY, PYROCLASTIC)   # 6 Kas: kül bulutu (GPT'nin insan cümlesi atılır)
+# Eksen öğesi kimlik öneki (Özgürlük Anıtı P, diğerleri I; sel hikâyesi H pasif)
+PEOPLE_ID_PREFIX = {LIBERTY: "P", PYROCLASTIC: "P"}
 
 
 def story_axis_on(event: str) -> bool:
@@ -4575,8 +4600,8 @@ def story_sentence(spec: dict, slot: str) -> str | None:
 
 # 3 Kas 2026, Bahadır (sel su kontrolü): su seviyesi profili koddan, dilimin başında birebir (VERBATIM ve kod yedeği aynı
 # metin; GPT değiştiremez). 0-4s açılış A aynen (bel hizası). Sadece sel.
-# 4 Kas (A5), Bahadır: 4-9s su cümlesi kameraya yaklaşır. Önceki "Water rises past the car windows."
-WATER_LEVEL_LINES = {FLOOD: {"slice_2": "Water rises past the car windows and races toward the camera.",
+# 6 Kas (kilit): 3249de8 cümlesi. 4 Kas (A5) hâli PASİF: FLOOD_4KAS_PASSIVE_WATER
+WATER_LEVEL_LINES = {FLOOD: {"slice_2": "Water rises past the car windows.",
                              "slice_3": "A second surge, first-floor high, slams in."}}
 
 
@@ -4647,7 +4672,9 @@ def choose_people_line(spec: dict, used: list | None, rng: random.Random) -> tup
     last_trial = bool(recent) and recent[-1] not in PEOPLE_AXIS_PROVEN
     use_trial = bool(trial) and not last_trial and (not proven or rng.random() < PEOPLE_AXIS_TRIAL_SHARE)
     group = trial if use_trial else (proven or trial)
-    if dogrulama_on(spec["event"]):   # 4 Kas: doğrulama bayrağı açıkken (sel, Özgürlük Anıtı) tüm öğeler eşit LRU
+    # 4 Kas: doğrulama bayrağı açıkken Özgürlük Anıtı öğeleri eşit LRU. 6 Kas (kilit): sel çıktı (3249de8'de selin insan
+    # ekseni I1-I2 KANITLI, I3-I6 DENEME; SEL_DOGRULAMA sadece beat seçimini eşitler)
+    if OZGURLUK_DOGRULAMA and spec["event"] == LIBERTY:
         group = opts
 
     def last_seen(v):
@@ -4685,10 +4712,15 @@ def mud_texture(spec: dict, slices: dict[str, str]) -> dict[str, str] | None:
 # (FALLBACK_TRANSITION). Son denetim (final_prompt_issues -> slice_issues) dilimlerin birebir havuz metni olduğunu
 # doğrular; değilse ret.
 # Kilitli (kanıtlanmış) olaylar: orman yangını, helikopter, hortum karaya vurur, volkan bombaları, heyelan köy.
-LOCKED_EVENTS = (WILDFIRE, HELICOPTER, LANDFALL, VOLCANIC_BOMBS, VILLAGE)
-# 3 Kas (devam), Bahadır kararı: kilitli 5 olayda KAPALI (GPT dilimleri HEAD'deki gibi kullanılır; snapshot farkı 0
-# olsa da GPT yolu değişmesin). Kilitsiz olaylarda AÇIK.
-VERBATIM_SLICES = {e: e not in LOCKED_EVENTS for e in EVENT_KEY_VISUAL}
+# 6 Kas 2026, Bahadır: + Caddelerde ani sel (3249de8 hâli), Özgürlük Anıtı hortumu. Kilit: prompt_snapshot farkı 0
+# (40 tohum, tests/fixtures/locked_prompts_40.json).
+# 6 Kas (Aşama 5): + Ateş hortumu (havuz temizliğinden sonraki hâli; 5 Kas 00:13 T4+U11 9/10).
+LOCKED_EVENTS = (WILDFIRE, HELICOPTER, LANDFALL, VOLCANIC_BOMBS, VILLAGE, FLOOD, LIBERTY, FIRE_TORNADO)
+# 3 Kas (devam), Bahadır kararı: ilk 5 kilitli olayda KAPALI (GPT dilimleri HEAD'deki gibi kullanılır; snapshot farkı 0
+# olsa da GPT yolu değişmesin). Diğerlerinde AÇIK. 6 Kas: bu küme kilit listesinden AYRI; sonradan kilide giren olaylar
+# VERBATIM kalır (kilitlendikleri hâlin GPT yolu değişmesin).
+VERBATIM_OFF_EVENTS = (WILDFIRE, HELICOPTER, LANDFALL, VOLCANIC_BOMBS, VILLAGE)
+VERBATIM_SLICES = {e: e not in VERBATIM_OFF_EVENTS for e in EVENT_KEY_VISUAL}
 
 
 def verbatim_on(event: str) -> bool:

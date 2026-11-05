@@ -165,11 +165,11 @@ class TestFallbackEveryCombination(unittest.TestCase):
         self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),
                          "Seconds later, in full view, a city bus is shoved sideways by the surge.")
         self.assertEqual(es.fallback_beat_slice(spec, "slice_2"), "The red SUV is carried down the street by the surge.")
-        spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D5", "red SUV", None)
+        spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D5", "red SUV", 5)
         self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),
                          "A second surge, first-floor high, slams in. A city bus is shoved sideways by the current.")
-        self.assertEqual(es.fallback_beat_slice(spec, "slice_2"),   # 4 Kas (A5): su kameraya yaklaşır
-                         "Water rises past the car windows and races toward the camera. The red SUV is caught by the current, turns sideways and "
+        self.assertEqual(es.fallback_beat_slice(spec, "slice_2"),
+                         "Water rises past the car windows. The red SUV is caught by the current, turns sideways and "
                          "is dragged down the street.")
         self.assertEqual(es.FALLBACK_TRANSITION, "Seconds later, in full view, ")
 
@@ -274,6 +274,7 @@ class TestSoftGate(unittest.TestCase):
         sys.path.insert(0, os.path.dirname(__file__))
         from test_rejected_real import REWRITTEN_31OCT, current, retired
         for r in [current(x) for x in data if "source" not in x and not retired(x)
+                  and x["beat"] not in es.disabled_beats(x["event"])   # 6 Kas: pasif öğe seçilemez
                   and (x["event"], x["beat"]) not in REWRITTEN_31OCT]:   # 31 Eki (3): F5 yeni metin
             e, bid = r["event"], r["beat"]
             slot = "slice_2" if bid in es.EVENT_BEATS[e]["slice_2"] else "slice_3"

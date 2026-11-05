@@ -84,7 +84,9 @@ class TestLockedSnapshot(_Quiet):
         self.assertEqual(ps.diff({e: base[e] for e in LOCKED}, now), {})
 
     def test_locked_list(self):
-        self.assertEqual(set(es.LOCKED_EVENTS), set(LOCKED))
+        # 6 Kas: + sel, anıt, ateş hortumu (tests/test_kilit_6kas.py). Bu dosyadaki LOCKED = ilk 5 (VERBATIM kapalı olanlar)
+        self.assertEqual(set(es.VERBATIM_OFF_EVENTS), set(LOCKED))
+        self.assertTrue(set(LOCKED) <= set(es.LOCKED_EVENTS))
 
     def test_locked_pools_untouched(self):
         """Kilitli olaylarda pasif/deneme öğe ya da insan ekseni yok. Tek istisna (3 Kas, Bahadır onaylı): helikopter G7,
@@ -196,10 +198,13 @@ class TestWeakPassive(_Quiet):
     def test_disabled_and_trial_sets(self):
         # 3 Kas (sel su kontrolü): sel pasif ve deneme listeleri test_sel_su_3kas'ta
         self.assertEqual(es.DISABLED_BEATS, {es.FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8",
-                                                        "D9"}, es.TIDAL: {"W2", "W6", "W8", "T6", "T4"},
+                                                        "D9"}, es.TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9"},
                                              es.FACADE_FIRE: {"N4", "M6"},
                                              es.HELICOPTER: {"G7"}, es.VOLCANIC_BOMBS: {"T5"},   # kilit istisnası
-                                             es.LIBERTY: {"B4", "B6"}})   # 4 Kas (4): 4-9s'te araç yok
+                                             es.LIBERTY: {"B4", "B6"},   # 4 Kas (4): 4-9s'te araç yok
+                                             # 6 Kas: havuz temizliği (tests/test_kilit_6kas.py)
+                                             es.FIRE_TORNADO: {"T5", "T6", "U6", "U10"}, es.PYROCLASTIC: {"Q2"},
+                                             es.MARINA_TORNADO: {"Y5"}, es.AVENUE: {"P5", "P7"}})
         self.assertEqual(es.TRIAL_BEATS, {es.FLOOD: {"D10", "V9", "V10", "V11", "V12", "D12", "D13", "D14", "D15",
                                                      "D16", "D17", "D18"},
                                           es.TIDAL: {"W9"}, es.FACADE_FIRE: {"N7", "M12"},
@@ -264,10 +269,8 @@ class TestWeakPassive(_Quiet):
 # ── AŞAMA 3 ───────────────────────────────────────────────────────────────────────────────────────────────────────
 class TestPeopleAxis(_Quiet):
     def test_people_rule_and_lines(self):
-        # 4 Kas (A4): selde kişi sayısı kuralı yok (hikâye ekseni); I1-I6 pasif ama metinleri aynı ve kurala uygun
-        self.assertFalse(es.has_people_rule(es.FLOOD))
-        for e in (es.FLOOD, es.TIDAL):
-            self.assertTrue(es.has_people_rule(e) or e == es.FLOOD)
+        for e in (es.FLOOD, es.TIDAL):   # 6 Kas (kilit): 4 Kas hikâye ekseni pasif, selde kişi kuralı geri
+            self.assertTrue(es.has_people_rule(e))
             self.assertEqual(sk.count_range(e, None), (3, 6))
             lines = es.FALLBACK_PEOPLE[e]
             self.assertGreaterEqual(len(lines), 6)
@@ -281,7 +284,7 @@ class TestPeopleAxis(_Quiet):
                                                             es.FALLBACK_PEOPLE_RETIRED[es.TIDAL][4]))
 
     def test_rotation(self):
-        for e in (es.TIDAL,):   # 4 Kas (A4): selin hikâye ekseni test_sel_ozgurluk_4kas'ta
+        for e in (es.FLOOD, es.TIDAL):   # 6 Kas (kilit): selde I1-I6 geri
             rows = _sequence(e, 60, 3)
             ids = [r["trace"]["axes"]["insan"] for r in rows]
             self.assertTrue(all(ids))
@@ -297,12 +300,9 @@ class TestPeopleAxis(_Quiet):
                                  es.clean_slice(es.FALLBACK_PEOPLE[e][i].format(N=word)))
 
     def test_axes_line_shows_person(self):
-        rows = _sequence(es.TIDAL, 2, 1)
+        rows = _sequence(es.FLOOD, 2, 1)   # 6 Kas (kilit): selde I1-I6 geri
         self.assertRegex(rows[-1]["structure"]["axes_line"], r"kişi=\d")
         self.assertIn("insan=I", rows[-1]["structure"]["axes_line"])
-        rows = _sequence(es.FLOOD, 2, 1)   # 4 Kas (A4): selde kişi sayısı yok, insan = hikâye
-        self.assertIn("kişi=-", rows[-1]["structure"]["axes_line"])
-        self.assertIn("insan=H", rows[-1]["structure"]["axes_line"])
 
 
 # ── AŞAMA 4 ───────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -469,8 +469,8 @@ class TestMeteor(_Quiet):
             e, n = key.rsplit("|", 1)
             if es.people_line({"event": e, "people": int(n)}) != line:
                 changed.add(e)
-        # 4 Kas (A4): selde kişi satırı yine yok (HEAD gibi); Özgürlük Anıtı fixture'da yok (yeni olay)
-        self.assertEqual(changed, {es.METEOR})
+        # 6 Kas (kilit): sel 3249de8 hâline döndü (3 Kas'taki gibi kişi satırı var)
+        self.assertEqual(changed, {es.METEOR, es.FLOOD})
         self.assertNotIn("street right below", es.people_line({"event": es.METEOR, "people": 4}))
 
     def test_cgi_and_camera_gate(self):

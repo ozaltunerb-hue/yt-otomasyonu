@@ -25,6 +25,32 @@
 
 ---
 
+## 📋 DEVİR: 6 Kasım kilit (8 olay) + havuz temizliği + kelime kapısı + kül bulutu insan ekseni
+
+Kie/GPT çağrısı yok; test `tests/test_kilit_6kas.py`, `tests/test_pool_word_gate.py`.
+- **KİLİT 8 olay** (`es.LOCKED_EVENTS`): orman yangını, helikopter, hortum karaya vurur, volkan bombaları, heyelan köy,
+  Caddelerde ani sel, Özgürlük Anıtı, Ateş hortumu. Kilit = 40 tohum özeti `tests/fixtures/locked_prompts_40.json`
+  (`scripts/locked_prompts.py check`; `write` sadece Bahadır onayıyla). `es.VERBATIM_OFF_EVENTS` ilk 5 olay: VERBATIM
+  bayrağı artık kilit listesinden AYRI (sel, anıt, ateş hortumu kilitli ama VERBATIM açık).
+- **Sel 3249de8 hâline döndü** (4 Kas 02:00, 8/10): 40 tohumda bayt bayt aynı (kaynak ağacı ayrı çıkarılıp ölçüldü). 4 Kas
+  eklentileri PASİF, silinmedi: `es.FLOOD_STORIES` H1-H5 (`es.STORY_AXIS` boş), `es.FLOOD_4KAS_PASSIVE_TEXTS`, `_WATER`,
+  `_PAIRS`, `_LIMITS` (215). Kapı `flood_people_loss_issues` çağrılmıyor. Sel 0-4s insan cümlesini yine GPT yazar. Tek
+  istisna A1 ({vehicle} boşluğu: Seçim satırı ve GPT mesajı; prompt farkı yok).
+- **Pasif** (`es.DISABLED_BEATS`): ateş hortumu T5 T6 U6 U10 (kilitten önce), kül bulutu Q2, dev dalga W9, marina Y5, cadde P5 P7.
+- **Bahadır kararıyla aktif:** cadde P6 (17 Eki 684K hiti, notion_runs satır 1275), meteor W2 (bu tur; 4-9s'te 3 öğe). Ateş
+  hortumu T4 + U11 (5 Kas 9/10) seçilebilir.
+- **Kül bulutu aday kuralı:** Q2 pasifken çatı terası ve balkonda 9-15s Q1 Q4 Q5; `BEAT_BLOCK_FALLBACK_EVENTS`'te (aday bitince
+  derinlik 1, normal akış aynı; testli).
+- **Dev dalga kamera:** `sk.TIDAL_FRAME_NEW` "the camera never pans, turns or follows" (`camera_rules`; tehdit metni sadece
+  dev dalgada, şablon ortak değil).
+- **Kelime kapısı** `core/pool_word_gate.py`: kilitsiz aktif havuz metinleri (kilit cümle, açılış, beat, ortam, stil eki).
+  Bugünkü takılmalar `KNOWN_HITS` (dokunulmadı); yeni takılma testi kırar. "the camera never pans, turns or follows" tam
+  ifadesi `ALLOWED_PHRASES`'te (içinde "follows" var ama takibi yasaklıyor). Takılan kayıtlar ve diğer kameralardaki "always in frame" ayrı tur kararı.
+- **Kül bulutu insan ekseni:** P1-P3 birebir (`es.VERBATIM_PEOPLE_EVENTS`), hepsi DENEME; önceki havuz `FALLBACK_PEOPLE_RETIRED`.
+- **Ateş hortumu iyi video:** `tests/fixtures/fire_tornado_good_videos.json` (5 Kas 00:13, T4+U11, forest_edge, çatı terası, 9/10).
+- Hit verisi sınırı: `notion_runs.json` 31 Eki'ye, `paylasimlar_snapshot.json` 20 Eki'ye kadar; paylaşım ile üretim arasında
+  doğrudan bağ yok (tarih, nokta, açıklama metniyle eşlendi).
+
 ## 📋 DEVİR: 4 Kasım (4) 🗽 Özgürlük Anıtı kadraj + 4-9s araç düzeltmesi
 
 Kie/GPT çağrısı yok; test `tests/test_ozgurluk_kadraj_4kas.py` (KİLİT: B4, B6, K3 pasif; K1 kanıtlı; mutasyon

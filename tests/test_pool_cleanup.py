@@ -324,10 +324,12 @@ class TestNewBeats(unittest.TestCase):
         for (e, slot, bid), text in NEW_BEATS.items():
             with self.subTest(beat=(e, bid)):
                 self.assertLessEqual(len(text.replace("{vehicle}", "x").split()), NEW_BEATS_LONG.get((e, bid), 16))
+                if bid in es.DISABLED_BEATS.get(e, set()):   # 6 Kas: T6, U10 pasif (tests/test_kilit_6kas.py)
+                    continue
                 self.assertTrue([p for s in sk.view_spots(e, None) for p in es.allowed_pairs(e, None, s)
                                  if p[0 if slot == "slice_2" else 1] == bid])
         pairs = {p for s in sk.view_spots(FT, None) for p in es.allowed_pairs(FT, None, s)}
-        for b2 in ("T6", "T7"):
+        for b2 in ("T7",):   # 6 Kas: T6 pasif
             self.assertGreaterEqual(len({d for v, d in pairs if v == b2}), 4, b2)
         # 18 Eki (2): kilit cümle 32-33 kelime: T6 (19 + araç) U2 ve U6 ile 75'i aşar
         self.assertEqual(es.EVENT_BEATS[FT]["excluded_pairs"], {("T1", "U2"), ("T2", "U2"), ("T6", "U2"), ("T6", "U6")})
@@ -367,6 +369,8 @@ def _make_test(event, slot, bid, text):
         self.assertEqual(es.pool_lint_hits(text.replace("{vehicle}", "vehicle")), [])   # lint temiz
         self.assertNotIn((event, bid), es.POOL_LINT_GRANDFATHERED)
         self.assertNotIn(bid, es.RETIRED_BEATS.get(event, {}))     # kimlik yeni
+        if bid in es.disabled_beats(event):   # 6 Kas: U10 pasif (metin duruyor, seçilemez: tests/test_kilit_6kas.py)
+            return
         # kendi metni: eski sıkı kapı (her terim grubu) ve yumuşak kapı (ana nesne) geçer
         b2, b3, spot = _any_pair(event, slot, bid)
         for veh in ([v for v, _ in es.event_vehicles(event, None)] if es.uses_vehicle(event) else [None]):
@@ -597,7 +601,7 @@ def _make_parti2_test(event, slot, bid, text, para):
         if bid in es.DISABLED_BEATS.get(event, set()):
             # 3 Kas kilit istisnası: helikopter G7 pasif (havuzda duruyor, çift seçiminde yok). Kilitsiz olayda pasif
             # öğe (3 Kas sel su kontrolü: D9) serbest
-            if event in es.LOCKED_EVENTS:
+            if event in es.VERBATIM_OFF_EVENTS:   # 6 Kas: ilk 5 kilitli olay (sel ve ateş hortumu pasifleriyle kilitlendi)
                 self.assertIn(bid, es.LOCKED_PASSIVE_EXCEPTION.get(event, set()))
             self.assertFalse([p for s in sk.view_spots(event, es.structure_views(event)[0])
                               for p in es.allowed_pairs(event, es.structure_views(event)[0], s) if bid in p])
@@ -672,7 +676,7 @@ class TestParti2DryRunGateFixes(unittest.TestCase):
     CASES = [   # (olay, b2, b3, dilim, gerçek GPT cümlesi)
         (es.MUDSLIDE, "H5", "M8", "slice_3",
          "Behind, the mud forces a large truck sideways, crashing it into a nearby house's facade."),
-        (FT, "T6", "U1", "slice_3", "The tornado yanks a burning roof into its vortex, swirling ferociously as it moves away."),
+        (FT, "T4", "U1", "slice_3", "The tornado yanks a burning roof into its vortex, swirling ferociously as it moves away."),
         (es.EARTHQUAKE_OLD_STREET, "R4", "T1", "slice_3",
          "The adjacent building collapses, expanding the dust cloud, as rubble continues to fall."),
         (es.EARTHQUAKE_APARTMENT, "P4", "Q5", "slice_3",

@@ -33,28 +33,24 @@ import core.skeleton_pipeline as sk   # noqa: E402
 from test_toplu_3kas import _sequence   # noqa: E402
 
 F, T = es.FLOOD, es.TIDAL
-# 4 Kas (A5): 4-9s su cümlesi kameraya yaklaşır (önceki "Water rises past the car windows.")
-L2 = "Water rises past the car windows and races toward the camera."
+L2 = "Water rises past the car windows."
 L3 = "A second surge, first-floor high, slams in."
 ACTIVE_2 = {"V1", "V2", "V9", "V10", "V11", "V12"}
 ACTIVE_3 = {"D5", "D10", "D12", "D13", "D14", "D15", "D16", "D17", "D18"}
-# 4 Kas (A6): bütçe çiftleri dışlanınca hiç çifti kalmayanlar (havuzda aktif, seçilemez): V11, D14, D18
-NO_PAIR = set()   # 4 Kas (3): V11 yeni metin, D14/D18 kısaldı: hepsinin çifti var
 PASSIVE = {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8", "D9"}
 TRIAL = {"D10", "V9", "V10", "V11", "V12", "D12", "D13", "D14", "D15", "D16", "D17", "D18"}
 NEW_TEXTS = {
     "V9": "the {vehicle} is shoved hard against the side of a parked city bus and pinned there",
     "V10": "the {vehicle} is rammed against a building front and pinned there by the current",
-    "V11": "the {vehicle} is swept up onto the sidewalk and slammed against a stone wall",   # 4 Kas (3)
+    "V11": "the {vehicle} is swept into a corner shop and its doors burst open as water pours inside",
     "V12": "the {vehicle} floats free and is carried fast down the middle of the street",
-    "D10": "the current shoves parked cars into a shopfront in the street right below the camera and its wall caves in",
-    "D13": "the street right below the camera becomes a fast brown river and the {vehicle} is carried away toward "
-           "the intersection",
-    "D14": "the current shoves a city bus into a shopfront right below the camera",   # 4 Kas (2)
+    "D10": "the current shoves parked cars into a shopfront and its wall caves in",
+    "D13": "the street becomes a fast brown river and the {vehicle} is carried away toward the intersection",
+    "D14": "the current pushes a parked city bus against a shopfront and floodwater pours in through its doors",
     "D15": "the flood bursts open a row of shop shutters and pours into the stores",
     "D16": "the surge tears the ground-floor fronts off the shops across the street",
-    "D17": "the surge tips a city bus onto its side in the street right below the camera and pushes it along",
-    "D18": "the surge slams the {vehicle} into the shopfront right below the camera",   # 4 Kas (2)
+    "D17": "the surge tips a city bus onto its side and pushes it along the street",
+    "D18": "the surge slams the {vehicle} into a building front and the shopfront caves in around it",
 }
 VEHICLE_WORDS = re.compile(r"\b(suvs?|vans?|trucks?|pickups?|scooters?|cars?|sedans?|buses|bus|taxis?)\b", re.I)
 
@@ -73,7 +69,7 @@ def _pool(e):
 
 
 def _spec(b2="V1", b3="D10", view="riviera", vehicle="red SUV", light="heavy rain"):
-    return es.build_spec(F, None, "Commercial city streets", view, b2, b3, vehicle, None, light=light)   # 4 Kas
+    return es.build_spec(F, None, "Commercial city streets", view, b2, b3, vehicle, 4, light=light)
 
 
 class TestWaterProfile(_Quiet):
@@ -100,14 +96,13 @@ class TestWaterProfile(_Quiet):
             self.assertNotIn("error", r, seed)
             self.assertIn(f"4-9s: {L2} ", r["prompt"])
             self.assertIn(f"9-15s: {L3} ", r["prompt"])
-            self.assertLessEqual(len(r["prompt"].split()), 215)   # 4 Kas (A6)
+            self.assertLessEqual(len(r["prompt"].split()), 185)
 
     def test_limits_only_flood(self):
-        # 4 Kas (A6): hikâye ekseniyle 43 / 45 / 40-116 / 215 (3 Kas: 26 / 30 / 40-80 / 185)
-        self.assertEqual(es.slice_words(F, "slice_2"), (10, 43))
-        self.assertEqual(es.slice_words(F, "slice_3"), (10, 45))
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[F], (40, 116))
-        self.assertEqual(es.max_prompt_words(F), 215)
+        self.assertEqual(es.slice_words(F, "slice_2"), (10, 26))
+        self.assertEqual(es.slice_words(F, "slice_3"), (10, 30))
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[F], (40, 80))
+        self.assertEqual(es.max_prompt_words(F), 185)
         for e in es.EVENT_KEY_VISUAL:
             if e != F:
                 self.assertEqual(es.slice_words(e, "slice_2"), es.SLICE_WORDS["slice_2"])
@@ -152,13 +147,13 @@ class TestPassiveAndActive(_Quiet):
         self.assertEqual(ox.options(T), ["A", "B", "C", "D"])   # dev dalga aynı
 
     def test_tidal_only_t4_passive(self):
-        """3 Kas (sel doğrulama ayarı): dev dalgada sadece T4 pasif; T8, W3, W9 aktif."""
-        self.assertEqual(es.DISABLED_BEATS[T], {"W2", "W6", "W8", "T6", "T4"})
+        """3 Kas (sel doğrulama ayarı): dev dalgada T4 pasif; T8, W3 aktif. 6 Kas: W9 de pasif (ikinci araç riski)."""
+        self.assertEqual(es.DISABLED_BEATS[T], {"W2", "W6", "W8", "T6", "T4", "W9"})
         self.assertEqual(es.disabled_beats(T), es.DISABLED_BEATS[T])
         self.assertEqual(es.TRIAL_BEATS[T], {"W9"})
         self.assertIn("T4", es.EVENT_BEATS[T]["slice_2"])   # silinmedi
         self.assertEqual(set(es.EVENT_BEATS[T]["slice_2"]) - es.DISABLED_BEATS[T], {"T1", "T2", "T3", "T5", "T7", "T8"})
-        self.assertEqual(set(es.EVENT_BEATS[T]["slice_3"]) - es.DISABLED_BEATS[T], {"W1", "W3", "W4", "W5", "W9"})
+        self.assertEqual(set(es.EVENT_BEATS[T]["slice_3"]) - es.DISABLED_BEATS[T], {"W1", "W3", "W4", "W5"})
         for view in es.structure_views(T):
             for spot in sk.view_spots(T, view):
                 self.assertFalse([p for p in es.allowed_pairs(T, view, spot) if "T4" in p])
@@ -187,7 +182,8 @@ class TestColorsAndSettings(_Quiet):
                 light = r["axes"]["weather"]
                 self.assertIn(f", in {light}, no readable signs", r["prompt"], (e, seed))
         self.assertEqual(set(sk.VIEW_LIGHT_EVENTS), {F, T})
-        self.assertFalse(set(sk.VIEW_LIGHT_EVENTS) & set(es.LOCKED_EVENTS))
+        # 6 Kas: sel kilide girdi (ışık 3249de8'deki gibi Setting satırında); dev dalga kilitsiz
+        self.assertEqual(set(sk.VIEW_LIGHT_EVENTS) & set(es.LOCKED_EVENTS), {F})
 
 
 class TestFloodGate(_Quiet):
@@ -210,7 +206,7 @@ class TestFloodGate(_Quiet):
                 self.assertTrue(self._issues(spec, {**base, "slice_2": f"Water rises as {phrase}."}))
 
     def test_collapse_only_in_verbatim_slice_3(self):
-        for b3 in ("D10", "D17"):   # 4 Kas (2): D18 kısaldı, çöküş kökü yok
+        for b3 in ("D10", "D17", "D18"):
             spec = _spec("V1", b3)
             v3 = es.fallback_beat_slice(spec, "slice_3")
             self.assertTrue(es.flood_root_words(v3))   # çöküş / yan yatma kökü var
@@ -242,8 +238,8 @@ class TestFloodGate(_Quiet):
 
     def test_float_only_in_verbatim(self):
         """V12 'floats' havuz metninde geçer (yüzdürme izinli); GPT kişi cümlesinde 'floats' reddedilir."""
-        spec = {**_spec("V12", "D5"), "people_line": "H1"}   # 4 Kas: üretimdeki gibi seçilen hikâye spec'te
-        sl = es.build_fallback(spec, random.Random(1), line="H1")
+        spec = _spec("V12", "D5")
+        sl = es.build_fallback(spec, random.Random(1))
         self.assertIn("floats", sl["slice_2"])
         self.assertEqual(es.final_prompt_issues(spec, sl, es.assemble_prompt(spec, sl), es.assemble_story(spec, sl)),
                          [])
@@ -285,9 +281,9 @@ class TestTrialShare(_Quiet):
                 self.assertFalse(set(t.split("+")) & (PASSIVE | {"D5"}))
                 c3[t.split("+")[1]] += 1
                 n += 1
-        self.assertEqual(set(c3), ACTIVE_3 - {"D5"} - NO_PAIR)   # 4 Kas: 6 final
-        for bid, k in c3.items():   # 8 öğe, eşit pay %12,5 (çift sayıları farklı)
-            self.assertTrue(0.04 <= k / n <= 0.22, (bid, k / n))   # D13 sadece 2 çiftte (V10, V11)
+        self.assertEqual(set(c3), ACTIVE_3 - {"D5"})
+        for bid, k in c3.items():   # 8 öğe, eşit pay %12,5
+            self.assertTrue(0.08 <= k / n <= 0.18, (bid, k / n))
         self.assertGreater(consecutive_trial, 0)   # "art arda deneme yok" devre dışı
 
     def test_flag_off_restores_old_behavior(self):
@@ -312,13 +308,12 @@ class TestFallbackEveryPair(_Quiet):
             for spot in sk.view_spots(F, view):
                 for b2, b3 in es.allowed_pairs(F, view, spot):
                     for veh, _ in es.event_vehicles(F, view):
-                        spec = es.build_spec(F, None, spot, view, b2, b3, veh, None, light=light)
-                        cands = es.fallback_candidates_ids(spec)
+                        spec = es.build_spec(F, None, spot, view, b2, b3, veh, 6, light=light)
+                        cands = es.fallback_candidates(spec)
                         self.assertTrue(cands, (view, spot, b2, b3, veh))
-                        pid, sl = cands[0]
-                        spec = {**spec, "people_line": pid}   # 4 Kas: üretimdeki gibi seçilen hikâye spec'te
+                        sl = cands[0]
                         prompt = es.assemble_prompt(spec, sl)
-                        self.assertLessEqual(len(prompt.split()), 215)
+                        self.assertLessEqual(len(prompt.split()), 185)
                         self.assertEqual(es.final_prompt_issues(spec, sl, prompt, es.assemble_story(spec, sl)), [],
                                          (view, spot, b2, b3, veh))
                         n += 1
