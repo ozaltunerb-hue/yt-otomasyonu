@@ -19,6 +19,7 @@ import threading
 
 import config
 from core.skeleton_pipeline import (EVENT_SKELETONS, REGION_VIEW_EVENTS, REGION_VIEWS, VOLC_ENV_WEIGHTS, VOLC_ENVS,
+                                     volc_env_text,
                                     VOLC_SPOT_KIND, VOLC_SPOT_WEIGHTS, VOLCANO_WEATHER_WEIGHTS, count_range,
                                     style_suffix, view_spots)
 from core.trace_format import count_constraints
@@ -147,7 +148,10 @@ RECENT_BEAT_BLOCK_BY_EVENT = {PYROCLASTIC: 2,
 # ör. B1+C3, B3+C2, B5+C4 sonrası sadece B2 kalır ve B2'nin C1/C6 eşi dışlı; 1 derinlikte her zaman aday var)
 BEAT_BLOCK_FALLBACK_EVENTS = (EARTHQUAKE_APARTMENT, EARTHQUAKE_OLD_STREET, LANDFALL, WILDFIRE, AVALANCHE_VILLAGE,
                               FACADE_FIRE, LIBERTY,
-                              PYROCLASTIC)   # 6 Kas, Bahadır kararı: Q2 pasif (çatı terası/balkon 3 final)
+                              PYROCLASTIC,   # 6 Kas, Bahadır kararı: Q2 pasif (çatı terası/balkon 3 final)
+                              # 6 Kas (2): T1 ve H3 pasif, 3 derinlikte sırayla aday bitebilir (dev dalga T2/T8 + W1
+                              # yasak; sokak H1 + M8 yasak). Aday varken seçim aynı, sadece çıkmazda derinlik 1.
+                              TIDAL, MUDSLIDE)
 
 # ── Kilit görsel (0-4s'nin ilk cümlesi, kod yazar) ──────────────────────────────────────────────────────────
 EVENT_KEY_VISUAL = {
@@ -970,7 +974,9 @@ _MET_BAR = ("bar", "beach bar", "lounger")
 # promenat/büfe, X3 bahçe + duvar
 METEOR_OBJECT_GATES = {"W1": (_MET_PALM, _MET_ROOFTILE), "W2": (_MET_STEAM, _MET_CAR),
                        "W3": (_MET_SUNBED, _MET_POOL), "X1": (_MET_FLOOD, _MET_PROMENADE),
-                       "X2": (_MET_SURGE, _MET_CAR), "X3": (_MET_GARDEN, _MET_WALL), "X4": (_MET_SURF, _MET_BAR)}
+                       "X2": (_MET_SURGE, _MET_CAR), "X3": (_MET_GARDEN, _MET_WALL), "X4": (_MET_SURF, _MET_BAR),
+                       # 6 Kas (2), Bahadır: W5 palmiye + promenat, W6 çatı + plaj barı
+                       "W5": (_MET_PALM, _MET_PROMENADE), "W6": (_MET_ROOFTILE, _MET_BAR)}
 # Tek meteor (kural 2): GPT'nin insan cümlesi, 4-9s ve 9-15s'te yasak (kod yedeği de aynı denetimden geçer)
 METEOR_ONE_BANNED = ("rain", "shower", "fragment", "debris", "ember", "fireball", "meteors", "meteorite", "second",
                      "another", "streak", "chunk", "falling rock")
@@ -982,7 +988,8 @@ METEOR_WATER = ("water", "seawater", "sea", "surge", "flood", "surf", "spray", "
 METEOR_WHITE = ("white", "foaming", "steaming")
 # Kalıcı hasar (kural 4): her W/X maddesinde ve GPT'nin 4-9s / 9-15s cümlesinde en az biri (çekimleriyle)
 METEOR_DAMAGE = ("snap", "rip", "tear", "tore", "torn", "flip", "smash", "shove", "knock over", "knocks over",
-                 "knocked over", "knocking over", "crush", "topple", "break", "broke", "broken")
+                 "knocked over", "knocking over", "crush", "topple", "break", "broke", "broken",
+                 "blasts")   # 6 Kas (2): W5 "blasts ... flat" (fiil; "the blast" ismi sayılmaz)
 # Ek kural (29 Eki, Bahadır): sakin/atmosferik beat yok. Bu fiiller hiçbir meteor beat'inde (lint) ve GPT'nin yazdığı
 # dilimlerde (EVENT_BANNED_WORDS) geçmez. Çekimleri find_terms ile eşleşir (billows, drifting, stood, staring...)
 METEOR_STATIC = ("billow", "drift", "rolls slowly", "roll slowly", "rolling slowly", "rolled slowly", "watch", "stare",
@@ -1883,16 +1890,25 @@ EVENT_BEATS = {
             # and flat roof slab tear away" (farklılık 2: P1)
             "Q6": {"text": "the cloud flips a row of parked cars and piles them against a house wall",
                    "terms": [_VOLC_CAR, _VOLC_FLIP + _VOLC_FLING + ("pile", "shove", "push", "pin", "jam", "wedge")]},
+            # 6 Kas (2), Bahadır: birebir, DENEME (TRIAL_BEATS). Yıkım bulutun ÖNÜNDE görünür, tozun içinde kaybolmaz
+            "Q7": {"text": "the cloud front tears the roof off the house right below before swallowing it",
+                   "terms": [_VOLC_ROOF, _VOLC_RIP]},
+            "Q8": {"text": "the cloud front knocks down the front wall of the two-storey house across the street, then "
+                           "swallows it",
+                   "terms": [_VOLC_HOUSE + _VOLC_WALL, ("knock down", "knocks down", "knocked down") + _VOLC_COLLAPSE]},
         },
         # Kural (13 Eki): aynı yapı iki dilimde yok. Çatı (P3,Q3) (P3,Q6) (P6,Q3) (P6,Q6); ev cephesi/duvarı (P1,Q1);
-        # balkon (P1,Q6); duvar (P5,Q1) (P5,Q4). Dükkân binası (Q5) ev sayılmaz.
+        # balkon (P1,Q6); duvar (P5,Q1) (P5,Q4). Dükkân binası (Q5) ev sayılmaz. 6 Kas (2): aynı kural Q7 (çatı: P3, P6) ve
+        # Q8 (ev duvarı: P1, P5)
         "excluded_pairs": {("P3", "Q3"), ("P1", "Q1"), ("P3", "Q6"), ("P6", "Q3"), ("P6", "Q6"), ("P1", "Q6"),
-                           ("P5", "Q1"), ("P5", "Q4")},
+                           ("P5", "Q1"), ("P5", "Q4"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8")},
         "excluded_views": {},
         # Kamera evinin/terasın çatısı: çatı maddeleri (P3 kiremit, P6 sac çatı, Q3 baca, Q6 çatı döşemesi) çatı
         # terasında ve köy evi balkonunda seçilmez, sadece yamaç terasında
         "excluded_spots": {"P3": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}, "Q3": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"},
-                           "P6": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}, "Q6": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}},
+                           "P6": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}, "Q6": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"},
+                           # 6 Kas (2): Q7 çatı maddesi, aynı kural
+                           "Q7": {"Rooftop terrace facing the erupting volcano", "Balcony of a village house facing the erupting volcano"}},
     },
     VOLCANIC_BOMBS: {
         "slice_2": {
@@ -2242,6 +2258,11 @@ EVENT_BEATS = {
             # 29 Eki (3), Bahadır: yeni metin (önceki "...pergolas and awnings...": ince hedef)
             "W3": {"text": "the blast rips the sunbeds off the villa terraces and smashes them into the pools",
                    "terms": [_MET_SUNBED, _MET_POOL]},
+            # 6 Kas (2), Bahadır: birebir, DENEME (TRIAL_BEATS). W2 ("flips the cars") bunlar eklendikten sonra PASİF
+            "W5": {"text": "the shockwave blasts the palm trees along the promenade flat",
+                   "terms": [_MET_PALM, _MET_PROMENADE]},
+            "W6": {"text": "the blast tears the roofs off the beach bars along the promenade",
+                   "terms": [_MET_ROOFTILE, _MET_BAR]},
         },
         "slice_3": {
             # 29 Eki (3), Bahadır: "knocking down" -> "knocking over" (hasar listesinde knock over)
@@ -2259,7 +2280,8 @@ EVENT_BEATS = {
         },
         # Aynı nesne iki dilimde (29 Eki (3), Bahadır): araba (W2: X2), şezlong (W3: X4). Sığma (Bahadır kararı): W2+X1
         # (17 + 17 kelime) O1 + öğle/kapalı ışıkta 205'i 1 kelime aşıyordu
-        "excluded_pairs": {("W2", "X2"), ("W3", "X4"), ("W2", "X1")},
+        # 6 Kas (2): plaj barı (W6: X4), aynı kural
+        "excluded_pairs": {("W2", "X2"), ("W3", "X4"), ("W2", "X1"), ("W6", "X4")},
         "excluded_views": {},
         "excluded_spots": {},
     },
@@ -2364,8 +2386,13 @@ FLOOD_4KAS_PASSIVE_WATER = "Water rises past the car windows and races toward th
 DISABLED_BEATS: dict[str, set[str]] = {
     FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8", "D9"},
     # 6 Kas: W9 (ikinci araç riski)
-    TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9"},
+    # 6 Kas (2): T1 (araç havaya kalkar, fırlar)
+    TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9", "T1"},
     FACADE_FIRE: {"N4", "M6"},
+    # 6 Kas (2), Bahadır (kalan havuz temizliği): sokak H3 (döner); yamaç R3, R6 (döner). Sokak H4 (ezer) AKTİF: H6 bütün aktif M
+    # beatlerle dışlı, gerçekte seçilemiyor; H4 de gitse 4-9s gerçek havuz 3 kalırdı (en az 4 kuralı, cadde P4 emsali)
+    MUDSLIDE: {"H3"},
+    SLOPE: {"R3", "R6"},
     # 6 Kas 2026, Bahadır (havuz temizliği): dönen, takla atan, havaya kalkan, fırlatılan aracı Seedance şekil değiştirerek
     # çiziyor (3-5 Kas videoları); küçük final antiklimaks. Ateş hortumu T6 (araç döner), U10 (küçük final), T5 (ters döner),
     # U6 (römork savrulur). T5 ve U6 15 Eki 10,7K videosunda geçmiş olabilir, hit değil: Bahadır pasif dedi. Kilitten ÖNCE
@@ -2373,12 +2400,14 @@ DISABLED_BEATS: dict[str, set[str]] = {
     FIRE_TORNADO: {"T5", "T6", "U6", "U10"},
     # Kül bulutu Q2: ince cam hedefi, tozda kayboluyor (hit değil: hit P2+Q1 yamaç terası). Çatı terası ve balkonda 9-15s'te
     # Q1 Q4 Q5 kalır (Q3, Q6 orada dışlı), 2 derinlikte 8/646 sırada aday biter: BEAT_BLOCK_FALLBACK_EVENTS'te (Bahadır kararı)
-    PYROCLASTIC: {"Q2"},
-    # Hortum marina Y5: araç havalanır, suya fırlar
-    MARINA_TORNADO: {"Y5"},
+    # 6 Kas (2): P6 (sac çatılar uçar), Q6 (arabalar takla atar); yerine Q7, Q8 deneme
+    PYROCLASTIC: {"Q2", "P6", "Q6"},
+    # Hortum marina Y5: araç havalanır, suya fırlar. 6 Kas (2): Z7 (pergola havaya kalkar)
+    MARINA_TORNADO: {"Y5", "Z7"},
     # Hortum cadde P5 (araç havalanır, fırlar), P7 (kamyon fırlatılır). P6 AKTİF: 17 Eki 684K hitinde kullanılmış (Bahadır kararı)
     AVENUE: {"P5", "P7"},
-    # Meteor W2 ("flips the cars") bu turda AKTİF (Bahadır kararı; 4-9s'te sadece 3 öğe var)
+    # 6 Kas (2): Meteor W2 ("flips the cars") PASİF: 4-9s'e W5, W6 eklendi, 4 öğe kaldı
+    METEOR: {"W2"},
     HELICOPTER: {"G7"},
     VOLCANIC_BOMBS: {"T5"},
     # 4 Kas (4), Bahadır: 4-9s'te araç YOK. Hortum karaya ~11. sn'de ulaşıyor; B4 aracı 4-9s'te ittirdiği için Seedance
@@ -2424,6 +2453,8 @@ TRIAL_BEATS: dict[str, set[str]] = {
     FLOOD: {"D10", "V9", "V10", "V11", "V12", "D12", "D13", "D14", "D15", "D16", "D17", "D18"},   # 3 Kas: sel su kontrolü
     TIDAL: {"W9"},
     FACADE_FIRE: {"N7", "M12"},   # 3 Kas (devam): M12 araç öğesi
+    PYROCLASTIC: {"Q7", "Q8"},    # 6 Kas (2)
+    METEOR: {"W5", "W6"},         # 6 Kas (2)
     # 4 Kas (B2): Özgürlük Anıtı tüm öğeler DENEME (OZGURLUK_DOGRULAMA açıkken eşit LRU)
     LIBERTY: {"B1", "B2", "B3", "B4", "B5", "B6", "C1", "C2", "C3", "C4", "C6"},
 }
@@ -2442,7 +2473,8 @@ METEOR_HELD_BEATS: dict[str, tuple] = {}
 # Havuzdaki maddelerin puanları (rapor ve test; hepsi en az 3)
 METEOR_BEAT_SCORES = {"W1": (4, 3, 4, 4, 5, 4), "W2": (5, 4, 4, 4, 5, 4), "W3": (4, 3, 4, 4, 5, 4),
                       "X1": (5, 4, 3, 4, 5, 4), "X2": (5, 4, 4, 4, 5, 4), "X3": (4, 4, 5, 4, 4, 4),
-                      "X4": (4, 4, 3, 4, 5, 4)}
+                      "X4": (4, 4, 3, 4, 5, 4),
+                      "W5": (4, 3, 4, 4, 5, 3), "W6": (4, 3, 3, 4, 5, 4)}   # 6 Kas (2): W5 W1 ile aynı nesne (farklılık 3)
 
 # ── 17 Eki 2026, Bahadır (temizlik turu): kurala göre çıkarılan beat'ler. Kural: denetimde (scratch/
 # asama3_havuz_denetimi.md) ZAYIF/ÇIKAR + en az biri: ince/uzak/küçük hedef, fizik ≤2, aksiyon ≤2, yakın ≤2, büyük ≤2,
@@ -2575,7 +2607,7 @@ OBJECT_GROUPS = {
     HELICOPTER: {"G7": 0, "F1": 0, "F2": 1, "F4": 0, "F5": 1, "G1": 2, "G2": 0, "G3": 0, "G5": 0, "G6": 1},   # 31 Eki (3): F5 güverte
     ERUPTION: {"S3": 0, "S4": 0, "S5": 0, "S6": 1, "S7": 1, "S8": 1, "U2": 1, "U3": 0, "U4": 0, "U5": 0, "U6": 0,
                "U7": 1, "U8": 1},
-    PYROCLASTIC: {"P1": 1, "P2": 0, "P3": 1, "P4": 0, "P5": 0, "P6": 0, "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q5": 0,
+    PYROCLASTIC: {"Q7": 0, "Q8": 0, "P1": 1, "P2": 0, "P3": 1, "P4": 0, "P5": 0, "P6": 0, "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q5": 0,
                   "Q6": 0},
     VOLCANIC_BOMBS: {"R2": 1, "R3": 1, "R4": 1, "R5": 1, "R7": 1, "R8": 1, "R9": 1, "T1": 1, "T2": 1, "T5": 1, "T6": 1,
                      "T7": 1, "T8": 1, "T9": 1},
@@ -2587,7 +2619,7 @@ OBJECT_GROUPS = {
     EARTHQUAKE_APARTMENT: {"Q5": 0, "P1": 1, "P2": 0, "P3": 1, "P4": 0, "Q1": 1, "Q2": 0, "Q3": 0, "Q4": 1},
     EARTHQUAKE_OLD_STREET: {"T7": 0, "T5": 0, "R1": 0, "R2": 0, "R3": 0, "R4": 1, "T1": 1, "T3": 0, "T4": 0},   # 18 Eki: T2 çıktı
     # 29 Eki (2): meteor nesneleri palmiye (W1), araç (X2), bar/şezlong (X4); iki nesne zorunluluğu METEOR_OBJECT_GATES
-    METEOR: {"W1": 0, "W2": 1, "W3": 0, "X1": 1, "X2": 1, "X3": 0, "X4": 1},
+    METEOR: {"W1": 0, "W2": 1, "W3": 0, "W5": 0, "W6": 1, "X1": 1, "X2": 1, "X3": 0, "X4": 1},
     LIBERTY: {"B1": 0, "B2": 0, "B3": 0, "B5": 0, "B6": 0, "C1": 0, "C2": 0, "C3": 0, "C4": 0},   # 4 Kas: Özgürlük Anıtı
 }
 
@@ -3579,7 +3611,7 @@ def volc_env_label(name: str, spot: str) -> str:
 def volc_place(event: str, name: str) -> str:
     """GPT'ye giden PLACE: ortam metni + volkana göre konum (iskelet yer metninin sonu)."""
     tail = "on the lower flank of the volcano" if event == PYROCLASTIC else "below the erupting volcano"
-    return f"{VOLC_ENVS[name]['text']}, {tail}"
+    return f"{volc_env_text(event, name)}, {tail}"
 
 
 def expected_key_visual(event: str, spot: str, opening: str | None = None) -> str:

@@ -96,7 +96,7 @@ GUARD = {
     "acilis": {
         # 3 Kas (sel su kontrolü): B pasif; koruma B' (E: aynı su duvarı kavşakta, arabalar yan yatmaz yana itilir)
         FLOOD: ("E", "A'nın aynı su duvarı, kavşakta; ilk karede büyük tehdit (B'nin yan yatırmasız hâli)"),
-        TIDAL: ("B", "dev dalga + kıyı yolu, ilk karede büyük tehdit"),
+        TIDAL: ("B", "dev dalga + kıyı yolu, ilk karede büyük tehdit"),   # 6 Kas (2): B pasif (ox.DISABLED_OPENINGS), rotasyonda sadece A (Bahadır kararı)
         MUDSLIDE: ("D", "21 Eki üretiminde kullanıldı (Kie'ye gitti), sorun raporu yok"),
         SLOPE: ("B", "çamur kütlesi yolu gömer: A'ya en yakın"),
         VILLAGE: ("B", "tarla çamuru köyün üst sırasına: A'ya en yakın"),

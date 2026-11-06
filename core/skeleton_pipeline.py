@@ -196,6 +196,18 @@ VOLC_ENVS = {
     "mountain_village": {"label": "dağ eteği köyü",
                          "text": "a village street of wooden and stone houses among trees"},
 }
+# 6 Kas (2), Bahadır: kül bulutu pastel_town metninde "concrete" -> "painted stucco", araç tarifi "parked trucks" -> "balconies". VOLC_ENVS kilitli bombalarla ortak:
+# AYRI kopya, bombalar bayt bayt aynı. Metin her zaman volc_env_text ile okunur.
+PYRO_ENV_TEXTS = {"pastel_town": "a street of colorful painted stucco houses with balconies"}
+
+
+def volc_env_text(event: str | None, name: str) -> str:
+    """Olayın ortam metni (kül bulutunda kendi kopyası olan ortam için o kopya)."""
+    if event == "Pyroclastic cloud races down into a village street" and name in PYRO_ENV_TEXTS:
+        return PYRO_ENV_TEXTS[name]
+    return VOLC_ENVS[name]["text"]
+
+
 # Ağırlıklar: bombalarda eşit; kül bulutunda renkli evler bulutu daha koyu gösteriyor (A=2, B=2, C=1, D=1)
 VOLC_ENV_WEIGHTS = {
     "Volcanic bombs slam into a village street": {"pastel_town": 1, "hillside_town": 1, "suburb": 1,
@@ -913,7 +925,7 @@ def volcano_camera(spot: str, event: str | None = None, volc_env: str | None = N
     # {perch} railing in the foreground; ..."
     perch = VOLCANO_CAMERA_PERCH[spot]
     # 18 Eki (3): ortam ekseni (bombalar, kül bulutu): sokak metni ortamdan; ortam yoksa eski metin
-    street = VOLC_ENVS[volc_env]["text"] if volc_env else "the village street"
+    street = volc_env_text(event, volc_env) if volc_env else "the village street"
     if event in VOLCANO_SHORT_CAMERA_EXCLUDED:   # kül bulutu: 13 Eki (3) metni aynen
         return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking down over "
                 f"{street} toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, "
@@ -1137,6 +1149,12 @@ _RAILING_CORNER = re.compile(r"a corner of the \w+ railing|a (?!railing\b)\w+ ra
 # ile aynı ders). Sadece "the tidal wave" tehdidi: bu tehdit yalnız dev dalgada var, diğer olayların şablonu aynen.
 TIDAL_FRAME_OLD = "the tidal wave always in frame"
 TIDAL_FRAME_NEW = "the camera never pans, turns or follows"
+# 6 Kas (2), Bahadır: aynı cümle cephe, sokak heyelanı, yamaç heyelanı, hortum marina, hortum cadde. Tehditler ("the tornado")
+# kilitli olaylarla ortak: değişim OLAY bazlı (style_suffix), şablon ve kilitli olayların eki bayt bayt aynı.
+NEVER_PANS_EVENTS = ("Flames race up a tower facade", "Mudslide pours down a hillside street",
+                     "Rain-soaked slope collapses onto a roadside", "Tornado crosses a marina quay",
+                     "Tornado sweeps down a coastal avenue")
+_THREAT_IN_FRAME = re.compile(r"\bthe [\w' -]+? always in frame")
 
 
 def camera_rules(camera: str) -> str:
@@ -1264,6 +1282,8 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
     env_centric = s["domain"] in ENV_CENTRIC_DOMAINS
     if env_centric:   # 21 Eki (genel kalite): kamera ortak kuralları, gerçek zaman, heyelanda çamur rengi
         camera = camera_rules(camera)
+        if event in NEVER_PANS_EVENTS:
+            camera = _THREAT_IN_FRAME.sub(TIDAL_FRAME_NEW, camera)
         if s["domain"] == "meteor_disasters":   # 29 Eki (3): ön planda yüksek bina yok
             camera = camera.replace(NO_FACE, METEOR_NO_FACE)
         guardrails = f"{guardrails} {REAL_TIME}" + (f" {MUD_COLOR}" if s["domain"] == "landslide_disasters" else "")

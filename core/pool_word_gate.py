@@ -56,7 +56,7 @@ def _items(event: str, camera_seeds) -> list[tuple[str, str, str]]:
     if event in es.METEOR_EVENTS:
         out += [("ortam", k, v) for k, v in es.METEOR_ENVS.items()]
     if event in es.VOLC_ENV_EVENTS:
-        out += [("ortam", k, v["text"]) for k, v in sk.VOLC_ENVS.items()]
+        out += [("ortam", k, sk.volc_env_text(event, k)) for k in sk.VOLC_ENVS]
     if event in es.AVALANCHE_EVENTS:
         out += [("ortam", axis, v) for axis, vals in es.ENV_AXES.items() for v in vals]
     if event in es.EARTHQUAKE_EVENTS:
@@ -101,27 +101,8 @@ KNOWN_HITS: frozenset[tuple[str, str, str, str]] = frozenset({
     ('Earthquake collapses an apartment block', 'beat', 'Q3', 'concrete'),
     ('Earthquake collapses an apartment block', 'kamera', '-', 'concrete'),
     ('Earthquake collapses an apartment block', 'ortam', 'city', 'concrete'),
-    ('Flames race up a tower facade', 'kamera', '-', 'always in frame'),
-    ('Flames race up a tower facade', 'ortam', 'E', 'concrete'),
-    ('Meteor slams into the sea off the coast', 'beat', 'W2', 'flip'),
-    ('Mudslide pours down a hillside street', 'beat', 'H3', 'spin'),
     ('Mudslide pours down a hillside street', 'beat', 'H4', 'crushed'),
-    ('Mudslide pours down a hillside street', 'kamera', '-', 'always in frame'),
-    ('Mudslide pours down a hillside street', 'ortam', 'B', 'concrete'),
-    ('Pyroclastic cloud races down into a village street', 'beat', 'P6', 'fly'),
-    ('Pyroclastic cloud races down into a village street', 'beat', 'Q6', 'flip'),
-    ('Pyroclastic cloud races down into a village street', 'kamera', '-', 'concrete'),
-    ('Pyroclastic cloud races down into a village street', 'ortam', 'pastel_town', 'concrete'),
-    ('Rain-soaked slope collapses onto a roadside', 'beat', 'R3', 'spin'),
-    ('Rain-soaked slope collapses onto a roadside', 'beat', 'R6', 'spin'),
-    ('Rain-soaked slope collapses onto a roadside', 'kamera', '-', 'always in frame'),
-    ('Tidal wave surges over a coastal city street', 'acilis', 'B', 'roll over'),
-    ('Tidal wave surges over a coastal city street', 'beat', 'T1', 'lift'),
-    ('Tornado crosses a marina quay', 'beat', 'Z7', 'lift'),
-    ('Tornado crosses a marina quay', 'kamera', '-', 'always in frame'),
-    ('Tornado sweeps down a coastal avenue', 'acilis', 'B', 'lift'),
     ('Tornado sweeps down a coastal avenue', 'beat', 'P4', 'crushed'),
     ('Tornado sweeps down a coastal avenue', 'beat', 'P6', 'spin'),
     ('Tornado sweeps down a coastal avenue', 'beat', 'P6', 'swept up'),
-    ('Tornado sweeps down a coastal avenue', 'kamera', '-', 'always in frame'),
 })

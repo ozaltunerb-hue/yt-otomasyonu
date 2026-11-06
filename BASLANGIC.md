@@ -25,6 +25,20 @@
 
 ---
 
+## 📋 DEVİR: 6 Kasım (2) kalan havuz temizliği
+
+Kie/GPT çağrısı yok; test `tests/test_havuz_6kas_2.py`. Kilitli 8 olay ve izin listesi dışındaki tüm olaylar 40 tohumda bayt bayt aynı.
+- **Pasif:** kül bulutu P6 Q6, meteor W2, dev dalga T1 + açılış B, sokak heyelanı H3, yamaç heyelanı R3 R6, marina Z7, cadde açılış B.
+- **Sokak H4 AKTİF (Bahadır kararı):** H6 bütün aktif M beatleriyle dışlı, gerçekte seçilemiyor. H4 de pasif olsa 4-9s'te gerçek havuz 3 olurdu (en az 4 kuralı). Cadde P4 ve P6 aktif (Bahadır kararı).
+- **Yeni, DENEME (`es.TRIAL_BEATS`):** kül bulutu Q7 Q8, meteor W5 W6. Aynı yapı kuralı: (P3,Q7) (P6,Q7) (P1,Q8) (P5,Q8) (W6,X4); Q7 çatı terası ve balkonda yok. `METEOR_DAMAGE`'a "blasts" eklendi (W5 birebir metni kapıdan geçsin diye).
+- **Ortam:** kül bulutu pastel_town `sk.PYRO_ENV_TEXTS` kopyası ("a street of colorful painted stucco houses with balconies"), bombalar kilitli olduğu için `sk.VOLC_ENVS` aynen; metin her zaman `sk.volc_env_text(event, name)` ile okunur. Sokak B "stucco", cephe E "brick".
+- **Kamera:** `sk.NEVER_PANS_EVENTS` (cephe, sokak, yamaç, marina, cadde) "the camera never pans, turns or follows". Değişim olay bazlı (`style_suffix`): şablon ortak, kilitli olaylarda "always in frame" aynen.
+- **Dev dalga rotasyonu:** B koruma harfiydi (`pa.GUARD`); şimdi rotasyonda sadece A var, C ve D havuzda ama seçilmiyor (Bahadır kararı: A ile devam).
+- **Aday tükenmesi:** dev dalga ve sokak `es.BEAT_BLOCK_FALLBACK_EVENTS`'e girdi (çıkmazda derinlik 1, aday varken seçim aynı).
+- **Kelime kapısı `KNOWN_HITS` 16 kayıt:** 12 deprem/çığ + sokak H4, cadde P4, P6 (2).
+
+---
+
 ## 📋 DEVİR: 6 Kasım kilit (8 olay) + havuz temizliği + kelime kapısı + kül bulutu insan ekseni
 
 Kie/GPT çağrısı yok; test `tests/test_kilit_6kas.py`, `tests/test_pool_word_gate.py`.

@@ -42,7 +42,9 @@ class TestData(unittest.TestCase):
         self.assertNotIn(es.FIRE_TORNADO, ox.OPENINGS)
         for e in EVENTS:
             # 3 Kas (sel su kontrolü): selde B ve C pasif, yerine E (B') ve F (C')
-            self.assertEqual(ox.options(e), ["A", "D", "E", "F"] if e == es.FLOOD else ["A", "B", "C", "D"])
+            # 6 Kas (2): dev dalga ve caddede B pasif
+            self.assertEqual(ox.options(e), ["A", "D", "E", "F"] if e == es.FLOOD else
+                             (["A", "C", "D"] if e in (es.TIDAL, es.AVENUE) else ["A", "B", "C", "D"]))
             self.assertIsNone(ox.text(e, "A"))
 
     def test_openings_pass_language_rules(self):

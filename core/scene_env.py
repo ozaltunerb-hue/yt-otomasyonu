@@ -42,7 +42,8 @@ SCENE_ENVS = {
     # 21 Eki (genel kalite): 175 kelime için kısa (gerçek zaman / ön plan / çamur satırları eklendi). Önceki: "a steep
     # hillside town of pastel concrete houses with tin roofs, banana trees and tangled power lines", "...with terracotta
     # roofs and narrow stepped lanes"
-    MUDSLIDE: {"B": "a steep town of pastel concrete houses with tin roofs and banana trees",
+    # 6 Kas (2), Bahadır: "concrete" -> "stucco" (B), cephe E "concrete" -> "brick" (kelime kapısı)
+    MUDSLIDE: {"B": "a steep town of pastel stucco houses with tin roofs and banana trees",
                "C": "a steep Mediterranean village of white-washed houses with terracotta roofs and stepped lanes",
                "D": "a hillside suburb of modern houses with garages, retaining walls and parked SUVs",
                "E": "a mountain town of wooden chalets with balconies among tall pine trees"},
@@ -76,7 +77,7 @@ SCENE_ENVS = {
     FACADE: {"B": "a dense city block of ten-storey apartment towers with balconies and satellite dishes",
              "C": "a historic quarter of five-storey stone apartment buildings with wrought-iron balconies",
              "D": "a modern clad residential tower beside a busy avenue",
-             "E": "a 1970s concrete housing estate with long balcony corridors and a playground"},
+             "E": "a 1970s brick housing estate with long balcony corridors and a playground"},
     HELICOPTER: {"B": "a canyon neighborhood of hillside villas with swimming pools and winding roads",
                  "C": "a lakeside town of houses below wooded hills",
                  "D": "a hillside town of white houses above a blue bay",

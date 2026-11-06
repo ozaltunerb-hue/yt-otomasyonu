@@ -66,9 +66,10 @@ class TestLibertyCamera(_Quiet):
             self.assertLessEqual(len(r["prompt"]), 1400, seed)
 
     def test_other_events_untouched(self):
-        # 'always in frame' kuyrukları başka olaylarda aynen duruyor (ör. cephe yangını, frame_axis)
+        # 'always in frame' kuyrukları kilitli olaylarda aynen duruyor (frame_axis). 6 Kas (2): cadde, cephe, heyelanlar, marina
+        # yeni cümlede (sk.NEVER_PANS_EVENTS, tests/test_havuz_6kas_2.py)
         self.assertIn("always in frame", open(fx.__file__, encoding="utf-8").read())
-        for seed, r in ps.snapshot_all([es.AVENUE], seeds=range(1, 6))[es.AVENUE].items():
+        for seed, r in ps.snapshot_all([es.LANDFALL], seeds=range(1, 6))[es.LANDFALL].items():
             self.assertNotIn(NEW, r["prompt"], seed)
 
 

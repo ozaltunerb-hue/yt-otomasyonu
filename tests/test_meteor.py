@@ -43,16 +43,19 @@ LIGHTS = ["golden sunset", "hazy midday light", "overcast grey sky"]
 W_POOL = {"W1": "the shockwave hits the shore, snapping palm trees and ripping roof tiles off the villas",
           # 29 Eki (3), Bahadır: yeni metinler
           "W2": "a ring of white steam and spray races ashore and flips the cars on the seafront road",
-          "W3": "the blast rips the sunbeds off the villa terraces and smashes them into the pools"}
+          "W3": "the blast rips the sunbeds off the villa terraces and smashes them into the pools",
+          # 6 Kas (2), Bahadır: birebir, DENEME; W2 pasif (havuzda durur)
+          "W5": "the shockwave blasts the palm trees along the promenade flat",
+          "W6": "the blast tears the roofs off the beach bars along the promenade"}
 X_POOL = {"X3": "white, foaming seawater bursts into the villa gardens right below, knocking over the garden walls",
           "X1": "the falling water column crashes onto the promenade as a white, foaming flood, smashing the beach kiosks",
           "X2": "a white, steaming surge floods the coastal road and shoves parked cars into the villa walls",
           "X4": "white surf bursts over the seawall and smashes the beach bars and loungers into the road"}
 HELD = {}
 OLD = {"M1", "M2", "M3", "M4", "M5", "M6", "N1", "N2", "N3", "N4", "N5", "N6"}
-# aynı nesne: W2+X2 araba, W3+X4 şezlong; sığma: W2+X1 (29 Eki (3), Bahadır)
-ALLOWED = {("W1", "X1"), ("W1", "X2"), ("W1", "X3"), ("W1", "X4"), ("W2", "X3"), ("W2", "X4"), ("W3", "X1"),
-           ("W3", "X2"), ("W3", "X3")}
+# aynı nesne: W3+X4 şezlong, W6+X4 plaj barı. 6 Kas (2): W2 pasif, W5 W6 eklendi
+ALLOWED = {("W1", "X1"), ("W1", "X2"), ("W1", "X3"), ("W1", "X4"), ("W3", "X1"), ("W3", "X2"), ("W3", "X3"),
+           ("W5", "X1"), ("W5", "X2"), ("W5", "X3"), ("W5", "X4"), ("W6", "X1"), ("W6", "X2"), ("W6", "X3")}
 # Test videosundaki gerçek GPT çıktısı (29 Eki): ikisi de yeni kapılardan RET almalı
 OLD_GPT_1 = "Burning fragments rain down, igniting rooftops as people race uphill in panic."
 OLD_GPT_2 = "A fierce wind levels palm trees and scatters furniture across villa terraces."
@@ -191,14 +194,14 @@ class TestMeteor(unittest.TestCase):
         self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, X_POOL)
         self.assertEqual(set(es.RETIRED_BEATS[MET]), OLD)
         self.assertEqual({k: v[0] for k, v in es.METEOR_HELD_BEATS.items()}, HELD)
-        self.assertNotIn(MET, es.DISABLED_BEATS)
+        self.assertEqual(es.DISABLED_BEATS[MET], {"W2"})   # 6 Kas (2)
         self.assertFalse(hasattr(es, "METEOR_WAVE_ENABLED"))
         pool = set(b["slice_2"]) | set(b["slice_3"])
         self.assertEqual(set(es.METEOR_BEAT_SCORES), pool)
         for bid, scores in list(es.METEOR_BEAT_SCORES.items()) + [(k, v[1]) for k, v in es.METEOR_HELD_BEATS.items()]:
             self.assertEqual(len(scores), 6)
             self.assertGreaterEqual(min(scores), 3, bid)   # 29 Eki (2): hiçbiri puandan düşmedi
-        self.assertEqual(b["excluded_pairs"], {("W2", "X2"), ("W3", "X4"), ("W2", "X1")})
+        self.assertEqual(b["excluded_pairs"], {("W2", "X2"), ("W3", "X4"), ("W2", "X1"), ("W6", "X4")})
         self.assertEqual(es.METEOR_RETIRED_ENVS, {"O4": "modern seafront apartment towers and low houses along a "
                                                         "promenade"})
         self.assertNotIn("O4", es.METEOR_ENVS)

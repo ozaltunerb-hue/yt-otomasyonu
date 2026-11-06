@@ -135,7 +135,7 @@ class TestPassiveAndActive(_Quiet):
                 self.assertFalse([p for p in pairs if set(p) & (PASSIVE | {"D5"})])
 
     def test_openings(self):
-        self.assertEqual(ox.DISABLED_OPENINGS, {F: {"B", "C"}})
+        self.assertEqual(ox.DISABLED_OPENINGS, {F: {"B", "C"}, T: {"B"}, es.AVENUE: {"B"}})   # 6 Kas (2): dev dalga, cadde
         self.assertEqual(ox.options(F), ["A", "D", "E", "F"])
         self.assertIn("B", ox.OPENINGS[F])   # silinmedi
         self.assertIn("C", ox.OPENINGS[F])
@@ -144,15 +144,15 @@ class TestPassiveAndActive(_Quiet):
         self.assertEqual(ox.OPENINGS[F]["F"], "A surge of brown floodwater pours down the sloping street and drags "
                                               "parked cars along with it.")
         self.assertEqual(pa.GUARD["acilis"][F][0], "E")
-        self.assertEqual(ox.options(T), ["A", "B", "C", "D"])   # dev dalga aynı
+        self.assertEqual(ox.options(T), ["A", "C", "D"])   # 6 Kas (2): dev dalga B pasif
 
     def test_tidal_only_t4_passive(self):
         """3 Kas (sel doğrulama ayarı): dev dalgada T4 pasif; T8, W3 aktif. 6 Kas: W9 de pasif (ikinci araç riski)."""
-        self.assertEqual(es.DISABLED_BEATS[T], {"W2", "W6", "W8", "T6", "T4", "W9"})
+        self.assertEqual(es.DISABLED_BEATS[T], {"W2", "W6", "W8", "T6", "T4", "W9", "T1"})   # 6 Kas (2): T1
         self.assertEqual(es.disabled_beats(T), es.DISABLED_BEATS[T])
         self.assertEqual(es.TRIAL_BEATS[T], {"W9"})
         self.assertIn("T4", es.EVENT_BEATS[T]["slice_2"])   # silinmedi
-        self.assertEqual(set(es.EVENT_BEATS[T]["slice_2"]) - es.DISABLED_BEATS[T], {"T1", "T2", "T3", "T5", "T7", "T8"})
+        self.assertEqual(set(es.EVENT_BEATS[T]["slice_2"]) - es.DISABLED_BEATS[T], {"T2", "T3", "T5", "T7", "T8"})
         self.assertEqual(set(es.EVENT_BEATS[T]["slice_3"]) - es.DISABLED_BEATS[T], {"W1", "W3", "W4", "W5"})
         for view in es.structure_views(T):
             for spot in sk.view_spots(T, view):

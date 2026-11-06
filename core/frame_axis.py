@@ -296,10 +296,10 @@ def fg_options(event: str, ftype: str, pos_spot: str | None, mode: str | None) -
 
 def family_window(event: str, volc_env: str | None = None) -> str:
     """Volkan/çığ/deprem pencere kadrajı: ailenin kanıtlanmış şablonu, yer pencere (175 kelime için kısa)."""
-    from core.skeleton_pipeline import VOLC_ENVS, VOLCANO_SHORT_CAMERA_EXCLUDED
+    from core.skeleton_pipeline import VOLCANO_SHORT_CAMERA_EXCLUDED, volc_env_text
     tail = "one continuous shot, no zoom, no cuts."
     if event in VOLCANO:
-        street = VOLC_ENVS[volc_env]["text"] if volc_env else "the village street"
+        street = volc_env_text(event, volc_env) if volc_env else "the village street"
         if event in VOLCANO_SHORT_CAMERA_EXCLUDED:
             return (f"Handheld footage filmed through an open upper-floor window, high vantage looking down over "
                     f"{street} toward the erupting volcano; slight hand shake, the camera stays fixed at the window, "

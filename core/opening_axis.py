@@ -202,7 +202,11 @@ OPENING_ENV_EXCLUDE = {
 
 
 # 3 Kas 2026, Bahadır (sel su kontrolü): pasif açılışlar (silinmedi, seçilmez)
-DISABLED_OPENINGS = {"Flash flooding in city streets": {"B", "C"}}
+# 6 Kas (2), Bahadır: dev dalga B ("rolls over"), cadde B (minibüs havaya kalkar). Dev dalgada B rotasyonun koruma harfiydi
+# (pa.GUARD): pasifken rotasyonda sadece A kalır; C ve D havuzda durur, rotasyona girmez.
+DISABLED_OPENINGS = {"Flash flooding in city streets": {"B", "C"},
+                     "Tidal wave surges over a coastal city street": {"B"},
+                     "Tornado sweeps down a coastal avenue": {"B"}}
 
 
 def options(event: str) -> list[str]:

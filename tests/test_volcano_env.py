@@ -155,6 +155,10 @@ class TestVolcEnvPrompt(unittest.TestCase):
     def test_env_in_camera_sentence_not_in_key(self):
         for e in es.VOLC_ENV_EVENTS:
             for env, (_, text) in ENVS.items():
+                # 6 Kas (2): kül bulutu pastel_town kendi kopyası ("painted stucco"); bombalar (kilitli) ENVS metni
+                text = sk.volc_env_text(e, env)
+                if e == VB:
+                    self.assertEqual(text, ENVS[env][1])
                 for spot in (BAL, RT, HT):
                     spec = self._spec(e, spot, env)
                     self.assertEqual(spec["key_visual"], KEYS[e])
@@ -230,7 +234,7 @@ class TestVolcEnvPrompt(unittest.TestCase):
         self.assertEqual(len(es.EVENT_BEATS[VB]["slice_2"]), 8)
         self.assertEqual(len(es.EVENT_BEATS[VB]["slice_3"]), 7)
         self.assertEqual(len(es.EVENT_BEATS[PY]["slice_2"]), 6)
-        self.assertEqual(len(es.EVENT_BEATS[PY]["slice_3"]), 6)
+        self.assertEqual(len(es.EVENT_BEATS[PY]["slice_3"]), 8)   # 6 Kas (2): Q7, Q8
         # hariç çiftler 6f16609 ile aynı (kod yedeği ve hikâye kuralları değişmedi)
         self.assertEqual(es.EVENT_BEATS[VB]["excluded_pairs"],
                          {("R1", "T2"), ("R1", "T9"), ("R2", "T2"), ("R2", "T9"), ("R5", "T6"), ("R7", "T1"),
@@ -238,7 +242,7 @@ class TestVolcEnvPrompt(unittest.TestCase):
                           ("R1", "T7"), ("R2", "T7")})   # 30 Eki (2), Bahadır: T7 araç (araç iki kez)
         self.assertEqual(es.EVENT_BEATS[PY]["excluded_pairs"],
                          {("P1", "Q1"), ("P1", "Q6"), ("P3", "Q3"), ("P3", "Q6"), ("P5", "Q1"), ("P5", "Q4"),
-                          ("P6", "Q3"), ("P6", "Q6")})
+                          ("P6", "Q3"), ("P6", "Q6"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8")})
 
 
 class TestVolcEnvPipeline(unittest.TestCase):
@@ -262,11 +266,11 @@ class TestVolcEnvPipeline(unittest.TestCase):
                 self.assertIn(env, ENVS)
                 import core.scene_env as sv   # 21 Eki (Aşama 5): ışık kapsamı (eklenenler ağırlık 1)
                 self.assertIn(tr["weather"], list(WEATHER[e]) + list(sv.LIGHT_ADD[e]))
-                self.assertIn(ENVS[env][1], scene["prompt"])
+                self.assertIn(sk.volc_env_text(e, env), scene["prompt"])   # 6 Kas (2): kül bulutu pastel_town kopyası
                 import core.opening_axis as ox   # 21 Eki (Aşama 6): açılış ekseni (A = bugünkü kilit cümle)
                 key = ox.text(e, st["axes"]["acilis"]) or KEYS[e]
                 self.assertTrue(scene["prompt"].startswith(f"0-4s: {key}"))
-                self.assertIn(f"PLACE: {ENVS[env][1]}, ", msgs[0])
+                self.assertIn(f"PLACE: {sk.volc_env_text(e, env)}, ", msgs[0])
                 self.assertIn(f"WEATHER: {tr['weather']}\n", msgs[0])
                 self.assertEqual(st["env_option"], ENVS[env][0])
                 self.assertEqual(st["environment"], f"Ortam: {ENVS[env][0]} ({env}) · kamera = {scene['spot']}")

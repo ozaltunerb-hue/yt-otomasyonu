@@ -117,9 +117,10 @@ class TestFloodBack(_Quiet):
 
 
 class TestPoolCleanup(_Quiet):
+    # 6 Kas (2) pasifleri tests/test_havuz_6kas_2.py'de (kül bulutu P6 Q6, meteor W2, dev dalga T1, ...)
     PASSIVE = {FT: {"T5", "T6", "U6", "U10"}, PY: {"Q2"}, TI: {"W9"}, es.MARINA_TORNADO: {"Y5"}, es.AVENUE: {"P5", "P7"}}
-    # Bahadır kararı: P6 684K hiti, T4 + U11 5 Kas 9/10, W2 bu turda aktif
-    KEPT = {FT: {"T4", "U11"}, es.AVENUE: {"P6"}, es.METEOR: {"W2"}}
+    # Bahadır kararı: P6 684K hiti, T4 + U11 5 Kas 9/10
+    KEPT = {FT: {"T4", "U11"}, es.AVENUE: {"P6"}}
 
     def test_passive_in_pool_not_selectable(self):
         for event, ids in self.PASSIVE.items():
@@ -213,7 +214,7 @@ class TestPyroclasticPeople(_Quiet):
 class TestPoolsDoNotRunOut(_Quiet):
     def test_long_sequence(self):
         """Havuzu küçülen olaylarda 100 art arda üretim: aday tükenmez, pasif öğe gelmez (kod yedeğiyle, geçmişli)."""
-        for event in (FT, PY, TI, es.MARINA_TORNADO, es.AVENUE):
+        for event in (FT, PY, TI, es.MARINA_TORNADO, es.AVENUE, es.METEOR, es.MUDSLIDE, es.SLOPE):   # 6 Kas (2): son üçü
             with self.subTest(event=event):
                 hist, recs = [], []
                 for _ in range(100):

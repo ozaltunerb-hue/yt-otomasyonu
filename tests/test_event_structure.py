@@ -995,7 +995,7 @@ class TestTidal(unittest.TestCase):
         # (W6 dışlaması artık noktayla: seawall'da W6 yok)
         # 3 Kas (Aşama 2): T6, W2, W6, W8 pasif, W9 + 3 hariç çift: 17 görünüm×spot × 30 çift × 3 araç
         # 3 Kas (sel doğrulama ayarı): T4 pasif (5 çift az)
-        self.assertEqual(n, 17 * 22 * 3)   # 6 Kas: W9 pasif, 22 çift
+        self.assertEqual(n, 17 * 18 * 3)   # 6 Kas: W9 pasif; 6 Kas (2): T1 pasif, 18 çift
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_w6_never_on_seawall(self):
@@ -1303,7 +1303,7 @@ class TestLandslideStructure(unittest.TestCase):
         # 18 Eki (2): çamur 3 × 30 × 4; yol 2 × 27 × 4; köy (32 + 32 + 22) × 3
         # 22 Eki: çamur 3 × 29 × 4 (H4+M6 bütçe); yol 2 × 24 × 4 (R2+S7, R2+S4, R2+S5); köy (31 + 31 + 21) × 3 (K5+L5
         # çıktı, K1+L5 ve K3+L6 eklendi). 22 Eki (2): yol 2 × 26 × 4 (R2 kısaldı, R2+S4 ve R2+S5 geri geldi)
-        self.assertEqual(n, 348 + 208 + 249 - 36)   # 31 Eki (3): heyelan (H6, M3), (H6, M4), (H4, M4) dışlandı
+        self.assertEqual(n, 625)   # 31 Eki (3): 769; 6 Kas (2): sokak H3, yamaç R3 R6 pasif
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -1590,7 +1590,7 @@ class TestTornadoStructure(unittest.TestCase):
         # 18 Eki (2): karaya vurma (19 + 16 + 19) × 4; marina 30 × 4; cadde 3 × 28 × 4
         # 23 Eki (hortum denetimi): karaya vurma 3 × 20 × 4 (C2+E1 ve E1 nokta dışlaması çıktı); marina 28 × 4 (Y3+Z4, Y3+Z2)
         # 29 Eki (4): marina 27 × 4 (Y5+Z3 dışlandı)
-        self.assertEqual(n, 240 + 88 + 228)   # 30 Eki (2): cadde (P5, Q3); 6 Kas: marina Y5 pasif 22 çift, cadde P5 P7 pasif 19 çift
+        self.assertEqual(n, 240 + 72 + 228)   # 30 Eki (2): cadde (P5, Q3); 6 Kas: cadde P5 P7 pasif 19 çift; 6 Kas (2): marina Y5 Z7 pasif 18 çift
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -1600,7 +1600,7 @@ class TestTornadoStructure(unittest.TestCase):
         for spot in sk.view_spots(es.LANDFALL, None):
             self.assertEqual(d3(es.LANDFALL, spot), {"E1", "E2", "E4", "E5", "E7"})
         self.assertEqual(sk.view_spots(es.MARINA_TORNADO, None), ["High marina balcony"])
-        self.assertEqual(d3(es.MARINA_TORNADO, "High marina balcony"), {"Z1", "Z2", "Z3", "Z4", "Z6", "Z7"})   # 18 Eki: Z7
+        self.assertEqual(d3(es.MARINA_TORNADO, "High marina balcony"), {"Z1", "Z2", "Z3", "Z4", "Z6"})   # 6 Kas (2): Z7 pasif
         # 10 Eki, Bahadır: cadde kamerası yüksek balkonda, her madde üç noktada da seçilebilir (17 Eki: Q5 çıktı)
         for spot in self.SPOTS[es.AVENUE]:
             self.assertEqual(d3(es.AVENUE, spot), {"Q1", "Q2", "Q3", "Q4", "Q6"})
@@ -2790,9 +2790,12 @@ class TestVolcano(unittest.TestCase):
             "Q4": "the cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street",
             "Q5": "the cloud blasts the front off a shop building and the brickwork falls into the street",
             "Q6": "the cloud flips a row of parked cars and piles them against a house wall",   # 30 Eki (Aşama B)
+            # 6 Kas (2), Bahadır
+            "Q7": "the cloud front tears the roof off the house right below before swallowing it",
+            "Q8": "the cloud front knocks down the front wall of the two-storey house across the street, then swallows it",
         }, {("P3", "Q3"), ("P1", "Q1"), ("P3", "Q6"), ("P6", "Q3"), ("P6", "Q6"), ("P1", "Q6"), ("P5", "Q1"),
-            ("P5", "Q4")},
-           {"P3": {RT, VB}, "Q3": {RT, VB}, "P6": {RT, VB}, "Q6": {RT, VB}}),
+            ("P5", "Q4"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8")},
+           {"P3": {RT, VB}, "Q3": {RT, VB}, "P6": {RT, VB}, "Q6": {RT, VB}, "Q7": {RT, VB}}),
         es.VOLCANIC_BOMBS: ({
             "R1": "a glowing rock punches through the roof of the {vehicle}",
             "R2": "a glowing rock smashes onto the street, bursts apart and sets a parked car on fire",
@@ -2957,6 +2960,17 @@ class TestVolcano(unittest.TestCase):
                "The surge tips a line of parked cars onto their sides and hurls them into a house.",
                "The cloud front flips the cars along the curb and jams them against a garden wall.",
                "The grey cloud flings the parked cars over and piles them up against a house."],
+        # 6 Kas (2)
+        "Q7": ["The cloud front tears the roof off the house right below before swallowing it.",
+               "The ash cloud rips the roof off the house below and swallows it.",
+               "The surge strips the rooftop off a house and engulfs the walls behind it.",
+               "The grey cloud tears the tiles and rafters off the house right below.",
+               "The cloud front peels the roof away from the house just below the camera."],
+        "Q8": ["The cloud front knocks down the front wall of the two-storey house across the street, then swallows it.",
+               "The ash cloud knocks down the front wall of a house and engulfs it.",
+               "The surge hits the two-storey house and its front wall collapses before the cloud swallows it.",
+               "The front wall of the house across the street caves in as the cloud arrives.",
+               "The grey cloud knocked down the wall of a house across the street and rolled on."],
         "R5": ["A volcanic bomb punches through a stone wall and the wall bursts apart.",
                "A glowing boulder smashes through a stone wall, which bursts apart.",
                "A volcanic bomb slams into a garden wall and blasts it to pieces.",
@@ -3247,7 +3261,7 @@ class TestVolcano(unittest.TestCase):
                             break   # 13 Eki: kül bulutu araçsız (tek tur)
         # 18 Eki: patlama 43 + 31 + 31 ve bombalar 47 + 33 + 33 (× 4 araç; yedeği sığmayan çift kalmadı); kül bulutu
         # 28 + 13 + 13 (değişmedi)
-        self.assertEqual(n, (105 + 111) * 4 + 40 + 12 - 96)   # 3 Kas kilit istisnası: bombalar T5 pasif (-24 çift x 4 araç)
+        self.assertEqual(n, (105 + 111) * 4 + 45 + 12 - 96)   # 3 Kas kilit istisnası: bombalar T5 pasif (-24 çift x 4 araç)
         # önceki: 30 Eki (2): bombalar (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) +12
 
     def test_block_depth_and_never_runs_out(self):
@@ -3333,7 +3347,8 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         es.PYROCLASTIC: {"P1": {"house", "balcony"}, "P2": {"treepole"}, "P3": {"roof"}, "P4": {"treepole"},
                          "P5": {"wall"}, "P6": {"roof", "shed"},
                          "Q1": {"house", "wall"}, "Q2": {"window"}, "Q3": {"roof", "chimney"}, "Q4": {"wall"},
-                         "Q5": {"shop"}, "Q6": {"vehicle", "house"}},   # 30 Eki: Q6 park arabaları eve yığılır
+                         "Q5": {"shop"}, "Q6": {"vehicle", "house"},   # 30 Eki: Q6 park arabaları eve yığılır
+                         "Q7": {"roof"}, "Q8": {"house", "wall"}},   # 6 Kas (2)
         # 17 Eki (Parti 1): R7 çatı, R8 duvar, R9 yol; T7 çatı, T8 ev üst katı, T9 kamyon araç
         es.VOLCANIC_BOMBS: {"R1": {"vehicle"}, "R2": {"vehicle"}, "R3": {"shop"}, "R4": {"sign"}, "R5": {"wall"},
                             "R7": {"roof"}, "R8": {"wall"}, "R9": {"shop"},   # 31 Eki: R9 köşe dükkânı (önceki yol)
@@ -3370,7 +3385,7 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                     env = scene["trace"].get("volc_env")   # 18 Eki (3): bombalar / kül bulutu ortam ekseni
                     if e in es.VOLC_ENV_EVENTS:
                         self.assertIn(env, sk.VOLC_ENVS)
-                        camera = camera.replace("the village street", sk.VOLC_ENVS[env]["text"])
+                        camera = camera.replace("the village street", sk.volc_env_text(e, env))
                         suffix = sk.style_suffix(e, None, spot, volc_env=env)
                     else:
                         self.assertIsNone(env)
@@ -3426,9 +3441,9 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         # 13 Eki (4): dilim başına madde sayısı ve kamera noktası başına izinli çift sayısı (rapor)
         sizes = {e: (len(es.EVENT_BEATS[e]["slice_2"]), len(es.EVENT_BEATS[e]["slice_3"])) for e in VOLC}
         # 17 Eki (temizlik + Parti 1): patlama 7 + 7, bombalar 8 + 7; kül bulutu dokunulmadı
-        self.assertEqual(sizes, {es.ERUPTION: (7, 7), es.PYROCLASTIC: (6, 6), es.VOLCANIC_BOMBS: (8, 7)})
+        self.assertEqual(sizes, {es.ERUPTION: (7, 7), es.PYROCLASTIC: (6, 8), es.VOLCANIC_BOMBS: (8, 7)})   # 6 Kas (2): Q7, Q8
         pairs = {e: [len(es.allowed_pairs(e, None, s)) for s in (self.HT, self.RT, self.VB)] for e in VOLC}
-        self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [22, 9, 9],
+        self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [23, 11, 11],
                                  es.VOLCANIC_BOMBS: [38, 26, 26]})   # 3 Kas kilit istisnası: T5 pasif (-8 her noktada)
         # önceki bombalar [46, 34, 34]; 18 Eki: sığmayan yok; 30 Eki (2): (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) açıldı
         for e in VOLC:   # araçsız kül bulutu; patlama ve bombalarda araç sadece eski maddelerde
@@ -3474,7 +3489,7 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         # 17 Eki: U7 (sokağın iki yanındaki evler çöker) kameranın durduğu evi de kapsar
         self.assertEqual(es.EVENT_BEATS[es.ERUPTION]["excluded_spots"], {"S3": roof_rt_vb, "U7": roof_rt_vb})
         self.assertEqual(es.EVENT_BEATS[es.PYROCLASTIC]["excluded_spots"],
-                         {"P3": roof_rt_vb, "Q3": roof_rt_vb, "P6": roof_rt_vb, "Q6": roof_rt_vb})
+                         {"P3": roof_rt_vb, "Q3": roof_rt_vb, "P6": roof_rt_vb, "Q6": roof_rt_vb, "Q7": roof_rt_vb})
         self.assertEqual(es.EVENT_BEATS[es.VOLCANIC_BOMBS]["excluded_spots"], {"T1": roof_rt_vb, "T7": roof_rt_vb})
 
     def test_volcano_prompt_max_175_words(self):

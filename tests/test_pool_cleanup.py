@@ -255,8 +255,8 @@ class TestCleanupRule(unittest.TestCase):
     def test_pyroclastic_untouched(self):
         b = es.EVENT_BEATS[es.PYROCLASTIC]
         self.assertEqual((sorted(b["slice_2"]), sorted(b["slice_3"])),
-                         (["P1", "P2", "P3", "P4", "P5", "P6"], ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6"]))
-        self.assertEqual(len(b["excluded_pairs"]), 8)
+                         (["P1", "P2", "P3", "P4", "P5", "P6"], ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8"]))   # 6 Kas (2)
+        self.assertEqual(len(b["excluded_pairs"]), 12)
         self.assertNotIn(es.PYROCLASTIC, es.RETIRED_BEATS)
 
     def test_every_group_at_least_four_and_every_spot_selectable(self):
@@ -265,7 +265,7 @@ class TestCleanupRule(unittest.TestCase):
             with self.subTest(event=e):
                 if e == es.METEOR:   # 29 Eki (3-4): ek kurala takılan madde havuza girmez; X3 4. turda girdi, 3 + 4
                     # madde (tests/test_meteor.py)
-                    self.assertEqual((len(b["slice_2"]), len(b["slice_3"])), (3, 4))
+                    self.assertEqual((len(b["slice_2"]), len(b["slice_3"])), (5, 4))   # 6 Kas (2): W5, W6 (W2 pasif, aktif 4 + 4)
                     continue
                 self.assertGreaterEqual(len(b["slice_2"]), 4)
                 self.assertGreaterEqual(len(b["slice_3"]), 4)
