@@ -114,7 +114,9 @@ class TestOpenings(_Quiet):
 
 class TestEnvs(_Quiet):
     def test_new_texts(self):
-        self.assertEqual(sk.volc_env_text(PY, "pastel_town"), "a street of colorful painted stucco houses with balconies")
+        # 11 Kas (A5): kül bulutu ortamları "right at the foot of the volcano" ile biter
+        self.assertEqual(sk.volc_env_text(PY, "pastel_town"),
+                         "a street of colorful painted stucco houses with balconies right at the foot of the volcano")
         self.assertEqual(sv.SCENE_ENVS[MU]["B"], "a steep town of pastel stucco houses with tin roofs and banana trees")
         self.assertEqual(sv.SCENE_ENVS[FA]["E"], "a 1970s brick housing estate with long balcony corridors and a playground")
 
@@ -126,8 +128,9 @@ class TestEnvs(_Quiet):
         self.assertIn("painted stucco", es.volc_place(PY, "pastel_town"))
 
     def test_other_envs_shared(self):
-        for name in ("hillside_town", "suburb", "mountain_village"):
-            self.assertEqual(sk.volc_env_text(PY, name), sk.VOLC_ENVS[name]["text"])
+        for name in ("hillside_town", "suburb", "mountain_village"):   # 11 Kas (A5): kül bulutu kopyası + "foot"
+            self.assertEqual(sk.volc_env_text(PY, name), f'{sk.VOLC_ENVS[name]["text"]} {sk.PYRO_FOOT}')
+            self.assertEqual(sk.volc_env_text(es.VOLCANIC_BOMBS, name), sk.VOLC_ENVS[name]["text"])
 
     def test_pyroclastic_window_frame_uses_copy(self):
         self.assertIn("painted stucco", fx.family_window(PY, "pastel_town"))
@@ -166,7 +169,8 @@ class TestWordGate(_Quiet):
         family = set(es.AVALANCHE_EVENTS) | set(es.EARTHQUAKE_EVENTS)
         left = {k for k in gate.KNOWN_HITS if k[0] not in family}
         self.assertEqual(left, {(MU, "beat", "H4", "crushed"), (AV, "beat", "P4", "crushed"), (AV, "beat", "P6", "spin"),
-                                (AV, "beat", "P6", "swept up")})
+                                (AV, "beat", "P6", "swept up"),
+                                (PY, "beat", "Q5", "blast")})   # 11 Kas (A6): hit, karar Bahadır'da
 
 
 if __name__ == "__main__":

@@ -167,7 +167,7 @@ class TestMeteor(unittest.TestCase):
         self.assertEqual(es.max_constraints(MET), 11)
         self.assertEqual(es.max_prompt_chars(MET), es.MAX_PROMPT_CHARS)
         for e in es.structured_events():
-            if e not in (MET, es.FLOOD, es.LIBERTY):   # sel 185, Özgürlük Anıtı 205
+            if e not in (MET, es.FLOOD, es.LIBERTY, es.PYROCLASTIC):   # sel 185, Özgürlük Anıtı 205, kül bulutu 205
                 self.assertEqual((es.max_prompt_words(e), es.max_constraints(e), es.max_prompt_chars(e)),
                                  (175, 8, 1400), e)
         # 3 Kas (sel su kontrolü), Bahadır: sel 185 kelime (su seviyesi cümleleri)
@@ -175,6 +175,8 @@ class TestMeteor(unittest.TestCase):
                          (185, 8, 1400))   # 6 Kas kilit: 4 Kas 215 pasif
         self.assertEqual((es.max_prompt_words(es.LIBERTY), es.max_constraints(es.LIBERTY),
                           es.max_prompt_chars(es.LIBERTY)), (205, 8, 1400))   # 4 Kas: Özgürlük Anıtı
+        self.assertEqual((es.max_prompt_words(es.PYROCLASTIC), es.max_constraints(es.PYROCLASTIC),
+                          es.max_prompt_chars(es.PYROCLASTIC)), (205, 8, 1400))   # 11 Kas (A7): kül bulutu
 
     def test_key_frames_envs_lights_locked(self):
         import core.creative_pipeline as cp

@@ -101,6 +101,8 @@ FLOOD_4KAS_PASSIVE_LIMITS = {"prompt_words": 215, "total": (40, 116),
                              "slices": {"slice_2": (10, 43), "slice_3": (10, 45)}}
 # 4 Kas (2), Bahadır kararı: Özgürlük Anıtı hikâyesi 40-85 (kilit cümle 32 kelime; ölçülen 71-83)
 TOTAL_WORDS_BY_EVENT[LIBERTY] = (40, 85)
+# 11 Kas 2026, Bahadır (A7): kül bulutu açılış E 37 kelime; en uzun kod yedeği hikâyesi 92 (E + P8 + Q8)
+TOTAL_WORDS_BY_EVENT[PYROCLASTIC] = (40, 92)
 
 
 def slice_words(event: str, field: str) -> tuple[int, int]:
@@ -765,7 +767,10 @@ PROMPT_WORDS_BY_EVENT = {"Meteor slams into the sea off the coast": 205,   # 29 
                          "Flash flooding in city streets": 185,
                          # 4 Kas (2), Bahadır kararı: Özgürlük Anıtı 205 (kilit cümle 32 kelime; 175'e hiçbir
                          # kombinasyon sığmıyordu), kısa ortam metniyle
-                         LIBERTY: 205}
+                         LIBERTY: 205,
+                         # 11 Kas 2026, Bahadır (A7): kül bulutu açılış E (37 kelime) + kadraj K_V + P8/Q8 kod yedeği
+                         # 175'e sığmıyordu (en kötü 205). Sadece kül bulutu; diğer tavanlar aynen
+                         PYROCLASTIC: 205}
 CONSTRAINTS_BY_EVENT = {"Meteor slams into the sea off the coast": 11}
 PROMPT_CHARS_BY_EVENT: dict[str, int] = {}
 
@@ -1184,9 +1189,23 @@ EVENT_BEATS = {
                    "terms": [_CAR, ("café", "cafe", "shop", "storefront", "shopfront", "front", "wall"),
                              ("cave", "cave in", "caves in", "caved in", "collapse", "crumble", "give way",
                               "gives way", "burst", "break", "smash", "crush")]},
+            # 11 Kas 2026, Bahadır (B3): yapısal finaller birebir (W_A, W_B, W_C). Ana öğe (deneme değil)
+            "W10": {"text": "the wave smashes through the front wall of a seafront house and pours inside",
+                    "terms": [_HOUSE, ("smash", "burst", "break", "broke", "crash", "tear", "tore", "pour", "cave",
+                                       "collapse")]},
+            "W11": {"text": "the surge swallows the ground floors of a row of shopfronts and a roof caves in",
+                    "terms": [_SHOP + ("ground floor", "ground floors"),
+                              ("swallow", "engulf", "submerge", "bury", "flood", "cave", "cave in", "caves in",
+                               "caved in", "collapse", "crumble", "give way", "gives way")]},
+            "W12": {"text": "the surge tears a wooden beach café off its foundations and smashes it against the "
+                            "apartment blocks",
+                    "terms": [("café", "cafe", "beach café", "beach cafe", "beach bar", "kiosk", "hut", "shack"),
+                              ("tear", "tore", "torn", "rip", "wrench", "sweep", "swept", "carry", "carried", "smash",
+                               "slam", "crash", "foundation", "foundations")]},
         },
         "excluded_pairs": {("T6", "W2"), ("T2", "W1"), ("T8", "W1"), ("T3", "W8"),
-                           ("T1", "W9"), ("T8", "W9"), ("T3", "W9")},   # 17 Eki: (T1,W7) W7 ile gitti. 3 Kas: bina önü / araç iki kez
+                           ("T1", "W9"), ("T8", "W9"), ("T3", "W9"),
+                           ("T8", "W10")},   # 11 Kas: aynı yapı (ev önü) iki dilimde yok   # 17 Eki: (T1,W7) W7 ile gitti. 3 Kas: bina önü / araç iki kez
         "excluded_views": {},
         # Kamera seawall'un üstünde duruyor: "alçak duvar çöker" olayı kameranın durduğu duvar gibi çizilir
         "excluded_spots": {"W6": {"Coastal avenue behind a seawall"}},
@@ -1871,6 +1890,13 @@ EVENT_BEATS = {
                    "terms": [_VOLC_WALL, _VOLC_TOPPLE + ("shove", "push")]},   # "shoves a wall over" (ayrık)
             "P6": {"text": "the cloud front rips the corrugated roofs off a row of low sheds and sends them flying",
                    "terms": [_VOLC_SHED + _VOLC_METAL_ROOF, _VOLC_RIP + _VOLC_FLING]},
+            # 11 Kas 2026, Bahadır (kül bulutu yeniden tasarım, A4): birebir (M_A, M_B). Bulut 4-9s'te kasabanın
+            # kenarına/ilk evlere ulaşır (açılış E: bulut yamaçtan ilk evlere doğru iner). Ana öğe (deneme değil)
+            "P7": {"text": "the ash cloud reaches the first houses at the foot of the slope and swallows them one by one",
+                   "terms": [_VOLC_CLOUD, _VOLC_HOUSE, _VOLC_ENGULF]},
+            "P8": {"text": "the ash cloud pours over the edge of the town and buries the parked cars along the first "
+                           "street in gray ash",
+                   "terms": [_VOLC_CLOUD, _VOLC_CAR, _VOLC_ENGULF]},
         },
         "slice_3": {
             "Q1": {"text": "a house wall across the street collapses as the cloud engulfs it",
@@ -1901,7 +1927,8 @@ EVENT_BEATS = {
         # balkon (P1,Q6); duvar (P5,Q1) (P5,Q4). Dükkân binası (Q5) ev sayılmaz. 6 Kas (2): aynı kural Q7 (çatı: P3, P6) ve
         # Q8 (ev duvarı: P1, P5)
         "excluded_pairs": {("P3", "Q3"), ("P1", "Q1"), ("P3", "Q6"), ("P6", "Q3"), ("P6", "Q6"), ("P1", "Q6"),
-                           ("P5", "Q1"), ("P5", "Q4"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8")},
+                           ("P5", "Q1"), ("P5", "Q4"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8"),
+                           ("P8", "Q6")},   # 11 Kas: park arabaları iki dilimde yok (Q6 pasif, kural kaydı)
         "excluded_views": {},
         # Kamera evinin/terasın çatısı: çatı maddeleri (P3 kiremit, P6 sac çatı, Q3 baca, Q6 çatı döşemesi) çatı
         # terasında ve köy evi balkonunda seçilmez, sadece yamaç terasında
@@ -2387,7 +2414,11 @@ DISABLED_BEATS: dict[str, set[str]] = {
     FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8", "D9"},
     # 6 Kas: W9 (ikinci araç riski)
     # 6 Kas (2): T1 (araç havaya kalkar, fırlar)
-    TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9", "T1"},
+    # 11 Kas (B3, B4), Bahadır: W3 (ağaç), W4 (büfe) zayıf final; yerine W10-W12 yapısal final. Hit kontrolü: W3'ün tek
+    # üretimi 4 Eki 10:25 (dükkân sokağı, balkon; seawall yok), 13 Eki 247K açıklaması "wave cleared the sea wall": eşleşmez.
+    # W4 hiçbir tamamlanmış üretimde yok. T5 AKTİF: tek tamamlanmış üretimi 4 Eki 10:16 (seawall) 13 Eki 247K adayı,
+    # paylaşım-üretim bağı yok (karar Bahadır'da)
+    TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9", "T1", "W3", "W4"},
     FACADE_FIRE: {"N4", "M6"},
     # 6 Kas (2), Bahadır (kalan havuz temizliği): sokak H3 (döner); yamaç R3, R6 (döner). Sokak H4 (ezer) AKTİF: H6 bütün aktif M
     # beatlerle dışlı, gerçekte seçilemiyor; H4 de gitse 4-9s gerçek havuz 3 kalırdı (en az 4 kuralı, cadde P4 emsali)
@@ -2401,7 +2432,9 @@ DISABLED_BEATS: dict[str, set[str]] = {
     # Kül bulutu Q2: ince cam hedefi, tozda kayboluyor (hit değil: hit P2+Q1 yamaç terası). Çatı terası ve balkonda 9-15s'te
     # Q1 Q4 Q5 kalır (Q3, Q6 orada dışlı), 2 derinlikte 8/646 sırada aday biter: BEAT_BLOCK_FALLBACK_EVENTS'te (Bahadır kararı)
     # 6 Kas (2): P6 (sac çatılar uçar), Q6 (arabalar takla atar); yerine Q7, Q8 deneme
-    PYROCLASTIC: {"Q2", "P6", "Q6"},
+    # 11 Kas (A4), Bahadır: P1, P3, P5 bulutu 4-9s'te zaten kasabanın içinde (karşı evler, çatılar, sokak) gösteriyor; yeni
+    # açılış E'de bulut ilk evlere doğru iniyor. Hiçbiri 100K+ hit'te yok (hit'ler P2+Q1, P2+Q5). P2 hit (aktif), P4 aktif
+    PYROCLASTIC: {"Q2", "P6", "Q6", "P1", "P3", "P5"},
     # Hortum marina Y5: araç havalanır, suya fırlar. 6 Kas (2): Z7 (pergola havaya kalkar)
     MARINA_TORNADO: {"Y5", "Z7"},
     # Hortum cadde P5 (araç havalanır, fırlar), P7 (kamyon fırlatılır). P6 AKTİF: 17 Eki 684K hitinde kullanılmış (Bahadır kararı)
@@ -2591,7 +2624,8 @@ RETIRED_BEATS = {
 OBJECT_GROUPS = {
     FLOOD: {"D9": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0, "D8": 0, "D10": 1,   # 3 Kas: D10 dükkân
             "D12": 1, "D14": 0, "D15": 0, "D16": 0, "D17": 0},   # 3 Kas (sel su kontrolü): dükkân, otobüs
-    TIDAL: {"W1": 1, "W2": 0, "W3": 0, "W4": 0, "W5": 0, "W6": 0, "W8": 0, "W9": 1},   # 3 Kas: W9 kafe
+    TIDAL: {"W1": 1, "W2": 0, "W3": 0, "W4": 0, "W5": 0, "W6": 0, "W8": 0, "W9": 1,   # 3 Kas: W9 kafe
+            "W10": 0, "W11": 0, "W12": 0},   # 11 Kas: ev, dükkân sırası, plaj kafesi
     # 18 Eki (2) kuru deneme: M8'in nesnesi ev (kamyon evin önüne; "house's facade" M7'ye benzetiliyordu)
     # 22 Eki: M6 ev (M7 ile aynı). 31 Eki (3): M3 ev (minibüs evin önüne; nesne minibüs olunca "house, wall" M6'nın
     # nesnesi sayılıyordu, kod yedeği M6'ya benzetildi), M4 dükkân
@@ -2607,7 +2641,7 @@ OBJECT_GROUPS = {
     HELICOPTER: {"G7": 0, "F1": 0, "F2": 1, "F4": 0, "F5": 1, "G1": 2, "G2": 0, "G3": 0, "G5": 0, "G6": 1},   # 31 Eki (3): F5 güverte
     ERUPTION: {"S3": 0, "S4": 0, "S5": 0, "S6": 1, "S7": 1, "S8": 1, "U2": 1, "U3": 0, "U4": 0, "U5": 0, "U6": 0,
                "U7": 1, "U8": 1},
-    PYROCLASTIC: {"Q7": 0, "Q8": 0, "P1": 1, "P2": 0, "P3": 1, "P4": 0, "P5": 0, "P6": 0, "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q5": 0,
+    PYROCLASTIC: {"P7": 1, "P8": 1, "Q7": 0, "Q8": 0, "P1": 1, "P2": 0, "P3": 1, "P4": 0, "P5": 0, "P6": 0, "Q1": 0, "Q2": 0, "Q3": 0, "Q4": 0, "Q5": 0,
                   "Q6": 0},
     VOLCANIC_BOMBS: {"R2": 1, "R3": 1, "R4": 1, "R5": 1, "R7": 1, "R8": 1, "R9": 1, "T1": 1, "T2": 1, "T5": 1, "T6": 1,
                      "T7": 1, "T8": 1, "T9": 1},
@@ -2875,6 +2909,10 @@ MOTION_GPT_BANNED = ("rolling away", "before rolling", "as it rolls", "lifted ef
 HYPE_GPT_BANNED = ("bombardment", "obliterat", "fiery hail", "fiery downfall")
 # Belirsiz kaçış hedefi ("run to safety", "away from danger", "from the threat"): hedef somut olmalı
 VAGUE_TARGET_GPT_BANNED = ("danger", "threat", "safety")
+# 11 Kas 2026, Bahadır (B5): olaya özel belirsiz kaçış hedefi (genel liste aynen). Dev dalga: "inland"
+VAGUE_TARGET_GPT_BANNED_BY_EVENT = {TIDAL: ("inland",)}
+# 11 Kas 2026, Bahadır (A6): kül bulutunda patlama/mantar bulutu çağrışımı yasak (sadece bu olay; genel liste aynen)
+PYRO_GPT_BANNED = ("fireball", "blast", "explosion", "explod", "nuclear", "mushroom")
 # Ses kelimeleri (SOUND_GPT_BANNED'e ek). "thunder" sadece ses anlamında: thunder/thunders/thundered/thundering/
 # thunderous; "thunderstorm", "thundercloud" hava durumu, serbest.
 SOUND_GPT_BANNED_EXTRA = ("roar", "thunder!", "thunderous", "crash sound", "scream", "echo", "hiss")
@@ -2940,12 +2978,16 @@ def gpt_added_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
         "things only move the way the given event says; nothing rolls away or is lifted effortlessly.")
     add("hype_word", _added_words(HYPE_GPT_BANNED, text, pool), "abartı kelimesi",
         "describe the concrete hit plainly; no bombardment, obliteration, fiery hail or fiery downfall.")
-    add("vague_target", _added_words(VAGUE_TARGET_GPT_BANNED, text, pool), "belirsiz kaçış hedefi",
+    add("vague_target", _added_words(VAGUE_TARGET_GPT_BANNED + VAGUE_TARGET_GPT_BANNED_BY_EVENT.get(event, ()), text,
+                                     pool), "belirsiz kaçış hedefi",
         "name a concrete place people run to, like a building entrance, a stairway or the back of a truck; never "
         "safety, danger or a threat.")
     if event in VOLC_ENV_EVENTS:
         add("volcano_banned_root", _added_words(VOLC_GPT_BANNED, text, pool), "volkanda yasak kelime",
             "rocks fall and smash; no missiles, trails, streaks, explosions or showers.")
+    if event == PYROCLASTIC:   # 11 Kas (A6)
+        add("pyro_blast_word", _added_words(PYRO_GPT_BANNED, text, pool), "kül bulutunda patlama kelimesi",
+            "the ash cloud pours, rolls, swallows and buries; never a fireball, blast, explosion or mushroom cloud.")
     if event in UPHILL_EVENTS:
         people_sents = " ".join(x for x in _sentences(text) if re.search(_PEOPLE_RX, x, re.IGNORECASE))
         add("people_uphill", _added_words(UPHILL_GPT_BANNED, people_sents, pool), "insan yönü (yokuş yukarı / akıntıya doğru)",
@@ -4460,7 +4502,11 @@ FALLBACK_PEOPLE = {
             "{N} people sprint into the entrance of a seafront hotel.",
             "{N} pedestrians run up the stairs of an apartment building.",
             "{N} residents sprint for the stairway of a parking garage.",
-            "{N} people run for the doorway of a seafront café."),
+            "{N} people run for the doorway of a seafront café.",
+            # 11 Kas 2026, Bahadır (B5): hedefli kaçış, birebir (I_A, I_B, I_C -> I7, I8, I9; başa kişi sayısı {N})
+            "{N} people run up the street away from the sea toward the apartment entrances.",
+            "{N} people run up the stairs of an apartment building.",
+            "{N} people run up the side lane toward the hill behind the town."),
     # 23 Eki, Bahadır (heyelan testi): çamur yukarıdan geliyor; "uphill" / "up the street" insanları çamura doğru
     # koşturuyordu. Önceki: "{N} residents run uphill away from the mud.", "{N} people flee from the mud up the
     # street.", "{N} pedestrians scramble uphill as the mud hits.", "{N} pedestrians dash uphill away from the flow."
@@ -4541,6 +4587,14 @@ FALLBACK_PEOPLE_FIRE_ENV = {
 PEOPLE_AXIS_EVENTS = (FLOOD, TIDAL, LIBERTY, PYROCLASTIC)   # 4 Kas (B9): Özgürlük Anıtı P1-P3; 6 Kas: kül bulutu P1-P3
 PEOPLE_AXIS_PROVEN = ("I1", "I2")
 PEOPLE_AXIS_TRIAL_SHARE = 0.20
+# 11 Kas 2026, Bahadır (B5): olaya özel kanıtlı/ana insan cümleleri ve PASİF insan cümleleri (silinmedi; kimlikler sıra
+# numarasıyla sabit). Dev dalga I2 "run inland" hedefsiz (hiçbir üretimde yok, kod yedeği metni): yerine I7-I9 ana öğe
+PEOPLE_AXIS_PROVEN_BY_EVENT = {TIDAL: ("I1", "I7", "I8", "I9")}
+DISABLED_PEOPLE_LINES: dict[str, set[str]] = {TIDAL: {"I2"}}
+
+
+def people_axis_proven(event: str) -> tuple[str, ...]:
+    return PEOPLE_AXIS_PROVEN_BY_EVENT.get(event, PEOPLE_AXIS_PROVEN)
 
 # ── SEL İNSAN HİKÂYESİ EKSENİ (4 Kas 2026, Bahadır, A4) ─────────────────────────────────────────────────────────────
 # Selde tek cümlelik insan ekseni (I1-I6, FALLBACK_PEOPLE[FLOOD]) yerine her videoda AYNI insanları üç dilim boyunca
@@ -4672,7 +4726,10 @@ def fallback_candidates_ids(spec: dict) -> list[tuple[str, dict[str, str]]]:
     word = people_word(spec).capitalize()
     s2, s3 = fallback_beat_slice(spec, "slice_2"), fallback_beat_slice(spec, "slice_3")
     out = []
+    off = DISABLED_PEOPLE_LINES.get(spec["event"], set())   # 11 Kas: pasif insan cümleleri
     for i, t in enumerate(fallback_people_pool(spec)):
+        if people_line_id(i, spec["event"]) in off:
+            continue
         if story_axis_on(spec["event"]):
             sp = {**spec, "people_line": people_line_id(i, spec["event"])}
             s2, s3 = fallback_beat_slice(sp, "slice_2"), fallback_beat_slice(sp, "slice_3")
@@ -4699,9 +4756,10 @@ def choose_people_line(spec: dict, used: list | None, rng: random.Random) -> tup
     if not opts:
         return None, []
     recent = [u for u in (used or []) if u]
-    proven = [i for i in opts if i in PEOPLE_AXIS_PROVEN]
-    trial = [i for i in opts if i not in PEOPLE_AXIS_PROVEN]
-    last_trial = bool(recent) and recent[-1] not in PEOPLE_AXIS_PROVEN
+    proven_ids = people_axis_proven(spec["event"])   # 11 Kas: olaya özel (dev dalga I1, I7-I9)
+    proven = [i for i in opts if i in proven_ids]
+    trial = [i for i in opts if i not in proven_ids]
+    last_trial = bool(recent) and recent[-1] not in proven_ids
     use_trial = bool(trial) and not last_trial and (not proven or rng.random() < PEOPLE_AXIS_TRIAL_SHARE)
     group = trial if use_trial else (proven or trial)
     # 4 Kas: doğrulama bayrağı açıkken Özgürlük Anıtı öğeleri eşit LRU. 6 Kas (kilit): sel çıktı (3249de8'de selin insan

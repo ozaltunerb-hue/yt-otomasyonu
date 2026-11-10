@@ -145,8 +145,10 @@ class TestProvenRotation(unittest.TestCase):
     def test_openings_envs_lights(self):
         for e in ox.OPENINGS:
             # 6 Kas (2): dev dalgada koruma harfi B pasif, rotasyonda sadece A (Bahadır kararı)
+            # 11 Kas (A2): kül bulutu A + yeni ana açılış E (B, C, D pasif)
             self.assertEqual(pa.openings(e, ox.options(e)),
-                             ["A"] if e == es.TIDAL else ["A", pa.GUARD["acilis"][e][0]], e)
+                             ["A"] if e == es.TIDAL else ["A", "E"] if e == PY
+                             else ["A", pa.GUARD["acilis"][e][0]], e)
         for e in sv.SCENE_ENVS:
             self.assertEqual(pa.scene_envs(e, sv.env_options(e)), ["A", pa.GUARD["ortam"][e][0]], e)
         for e in (VB, PY):

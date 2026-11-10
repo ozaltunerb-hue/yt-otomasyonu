@@ -163,10 +163,13 @@ class TestVolcEnvPrompt(unittest.TestCase):
                     spec = self._spec(e, spot, env)
                     self.assertEqual(spec["key_visual"], KEYS[e])
                     self.assertNotIn(text, spec["key_visual"])
-                    self.assertIn(f"over {text} toward the volcano", spec["suffix"])   # 21 Eki: kısa (175)
+                    # 11 Kas (A5): kül bulutu ortamı "right at the foot of the volcano" ile biter, yön tekrarı yok
+                    foot = e == PY and text.endswith(sk.PYRO_FOOT)
+                    self.assertIn(f"over {text};" if foot else f"over {text} toward the volcano", spec["suffix"])
                     self.assertNotIn("the village street", spec["suffix"])
                     old = sk.style_suffix(e, None, spot)
-                    self.assertEqual(spec["suffix"], old.replace("the village street", text))   # başka bir şey değişmez
+                    self.assertEqual(spec["suffix"], old.replace("the village street toward the volcano", text) if foot
+                                     else old.replace("the village street", text))   # başka bir şey değişmez
                     self.assertEqual(spec["volc_env"], env)
 
     def test_env_rejected_elsewhere(self):
@@ -185,8 +188,9 @@ class TestVolcEnvPrompt(unittest.TestCase):
 
     def test_every_combination_fits_175_and_passes(self):
         """olay × ortam × yer × beat çifti × araç × kişi sayısı × kod yedeği: ≤175 kelime, son denetim temiz."""
-        worst = 0
+        worst, worst_by = 0, {}
         for e in es.VOLC_ENV_EVENTS:
+            worst = 0
             lo, hi = sk.count_range(e, None)
             vehicles = [v for v, _ in es.event_vehicles(e, None)] if es.uses_vehicle(e) else [None]
             for env in ENVS:
@@ -200,9 +204,13 @@ class TestVolcEnvPrompt(unittest.TestCase):
                                 for sl in cands:
                                     prompt = es.assemble_prompt(spec, sl)
                                     worst = max(worst, len(prompt.split()))
-                                    self.assertLessEqual(len(prompt.split()), 175)
+                                    # 11 Kas (A7): kül bulutu 205
+                                    self.assertLessEqual(len(prompt.split()), es.max_prompt_words(e))
                                 self.assertEqual(es.final_prompt_issues(spec, cands[0], es.assemble_prompt(
                                     spec, cands[0]), es.assemble_story(spec, cands[0])), [])
+            worst_by[e] = worst
+        self.assertLessEqual(worst_by[PY], 205)   # 11 Kas (A7): açılış A ile en uzun kül bulutu (kadraj yok)
+        worst = worst_by[VB]   # bombalar (kilitli) aynen
         self.assertEqual(worst, 171)   # 3 Kas kilit istisnası: T5 pasif (en uzun T5'li çiftti, 174 -> 171). 21 Eki (genel kalite): önceki 174 -> 173. 31 Eki: nötr balkon cümlesi (-1). 31 Eki (2): (R9, T5) açıldı (+2), sınır 175 aynı
 
     def test_word_budget_keeps_gpt_prompt_within_175(self):
@@ -213,7 +221,8 @@ class TestVolcEnvPrompt(unittest.TestCase):
             for env in [None, *ENVS]:
                 for spot in (BAL, RT, HT):
                     spec = self._spec(e, spot, env)
-                    total = min(75, 175 - 3 - len(spec["suffix"].split()))
+                    # 11 Kas (A7): kül bulutu 40-92 / 205 (bombalar 75 / 175 aynen)
+                    total = min(es.TOTAL_WORDS_BY_EVENT[e][1], es.max_prompt_words(e) - 3 - len(spec["suffix"].split()))
                     line = es.word_budget_line(spec)
                     self.assertIn(f"must total at most {total} words", line)
                     self.assertGreaterEqual(total, len(spec["key_visual"].split()) + 6 + 10 + 10)
@@ -223,17 +232,17 @@ class TestVolcEnvPrompt(unittest.TestCase):
                     rest = total - key
                     sl = {"slice_1_rest": " ".join(["run"] * 6), "slice_2": " ".join(["x"] * (rest // 2 - 3)),
                           "slice_3": " ".join(["y"] * (rest - 6 - (rest // 2 - 3)))}
-                    self.assertLessEqual(len(es.assemble_prompt(spec, sl).split()), 175)
+                    self.assertLessEqual(len(es.assemble_prompt(spec, sl).split()), es.max_prompt_words(e))
         # 21 Eki (genel kalite): gerçek zaman + ön plan yüzü eklendi, ortak kısaltmalarla en uzun ek 102 (iki olayda)
         # 31 Eki: nötr balkon cümlesi bir kelime kısa: en uzun ek 101, bütçe 71 (önceki 102 -> 70)
-        self.assertIn((PY, 71), seen)   # en uzun kül bulutu eki (101; önceki 113 -> 59)
+        self.assertIn((PY, 92), seen)   # 11 Kas (A7): kül bulutu tavanı 205, bütçe hikâye üst sınırı 92
         self.assertIn((VB, 71), seen)   # en uzun bombalar eki (101; önceki 103 -> 69)
         self.assertEqual(es.word_budget_line({"event": ER, "key_visual": "x"}), "")
 
     def test_pools_pairs_unchanged(self):
         self.assertEqual(len(es.EVENT_BEATS[VB]["slice_2"]), 8)
         self.assertEqual(len(es.EVENT_BEATS[VB]["slice_3"]), 7)
-        self.assertEqual(len(es.EVENT_BEATS[PY]["slice_2"]), 6)
+        self.assertEqual(len(es.EVENT_BEATS[PY]["slice_2"]), 8)   # 11 Kas (A4): P7, P8
         self.assertEqual(len(es.EVENT_BEATS[PY]["slice_3"]), 8)   # 6 Kas (2): Q7, Q8
         # hariç çiftler 6f16609 ile aynı (kod yedeği ve hikâye kuralları değişmedi)
         self.assertEqual(es.EVENT_BEATS[VB]["excluded_pairs"],
@@ -242,7 +251,8 @@ class TestVolcEnvPrompt(unittest.TestCase):
                           ("R1", "T7"), ("R2", "T7")})   # 30 Eki (2), Bahadır: T7 araç (araç iki kez)
         self.assertEqual(es.EVENT_BEATS[PY]["excluded_pairs"],
                          {("P1", "Q1"), ("P1", "Q6"), ("P3", "Q3"), ("P3", "Q6"), ("P5", "Q1"), ("P5", "Q4"),
-                          ("P6", "Q3"), ("P6", "Q6"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8")})
+                          ("P6", "Q3"), ("P6", "Q6"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8"),
+                          ("P8", "Q6")})   # 11 Kas: park arabaları
 
 
 class TestVolcEnvPipeline(unittest.TestCase):
@@ -266,7 +276,11 @@ class TestVolcEnvPipeline(unittest.TestCase):
                 self.assertIn(env, ENVS)
                 import core.scene_env as sv   # 21 Eki (Aşama 5): ışık kapsamı (eklenenler ağırlık 1)
                 self.assertIn(tr["weather"], list(WEATHER[e]) + list(sv.LIGHT_ADD[e]))
-                self.assertIn(sk.volc_env_text(e, env), scene["prompt"])   # 6 Kas (2): kül bulutu pastel_town kopyası
+                # 6 Kas (2): kül bulutu pastel_town kopyası. 11 Kas (A3): kadraj K_V'de "foot" eki yok (Setting satırı)
+                text = sk.volc_env_text(e, env)
+                if st["axes"]["kadraj"] == "K_V":
+                    text = text.replace(" " + sk.PYRO_FOOT, "")
+                self.assertIn(text, scene["prompt"])
                 import core.opening_axis as ox   # 21 Eki (Aşama 6): açılış ekseni (A = bugünkü kilit cümle)
                 key = ox.text(e, st["axes"]["acilis"]) or KEYS[e]
                 self.assertTrue(scene["prompt"].startswith(f"0-4s: {key}"))

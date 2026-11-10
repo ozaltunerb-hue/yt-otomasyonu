@@ -255,8 +255,9 @@ class TestCleanupRule(unittest.TestCase):
     def test_pyroclastic_untouched(self):
         b = es.EVENT_BEATS[es.PYROCLASTIC]
         self.assertEqual((sorted(b["slice_2"]), sorted(b["slice_3"])),
-                         (["P1", "P2", "P3", "P4", "P5", "P6"], ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8"]))   # 6 Kas (2)
-        self.assertEqual(len(b["excluded_pairs"]), 12)
+                         (["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"],   # 11 Kas (A4): P7, P8
+                          ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8"]))   # 6 Kas (2)
+        self.assertEqual(len(b["excluded_pairs"]), 13)   # 11 Kas: (P8, Q6)
         self.assertNotIn(es.PYROCLASTIC, es.RETIRED_BEATS)
 
     def test_every_group_at_least_four_and_every_spot_selectable(self):
@@ -743,7 +744,8 @@ class TestFireTornadoShape(unittest.TestCase):
 
 class TestDisabledEvents(unittest.TestCase):
     def test_shockwave_disabled_single_flag(self):
-        self.assertEqual(sk.DISABLED_EVENTS, {ER, es.EARTHQUAKE_OLD_STREET})   # 3 Kas (Aşama 7): eski sokak
+        self.assertEqual(sk.DISABLED_EVENTS, {ER, es.EARTHQUAKE_OLD_STREET,   # 3 Kas (Aşama 7): eski sokak
+                                              es.FACADE_FIRE})   # 11 Kas (C1): cephe yangını
         self.assertNotIn(ER, sk.skeleton_events("volcano_disasters"))
         self.assertEqual(sk.skeleton_events("volcano_disasters"), [es.PYROCLASTIC, VB])
         # havuz, iskelet, kilit cümle, kombinasyon denetimi duruyor

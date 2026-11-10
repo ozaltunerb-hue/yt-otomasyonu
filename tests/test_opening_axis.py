@@ -37,13 +37,16 @@ EVENTS = [e for e in ps.active_events() if e not in (es.FIRE_TORNADO, es.METEOR,
 class TestData(unittest.TestCase):
     def test_eighteen_events_fire_tornado_excluded(self):
         # 3 Kas (Aşama 7): "Eski sokak" pasif (açılışları kodda duruyor), aktif açılışlı olay 17
-        self.assertEqual(set(ox.OPENINGS), set(EVENTS) | {es.EARTHQUAKE_OLD_STREET})
-        self.assertEqual(len(EVENTS), 17)
+        # 11 Kas (C1): cephe yangını pasif (açılışları kodda duruyor), aktif açılışlı olay 16
+        self.assertEqual(set(ox.OPENINGS), set(EVENTS) | {es.EARTHQUAKE_OLD_STREET, es.FACADE_FIRE})
+        self.assertEqual(len(EVENTS), 16)
         self.assertNotIn(es.FIRE_TORNADO, ox.OPENINGS)
         for e in EVENTS:
             # 3 Kas (sel su kontrolü): selde B ve C pasif, yerine E (B') ve F (C')
             # 6 Kas (2): dev dalga ve caddede B pasif
+            # 11 Kas (A2): kül bulutu B C D pasif, yerine E
             self.assertEqual(ox.options(e), ["A", "D", "E", "F"] if e == es.FLOOD else
+                             ["A", "E"] if e == es.PYROCLASTIC else
                              (["A", "C", "D"] if e in (es.TIDAL, es.AVENUE) else ["A", "B", "C", "D"]))
             self.assertIsNone(ox.text(e, "A"))
 

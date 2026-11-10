@@ -39,7 +39,8 @@ CAMERA_BANNED = ("eye level", "street level", "ground level", "sidewalk", "pans 
 HEIGHT_TERMS = ("high", "elevated", "rooftop", "balcony", "upper-floor", "upper floor", "high-floor", "overlook",
                 "overlooking", "terrace", "raised", "vantage", "above", "looking down")
 FIXED_TERMS = ("stays fixed", "fixed", "locked-off", "locked off", "stays in place", "never moves", "static",
-               "never descending", "never descends")
+               "never descending", "never descends",
+               "never pans")   # 11 Kas: Bahadır'ın birebir kadrajları ("the camera never pans, turns or follows")
 RAIN_RE = re.compile(r"\brain(?:s|ed|ing|y)?\b", re.IGNORECASE)
 MAX_WORDS = 175
 

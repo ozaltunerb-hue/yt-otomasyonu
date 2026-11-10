@@ -131,7 +131,8 @@ class TestModeAndNative(unittest.TestCase):
                 self.assertEqual(sk.style_suffix(e, None, spot, view, frame=f, fire_env=fire_env),
                                  sk.style_suffix(e, None, spot, view), (e, spot))
                 n += 1
-        self.assertEqual(n, 25)   # kıyı dalga 3, yamaç 2, köy 3, marina 1, cadde 3, orman 2, cephe 4, ateş 6, heli 1 (29 Eki: balkon sabit; set noktasının mod A'sı seçilemez)
+        # 11 Kas (C1): cephe yangını aktif listeden çıktı (4 nokta): 25 -> 21
+        self.assertEqual(n, 21)   # kıyı dalga 3, yamaç 2, köy 3, marina 1, cadde 3, orman 2, cephe 4, ateş 6, heli 1 (29 Eki: balkon sabit; set noktasının mod A'sı seçilemez)
 
     def test_native_railing_is_todays_sentence_verbatim(self):
         n = 0

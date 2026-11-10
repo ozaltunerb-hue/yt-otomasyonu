@@ -198,7 +198,8 @@ class TestWeakPassive(_Quiet):
     def test_disabled_and_trial_sets(self):
         # 3 Kas (sel su kontrolü): sel pasif ve deneme listeleri test_sel_su_3kas'ta
         self.assertEqual(es.DISABLED_BEATS, {es.FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8",
-                                                        "D9"}, es.TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9", "T1"},
+                                                        "D9"}, es.TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9", "T1",
+                                                                          "W3", "W4"},   # 11 Kas (B3)
                                              es.FACADE_FIRE: {"N4", "M6"},
                                              es.HELICOPTER: {"G7"}, es.VOLCANIC_BOMBS: {"T5"},   # kilit istisnası
                                              es.LIBERTY: {"B4", "B6"},   # 4 Kas (4): 4-9s'te araç yok
@@ -206,7 +207,8 @@ class TestWeakPassive(_Quiet):
                                              es.FIRE_TORNADO: {"T5", "T6", "U6", "U10"},
                                              es.AVENUE: {"P5", "P7"},
                                              # 6 Kas (2): kalan havuz temizliği (tests/test_havuz_6kas_2.py)
-                                             es.PYROCLASTIC: {"Q2", "P6", "Q6"}, es.MARINA_TORNADO: {"Y5", "Z7"},
+                                             es.PYROCLASTIC: {"Q2", "P6", "Q6", "P1", "P3", "P5"},   # 11 Kas (A4)
+                                             es.MARINA_TORNADO: {"Y5", "Z7"},
                                              es.METEOR: {"W2"}, es.MUDSLIDE: {"H3"}, es.SLOPE: {"R3", "R6"}})
         self.assertEqual(es.TRIAL_BEATS, {es.FLOOD: {"D10", "V9", "V10", "V11", "V12", "D12", "D13", "D14", "D15",
                                                      "D16", "D17", "D18"},
@@ -282,8 +284,12 @@ class TestPeopleAxis(_Quiet):
                 low = t.lower()
                 self.assertTrue(t.startswith("{N} "), t)
                 self.assertTrue(re.search(r"\b(run|sprint)\b", low), t)
+                # 11 Kas (B5): dev dalga I7-I9 Bahadır'ın birebir cümleleri; "up the street / up the stairs / up the
+                # side lane" denizden uzağa (dalga aşağıdan geliyor), kod yedeği cümlesi (GPT kapısı muaf)
+                verbatim = e == es.TIDAL and t in es.FALLBACK_PEOPLE[es.TIDAL][6:]
                 for bad in ("scatter", "scramble", "dash", "uphill", "higher", "up the street", "flee", "safety"):
-                    self.assertNotIn(bad, low, t)
+                    if not (verbatim and bad == "up the street"):
+                        self.assertNotIn(bad, low, t)
         self.assertEqual(es.FALLBACK_PEOPLE[es.TIDAL][:2], (es.FALLBACK_PEOPLE_RETIRED[es.TIDAL][0],
                                                             es.FALLBACK_PEOPLE_RETIRED[es.TIDAL][4]))
 
@@ -292,11 +298,13 @@ class TestPeopleAxis(_Quiet):
             rows = _sequence(e, 60, 3)
             ids = [r["trace"]["axes"]["insan"] for r in rows]
             self.assertTrue(all(ids))
-            trial = [i not in es.PEOPLE_AXIS_PROVEN for i in ids]
+            proven_ids = es.people_axis_proven(e)   # 11 Kas (B5): dev dalga I1, I7-I9 (I2 pasif)
+            trial = [i not in proven_ids for i in ids]
             self.assertFalse(any(a and b for a, b in zip(trial, trial[1:])), (e, ids))
             self.assertLessEqual(sum(trial) / len(trial), 0.3)
-            proven = [i for i in ids if i in es.PEOPLE_AXIS_PROVEN]
-            self.assertEqual(set(proven), {"I1", "I2"})
+            proven = [i for i in ids if i in proven_ids]
+            self.assertEqual(set(proven), {"I1", "I7", "I8", "I9"} if e == es.TIDAL else {"I1", "I2"})
+            self.assertNotIn("I2", ids if e == es.TIDAL else [])
             for r in rows:   # kod yedeği seçilen cümleyi kullanır
                 i = int(r["trace"]["axes"]["insan"][1:]) - 1
                 word = es.people_word(r["structure"]["spec"]).capitalize()

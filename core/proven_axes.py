@@ -84,7 +84,12 @@ LIBERTY_K3 = "Top-floor terrace of a waterfront hotel next to Battery Park"
 PROVEN_SPOTS[LIBERTY] = {LIBERTY_K1}
 # PASİF kamera noktaları (silinmedi: SPOT_FRAME, CAMERA_SPOTS ve iskelette durur; kadraj rotasyonuna hiç girmez,
 # ROTATION_ON kapalıyken de)
-PASSIVE_SPOTS = {LIBERTY: {LIBERTY_K3}}
+PASSIVE_SPOTS = {LIBERTY: {LIBERTY_K3},
+                 # 11 Kas (A3): kül bulutu balkonu (buluta yakın; hiçbir 100K+ hit'te yok, zaten rotasyonda değildi)
+                 PYROCLASTIC: {VOLC_VB}}
+# 11 Kas 2026, Bahadır: yeni ANA değerler (deneme değil; kanıtlı değerlerle eşit rotasyonda). Kül bulutu açılış E (A2):
+# "tek aktif açılış" istendi, A 13 Eki hit'inde kullanıldığı için pasife alınmadı; rotasyon A + E (son 1 hariç)
+PRIMARY = {"acilis": {PYROCLASTIC: ("E",)}}
 # Meteor ortamı (29 Eki, yeni): sadece paylaşılan
 PROVEN_METEOR_ENVS = {"O2"}
 # Paylaşılan kadraj varyantları: (olay, tip, kamera noktası (None = kütüphane), mod) ve ön planı
@@ -227,6 +232,7 @@ def openings(event: str, cands: list[str]) -> list[str]:
     if not ROTATION_ON:
         return list(cands)
     keep = [o for o in cands if o == "A"]
+    keep += [o for o in PRIMARY["acilis"].get(event, ()) if o in cands]   # 11 Kas
     g = _guard("acilis", event)
     if g and g in cands and (("acilis", event, g) not in NEVER):
         keep.append(g)
@@ -321,6 +327,11 @@ def rotation_frames(event: str, spot: str, variants: list[dict]) -> tuple[list[d
     notes = []
     if not ROTATION_ON:
         return list(variants), notes
+    import core.frame_axis as fx
+    verb = [f for f in variants if fx.is_verbatim_frame(event, f)]
+    if verb:   # 11 Kas: birebir kadrajlar her zaman rotasyonda; yerli varyantlar (kül bulutu) eski kuralla
+        rest = [f for f in variants if not fx.is_verbatim_frame(event, f)]
+        return verb + (rotation_frames(event, spot, rest)[0] if rest else []), notes
     proven = [f for f in variants if frame_status(event, spot, f) == PROVEN]
     types = list(dict.fromkeys(f["type"] for f in proven))
     while len(types) < 2:   # koruma: 2 tip olana kadar en az riskli deneme tipi

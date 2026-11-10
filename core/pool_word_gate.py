@@ -27,17 +27,25 @@ BANNED_TERMS = {
     "always in frame": r"always\s+in\s+frame",
 }
 _BANNED_RE = {k: re.compile(rf"\b(?:{v})\b", re.IGNORECASE) for k, v in BANNED_TERMS.items()}
+# 11 Kas 2026, Bahadır (A6): SADECE kül bulutunda ek yasak kökler (patlama / mantar bulutu çağrışımı). Genel liste aynen.
+PYROCLASTIC = "Pyroclastic cloud races down into a village street"
+EVENT_BANNED_TERMS = {PYROCLASTIC: {"fireball": r"fireballs?", "blast": r"blast(?:s|ed|ing)?",
+                                    "explosion": r"explosions?", "explode": r"explod(?:e|es|ed|ing)",
+                                    "nuclear": r"nuclear", "mushroom": r"mushrooms?"}}
+_EVENT_BANNED_RE = {e: {k: re.compile(rf"\b(?:{v})\b", re.IGNORECASE) for k, v in terms.items()}
+                    for e, terms in EVENT_BANNED_TERMS.items()}
 # Bahadır'ın 6 Kas'ta dev dalga için yazdırdığı kamera cümlesi "follows" içerir ama takibi YASAKLAR: kapı bu tam ifadeyi
 # yok sayar. Başka "follow" geçen metin takılır.
 ALLOWED_PHRASES = ("the camera never pans, turns or follows",)
 
 
-def term_hits(text: str) -> list[str]:
-    """Metinde geçen yasak kökler (etiketleriyle)."""
+def term_hits(text: str, event: str | None = None) -> list[str]:
+    """Metinde geçen yasak kökler (etiketleriyle). event: olaya özel ek kökler (EVENT_BANNED_TERMS, 11 Kas)."""
     low = text or ""
     for phrase in ALLOWED_PHRASES:
         low = low.replace(phrase, " ")
-    return [k for k, rx in _BANNED_RE.items() if rx.search(low)]
+    rxs = {**_BANNED_RE, **_EVENT_BANNED_RE.get(event, {})}
+    return [k for k, rx in rxs.items() if rx.search(low)]
 
 
 def _items(event: str, camera_seeds) -> list[tuple[str, str, str]]:
@@ -76,7 +84,7 @@ def scan(events, camera_seeds=range(1, 9)) -> dict[tuple[str, str, str, str], st
     found: dict[tuple[str, str, str, str], str] = {}
     for event in events:
         for kind, key, text in _items(event, camera_seeds):
-            for term in term_hits(text):
+            for term in term_hits(text, event):
                 found.setdefault((event, kind, key, term), text)
     return found
 
@@ -102,6 +110,9 @@ KNOWN_HITS: frozenset[tuple[str, str, str, str]] = frozenset({
     ('Earthquake collapses an apartment block', 'kamera', '-', 'concrete'),
     ('Earthquake collapses an apartment block', 'ortam', 'city', 'concrete'),
     ('Mudslide pours down a hillside street', 'beat', 'H4', 'crushed'),
+    # 11 Kas (A6): kül bulutu Q5 "blasts" yeni kül bulutu kapısına takıldı; Q5 25 Eki 102K paylaşımında (17 Eki 14:13
+    # üretimi P2+Q5) kullanıldı: hit kuralı gereği pasife alınmadı, karar Bahadır'da
+    ('Pyroclastic cloud races down into a village street', 'beat', 'Q5', 'blast'),
     ('Tornado sweeps down a coastal avenue', 'beat', 'P4', 'crushed'),
     ('Tornado sweeps down a coastal avenue', 'beat', 'P6', 'spin'),
     ('Tornado sweeps down a coastal avenue', 'beat', 'P6', 'swept up'),

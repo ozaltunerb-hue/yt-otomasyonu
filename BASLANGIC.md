@@ -25,6 +25,26 @@
 
 ---
 
+## 📋 DEVİR: 11 Kasım kül bulutu yeniden tasarım + dev dalga yüksek kadraj + cephe pasif + kilitli 8 denetim
+
+Kie/GPT çağrısı yok; test `tests/test_11kas.py`. Kilitli 8 olay 40 tohumda fark 0; 40 tohum EK KONTROL'de sadece kül bulutu ve
+dev dalga değişti (cephe yangını aktif listeden çıktı, promptları bayt bayt aynı). Rapor: `reports/havuz_denetim_2026-11-11.md`
+(betik `scripts/havuz_denetim.py`, salt okuma).
+- **Hit kuralı:** pasife alınacak her öğe Notion Paylaşımlar (100K+) + üretim kayıtlarıyla eşlendi. Hit'te kullanılanlar
+  pasife alınmadı: kül bulutu açılış A, yamaç ve çatı terası kadrajı, P2, Q5; dev dalga T5 (13 Eki 247K adayı, karar Bahadır'da).
+- **Kül bulutu:** açılış E birebir (`ox.OPENINGS`), B C D pasif, rotasyon A + E (`pa.PRIMARY`). Kadraj K_V birebir
+  (`fx.VERBATIM_FRAMES`; yerli hit kadrajlarla birlikte, `fx.VERBATIM_WITH_NATIVE`), balkon pasif (`pa.PASSIVE_SPOTS`).
+  4-9s P7 P8 birebir (ana öğe), P1 P3 P5 pasif (bulutu zaten kasabanın içinde gösteriyordu). Ortamlar `sk.PYRO_ENV_TEXTS`
+  "right at the foot of the volcano" (bombalar aynen; K_V Setting satırında bu ek yok). Kelime kapısı sadece kül bulutu:
+  `gate.EVENT_BANNED_TERMS`, `es.PYRO_GPT_BANNED`; Q5 "blasts" `KNOWN_HITS`'te. Tavan 205 / 1400, hikâye 40-92.
+- **Dev dalga:** kadraj K_R1-K_R3 birebir, spottan bağımsız, ön plan kadraja bağlı (parapet / pencere / teras korkuluğu);
+  balkon ve teras rotasyonda değil (SPOT_FRAME'de durur). 9-15s W10-W12 yapısal final (ana öğe), W3 W4 pasif. İnsan I7-I9
+  birebir (`{N}` önekiyle), I2 pasif (`es.DISABLED_PEOPLE_LINES`), kanıtlı I1 I7 I8 I9 (`es.PEOPLE_AXIS_PROVEN_BY_EVENT`).
+  GPT kapısı "inland" (`es.VAGUE_TARGET_GPT_BANNED_BY_EVENT`). Rotasyon dışı açılış C/D için bütçe dışlaması
+  (`ox.BUDGET_CONFLICTS`; üretim davranışı aynı).
+- **Cephe yangını:** `sk.DISABLED_EVENTS` (menüde ve otomatik seçimde yok; kod, havuz, testler yerinde).
+- `scripts/prompt_rules.py` K3 sabitlik sözlüğüne "never pans" eklendi (birebir kadrajlar "the camera never pans, turns or follows").
+
 ## 📋 DEVİR: 6 Kasım (2) kalan havuz temizliği
 
 Kie/GPT çağrısı yok; test `tests/test_havuz_6kas_2.py`. Kilitli 8 olay ve izin listesi dışındaki tüm olaylar 40 tohumda bayt bayt aynı.

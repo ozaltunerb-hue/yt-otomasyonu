@@ -105,7 +105,12 @@ OPENINGS = {
              "first second.",
         "C": "A blast of hot air ahead of the cloud bends the trees, and the grey wall of ash surges into the "
              "street right behind it.",
-        "D": "The ash cloud spreads across the valley and engulfs the houses on both sides of the street at once."},
+        "D": "The ash cloud spreads across the valley and engulfs the houses on both sides of the street at once.",
+        # 11 Kas 2026, Bahadır (kül bulutu yeniden tasarım, A2): birebir. Tek yeni açılış; B, C, D PASİF (hiçbir 100K+
+        # hit'te yok: 21 Eki sonrası eklendi). A (kilit cümle) 13 Eki 2,13M hit'inde kullanıldı: pasife alınmadı
+        "E": "The whole volcano looms directly behind the town, its summit crater erupting a towering column of black "
+             "ash, and part of the column collapses into a churning gray ash cloud that pours down the slope toward the "
+             "first houses."},
     "Volcanic bombs slam into a village street": {
         "B": "A single huge glowing rock from the volcano punches straight through the roof of the house across "
              "the street.",
@@ -206,7 +211,9 @@ OPENING_ENV_EXCLUDE = {
 # (pa.GUARD): pasifken rotasyonda sadece A kalır; C ve D havuzda durur, rotasyona girmez.
 DISABLED_OPENINGS = {"Flash flooding in city streets": {"B", "C"},
                      "Tidal wave surges over a coastal city street": {"B"},
-                     "Tornado sweeps down a coastal avenue": {"B"}}
+                     "Tornado sweeps down a coastal avenue": {"B"},
+                     # 11 Kas (A2): kül bulutu eski açılışlar (yerine E; A hit, aktif)
+                     "Pyroclastic cloud races down into a village street": {"B", "C", "D"}}
 
 
 def options(event: str) -> list[str]:
@@ -256,8 +263,14 @@ BEAT_CONFLICTS = {
 }
 
 
+# 11 Kas 2026: bütçe dışlaması (anlam çakışması değil). Dev dalga C/D rotasyonda değil (6 Kas (2), Bahadır: sadece A);
+# yeni yüksek kadrajlar (K_R1-K_R3) ve yeni finallerle kod yedeği 175'e sığmayan çiftler. Üretim davranışı aynı.
+BUDGET_CONFLICTS = {"Tidal wave surges over a coastal city street": {"C": {"W12"}, "D": {"W5", "W11", "W12"}}}
+
+
 def beat_conflicts(event: str, letter: str) -> frozenset[str]:
-    return frozenset(BEAT_CONFLICTS.get(event, {}).get(letter, set()))
+    return frozenset(BEAT_CONFLICTS.get(event, {}).get(letter, set())
+                     | BUDGET_CONFLICTS.get(event, {}).get(letter, set()))
 
 
 @functools.lru_cache(maxsize=None)

@@ -67,15 +67,15 @@ class TestEventPool(unittest.TestCase):
                                   "coastal_tornado_landfall": 4,   # 4 Kas: + Özgürlük Anıtı
                                   "urban_city_disasters": 2,
                                   "open_beach_coastal_events": 0, "landslide_disasters": 3,   # 2 Eki: heyelan; 3 Kas: plaj pasif
-                                  "fire_disasters": 4,   # 8 Eki: yangın; 10 Eki: + helikopter
+                                  "fire_disasters": 3,   # 8 Eki: yangın; 10 Eki: + helikopter; 11 Kas: cephe pasif
                                   "volcano_disasters": 2,   # 10 Eki: volkan; 13 Eki: lav nehri çıktı; + 3 çığ; 18 Eki (2): şok dalgası devre dışı
                                   "avalanche_disasters": 3,   # 13 Eki: çığ
                                   "earthquake_disasters": 1,   # 14 Eki: deprem; 3 Kas: eski sokak pasif
                                   "meteor_disasters": 1})   # 29 Eki: meteor
         # 18 Eki (2): şok dalgası devre dışı; 29 Eki: -10 deniz, +1 meteor. 3 Kas: kruvaziyer, plaj (-6), eski sokak (-1)
-        self.assertEqual(sum(counts.values()), 20)   # 4 Kas: + Özgürlük Anıtı
+        self.assertEqual(sum(counts.values()), 19)   # 4 Kas: + Özgürlük Anıtı; 11 Kas: cephe yangını pasif
         with patch.object(sk, "DISABLED_DOMAINS", set()):   # bayrak açılınca deniz + kruvaziyer + plaj geri gelir
-            self.assertEqual(sum(len(sk.skeleton_events(d)) for d in DOMAIN_ATTRIBUTES), 36)   # 4 Kas: + Özgürlük Anıtı
+            self.assertEqual(sum(len(sk.skeleton_events(d)) for d in DOMAIN_ATTRIBUTES), 35)   # 4 Kas: + Özgürlük Anıtı; 11 Kas: cephe pasif
 
     def test_removed_events(self):
         # 30 Eyl: + tabela/iskele (aksiyonsuz video); 1 Eki: + halat, kontrolsüz yat; 4 Eki (TASLAK): + hortum kıyıya
@@ -330,7 +330,7 @@ class TestMenu(unittest.TestCase):
     def test_menu_follows_pipeline(self):
         with patch.object(settings, "PROMPT_PIPELINE", "skeleton"):
             # 3 Kas: kruvaziyer (-3), plaj & sahil (-3), eski sokak (-1) pasif
-            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 20)   # 4 Kas: + Özgürlük Anıtı; 29 Eki: deniz pasif, + meteor; 18 Eki (2): şok dalgası devre dışı; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
+            self.assertEqual(sum(len(bot.domain_events(d)) for d in DOMAIN_ATTRIBUTES), 19)   # 11 Kas: cephe yangını pasif; 4 Kas: + Özgürlük Anıtı; 29 Eki: deniz pasif, + meteor; 18 Eki (2): şok dalgası devre dışı; 2 Eki: + 3 heyelan; 8 Eki: + 3 yangın; 10 Eki: + helikopter, + 4 volkan; 13 Eki: lav nehri çıktı; + 3 çığ
         with patch.object(settings, "PROMPT_PIPELINE", "legacy"):
             # 30 Eyl: dev dalga baskını havuza eklendi (tabela/iskele havuzda kaldı, sadece iskeletten çıktı)
             # 1 Eki: kontrolsüz yat havuza eklendi (halat havuzda kaldı, sadece iskeletten çıktı)

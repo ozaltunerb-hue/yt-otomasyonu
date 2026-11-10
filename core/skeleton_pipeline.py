@@ -198,7 +198,14 @@ VOLC_ENVS = {
 }
 # 6 Kas (2), Bahadır: kül bulutu pastel_town metninde "concrete" -> "painted stucco", araç tarifi "parked trucks" -> "balconies". VOLC_ENVS kilitli bombalarla ortak:
 # AYRI kopya, bombalar bayt bayt aynı. Metin her zaman volc_env_text ile okunur.
-PYRO_ENV_TEXTS = {"pastel_town": "a street of colorful painted stucco houses with balconies"}
+# 11 Kas 2026, Bahadır (A5): kül bulutu ortamlarının hepsi volkanın hemen eteğinde (7 Kas paylaşımında banliyö
+# ortamında volkan görünmüyordu). Metinlere "right at the foot of the volcano" eklendi; bombalar (kilitli) VOLC_ENVS aynen.
+# Önceki pastel_town kopyası: "a street of colorful painted stucco houses with balconies"
+PYRO_FOOT = "right at the foot of the volcano"
+PYRO_ENV_TEXTS = {"pastel_town": f"a street of colorful painted stucco houses with balconies {PYRO_FOOT}",
+                  "hillside_town": f"a wide hillside-town street of stone and painted houses {PYRO_FOOT}",
+                  "suburb": f"a suburban street of detached houses, garages and palm trees {PYRO_FOOT}",
+                  "mountain_village": f"a village street of wooden and stone houses among trees {PYRO_FOOT}"}
 
 
 def volc_env_text(event: str | None, name: str) -> str:
@@ -927,8 +934,10 @@ def volcano_camera(spot: str, event: str | None = None, volc_env: str | None = N
     # 18 Eki (3): ortam ekseni (bombalar, kül bulutu): sokak metni ortamdan; ortam yoksa eski metin
     street = volc_env_text(event, volc_env) if volc_env else "the village street"
     if event in VOLCANO_SHORT_CAMERA_EXCLUDED:   # kül bulutu: 13 Eki (3) metni aynen
+        # 11 Kas (A5): ortam metni volkanla bitiyorsa ("right at the foot of the volcano") yön tekrarı yok
+        toward = "" if street.endswith("the volcano") else " toward the erupting volcano"
         return (f"Handheld footage shot by a person standing {CAMERA_SPOTS[spot]}, high vantage looking down over "
-                f"{street} toward the erupting volcano; slight hand shake, the camera stays fixed on the {perch}, "
+                f"{street}{toward}; slight hand shake, the camera stays fixed on the {perch}, "
                 f"tilting down no more than slightly and never descending, the erupting volcano always visible in the "
                 f"upper third of the frame, a corner of the {perch} railing in the foreground; one continuous shot, no "
                 f"zoom, no cuts.")
@@ -1200,7 +1209,10 @@ def domain_active(domain: str) -> bool:
 DISABLED_EVENTS = {"Volcano erupts and a shockwave blows out windows",
                    # 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 7): deprem ortamları modern olsun; "Eski sokak" (eski taş
                    # evler) PASİF. Havuz, beat'ler, iskelet ve testler yerinde (açmak: bu satırı sil)
-                   "Earthquake collapses a row of old stone houses"}
+                   "Earthquake collapses a row of old stone houses",
+                   # 11 Kas 2026, Bahadır (C1): "Apartman cephe yangını" Telegram menüsünden kalktı (PASİF; kod, havuz,
+                   # iskelet ve testler yerinde)
+                   "Flames race up a tower facade"}
 
 
 def skeleton_events(domain: str) -> list[str]:
@@ -1263,6 +1275,12 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
         from core.frame_axis import frame_camera
         camera = frame_camera(event, spot, frame, volc_env, fire_env, legacy=legacy_camera, scene_env=scene_env)
     scene_signs = False
+    if frame is not None and volc_env and event in VOLCANO_SHORT_CAMERA_EXCLUDED:
+        from core.frame_axis import is_verbatim_frame
+        if is_verbatim_frame(event, frame):   # 11 Kas (A3): kül bulutu birebir kadrajı; ortam ayrı Setting satırında
+            scene_signs = True
+            # kadraj cümlesi volkanı evlerin hemen arkasında veriyor: "foot" eki burada tekrar olmasın (205 kelime)
+            setting = f"Setting: {volc_env_text(event, volc_env).replace(' ' + PYRO_FOOT, '')}, {NO_SIGNS}."
     if scene_env and scene_env != "A":   # 21 Eki (Aşama 5): ortam ekseni (9 olay), çığ ortam satırı gibi kameradan sonra
         from core.scene_env import env_text
         # en fazla 8 kısıt: yazı/tabela yasağı ortam cümlesine katılır (bölge görünümündeki gibi tek kısıt)

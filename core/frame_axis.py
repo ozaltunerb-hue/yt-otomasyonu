@@ -256,6 +256,66 @@ RETIRED_CAMERA_SPOTS = {TIDAL: {"Coastal avenue behind a seawall"}}
 def retired_positions(event: str) -> set[str]:
     return set(RETIRED_CAMERA_SPOTS.get(event, set()))
 
+
+# ── 11 Kas 2026, Bahadır: BİREBİR KADRAJLAR (kamera cümlesi kelimesi kelimesine; spottan bağımsız) ─────────────────────
+# Olay -> {kadraj kimliği: (kamera cümlesi, ön plan anahtarı | None)}. Seçilen kadrajın cümlesi stil ekinin kamera
+# cümlesidir; ön plan kadraja bağlı (her kadrajın kendi ön planı, yaprak yok). Kilitli olaylarda kayıt YOK.
+# - Dev dalga: K_R1-K_R3 (yüksek çatı / otel pencere / tepe terası). Eski "balkon" (ikinci kat balkonu) ve "teras" (sahil
+#   korkuluğu) PASİF: alçak çiziliyordu; hit videolarda (24 Eyl, 3 Eki, 13 Eki) mod A cümlesi (eye level, pans to follow)
+#   kullanılmıştı, bugünkü mod B cümleleri hiçbir hit'te yok. Kadrajlar SPOT_FRAME'de durur (silinmedi), rotasyona girmez.
+# - Kül bulutu: K_V (volkanın tamamı, kasaba kenarındaki yüksek çatı terası). Eski yerli kadrajlar (yamaç terası, çatı
+#   terası) hit'te kullanıldı (13 Eki 2,13M yamaç; 25 Eki 102K çatı): pasife alınmadı, K_V ile birlikte rotasyonda
+#   (VERBATIM_WITH_NATIVE). Balkon zaten rotasyonda değildi (pa.PASSIVE_SPOTS).
+FRAME_NEVER_PANS = "the camera never pans, turns or follows"
+VERBATIM_FRAMES = {
+    TIDAL: {
+        "K_R1": ("Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide "
+                 "angle, the whole coastal street and the sea behind it in frame; the camera never pans, turns or "
+                 "follows.", "parapet"),
+        "K_R2": ("Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight "
+                 "down the coastal street toward the sea; the camera never pans, turns or follows.", "pencere"),
+        "K_R3": ("Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, "
+                 "the coastal street and the apartment blocks below in frame; the camera never pans, turns or "
+                 "follows.", "teras_korkuluk"),
+    },
+    PYROCLASTIC: {
+        "K_V": ("Filmed from a high rooftop terrace at the edge of the town, wide angle, the entire volcano from its "
+                "base to its summit filling the upper half of the frame directly behind the houses, the town below in "
+                "the lower half; the camera never pans, turns or follows.", None),
+    },
+}
+# Birebir kadrajların yanında olayın yerli kadrajı da rotasyonda kalan olaylar (hit kadrajı pasife alınamadı)
+VERBATIM_WITH_NATIVE = (PYROCLASTIC,)
+# Birebir kadrajın ön plan cümlesi (FG_TEXT ile aynı metinler, cümle başı büyük harf)
+_VERBATIM_TAIL = "one continuous shot, no zoom, no cuts."
+
+
+def is_verbatim_frame(event: str, frame: dict | None) -> bool:
+    return bool(frame) and frame.get("type") in VERBATIM_FRAMES.get(event, {})
+
+
+def verbatim_variants(event: str) -> list[dict]:
+    return [{"type": k, "pos_spot": None, "fg": fg, "mode": None} for k, (_, fg) in VERBATIM_FRAMES.get(event, {}).items()]
+
+
+def verbatim_camera(event: str, frame: dict) -> str:
+    """Birebir kadrajın kamera cümlesi + ön plan + tek çekim kuyruğu (camera_rules ön plan yüzü yasağını ekler)."""
+    text, fg = VERBATIM_FRAMES[event][frame["type"]]
+    if fg:
+        lead = FG_TEXT[fg][0].upper() + FG_TEXT[fg][1:]
+        return f"{text} {lead}, {_VERBATIM_TAIL}"
+    return f"{text} {_VERBATIM_TAIL[0].upper()}{_VERBATIM_TAIL[1:]}"
+
+
+def _choose_verbatim(event: str, native_frame: dict | None, hist: list[dict], rng: random.Random) -> tuple[dict, list]:
+    """Birebir kadrajlar (+ VERBATIM_WITH_NATIVE'de yerli kadraj) arasından son 1 hariç eşit seçim (kadraj ekseni LRU)."""
+    opts = verbatim_variants(event) + ([native_frame] if native_frame else [])
+    used = [h.get("kadraj") for h in hist if h.get("kadraj") not in (None, "", "-")]
+    last = used[-1:] if len(opts) > 1 else []
+    cands = [f for f in opts if f["type"] not in last] or opts
+    pick = rng.choice(cands)
+    return pick, [f["type"] for f in opts if f not in cands]
+
 # Volkan/çığ/deprem ön planı: (bugünkü metin, "boş" metni). Volkanda bugünkü metin perch'li ({perch} doldurulur).
 NATIVE_FG = {"volcano": ("a {perch} railing corner in the foreground", "nothing in the foreground"),
              "volcano_long": ("a corner of the {perch} railing in the foreground", "nothing in the foreground"),
@@ -341,6 +401,8 @@ def frame_camera(event: str, spot: str, frame: dict, volc_env: str | None = None
 def _frame_camera(event: str, spot: str, frame: dict, volc_env: str | None = None, fire_env: str | None = None,
                   legacy=None, scene_env: str | None = None) -> str:
     """Kadraja göre kamera cümlesi. legacy(event, spot, volc_env) -> bugünkü cümle (skeleton_pipeline verir)."""
+    if is_verbatim_frame(event, frame):   # 11 Kas: birebir kadraj
+        return verbatim_camera(event, frame)
     ftype, pos_spot, fg, mode = frame["type"], frame.get("pos_spot"), frame.get("fg"), frame.get("mode")
     fam = family(event)
     if pos_spot and (mode == "A" or native(event, pos_spot)[1] == NATIVE):
@@ -400,13 +462,28 @@ def _weighted(options: list[str], rng) -> str:
 
 def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: list[dict],
                  rng: random.Random, blocked: set[str] | None = None) -> tuple[dict, dict]:
+    """11 Kas: birebir kadrajlı olaylarda (VERBATIM_FRAMES) kadraj birebir kadrajlardan (+ yerli kadraj, kül bulutu);
+    diğer olaylarda _choose_frame_core aynen (aynı rastgele çekimler)."""
+    if event not in VERBATIM_FRAMES:
+        return _choose_frame_core(event, spot, pool, risky, hist, rng, blocked)
+    native_frame, excluded = (_choose_frame_core(event, spot, pool, risky, hist, rng, blocked)
+                              if event in VERBATIM_WITH_NATIVE else (None, {}))
+    frame, gone = _choose_verbatim(event, native_frame, hist, rng)
+    if frame is not native_frame:
+        excluded = {}
+    excluded["kadraj"] = gone
+    return frame, excluded
+
+
+def _choose_frame_core(event: str, spot: str, pool: list[str], risky: set[str], hist: list[dict],
+                       rng: random.Random, blocked: set[str] | None = None) -> tuple[dict, dict]:
     """(frame, elenenler). pool: bu üretimde kamera yeri ödünç alınabilecek spotlar (görünüm/ortam süzülmüş). risky:
     seçilen beat'lerin dışlandığı spotlar (orada kamera olmaz; pencere balkon riskini de taşır). blocked: 21 Eki
     (Aşama 5) ortamla çelişen kamera noktaları (spot adı ya da "lib:<tip>")."""
     blocked = (blocked or set()) | retired_positions(event)   # 3 Kas: pasif kamera noktaları
     # 31 Eki (3): rotasyon sadece KANITLI kadraj/ön plan (+ yetersizlik koruması); pencere DENEME (core.proven_axes)
     import core.proven_axes as pa
-    rot = pa.allowed_variants(event, spot, all_frames(event, spot, pool, risky, blocked))
+    rot = pa.allowed_variants(event, spot, _all_frames_core(event, spot, pool, risky, blocked))   # 11 Kas: yerli varyantlar
     g_types, g_fgs = pa.frame_guards(event, spot, rot)   # koruma tipleri / ön planları (en fazla %20)
 
     def in_rot(t, ps="*", m="*", fg="*"):
@@ -491,7 +568,16 @@ def frame_label(frame: dict | None) -> str:
 def all_frames(event: str, spot: str, pool: list[str], risky: set[str] | None = None,
                blocked: set[str] | None = None) -> list[dict]:
     """Bu spotta olası tüm kadraj varyantları (testler, kural denetimi, K5 sığma koruması). risky verilirse seçilen
-    beat'lerin dışlandığı spotlar ödünç alınmaz; blocked: ortamla çelişen noktalar (choose_frame ile aynı süzgeç)."""
+    beat'lerin dışlandığı spotlar ödünç alınmaz; blocked: ortamla çelişen noktalar (choose_frame ile aynı süzgeç).
+    11 Kas: birebir kadrajlı olayda birebir kadrajlar (+ kül bulutunda yerli varyantlar)."""
+    if event in VERBATIM_FRAMES:
+        native = _all_frames_core(event, spot, pool, risky, blocked) if event in VERBATIM_WITH_NATIVE else []
+        return verbatim_variants(event) + native
+    return _all_frames_core(event, spot, pool, risky, blocked)
+
+
+def _all_frames_core(event: str, spot: str, pool: list[str], risky: set[str] | None = None,
+                     blocked: set[str] | None = None) -> list[dict]:
     risky = risky or set()
     blocked = (blocked or set()) | retired_positions(event)   # 3 Kas: pasif kamera noktaları (choose_frame ile aynı)
     pool = [s for s in pool if s not in blocked]

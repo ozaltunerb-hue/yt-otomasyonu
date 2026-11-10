@@ -148,14 +148,16 @@ class TestPoolCleanup(_Quiet):
         spot = "Rooftop terrace facing the erupting volcano"
         pairs = es.allowed_pairs(PY, None, spot)
         self.assertFalse([p for p in pairs if "Q2" in p])
-        # 8/646 çıkmaz sıradan biri: eskiden StructureError
+        # 11 Kas (A4): 4-9s P2 P4 P7 P8 (yasak çiftleri yok), 2 derinlikte çıkmaz sıra kalmadı (önceki 8/646). Bayrak
+        # durur: çıkmaz olursa StructureError yerine derinlik 1
+        for h1 in pairs:
+            for h2 in pairs:
+                left = [p for p in pairs if p[0] not in {h1[0], h2[0]} and p[1] not in {h1[1], h2[1]}]
+                self.assertTrue(left, (h1, h2))
         hist = ["x|none|y|z##P2+Q4|c", "x|none|y|z##P4+Q5|c"]
-        dead = {("P2", "Q4"), ("P4", "Q5")}
-        b2, b3 = {p[0] for p in dead}, {p[1] for p in dead}
-        self.assertFalse([p for p in pairs if p[0] not in b2 and p[1] not in b3])
         self.assertIn(es.choose_beats(PY, None, spot, hist, random.Random(1)), pairs)
         # Normal akış: aday varken listeden çıkarılsa da seçim aynı
-        hist = ["x|none|y|z##P1+Q4|c", "x|none|y|z##P2+Q5|c"]
+        hist = ["x|none|y|z##P7+Q4|c", "x|none|y|z##P2+Q5|c"]   # 11 Kas: P1 pasif
         real = es.BEAT_BLOCK_FALLBACK_EVENTS
         for seed in range(50):
             with_fb = es.choose_beats(PY, None, spot, hist, random.Random(seed))
