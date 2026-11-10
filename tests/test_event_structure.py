@@ -3336,7 +3336,11 @@ class TestVolcano(unittest.TestCase):
                 scene = asyncio.run(cp.build_creative_scene("volcano_disasters", e, [], [], gpt))
                 t = scene["trace"]
                 self.assertIn(t["spot"], self.CAMS)
-                self.assertIn("the volcano always in the upper third", scene["prompt"])   # 21 Eki: kısa (175)
+                # 11 Kas (A3): kül bulutu birebir kadrajı K_V volkanı "upper half" ile verir
+                if scene["structure"]["spec"]["frame"].get("type") == "K_V":
+                    self.assertIn("the entire volcano from its base to its summit filling the upper half", scene["prompt"])
+                else:
+                    self.assertIn("the volcano always in the upper third", scene["prompt"])   # 21 Eki: kısa (175)
                 self.assertTrue(scene["combo_key"].startswith("volcano_disasters|none|"))
                 spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
                 self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
