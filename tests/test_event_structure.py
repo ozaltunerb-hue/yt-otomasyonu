@@ -711,7 +711,7 @@ class TestTidal(unittest.TestCase):
             # 11 Kas (5), Bahadır: T7, T8 yeni metin (önceki T7 "...carried backwards down the street, bumping parked
             # cars", T8 "...driven into the front of a house and the porch collapses onto it")
             "T7": "the {vehicle} is swept into a row of parked cars and piles up against them",
-            "T8": "the {vehicle} is rammed into a ground-floor shopfront and the front wall caves in onto it",
+            "T8": "the {vehicle} is swept against a parked city bus and pinned there by the current",   # 11 Kas (6)
         })
         self.assertEqual({k: v["text"] for k, v in BT["slice_3"].items()}, {
             "W1": "a row of parked vehicles is ripped loose one by one and washed away",
@@ -732,8 +732,7 @@ class TestTidal(unittest.TestCase):
         })
         self.assertEqual(BT["excluded_pairs"], {("T6", "W2"), ("T2", "W1"), ("T8", "W1"), ("T3", "W8"),
                                                 ("T1", "W9"), ("T8", "W9"), ("T3", "W9"),
-                                                # 11 Kas (5): yeni T8 (dükkân önü); (T8, W10) kalktı (ev önü değil)
-                                                ("T8", "W11"), ("T8", "W13")})
+                                                })   # 11 Kas (6): aktif öğeler arasında dışlama yok
         self.assertEqual(BT["excluded_views"], {})
         # Kamera seawall'un üstünde: "alçak duvar çöker" kameranın durduğu duvar gibi çizilir
         self.assertEqual(BT["excluded_spots"], {"W6": {"Coastal avenue behind a seawall"}})
@@ -770,7 +769,7 @@ class TestTidal(unittest.TestCase):
               "T2": "The surge sweeps the pickup truck along the street.",
               # 30 Eki (Aşama B): T4, T8 yeni metne göre
               "T4": "The surge hurls the SUV onto the roof of a parked car and crushes it.",
-              "T8": "The surge drives the sedan into the front of a house and the porch caves in.",
+              "T8": "The surge sweeps the sedan against a parked city bus and pins it there.",   # 11 Kas (6)
               "W1": "One after another, the parked cars are torn loose and washed away.",
               "W4": "A newsstand is ripped off its base and carried down the street.",
               "W8": "A green trash bin rolls through the water and slams into a car."}
@@ -1007,8 +1006,8 @@ class TestTidal(unittest.TestCase):
         # 3 Kas (sel doğrulama ayarı): T4 pasif (5 çift az)
         # 11 Kas (B3): W3, W4 pasif; W10-W12 (T8+W10 dışlı): 5 x 5 - 3 = 22 çift
         # 11 Kas (2) (0c): T5 pasif: 4 x 5 - 3 = 17 çift
-        # 11 Kas (5): W1, W5 pasif, W13 yeni; (T8, W11) (T8, W13) dışlı, (T8, W10) açık: 4 x 4 - 2 = 14 çift
-        self.assertEqual(n, 17 * 14 * 3)
+        # 11 Kas (6): dışlama yok: 4 x 4 = 16 çift (11 Kas (5): 14)
+        self.assertEqual(n, 17 * 16 * 3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_w6_never_on_seawall(self):

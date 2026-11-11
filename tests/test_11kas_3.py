@@ -261,8 +261,9 @@ class TestTidalRound5(_Quiet):
 
     def test_texts_and_passive(self):
         b = es.EVENT_BEATS[self.T]
+        # 11 Kas (6): T8 yine değişti (park hâlindeki şehir otobüsü)
         self.assertEqual(b["slice_2"]["T8"]["text"],
-                         "the {vehicle} is rammed into a ground-floor shopfront and the front wall caves in onto it")
+                         "the {vehicle} is swept against a parked city bus and pinned there by the current")
         self.assertEqual(b["slice_2"]["T7"]["text"],
                          "the {vehicle} is swept into a row of parked cars and piles up against them")
         self.assertEqual(b["slice_3"]["W13"]["text"],
@@ -273,9 +274,11 @@ class TestTidalRound5(_Quiet):
             self.assertEqual(gate.term_hits(b[slot][bid]["text"], self.T), [], bid)
 
     def test_pairs_and_partners(self):
+        # 11 Kas (6): aktif öğeler arasında dışlama yok; kalan kayıtlar pasif öğe içerir
         ex = es.EVENT_BEATS[self.T]["excluded_pairs"]
-        self.assertTrue({("T8", "W11"), ("T8", "W13")} <= ex)
-        self.assertNotIn(("T8", "W10"), ex)
+        off = es.disabled_beats(self.T)
+        self.assertFalse([p for p in ex if not (set(p) & off)])
+        self.assertEqual(es.RECENT_BEAT_BLOCK_BY_EVENT[self.T], 2)
         allp = set()
         for v in es.structure_views(self.T):
             for s in sk.view_spots(self.T, v):
@@ -285,7 +288,14 @@ class TestTidalRound5(_Quiet):
                     self.assertGreaterEqual(len({d for a, d in ps_ if a == m}), 2, (s, m))
         self.assertEqual(sorted({a for a, _ in allp}), ["T2", "T3", "T7", "T8"])
         self.assertEqual(sorted({d for _, d in allp}), ["W10", "W11", "W12", "W13"])
-        self.assertEqual(sorted(d for a, d in allp if a == "T8"), ["W10", "W12"])
+        self.assertEqual(sorted(d for a, d in allp if a == "T8"), ["W10", "W11", "W12", "W13"])
+        self.assertEqual(len(allp), 16)
+
+    def test_40_presses_no_short_cycle(self):
+        """11 Kas (6): tekrar engeli 2 ile 40 basışta 16 çiftin hepsi görülür (önceki 3 ile 4 çiftlik döngü)."""
+        import havuz_denetim as hd
+        seq = [r["beats"] for r in hd.simulate(self.T, 40)]
+        self.assertEqual(len(set(seq)), 16)
 
     def test_no_filler_phrase(self):
         self.assertIn(self.T, es.NO_TRANSITION_EVENTS)

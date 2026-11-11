@@ -5307,7 +5307,7 @@
   "1": {
    "axes": {
     "acilis": "A",
-    "beats": "T3+W10",
+    "beats": "T7+W10",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R1",
@@ -5322,14 +5322,14 @@
     "view": "north_african_coast",
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal avenue behind a seawall#north_african_coast#T3+W10|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Six people run up the stairs of an apartment building. 4-9s: The red SUV is slammed into the car parked ahead and both are shoved along. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in stormy late-afternoon light, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal avenue behind a seawall#north_african_coast#T7+W10|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Six people run up the stairs of an apartment building. 4-9s: The red SUV is swept into a row of parked cars and piles up against them. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in stormy late-afternoon light, no readable signs, text or flags.",
    "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in stormy late-afternoon light, no readable signs, text or flags."
   },
   "10": {
    "axes": {
     "acilis": "A",
-    "beats": "T3+W13",
+    "beats": "T8+W13",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R1",
@@ -5344,14 +5344,14 @@
     "view": "riviera",
     "weather": "a dark storm light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#riviera#T3+W13|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three pedestrians run from the wave toward the buildings. 4-9s: The green delivery van is slammed into the car parked ahead and both are shoved along. 9-15s: The surge caves in the front of a seafront restaurant and drags its terrace into the street. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#riviera#T8+W13|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three pedestrians run from the wave toward the buildings. 4-9s: The green delivery van is swept against a parked city bus and pinned there by the current. 9-15s: The surge caves in the front of a seafront restaurant and drags its terrace into the street. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags.",
    "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags."
   },
   "11": {
    "axes": {
     "acilis": "A",
-    "beats": "T3+W13",
+    "beats": "T8+W12",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R3",
@@ -5366,14 +5366,14 @@
     "view": "north_european_seaside",
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal avenue behind a seawall#north_european_seaside#T3+W13|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four pedestrians run from the wave toward the buildings. 4-9s: The green delivery van is slammed into the car parked ahead and both are shoved along. 9-15s: The surge caves in the front of a seafront restaurant and drags its terrace into the street. Until the last frame, the floodwater keeps surging through the street. Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in stormy late-afternoon light, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal avenue behind a seawall#north_european_seaside#T8+W12|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four pedestrians run from the wave toward the buildings. 4-9s: The green delivery van is swept against a parked city bus and pinned there by the current. 9-15s: The surge tears a wooden beach café off its foundations and smashes it against the apartment blocks. Until the last frame, the floodwater keeps surging through the street. Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in stormy late-afternoon light, no readable signs, text or flags.",
    "style_suffix": "Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in stormy late-afternoon light, no readable signs, text or flags."
   },
   "12": {
    "axes": {
     "acilis": "A",
-    "beats": "T2+W12",
+    "beats": "T3+W10",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R2",
@@ -5388,14 +5388,14 @@
     "view": "north_european_seaside",
     "weather": "driving rain and wind"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#north_european_seaside#T2+W12|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three pedestrians run from the wave toward the buildings. 4-9s: The orange delivery truck is carried down the street by the surge. 9-15s: The surge tears a wooden beach café off its foundations and smashes it against the apartment blocks. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in driving rain and wind, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#north_european_seaside#T3+W10|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three pedestrians run from the wave toward the buildings. 4-9s: The orange delivery truck is slammed into the car parked ahead and both are shoved along. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in driving rain and wind, no readable signs, text or flags.",
    "style_suffix": "Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in driving rain and wind, no readable signs, text or flags."
   },
   "13": {
    "axes": {
     "acilis": "A",
-    "beats": "T7+W12",
+    "beats": "T3+W13",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R1",
@@ -5406,18 +5406,18 @@
     "people": 4,
     "spot": "Coastal street of low shopfronts",
     "story_source": "code",
-    "vehicle": "yellow pickup truck",
+    "vehicle": "blue sedan",
     "view": "us_coastal_town",
     "weather": "a dark storm light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#us_coastal_town#T7+W12|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four pedestrians run from the wave toward the buildings. 4-9s: The yellow pickup truck is swept into a row of parked cars and piles up against them. 9-15s: The surge tears a wooden beach café off its foundations and smashes it against the apartment blocks. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with wide asphalt roads, low wooden and brick houses, power lines, in a dark storm light, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#us_coastal_town#T3+W13|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four pedestrians run from the wave toward the buildings. 4-9s: The blue sedan is slammed into the car parked ahead and both are shoved along. 9-15s: The surge caves in the front of a seafront restaurant and drags its terrace into the street. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with wide asphalt roads, low wooden and brick houses, power lines, in a dark storm light, no readable signs, text or flags.",
    "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with wide asphalt roads, low wooden and brick houses, power lines, in a dark storm light, no readable signs, text or flags."
   },
   "14": {
    "axes": {
     "acilis": "A",
-    "beats": "T3+W10",
+    "beats": "T7+W10",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R1",
@@ -5432,14 +5432,14 @@
     "view": "gulf_metropolis",
     "weather": "driving rain and wind"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal avenue behind a seawall#gulf_metropolis#T3+W10|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Five people run up the street away from the sea toward the apartment entrances. 4-9s: The blue sedan is slammed into the car parked ahead and both are shoved along. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with glass towers behind palm-lined boulevards, sand-colored low buildings, in driving rain and wind, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal avenue behind a seawall#gulf_metropolis#T7+W10|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Five people run up the street away from the sea toward the apartment entrances. 4-9s: The blue sedan is swept into a row of parked cars and piles up against them. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with glass towers behind palm-lined boulevards, sand-colored low buildings, in driving rain and wind, no readable signs, text or flags.",
    "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with glass towers behind palm-lined boulevards, sand-colored low buildings, in driving rain and wind, no readable signs, text or flags."
   },
   "15": {
    "axes": {
     "acilis": "A",
-    "beats": "T2+W12",
+    "beats": "T3+W11",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R1",
@@ -5454,14 +5454,14 @@
     "view": "north_african_coast",
     "weather": "driving rain and wind"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#north_african_coast#T2+W12|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three pedestrians run from the wave toward the buildings. 4-9s: The red SUV is carried down the street by the surge. 9-15s: The surge tears a wooden beach café off its foundations and smashes it against the apartment blocks. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#north_african_coast#T3+W11|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three pedestrians run from the wave toward the buildings. 4-9s: The red SUV is slammed into the car parked ahead and both are shoved along. 9-15s: The surge swallows the ground floors of a row of shopfronts and a roof caves in. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags.",
    "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags."
   },
   "16": {
    "axes": {
     "acilis": "A",
-    "beats": "T3+W10",
+    "beats": "T7+W11",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R1",
@@ -5476,14 +5476,14 @@
     "view": "us_coastal_town",
     "weather": "strong gusting wind"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#us_coastal_town#T3+W10|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four pedestrians run up the stairs of an apartment building. 4-9s: The red SUV is slammed into the car parked ahead and both are shoved along. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with wide asphalt roads, low wooden and brick houses, power lines, in strong gusting wind, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#us_coastal_town#T7+W11|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four pedestrians run up the stairs of an apartment building. 4-9s: The red SUV is swept into a row of parked cars and piles up against them. 9-15s: The surge swallows the ground floors of a row of shopfronts and a roof caves in. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with wide asphalt roads, low wooden and brick houses, power lines, in strong gusting wind, no readable signs, text or flags.",
    "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with wide asphalt roads, low wooden and brick houses, power lines, in strong gusting wind, no readable signs, text or flags."
   },
   "17": {
    "axes": {
     "acilis": "A",
-    "beats": "T3+W11",
+    "beats": "T7+W13",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R2",
@@ -5498,14 +5498,14 @@
     "view": "riviera",
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#riviera#T3+W11|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four pedestrians run from the wave toward the buildings. 4-9s: The yellow pickup truck is slammed into the car parked ahead and both are shoved along. 9-15s: The surge swallows the ground floors of a row of shopfronts and a roof caves in. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in stormy late-afternoon light, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#riviera#T7+W13|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four pedestrians run from the wave toward the buildings. 4-9s: The yellow pickup truck is swept into a row of parked cars and piles up against them. 9-15s: The surge caves in the front of a seafront restaurant and drags its terrace into the street. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in stormy late-afternoon light, no readable signs, text or flags.",
    "style_suffix": "Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in stormy late-afternoon light, no readable signs, text or flags."
   },
   "18": {
    "axes": {
     "acilis": "A",
-    "beats": "T3+W11",
+    "beats": "T7+W12",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R1",
@@ -5520,36 +5520,36 @@
     "view": "north_african_coast",
     "weather": "strong gusting wind"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#north_african_coast#T3+W11|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four pedestrians run from the wave toward the buildings. 4-9s: The red SUV is slammed into the car parked ahead and both are shoved along. 9-15s: The surge swallows the ground floors of a row of shopfronts and a roof caves in. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in strong gusting wind, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#north_african_coast#T7+W12|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four pedestrians run from the wave toward the buildings. 4-9s: The red SUV is swept into a row of parked cars and piles up against them. 9-15s: The surge tears a wooden beach café off its foundations and smashes it against the apartment blocks. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in strong gusting wind, no readable signs, text or flags.",
    "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in strong gusting wind, no readable signs, text or flags."
   },
   "19": {
    "axes": {
     "acilis": "A",
-    "beats": "T7+W10",
+    "beats": "T3+W12",
     "environment": null,
     "fit_guard": false,
-    "kadraj": "K_R3",
+    "kadraj": "K_R1",
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
-    "on_plan": "teras_korkuluk",
-    "people": 6,
+    "on_plan": "parapet",
+    "people": 5,
     "spot": "Coastal road below a seafront promenade",
     "story_source": "code",
-    "vehicle": "red SUV",
+    "vehicle": "orange box truck",
     "view": "east_asian_coast",
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#east_asian_coast#T7+W10|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Six pedestrians run from the wave toward the buildings. 4-9s: The red SUV is swept into a row of parked cars and piles up against them. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in stormy late-afternoon light, no readable signs, text or flags.",
-   "style_suffix": "Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in stormy late-afternoon light, no readable signs, text or flags."
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#east_asian_coast#T3+W12|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Five pedestrians run from the wave toward the buildings. 4-9s: The orange box truck is slammed into the car parked ahead and both are shoved along. 9-15s: The surge tears a wooden beach café off its foundations and smashes it against the apartment blocks. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in stormy late-afternoon light, no readable signs, text or flags.",
+   "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in stormy late-afternoon light, no readable signs, text or flags."
   },
   "2": {
    "axes": {
     "acilis": "A",
-    "beats": "T3+W11",
+    "beats": "T7+W13",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R2",
@@ -5564,36 +5564,36 @@
     "view": "gulf_metropolis",
     "weather": "driving rain and wind"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#gulf_metropolis#T3+W11|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Five people run up the stairs of an apartment building. 4-9s: The red SUV is slammed into the car parked ahead and both are shoved along. 9-15s: The surge swallows the ground floors of a row of shopfronts and a roof caves in. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with glass towers behind palm-lined boulevards, sand-colored low buildings, in driving rain and wind, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#gulf_metropolis#T7+W13|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Five people run up the stairs of an apartment building. 4-9s: The red SUV is swept into a row of parked cars and piles up against them. 9-15s: The surge caves in the front of a seafront restaurant and drags its terrace into the street. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with glass towers behind palm-lined boulevards, sand-colored low buildings, in driving rain and wind, no readable signs, text or flags.",
    "style_suffix": "Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with glass towers behind palm-lined boulevards, sand-colored low buildings, in driving rain and wind, no readable signs, text or flags."
   },
   "20": {
    "axes": {
     "acilis": "A",
-    "beats": "T7+W12",
+    "beats": "T2+W13",
     "environment": null,
     "fit_guard": false,
-    "kadraj": "K_R1",
+    "kadraj": "K_R3",
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
-    "on_plan": "parapet",
-    "people": 3,
+    "on_plan": "teras_korkuluk",
+    "people": 4,
     "spot": "Coastal road below a seafront promenade",
     "story_source": "code",
-    "vehicle": "green delivery van",
+    "vehicle": "orange box truck",
     "view": "east_asian_coast",
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#east_asian_coast#T7+W12|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three people run up the street away from the sea toward the apartment entrances. 4-9s: The green delivery van is swept into a row of parked cars and piles up against them. 9-15s: The surge tears a wooden beach café off its foundations and smashes it against the apartment blocks. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in stormy late-afternoon light, no readable signs, text or flags.",
-   "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in stormy late-afternoon light, no readable signs, text or flags."
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#east_asian_coast#T2+W13|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four people run up the side lane toward the hill behind the town. 4-9s: The orange box truck is carried down the street by the surge. 9-15s: The surge caves in the front of a seafront restaurant and drags its terrace into the street. Until the last frame, the floodwater keeps surging through the street. Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in stormy late-afternoon light, no readable signs, text or flags.",
+   "style_suffix": "Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in stormy late-afternoon light, no readable signs, text or flags."
   },
   "3": {
    "axes": {
     "acilis": "A",
-    "beats": "T3+W11",
+    "beats": "T7+W13",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R1",
@@ -5608,36 +5608,36 @@
     "view": "north_african_coast",
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal avenue behind a seawall#north_african_coast#T3+W11|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Six people run up the side lane toward the hill behind the town. 4-9s: The green delivery van is slammed into the car parked ahead and both are shoved along. 9-15s: The surge swallows the ground floors of a row of shopfronts and a roof caves in. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in stormy late-afternoon light, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal avenue behind a seawall#north_african_coast#T7+W13|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Six people run up the side lane toward the hill behind the town. 4-9s: The green delivery van is swept into a row of parked cars and piles up against them. 9-15s: The surge caves in the front of a seafront restaurant and drags its terrace into the street. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in stormy late-afternoon light, no readable signs, text or flags.",
    "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in stormy late-afternoon light, no readable signs, text or flags."
   },
   "4": {
    "axes": {
     "acilis": "A",
-    "beats": "T7+W13",
+    "beats": "T8+W10",
     "environment": null,
     "fit_guard": false,
-    "kadraj": "K_R3",
+    "kadraj": "K_R2",
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
-    "on_plan": "teras_korkuluk",
-    "people": 6,
+    "on_plan": "pencere",
+    "people": 4,
     "spot": "Coastal street of low shopfronts",
     "story_source": "code",
     "vehicle": "yellow pickup truck",
     "view": "north_african_coast",
     "weather": "a dark storm light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#north_african_coast#T7+W13|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Six people run up the side lane toward the hill behind the town. 4-9s: The yellow pickup truck is swept into a row of parked cars and piles up against them. 9-15s: The surge caves in the front of a seafront restaurant and drags its terrace into the street. Until the last frame, the floodwater keeps surging through the street. Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in a dark storm light, no readable signs, text or flags.",
-   "style_suffix": "Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in a dark storm light, no readable signs, text or flags."
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#north_african_coast#T8+W10|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four people sprint into the entrance of a seafront hotel. 4-9s: The yellow pickup truck is swept against a parked city bus and pinned there by the current. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in a dark storm light, no readable signs, text or flags.",
+   "style_suffix": "Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in a dark storm light, no readable signs, text or flags."
   },
   "5": {
    "axes": {
     "acilis": "A",
-    "beats": "T8+W10",
+    "beats": "T2+W10",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R2",
@@ -5645,43 +5645,43 @@
     "kamera_noktasi": null,
     "key_visual": "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
     "on_plan": "pencere",
-    "people": 3,
+    "people": 4,
     "spot": "Coastal street of low shopfronts",
     "story_source": "code",
-    "vehicle": "green delivery van",
+    "vehicle": "yellow pickup truck",
     "view": "riviera",
     "weather": "a dark storm light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#riviera#T8+W10|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three people run up the stairs of an apartment building. 4-9s: The green delivery van is rammed into a ground-floor shopfront and the front wall caves in onto it. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#riviera#T2+W10|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four people run up the street away from the sea toward the apartment entrances. 4-9s: The yellow pickup truck is carried down the street by the surge. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags.",
    "style_suffix": "Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags."
   },
   "6": {
    "axes": {
     "acilis": "A",
-    "beats": "T8+W10",
+    "beats": "T7+W10",
     "environment": null,
     "fit_guard": false,
-    "kadraj": "K_R2",
+    "kadraj": "K_R1",
     "kamera_modu": null,
     "kamera_noktasi": null,
     "key_visual": "A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street.",
-    "on_plan": "pencere",
+    "on_plan": "parapet",
     "people": 3,
     "spot": "Coastal road below a seafront promenade",
     "story_source": "code",
-    "vehicle": "yellow pickup truck",
+    "vehicle": "red SUV",
     "view": "riviera",
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#riviera#T8+W10|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three people run up the stairs of an apartment building. 4-9s: The yellow pickup truck is rammed into a ground-floor shopfront and the front wall caves in onto it. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in stormy late-afternoon light, no readable signs, text or flags.",
-   "style_suffix": "Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in stormy late-afternoon light, no readable signs, text or flags."
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#riviera#T7+W10|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three people run up the street away from the sea toward the apartment entrances. 4-9s: The red SUV is swept into a row of parked cars and piles up against them. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in stormy late-afternoon light, no readable signs, text or flags.",
+   "style_suffix": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A low parapet edge in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in stormy late-afternoon light, no readable signs, text or flags."
   },
   "7": {
    "axes": {
     "acilis": "A",
-    "beats": "T7+W12",
+    "beats": "T2+W11",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R3",
@@ -5696,14 +5696,14 @@
     "view": "us_coastal_town",
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#us_coastal_town#T7+W12|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three pedestrians run from the wave toward the buildings. 4-9s: The yellow pickup truck is swept into a row of parked cars and piles up against them. 9-15s: The surge tears a wooden beach café off its foundations and smashes it against the apartment blocks. Until the last frame, the floodwater keeps surging through the street. Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with wide asphalt roads, low wooden and brick houses, power lines, in stormy late-afternoon light, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal road below a seafront promenade#us_coastal_town#T2+W11|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three people run up the stairs of an apartment building. 4-9s: The yellow pickup truck is carried down the street by the surge. 9-15s: The surge swallows the ground floors of a row of shopfronts and a roof caves in. Until the last frame, the floodwater keeps surging through the street. Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with wide asphalt roads, low wooden and brick houses, power lines, in stormy late-afternoon light, no readable signs, text or flags.",
    "style_suffix": "Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with wide asphalt roads, low wooden and brick houses, power lines, in stormy late-afternoon light, no readable signs, text or flags."
   },
   "8": {
    "axes": {
     "acilis": "A",
-    "beats": "T2+W12",
+    "beats": "T3+W10",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R2",
@@ -5718,14 +5718,14 @@
     "view": "north_african_coast",
     "weather": "stormy late-afternoon light"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#north_african_coast#T2+W12|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three people sprint into the entrance of a seafront hotel. 4-9s: The red SUV is carried down the street by the surge. 9-15s: The surge tears a wooden beach café off its foundations and smashes it against the apartment blocks. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in stormy late-afternoon light, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal street of low shopfronts#north_african_coast#T3+W10|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Three people sprint into the entrance of a seafront hotel. 4-9s: The red SUV is slammed into the car parked ahead and both are shoved along. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in stormy late-afternoon light, no readable signs, text or flags.",
    "style_suffix": "Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, turns or follows. The open window frame at one side, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in stormy late-afternoon light, no readable signs, text or flags."
   },
   "9": {
    "axes": {
     "acilis": "A",
-    "beats": "T3+W10",
+    "beats": "T7+W10",
     "environment": null,
     "fit_guard": false,
     "kadraj": "K_R3",
@@ -5740,8 +5740,8 @@
     "view": "north_european_seaside",
     "weather": "strong gusting wind"
    },
-   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal avenue behind a seawall#north_european_seaside#T3+W10|bystander_handheld",
-   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four people run up the stairs of an apartment building. 4-9s: The red SUV is slammed into the car parked ahead and both are shoved along. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in strong gusting wind, no readable signs, text or flags.",
+   "combo_key": "urban_city_disasters|none|tidal wave surges over a coastal city street|coastal avenue behind a seawall#north_european_seaside#T7+W10|bystander_handheld",
+   "prompt": "0-4s: A towering brown tidal wave thick with debris crashes over the waterfront onto the coastal street. Four people run up the stairs of an apartment building. 4-9s: The red SUV is swept into a row of parked cars and piles up against them. 9-15s: The wave smashes through the front wall of a seafront house and pours inside. Until the last frame, the floodwater keeps surging through the street. Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in strong gusting wind, no readable signs, text or flags.",
    "style_suffix": "Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the camera never pans, turns or follows. A railing corner in the foreground, one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Full action from the very first frame to the last. Everything moves in real time, never in slow motion, people run at full speed. Setting: a seafront district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in strong gusting wind, no readable signs, text or flags."
   }
  },

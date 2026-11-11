@@ -25,6 +25,13 @@
 
 ---
 
+## 📋 DEVİR: 11 Kasım (6) dev dalga T8 otobüs + dışlama yok + tekrar engeli 2
+
+T8 "the {vehicle} is swept against a parked city bus and pinned there by the current" (çapa otobüs). Dev dalgada aktif
+öğeler arasında dışlama yok (4 x 4 = 16 çift). Orta/final tekrar engeli 2 (`RECENT_BEAT_BLOCK_BY_EVENT`; diğer eksenler
+aynen): 40 basışta 16 çiftin 16'sı (önceki 4 çiftlik döngü). Açık gözlem: karaya vurur 40 basışta 13 çiftin 4'ü, 4 üretimde
+bir aynı sıra (dokunulmadı).
+
 ## 📋 DEVİR: 11 Kasım (5) dev dalga orta/final temizliği
 
 Test `tests/test_11kas_3.py` (TestTidalRound5). Sadece dev dalga değişti (40 tohum EK KONTROL). T7 "...is swept into a row

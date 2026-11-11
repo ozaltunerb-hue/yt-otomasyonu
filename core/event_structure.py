@@ -127,6 +127,9 @@ RECENT_BEAT_BLOCK = 3          # son N üretimde geçen 4-9s / 9-15s olayı tekr
 # terası ve balkonda seçilmediği için orada 4 × 4 madde ve 8 yasak çift kalıyor, 3 derinlik en kötü durumda adayı
 # bitirir.
 RECENT_BEAT_BLOCK_BY_EVENT = {PYROCLASTIC: 2,
+                              # 11 Kas (6), Bahadır: dev dalga 2 (4 x 4 havuzda 3 derinlik tek döngüye zorluyordu: 40
+                              # basışta 4 çift). Sadece orta/final; diğer eksenler aynen
+                              TIDAL: 2,
                               # 13 Eki, çığ: köy standart 3; kayak 2 (istasyon terasında teleferik ve çatı maddeleri
                               # yok, 4 × 4 madde, 3 derinlik en kötü durumda adayı bitirir); orman 2 (balkonda çatı
                               # maddesi yok, 10 yasak çift, aynı sebep). Bahadır talimatı: aday kalmazsa 2.
@@ -1181,10 +1184,10 @@ EVENT_BEATS = {
             "T7": {"text": "the {vehicle} is swept into a row of parked cars and piles up against them",
                    "terms": [_DRAG + ("thrust", "slam", "ram", "pile", "piles up"),
                              ("row of parked cars", "parked cars", "parked", "row")]},
-            "T8": {"text": "the {vehicle} is rammed into a ground-floor shopfront and the front wall caves in onto it",
-                   "terms": [_HIT + ("drive", "drove", "driven"), _SHOP + ("shopfront", "ground-floor", "front",
-                                                                           "facade", "façade", "building"),
-                             _FALL + ("cave", "caves in", "crumble")]},
+            # 11 Kas (6), Bahadır: T8 yine değişti, kod aynı. Önceki (11 Kas (5)) "the {vehicle} is rammed into a
+            # ground-floor shopfront and the front wall caves in onto it"
+            "T8": {"text": "the {vehicle} is swept against a parked city bus and pinned there by the current",
+                   "terms": [_DRAG + _HIT + ("pin", "pinned", "trap", "trapped"), ("bus", "buses", "city bus")]},
         },
         "slice_3": {
             "W1": {"text": "a row of parked vehicles is ripped loose one by one and washed away",
@@ -1236,11 +1239,10 @@ EVENT_BEATS = {
                               ("cave", "cave in", "caves in", "caved in", "collapse", "crumble", "drag", "tear", "tore",
                                "rip", "smash", "give way", "gives way")]},
         },
-        # 11 Kas (5), Bahadır: yeni T8 (dükkân önü) W11 (dükkânlar) ve W13 (restoran önü) ile eşleşmez. (T8, W10)
-        # kalktı: gerekçesi "ev önü iki dilimde" idi, yeni T8 ev değil (kalsaydı T8'in tek final eşi W12 kalırdı)
+        # 11 Kas (6), Bahadır: orta hep araç, final hep yapısal: aktif öğeler arasında dışlama yok ((T8, W11) (T8, W13)
+        # kalktı; (T8, W10) zaten yoktu). Kalan çiftlerin hepsi pasif öğe içerir (kayıt, seçimi etkilemez)
         "excluded_pairs": {("T6", "W2"), ("T2", "W1"), ("T8", "W1"), ("T3", "W8"),
-                           ("T1", "W9"), ("T8", "W9"), ("T3", "W9"),
-                           ("T8", "W11"), ("T8", "W13")},   # 17 Eki: (T1,W7) W7 ile gitti. 3 Kas: bina önü / araç iki kez
+                           ("T1", "W9"), ("T8", "W9"), ("T3", "W9")},   # 17 Eki: (T1,W7) W7 ile gitti. 3 Kas: bina önü / araç iki kez
         "excluded_views": {},
         # Kamera seawall'un üstünde duruyor: "alçak duvar çöker" olayı kameranın durduğu duvar gibi çizilir
         "excluded_spots": {"W6": {"Coastal avenue behind a seawall"}},
@@ -2776,7 +2778,8 @@ BEAT_ANCHORS = {
             "V9": _ANCHOR_BUS, "V11": _ANCHOR_SHOP, "D12": _ANCHOR_SHOP, "D14": _ANCHOR_BUS, "D16": _ANCHOR_SHOP,
             "D18": _ANCHOR_SHOP},
     # 3 Kas: W9 kafe önü. 11 Kas (5): T8 artık dükkân önü (önceki _ANCHOR_HOUSE, ev önü)
-    TIDAL: {"T8": _ANCHOR_SHOP + ("shopfront",), "W9": _ANCHOR_SHOP},
+    # 11 Kas (6): T8 park hâlindeki şehir otobüsü (önceki çapa dükkân önü)
+    TIDAL: {"T8": _ANCHOR_BUS, "W9": _ANCHOR_SHOP},
     MUDSLIDE: {"H6": _ANCHOR_HOUSE, "M3": _ANCHOR_HOUSE},   # 31 Eki (3): M3 minibüs evin önüne
     VILLAGE: {"L6": _ANCHOR_HOUSE},
     MARINA_TORNADO: {"Y3": _MARINA_OFFICE},
