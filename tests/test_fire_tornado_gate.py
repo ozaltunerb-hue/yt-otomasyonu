@@ -696,7 +696,7 @@ class TestFireTornadoGate(unittest.TestCase):
 
     def test_total_words_75_only_fire_tornado(self):
         self.assertEqual(es.TOTAL_WORDS, (40, 70))
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[E], (40, 75))
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[E], (40, 87))   # 11 Kas (3): + devam cümlesi (12)
         self.assertNotIn(es.FACADE_FIRE, es.TOTAL_WORDS_BY_EVENT)
         key = len(es.EVENT_KEY_VISUAL[E].split())
 
@@ -707,7 +707,7 @@ class TestFireTornadoGate(unittest.TestCase):
             need = total - key - len(s1.split()) - len(s2.split())
             return {"slice_1_rest": s1, "slice_2": s2, "slice_3": " ".join((base + ["again"] * 40)[:need])}
         spec = es.build_spec(E, None, SPOTS[0], None, "T6", "U6", "SUV", 3)   # 17 Eki: U4 çıktı
-        for total, ok in ((73, True), (75, True), (76, False), (81, False)):
+        for total, ok in ((73, True), (87, True), (88, False), (93, False)):
             sl = story(total)
             self.assertEqual(len(es.plain_story(spec, sl).split()), total)
             with self.subTest(total=total):
@@ -718,7 +718,9 @@ class TestFireTornadoGate(unittest.TestCase):
         self.assertEqual(sorted(sk.EVENT_SKELETONS[E]["spots"]), sorted(SPOTS))
         longest = max(len(es.style_suffix(E, None, s, None, None).split()) for s in SPOTS)
         # 18 Eki (2): şekil cümlesi eklendi, kamera/giyim satırı ve iki nokta kısaldı: en uzun stil eki 96
-        self.assertEqual(longest + 75 + 3, 174)
+        # 11 Kas (3): hareket cümlesi (+21): en uzun ek 117; tavan 205, sığmayan çiftler bütçe dışlamasıyla kapalı
+        self.assertEqual(longest, 117)
+        self.assertEqual(es.max_prompt_words(E), 205)
         self.assertEqual(es.VOLC_MAX_PROMPT_WORDS, 175)
         self.assertIn(E, es.WORD_CAP_EVENTS)
         from core.trace_format import count_constraints
@@ -735,13 +737,14 @@ class TestFireTornadoGate(unittest.TestCase):
             self.assertEqual(spec["fire_env"], name)
             n = len(key.split())
             self.assertIn(n, (32, 33))
-            s23 = (75 - n - 10) // 2
-            self.assertEqual(s23, 16)
-            self.assertEqual(es.word_budget_line(spec),
-                             f"WORD BUDGET: the opening sentence has {n} words; slice_1_rest 6 to 10 words, slice_2 10 "
-                             f"to {s23} words, slice_3 10 to {s23} words; the opening plus the three fields must total "
-                             "at most 75 words.\n")
-            self.assertLessEqual(n + 10 + s23 + s23, 75)
+            # 11 Kas (3): ateş hortumu HEDEF 8 (GPT hikâye çağrısı yok); satır kayıt olarak hesaplanır, toplam 40-87
+            line = es.word_budget_line(spec)
+            self.assertTrue(line.startswith(f"WORD BUDGET: the opening sentence has {n} words; slice_1_rest 6 to 10 "
+                                            "words, slice_2 10 to "), line)
+            total = int(line.split("must total at most ")[1].split()[0])
+            s23 = int(line.split("slice_2 10 to ")[1].split()[0])
+            self.assertLessEqual(n + 10 + s23 + s23, total)
+            self.assertLessEqual(total, 87)
 
     def test_people_two_or_three_close_by(self):
         spec, sl = build("T6", "U7")   # 17 Eki: U4 çıktı; 18 Eki (2): T6+U6 hariç
@@ -792,7 +795,9 @@ class TestFireTornadoGate(unittest.TestCase):
         es._BEAT_MEMORY.clear()
         first, longest = 0, 0
         for _ in range(200):
-            scene = asyncio.run(cp.build_creative_scene("fire_disasters", E, [], [], gpt))
+            # 11 Kas (3): hibrit mekanizma sınanıyor (ateş hortumu üretimde HEDEF 8: GPT yok)
+            with _vpatch.object(es, "CODE_STORY_EVENTS", ()):
+                scene = asyncio.run(cp.build_creative_scene("fire_disasters", E, [], [], gpt))
             spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
             self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
             self.assertIn(spec["people"], (2, 3))
@@ -800,7 +805,7 @@ class TestFireTornadoGate(unittest.TestCase):
             first += len(scene["trace"]["attempts"]) == 1
         # 6 Kas: T5, T6, U6, U10 pasif. Ölçüm 5 koşu (sahte GPT, tohumsuz): önceki havuz 180-190, yeni 177-185; 180 sınırı gürültüde
         self.assertGreaterEqual(first, 170)
-        self.assertLessEqual(longest, 175)
+        self.assertLessEqual(longest, es.max_prompt_words(E))   # 11 Kas (3): 205
         es._BEAT_MEMORY.clear()
 
 

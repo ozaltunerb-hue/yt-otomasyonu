@@ -1112,6 +1112,15 @@ VOLCANO_GUARDRAILS_LONG = VOLCANO_GUARDRAILS   # 21 Eki (genel kalite): kül bul
 # olabilir; 175 kelime için de kısa).
 # Bahadır'ın metni; ";" yerine virgül: stil eki en fazla 8 kısıt (count_constraints ";" ve "." ile sayar)
 REAL_TIME = "Everything moves in real time, never in slow motion, people run at full speed."
+# 11 Kas 2026 (3), Bahadır (2b): HEDEF 8'de kamera cümlesinden sonra, gerçek zaman cümlesinden önce birebir
+FULL_MOTION = "The disaster is already in full motion in the very first frame, and the action never calms down before the end."
+FULL_MOTION_EVENTS = ("Wall of flames sweeps into a hillside neighborhood",
+                      "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
+                      "Tornado making landfall", "Volcanic bombs slam into a village street",
+                      "Mud and debris torrent tears through a hillside village",
+                      "Fire tornado tears across a burning roadside",
+                      "Pyroclastic cloud races down into a village street",
+                      "Tidal wave surges over a coastal city street")
 NO_FACE = "no person or face close to the camera"
 MUD_COLOR = "The mud is dark brown, never grey."
 # Yapılandırılmış hat, gemisiz ortam olayları: giyim + ışık tek satır (önceki iki satır 25 kelime; ışık ortam / ışık
@@ -1304,7 +1313,9 @@ def style_suffix(event: str, ship: str | None, spot: str, view: str | None = Non
             camera = _THREAT_IN_FRAME.sub(TIDAL_FRAME_NEW, camera)
         if s["domain"] == "meteor_disasters":   # 29 Eki (3): ön planda yüksek bina yok
             camera = camera.replace(NO_FACE, METEOR_NO_FACE)
-        guardrails = f"{guardrails} {REAL_TIME}" + (f" {MUD_COLOR}" if s["domain"] == "landslide_disasters" else "")
+        motion = f"{FULL_MOTION} " if event in FULL_MOTION_EVENTS else ""   # 11 Kas (3), 2b
+        guardrails = f"{guardrails} {motion}{REAL_TIME}" + (f" {MUD_COLOR}" if s["domain"] == "landslide_disasters"
+                                                             else "")
     out = f"{camera} {setting} {guardrails}" if setting else f"{camera} {guardrails}"
     if view:
         # 1 Eki: görünüm + nötr giyim + yazı/bayrak yasağı tek cümle (tek kısıt; toplam 7 -> 8). 21 Eki (genel kalite):

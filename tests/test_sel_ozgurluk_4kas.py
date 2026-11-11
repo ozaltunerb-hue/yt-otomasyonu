@@ -182,7 +182,7 @@ class TestA3VerbatimPeople(_Quiet):
             self.assertIn(e, es.VERBATIM_PEOPLE_EVENTS)
             self.assertIn(e, es.PEOPLE_AXIS_EVENTS)
             self.assertIn(e, es.PEOPLE_ONLY_VERBATIM_EVENTS)
-            self.assertFalse(es.verbatim_on(e))
+            self.assertTrue(es.verbatim_on(e))   # 11 Kas (3): HEDEF 8 hikâye koddan, dilimler birebir
         self.assertEqual(set(es.VERBATIM_PEOPLE_EVENTS),
                          {T, L, es.PYROCLASTIC} | set(es.VERBATIM_OFF_EVENTS))   # 6 Kas: sel çıktı, kül bulutu girdi
 

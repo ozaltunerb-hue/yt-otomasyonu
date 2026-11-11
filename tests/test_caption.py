@@ -225,15 +225,18 @@ class TestSchemaAndStory(unittest.TestCase):
         try:
             ps.reset_memory()
             random.seed(5)
+            # 11 Kas (3): bombalar HEDEF 8 (GPT hikâye çağrısı yok); hibrit mekanizma diğer olaylar için aynen sınanır
             with patch.object(pg, "_call_gpt", fake), patch.object(pg, "_generate_metadata",
-                                                                   side_effect=AssertionError("ek GPT çağrısı")):
+                                                                   side_effect=AssertionError("ek GPT çağrısı")), \
+                    patch.object(es, "CODE_STORY_EVENTS", ()):
                 out = asyncio.run(pg.generate_creative_prompts({"domain": "volcano_disasters", "event": es.VOLCANIC_BOMBS,
                                                                 "caption_loader": lambda: {"posted": ROWS,
                                                                                            "generated": []}}))
         finally:
             logging.disable(logging.NOTSET)
         self.assertTrue(all(c == es.SLICE_SCHEMA for c in calls))
-        self.assertEqual(len(calls), 2)   # hikâye denemeleri (kapıdan kalır -> kod yedeği); caption için ek çağrı yok
+        # 11 Kas (3): bombalarda dilimler birebir (VERBATIM açık): hibrit yolda ilk deneme geçer; caption için ek çağrı yok
+        self.assertEqual(len(calls), 1)
         c = out["caption"]
         self.assertTrue(out["youtube_title"].endswith(" #Shorts"))
         self.assertEqual(out["youtube_title"], c["title"] + " #Shorts")

@@ -178,8 +178,11 @@ def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
          f"Tekrar önleme: olay çifti {beats} (son 3 üretimin olayları elendi, LRU) · son "
          f"{trace.get('recent_count', 0)} hikâye GPT'ye verildi"),
         # 16 Eki: hibrit hikâye (en fazla 2 GPT denemesi, geçemezse kod yedeği)
-        ("🔍 2. GPT-4o dilimleri (strict şema; kalite kapısı + son denetim, en fazla 2 deneme, sonra kod yedeği)",
-         "\n\n".join(lines + ([trace["story_source"]] if trace.get("story_source") else [])) or "-"),
+        # 11 Kas (3): HEDEF 8'de hikâye tamamen koddan (GPT çağrısı yok): deneme bloğu yok, sadece kaynak satırı
+        (("🔍 2. Hikâye kaynağı", trace.get("story_source") or "Hikâye: kod (birebir)")
+         if trace.get("story_source_kind") == "code" else
+         ("🔍 2. GPT-4o dilimleri (strict şema; kalite kapısı + son denetim, en fazla 2 deneme, sonra kod yedeği)",
+          "\n\n".join(lines + ([trace["story_source"]] if trace.get("story_source") else [])) or "-")),
         ("🔍 3. Hikâye", f"{trace.get('story_words')} kelime (etiketsiz)\n{trace.get('story')}"),
     ]
 

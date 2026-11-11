@@ -330,14 +330,15 @@ VERBATIM_FRAMES = {
     VILLAGE: {
         "K_Y3": ("Handheld footage filmed from the flat rooftop of a tall stone house at the bottom of the village, high "
                  "vantage, facing up the slope with the lanes and houses below in frame; slight hand shake, the camera "
-                 "stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet "
-                 "edge in the foreground; one continuous shot, no zoom, no cuts.", "parapet"),
+                 "stays fixed, tilting only slightly, never descending, the debris torrent in frame, a low parapet "
+                 "edge in the foreground; one continuous shot, no zoom, no cuts.", "parapet"),   # 11 Kas (3): "always" çıktı
     },
 }
 # 11 Kas (2): PASİF birebir kadrajlar (rotasyona girmez, metin kayıtta). Heyelan köy K_Y3 havuz kelime kapısının
 # "always in frame" köküne takıldı (core/pool_word_gate.py): talimat gereği eklenmedi, karar Bahadır'da (açmak: bu kümeden
 # çıkar)
-PASSIVE_VERBATIM_FRAMES = {VILLAGE: {"K_Y3"}}
+# 11 Kas (3), Bahadır (3): K_Y3 "the debris torrent always in frame" -> "the debris torrent in frame", AKTİF
+PASSIVE_VERBATIM_FRAMES: dict[str, set[str]] = {}
 # Metni ön planı ve kuyruğu zaten içeren birebir kadrajlar (verbatim_camera ön plan eklemez)
 FULL_TEXT_FRAMES = {"K_O3", "K_H3", "K_B3", "K_Y3"}
 # Birebir kadrajların yanında olayın yerli kadrajı da rotasyonda kalan olaylar (kül bulutu: hit kadrajı pasife alınamadı;

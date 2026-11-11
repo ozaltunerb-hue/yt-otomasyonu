@@ -131,8 +131,9 @@ class TestAshCloud(_Quiet):
 
     def test_caps(self):
         self.assertEqual(es.max_prompt_words(PY), 205)
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[PY], (40, 92))
-        self.assertEqual(es.max_prompt_words(es.VOLCANIC_BOMBS), 182)   # 11 Kas (2): K_B3 + birebir insan cümlesi
+        # 11 Kas (3): devam cümlesi (11 kelime) 9-15s'in parçası: hikâye 40-104; bombalar 205
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[PY], (40, 104))
+        self.assertEqual(es.max_prompt_words(es.VOLCANIC_BOMBS), 205)
 
     def test_40_seeds_build(self):
         seen_k, seen_op = set(), set()
@@ -145,7 +146,9 @@ class TestAshCloud(_Quiet):
             for w in ("fireball", "explosion", "nuclear", "mushroom"):
                 self.assertNotIn(w, snap["prompt"].lower())
         self.assertIn("K_V", seen_k)
-        self.assertEqual(seen_op, {"A", "E"})
+        # 11 Kas (3): açılış E (37 kelime) devam + hareket cümleleriyle hiçbir çiftte 205'e sığmıyor: bütçe dışlaması
+        # (ox.BUDGET_TRIPLES_11KAS_3), rotasyonda A
+        self.assertEqual(seen_op, {"A"})
 
 
 class TestTidal(_Quiet):

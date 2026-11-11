@@ -25,6 +25,22 @@
 
 ---
 
+## 📋 DEVİR: 11 Kasım (3) HEDEF 8 hikâyesi tamamen koddan + devam/hareket cümleleri + bütçe dışlamaları
+
+Kie/GPT çağrısı yok; test `tests/test_11kas_3.py`. HEDEF 8 = orman, helikopter, karaya vurur, bombalar, heyelan köy, ateş
+hortumu, kül bulutu, dev dalga. Sel ve Özgürlük Anıtı 40 tohumda aynen; yeni hâl kilit baseline'ı.
+- **GPT hikâye çağrısı yok (`es.CODE_STORY_EVENTS`):** dilimler `es.build_fallback` ile (kod yedeğiyle aynı fonksiyon), kaynak
+  "Hikâye: kod (birebir)", onay/izde GPT deneme bloğu yok (`trace_format`). Kie reddi sonrası yeniden yazım GPT'siz (aynı
+  hikâye). Preflight aynen. Caption adayları yok: başlık/açıklama şablondan (`cap.choose`, ek GPT çağrısı yok).
+  `VERBATIM_SLICES` HEDEF 8'de açık (`VERBATIM_OFF_EVENTS` tuple kayıt).
+- **2a devam cümlesi** `es.CONTINUATION_LINES` (9-15s'in parçası; 9-15s ve toplam üst sınırı cümle kadar uzun). **2b**
+  `sk.FULL_MOTION`, gerçek zaman cümlesinin önünde (`sk.FULL_MOTION_EVENTS`).
+- **K_Y3** "always" çıktı, aktif. **Orman** (K9, L7) (K9, L8) dışlı.
+- **Tavan:** HEDEF 8'de 205 (karaya vurur 198). **Bütçe dışlamaları** (205'e hiçbir rotasyon kadrajıyla sığmayan; dışlanmasa
+  sığma koruması alçak mod A kameraya düşerdi): `es.BUDGET_PAIRS_11KAS_3` (ateş hortumu T4/T8'in tüm eşleri, helikopter
+  F6+G2/G8, dev dalga T3+W11/W12, T8+W5/W11/W12) ve `ox.BUDGET_TRIPLES_11KAS_3` (kül bulutu açılış E tüm çiftler: E fiilen
+  kapalı; dev dalga C/D). Sonuç: ateş hortumu 4-9s'te fiilen T2, T7; dev dalga T2, T3, T7 (Bahadır kararı bekliyor).
+
 ## 📋 DEVİR: 11 Kasım (2) 6 kilitli olay bilerek değişti + kül bulutu / dev dalga kararları + birebir insan ekseni
 
 Kie/GPT çağrısı yok; test `tests/test_11kas_2.py`. Bahadır onayıyla orman, helikopter, karaya vurur, bombalar, heyelan köy, ateş

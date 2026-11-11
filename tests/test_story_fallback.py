@@ -162,8 +162,9 @@ class TestFallbackEveryCombination(unittest.TestCase):
         # 3 Kas (sel su kontrolü): selde dilim başında su seviyesi cümlesi var, geçiş kalıbı gerekmez; kısa beat'li dev
         # dalgada geçiş kalıbı aynen
         spec = es.build_spec(es.TIDAL, None, "Coastal street of low shopfronts", "riviera", "T2", "W5", "red SUV", 5)
-        self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),
-                         "Seconds later, in full view, a city bus is shoved sideways by the surge.")
+        self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),   # 11 Kas (3): + devam cümlesi
+                         "Seconds later, in full view, a city bus is shoved sideways by the surge. Until the last "
+                         "frame, the floodwater keeps surging through the street.")
         self.assertEqual(es.fallback_beat_slice(spec, "slice_2"), "The red SUV is carried down the street by the surge.")
         spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D5", "red SUV", 5)
         self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),
@@ -336,10 +337,15 @@ class TestFlow(unittest.TestCase):
 
     tearDown = setUp
 
-    def run_scene(self, domain, event, answers, view=None):
+    def run_scene(self, domain, event, answers, view=None, hybrid=True):
+        """11 Kas (3): hybrid=True hibrit hikâye mekanizmasını (GPT -> kod yedeği) sınar: HEDEF 8 kümesi boşaltılır
+        (üretimde HEDEF 8'de GPT çağrısı yok, mekanizma diğer olaylarda aynen)."""
+        import contextlib
         import core.creative_pipeline as cp
         gpt, calls = fake_gpt(answers)
-        scene = asyncio.run(cp.build_creative_scene(domain, event, [], [], gpt, view=view))
+        ctx = patch.object(es, "CODE_STORY_EVENTS", ()) if hybrid else contextlib.nullcontext()
+        with ctx:
+            scene = asyncio.run(cp.build_creative_scene(domain, event, [], [], gpt, view=view))
         return scene, calls
 
     def test_fixed_truck_beat_never_gets_truck_vehicle(self):
@@ -412,11 +418,12 @@ class TestFlow(unittest.TestCase):
                 return next(p for p in es.allowed_pairs(ev, view, spot) if p not in gaps)
             for _ in range(3):
                 with patch.object(es, "choose_beats", beats if gaps else real):
-                    scene, calls = self.run_scene(domain, event, [bad])
+                    scene, calls = self.run_scene(domain, event, [bad], hybrid=False)
                 st = scene["structure"]
                 with self.subTest(event=event):
-                    self.assertEqual(len(calls), 2)
-                    self.assertEqual(st["story_source_kind"], "fallback")
+                    # 11 Kas (3): HEDEF 8'de GPT hikâye çağrısı yok, kaynak "kod (birebir)"
+                    self.assertEqual(len(calls), 0 if es.code_story(event) else 2)
+                    self.assertEqual(st["story_source_kind"], "code" if es.code_story(event) else "fallback")
                     self.assertEqual(es.final_prompt_issues(st["spec"], st["slices"], scene["prompt"],
                                                             scene["story"]), [])
 

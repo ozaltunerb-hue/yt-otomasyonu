@@ -696,6 +696,8 @@ def story_source_label(source: dict) -> str:
     """Onay mesajı satırı: "Hikâye: GPT (deneme N)" ya da "Hikâye: kod yedeği (neden: ...)"."""
     if source["kind"] == "gpt":
         return f"Hikâye: GPT (deneme {source['attempt']})"
+    if source["kind"] == "code":   # 11 Kas (3): HEDEF 8, GPT hikâye çağrısı yok
+        return "Hikâye: kod (birebir)"
     return f"Hikâye: kod yedeği (neden: {source['reason']})"
 
 
@@ -713,6 +715,11 @@ async def rewrite_structured(structure: dict, reason: str, call_gpt) -> str:
     # 10 Eki, Bahadır: her denemenin tam metni ve sonucu kaydedilir (main.py Notion gövdesine yazar)
     entry = {"reason": reason, "attempts": [], "result": "?"}
     structure.setdefault("rewrite_log", []).append(entry)
+    if es.code_story(spec["event"]):
+        # 11 Kas (3): HEDEF 8'de GPT yok; birebir hikâye yeniden yazılmaz (önceki davranışta da GPT metni birebir
+        # dilimlerle değiştirildiği için aynı metin gidiyordu). Aynı birebir hikâye döner, gönderim hakkı kie_client'ta
+        entry["result"] = "kod (birebir): yeniden yazım yok, aynı hikâye"
+        return es.assemble_story(spec, structure["slices"])
     try:
         slices, attempts = await write_slices(spec, structure["place"], structure["weather"], structure["recent"],
                                               call_gpt, max_attempts=MAX_ATTEMPTS,
@@ -1152,15 +1159,21 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
         trace["fire_env_label_short"] = es.VOLC_ENVS[volc_env]["label"]
     # 16 Eki, Bahadır (hibrit hikâye): GPT en fazla STRUCTURED_MAX_ATTEMPTS deneme; ikisi de kapıdan geçemezse kod
     # yedeği (üretim durmaz). GPT/JSON/şema hatası yine akışı durdurur (yedek sadece kapı retleri için).
-    try:
-        slices, attempts = await write_slices(spec, place, weather, recent, call_gpt,
-                                              max_attempts=STRUCTURED_MAX_ATTEMPTS, caption_ctx=caption_ctx)
-        source = {"kind": "gpt", "attempt": len(attempts), "reason": ""}
-    except CreativeStoryError as e:
-        attempts = e.attempts
-        slices = es.build_fallback(spec, line=axes.get("insan"))   # 3 Kas: insan ekseni (sel, dev dalga)
-        source = {"kind": "fallback", "attempt": len(attempts), "reason": fallback_reason(attempts)}
-        log.warning(f"🧩 Kod yedeği: {event} | {tag} | {source['reason']}")
+    if es.code_story(event):
+        # 11 Kas 2026 (3), Bahadır (1): HEDEF 8'de hikâye tamamen koddan (kod yedeğiyle aynı fonksiyon, aynı metin);
+        # GPT hikâye çağrısı yapılmaz. Preflight risk kontrolü main.py'de aynen
+        slices, attempts = es.build_fallback(spec, line=axes.get("insan")), []
+        source = {"kind": "code", "attempt": 0, "reason": ""}
+    else:
+        try:
+            slices, attempts = await write_slices(spec, place, weather, recent, call_gpt,
+                                                  max_attempts=STRUCTURED_MAX_ATTEMPTS, caption_ctx=caption_ctx)
+            source = {"kind": "gpt", "attempt": len(attempts), "reason": ""}
+        except CreativeStoryError as e:
+            attempts = e.attempts
+            slices = es.build_fallback(spec, line=axes.get("insan"))   # 3 Kas: insan ekseni (sel, dev dalga)
+            source = {"kind": "fallback", "attempt": len(attempts), "reason": fallback_reason(attempts)}
+            log.warning(f"🧩 Kod yedeği: {event} | {tag} | {source['reason']}")
     source["label"] = story_source_label(source)
     story = es.assemble_story(spec, slices)
     prompt = es.assemble_prompt(spec, slices)
@@ -1177,7 +1190,7 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
                  f"{SKELETON_CAMERA}")
     plain = es.plain_story(spec, slices)
     trace.update(attempts=attempts, story=story, story_words=len(plain.split()), slices=slices,
-                 story_source=source["label"])
+                 story_source=source["label"], story_source_kind=source["kind"])
     log.info(f"✍️ Creative (yapılandırılmış): [{domain}] {event} | yer={spot} | görünüm={view} | olaylar={tag} | "
              f"araç={vehicle} | {len(plain.split())} kelime")
     return {"domain": domain, "event": event, "ship": ship, "spot": spot, "story": story, "plain_story": plain,

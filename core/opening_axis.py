@@ -293,9 +293,23 @@ def candidate_beat_conflicts(event: str, letter: str) -> frozenset[str]:
     return frozenset(out)
 
 
+# 11 Kas 2026 (3), Bahadır (5): devam + hareket cümleleriyle 205'e sığmayan (açılış, orta, final). Kül bulutu E (37
+# kelime) hiçbir çiftle sığmıyor: E fiilen kapalı, rotasyonda A kalır (E kodda, açmak: kümeden çıkar). Dev dalga C / D
+# rotasyon dışı (bütçe dışlaması, üretim aynı). Açılışsız kalan çiftler event_structure.BUDGET_PAIRS_11KAS_3'te
+_PYRO = "Pyroclastic cloud races down into a village street"
+_TIDAL = "Tidal wave surges over a coastal city street"
+BUDGET_TRIPLES_11KAS_3 = {
+    _PYRO: {("E", p2, p3) for p2 in ("P2", "P4", "P7", "P8") for p3 in ("Q1", "Q3", "Q4", "Q5", "Q7", "Q8")},
+    _TIDAL: {("C", "T2", "W11"), ("C", "T3", "W1"), ("C", "T3", "W10"), ("C", "T3", "W5"), ("C", "T7", "W1"),
+             ("C", "T7", "W10"), ("C", "T7", "W11"), ("C", "T7", "W5"), ("D", "T2", "W10"), ("D", "T3", "W1"),
+             ("D", "T3", "W10"), ("D", "T7", "W1"), ("D", "T7", "W10")},
+}
+
+
 def allowed(event: str, env: str | None, b2: str, b3: str) -> list[str]:
+    budget = BUDGET_TRIPLES_11KAS_3.get(event, set())   # 11 Kas (3)
     return [o for o in options(event) if env_compatible(event, o, env)
-            and not ({b2, b3} & beat_conflicts(event, o))]
+            and not ({b2, b3} & beat_conflicts(event, o)) and (o, b2, b3) not in budget]
 
 
 def choose(event: str, env: str | None, b2: str, b3: str, used: list, rng: random.Random) -> tuple[str | None, list]:

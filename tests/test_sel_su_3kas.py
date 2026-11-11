@@ -106,9 +106,11 @@ class TestWaterProfile(_Quiet):
         for e in es.EVENT_KEY_VISUAL:
             if e != F:
                 self.assertEqual(es.slice_words(e, "slice_2"), es.SLICE_WORDS["slice_2"])
-                self.assertEqual(es.slice_words(e, "slice_3"), es.SLICE_WORDS["slice_3"])
+                # 11 Kas (3): HEDEF 8'de 9-15s üst sınırı + devam cümlesi
+                extra = len(es.CONTINUATION_LINES[e].split()) if e in es.CONTINUATION_LINES else 0
+                self.assertEqual(es.slice_words(e, "slice_3"), (10, 24 + extra))
                 self.assertNotIn(e, es.WATER_LEVEL_LINES)
-        self.assertEqual(es.max_prompt_words(T), 188)   # 11 Kas (2): K_R1-3 sabitlik eki + I7/I9
+        self.assertEqual(es.max_prompt_words(T), 205)   # 11 Kas (3): devam + hareket cümleleri
 
 
 class TestPassiveAndActive(_Quiet):

@@ -30,6 +30,7 @@ for p in (ROOT, os.path.join(ROOT, "scripts")):
         sys.path.insert(0, p)
 
 import prompt_snapshot as ps   # noqa: E402
+from unittest.mock import patch   # noqa: E402  (11 Kas (3))
 import core.creative_pipeline as cp   # noqa: E402
 import core.event_structure as es   # noqa: E402
 import core.frame_axis as fx   # noqa: E402
@@ -111,8 +112,8 @@ class TestVerbatimSlices(_Quiet):
     def test_flag_on_unlocked_off_locked(self):
         for e in UNLOCKED:
             self.assertTrue(es.verbatim_on(e), e)
-        for e in LOCKED:
-            self.assertFalse(es.verbatim_on(e), e)
+        for e in LOCKED:   # 11 Kas (3): HEDEF 8'de dilimler birebir (hikâye koddan)
+            self.assertTrue(es.verbatim_on(e), e)
 
     def test_locked_gpt_slices_kept(self):
         """Kilitli 5 olayda GPT'nin 4-9s / 9-15s dilimleri atılmaz (HEAD davranışı); kilitsizde atılır. 11 Kas (2) (7):
@@ -127,8 +128,9 @@ class TestVerbatimSlices(_Quiet):
                 attempts = err.attempts
             sl = attempts[0]["slices"]
             with self.subTest(event=e):
-                if e in LOCKED:
-                    self.assertEqual((sl["slice_2"], sl["slice_3"]), (BAD_2, BAD_3))
+                if e in LOCKED:   # 11 Kas (3): 4-9s / 9-15s de birebir (üretimde write_slices çağrılmaz)
+                    self.assertIn(sl["slice_2"], es.verbatim_forms(spec, "slice_2"))
+                    self.assertIn(sl["slice_3"], es.verbatim_forms(spec, "slice_3"))
                     self.assertEqual(sl["slice_1_rest"], es.verbatim_people_line(spec))   # 11 Kas (2) (7)
                     self.assertNotEqual(attempts[0]["gpt_slices"]["slice_1_rest"], sl["slice_1_rest"])
                 else:
@@ -162,7 +164,9 @@ class TestVerbatimSlices(_Quiet):
         try:
             ps.reset_memory()
             random.seed(4)
-            sc = asyncio.run(cp.build_creative_scene(None, es.TIDAL, [], [], _bad_slices_gpt))
+            # 11 Kas (3): dev dalga HEDEF 8 (GPT yok); hibrit yol HEDEF 8 kümesi boşaltılarak sınanır
+            with patch.object(es, "CODE_STORY_EVENTS", ()):
+                sc = asyncio.run(cp.build_creative_scene(None, es.TIDAL, [], [], _bad_slices_gpt))
         finally:
             cp.record_story_source = real
         self.assertEqual(sc["structure"]["story_source_kind"], "gpt")

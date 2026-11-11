@@ -226,6 +226,8 @@ class TestWordCap(unittest.TestCase):
     def test_gpt_budget_feasible_for_every_suffix(self):
         lo = sum(es.SLICE_WORDS[f][0] for f in es.SLICE_FIELDS)
         for e in (es.FLOOD, es.TIDAL):
+            if es.code_story(e):   # 11 Kas (3): dev dalga HEDEF 8, GPT hikâye çağrısı yok (bütçe satırı kullanılmaz)
+                continue
             key = len(es.EVENT_KEY_VISUAL[e].split())
             for item in pr.camera_items()[e].values():
                 budget = es.VOLC_MAX_PROMPT_WORDS - 3 - len(item["style_suffix"].split())

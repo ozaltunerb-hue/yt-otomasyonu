@@ -159,7 +159,9 @@ BEAT_BLOCK_FALLBACK_EVENTS = (EARTHQUAKE_APARTMENT, EARTHQUAKE_OLD_STREET, LANDF
                               TIDAL, MUDSLIDE,
                               # 11 Kas (2): heyelan köy K2 K4 L3 L6 pasif (dilim başına 4; köy evi balkonunda 9-15s'te L4 L5),
                               # helikopter F3 G1 G5 pasif (yamaç evi balkonunda 4-9s'te F1 F4 F6): 3 derinlikte aday biter
-                              VILLAGE, HELICOPTER)
+                              VILLAGE, HELICOPTER,
+                              # 11 Kas (3): ateş hortumu bütçe dışlamasıyla 4-9s'te fiilen T2, T7 (T4, T8 sığmıyor)
+                              FIRE_TORNADO)
 
 # ── Kilit görsel (0-4s'nin ilk cümlesi, kod yazar) ──────────────────────────────────────────────────────────
 EVENT_KEY_VISUAL = {
@@ -786,6 +788,10 @@ PROMPT_WORDS_BY_EVENT = {"Meteor slams into the sea off the coast": 205,   # 29 
                          # insan cümleleri 175'e sığmıyordu. Olay bazında, rotasyondaki tüm kombinasyonların ölçülen en
                          # büyüğü (scripts/frame_budget.py ile aynı döngü). Karaya vurur (166) ve diğer olaylar aynen
                          WILDFIRE: 194, HELICOPTER: 182, VOLCANIC_BOMBS: 182, VILLAGE: 179, TIDAL: 188}
+# 11 Kas 2026 (3), Bahadır (5): devam cümlesi (2a) + hareket cümlesi (2b) ~34 kelime ekledi. Aşan olayın tavanı en fazla
+# 205; karaya vurur ölçülen en büyük 198. Hâlâ sığmayan kombinasyonlar bütçe dışlamasıyla kapalı (BUDGET_PAIRS_11KAS_3)
+PROMPT_WORDS_BY_EVENT.update({WILDFIRE: 205, HELICOPTER: 205, LANDFALL: 198, VOLCANIC_BOMBS: 205, VILLAGE: 205,
+                              FIRE_TORNADO: 205, TIDAL: 205})
 CONSTRAINTS_BY_EVENT = {"Meteor slams into the sea off the coast": 11}
 PROMPT_CHARS_BY_EVENT: dict[str, int] = {}
 
@@ -1644,7 +1650,10 @@ EVENT_BEATS = {
         # 17 Eki: (K3,L2) (K6,L2) L2 ile gitti. 18 Eki (2): evler/çatı iki kez (K7, K8: L1, L5, L7)
         "excluded_pairs": {("K1", "L4"), ("K7", "L1"), ("K7", "L5"), ("K7", "L7"), ("K8", "L1"), ("K8", "L5"),
                            ("K8", "L7"),
-                           ("K7", "L8"), ("K8", "L8")},   # 11 Kas (2): evler iki kez (K7, K8 ile L8; L1/L5/L7 kuralı)
+                           ("K7", "L8"), ("K8", "L8"),   # 11 Kas (2): evler iki kez (K7, K8 ile L8; L1/L5/L7 kuralı)
+                           # 11 Kas (3), Bahadır (4): K9 (çatı çöker) L7 / L8 (ev/çatı çöker) ile eşleşmez. (K8, L1)
+                           # (K8, L5) (K7, L1) zaten dışlı
+                           ("K9", "L7"), ("K9", "L8")},
         "excluded_views": {},
         # Kamera bir yamaç evinin balkonunda (Bahadır onayı, 8 Eki): ev çatısını yakan maddeler o noktada seçilmez
         "excluded_spots": {"L1": {"Balcony of a hillside house"}, "L5": {"Balcony of a hillside house"}},
@@ -3201,7 +3210,8 @@ def soft_beat_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             continue
         if event in OWN_OBJECT_ENOUGH_EVENTS:   # 17 Eki: kendi nesnesi varsa benzerlik kontrolü yok (helikopter)
             continue
-        if event not in VERBATIM_OFF_EVENTS and text in verbatim_forms(spec, slot):
+        # 11 Kas (3): HEDEF 8 (ilk 5 kilitli olay dahil) hikâyesi koddan, birebir; diğer olaylarda koşul aynen
+        if (event not in VERBATIM_OFF_EVENTS or code_story(event)) and text in verbatim_forms(spec, slot):
             # 3 Kas (sel su kontrolü): VERBATIM dilim seçilen havuz metninin kendisi; "başka olaya benziyor" kıyası
             # GPT'nin başka olayı anlatmasını yakalamak için (sel D18 havuz metni D10'a benzetiliyordu)
             continue
@@ -3961,8 +3971,10 @@ def allowed_pairs(event: str, view: str | None, spot: str) -> list[tuple[str, st
     def ok2(v):   # 10 Eki: kamera noktası dışlaması 4-9s maddesinde de olabilir (helikopter F2/F5)
         return spot not in b["excluded_spots"].get(v, set())
     off = disabled_beats(event)   # 29 Eki: bayrakla kapalı beat'ler (meteor [DALGA]); 3 Kas: + SEL_DOGRULAMA
+    budget = BUDGET_PAIRS_11KAS_3.get(event, set())   # 11 Kas (3): 205'e sığmayan çiftler
     return [(v, d) for v in b["slice_2"] for d in b["slice_3"]
-            if (v, d) not in b["excluded_pairs"] and ok2(v) and ok3(d) and v not in off and d not in off]
+            if (v, d) not in b["excluded_pairs"] and (v, d) not in budget and ok2(v) and ok3(d) and v not in off
+            and d not in off]
 
 
 def choose_beats(event: str, view: str | None, spot: str, history: list[str],
@@ -4794,6 +4806,35 @@ WATER_LEVEL_LINES = {FLOOD: {"slice_2": "Water rises past the car windows.",
                              "slice_3": "A second surge, first-floor high, slams in."}}
 
 
+# 11 Kas 2026 (3), Bahadır (5): devam (2a) + hareket (2b) cümleleriyle tavan 205'te hâlâ sığmayan çiftler. Sığmayan =
+# rotasyondaki hiçbir kadraj ve insan cümlesiyle sığmıyor (scripts/frame_budget.py döngüsü). Dışlanmasalar üretimdeki
+# sığma koruması rotasyon dışı kadraja düşer; ateş hortumunda tek sığan mod A (göz hizası, takip eden kamera): yüksek-sabit
+# kuralına aykırı. Açılışa bağlı olanlar opening_axis.BUDGET_TRIPLES_11KAS_3'te. Kayıt; açmak: kümeden çıkar
+BUDGET_PAIRS_11KAS_3 = {
+    FIRE_TORNADO: {("T4", "U1"), ("T4", "U2"), ("T4", "U7"), ("T4", "U8"), ("T4", "U9"), ("T4", "U11"),
+                   ("T8", "U1"), ("T8", "U7"), ("T8", "U8"), ("T8", "U9"), ("T8", "U11")},
+    HELICOPTER: {("F6", "G2"), ("F6", "G8")},
+    TIDAL: {("T3", "W11"), ("T3", "W12"), ("T8", "W5"), ("T8", "W11"), ("T8", "W12")},   # rotasyon açılışı A ile
+}
+# 11 Kas 2026 (3), Bahadır (2a): 9-15s cümlesinden hemen sonra birebir devam cümlesi (HEDEF 8). Dilim 9-15s'in parçası:
+# kod yedeği, birebir hâl ve son denetim aynı metni görür; 9-15s ve toplam kelime üst sınırı cümle kadar uzar
+CONTINUATION_LINES = {
+    TIDAL: "Until the last frame, the floodwater keeps surging through the street.",
+    PYROCLASTIC: "Until the last frame, the ash cloud keeps rolling over the town.",
+    WILDFIRE: "Until the last frame, the flames keep spreading from house to house.",
+    HELICOPTER: "Until the last frame, the flames keep spreading toward the houses.",
+    LANDFALL: "Until the last frame, the tornado keeps tearing through the street.",
+    VOLCANIC_BOMBS: "Until the last frame, glowing rocks keep slamming into the street.",
+    VILLAGE: "Until the last frame, the mud keeps pouring down the lane.",
+    FIRE_TORNADO: "Until the last frame, the fire tornado keeps tearing through the houses.",
+}
+for _e, _c in CONTINUATION_LINES.items():
+    _lo, _hi = slice_words(_e, "slice_3")
+    SLICE_WORDS_BY_EVENT.setdefault(_e, {})["slice_3"] = (_lo, _hi + len(_c.split()))
+    _tlo, _thi = TOTAL_WORDS_BY_EVENT.get(_e, TOTAL_WORDS)
+    TOTAL_WORDS_BY_EVENT[_e] = (_tlo, _thi + len(_c.split()))
+
+
 def fallback_beat_slice(spec: dict, slot: str) -> str:
     """Seçilen beat'in kod metni; dilim alt sınırından kısaysa sabit geçiş kalıbıyla. 3 Kas: selde su seviyesi cümlesi
     başta (WATER_LEVEL_LINES). 4 Kas (A4): selde seçilen hikâyenin b/c cümlesi sonda (spec["people_line"])."""
@@ -4805,7 +4846,9 @@ def fallback_beat_slice(spec: dict, slot: str) -> str:
     text = clean_slice(text[0].upper() + text[1:])
     out = f"{level} {text}" if level else text
     story = story_sentence(spec, slot)
-    return f"{out} {story}" if story else out
+    out = f"{out} {story}" if story else out
+    cont = CONTINUATION_LINES.get(spec["event"]) if slot == "slice_3" else None   # 11 Kas (3), 2a
+    return f"{out} {cont}" if cont else out
 
 
 def _fallback_fits(spec: dict, slices: dict[str, str]) -> bool:
@@ -4913,7 +4956,15 @@ LOCKED_EVENTS = (WILDFIRE, HELICOPTER, LANDFALL, VOLCANIC_BOMBS, VILLAGE, FLOOD,
 # olsa da GPT yolu değişmesin). Diğerlerinde AÇIK. 6 Kas: bu küme kilit listesinden AYRI; sonradan kilide giren olaylar
 # VERBATIM kalır (kilitlendikleri hâlin GPT yolu değişmesin).
 VERBATIM_OFF_EVENTS = (WILDFIRE, HELICOPTER, LANDFALL, VOLCANIC_BOMBS, VILLAGE)
-VERBATIM_SLICES = {e: e not in VERBATIM_OFF_EVENTS for e in EVENT_KEY_VISUAL}
+# 11 Kas 2026 (3), Bahadır (1): HEDEF 8'de hikâye TAMAMEN koddan (açılış + insan + orta + final + devam cümlesi; GPT
+# hikâye çağrısı yok, creative_pipeline). 4-9s / 9-15s birebir havuz metni: VERBATIM_OFF_EVENTS'teki 5 olay da açık
+# (tuple kayıt olarak durur)
+CODE_STORY_EVENTS = (WILDFIRE, HELICOPTER, LANDFALL, VOLCANIC_BOMBS, VILLAGE, FIRE_TORNADO, PYROCLASTIC, TIDAL)
+VERBATIM_SLICES = {e: e not in VERBATIM_OFF_EVENTS or e in CODE_STORY_EVENTS for e in EVENT_KEY_VISUAL}
+
+
+def code_story(event: str) -> bool:
+    return event in CODE_STORY_EVENTS
 
 
 def verbatim_on(event: str) -> bool:
@@ -4981,7 +5032,7 @@ def verbatim_issues(spec: dict, slices: dict[str, str]) -> list[dict]:
             out.append(_issue("verbatim_slice", f"{label}: havuz metniyle birebir aynı değil",
                               f"'{slot}' must be exactly: {fallback_beat_slice(spec, slot)}"))
     line = verbatim_people_line(spec)
-    if line is not None and slices.get("slice_1_rest", "") != line:
+    if line is not None and slices.get("slice_1_rest", "") not in verbatim_people_forms(spec, line):   # 11 Kas (3)
         out.append(_issue("verbatim_people", "0-4s: insan cümlesi seçilen eksen öğesiyle birebir aynı değil",
                           f"'slice_1_rest' must be exactly: {line}"))
     return out

@@ -578,7 +578,7 @@ class TestRegionViewMenu(unittest.TestCase):
                 self.assertEqual(scene["trace"]["view"], view)
                 self.assertEqual(scene["trace"]["view_source"], "menü")
                 self.assertIn(f"#{view}#", scene["combo_key"])   # 4 Eki: yer#görünüm#olay çifti
-                self.assertIn(self.sk.REGION_VIEWS[view], gpt.user)
+                self.assertFalse(hasattr(gpt, "user"))   # 11 Kas (3): dev dalga HEDEF 8, GPT hikâye çağrısı yok
                 self.assertIn(self.sk.REGION_VIEWS[view], scene["style_suffix"])
                 self.assertIn(scene["spot"], self.sk.view_spots(TIDAL_EVENT, view))   # çakışma kuralı geçerli
                 self.assertEqual(self.sk._VIEW_MEMORY[TIDAL_EVENT][-1], view)          # LRU belleğine yazıldı

@@ -81,7 +81,9 @@ class TestPools(_Quiet):
         for event in CHANGED:
             pairs = {p for view, spot in _spots(event) for p in es.allowed_pairs(event, view, spot)}
             for i in (0, 1):
-                self.assertGreaterEqual(len({p[i] for p in pairs}), 4, (event, i))
+                # 11 Kas (3), Bahadır (5): dev dalga T8 bütçe dışlamasıyla (205) hiçbir finalle eşleşmiyor: 4-9s'te 3
+                low = {(es.TIDAL, 0): 3}.get((event, i), 4)
+                self.assertGreaterEqual(len({p[i] for p in pairs}), low, (event, i))
 
     def test_meteor_active_slice2(self):
         active = [b for b in es.EVENT_BEATS[ME]["slice_2"] if b not in es.disabled_beats(ME)]

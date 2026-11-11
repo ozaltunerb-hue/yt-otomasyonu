@@ -74,8 +74,9 @@ class TestLock(_Quiet):
     def test_verbatim_flag_separate_from_lock(self):
         """Sonradan kilide giren olaylar VERBATIM kalır (kilitlendikleri hâlin GPT yolu); ilk 5 kapalı (HEAD davranışı)."""
         self.assertEqual(set(es.VERBATIM_OFF_EVENTS), FIRST_FIVE)
-        for e in FIRST_FIVE:
-            self.assertFalse(es.verbatim_on(e), e)
+        for e in FIRST_FIVE:   # 11 Kas (3): HEDEF 8'de hikâye koddan, dilimler birebir (tuple kayıt)
+            self.assertTrue(es.verbatim_on(e), e)
+            self.assertTrue(es.code_story(e), e)
         for e in (F, L, FT):
             self.assertTrue(es.verbatim_on(e), e)
 
@@ -237,8 +238,10 @@ class TestFireTornadoLock(_Quiet):
                          ("2026-11-05 00:13", "T4+U11", "forest_edge", "9/10"))
         self.assertIn("Rooftop terrace", v["spot"])
         self.assertTrue(set(v["spot"].split()) and v["spot"] in es.FIRE_TOR_ENVS["forest_edge"]["spots"])
-        self.assertIn(("T4", "U11"), [p for s in es.FIRE_TOR_ENVS["forest_edge"]["spots"]
-                                      for p in es.allowed_pairs(FT, None, s)])
+        # 11 Kas (3): T4 + U11 (5 Kas 9/10) devam + hareket cümleleriyle hiçbir rotasyon kadrajında 205'e sığmıyor:
+        # bütçe dışlaması (es.BUDGET_PAIRS_11KAS_3); havuzda ve yasak çift listesinde değil, sadece bütçe
+        self.assertIn(("T4", "U11"), es.BUDGET_PAIRS_11KAS_3[FT])
+        self.assertNotIn(("T4", "U11"), es.EVENT_BEATS[FT]["excluded_pairs"])
 
 
 if __name__ == "__main__":

@@ -39,9 +39,10 @@ K_H3 = ("Handheld footage filmed from the flat rooftop of a three-story house at
         "the neighborhood and the wall of flames together, the helicopter large and close in frame, never a distant dot; "
         "slight hand shake, the camera stays fixed, never descending, empty foreground; no zoom, no cuts, no person or "
         "face close to the camera.")
+# 11 Kas (3): "always in frame" -> "in frame", aktif
 K_Y3 = ("Handheld footage filmed from the flat rooftop of a tall stone house at the bottom of the village, high vantage, "
         "facing up the slope with the lanes and houses below in frame; slight hand shake, the camera stays fixed, tilting "
-        "only slightly, never descending, the debris torrent always in frame, a low parapet edge in the foreground; one "
+        "only slightly, never descending, the debris torrent in frame, a low parapet edge in the foreground; one "
         "continuous shot, no zoom, no cuts, no person or face close to the camera.")
 BOMBS_POINT = ("filmed from the top-floor window of a tall house at the end of the street, high vantage over {street} "
                "toward the")
@@ -142,7 +143,7 @@ class TestFrames(_Quiet):
     def test_verbatim_texts(self):
         self.assertEqual(_cam(WF, "K_O3"), K_O3)
         self.assertEqual(_cam(HE, "K_H3"), K_H3)
-        self.assertEqual(_cam(VI, "K_Y3"), K_Y3)   # metin kayıtta (pasif)
+        self.assertEqual(_cam(VI, "K_Y3"), K_Y3)   # 11 Kas (3): aktif
         for env in sk.VOLC_ENVS:
             cam = _cam(VB, "K_B3", env)
             with self.subTest(env=env):
@@ -176,12 +177,12 @@ class TestFrames(_Quiet):
                 self.assertFalse([f for f in allv if f["type"] == "teras"])
                 self.assertFalse([f for f in allv if f["type"] == "tepe" and f.get("fg") == "yaprak"])
                 self.assertTrue([f for f in allv if f["type"] == "tepe" and f.get("fg") == "boş"])
-                self.assertFalse([f for f in allv if f["type"] == "K_Y3"])
+                self.assertTrue([f for f in allv if f["type"] == "K_Y3"])   # 11 Kas (3): spottan bağımsız
 
-    def test_village_k_y3_not_added_word_gate(self):
-        # Bahadır'ın K_Y3 metni havuz kelime kapısının "always in frame" köküne takıldı: talimat gereği eklenmedi
-        self.assertEqual(fx.PASSIVE_VERBATIM_FRAMES, {VI: {"K_Y3"}})
-        self.assertIn("always in frame", gate.term_hits(fx.VERBATIM_FRAMES[VI]["K_Y3"][0], VI))
+    def test_village_k_y3_active_word_gate(self):
+        # 11 Kas (3), Bahadır: "always" çıktı, kelime kapısından geçer, aktif
+        self.assertEqual(fx.PASSIVE_VERBATIM_FRAMES, {})
+        self.assertEqual(gate.term_hits(fx.VERBATIM_FRAMES[VI]["K_Y3"][0], VI), [])
 
 
 class TestBeats(_Quiet):
@@ -256,7 +257,9 @@ class TestPeople(_Quiet):
             sl = att[0]["slices"]
             with self.subTest(event=e):
                 self.assertEqual(sl["slice_1_rest"], es.clean_slice(PEOPLE[e][1].format(N="Four")))
-                self.assertEqual((sl["slice_2"], sl["slice_3"]), ("X two.", "Y three."))   # GPT dilimleri kalır
+                # 11 Kas (3): HEDEF 8'de 4-9s / 9-15s de birebir (VERBATIM açık); üretimde write_slices hiç çağrılmaz
+                self.assertEqual((sl["slice_2"], sl["slice_3"]),
+                                 (es.fallback_beat_slice(spec, "slice_2"), es.fallback_beat_slice(spec, "slice_3")))
 
     def test_people_lru_no_repeat(self):
         for e in PEOPLE:
@@ -268,15 +271,19 @@ class TestPeople(_Quiet):
             seq = [r["insan"] for r in hd.simulate(e, 12)]
             with self.subTest(event=e):
                 self.assertTrue(all(seq))
-                self.assertFalse([i for i in range(1, len(seq)) if seq[i] == seq[i - 1]])
+                # 11 Kas (3): 205 tavanında bazı üretimlerde tek insan cümlesi sığıyor (helikopter): en fazla 1 tekrar
+                reps = [i for i in range(1, len(seq)) if seq[i] == seq[i - 1]]
+                self.assertLessEqual(len(reps), 1 if e == HE else 0)
 
 
 class TestBuildAndCaps(_Quiet):
     def test_caps(self):
+        # 11 Kas (3): devam + hareket cümleleri: tavan en fazla 205 (karaya vurur ölçülen 198); hikâye üst sınırı +
+        # devam cümlesi
         self.assertEqual({e: es.max_prompt_words(e) for e in CHANGED},
-                         {WF: 194, HE: 182, LF: 175, VB: 182, VI: 179, FT: 175, PY: 205, TI: 188})
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[HE], (40, 81))
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[FT], (40, 75))
+                         {WF: 205, HE: 205, LF: 198, VB: 205, VI: 205, FT: 205, PY: 205, TI: 205})
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[HE], (40, 92))
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[FT], (40, 87))
         for e in CHANGED:
             self.assertLessEqual(es.max_prompt_words(e), 205)
             self.assertEqual(es.max_prompt_chars(e), 1400)

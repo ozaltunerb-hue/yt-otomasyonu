@@ -107,7 +107,7 @@ class TestRuleChecks(unittest.TestCase):
                                         self.item(self.CAM_HIGH, "0-4s: The terrain drains.")))
 
     def test_k5_word_limit(self):
-        long = "0-4s: " + "word " * 175
+        long = "0-4s: " + "word " * 205   # 11 Kas (3): bombalar tavanı 205
         self.assertIn("K5", pr.check("Volcanic bombs slam into a village street", self.item(self.CAM_HIGH, long)))
 
     def test_build_error_counts_everywhere(self):

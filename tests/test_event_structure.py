@@ -1001,7 +1001,8 @@ class TestTidal(unittest.TestCase):
         # 3 Kas (sel doğrulama ayarı): T4 pasif (5 çift az)
         # 11 Kas (B3): W3, W4 pasif; W10-W12 (T8+W10 dışlı): 5 x 5 - 3 = 22 çift
         # 11 Kas (2) (0c): T5 pasif: 4 x 5 - 3 = 17 çift
-        self.assertEqual(n, 17 * 17 * 3)
+        # 11 Kas (3): bütçe dışlaması (T3, W11) (T3, W12) (T8, W5) (T8, W11) (T8, W12): 12 çift
+        self.assertEqual(n, 17 * 12 * 3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_w6_never_on_seawall(self):
@@ -1655,6 +1656,7 @@ class TestTornadoStructure(unittest.TestCase):
                                                                      "pedestrians run from the tornado")}
         for e in TORNADO:
             with self.subTest(event=e):
+                calls.clear()   # 11 Kas (3): olay başına çağrı listesi (HEDEF 8'de boş kalır)
                 scene = asyncio.run(cp.build_creative_scene("coastal_tornado_landfall", e, [], [], gpt))
                 t = scene["trace"]
                 self.assertIsNone(t["view"])
@@ -1668,7 +1670,11 @@ class TestTornadoStructure(unittest.TestCase):
                 self.assertNotIn("Görünüm", "\n".join(body for _, body in format_generation(t)))
                 spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
                 self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
-                self.assertIn("run away from the tornado", calls[-1])
+                if es.code_story(e):   # 11 Kas (3): HEDEF 8'de GPT hikâye çağrısı yok
+                    self.assertEqual(calls, [])
+                    self.assertEqual(scene["structure"]["story_source"], "Hikâye: kod (birebir)")
+                else:
+                    self.assertIn("run away from the tornado", calls[-1])
 
     def test_flying_beats(self):
         # 4 Eki, Bahadır onayı: C5/C6, Y5/Y6, P5/P6 araç havalanır; Y6/P6 artık "birlikte itilir" değil.
@@ -1769,13 +1775,15 @@ class TestMarinaRedesign(unittest.TestCase):
     def test_total_words_override_only_marina(self):
         self.assertEqual(es.TOTAL_WORDS, (40, 70))
         # 10 Eki, Bahadır: orman yangını da 40-75 (TestFireStructure ayrıca kilitler)
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT, {es.MARINA_TORNADO: (40, 75), es.WILDFIRE: (40, 75),
-                                                   es.HELICOPTER: (40, 81),   # 10 Eki: helikopter; 11 Kas (2): 40-81
-                                                   es.FIRE_TORNADO: (40, 75),   # 15 Eki: ateş hortumu
+        # 11 Kas (3): HEDEF 8'de üst sınır + devam cümlesi (2a)
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT, {es.MARINA_TORNADO: (40, 75), es.WILDFIRE: (40, 87),
+                                                   es.HELICOPTER: (40, 92),   # 10 Eki: helikopter; 11 Kas (2): 40-81
+                                                   es.FIRE_TORNADO: (40, 87),   # 15 Eki: ateş hortumu
                                                    # 10 Eki: volkan
                                                    es.ERUPTION: (40, 75),
-                                                   es.PYROCLASTIC: (40, 92),   # 11 Kas (A7): açılış E
-                                                   es.VOLCANIC_BOMBS: (40, 75),
+                                                   es.PYROCLASTIC: (40, 104),   # 11 Kas (A7): açılış E
+                                                   es.VOLCANIC_BOMBS: (40, 86),
+                                                   TIDAL: (40, 81), es.LANDFALL: (40, 81), es.VILLAGE: (40, 81),
                                                    **{e: (40, 70) for e in es.AVALANCHE_EVENTS},   # 13 Eki: çığ; 14 Eki (5): 40-70
                                                    **{e: (40, 70) for e in es.EARTHQUAKE_EVENTS},   # 14 Eki: deprem
                                                    es.METEOR: (40, 75),   # 29 Eki: meteor
@@ -1806,7 +1814,8 @@ class TestMarinaRedesign(unittest.TestCase):
             for extra in range(0, 12):
                 n, rules = total_rules(event, spot, b2, b3, "SUV", extra)
                 with self.subTest(event=event, words=n):
-                    self.assertEqual("total_words" in rules, not 40 <= n <= 70)
+                    # 11 Kas (3): karaya vurma HEDEF 8 (40-81)
+                    self.assertEqual("total_words" in rules, not 40 <= n <= es.TOTAL_WORDS_BY_EVENT.get(event, es.TOTAL_WORDS)[1])
 
     def test_y1_y3_accept(self):
         b = es.EVENT_BEATS[es.MARINA_TORNADO]["slice_2"]
@@ -1939,7 +1948,8 @@ class TestFireStructure(unittest.TestCase):
             "L8": "a burning house across the street collapses in on itself in a shower of sparks",
             "L9": "the flames engulf a wooden garage and its roof caves in onto the car inside",
         }, {("K1", "L4"), ("K7", "L1"), ("K7", "L5"), ("K7", "L7"), ("K8", "L1"), ("K8", "L5"), ("K8", "L7"),
-            ("K7", "L8"), ("K8", "L8")},
+            ("K7", "L8"), ("K8", "L8"),
+            ("K9", "L7"), ("K9", "L8")},   # 11 Kas (3): K9 çatı çöker + ev/çatı çöker
             {"L1": {"Balcony of a hillside house"}, "L5": {"Balcony of a hillside house"}}),
         es.FACADE_FIRE: ({
             "M6": "flaming debris smashes the windshield of the {vehicle} as it brakes hard",
@@ -2175,8 +2185,9 @@ class TestFireStructure(unittest.TestCase):
                                     "bolt", "race", "scramble", "dart", "hurry"))
         self.assertEqual(es.TOTAL_WORDS, (40, 70))
         # 10 Eki, Bahadır: orman yangını 40-75; 15 Eki: ateş hortumu da 40-75; cephe genel 40-70
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[es.WILDFIRE], (40, 75))
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[es.FIRE_TORNADO], (40, 75))
+        # 11 Kas (3): + devam cümlesi (2a)
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[es.WILDFIRE], (40, 87))
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[es.FIRE_TORNADO], (40, 87))
         self.assertNotIn(es.FACADE_FIRE, es.TOTAL_WORDS_BY_EVENT)
 
     def test_canonical_terms_pass(self):
@@ -2291,7 +2302,9 @@ class TestFireStructure(unittest.TestCase):
         # × 4 araç
         # 30 Eki (2): cephe (M11, N3). 3 Kas: cephe M6, N4 pasif, M12 + N7 deneme (5 hariç çift): 12 çift
         # 11 Kas (2): orman K1 K5 L3 pasif, L8 L9 yeni (balkon 12, set 16 çift); ateş hortumu T1 pasif, T8 yeni (T8+U2 hariç)
-        self.assertEqual(n, (12 + 16) * 4 + 12 * 4 * 4 + 22 * 6 * 4)   # 6 Kas: T5, T6, U6, U10 pasif, 22 çift
+        # 11 Kas (3): orman (K9, L7) (K9, L8) dışlı: balkon 10, set 14. Ateş hortumu bütçe dışlaması (T4, T8 hiçbir finalle
+        # 205'e sığmıyor): nokta başına 11 çift
+        self.assertEqual(n, (10 + 14) * 4 + 12 * 4 * 4 + 11 * 6 * 4)   # 6 Kas: T5, T6, U6, U10 pasif, 22 çift
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -2364,6 +2377,7 @@ class TestFireStructure(unittest.TestCase):
                     "slice_2": cap(line["4-9s EVENT"]) + ".", "slice_3": cap(line["9-15s EVENT"]) + "."}
         for e in FIRE:
             with self.subTest(event=e):
+                calls.clear()   # 11 Kas (3): olay başına çağrı listesi (HEDEF 8'de boş kalır)
                 scene = asyncio.run(cp.build_creative_scene("fire_disasters", e, [], [], gpt))
                 t = scene["trace"]
                 self.assertIsNone(t["view"])
@@ -2382,7 +2396,11 @@ class TestFireStructure(unittest.TestCase):
                 assert_frame_camera(self, scene)   # 21 Eki (Aşama 4): kamera yeri kadraj ekseninden
                 spec, sl = scene["structure"]["spec"], scene["structure"]["slices"]
                 self.assertEqual(es.final_prompt_issues(spec, sl, scene["prompt"], scene["story"]), [])
-                self.assertIn(f"run away from {self.AWAY[e]}", calls[-1])
+                if es.code_story(e):   # 11 Kas (3): HEDEF 8'de GPT hikâye çağrısı yok
+                    self.assertEqual(calls, [])
+                    self.assertEqual(scene["structure"]["story_source"], "Hikâye: kod (birebir)")
+                else:
+                    self.assertIn(f"run away from {self.AWAY[e]}", calls[-1])
 
     def test_no_candidates_never(self):
         from itertools import combinations
@@ -2439,7 +2457,7 @@ class TestOct10Changes(unittest.TestCase):
             self.assertIn(old, env)
 
     def test_wildfire_75_words_only(self):
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[es.WILDFIRE], (40, 75))
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[es.WILDFIRE], (40, 87))   # 11 Kas (3): + devam cümlesi
         self.assertEqual(es.TOTAL_WORDS, (40, 70))
 
         def rules(event, spot, b2, b3, words):
@@ -2452,7 +2470,7 @@ class TestOct10Changes(unittest.TestCase):
                   "slice_2": s2, "slice_3": s3}
             self.assertEqual(len(es.plain_story(spec, sl).split()), words)
             return {i["rule"] for i in es.slice_issues(spec, sl)}
-        for words, bad in ((70, False), (75, False), (76, True)):
+        for words, bad in ((70, False), (87, False), (88, True)):   # 11 Kas (3): 40-87
             with self.subTest(event="orman", words=words):
                 self.assertEqual("total_words" in rules(es.WILDFIRE, "Embankment above the village road", "K2",
                                                          "L3", words), bad)
@@ -2543,7 +2561,7 @@ class TestHelicopter(unittest.TestCase):
         self.assertNotIn(self.E, cp.REQUIRED_APPROVED)
         self.assertIn(self.E, cp.EVENT_OUTCOMES)
         self.assertEqual(sk.count_range(self.E, None), (3, 6))
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[self.E], (40, 81))   # 11 Kas (2): birebir insan cümleleri + G8
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[self.E], (40, 92))   # 11 Kas (3): + devam cümlesi (11)
         self.assertEqual(es.structure_views(self.E), [None])
         self.assertEqual([n for n, _ in es.EVENT_VEHICLES[self.E]], self.VEHICLES)
 
@@ -2659,7 +2677,7 @@ class TestHelicopter(unittest.TestCase):
     def test_total_words_75(self):
         spec, sl = self.build("F2", "G2")
         base = len(es.plain_story(spec, {**sl, "slice_1_rest": ""}).split())
-        for words, bad in ((81, False), (82, True)):   # 11 Kas (2): 40-81
+        for words, bad in ((92, False), (93, True)):   # 11 Kas (3): 40-92
             s1 = "Five people run from the flames" + " far" * (words - base - 6)
             sl2 = {**sl, "slice_1_rest": es.clean_slice(s1)}
             self.assertEqual(len(es.plain_story(spec, sl2).split()), words)
@@ -2674,8 +2692,9 @@ class TestHelicopter(unittest.TestCase):
         self.assertNotIn("G3", {d for _, d in balcony})   # 30 Eki (2)
         # 17 Eki: G4 çıktı, 9-15s'de 5 madde. 30 Eki (2): G3 balkonda yok (F3, F4, F6 ile eşleşmesi düştü)
         # 11 Kas (2): F3 G1 G5 pasif, G8 G9 yeni; (F2, G8) (F4, G8) (F4, G9) hariç. Balkon 3 x 4 - 2, set 5 x 5 - 6
-        self.assertEqual(len(balcony), 3 * 4 - 2)
-        self.assertEqual(len(pairs("Embankment above the village road")), 25 - 6)
+        # 11 Kas (3): bütçe dışlaması (F6, G2) (F6, G8)
+        self.assertEqual(len(balcony), 3 * 4 - 2 - 2)
+        self.assertEqual(len(pairs("Embankment above the village road")), 25 - 6 - 2)
         n = 0
         for spot in self.SPOTS:
             for b2, b3 in pairs(spot):
@@ -2685,7 +2704,7 @@ class TestHelicopter(unittest.TestCase):
                     if issues:
                         self.fail(f"{spot}/{b2}+{b3}/{v}: {issues}")
                     n += 1
-        self.assertEqual(n, (10 + 19) * 4)   # 11 Kas (2) (önceki 16 + 27; 30 Eki (2): G3 balkonda yok)
+        self.assertEqual(n, (8 + 17) * 4)   # 11 Kas (3): bütçe dışlaması   # 11 Kas (2) (önceki 16 + 27; 30 Eki (2): G3 balkonda yok)
         # 4-9s dışlaması helikopterden önceki olaylarda hiçbir şeyi değiştirmez (onların dışlamalarının hepsi 9-15s).
         # 10 Eki: volkanda da 4-9s kamera dışlaması var (TestVolcano)
         for e, b in es.EVENT_BEATS.items():
@@ -3167,7 +3186,9 @@ class TestVolcano(unittest.TestCase):
                 self.assertIn(e, cp.EVENT_OUTCOMES)
                 self.assertEqual(sk.count_range(e, None), (3, 6))
                 # 11 Kas (A7): kül bulutu 40-92 (açılış E 37 kelime)
-                self.assertEqual(es.TOTAL_WORDS_BY_EVENT[e], (40, 92) if e == es.PYROCLASTIC else (40, 75))
+                # 11 Kas (3): + devam cümlesi
+                self.assertEqual(es.TOTAL_WORDS_BY_EVENT[e], {es.PYROCLASTIC: (40, 104), es.VOLCANIC_BOMBS: (40, 86)}
+                                 .get(e, (40, 75)))
                 self.assertIn(e, es.NO_RAIN_EVENTS)
                 if e == es.PYROCLASTIC:   # 13 Eki: araçsız
                     self.assertFalse(es.uses_vehicle(e))
@@ -3435,7 +3456,10 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                     suffix = sk.style_suffix(e, None, spot)
                     self.assertNotIn("pans to follow", suffix)
                     self.assertNotIn("eye level", suffix)
-                    self.assertEqual(suffix, f"{sk.camera_rules(camera)} {volc_guard(e)} No readable signs, text or "
+                    # 11 Kas (3): hareket cümlesi (2b) gerçek zaman cümlesinin önünde
+                    guard = (volc_guard(e).replace(sk.REAL_TIME, f"{sk.FULL_MOTION} {sk.REAL_TIME}")
+                             if e in sk.FULL_MOTION_EVENTS else volc_guard(e))
+                    self.assertEqual(suffix, f"{sk.camera_rules(camera)} {guard} No readable signs, text or "
                                              f"flags.")
                     with patch.object(cp, "pick_setting", lambda ev, view=None, s=spot: (s, sk.VOLCANO_WEATHER[0])), \
                             patch.object(es, "choose_volc_spot", lambda ev, h=None, rng=None, s=spot: s):
@@ -3561,8 +3585,11 @@ class TestVolcanoClose13Oct(unittest.TestCase):
             longest = max(len(sk.style_suffix(e, None, s).split()) for s in sk.view_spots(e, None))
             # 21 Eki (genel kalite): gerçek zaman + ön plan yüzü, ortak kısaltmalar (önceki 96). 31 Eki: nötr balkon
             # cümlesi bir kelime kısa (önceki 95)
-            self.assertEqual(longest, 94)
-            self.assertLessEqual(longest + 75 + 3, 175)
+            # 11 Kas (3): bombalar HEDEF 8 (hareket cümlesi +21, tavan 205, GPT yok; sığma frame_budget'te); patlama
+            # aynen
+            self.assertEqual(longest, 115 if e == es.VOLCANIC_BOMBS else 94)
+            if e == es.ERUPTION:
+                self.assertLessEqual(longest + 75 + 3, 175)
         # kapı yine durur: kül bulutu balkonda bütçeyi aşan hikâye -> 175 üstü -> kısaltma geri bildirimi. 21 Eki (genel
         # kalite): kül bulutu eki kısaldı (106 -> 95), aşım için hikâye 75 yerine 80 kelime
         # 11 Kas (A7): kül bulutu tavanı 205; aşım için hikâye 115 kelime

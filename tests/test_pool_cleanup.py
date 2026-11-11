@@ -336,12 +336,12 @@ class TestNewBeats(unittest.TestCase):
         self.assertEqual(es.EVENT_BEATS[FT]["excluded_pairs"], {("T1", "U2"), ("T2", "U2"), ("T6", "U2"), ("T6", "U6"),
                                                                 ("T8", "U2")})   # 11 Kas (2): T8 (18 kelime + araç) + U2
         self.assertEqual(es._VOLC_BOMBS_GAPS | es._VOLC_ERUPTION_GAPS, set())
-        self.assertNotIn(FT, es.BEAT_BLOCK_FALLBACK_EVENTS)
+        self.assertIn(FT, es.BEAT_BLOCK_FALLBACK_EVENTS)   # 11 Kas (3): bütçe dışlamasıyla 4-9s'te T2, T7
 
     def test_volcano_prompt_never_over_175(self):
         # 18 Eki: patlama ve bombalarda en uzun stil eki 96 kelime: 96 + 75 + 3 etiket ≤ 175 (GPT'ye kural yok). Kül
         # bulutu bu turda dokunulmadı (eski kamera metni aynen)
-        for e in (ER, VB):
+        for e in (ER,):   # 11 Kas (3): bombalar HEDEF 8 (GPT yok, tavan 205; sığma frame_budget'te)
             longest = max(len(sk.style_suffix(e, None, s).split()) for s in sk.view_spots(e, None))
             self.assertLessEqual(longest + es.TOTAL_WORDS_BY_EVENT[e][1] + 3, es.VOLC_MAX_PROMPT_WORDS, e)
         self.assertIn(es.PYROCLASTIC, sk.VOLCANO_SHORT_CAMERA_EXCLUDED)
@@ -687,7 +687,9 @@ class TestParti2DryRunGateFixes(unittest.TestCase):
 
     def _spec(self, event, b2, b3):
         view = es.structure_views(event)[0]
-        spot = next(s for s in sk.view_spots(event, view) if (b2, b3) in es.allowed_pairs(event, view, s))
+        # 11 Kas (3): bütçe dışlamasındaki çiftler (ateş hortumu T4 + U1) kapı testinde ilk noktada kurulur
+        spot = next((s for s in sk.view_spots(event, view) if (b2, b3) in es.allowed_pairs(event, view, s)),
+                    sk.view_spots(event, view)[0])
         veh = [v for v, _ in es.event_vehicles(event, view)][0] if es.uses_vehicle(event) else None
         ppl = sk.count_range(event, None)[0] if es.has_people_rule(event) else None
         return es.build_spec(event, None, spot, view, b2, b3, veh, ppl)
@@ -720,7 +722,8 @@ class TestFireTornadoShape(unittest.TestCase):
             # 21 Eki (genel kalite): kısa şekil cümlesi (175). Önceki: "The fire tornado is a visibly rotating funnel
             # of flame with debris orbiting it, never a straight smoke plume or an explosion."
             self.assertIn("A rotating funnel of flame with orbiting debris, never a straight plume or explosion.", suf)
-            self.assertLessEqual(len(suf.split()) + 75 + 3, 175)
+            # 11 Kas (3): HEDEF 8 (hareket cümlesi; tavan 205, GPT yok; sığma frame_budget'te)
+            self.assertLessEqual(len(suf.split()), 117)
         for e in es.structured_events():
             if e != FT:
                 for spot in sk.view_spots(e, es.structure_views(e)[0]):
