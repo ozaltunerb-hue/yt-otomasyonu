@@ -25,21 +25,27 @@ PY, TI = es.PYROCLASTIC, es.TIDAL
 
 A2 = ("The whole volcano looms directly behind the town, its summit crater erupting a towering column of black ash, and "
       "part of the column collapses into a churning gray ash cloud that pours down the slope toward the first houses.")
-A3 = ("Filmed from a high rooftop terrace at the edge of the town, wide angle, the entire volcano from its base to its "
-      "summit filling the upper half of the frame directly behind the houses, the town below in the lower half; the "
-      "camera stays fixed, never descending, the camera never pans, turns or follows.")   # 11 Kas (2) (0d): sabitlik eki
+# 11 Kas (2) (0d): sabitlik eki. 11 Kas (8) (1): "Handheld footage filmed from" + "slight hand shake, "
+A3 = ("Handheld footage filmed from a high rooftop terrace at the edge of the town, wide angle, the entire volcano from "
+      "its base to its summit filling the upper half of the frame directly behind the houses, the town below in the "
+      "lower half; slight hand shake, the camera stays fixed, never descending, the camera never pans, turns or follows.")
 M_A = "the ash cloud reaches the first houses at the foot of the slope and swallows them one by one"
 M_B = "the ash cloud pours over the edge of the town and buries the parked cars along the first street in gray ash"
 # 11 Kas (2) (0d): "the camera never pans..." önüne "the camera stays fixed, never descending," eklendi
-K_R = {"K_R1": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide "
-               "angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never "
-               "descending, the camera never pans, turns or follows.",
-       "K_R2": "Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down "
-               "the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, "
-               "turns or follows.",
+# 11 Kas (8) (1)(2): K_R1, K_R2 elde çekim ifadesi; K_R3 PASİF (metin aynen), K_R4 yeni (rotasyon K_R_ACTIVE)
+K_R = {"K_R1": "Handheld footage filmed from the flat rooftop of a six-story apartment block right on the seafront, "
+               "high vantage, wide angle, the whole coastal street and the sea behind it in frame; slight hand shake, "
+               "the camera stays fixed, never descending, the camera never pans, turns or follows.",
+       "K_R2": "Handheld footage filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, "
+               "looking straight down the coastal street toward the sea; slight hand shake, the camera stays fixed, "
+               "never descending, the camera never pans, turns or follows.",
        "K_R3": "Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the "
                "coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the "
-               "camera never pans, turns or follows."}
+               "camera never pans, turns or follows.",
+       "K_R4": "Handheld footage filmed from the top-floor balcony of a seafront hotel right on the promenade, high "
+               "vantage, wide angle, the sea and the coastal street directly below in frame; slight hand shake, the "
+               "camera stays fixed, never descending, the camera never pans, turns or follows."}
+K_R_ACTIVE = {"K_R1", "K_R2", "K_R4"}
 W_NEW = {"W10": "the wave smashes through the front wall of a seafront house and pours inside",
          "W11": "the surge swallows the ground floors of a row of shopfronts and a roof caves in",
          "W12": "the surge tears a wooden beach café off its foundations and smashes it against the apartment blocks"}
@@ -154,10 +160,10 @@ class TestTidal(_Quiet):
     def test_frames_verbatim_and_independent_of_spot(self):
         self.assertEqual({k: v[0] for k, v in fx.VERBATIM_FRAMES[TI].items()}, K_R)
         self.assertEqual({k: v[1] for k, v in fx.VERBATIM_FRAMES[TI].items()},
-                         {"K_R1": "parapet", "K_R2": "pencere", "K_R3": "teras_korkuluk"})   # yaprak yok
+                         {"K_R1": "parapet", "K_R2": "pencere", "K_R3": "teras_korkuluk", "K_R4": "korkuluk"})   # yaprak yok
         for spot in sk.EVENT_SKELETONS[TI]["spots"]:
             types = {f["type"] for f in fx.all_frames(TI, spot, list(sk.EVENT_SKELETONS[TI]["spots"]))}
-            self.assertEqual(types, set(K_R), spot)   # balkon / teras rotasyonda yok
+            self.assertEqual(types, K_R_ACTIVE, spot)   # balkon / teras rotasyonda yok; 11 Kas (8): K_R3 pasif
 
     def test_old_frames_kept_in_data(self):
         self.assertEqual(fx.SPOT_FRAME[TI]["Coastal street of low shopfronts"][0], "balkon")
@@ -174,7 +180,7 @@ class TestTidal(_Quiet):
             self.assertIn("the camera never pans, turns or follows", snap["prompt"])
             self.assertNotIn("second-floor balcony", snap["prompt"])
             self.assertNotIn("raised seafront promenade", snap["prompt"])
-        self.assertEqual(seen, set(K_R))
+        self.assertEqual(seen, K_R_ACTIVE)
 
     def test_finals(self):
         b = es.EVENT_BEATS[TI]["slice_3"]
@@ -192,16 +198,17 @@ class TestTidal(_Quiet):
 
     def test_people_lines(self):
         pool = es.FALLBACK_PEOPLE[TI]
-        self.assertEqual(pool[6:], I_NEW)
+        self.assertEqual(pool[6:9], I_NEW)
         self.assertEqual(pool[1], "{N} people run inland as the wave hits.")   # I2 silinmedi
-        self.assertEqual(es.DISABLED_PEOPLE_LINES[TI], {"I2", "I6"})   # 11 Kas (7): I6 pasif
+        # 11 Kas (7): I6 pasif. 11 Kas (8) (3): I1-I9 pasif, aktif I10-I12 (tests/test_11kas_8.py)
+        self.assertEqual(es.DISABLED_PEOPLE_LINES[TI], {f"I{i}" for i in range(1, 10)})
         spec = es.build_spec(TI, None, "Coastal street of low shopfronts", "riviera", "T2", "W5", "red SUV", 4,
                              frame={"type": "K_R2", "pos_spot": None, "fg": "pencere", "mode": None},
                              light="driving rain and wind")
         ids = [i for i, _ in es.fallback_candidates_ids(spec)]
         self.assertNotIn("I2", ids)
-        self.assertTrue({"I7", "I8", "I9"} <= set(ids))
-        self.assertEqual(es.people_axis_proven(TI), ("I1", "I7", "I8", "I9"))
+        self.assertEqual(set(ids), {"I10", "I11", "I12"})
+        self.assertEqual(es.people_axis_proven(TI), ("I10", "I11", "I12"))
         self.assertEqual(es.people_axis_proven(es.FLOOD), ("I1", "I2"))
 
     def test_inland_gate_tidal_only(self):

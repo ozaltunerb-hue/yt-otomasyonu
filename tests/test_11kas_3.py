@@ -175,7 +175,10 @@ class TestFramesAndPairs(_Quiet):
     def test_budget_exclusions_recorded(self):
         # 11 Kas (4): sıfırdan hesap: çift dışlaması kalmadı; tek bütçe dışlaması kül bulutu E + P8 + Q4/Q8
         self.assertEqual(es.BUDGET_PAIRS_11KAS_3, {})
-        self.assertEqual(ox.BUDGET_TRIPLES_11KAS_3, {es.PYROCLASTIC: {("E", "P8", "Q4"), ("E", "P8", "Q8")}})
+        # 11 Kas (8): dev dalga D + T3/T7/T8 + W13 (yeni insan cümleleri; D rotasyon dışı, üretim aynı)
+        self.assertEqual(ox.BUDGET_TRIPLES_11KAS_3, {es.PYROCLASTIC: {("E", "P8", "Q4"), ("E", "P8", "Q8")},
+                                                     es.TIDAL: {("D", "T3", "W13"), ("D", "T7", "W13"),
+                                                                ("D", "T8", "W13")}})
         self.assertTrue(es.BUDGET_PAIRS_11KAS_3_ESKI and ox.BUDGET_TRIPLES_11KAS_3_ESKI)   # kayıt
         ft = {p for s in sk.view_spots(es.FIRE_TORNADO, None) for p in es.allowed_pairs(es.FIRE_TORNADO, None, s)}
         self.assertIn(("T4", "U11"), ft)
@@ -302,7 +305,7 @@ class TestTidalRound5(_Quiet):
         pool = es.FALLBACK_PEOPLE[self.T]
         self.assertEqual(pool[0], "{N} pedestrians run from the wave into the nearest apartment entrance.")
         self.assertEqual(pool[5], "{N} people run for the doorway of a seafront café.")   # silinmedi
-        self.assertEqual(es.DISABLED_PEOPLE_LINES[self.T], {"I2", "I6"})
+        self.assertTrue({"I2", "I6"} <= es.DISABLED_PEOPLE_LINES[self.T])   # 11 Kas (8): I1-I9 hepsi pasif
         self.assertEqual(gate.term_hits(pool[0], self.T), [])
         for seed in range(1, 41):
             p = ps.snapshot_event(self.T, seed)["prompt"]

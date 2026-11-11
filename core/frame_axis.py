@@ -286,21 +286,28 @@ FRAME_NEVER_PANS = "the camera never pans, turns or follows"
 FRAME_STAYS_FIXED = "the camera stays fixed, never descending, "
 VERBATIM_FRAMES = {
     TIDAL: {
-        "K_R1": ("Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide "
-                 "angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never "
-                 "descending, the camera never pans, turns or follows.", "parapet"),
-        "K_R2": ("Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight "
-                 "down the coastal street toward the sea; the camera stays fixed, never descending, the camera never "
-                 "pans, turns or follows.", "pencere"),
+        # 11 Kas 2026 (8), Bahadır (1): K_R1, K_R2 ve kül bulutu K_V "Filmed from" -> "Handheld footage filmed from",
+        # sabitlik cümlesinin başına "slight hand shake, " (diğer olayların kadraj kalıbı). Önceki metinler aynı, bu iki ek
+        # olmadan
+        "K_R1": ("Handheld footage filmed from the flat rooftop of a six-story apartment block right on the seafront, "
+                 "high vantage, wide angle, the whole coastal street and the sea behind it in frame; slight hand shake, "
+                 "the camera stays fixed, never descending, the camera never pans, turns or follows.", "parapet"),
+        "K_R2": ("Handheld footage filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, "
+                 "looking straight down the coastal street toward the sea; slight hand shake, the camera stays fixed, "
+                 "never descending, the camera never pans, turns or follows.", "pencere"),
         "K_R3": ("Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, "
                  "the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, "
-                 "the camera never pans, turns or follows.", "teras_korkuluk"),
+                 "the camera never pans, turns or follows.", "teras_korkuluk"),   # 11 Kas (8): PASİF (denize uzak)
+        # 11 Kas 2026 (8), Bahadır (2): K_R3 yerine yakın kadraj (birebir; ön plan korkuluk köşesi)
+        "K_R4": ("Handheld footage filmed from the top-floor balcony of a seafront hotel right on the promenade, high "
+                 "vantage, wide angle, the sea and the coastal street directly below in frame; slight hand shake, the "
+                 "camera stays fixed, never descending, the camera never pans, turns or follows.", "korkuluk"),
     },
     PYROCLASTIC: {
-        "K_V": ("Filmed from a high rooftop terrace at the edge of the town, wide angle, the entire volcano from its "
-                "base to its summit filling the upper half of the frame directly behind the houses, the town below in "
-                "the lower half; the camera stays fixed, never descending, the camera never pans, turns or follows.",
-                None),
+        "K_V": ("Handheld footage filmed from a high rooftop terrace at the edge of the town, wide angle, the entire "
+                "volcano from its base to its summit filling the upper half of the frame directly behind the houses, the "
+                "town below in the lower half; slight hand shake, the camera stays fixed, never descending, the camera "
+                "never pans, turns or follows.", None),   # 11 Kas (8) (1): elde çekim ifadesi
     },
     # 11 Kas 2026 (2), Bahadır: kilitli olaylara birebir kadraj (seçim spottan bağımsız; yerli kadrajlarla birlikte döner,
     # VERBATIM_WITH_NATIVE). Metin ön planı ve tek çekim kuyruğunu içerir (FULL_TEXT_FRAMES); "no person or face close
@@ -338,7 +345,8 @@ VERBATIM_FRAMES = {
 # "always in frame" köküne takıldı (core/pool_word_gate.py): talimat gereği eklenmedi, karar Bahadır'da (açmak: bu kümeden
 # çıkar)
 # 11 Kas (3), Bahadır (3): K_Y3 "the debris torrent always in frame" -> "the debris torrent in frame", AKTİF
-PASSIVE_VERBATIM_FRAMES: dict[str, set[str]] = {}
+# 11 Kas 2026 (8), Bahadır (2): dev dalga K_R3 (tepe terası, denize uzak) PASİF; yerine K_R4
+PASSIVE_VERBATIM_FRAMES: dict[str, set[str]] = {TIDAL: {"K_R3"}}
 # Metni ön planı ve kuyruğu zaten içeren birebir kadrajlar (verbatim_camera ön plan eklemez)
 FULL_TEXT_FRAMES = {"K_O3", "K_H3", "K_B3", "K_Y3"}
 # Birebir kadrajların yanında olayın yerli kadrajı da rotasyonda kalan olaylar (kül bulutu: hit kadrajı pasife alınamadı;

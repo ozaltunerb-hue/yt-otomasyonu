@@ -306,7 +306,10 @@ BUDGET_TRIPLES_11KAS_3_ESKI = {
              ("D", "T3", "W10"), ("D", "T7", "W1"), ("D", "T7", "W10")},
 }
 # 11 Kas (4): 215 tavanı ve kısa hareket cümlesiyle hâlâ sığmayan tek kombinasyonlar (bu çiftlerde açılış A kalır)
-BUDGET_TRIPLES_11KAS_3: dict[str, set] = {_PYRO: {("E", "P8", "Q4"), ("E", "P8", "Q8")}}
+# 11 Kas (8): dev dalga yeni insan cümleleri (I10-I12, en kısası 14 kelime; önceki I1 11) açılış D (24 kelime) + W13 ile
+# en uzun ortam/ışıkta toplam hikâye 81'i aşıyor. D rotasyon dışı (dev dalgada sadece A döner): üretim aynı
+BUDGET_TRIPLES_11KAS_3: dict[str, set] = {_PYRO: {("E", "P8", "Q4"), ("E", "P8", "Q8")},
+                                          _TIDAL: {("D", "T3", "W13"), ("D", "T7", "W13"), ("D", "T8", "W13")}}
 
 
 def allowed(event: str, env: str | None, b2: str, b3: str) -> list[str]:

@@ -132,10 +132,12 @@ class TestDecisions0(_Quiet):
         self.assertIn("T5", es.EVENT_BEATS[TI]["slice_2"])   # silinmedi
 
     def test_0d_fixed_phrase(self):
-        for e, ids in ((PY, ("K_V",)), (TI, ("K_R1", "K_R2", "K_R3"))):
+        # 11 Kas (8) (1): K_V, K_R1, K_R2 (ve yeni K_R4) "; slight hand shake, " + sabitlik; pasif K_R3 metni aynen
+        for e, ids in ((PY, ("K_V",)), (TI, ("K_R1", "K_R2", "K_R4"))):
             for k in ids:
                 with self.subTest(frame=k):
-                    self.assertIn(f"; {FIXED}.", fx.VERBATIM_FRAMES[e][k][0])
+                    self.assertIn(f"; slight hand shake, {FIXED}.", fx.VERBATIM_FRAMES[e][k][0])
+        self.assertIn(f"; {FIXED}.", fx.VERBATIM_FRAMES[TI]["K_R3"][0])
         self.assertIn("never pans", __import__("prompt_rules").FIXED_TERMS)   # sözlük eklemesi kalır
 
 
@@ -181,7 +183,7 @@ class TestFrames(_Quiet):
 
     def test_village_k_y3_active_word_gate(self):
         # 11 Kas (3), Bahadır: "always" çıktı, kelime kapısından geçer, aktif
-        self.assertEqual(fx.PASSIVE_VERBATIM_FRAMES, {})
+        self.assertEqual(fx.PASSIVE_VERBATIM_FRAMES, {TI: {"K_R3"}})   # 11 Kas (8) (2): sadece dev dalga K_R3
         self.assertEqual(gate.term_hits(fx.VERBATIM_FRAMES[VI]["K_Y3"][0], VI), [])
 
 

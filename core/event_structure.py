@@ -4537,7 +4537,9 @@ FLOAT_EXEMPT_EVENTS = (FLOOD,)
 CAMERA_EXEMPT_EVENTS = (LIBERTY,   # 6 Kas (kilit): sel çıktı (3249de8 metinlerinde kamera kelimesi yok)
                         # 11 Kas (2) (7): Bahadır'ın birebir insan cümlelerinde "below the camera" (orman I4, helikopter I2);
                         # sadece koddan gelen cümle muaf, GPT cümlesinde kural aynen
-                        WILDFIRE, HELICOPTER)
+                        WILDFIRE, HELICOPTER,
+                        # 11 Kas (8) (3): dev dalga I10-I12 "toward the camera" / "below the camera" (birebir kod cümlesi)
+                        TIDAL)
 
 
 def verbatim_story_exempt(spec: dict, slices: dict[str, str], issues: list[dict]) -> list[dict]:
@@ -4545,6 +4547,10 @@ def verbatim_story_exempt(spec: dict, slices: dict[str, str], issues: list[dict]
     if spec["event"] in CAMERA_EXEMPT_EVENTS:   # kod yedeği de birebir kod metni (VERBATIM bayrağından bağımsız)
         from core.creative_pipeline import CAMERA_WORDS
         code = code_sentences(spec)
+        # 11 Kas (8): dev dalgada spec insan kimliği taşımıyorsa (kod yedeği kendi seçti) havuzdaki aktif cümleler de
+        # koddan sayılır (birebir eşleşme). Sadece dev dalga: kilitli olayların davranışı aynı
+        if spec["event"] == TIDAL and not spec.get("people_line"):
+            code |= {people_line_text(spec, i) for i, _ in fallback_candidates_ids(spec)}
         rest = [spec["key_visual"]] + [s for f in SLICE_FIELDS for s in _sentences(slices.get(f, "")) if s not in code]
         if not find_terms(CAMERA_WORDS, " ".join(rest)):
             out = [i for i in out if i["rule"] != "b_no_camera_words"]
@@ -4623,7 +4629,13 @@ FALLBACK_PEOPLE = {
             # 11 Kas 2026, Bahadır (B5): hedefli kaçış, birebir (I_A, I_B, I_C -> I7, I8, I9; başa kişi sayısı {N})
             "{N} people run up the street away from the sea toward the apartment entrances.",
             "{N} people run up the stairs of an apartment building.",
-            "{N} people run up the side lane toward the hill behind the town."),
+            "{N} people run up the side lane toward the hill behind the town.",
+            # 11 Kas 2026 (8), Bahadır (3): yön kameraya göre (insanlar dalgadan kaçıp kameraya doğru koşar), birebir
+            # (I10, I11, I12). I1-I9 PASİF (DISABLED_PEOPLE_LINES; silinmedi). I12 Bahadır onayıyla kısa hâl: verilen
+            # metin ("...as the wave hits the street behind them.", 20 kelime) 0-4s insan dilimi sınırına (18) sığmıyordu
+            "{N} people sprint up the street toward the camera, the wave right behind them.",
+            "{N} pedestrians run toward the camera and into the apartment entrance right below it.",
+            "{N} people race up the steps of the building below the camera as the wave hits."),
     # 23 Eki, Bahadır (heyelan testi): çamur yukarıdan geliyor; "uphill" / "up the street" insanları çamura doğru
     # koşturuyordu. Önceki: "{N} residents run uphill away from the mud.", "{N} people flee from the mud up the
     # street.", "{N} pedestrians scramble uphill as the mud hits.", "{N} pedestrians dash uphill away from the flow."
@@ -4732,13 +4744,15 @@ PEOPLE_AXIS_PROVEN = ("I1", "I2")
 PEOPLE_AXIS_TRIAL_SHARE = 0.20
 # 11 Kas 2026, Bahadır (B5): olaya özel kanıtlı/ana insan cümleleri ve PASİF insan cümleleri (silinmedi; kimlikler sıra
 # numarasıyla sabit). Dev dalga I2 "run inland" hedefsiz (hiçbir üretimde yok, kod yedeği metni): yerine I7-I9 ana öğe
-PEOPLE_AXIS_PROVEN_BY_EVENT = {TIDAL: ("I1", "I7", "I8", "I9"),
+# 11 Kas (8), Bahadır (3): dev dalga ana öğeleri I10-I12 (önceki ("I1", "I7", "I8", "I9"); eşit LRU, deneme yok)
+PEOPLE_AXIS_PROVEN_BY_EVENT = {TIDAL: ("I10", "I11", "I12"),
                                # 11 Kas (2) (7): Bahadır'ın cümleleri hepsi ana öğe (deneme yok; eşit LRU)
                                WILDFIRE: ("I1", "I2", "I3", "I4"), HELICOPTER: ("I1", "I2", "I3"),
                                LANDFALL: ("I1", "I2", "I3"), VOLCANIC_BOMBS: ("I1", "I2", "I3"),
                                VILLAGE: ("I1", "I2", "I3")}
 # 11 Kas (7), Bahadır: dev dalga I6 ("run for the doorway of a seafront café": insanlar dalgaya doğru koşuyor) PASİF
-DISABLED_PEOPLE_LINES: dict[str, set[str]] = {TIDAL: {"I2", "I6"}}
+# 11 Kas (8), Bahadır (3): dev dalgada önceki aktif cümlelerin hepsi (I1, I3, I4, I5, I7, I8, I9) PASİF, aktif I10-I12
+DISABLED_PEOPLE_LINES: dict[str, set[str]] = {TIDAL: {"I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9"}}
 
 
 def people_axis_proven(event: str) -> tuple[str, ...]:
