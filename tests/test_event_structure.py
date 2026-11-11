@@ -708,8 +708,10 @@ class TestTidal(unittest.TestCase):
             "T4": "the {vehicle} is hurled onto the roof of a parked car, crushing it flat",   # 30 Eki (Aşama B)
             "T5": "the {vehicle} tips over onto its side in the churning water",
             "T6": "the {vehicle} is pushed onto the sidewalk and slams into a lamppost",
-            "T7": "the {vehicle} is carried backwards down the street, bumping parked cars",
-            "T8": "the {vehicle} is driven into the front of a house and the porch collapses onto it",   # 30 Eki
+            # 11 Kas (5), Bahadır: T7, T8 yeni metin (önceki T7 "...carried backwards down the street, bumping parked
+            # cars", T8 "...driven into the front of a house and the porch collapses onto it")
+            "T7": "the {vehicle} is swept into a row of parked cars and piles up against them",
+            "T8": "the {vehicle} is rammed into a ground-floor shopfront and the front wall caves in onto it",
         })
         self.assertEqual({k: v["text"] for k, v in BT["slice_3"].items()}, {
             "W1": "a row of parked vehicles is ripped loose one by one and washed away",
@@ -726,9 +728,12 @@ class TestTidal(unittest.TestCase):
             "W10": "the wave smashes through the front wall of a seafront house and pours inside",
             "W11": "the surge swallows the ground floors of a row of shopfronts and a roof caves in",
             "W12": "the surge tears a wooden beach café off its foundations and smashes it against the apartment blocks",
+            "W13": "the surge caves in the front of a seafront restaurant and drags its terrace into the street",   # 11 Kas (5)
         })
         self.assertEqual(BT["excluded_pairs"], {("T6", "W2"), ("T2", "W1"), ("T8", "W1"), ("T3", "W8"),
-                                                ("T1", "W9"), ("T8", "W9"), ("T3", "W9"), ("T8", "W10")})
+                                                ("T1", "W9"), ("T8", "W9"), ("T3", "W9"),
+                                                # 11 Kas (5): yeni T8 (dükkân önü); (T8, W10) kalktı (ev önü değil)
+                                                ("T8", "W11"), ("T8", "W13")})
         self.assertEqual(BT["excluded_views"], {})
         # Kamera seawall'un üstünde: "alçak duvar çöker" kameranın durduğu duvar gibi çizilir
         self.assertEqual(BT["excluded_spots"], {"W6": {"Coastal avenue behind a seawall"}})
@@ -771,9 +776,10 @@ class TestTidal(unittest.TestCase):
               "W8": "A green trash bin rolls through the water and slams into a car."}
         # 4 Eki, Bahadır: kuru provada reddedilen ifadeler artık geçer
         ok.update({"W1": "A sequence of parked vehicles is torn free, each swept away in a chaotic stream.",
-                   "T7": "The SUV is thrust backward, colliding forcefully with parked trucks."})
+                   # 11 Kas (5): T7 yeni anlam (park araç sırasına sürüklenip yığılır)
+                   "T7": "The SUV is swept into a line of parked cars and piles up against them."})
         bad = {"T1": "The sedan is lifted by the water.",
-               "T7": "The SUV is thrust forward into parked trucks.",
+               "T7": "The SUV drifts slowly down the empty street.",   # 11 Kas (5): park araç yok
                "T2": "The SUV is lifted on top of the surge.",
                "T6": "The SUV is pushed onto the sidewalk.",
                "W4": "A low wall collapses into the water."}
@@ -1001,8 +1007,8 @@ class TestTidal(unittest.TestCase):
         # 3 Kas (sel doğrulama ayarı): T4 pasif (5 çift az)
         # 11 Kas (B3): W3, W4 pasif; W10-W12 (T8+W10 dışlı): 5 x 5 - 3 = 22 çift
         # 11 Kas (2) (0c): T5 pasif: 4 x 5 - 3 = 17 çift
-        # 11 Kas (4): bütçe dışlaması kalktı: 17 çift
-        self.assertEqual(n, 17 * 17 * 3)
+        # 11 Kas (5): W1, W5 pasif, W13 yeni; (T8, W11) (T8, W13) dışlı, (T8, W10) açık: 4 x 4 - 2 = 14 çift
+        self.assertEqual(n, 17 * 14 * 3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_w6_never_on_seawall(self):

@@ -179,7 +179,8 @@ class TestTidal(_Quiet):
     def test_finals(self):
         b = es.EVENT_BEATS[TI]["slice_3"]
         self.assertEqual({k: b[k]["text"] for k in W_NEW}, W_NEW)
-        self.assertEqual(sorted(_active(TI, "slice_3")), ["W1", "W10", "W11", "W12", "W5"])
+        # 11 Kas (5): W1, W5 pasif, W13 yeni; final havuzu hepsi yapısal
+        self.assertEqual(sorted(_active(TI, "slice_3")), ["W10", "W11", "W12", "W13"])
         self.assertTrue({"W3", "W4"} <= es.DISABLED_BEATS[TI])
         self.assertFalse(set(W_NEW) & es.TRIAL_BEATS[TI])
 

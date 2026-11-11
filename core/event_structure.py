@@ -1175,11 +1175,16 @@ EVENT_BEATS = {
             "T6": {"text": "the {vehicle} is pushed onto the sidewalk and slams into a lamppost",
                    "terms": [_CURB, _POLE]},
             # 4 Eki, Bahadır: "thrust" (kuru provada "thrust backward" reddedildi); _DRAG selle ortak, ona eklenmez
-            "T7": {"text": "the {vehicle} is carried backwards down the street, bumping parked cars",
-                   "terms": [_BACKWARD, _DRAG + ("thrust",)]},
-            "T8": {"text": "the {vehicle} is driven into the front of a house and the porch collapses onto it",
-                   "terms": [_HIT + ("drive", "drove", "driven"), ("house", "home", "porch", "veranda", "front", "facade",
-                                                                   "façade", "building"), _FALL + ("cave", "crumble")]},
+            # 11 Kas 2026 (5), Bahadır: T7 ve T8 metni değişti, kodlar aynı (5 Onay testinden 1'i geçti). Önceki T7
+            # "the {vehicle} is carried backwards down the street, bumping parked cars", T8 "the {vehicle} is driven
+            # into the front of a house and the porch collapses onto it"
+            "T7": {"text": "the {vehicle} is swept into a row of parked cars and piles up against them",
+                   "terms": [_DRAG + ("thrust", "slam", "ram", "pile", "piles up"),
+                             ("row of parked cars", "parked cars", "parked", "row")]},
+            "T8": {"text": "the {vehicle} is rammed into a ground-floor shopfront and the front wall caves in onto it",
+                   "terms": [_HIT + ("drive", "drove", "driven"), _SHOP + ("shopfront", "ground-floor", "front",
+                                                                           "facade", "façade", "building"),
+                             _FALL + ("cave", "caves in", "crumble")]},
         },
         "slice_3": {
             "W1": {"text": "a row of parked vehicles is ripped loose one by one and washed away",
@@ -1225,10 +1230,17 @@ EVENT_BEATS = {
                     "terms": [("café", "cafe", "beach café", "beach cafe", "beach bar", "kiosk", "hut", "shack"),
                               ("tear", "tore", "torn", "rip", "wrench", "sweep", "swept", "carry", "carried", "smash",
                                "slam", "crash", "foundation", "foundations")]},
+            # 11 Kas 2026 (5), Bahadır: yeni yapısal final (birebir)
+            "W13": {"text": "the surge caves in the front of a seafront restaurant and drags its terrace into the street",
+                    "terms": [("restaurant", "café", "cafe", "terrace", "shopfront", "front", "building"),
+                              ("cave", "cave in", "caves in", "caved in", "collapse", "crumble", "drag", "tear", "tore",
+                               "rip", "smash", "give way", "gives way")]},
         },
+        # 11 Kas (5), Bahadır: yeni T8 (dükkân önü) W11 (dükkânlar) ve W13 (restoran önü) ile eşleşmez. (T8, W10)
+        # kalktı: gerekçesi "ev önü iki dilimde" idi, yeni T8 ev değil (kalsaydı T8'in tek final eşi W12 kalırdı)
         "excluded_pairs": {("T6", "W2"), ("T2", "W1"), ("T8", "W1"), ("T3", "W8"),
                            ("T1", "W9"), ("T8", "W9"), ("T3", "W9"),
-                           ("T8", "W10")},   # 11 Kas: aynı yapı (ev önü) iki dilimde yok   # 17 Eki: (T1,W7) W7 ile gitti. 3 Kas: bina önü / araç iki kez
+                           ("T8", "W11"), ("T8", "W13")},   # 17 Eki: (T1,W7) W7 ile gitti. 3 Kas: bina önü / araç iki kez
         "excluded_views": {},
         # Kamera seawall'un üstünde duruyor: "alçak duvar çöker" olayı kameranın durduğu duvar gibi çizilir
         "excluded_spots": {"W6": {"Coastal avenue behind a seawall"}},
@@ -2498,7 +2510,8 @@ DISABLED_BEATS: dict[str, set[str]] = {
     # W4 hiçbir tamamlanmış üretimde yok. T5 AKTİF: tek tamamlanmış üretimi 4 Eki 10:16 (seawall) 13 Eki 247K adayı,
     # paylaşım-üretim bağı yok (karar Bahadır'da)
     # 11 Kas 2026 (2), Bahadır (0c): T5 PASİF (araç yan yatar; 13 Eki 247K eşleşmesi belirsizdi, karar Bahadır'ın)
-    TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9", "T1", "W3", "W4", "T5"},
+    # 11 Kas (5), Bahadır: W1 (park araç sırası) ve W5 (otobüs) orta dilimin araç maddeleriyle aynı tür: PASİF
+    TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9", "T1", "W3", "W4", "T5", "W1", "W5"},
     FACADE_FIRE: {"N4", "M6"},
     # 6 Kas (2), Bahadır (kalan havuz temizliği): sokak H3 (döner); yamaç R3, R6 (döner). Sokak H4 (ezer) AKTİF: H6 bütün aktif M
     # beatlerle dışlı, gerçekte seçilemiyor; H4 de gitse 4-9s gerçek havuz 3 kalırdı (en az 4 kuralı, cadde P4 emsali)
@@ -2714,7 +2727,7 @@ OBJECT_GROUPS = {
     FLOOD: {"D9": 0, "D2": 0, "D3": 0, "D4": 0, "D5": 0, "D8": 0, "D10": 1,   # 3 Kas: D10 dükkân
             "D12": 1, "D14": 0, "D15": 0, "D16": 0, "D17": 0},   # 3 Kas (sel su kontrolü): dükkân, otobüs
     TIDAL: {"W1": 1, "W2": 0, "W3": 0, "W4": 0, "W5": 0, "W6": 0, "W8": 0, "W9": 1,   # 3 Kas: W9 kafe
-            "W10": 0, "W11": 0, "W12": 0},   # 11 Kas: ev, dükkân sırası, plaj kafesi
+            "W10": 0, "W11": 0, "W12": 0, "W13": 0},   # 11 Kas: ev, dükkân sırası, plaj kafesi; 11 Kas (5): restoran
     # 18 Eki (2) kuru deneme: M8'in nesnesi ev (kamyon evin önüne; "house's facade" M7'ye benzetiliyordu)
     # 22 Eki: M6 ev (M7 ile aynı). 31 Eki (3): M3 ev (minibüs evin önüne; nesne minibüs olunca "house, wall" M6'nın
     # nesnesi sayılıyordu, kod yedeği M6'ya benzetildi), M4 dükkân
@@ -2762,7 +2775,8 @@ BEAT_ANCHORS = {
             # 3 Kas (sel su kontrolü): otobüs ve dükkân hedefli yeni öğeler
             "V9": _ANCHOR_BUS, "V11": _ANCHOR_SHOP, "D12": _ANCHOR_SHOP, "D14": _ANCHOR_BUS, "D16": _ANCHOR_SHOP,
             "D18": _ANCHOR_SHOP},
-    TIDAL: {"T8": _ANCHOR_HOUSE, "W9": _ANCHOR_SHOP},                      # 3 Kas: W9 kafe önü
+    # 3 Kas: W9 kafe önü. 11 Kas (5): T8 artık dükkân önü (önceki _ANCHOR_HOUSE, ev önü)
+    TIDAL: {"T8": _ANCHOR_SHOP + ("shopfront",), "W9": _ANCHOR_SHOP},
     MUDSLIDE: {"H6": _ANCHOR_HOUSE, "M3": _ANCHOR_HOUSE},   # 31 Eki (3): M3 minibüs evin önüne
     VILLAGE: {"L6": _ANCHOR_HOUSE},
     MARINA_TORNADO: {"Y3": _MARINA_OFFICE},
@@ -4549,6 +4563,8 @@ def verbatim_story_exempt(spec: dict, slices: dict[str, str], issues: list[dict]
 # insan cümlesi sığmazsa StructureError (Kie'ye gidilmez). Hangi kombinasyonların sığmadığı
 # tests/test_story_fallback.py'de tek tek sayılır (havuzdan çıkarılmaz, Bahadır karar verir).
 FALLBACK_TRANSITION = "Seconds later, in full view, "
+# 11 Kas 2026 (5), Bahadır (6): dev dalgada dolgu bağlantısı yok (kaynağı bu kalıp; dev dalgada W5 tetikliyordu, W5 pasif)
+NO_TRANSITION_EVENTS = (TIDAL,)
 # {N}: kaçan kişi sayısı (büyük harfle). Kişi kuralı olmayan olayda (sel) sayı yok.
 _FB_TORNADO = ("{N} people sprint for cover from the tornado.", "{N} onlookers run inland away from the tornado.",
                "{N} residents flee from the tornado toward the buildings.",
@@ -4858,7 +4874,8 @@ def fallback_beat_slice(spec: dict, slot: str) -> str:
     bid = spec["beat_2"] if slot == "slice_2" else spec["beat_3"]
     text = beat_text(spec["event"], slot, bid, spec["vehicle"])
     level = WATER_LEVEL_LINES.get(spec["event"], {}).get(slot)
-    if len(text.split()) + (len(level.split()) if level else 0) < SLICE_WORDS[slot][0]:
+    if (len(text.split()) + (len(level.split()) if level else 0) < SLICE_WORDS[slot][0]
+            and spec["event"] not in NO_TRANSITION_EVENTS):
         text = FALLBACK_TRANSITION + text
     text = clean_slice(text[0].upper() + text[1:])
     out = f"{level} {text}" if level else text

@@ -213,7 +213,8 @@ class TestWeakPassive(_Quiet):
         self.assertEqual(es.DISABLED_BEATS, {es.FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8",
                                                         "D9"}, es.TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9", "T1",
                                                                           "W3", "W4",   # 11 Kas (B3)
-                                                                          "T5"},   # 11 Kas (2) (0c)
+                                                                          "T5",   # 11 Kas (2) (0c)
+                                                                          "W1", "W5"},   # 11 Kas (5)
                                              es.FACADE_FIRE: {"N4", "M6"},
                                              es.HELICOPTER: {"G7"} | PASSIVE_11KAS_2[es.HELICOPTER],   # kilit istisnası
                                              es.VOLCANIC_BOMBS: {"T5"} | PASSIVE_11KAS_2[es.VOLCANIC_BOMBS],

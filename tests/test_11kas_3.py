@@ -255,5 +255,53 @@ class TestRound4(_Quiet):
         self.assertIn("pa.frame_status(event, spot, a[1]) != pa.LOW", src)
 
 
+class TestTidalRound5(_Quiet):
+    """11 Kas (5), Bahadır: dev dalga T7 / T8 yeni metin, W1 W5 pasif, W13 yeni, dolgu bağlantısı yok, onay metni."""
+    T = es.TIDAL
+
+    def test_texts_and_passive(self):
+        b = es.EVENT_BEATS[self.T]
+        self.assertEqual(b["slice_2"]["T8"]["text"],
+                         "the {vehicle} is rammed into a ground-floor shopfront and the front wall caves in onto it")
+        self.assertEqual(b["slice_2"]["T7"]["text"],
+                         "the {vehicle} is swept into a row of parked cars and piles up against them")
+        self.assertEqual(b["slice_3"]["W13"]["text"],
+                         "the surge caves in the front of a seafront restaurant and drags its terrace into the street")
+        self.assertTrue({"W1", "W5"} <= es.disabled_beats(self.T))
+        self.assertTrue({"W1", "W5"} <= set(b["slice_3"]))   # silinmedi
+        for bid, slot in (("T7", "slice_2"), ("T8", "slice_2"), ("W13", "slice_3")):
+            self.assertEqual(gate.term_hits(b[slot][bid]["text"], self.T), [], bid)
+
+    def test_pairs_and_partners(self):
+        ex = es.EVENT_BEATS[self.T]["excluded_pairs"]
+        self.assertTrue({("T8", "W11"), ("T8", "W13")} <= ex)
+        self.assertNotIn(("T8", "W10"), ex)
+        allp = set()
+        for v in es.structure_views(self.T):
+            for s in sk.view_spots(self.T, v):
+                ps_ = es.allowed_pairs(self.T, v, s)
+                allp |= set(ps_)
+                for m in {a for a, _ in ps_}:
+                    self.assertGreaterEqual(len({d for a, d in ps_ if a == m}), 2, (s, m))
+        self.assertEqual(sorted({a for a, _ in allp}), ["T2", "T3", "T7", "T8"])
+        self.assertEqual(sorted({d for _, d in allp}), ["W10", "W11", "W12", "W13"])
+        self.assertEqual(sorted(d for a, d in allp if a == "T8"), ["W10", "W12"])
+
+    def test_no_filler_phrase(self):
+        self.assertIn(self.T, es.NO_TRANSITION_EVENTS)
+        for seed in range(1, 41):
+            self.assertNotIn("Seconds later", ps.snapshot_event(self.T, seed)["prompt"], seed)
+
+    def test_approval_text_without_gpt_history(self):
+        from core.trace_format import format_generation
+        random.seed(1)
+        sc = asyncio.run(cp.build_creative_scene(None, self.T, [], [], _no_gpt))
+        text = "\n".join(b for _, b in format_generation(sc["trace"]))
+        self.assertNotIn("hikâye GPT'ye verildi", text)
+        self.assertIn("son 3 üretimin olayları elendi", text)   # seçim satırı aynen
+        gpt_trace = {**sc["trace"], "story_source_kind": "gpt"}
+        self.assertIn("hikâye GPT'ye verildi", "\n".join(b for _, b in format_generation(gpt_trace)))
+
+
 if __name__ == "__main__":
     unittest.main()

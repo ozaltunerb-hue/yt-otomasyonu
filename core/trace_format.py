@@ -175,8 +175,10 @@ def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
          f"Araç: {trace.get('vehicle')}\n"
          f"4-9s olayı ({b2 or '-'}): {trace.get('beat_2_text', '-')}\n"
          f"9-15s olayı ({b3 or '-'}): {trace.get('beat_3_text', '-')}\n"
-         f"Tekrar önleme: olay çifti {beats} (son 3 üretimin olayları elendi, LRU) · son "
-         f"{trace.get('recent_count', 0)} hikâye GPT'ye verildi"),
+         f"Tekrar önleme: olay çifti {beats} (son 3 üretimin olayları elendi, LRU)"
+         # 11 Kas (5): GPT çağrılmayan olaylarda (kod hikâyesi) "hikâye GPT'ye verildi" yazılmaz (sadece metin)
+         + ("" if trace.get("story_source_kind") == "code"
+            else f" · son {trace.get('recent_count', 0)} hikâye GPT'ye verildi")),
         # 16 Eki: hibrit hikâye (en fazla 2 GPT denemesi, geçemezse kod yedeği)
         # 11 Kas (3): HEDEF 8'de hikâye tamamen koddan (GPT çağrısı yok): deneme bloğu yok, sadece kaynak satırı
         (("🔍 2. Hikâye kaynağı", trace.get("story_source") or "Hikâye: kod (birebir)")

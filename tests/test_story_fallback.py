@@ -159,11 +159,11 @@ class TestFallbackEveryCombination(unittest.TestCase):
                 self.assertEqual(es.find_terms(es.FIRE_TOR_OPEN_LAND, t), [])
 
     def test_transition_only_when_needed(self):
-        # 3 Kas (sel su kontrolü): selde dilim başında su seviyesi cümlesi var, geçiş kalıbı gerekmez; kısa beat'li dev
-        # dalgada geçiş kalıbı aynen
+        # 3 Kas (sel su kontrolü): selde dilim başında su seviyesi cümlesi var, geçiş kalıbı gerekmez. 11 Kas (5): dev
+        # dalgada geçiş kalıbı yok (es.NO_TRANSITION_EVENTS; W5 pasif, burada kayıt için doğrudan kurulur)
         spec = es.build_spec(es.TIDAL, None, "Coastal street of low shopfronts", "riviera", "T2", "W5", "red SUV", 5)
         self.assertEqual(es.fallback_beat_slice(spec, "slice_3"),   # 11 Kas (3): + devam cümlesi
-                         "Seconds later, in full view, a city bus is shoved sideways by the surge. Until the last "
+                         "A city bus is shoved sideways by the surge. Until the last "
                          "frame, the floodwater keeps surging through the street.")
         self.assertEqual(es.fallback_beat_slice(spec, "slice_2"), "The red SUV is carried down the street by the surge.")
         spec = es.build_spec(es.FLOOD, None, "Downtown city center", "riviera", "V1", "D5", "red SUV", 5)

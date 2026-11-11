@@ -25,6 +25,15 @@
 
 ---
 
+## 📋 DEVİR: 11 Kasım (5) dev dalga orta/final temizliği
+
+Test `tests/test_11kas_3.py` (TestTidalRound5). Sadece dev dalga değişti (40 tohum EK KONTROL). T7 "...is swept into a row
+of parked cars and piles up against them", T8 "...is rammed into a ground-floor shopfront and the front wall caves in onto
+it" (çapa dükkân), W13 yeni yapısal final, W1 W5 pasif. Final havuzu W10-W13. Dışlama (T8, W11) (T8, W13); (T8, W10) kalktı
+(gerekçesi "ev önü" idi, yeni T8 ev değil; kalsaydı T8'in tek eşi kalırdı). Dolgu bağlantısı ("Seconds later, in full view,"
+= `es.FALLBACK_TRANSITION`) dev dalgada kapalı (`es.NO_TRANSITION_EVENTS`); başka yerde: çığ orman E6, F4 (dokunulmadı),
+`core/caption.py` açıklama şablonu (prompt değil). Onay metninde "son N hikâye GPT'ye verildi" kod hikâyesinde yazılmaz.
+
 ## 📋 DEVİR: 11 Kasım (4) kısa hareket cümlesi + 215 tavanı + bütçe dışlamaları geri açıldı
 
 Test `tests/test_11kas_3.py` (TestRound4). `sk.FULL_MOTION` = "Full action from the very first frame to the last."; ateş

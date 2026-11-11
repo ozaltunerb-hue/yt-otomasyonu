@@ -153,13 +153,14 @@ class TestPassiveAndActive(_Quiet):
         """3 Kas (sel doğrulama ayarı): dev dalgada T4 pasif; T8, W3 aktif. 6 Kas: W9 de pasif (ikinci araç riski)."""
         self.assertEqual(es.DISABLED_BEATS[T], {"W2", "W6", "W8", "T6", "T4", "W9", "T1",   # 6 Kas (2): T1
                                                 "W3", "W4",   # 11 Kas (B3)
-                                                "T5"})   # 11 Kas (2) (0c)
+                                                "T5",   # 11 Kas (2) (0c)
+                                                "W1", "W5"})   # 11 Kas (5)
         self.assertEqual(es.disabled_beats(T), es.DISABLED_BEATS[T])
         self.assertEqual(es.TRIAL_BEATS[T], {"W9"})
         self.assertIn("T4", es.EVENT_BEATS[T]["slice_2"])   # silinmedi
         self.assertEqual(set(es.EVENT_BEATS[T]["slice_2"]) - es.DISABLED_BEATS[T], {"T2", "T3", "T7", "T8"})   # 11 Kas (2): T5 pasif
         self.assertEqual(set(es.EVENT_BEATS[T]["slice_3"]) - es.DISABLED_BEATS[T],
-                         {"W1", "W5", "W10", "W11", "W12"})   # 11 Kas (B3): W3, W4 pasif, 3 yapısal final
+                         {"W10", "W11", "W12", "W13"})   # 11 Kas (B3): W3, W4 pasif; 11 Kas (5): W1, W5 pasif, W13
         for view in es.structure_views(T):
             for spot in sk.view_spots(T, view):
                 self.assertFalse([p for p in es.allowed_pairs(T, view, spot) if "T4" in p])
