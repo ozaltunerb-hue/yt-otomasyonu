@@ -110,9 +110,7 @@ KNOWN_HITS: frozenset[tuple[str, str, str, str]] = frozenset({
     ('Earthquake collapses an apartment block', 'kamera', '-', 'concrete'),
     ('Earthquake collapses an apartment block', 'ortam', 'city', 'concrete'),
     ('Mudslide pours down a hillside street', 'beat', 'H4', 'crushed'),
-    # 11 Kas (A6): kül bulutu Q5 "blasts" yeni kül bulutu kapısına takıldı; Q5 25 Eki 102K paylaşımında (17 Eki 14:13
-    # üretimi P2+Q5) kullanıldı: hit kuralı gereği pasife alınmadı, karar Bahadır'da
-    ('Pyroclastic cloud races down into a village street', 'beat', 'Q5', 'blast'),
+    # 11 Kas (2) (0b): kül bulutu Q5 "blasts" -> "slams" oldu, istisna kalktı
     ('Tornado sweeps down a coastal avenue', 'beat', 'P4', 'crushed'),
     ('Tornado sweeps down a coastal avenue', 'beat', 'P6', 'spin'),
     ('Tornado sweeps down a coastal avenue', 'beat', 'P6', 'swept up'),

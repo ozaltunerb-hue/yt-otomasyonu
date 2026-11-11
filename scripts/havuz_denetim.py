@@ -128,6 +128,10 @@ def axis_rows(event: str) -> dict:
                 seen_f.add(fk)
                 fgs.append((f"{f.get('fg')} ({label})", fx.FG_TEXT.get(f["fg"], f["fg"]), st,
                             hit_marks(event, "on_plan", f.get("fg"))))
+    # 11 Kas (2): pasif birebir kadrajlar (rotasyona girmez, metin kayıtta)
+    for k in sorted(getattr(fx, "PASSIVE_VERBATIM_FRAMES", {}).get(event, set())):
+        f = {"type": k, "pos_spot": None, "fg": fx.VERBATIM_FRAMES[event][k][1], "mode": None}
+        kad.append((f"{k} (birebir)", sk.camera_rules(fx.verbatim_camera(event, f)), "PASİF (kelime kapısı)", ""))
     rows["kadraj"] = kad
     rows["on_plan"] = fgs
     # ortam
@@ -325,7 +329,11 @@ def main(argv) -> int:
     ap.add_argument("--no-sim", action="store_true")
     a = ap.parse_args(argv[1:])
     es = _m()[0]
-    events = list(es.LOCKED_EVENTS) if a.events == "kilitli" else [e.strip() for e in a.events.split(";")]
+    # 11 Kas (2): "degisen" = bu turda değişen 8 olay (6 kilitli + kül bulutu + dev dalga)
+    changed = [es.WILDFIRE, es.HELICOPTER, es.LANDFALL, es.VOLCANIC_BOMBS, es.VILLAGE, es.FIRE_TORNADO,
+               es.PYROCLASTIC, es.TIDAL]
+    events = (list(es.LOCKED_EVENTS) if a.events == "kilitli" else changed if a.events == "degisen"
+              else [e.strip() for e in a.events.split(";")])
     lines = []
     for e in events:
         lines += event_md(e, sim=not a.no_sim)

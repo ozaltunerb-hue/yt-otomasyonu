@@ -211,7 +211,8 @@ class TestVolcEnvPrompt(unittest.TestCase):
             worst_by[e] = worst
         self.assertLessEqual(worst_by[PY], 205)   # 11 Kas (A7): açılış A ile en uzun kül bulutu (kadraj yok)
         worst = worst_by[VB]   # bombalar (kilitli) aynen
-        self.assertEqual(worst, 171)   # 3 Kas kilit istisnası: T5 pasif (en uzun T5'li çiftti, 174 -> 171). 21 Eki (genel kalite): önceki 174 -> 173. 31 Eki: nötr balkon cümlesi (-1). 31 Eki (2): (R9, T5) açıldı (+2), sınır 175 aynı
+        # 11 Kas (2): bombalar birebir insan cümleleri (en uzun 12 kelime), tavan 182: kadrajsız en uzun 174
+        self.assertEqual(worst, 174)   # 3 Kas kilit istisnası: T5 pasif (en uzun T5'li çiftti, 174 -> 171). 21 Eki (genel kalite): önceki 174 -> 173. 31 Eki: nötr balkon cümlesi (-1). 31 Eki (2): (R9, T5) açıldı (+2), sınır 175 aynı
 
     def test_word_budget_keeps_gpt_prompt_within_175(self):
         """Bahadır kararı (18 Eki (3)): GPT'ye söylenen toplam = 175 - stil eki - 3 (en fazla kapının 75'i)."""
@@ -236,7 +237,8 @@ class TestVolcEnvPrompt(unittest.TestCase):
         # 21 Eki (genel kalite): gerçek zaman + ön plan yüzü eklendi, ortak kısaltmalarla en uzun ek 102 (iki olayda)
         # 31 Eki: nötr balkon cümlesi bir kelime kısa: en uzun ek 101, bütçe 71 (önceki 102 -> 70)
         self.assertIn((PY, 92), seen)   # 11 Kas (A7): kül bulutu tavanı 205, bütçe hikâye üst sınırı 92
-        self.assertIn((VB, 71), seen)   # en uzun bombalar eki (101; önceki 103 -> 69)
+        # 11 Kas (2): bombalar tavanı 182 (K_B3 + birebir insan cümlesi): bütçe hikâye üst sınırı 75 (önceki 71)
+        self.assertIn((VB, 75), seen)   # en uzun bombalar eki (101; önceki 103 -> 69)
         self.assertEqual(es.word_budget_line({"event": ER, "key_visual": "x"}), "")
 
     def test_pools_pairs_unchanged(self):

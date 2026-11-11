@@ -147,10 +147,14 @@ class TestCamera(_Quiet):
                 self.assertNotIn("always in frame", snap["prompt"], (event, seed))
 
     def test_locked_events_share_template_untouched(self):
+        import core.frame_axis as fx
         for event in (es.LANDFALL, es.VILLAGE, es.WILDFIRE):
             self.assertNotIn(event, sk.NEVER_PANS_EVENTS)
-            hits = [ps.snapshot_event(event, s)["style_suffix"] for s in range(1, 21)]
-            self.assertFalse([h for h in hits if NEVER_PANS in h], event)
+            snaps = [ps.snapshot_event(event, s) for s in range(1, 21)]
+            hits = [x["style_suffix"] for x in snaps]
+            # 11 Kas (2): orman K_O3 Bahadır'ın birebir kadrajı (cümlede "never pans" kendisi var); şablon kadrajlar aynen
+            self.assertFalse([x["style_suffix"] for x in snaps if NEVER_PANS in x["style_suffix"]
+                              and x["axes"]["kadraj"] not in fx.VERBATIM_FRAMES.get(event, {})], event)
             self.assertTrue([h for h in hits if "always in frame" in h], event)
 
     def test_replacement_keeps_rest_of_sentence(self):
@@ -169,8 +173,7 @@ class TestWordGate(_Quiet):
         family = set(es.AVALANCHE_EVENTS) | set(es.EARTHQUAKE_EVENTS)
         left = {k for k in gate.KNOWN_HITS if k[0] not in family}
         self.assertEqual(left, {(MU, "beat", "H4", "crushed"), (AV, "beat", "P4", "crushed"), (AV, "beat", "P6", "spin"),
-                                (AV, "beat", "P6", "swept up"),
-                                (PY, "beat", "Q5", "blast")})   # 11 Kas (A6): hit, karar Bahadır'da
+                                (AV, "beat", "P6", "swept up")})   # 11 Kas (2) (0b): kül bulutu Q5 "slams", istisna kalktı
 
 
 if __name__ == "__main__":

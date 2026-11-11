@@ -265,7 +265,9 @@ BEAT_CONFLICTS = {
 
 # 11 Kas 2026: bütçe dışlaması (anlam çakışması değil). Dev dalga C/D rotasyonda değil (6 Kas (2), Bahadır: sadece A);
 # yeni yüksek kadrajlar (K_R1-K_R3) ve yeni finallerle kod yedeği 175'e sığmayan çiftler. Üretim davranışı aynı.
-BUDGET_CONFLICTS = {"Tidal wave surges over a coastal city street": {"C": {"W12"}, "D": {"W5", "W11", "W12"}}}
+BUDGET_CONFLICTS = {"Tidal wave surges over a coastal city street": {"C": {"W12"}, "D": {"W5", "W11", "W12"}},
+                    # 11 Kas (2): karaya vurur D rotasyonda değil (deneme); yeni E8 ile D + C8 + E8 175'e sığmıyor
+                    "Tornado making landfall": {"D": {"E8"}}}
 
 
 def beat_conflicts(event: str, letter: str) -> frozenset[str]:

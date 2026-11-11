@@ -40,6 +40,11 @@ LOCKED = (es.WILDFIRE, es.HELICOPTER, es.LANDFALL, es.VOLCANIC_BOMBS, es.VILLAGE
 UNLOCKED = tuple(e for e in ps.active_events() if e not in LOCKED)
 BAD_2 = "The car keeps rolling away and obliterates the street in a fiery hail of debris."
 BAD_3 = "Everything is lifted effortlessly as the roar of devastation spreads further."
+# 11 Kas 2026 (2), Bahadır (kilitli olaylar bilerek değişti, onaylı): ilk 5 kilitli olayda pasife alınan öğeler (3 Kas kilit
+# istisnasına ek) ve birebir insan ekseni (4-9s / 9-15s GPT'de kalır)
+PASSIVE_11KAS_2 = {es.WILDFIRE: {"K1", "K5", "L3"}, es.HELICOPTER: {"F3", "G1", "G5"},
+                 es.LANDFALL: {"C2", "C5", "E4", "E5"}, es.VOLCANIC_BOMBS: {"R3", "T7"},
+                 es.VILLAGE: {"K2", "K4", "L3", "L6"}}
 
 
 class _Quiet(unittest.TestCase):
@@ -92,9 +97,11 @@ class TestLockedSnapshot(_Quiet):
         """Kilitli olaylarda pasif/deneme öğe ya da insan ekseni yok. Tek istisna (3 Kas, Bahadır onaylı): helikopter G7,
         bombalar T5 pasif (TestLockPassiveException)."""
         for e in LOCKED:
-            self.assertEqual(es.DISABLED_BEATS.get(e, set()), es.LOCKED_PASSIVE_EXCEPTION.get(e, set()))
+            self.assertEqual(es.DISABLED_BEATS.get(e, set()),
+                             es.LOCKED_PASSIVE_EXCEPTION.get(e, set()) | PASSIVE_11KAS_2[e])   # 11 Kas (2)
             self.assertNotIn(e, es.TRIAL_BEATS)
-            self.assertNotIn(e, es.PEOPLE_AXIS_EVENTS)
+            self.assertIn(e, es.PEOPLE_AXIS_EVENTS)   # 11 Kas (2) (7): birebir insan ekseni
+            self.assertIn(e, es.PEOPLE_ONLY_VERBATIM_EVENTS)
             for axis in pa.EXTRA_TRIALS.values():
                 self.assertNotIn(e, axis)
 
@@ -108,7 +115,8 @@ class TestVerbatimSlices(_Quiet):
             self.assertFalse(es.verbatim_on(e), e)
 
     def test_locked_gpt_slices_kept(self):
-        """Kilitli 5 olayda GPT'nin dilimleri atılmaz (HEAD davranışı); kilitsizde atılır."""
+        """Kilitli 5 olayda GPT'nin 4-9s / 9-15s dilimleri atılmaz (HEAD davranışı); kilitsizde atılır. 11 Kas (2) (7):
+        kilitli 5 olayda 0-4s insan cümlesi seçilen birebir eksen öğesi (GPT'nin cümlesi atılır)."""
         async def gpt(system, msg, **kw):
             return {"slice_1_rest": _human(msg), "slice_2": BAD_2, "slice_3": BAD_3}
         for e in ps.active_events():
@@ -121,7 +129,8 @@ class TestVerbatimSlices(_Quiet):
             with self.subTest(event=e):
                 if e in LOCKED:
                     self.assertEqual((sl["slice_2"], sl["slice_3"]), (BAD_2, BAD_3))
-                    self.assertNotIn("gpt_slices", attempts[0])
+                    self.assertEqual(sl["slice_1_rest"], es.verbatim_people_line(spec))   # 11 Kas (2) (7)
+                    self.assertNotEqual(attempts[0]["gpt_slices"]["slice_1_rest"], sl["slice_1_rest"])
                 else:
                     self.assertIn(sl["slice_2"], es.verbatim_forms(spec, "slice_2"))
                     self.assertEqual(attempts[0]["gpt_slices"]["slice_2"], BAD_2)
@@ -199,12 +208,18 @@ class TestWeakPassive(_Quiet):
         # 3 Kas (sel su kontrolü): sel pasif ve deneme listeleri test_sel_su_3kas'ta
         self.assertEqual(es.DISABLED_BEATS, {es.FLOOD: {"D2", "D4", "V4", "V3", "V5", "V6", "V7", "V8", "D3", "D8",
                                                         "D9"}, es.TIDAL: {"W2", "W6", "W8", "T6", "T4", "W9", "T1",
-                                                                          "W3", "W4"},   # 11 Kas (B3)
+                                                                          "W3", "W4",   # 11 Kas (B3)
+                                                                          "T5"},   # 11 Kas (2) (0c)
                                              es.FACADE_FIRE: {"N4", "M6"},
-                                             es.HELICOPTER: {"G7"}, es.VOLCANIC_BOMBS: {"T5"},   # kilit istisnası
+                                             es.HELICOPTER: {"G7"} | PASSIVE_11KAS_2[es.HELICOPTER],   # kilit istisnası
+                                             es.VOLCANIC_BOMBS: {"T5"} | PASSIVE_11KAS_2[es.VOLCANIC_BOMBS],
+                                             # 11 Kas (2): kilitli olaylar bilerek değişti
+                                             es.WILDFIRE: PASSIVE_11KAS_2[es.WILDFIRE],
+                                             es.LANDFALL: PASSIVE_11KAS_2[es.LANDFALL],
+                                             es.VILLAGE: PASSIVE_11KAS_2[es.VILLAGE],
                                              es.LIBERTY: {"B4", "B6"},   # 4 Kas (4): 4-9s'te araç yok
                                              # 6 Kas: havuz temizliği (tests/test_kilit_6kas.py)
-                                             es.FIRE_TORNADO: {"T5", "T6", "U6", "U10"},
+                                             es.FIRE_TORNADO: {"T5", "T6", "U6", "U10", "T1"},   # 11 Kas (2): T1
                                              es.AVENUE: {"P5", "P7"},
                                              # 6 Kas (2): kalan havuz temizliği (tests/test_havuz_6kas_2.py)
                                              es.PYROCLASTIC: {"Q2", "P6", "Q6", "P1", "P3", "P5"},   # 11 Kas (A4)
@@ -571,10 +586,11 @@ class TestLockPassiveException(_Quiet):
 
     def test_exception_exact(self):
         self.assertEqual(es.LOCKED_PASSIVE_EXCEPTION, {es.HELICOPTER: {"G7"}, es.VOLCANIC_BOMBS: {"T5"}})
-        self.assertEqual(es.DISABLED_BEATS[es.HELICOPTER], {"G7"})
-        self.assertEqual(es.DISABLED_BEATS[es.VOLCANIC_BOMBS], {"T5"})
+        # 11 Kas (2): kilitli olaylarda Bahadır onaylı yeni pasifler (PASSIVE_11KAS_2); 3 Kas istisnası aynen
+        self.assertEqual(es.DISABLED_BEATS[es.HELICOPTER], {"G7"} | PASSIVE_11KAS_2[es.HELICOPTER])
+        self.assertEqual(es.DISABLED_BEATS[es.VOLCANIC_BOMBS], {"T5"} | PASSIVE_11KAS_2[es.VOLCANIC_BOMBS])
         for e in (es.WILDFIRE, es.LANDFALL, es.VILLAGE):
-            self.assertNotIn(e, es.DISABLED_BEATS)
+            self.assertEqual(es.DISABLED_BEATS[e], PASSIVE_11KAS_2[e])
 
     def test_kept_in_pool(self):
         """Silinmedi: metin havuzda aynen duruyor."""

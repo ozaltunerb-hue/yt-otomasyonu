@@ -177,10 +177,14 @@ class TestA3VerbatimPeople(_Quiet):
             self.assertEqual(sl["slice_1_rest"], es.people_line_text(spec, sc["structure"]["axes"]["insan"]))
 
     def test_locked_unchanged(self):
+        # 11 Kas (2) (7), Bahadır: ilk 5 kilitli olayda insan cümlesi birebir eksen (4-9s / 9-15s GPT'de kalır)
         for e in es.VERBATIM_OFF_EVENTS:   # 6 Kas: ilk 5 kilitli olay
-            self.assertNotIn(e, es.VERBATIM_PEOPLE_EVENTS)
-            self.assertNotIn(e, es.PEOPLE_AXIS_EVENTS)
-        self.assertEqual(set(es.VERBATIM_PEOPLE_EVENTS), {T, L, es.PYROCLASTIC})   # 6 Kas: sel çıktı, kül bulutu girdi
+            self.assertIn(e, es.VERBATIM_PEOPLE_EVENTS)
+            self.assertIn(e, es.PEOPLE_AXIS_EVENTS)
+            self.assertIn(e, es.PEOPLE_ONLY_VERBATIM_EVENTS)
+            self.assertFalse(es.verbatim_on(e))
+        self.assertEqual(set(es.VERBATIM_PEOPLE_EVENTS),
+                         {T, L, es.PYROCLASTIC} | set(es.VERBATIM_OFF_EVENTS))   # 6 Kas: sel çıktı, kül bulutu girdi
 
 
 # 6 Kas 2026, Bahadır (kilit): sel 3249de8 hâline döndü, 4 Kas A2/A4/A5/A6 PASİF (metinler kayıtta; yeni kilit testi
@@ -245,8 +249,9 @@ class TestB1Structure(_Quiet):
     def test_landfall_data_untouched(self):
         self.assertEqual(es.EVENT_KEY_VISUAL[es.LANDFALL],
                          "A violent tornado makes landfall on the waterfront, tearing roofs and signs into the air.")
-        self.assertEqual(set(es.EVENT_BEATS[es.LANDFALL]["slice_2"]), {"C1", "C2", "C4", "C5"})
-        self.assertNotIn(es.LANDFALL, es.PEOPLE_AXIS_EVENTS)
+        # 11 Kas (2): C7, C8 yeni (C2, C5 pasif, silinmedi); insan ekseni birebir
+        self.assertEqual(set(es.EVENT_BEATS[es.LANDFALL]["slice_2"]), {"C1", "C2", "C4", "C5", "C7", "C8"})
+        self.assertIn(es.LANDFALL, es.PEOPLE_AXIS_EVENTS)
         self.assertIsNot(es.EVENT_BEATS[L], es.EVENT_BEATS[es.LANDFALL])
 
     def test_builds(self):

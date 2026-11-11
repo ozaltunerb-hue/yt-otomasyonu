@@ -342,7 +342,11 @@ class TestDeployScenario(_Quiet):
                     if e in sv.SCENE_ENVS and a["environment"] == b["environment"] and not b["fit_guard"]:
                         # 31 Eki (3): ortam A (kanıtlı) tekrar edebilir; koruma ortamı art arda gelmez
                         self.assertNotIn(b["environment"], pa.guards(e, "ortam"), (e, i, envs[:i + 1]))
-                    if a["on_plan"] == b["on_plan"] and b["on_plan"] != "—" and not b["fit_guard"]:
+                    # 11 Kas (2): pasif ön plan (fx.PASSIVE_FG) kadrajda tek ön plan bıraktıysa tekrar zorunlu (heyelan köy
+                    # tepe: yaprak pasif, sadece boş)
+                    forced = len([g for g in fx.FRAME_FG.get(b["kadraj"], ())
+                                  if g not in fx.PASSIVE_FG.get(e, {}).get(b["kadraj"], set())]) == 1
+                    if a["on_plan"] == b["on_plan"] and b["on_plan"] != "—" and not b["fit_guard"] and not forced:
                         # 31 Eki (3): kanıtlı ön plan tekrar edebilir (koruması en fazla %20); koruma art arda gelmez
                         self.assertIn(b["on_plan"], ("korkuluk", "parapet", "None", None), (e, i, a, b))
                 # 21 Eki (Aşama 4): kadraj tekrarı sadece seçilen beat'lerin dışlamaları tek güvenli kadraj bıraktıysa

@@ -108,7 +108,7 @@ class TestWaterProfile(_Quiet):
                 self.assertEqual(es.slice_words(e, "slice_2"), es.SLICE_WORDS["slice_2"])
                 self.assertEqual(es.slice_words(e, "slice_3"), es.SLICE_WORDS["slice_3"])
                 self.assertNotIn(e, es.WATER_LEVEL_LINES)
-        self.assertEqual(es.max_prompt_words(T), 175)
+        self.assertEqual(es.max_prompt_words(T), 188)   # 11 Kas (2): K_R1-3 sabitlik eki + I7/I9
 
 
 class TestPassiveAndActive(_Quiet):
@@ -150,11 +150,12 @@ class TestPassiveAndActive(_Quiet):
     def test_tidal_only_t4_passive(self):
         """3 Kas (sel doğrulama ayarı): dev dalgada T4 pasif; T8, W3 aktif. 6 Kas: W9 de pasif (ikinci araç riski)."""
         self.assertEqual(es.DISABLED_BEATS[T], {"W2", "W6", "W8", "T6", "T4", "W9", "T1",   # 6 Kas (2): T1
-                                                "W3", "W4"})   # 11 Kas (B3)
+                                                "W3", "W4",   # 11 Kas (B3)
+                                                "T5"})   # 11 Kas (2) (0c)
         self.assertEqual(es.disabled_beats(T), es.DISABLED_BEATS[T])
         self.assertEqual(es.TRIAL_BEATS[T], {"W9"})
         self.assertIn("T4", es.EVENT_BEATS[T]["slice_2"])   # silinmedi
-        self.assertEqual(set(es.EVENT_BEATS[T]["slice_2"]) - es.DISABLED_BEATS[T], {"T2", "T3", "T5", "T7", "T8"})
+        self.assertEqual(set(es.EVENT_BEATS[T]["slice_2"]) - es.DISABLED_BEATS[T], {"T2", "T3", "T7", "T8"})   # 11 Kas (2): T5 pasif
         self.assertEqual(set(es.EVENT_BEATS[T]["slice_3"]) - es.DISABLED_BEATS[T],
                          {"W1", "W5", "W10", "W11", "W12"})   # 11 Kas (B3): W3, W4 pasif, 3 yapısal final
         for view in es.structure_views(T):

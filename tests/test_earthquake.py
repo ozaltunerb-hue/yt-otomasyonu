@@ -516,7 +516,8 @@ class TestEarthquake(unittest.TestCase):
         # 17 Eki (temizlik turu): ateş hortumu, hortum karaya vuruş, orman yangını, çığ köy de aday kalmazsa 1'e düşer
         # 18 Eki: ateş hortumu listeden çıktı (kısa metinlerle yeterli çift)
         self.assertEqual(es.BEAT_BLOCK_FALLBACK_EVENTS, EQ + (es.LANDFALL, es.WILDFIRE, es.AVALANCHE_VILLAGE,
-                                                              es.FACADE_FIRE, es.LIBERTY, es.PYROCLASTIC, es.TIDAL, es.MUDSLIDE))   # 18 Eki (2): cephe yangını; 4 Kas (4): Özgürlük Anıtı
+                                                              es.FACADE_FIRE, es.LIBERTY, es.PYROCLASTIC, es.TIDAL, es.MUDSLIDE,
+                                                              es.VILLAGE, es.HELICOPTER))   # 18 Eki (2): cephe yangını; 4 Kas (4): Özgürlük Anıtı; 11 Kas (2): köy, helikopter
 
         def worst(e, spot, k):
             b, ps = es.EVENT_BEATS[e], es.allowed_pairs(e, None, spot)

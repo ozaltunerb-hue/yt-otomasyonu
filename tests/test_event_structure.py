@@ -1000,7 +1000,8 @@ class TestTidal(unittest.TestCase):
         # 3 Kas (Aşama 2): T6, W2, W6, W8 pasif, W9 + 3 hariç çift: 17 görünüm×spot × 30 çift × 3 araç
         # 3 Kas (sel doğrulama ayarı): T4 pasif (5 çift az)
         # 11 Kas (B3): W3, W4 pasif; W10-W12 (T8+W10 dışlı): 5 x 5 - 3 = 22 çift
-        self.assertEqual(n, 17 * 22 * 3)
+        # 11 Kas (2) (0c): T5 pasif: 4 x 5 - 3 = 17 çift
+        self.assertEqual(n, 17 * 17 * 3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_w6_never_on_seawall(self):
@@ -1308,7 +1309,8 @@ class TestLandslideStructure(unittest.TestCase):
         # 18 Eki (2): çamur 3 × 30 × 4; yol 2 × 27 × 4; köy (32 + 32 + 22) × 3
         # 22 Eki: çamur 3 × 29 × 4 (H4+M6 bütçe); yol 2 × 24 × 4 (R2+S7, R2+S4, R2+S5); köy (31 + 31 + 21) × 3 (K5+L5
         # çıktı, K1+L5 ve K3+L6 eklendi). 22 Eki (2): yol 2 × 26 × 4 (R2 kısaldı, R2+S4 ve R2+S5 geri geldi)
-        self.assertEqual(n, 625)   # 31 Eki (3): 769; 6 Kas (2): sokak H3, yamaç R3 R6 pasif
+        # 11 Kas (2): köy K2 K4 L3 L6 pasif: (13 + 13 + 7) x 3 (önceki 83 x 3)
+        self.assertEqual(n, 625 - 249 + 99)   # 31 Eki (3): 769; 6 Kas (2): sokak H3, yamaç R3 R6 pasif
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -1405,6 +1407,10 @@ class TestTornadoStructure(unittest.TestCase):
             "C2": "the tornado tips the {vehicle} over onto its side in the middle of the street",   # 17 Eki: C3, C6 çıktı
             "C4": "the {vehicle} slides along the street and slams into a parked car",
             "C5": "the {vehicle} is lifted off the road and flung down the street",
+            # 11 Kas 2026 (2), Bahadır: C7, C8 (Bahadır'ın "C6"sı; C6 kimliği 4 Eki'de çıkan maddenin) yeni; C2 C5 pasif
+            "C7": "the tornado tears the front off a waterfront café and drags its tables and chairs into the street",
+            "C8": "the tornado rips the balconies off the front of a waterfront apartment block and throws the pieces "
+                  "into the street",
         }, {
             "E1": "the tornado tears the roof off a waterfront building and scatters the pieces across the street",
             "E2": "the tornado tears the roof off a waterfront restaurant and flings it across the road",   # 17 Eki: E3, E6
@@ -1412,7 +1418,10 @@ class TestTornadoStructure(unittest.TestCase):
             "E5": "the tornado lifts a wooden kiosk off the waterfront and smashes it into the building across the street",   # 31 Eki (2)
             # 18 Eki (2): Parti 2
             "E7": "the tornado shreds the top floor of a building across the street, debris spiraling up",
-        }, set(), {}),
+            # 11 Kas (2): E8 yeni; E4 E5 pasif
+            "E8": "the tornado collapses the front wall of a waterfront house into the street, the rooms behind it torn "
+                  "open",
+        }, {("C8", "E1"), ("C7", "E8")}, {}),
         es.MARINA_TORNADO: ({
             # 23 Eki (hortum denetimi): Y1, Y3, Y5; Z1, Z2, Z3, Z6, Z7 yeni metin; Y3+Z4, Y3+Z2 eklendi
             "Y1": "the tornado shoves the {vehicle} sideways across the quay toward the water's edge",
@@ -1595,7 +1604,8 @@ class TestTornadoStructure(unittest.TestCase):
         # 18 Eki (2): karaya vurma (19 + 16 + 19) × 4; marina 30 × 4; cadde 3 × 28 × 4
         # 23 Eki (hortum denetimi): karaya vurma 3 × 20 × 4 (C2+E1 ve E1 nokta dışlaması çıktı); marina 28 × 4 (Y3+Z4, Y3+Z2)
         # 29 Eki (4): marina 27 × 4 (Y5+Z3 dışlandı)
-        self.assertEqual(n, 240 + 72 + 228)   # 30 Eki (2): cadde (P5, Q3); 6 Kas: cadde P5 P7 pasif 19 çift; 6 Kas (2): marina Y5 Z7 pasif 18 çift
+        # 11 Kas (2): karaya vurma C2 C5 E4 E5 pasif, C7 C8 E8 yeni, 2 hariç çift: 3 x 14 x 4
+        self.assertEqual(n, 168 + 72 + 228)   # 30 Eki (2): cadde (P5, Q3); 6 Kas: cadde P5 P7 pasif 19 çift; 6 Kas (2): marina Y5 Z7 pasif 18 çift
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -1603,7 +1613,7 @@ class TestTornadoStructure(unittest.TestCase):
             return {d for _, d in es.allowed_pairs(e, None, spot)}
         # 23 Eki: E1 artık "a waterfront building" (kameranın verandalı evi değil), kıyı mahallesinde de seçilir
         for spot in sk.view_spots(es.LANDFALL, None):
-            self.assertEqual(d3(es.LANDFALL, spot), {"E1", "E2", "E4", "E5", "E7"})
+            self.assertEqual(d3(es.LANDFALL, spot), {"E1", "E2", "E7", "E8"})   # 11 Kas (2): E4 E5 pasif, E8
         self.assertEqual(sk.view_spots(es.MARINA_TORNADO, None), ["High marina balcony"])
         self.assertEqual(d3(es.MARINA_TORNADO, "High marina balcony"), {"Z1", "Z2", "Z3", "Z4", "Z6"})   # 6 Kas (2): Z7 pasif
         # 10 Eki, Bahadır: cadde kamerası yüksek balkonda, her madde üç noktada da seçilebilir (17 Eki: Q5 çıktı)
@@ -1760,7 +1770,7 @@ class TestMarinaRedesign(unittest.TestCase):
         self.assertEqual(es.TOTAL_WORDS, (40, 70))
         # 10 Eki, Bahadır: orman yangını da 40-75 (TestFireStructure ayrıca kilitler)
         self.assertEqual(es.TOTAL_WORDS_BY_EVENT, {es.MARINA_TORNADO: (40, 75), es.WILDFIRE: (40, 75),
-                                                   es.HELICOPTER: (40, 75),   # 10 Eki: helikopter
+                                                   es.HELICOPTER: (40, 81),   # 10 Eki: helikopter; 11 Kas (2): 40-81
                                                    es.FIRE_TORNADO: (40, 75),   # 15 Eki: ateş hortumu
                                                    # 10 Eki: volkan
                                                    es.ERUPTION: (40, 75),
@@ -1925,7 +1935,11 @@ class TestFireStructure(unittest.TestCase):
             "L5": "a house roof catches fire and its tiles burst apart in the heat",
             # 18 Eki (2): Parti 2
             "L7": "a house across the street is engulfed and its roof collapses in a burst of flames",
-        }, {("K1", "L4"), ("K7", "L1"), ("K7", "L5"), ("K7", "L7"), ("K8", "L1"), ("K8", "L5"), ("K8", "L7")},
+            # 11 Kas 2026 (2), Bahadır: L8, L9 yeni; K1 K5 L3 pasif
+            "L8": "a burning house across the street collapses in on itself in a shower of sparks",
+            "L9": "the flames engulf a wooden garage and its roof caves in onto the car inside",
+        }, {("K1", "L4"), ("K7", "L1"), ("K7", "L5"), ("K7", "L7"), ("K8", "L1"), ("K8", "L5"), ("K8", "L7"),
+            ("K7", "L8"), ("K8", "L8")},
             {"L1": {"Balcony of a hillside house"}, "L5": {"Balcony of a hillside house"}}),
         es.FACADE_FIRE: ({
             "M6": "flaming debris smashes the windshield of the {vehicle} as it brakes hard",
@@ -1960,6 +1974,9 @@ class TestFireStructure(unittest.TestCase):
                   "across the road",
             # 17 Eki, Bahadır (Parti 1): T3 çıktı (fizik 2), T7 yeni. 18 Eki: kısa metinler
             "T7": "the {vehicle} races away from the fire tornado as burning debris crashes down behind it",
+            # 11 Kas 2026 (2), Bahadır: T8 yeni; T1 pasif
+            "T8": "the base of the fire tornado sweeps over the parked {vehicle} and it bursts into flames where it "
+                  "stands",
         }, {
             # 17 Eki, Bahadır: U1 "across the street", nokta kısıtı kalktı; U3-U5 çıktı (kırsal/boş arazi), U7-U11 yeni
             "U2": "the huge fire tornado uproots a cluster of burning trees and flings their trunks down the road",
@@ -1973,7 +1990,7 @@ class TestFireStructure(unittest.TestCase):
             "U9": "the front wall of a house across the street tears away, rubble sucked into the funnel",
         }, {("T1", "U2"), ("T2", "U2"),
             # kod yedeğinin 75 kelimeye sığmadığı çiftler (18 Eki (2): kilit cümle 32-33 kelime)
-            ("T6", "U2"), ("T6", "U6")},
+            ("T6", "U2"), ("T6", "U6"), ("T8", "U2")},   # 11 Kas (2): T8 + U2
             {}),
     }
     # spot (kamera noktası) -> (kamera satırı, PLACE metni = Bahadır'ın ortam tarifi)
@@ -2273,7 +2290,8 @@ class TestFireStructure(unittest.TestCase):
         # 18 Eki (2): orman balkon 15 + set 23; cephe 4 nokta × 17; ateş hortumu 6 nokta × 44 (6 × 8 - 4 hariç çift);
         # × 4 araç
         # 30 Eki (2): cephe (M11, N3). 3 Kas: cephe M6, N4 pasif, M12 + N7 deneme (5 hariç çift): 12 çift
-        self.assertEqual(n, (15 + 23) * 4 + 12 * 4 * 4 + 22 * 6 * 4)   # 6 Kas: T5, T6, U6, U10 pasif, 22 çift
+        # 11 Kas (2): orman K1 K5 L3 pasif, L8 L9 yeni (balkon 12, set 16 çift); ateş hortumu T1 pasif, T8 yeni (T8+U2 hariç)
+        self.assertEqual(n, (12 + 16) * 4 + 12 * 4 * 4 + 22 * 6 * 4)   # 6 Kas: T5, T6, U6, U10 pasif, 22 çift
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -2485,6 +2503,9 @@ class TestHelicopter(unittest.TestCase):
         "G5": "the helicopter pulls up and away as the flames roar back behind it",
         "G6": "the downdraft knocks a burning carport roof flat onto the cars beneath it",
         "G7": "the falling sheet of water hits a burning garage across the street and its walls collapse in steam",
+        # 11 Kas 2026 (2), Bahadır: G8, G9 yeni; F3 G1 G5 pasif
+        "G8": "a burning wooden house beside the water line collapses in on itself in a burst of sparks and steam",
+        "G9": "the downdraft tears the burning roof off a wooden shed and its walls fall in",
     }
     SPOTS = {"Balcony of a hillside house": "on a balcony of a hillside house overlooking the street and the burning "
                                             "slope",
@@ -2522,7 +2543,7 @@ class TestHelicopter(unittest.TestCase):
         self.assertNotIn(self.E, cp.REQUIRED_APPROVED)
         self.assertIn(self.E, cp.EVENT_OUTCOMES)
         self.assertEqual(sk.count_range(self.E, None), (3, 6))
-        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[self.E], (40, 75))
+        self.assertEqual(es.TOTAL_WORDS_BY_EVENT[self.E], (40, 81))   # 11 Kas (2): birebir insan cümleleri + G8
         self.assertEqual(es.structure_views(self.E), [None])
         self.assertEqual([n for n, _ in es.EVENT_VEHICLES[self.E]], self.VEHICLES)
 
@@ -2534,7 +2555,8 @@ class TestHelicopter(unittest.TestCase):
         b = es.EVENT_BEATS[self.E]
         self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, self.S2)
         self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, self.S3)
-        self.assertEqual(b["excluded_pairs"], {("F1", "G3"), ("F2", "G2"), ("F5", "G3")})
+        self.assertEqual(b["excluded_pairs"], {("F1", "G3"), ("F2", "G2"), ("F5", "G3"),
+                                               ("F2", "G8"), ("F4", "G8"), ("F4", "G9")})   # 11 Kas (2): aynı yapı iki kez
         self.assertEqual(b["excluded_views"], {})
         # kamera evi: yanan çatıya/eve su (F2, F5) balkon noktasında seçilmez (17 Eki: G4 çıktı, kısıtı onunla gitti)
         # 30 Eki (2): G3 yan eve devrilen ağaç aynı sebeple
@@ -2637,7 +2659,7 @@ class TestHelicopter(unittest.TestCase):
     def test_total_words_75(self):
         spec, sl = self.build("F2", "G2")
         base = len(es.plain_story(spec, {**sl, "slice_1_rest": ""}).split())
-        for words, bad in ((75, False), (76, True)):
+        for words, bad in ((81, False), (82, True)):   # 11 Kas (2): 40-81
             s1 = "Five people run from the flames" + " far" * (words - base - 6)
             sl2 = {**sl, "slice_1_rest": es.clean_slice(s1)}
             self.assertEqual(len(es.plain_story(spec, sl2).split()), words)
@@ -2651,8 +2673,9 @@ class TestHelicopter(unittest.TestCase):
         self.assertFalse({v for v, _ in balcony} & {"F2", "F5"})
         self.assertNotIn("G3", {d for _, d in balcony})   # 30 Eki (2)
         # 17 Eki: G4 çıktı, 9-15s'de 5 madde. 30 Eki (2): G3 balkonda yok (F3, F4, F6 ile eşleşmesi düştü)
-        self.assertEqual(len(balcony), 4 * 6 - 1 - 3 - 4)   # 3 Kas kilit istisnası: G7 pasif (-4)
-        self.assertEqual(len(pairs("Embankment above the village road")), 36 - 3 - 6)   # 18 Eki (2): G7; 3 Kas: G7 pasif (-6)
+        # 11 Kas (2): F3 G1 G5 pasif, G8 G9 yeni; (F2, G8) (F4, G8) (F4, G9) hariç. Balkon 3 x 4 - 2, set 5 x 5 - 6
+        self.assertEqual(len(balcony), 3 * 4 - 2)
+        self.assertEqual(len(pairs("Embankment above the village road")), 25 - 6)
         n = 0
         for spot in self.SPOTS:
             for b2, b3 in pairs(spot):
@@ -2662,7 +2685,7 @@ class TestHelicopter(unittest.TestCase):
                     if issues:
                         self.fail(f"{spot}/{b2}+{b3}/{v}: {issues}")
                     n += 1
-        self.assertEqual(n, (16 + 27) * 4)   # 30 Eki (2): G3 balkonda yok; 3 Kas kilit istisnası: G7 pasif (önceki 20 + 33)
+        self.assertEqual(n, (10 + 19) * 4)   # 11 Kas (2) (önceki 16 + 27; 30 Eki (2): G3 balkonda yok)
         # 4-9s dışlaması helikopterden önceki olaylarda hiçbir şeyi değiştirmez (onların dışlamalarının hepsi 9-15s).
         # 10 Eki: volkanda da 4-9s kamera dışlaması var (TestVolcano)
         for e, b in es.EVENT_BEATS.items():
@@ -2674,9 +2697,11 @@ class TestHelicopter(unittest.TestCase):
         b = es.EVENT_BEATS[self.E]
         for spot in self.SPOTS:
             ps_ = es.allowed_pairs(self.E, None, spot)
+            # 11 Kas (2): helikopter BEAT_BLOCK_FALLBACK_EVENTS'te (aday kalmazsa derinlik 1)
+            k = 1 if self.E in es.BEAT_BLOCK_FALLBACK_EVENTS else es.RECENT_BEAT_BLOCK
             worst = min(sum(1 for v, d in ps_ if v not in x2 and d not in x3)
-                        for x2 in map(set, combinations(b["slice_2"], es.RECENT_BEAT_BLOCK))
-                        for x3 in map(set, combinations(b["slice_3"], es.RECENT_BEAT_BLOCK)))
+                        for x2 in map(set, combinations(b["slice_2"], k))
+                        for x3 in map(set, combinations(b["slice_3"], k)))
             with self.subTest(spot=spot):
                 self.assertGreater(worst, 0)
 
@@ -2800,7 +2825,7 @@ class TestVolcano(unittest.TestCase):
             "Q2": "the cloud engulfs a whole block and the upper-floor windows burst outward in a shower of glass",
             "Q3": "a chimney topples and crashes through a roof as the cloud passes over",
             "Q4": "the cloud hits a hillside retaining wall and the wall gives way, boulders tumbling into the street",
-            "Q5": "the cloud blasts the front off a shop building and the brickwork falls into the street",
+            "Q5": "the cloud slams the front off a shop building and the brickwork falls into the street",   # 11 Kas (2) (0b)
             "Q6": "the cloud flips a row of parked cars and piles them against a house wall",   # 30 Eki (Aşama B)
             # 6 Kas (2), Bahadır
             "Q7": "the cloud front tears the roof off the house right below before swallowing it",
@@ -3288,7 +3313,8 @@ class TestVolcano(unittest.TestCase):
         # 18 Eki: patlama 43 + 31 + 31 ve bombalar 47 + 33 + 33 (× 4 araç; yedeği sığmayan çift kalmadı); kül bulutu
         # 28 + 13 + 13 (değişmedi)
         # 11 Kas (A4): kül bulutu 45 -> 56 çift (24 + 16 + 16)
-        self.assertEqual(n, (105 + 111) * 4 + 56 + 12 - 96)   # 3 Kas kilit istisnası: bombalar T5 pasif (-24 çift x 4 araç)
+        # 11 Kas (2): bombalar R3 T7 pasif (-18 çift x 4 araç)
+        self.assertEqual(n, (105 + 111) * 4 + 56 + 12 - 96 - 72)   # 3 Kas kilit istisnası: bombalar T5 pasif (-24 çift x 4 araç)
         # önceki: 30 Eki (2): bombalar (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) +12
 
     def test_block_depth_and_never_runs_out(self):
@@ -3480,7 +3506,7 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         pairs = {e: [len(es.allowed_pairs(e, None, s)) for s in (self.HT, self.RT, self.VB)] for e in VOLC}
         # 11 Kas (A4): kül bulutu 4-9s P2 P4 P7 P8 (P1 P3 P5 pasif): önceki [23, 11, 11]
         self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [24, 16, 16],
-                                 es.VOLCANIC_BOMBS: [38, 26, 26]})   # 3 Kas kilit istisnası: T5 pasif (-8 her noktada)
+                                 es.VOLCANIC_BOMBS: [28, 22, 22]})   # 11 Kas (2): R3 T7 pasif (önceki [38, 26, 26])
         # önceki bombalar [46, 34, 34]; 18 Eki: sığmayan yok; 30 Eki (2): (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) açıldı
         for e in VOLC:   # araçsız kül bulutu; patlama ve bombalarda araç sadece eski maddelerde
             for slot in ("slice_2", "slice_3"):
@@ -3629,10 +3655,12 @@ class TestLandslideTestFixes23Oct(unittest.TestCase):
         self.assertIn("{N} residents run down the street away from the mud.", es.FALLBACK_PEOPLE[es.MUDSLIDE])
         self.assertIn("{N} people flee from the mud toward the lower street.", es.FALLBACK_PEOPLE[es.MUDSLIDE])
         # köy "scramble up the stone steps" kalır (Bahadır, 23 Eki (2)); "flee from the torrent to higher ground" bu
-        # turda değişmedi ("run for higher ground" kalıbı değil)
-        self.assertIn("{N} villagers scramble up the stone steps.", es.FALLBACK_PEOPLE[es.VILLAGE])
+        # turda değişmedi ("run for higher ground" kalıbı değil). 11 Kas (2) (7): köy birebir insan ekseni (3 cümle; önceki
+        # havuz FALLBACK_PEOPLE_RETIRED'da)
+        self.assertIn("{N} villagers scramble up the stone steps.", es.FALLBACK_PEOPLE_RETIRED[es.VILLAGE])
+        self.assertIn("{N} villagers run up the stone steps of the nearest house.", es.FALLBACK_PEOPLE[es.VILLAGE])
         for e in self.LANDSLIDE:
-            self.assertEqual(len(set(es.FALLBACK_PEOPLE[e])), 6)
+            self.assertEqual(len(set(es.FALLBACK_PEOPLE[e])), 3 if e == es.VILLAGE else 6)
 
     def test_clashing_vehicles(self):
         trucks = ["pickup truck", "delivery truck"]
@@ -3706,10 +3734,10 @@ class TestTornadoAudit23Oct(unittest.TestCase):
 
     def test_exclusions(self):
         import core.opening_axis as ox
-        self.assertEqual(es.EVENT_BEATS[es.LANDFALL]["excluded_pairs"], set())
+        self.assertEqual(es.EVENT_BEATS[es.LANDFALL]["excluded_pairs"], {("C8", "E1"), ("C7", "E8")})   # 11 Kas (2)
         self.assertEqual(es.EVENT_BEATS[es.LANDFALL]["excluded_spots"], {})
         self.assertEqual(ox.beat_conflicts(es.LANDFALL, "C"), {"C2"})
-        self.assertEqual(ox.beat_conflicts(es.LANDFALL, "D"), {"E1", "E2"})
+        self.assertEqual(ox.beat_conflicts(es.LANDFALL, "D"), {"E1", "E2", "E8"})   # 11 Kas (2): E8 bütçe (D deneme)
         self.assertEqual(ox.beat_conflicts(es.LANDFALL, "C"), ox.candidate_beat_conflicts(es.LANDFALL, "C"))
         m = es.EVENT_BEATS[es.MARINA_TORNADO]["excluded_pairs"]
         self.assertTrue({("Y3", "Z4"), ("Y3", "Z2"), ("Y5", "Z3")} <= m)   # 29 Eki (4): + Y5+Z3

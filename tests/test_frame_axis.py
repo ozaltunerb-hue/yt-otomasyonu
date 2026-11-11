@@ -245,11 +245,12 @@ class TestSelection(unittest.TestCase):
         self.assertFalse([i for i in range(1, len(modes)) if modes[i] == modes[i - 1]])
 
     def test_three_types_last_one(self):
-        e, spot = es.WILDFIRE, "Balcony of a hillside house"
+        # 11 Kas (2): orman yangınında tepe kadrajı pasif ve K_O3 birebir kadraj eklendi; mekanik 3 tipli sokak heyelanında
+        e, spot = es.MUDSLIDE, "Balcony across a steep hillside street"
         hist = [{"kadraj": "çatı"}, {"kadraj": "balkon"}]
         seen = {fx.choose_frame(e, spot, sk.view_spots(e, None), set(), hist, random.Random(i))[0]["type"]
                 for i in range(40)}
-        self.assertEqual(seen, {"çatı", "tepe"})   # 3 tip: sadece son 1 (balkon) elenir
+        self.assertEqual(seen, {"çatı", "pencere"})   # 3 tip: sadece son 1 (balkon) elenir
 
     def test_foreground_last_one(self):
         e, spot = es.VOLCANIC_BOMBS, "Balcony of a village house facing the erupting volcano"
@@ -269,7 +270,8 @@ class TestSelection(unittest.TestCase):
         hill = "Hillside terrace facing the erupting volcano"
         risky = {"Balcony of a village house facing the erupting volcano", "Rooftop terrace facing the erupting volcano"}
         for i in range(30):
-            f, _ = fx.choose_frame(e, hill, sk.view_spots(e, None), risky, [], random.Random(i))
+            # 11 Kas (2): bombalarda K_B3 birebir kadrajı da döner (spottan bağımsız); yerli kadraj seçimi çekirdekte
+            f, _ = fx._choose_frame_core(e, hill, sk.view_spots(e, None), risky, [], random.Random(i))
             self.assertEqual(f["type"], "tepe")   # balkon/çatı riskli, pencere balkon riskini taşır
 
 

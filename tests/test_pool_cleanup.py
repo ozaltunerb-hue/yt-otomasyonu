@@ -333,7 +333,8 @@ class TestNewBeats(unittest.TestCase):
         for b2 in ("T7",):   # 6 Kas: T6 pasif
             self.assertGreaterEqual(len({d for v, d in pairs if v == b2}), 4, b2)
         # 18 Eki (2): kilit cümle 32-33 kelime: T6 (19 + araç) U2 ve U6 ile 75'i aşar
-        self.assertEqual(es.EVENT_BEATS[FT]["excluded_pairs"], {("T1", "U2"), ("T2", "U2"), ("T6", "U2"), ("T6", "U6")})
+        self.assertEqual(es.EVENT_BEATS[FT]["excluded_pairs"], {("T1", "U2"), ("T2", "U2"), ("T6", "U2"), ("T6", "U6"),
+                                                                ("T8", "U2")})   # 11 Kas (2): T8 (18 kelime + araç) + U2
         self.assertEqual(es._VOLC_BOMBS_GAPS | es._VOLC_ERUPTION_GAPS, set())
         self.assertNotIn(FT, es.BEAT_BLOCK_FALLBACK_EVENTS)
 

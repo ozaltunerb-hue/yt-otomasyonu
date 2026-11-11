@@ -116,6 +116,14 @@ FREE = {
         "Fleeing the colossal fire whirl, the small car tears away as blazing debris rains onto the road behind.",
         "The SUV bolts down the road, flaming wreckage crashing onto the lane right behind it.",
     ],
+    # 11 Kas 2026 (2), Bahadır: T8 (hortumun tabanı park hâlindeki aracın üstünden geçer, araç yerinde tutuşur)
+    "T8": [
+        "The fire tornado's huge base passes over the parked SUV and the vehicle bursts into flames on the spot.",
+        "As the burning vortex sweeps over the parked van, it catches fire right where it stands.",
+        "The towering fire whirl swallows the parked pickup truck and it goes up in flames without moving.",
+        "The parked SUV is engulfed by the base of the giant fire column and erupts in flames.",
+        "The colossal fire tornado passes over the parked van, setting it ablaze where it stands.",
+    ],
     "U7": [
         "The colossal vortex rips a wooden house from its foundation and swallows it whole, beams and planks whirling upward.",
         "A whole wooden house is torn off its foundation by the fire tornado, its burning timbers spiraling into the column.",
@@ -198,6 +206,11 @@ HELD_OUT = {
         "The delivery truck speeds away from the tornado as a mass of burning debris slams down behind it.",
         "The van flees down the road, flaming wreckage crashing onto the asphalt at its back.",
         "Burning debris crashes down behind the SUV as it races away from the giant fire column.",
+    ],
+    "T8": [   # 11 Kas (2)
+        "The vortex's wide base sweeps across the parked pickup truck, which bursts into flames in place.",
+        "Engulfed by the passing fire tornado, the parked SUV catches fire where it stands.",
+        "The giant burning column moves over the parked van and the van goes up in flames.",
     ],
     "U7": [
         "The fire tornado rips a whole house from its foundation, its burning planks spiraling upward.",
@@ -345,6 +358,12 @@ AUDIT_4 = {
         "The SUV speeds off as a shower of burning debris from the tornado crashes down at its back.",
         "Fleeing the giant fire whirl, the car drives away while flaming debris lands behind it.",
     ],
+    "T8": [   # 11 Kas (2)
+        "The fire tornado sweeps over the parked SUV and the whole vehicle bursts into flames.",
+        "The parked van is swallowed by the vortex's base and catches fire on the spot.",
+        "The giant fire whirl's base engulfs the parked pickup truck, setting it on fire where it stands.",
+        "As the burning vortex passes over the car, the parked car erupts in flames.",
+    ],
     "U7": [
         "The vortex tears a wooden house off its foundation and swallows it, burning planks spiraling up.",
         "The tornado devours a whole house, its beams and boards whirling up into the column.",
@@ -429,7 +448,10 @@ POOL = ({"T1": "the towering fire tornado lifts the {vehicle} off the road and f
          "T6": "huge flaming debris flung by the towering tornado slams into the {vehicle}, which spins and stops "
                "across the road",
          # 18 Eki: Parti 1 metinleri kısaldı (≤16 kelime)
-         "T7": "the {vehicle} races away from the fire tornado as burning debris crashes down behind it"},
+         "T7": "the {vehicle} races away from the fire tornado as burning debris crashes down behind it",
+         # 11 Kas 2026 (2), Bahadır: T8 yeni (T1 pasif)
+         "T8": "the base of the fire tornado sweeps over the parked {vehicle} and it bursts into flames where it "
+               "stands"},
         {"U1": "the fire tornado rips the burning roof off a house across the street into its funnel",
          "U2": "the huge fire tornado uproots a cluster of burning trees and flings their trunks down the road",
          "U6": "the towering fire tornado sweeps over a parked trailer and tosses it aside in fire and smoke",
@@ -441,7 +463,8 @@ POOL = ({"T1": "the towering fire tornado lifts the {vehicle} off the road and f
          "U11": "a wooden garage beside a house across the street bursts apart, burning boards spiraling up"})
 # Kod yedeğinin 75 kelimeye sığmadığı çiftler (tests/test_story_fallback.py FALLBACK_GAPS_EXCLUDED). 18 Eki: kısa
 # metinlerle 23 -> 1
-FIT_GAPS = {("T6", "U2"), ("T6", "U6")}   # 18 Eki (2): kilit cümle 32-33 kelime
+FIT_GAPS = {("T6", "U2"), ("T6", "U6"),   # 18 Eki (2): kilit cümle 32-33 kelime
+            ("T8", "U2")}                   # 11 Kas (2): T8 (18 kelime + araç)
 
 
 # 3 Kas 2026 (toplu düzeltme): bu modül GPT'nin yazdığı dilim metnini (eş anlamlı / serbest anlatım) kapılara sokar.
@@ -489,7 +512,8 @@ class TestFireTornadoGate(unittest.TestCase):
         small = ("glass", "window", "windshield", "pole", "wire", "cable", "fence", "sign", "billboard", "railing",
                  "guardrail", "ember")
         # 17-18 Eki: Parti 1 kısa metinleri Bahadır'ın metni birebir (büyüklük sıfatı yok); kilit cümle ölçeği verir
-        no_size = {"T7", "U1", "U7", "U8", "U9", "U10", "U11"}   # 18 Eki (2): U1 16 kelimeye kısaldı
+        no_size = {"T7", "U1", "U7", "U8", "U9", "U10", "U11",   # 18 Eki (2): U1 16 kelimeye kısaldı
+                   "T8"}   # 11 Kas (2): Bahadır'ın metni birebir ("the base of the fire tornado"; ölçek kilit cümlede)
         for sl in POOL:
             for bid, text in sl.items():
                 with self.subTest(beat=bid):
@@ -595,6 +619,7 @@ class TestFireTornadoGate(unittest.TestCase):
         self.assertTrue(all("unless" not in x for e, d in es.EVENT_BEATS.items() for sl in ("slice_2", "slice_3")
                             for k, x in d[sl].items()
                             if (e, k) not in ((E, "U1"), (es.EARTHQUAKE_APARTMENT, "Q5"),   # 18 Eki (2): deprem Q5 toz
+                                              (E, "T8"),   # 11 Kas (2): T8 devirme/kaldırma/kayma/kaçış cümlesini almaz
                                               # 30 Eki: eski sokak R2 ve T1, baca cümlesi (yeni T3) sayılmasın
                                               (es.EARTHQUAKE_OLD_STREET, "R2"), (es.EARTHQUAKE_OLD_STREET, "T1"))))
         # yeni maddeler açık arazi/kırsal değil, yerleşim: ev, çatı, ön duvar, veranda, garaj

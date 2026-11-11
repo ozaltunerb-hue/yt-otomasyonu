@@ -166,8 +166,12 @@ class TestMeteor(unittest.TestCase):
         self.assertEqual(es.max_prompt_words(MET), 205)
         self.assertEqual(es.max_constraints(MET), 11)
         self.assertEqual(es.max_prompt_chars(MET), es.MAX_PROMPT_CHARS)
+        # 11 Kas 2026 (2), Bahadır (8): olay bazında ölçülen en büyük (yeni kadrajlar + birebir insan cümleleri)
+        raised = {es.WILDFIRE: 194, es.HELICOPTER: 182, es.VOLCANIC_BOMBS: 182, es.VILLAGE: 179, es.TIDAL: 188}
+        for e, n in raised.items():
+            self.assertEqual((es.max_prompt_words(e), es.max_constraints(e), es.max_prompt_chars(e)), (n, 8, 1400), e)
         for e in es.structured_events():
-            if e not in (MET, es.FLOOD, es.LIBERTY, es.PYROCLASTIC):   # sel 185, Özgürlük Anıtı 205, kül bulutu 205
+            if e not in (MET, es.FLOOD, es.LIBERTY, es.PYROCLASTIC) and e not in raised:   # sel 185, Özgürlük Anıtı 205, kül bulutu 205
                 self.assertEqual((es.max_prompt_words(e), es.max_constraints(e), es.max_prompt_chars(e)),
                                  (175, 8, 1400), e)
         # 3 Kas (sel su kontrolü), Bahadır: sel 185 kelime (su seviyesi cümleleri)
@@ -403,19 +407,19 @@ class TestHelicopterFrame(unittest.TestCase):
         for spot in spots:
             for f in fx.all_frames(H, spot, spots):
                 with self.subTest(spot=spot, frame=f):
-                    self.assertIn(f["type"], ("balkon", "çatı"))
+                    self.assertIn(f["type"], ("balkon", "çatı", "K_H3"))   # 11 Kas (2): K_H3 birebir kadraj
                     self.assertIsNone(f["mode"])
-                    self.assertIsNone(f["fg"])
+                    self.assertEqual(f["fg"], "boş" if f["type"] == "K_H3" else None)   # K_H3: "empty foreground"
                     low = sk.style_suffix(H, None, spot, None, None, None, f).split(" no cuts")[0].lower()
                     for w in self.BANNED:
                         self.assertNotIn(w, low)
                     self.assertTrue("rooftop terrace of a hillside house" in low or "high balcony of a hillside house"
-                                    in low)
+                                    in low or "flat rooftop of a three-story house at the top of the street" in low)
                     for w in ("high wide view", "the wall of flames", "the helicopter large and close in frame",
                               "never a distant dot", "the camera stays fixed", "empty foreground"):
                         self.assertIn(w, low)
                     seen.add(f["type"])
-        self.assertEqual(seen, {"balkon", "çatı"})
+        self.assertEqual(seen, {"balkon", "çatı", "K_H3"})
 
 
 if __name__ == "__main__":

@@ -25,6 +25,33 @@
 
 ---
 
+## 📋 DEVİR: 11 Kasım (2) 6 kilitli olay bilerek değişti + kül bulutu / dev dalga kararları + birebir insan ekseni
+
+Kie/GPT çağrısı yok; test `tests/test_11kas_2.py`. Bahadır onayıyla orman, helikopter, karaya vurur, bombalar, heyelan köy, ateş
+hortumu + kül bulutu, dev dalga değişti; sel (3249de8) ve Özgürlük Anıtı 40 tohumda bayt bayt aynı. Yeni hâl kilit baseline'ı
+(`tests/fixtures/locked_prompts_40.json`, `tests/snapshots/prompts_baseline.json`). Rapor: `reports/havuz_denetim_2026-11-11b.md`.
+- **Dünkü 4 karar:** kül bulutu A + E sırayla (aynen); Q5 "blasts" -> "slams", `KNOWN_HITS`'ten çıktı; dev dalga T5 pasif;
+  K_V ve K_R1-K_R3'e "the camera stays fixed, never descending," (sözlükte "never pans" kalır).
+- **Birebir kadraj (spottan bağımsız, yerli kadrajlarla döner; `fx.VERBATIM_FRAMES`, `fx.VERBATIM_WITH_NATIVE`):** orman
+  K_O3, helikopter K_H3, bombalar K_B3 (bombalar kalıbı, ortam metni yerinde; `{street}`). Metin ön planı ve kuyruğu içerir:
+  `fx.FULL_TEXT_FRAMES`. Heyelan köy **K_Y3 EKLENMEDİ**: "always in frame" kelime kapısına takıldı, metin pasif
+  (`fx.PASSIVE_VERBATIM_FRAMES`, açmak: kümeden çıkar).
+- **Pasif kadraj:** orman tepe @ Embankment (+ yaprak) ve köy teras @ basamaklar: `fx.RETIRED_CAMERA_SPOTS` (spotlar sahne
+  olarak aktif). Köy tepe yaprak ön planı: `fx.PASSIVE_FG`. "lib:tepe" (orman) ve "lib:çatı" (köy): hiç rotasyonda olmayan
+  kütüphane kadrajları koruma yoluyla gelmesin.
+- **Pasif beat:** orman K1 K5 L3; helikopter F3 G1 G5; karaya vurur C2 C5 E4 E5; bombalar R3 T7; köy K2 K4 L3 L6; ateş
+  hortumu T1. **Yeni:** orman L8 L9; helikopter G8 G9; karaya vurur C7, C8 (Bahadır'ın "C6"sı: C6 kimliği 4 Eki'de çıkarılan
+  maddenin; "scatters" kapıya takıldı, yedek ifade "throws the pieces into the street"), E8; ateş hortumu T8 (`_FIRE_TOR_OVER`
+  + "unless"). Aynı yapı dışlamaları: orman (K7/K8, L8); helikopter (F2, G8) (F4, G8) (F4, G9); karaya vurur (C8, E1)
+  (C7, E8); ateş hortumu (T8, U2) sığmıyor. Bombalar R1/R2 -> T2/T9 yok kuralı zaten dışlamalarda (testli).
+- **İnsan cümlesi birebir (orman, helikopter, karaya vurur, bombalar, köy):** `es.PEOPLE_ONLY_VERBATIM_EVENTS`; 4-9s/9-15s
+  GPT'de kalır (VERBATIM kapalı), 0-4s seçilen cümle (LRU, hepsi ana öğe). Önceki havuzlar `FALLBACK_PEOPLE_RETIRED`.
+  "below the camera" cümleleri `es.CAMERA_EXEMPT_EVENTS` (sadece kod cümlesi muaf). Köyde çamur dokulu hâl de birebir
+  (`es.verbatim_people_forms`).
+- **Tavan (olay bazlı, ölçülen en büyük):** orman 194, helikopter 182 (hikâye 40-81), bombalar 182, köy 179, dev dalga 188;
+  karaya vurur ve ateş hortumu 175 aynen; kül bulutu 205 (K_V 210'a çıkan birkaç kombinasyonda sığma koruması yerli kadraja
+  geçer). Köy ve helikopter `es.BEAT_BLOCK_FALLBACK_EVENTS`'te (çıkmazda derinlik 1). Karaya vurur D + E8 bütçe dışlaması.
+
 ## 📋 DEVİR: 11 Kasım kül bulutu yeniden tasarım + dev dalga yüksek kadraj + cephe pasif + kilitli 8 denetim
 
 Kie/GPT çağrısı yok; test `tests/test_11kas.py`. Kilitli 8 olay 40 tohumda fark 0; 40 tohum EK KONTROL'de sadece kül bulutu ve

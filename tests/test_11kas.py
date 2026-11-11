@@ -27,15 +27,19 @@ A2 = ("The whole volcano looms directly behind the town, its summit crater erupt
       "part of the column collapses into a churning gray ash cloud that pours down the slope toward the first houses.")
 A3 = ("Filmed from a high rooftop terrace at the edge of the town, wide angle, the entire volcano from its base to its "
       "summit filling the upper half of the frame directly behind the houses, the town below in the lower half; the "
-      "camera never pans, turns or follows.")
+      "camera stays fixed, never descending, the camera never pans, turns or follows.")   # 11 Kas (2) (0d): sabitlik eki
 M_A = "the ash cloud reaches the first houses at the foot of the slope and swallows them one by one"
 M_B = "the ash cloud pours over the edge of the town and buries the parked cars along the first street in gray ash"
+# 11 Kas (2) (0d): "the camera never pans..." önüne "the camera stays fixed, never descending," eklendi
 K_R = {"K_R1": "Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide "
-               "angle, the whole coastal street and the sea behind it in frame; the camera never pans, turns or follows.",
+               "angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never "
+               "descending, the camera never pans, turns or follows.",
        "K_R2": "Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight down "
-               "the coastal street toward the sea; the camera never pans, turns or follows.",
+               "the coastal street toward the sea; the camera stays fixed, never descending, the camera never pans, "
+               "turns or follows.",
        "K_R3": "Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, the "
-               "coastal street and the apartment blocks below in frame; the camera never pans, turns or follows."}
+               "coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, the "
+               "camera never pans, turns or follows."}
 W_NEW = {"W10": "the wave smashes through the front wall of a seafront house and pours inside",
          "W11": "the surge swallows the ground floors of a row of shopfronts and a roof caves in",
          "W12": "the surge tears a wooden beach café off its foundations and smashes it against the apartment blocks"}
@@ -107,7 +111,12 @@ class TestAshCloud(_Quiet):
             self.assertTrue(gate.term_hits(f"the {w} spreads", PY), w)
             self.assertEqual(gate.term_hits(f"the {w} spreads", es.VOLCANIC_BOMBS), [], w)
             self.assertEqual(gate.term_hits(f"the {w} spreads"), [], w)
-        self.assertIn((PY, "beat", "Q5", "blast"), gate.KNOWN_HITS)   # Q5 25 Eki 102K hit: karar Bahadır'da
+        # 11 Kas (2) (0b), Bahadır: Q5 "blasts" -> "slams", istisna kalktı; Q5 aktif
+        self.assertNotIn((PY, "beat", "Q5", "blast"), gate.KNOWN_HITS)
+        q5 = es.EVENT_BEATS[PY]["slice_3"]["Q5"]["text"]
+        self.assertEqual(q5, "the cloud slams the front off a shop building and the brickwork falls into the street")
+        self.assertEqual(gate.term_hits(q5, PY), [])
+        self.assertNotIn("Q5", es.disabled_beats(PY))
 
     def test_gpt_gate_pyro_only(self):
         spec = es.build_spec(PY, None, "Hillside terrace facing the erupting volcano", None, "P7", "Q1", None, 4,
@@ -123,7 +132,7 @@ class TestAshCloud(_Quiet):
     def test_caps(self):
         self.assertEqual(es.max_prompt_words(PY), 205)
         self.assertEqual(es.TOTAL_WORDS_BY_EVENT[PY], (40, 92))
-        self.assertEqual(es.max_prompt_words(es.VOLCANIC_BOMBS), 175)
+        self.assertEqual(es.max_prompt_words(es.VOLCANIC_BOMBS), 182)   # 11 Kas (2): K_B3 + birebir insan cümlesi
 
     def test_40_seeds_build(self):
         seen_k, seen_op = set(), set()
@@ -172,10 +181,11 @@ class TestTidal(_Quiet):
         self.assertTrue({"W3", "W4"} <= es.DISABLED_BEATS[TI])
         self.assertFalse(set(W_NEW) & es.TRIAL_BEATS[TI])
 
-    def test_middle_t5_kept_for_hit_decision(self):
-        # T5 tek tamamlanmış üretimi 4 Eki 10:16 (seawall), 13 Eki 247K adayı: karar Bahadır'da
-        self.assertNotIn("T5", es.DISABLED_BEATS[TI])
-        self.assertEqual(sorted(_active(TI, "slice_2")), ["T2", "T3", "T5", "T7", "T8"])
+    def test_middle_t5_passive(self):
+        # 11 Kas (2) (0c), Bahadır: T5 PASİF (11 Kas'ta 13 Eki 247K adayı olduğu için bırakılmıştı); 4-9s'te 4 aktif
+        self.assertIn("T5", es.DISABLED_BEATS[TI])
+        self.assertIn("T5", es.EVENT_BEATS[TI]["slice_2"])   # silinmedi
+        self.assertEqual(sorted(_active(TI, "slice_2")), ["T2", "T3", "T7", "T8"])
 
     def test_people_lines(self):
         pool = es.FALLBACK_PEOPLE[TI]

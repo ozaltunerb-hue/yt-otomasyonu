@@ -33,7 +33,9 @@ FG_TEXT = {"korkuluk": "a railing corner in the foreground",
            "pencere": "the open window frame at one side",
            "yaprak": "a few leaves at the frame edge",
            "teras_korkuluk": "a railing corner in the foreground",
-           "boş": "nothing in the foreground"}
+           "boş": "nothing in the foreground",
+           # 11 Kas 2026 (2): birebir pencere kadrajlarının ön planı (orman K_O3, bombalar K_B3; metin kadraj cümlesinde)
+           "pencere_kenari": "a window frame edge in the foreground"}
 FRAME_FG = {"balkon": ("korkuluk", "boş"), "çatı": ("parapet", "boş"), "pencere": ("pencere",),
             "tepe": ("yaprak", "boş"), "direk": (), "teras": ("teras_korkuluk", "boş")}
 # Kütüphane yeri (olayda o tipte spot yoksa): yer metni sahneyi içerir (sahne cümlede bir kez geçer)
@@ -250,7 +252,19 @@ OWN_SPOT_ONLY = ("meteor", "liberty")   # 4 Kas: Özgürlük Anıtı
 # 3 Kas 2026, Bahadır (toplu düzeltme, Aşama 4): PASİF kamera noktaları (kadraj rotasyonundan çıktı; spot sahne olarak
 # seçilmeye devam eder, kamera başka bir noktadan/kütüphaneden gelir). Silinmedi: SPOT_FRAME'de durur.
 # Dev dalga "on top of the seawall": kötü sonuç verdi.
-RETIRED_CAMERA_SPOTS = {TIDAL: {"Coastal avenue behind a seawall"}}
+RETIRED_CAMERA_SPOTS = {TIDAL: {"Coastal avenue behind a seawall"},
+                        # 11 Kas 2026 (2), Bahadır: orman yangını "tepe @ Embankment above the village road" kadrajı (mod B ve
+                        # ödünç) ve ona bağlı yaprak ön planı PASİF; Embankment SPOTU aktif (31 Eki hit'i bu spottan çatı
+                        # kadrajıyla). "lib:tepe": tepe kütüphane yeri de yok (yaprak ön planı geri gelmesin)
+                        WILDFIRE: {"Embankment above the village road", "lib:tepe"},
+                        # 11 Kas (2): heyelan köy "teras @ High steps on the village square" PASİF (spot sahne olarak kalır,
+                        # bu kadrajla eşleşmez; teras tipinin kütüphanesi yok). "lib:çatı": köyün kütüphane çatı kadrajı
+                        # hiç rotasyonda değildi; teras gidince yetersizlik koruması onu (balkon riskliyken) getiriyordu,
+                        # önceki gibi rotasyon dışında kalır
+                        VILLAGE: {"High steps on the village square", "lib:çatı"}}
+# 11 Kas 2026 (2), Bahadır: PASİF ön planlar (olay -> kadraj tipi -> ön plan anahtarları). Heyelan köy tepe kadrajında yaprak
+# (boş ön plan kalır); orman yangınında yaprak sadece pasif tepe kadrajındaydı (kayıt)
+PASSIVE_FG = {VILLAGE: {"tepe": {"yaprak"}}, WILDFIRE: {"tepe": {"yaprak"}}}
 
 
 def retired_positions(event: str) -> set[str]:
@@ -267,25 +281,68 @@ def retired_positions(event: str) -> set[str]:
 #   terası) hit'te kullanıldı (13 Eki 2,13M yamaç; 25 Eki 102K çatı): pasife alınmadı, K_V ile birlikte rotasyonda
 #   (VERBATIM_WITH_NATIVE). Balkon zaten rotasyonda değildi (pa.PASSIVE_SPOTS).
 FRAME_NEVER_PANS = "the camera never pans, turns or follows"
+# 11 Kas 2026 (2), Bahadır (0d): K_V ve K_R1-K_R3'te "the camera never pans..." önüne sabitlik eki. Önceki metinler ";
+# the camera never pans, turns or follows." ile bitiyordu (11 Kas)
+FRAME_STAYS_FIXED = "the camera stays fixed, never descending, "
 VERBATIM_FRAMES = {
     TIDAL: {
         "K_R1": ("Filmed from the flat rooftop of a six-story apartment block right on the seafront, high vantage, wide "
-                 "angle, the whole coastal street and the sea behind it in frame; the camera never pans, turns or "
-                 "follows.", "parapet"),
+                 "angle, the whole coastal street and the sea behind it in frame; the camera stays fixed, never "
+                 "descending, the camera never pans, turns or follows.", "parapet"),
         "K_R2": ("Filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, looking straight "
-                 "down the coastal street toward the sea; the camera never pans, turns or follows.", "pencere"),
+                 "down the coastal street toward the sea; the camera stays fixed, never descending, the camera never "
+                 "pans, turns or follows.", "pencere"),
         "K_R3": ("Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, "
-                 "the coastal street and the apartment blocks below in frame; the camera never pans, turns or "
-                 "follows.", "teras_korkuluk"),
+                 "the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, "
+                 "the camera never pans, turns or follows.", "teras_korkuluk"),
     },
     PYROCLASTIC: {
         "K_V": ("Filmed from a high rooftop terrace at the edge of the town, wide angle, the entire volcano from its "
                 "base to its summit filling the upper half of the frame directly behind the houses, the town below in "
-                "the lower half; the camera never pans, turns or follows.", None),
+                "the lower half; the camera stays fixed, never descending, the camera never pans, turns or follows.",
+                None),
+    },
+    # 11 Kas 2026 (2), Bahadır: kilitli olaylara birebir kadraj (seçim spottan bağımsız; yerli kadrajlarla birlikte döner,
+    # VERBATIM_WITH_NATIVE). Metin ön planı ve tek çekim kuyruğunu içerir (FULL_TEXT_FRAMES); "no person or face close
+    # to the camera" camera_rules'tan gelir (Bahadır'ın metniyle birebir aynı sonuç)
+    WILDFIRE: {
+        "K_O3": ("Handheld footage filmed from the top-floor window of a tall house high on the hillside, high vantage, "
+                 "wide angle, the burning slope and the street below both in frame; slight hand shake, the camera stays "
+                 "fixed, never descending, the camera never pans, turns or follows, a window frame edge in the "
+                 "foreground; one continuous shot, no zoom, no cuts.", "pencere_kenari"),
+    },
+    # helikopter kadraj kalıbıyla (helicopter_camera: geniş mahalle + alev duvarı, helikopter büyük ve yakın, ön plan boş)
+    HELICOPTER: {
+        "K_H3": ("Handheld footage filmed from the flat rooftop of a three-story house at the top of the street, high "
+                 "wide view of the neighborhood and the wall of flames together, the helicopter large and close in "
+                 "frame, never a distant dot; slight hand shake, the camera stays fixed, never descending, empty "
+                 "foreground; no zoom, no cuts.", "boş"),
+    },
+    # mevcut bombalar kalıbı (volcano_camera): ortam metni "high vantage over {street} toward the erupting volcano"
+    # yerinde, sabitlik cümlesi diğerleriyle aynı; sadece kamera noktası ve ön plan yeni. camera_rules kısaltmaları
+    # (" toward the erupting volcano;" -> " toward the volcano;", üst üçte bir) diğer bombalar kadrajlarındaki gibi
+    BOMBS: {
+        "K_B3": ("Handheld footage filmed from the top-floor window of a tall house at the end of the street, high "
+                 "vantage over {street} toward the erupting volcano; slight hand shake, the camera stays fixed, tilting "
+                 "only slightly, never descending, the erupting volcano always visible in the upper third of the frame, "
+                 "a window frame edge in the foreground; one continuous shot, no zoom, no cuts.", "pencere_kenari"),
+    },
+    VILLAGE: {
+        "K_Y3": ("Handheld footage filmed from the flat rooftop of a tall stone house at the bottom of the village, high "
+                 "vantage, facing up the slope with the lanes and houses below in frame; slight hand shake, the camera "
+                 "stays fixed, tilting only slightly, never descending, the debris torrent always in frame, a low parapet "
+                 "edge in the foreground; one continuous shot, no zoom, no cuts.", "parapet"),
     },
 }
-# Birebir kadrajların yanında olayın yerli kadrajı da rotasyonda kalan olaylar (hit kadrajı pasife alınamadı)
-VERBATIM_WITH_NATIVE = (PYROCLASTIC,)
+# 11 Kas (2): PASİF birebir kadrajlar (rotasyona girmez, metin kayıtta). Heyelan köy K_Y3 havuz kelime kapısının
+# "always in frame" köküne takıldı (core/pool_word_gate.py): talimat gereği eklenmedi, karar Bahadır'da (açmak: bu kümeden
+# çıkar)
+PASSIVE_VERBATIM_FRAMES = {VILLAGE: {"K_Y3"}}
+# Metni ön planı ve kuyruğu zaten içeren birebir kadrajlar (verbatim_camera ön plan eklemez)
+FULL_TEXT_FRAMES = {"K_O3", "K_H3", "K_B3", "K_Y3"}
+# Birebir kadrajların yanında olayın yerli kadrajı da rotasyonda kalan olaylar (kül bulutu: hit kadrajı pasife alınamadı;
+# 11 Kas (2): kilitli dört olayda yeni kadraj eklendi, mevcut kadrajlar duruyor)
+VERBATIM_WITH_NATIVE = (PYROCLASTIC, WILDFIRE, HELICOPTER, BOMBS, VILLAGE)
 # Birebir kadrajın ön plan cümlesi (FG_TEXT ile aynı metinler, cümle başı büyük harf)
 _VERBATIM_TAIL = "one continuous shot, no zoom, no cuts."
 
@@ -295,12 +352,20 @@ def is_verbatim_frame(event: str, frame: dict | None) -> bool:
 
 
 def verbatim_variants(event: str) -> list[dict]:
-    return [{"type": k, "pos_spot": None, "fg": fg, "mode": None} for k, (_, fg) in VERBATIM_FRAMES.get(event, {}).items()]
+    off = PASSIVE_VERBATIM_FRAMES.get(event, set())   # 11 Kas (2): pasif birebir kadrajlar
+    return [{"type": k, "pos_spot": None, "fg": fg, "mode": None} for k, (_, fg) in VERBATIM_FRAMES.get(event, {}).items()
+            if k not in off]
 
 
-def verbatim_camera(event: str, frame: dict) -> str:
-    """Birebir kadrajın kamera cümlesi + ön plan + tek çekim kuyruğu (camera_rules ön plan yüzü yasağını ekler)."""
+def verbatim_camera(event: str, frame: dict, volc_env: str | None = None) -> str:
+    """Birebir kadrajın kamera cümlesi + ön plan + tek çekim kuyruğu (camera_rules ön plan yüzü yasağını ekler).
+    11 Kas (2): FULL_TEXT_FRAMES metni olduğu gibi ({street}: volkan ortam metni, bombalar K_B3)."""
     text, fg = VERBATIM_FRAMES[event][frame["type"]]
+    if frame["type"] in FULL_TEXT_FRAMES:
+        if "{street}" in text:
+            from core.skeleton_pipeline import volc_env_text
+            text = text.replace("{street}", volc_env_text(event, volc_env) if volc_env else "the village street")
+        return text
     if fg:
         lead = FG_TEXT[fg][0].upper() + FG_TEXT[fg][1:]
         return f"{text} {lead}, {_VERBATIM_TAIL}"
@@ -351,7 +416,8 @@ def fg_options(event: str, ftype: str, pos_spot: str | None, mode: str | None) -
         return ()
     if pos_spot and native(event, pos_spot)[1] == NATIVE:
         return NATIVE_FG_KEYS
-    return FRAME_FG[ftype]
+    off = PASSIVE_FG.get(event, {}).get(ftype, set())   # 11 Kas (2): pasif ön planlar
+    return tuple(g for g in FRAME_FG[ftype] if g not in off)
 
 
 def family_window(event: str, volc_env: str | None = None) -> str:
@@ -402,7 +468,7 @@ def _frame_camera(event: str, spot: str, frame: dict, volc_env: str | None = Non
                   legacy=None, scene_env: str | None = None) -> str:
     """Kadraja göre kamera cümlesi. legacy(event, spot, volc_env) -> bugünkü cümle (skeleton_pipeline verir)."""
     if is_verbatim_frame(event, frame):   # 11 Kas: birebir kadraj
-        return verbatim_camera(event, frame)
+        return verbatim_camera(event, frame, volc_env)
     ftype, pos_spot, fg, mode = frame["type"], frame.get("pos_spot"), frame.get("fg"), frame.get("mode")
     fam = family(event)
     if pos_spot and (mode == "A" or native(event, pos_spot)[1] == NATIVE):
@@ -464,7 +530,7 @@ def choose_frame(event: str, spot: str, pool: list[str], risky: set[str], hist: 
                  rng: random.Random, blocked: set[str] | None = None) -> tuple[dict, dict]:
     """11 Kas: birebir kadrajlı olaylarda (VERBATIM_FRAMES) kadraj birebir kadrajlardan (+ yerli kadraj, kül bulutu);
     diğer olaylarda _choose_frame_core aynen (aynı rastgele çekimler)."""
-    if event not in VERBATIM_FRAMES:
+    if not verbatim_variants(event):   # 11 Kas (2): aktif birebir kadrajı olmayan olay (pasif K_Y3) eski yol
         return _choose_frame_core(event, spot, pool, risky, hist, rng, blocked)
     native_frame, excluded = (_choose_frame_core(event, spot, pool, risky, hist, rng, blocked)
                               if event in VERBATIM_WITH_NATIVE else (None, {}))
@@ -570,7 +636,7 @@ def all_frames(event: str, spot: str, pool: list[str], risky: set[str] | None = 
     """Bu spotta olası tüm kadraj varyantları (testler, kural denetimi, K5 sığma koruması). risky verilirse seçilen
     beat'lerin dışlandığı spotlar ödünç alınmaz; blocked: ortamla çelişen noktalar (choose_frame ile aynı süzgeç).
     11 Kas: birebir kadrajlı olayda birebir kadrajlar (+ kül bulutunda yerli varyantlar)."""
-    if event in VERBATIM_FRAMES:
+    if verbatim_variants(event):
         native = _all_frames_core(event, spot, pool, risky, blocked) if event in VERBATIM_WITH_NATIVE else []
         return verbatim_variants(event) + native
     return _all_frames_core(event, spot, pool, risky, blocked)
