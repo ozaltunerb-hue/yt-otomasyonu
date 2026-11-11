@@ -4613,8 +4613,9 @@ FALLBACK_PEOPLE = {
             "{N} pedestrians run for the stairway of a parking garage.",
             "{N} people sprint into a hotel lobby across the street.",
             "{N} pedestrians run up the stairs of a shopping arcade."),
-    # I1, I2 eski cümleler (1. ve 5.) birebir
-    TIDAL: ("{N} pedestrians run from the wave toward the buildings.", "{N} people run inland as the wave hits.",
+    # I1, I2 eski cümleler (1. ve 5.) birebir. 11 Kas (7), Bahadır: I1 metni değişti (önceki "{N} pedestrians run from
+    # the wave toward the buildings."; kayıt FALLBACK_PEOPLE_RETIRED[TIDAL])
+    TIDAL: ("{N} pedestrians run from the wave into the nearest apartment entrance.", "{N} people run inland as the wave hits.",
             "{N} people sprint into the entrance of a seafront hotel.",
             "{N} pedestrians run up the stairs of an apartment building.",
             "{N} residents sprint for the stairway of a parking garage.",
@@ -4736,7 +4737,8 @@ PEOPLE_AXIS_PROVEN_BY_EVENT = {TIDAL: ("I1", "I7", "I8", "I9"),
                                WILDFIRE: ("I1", "I2", "I3", "I4"), HELICOPTER: ("I1", "I2", "I3"),
                                LANDFALL: ("I1", "I2", "I3"), VOLCANIC_BOMBS: ("I1", "I2", "I3"),
                                VILLAGE: ("I1", "I2", "I3")}
-DISABLED_PEOPLE_LINES: dict[str, set[str]] = {TIDAL: {"I2"}}
+# 11 Kas (7), Bahadır: dev dalga I6 ("run for the doorway of a seafront café": insanlar dalgaya doğru koşuyor) PASİF
+DISABLED_PEOPLE_LINES: dict[str, set[str]] = {TIDAL: {"I2", "I6"}}
 
 
 def people_axis_proven(event: str) -> tuple[str, ...]:

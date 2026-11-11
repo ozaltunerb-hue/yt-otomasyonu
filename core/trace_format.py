@@ -150,6 +150,12 @@ def _format_creative(trace: dict, labels: dict) -> list[tuple[str, str]]:
     ]
 
 
+def _beat_block(event) -> int:
+    """11 Kas (7): olayın gerçek orta/final tekrar engeli (sadece onay metni; seçim event_structure'da)."""
+    import core.event_structure as es
+    return es.RECENT_BEAT_BLOCK_BY_EVENT.get(event, es.RECENT_BEAT_BLOCK)
+
+
 def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
     """Yapılandırılmış hat (4 Eki, core/event_structure.py): kodun seçtikleri, GPT-4o dilim denemeleri, hikâye."""
     lo, hi = (trace.get("count_range") or ["?", "?"])[:2]
@@ -175,7 +181,7 @@ def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
          f"Araç: {trace.get('vehicle')}\n"
          f"4-9s olayı ({b2 or '-'}): {trace.get('beat_2_text', '-')}\n"
          f"9-15s olayı ({b3 or '-'}): {trace.get('beat_3_text', '-')}\n"
-         f"Tekrar önleme: olay çifti {beats} (son 3 üretimin olayları elendi, LRU)"
+         f"Tekrar önleme: olay çifti {beats} (son {_beat_block(trace.get('event'))} üretimin olayları elendi, LRU)"
          # 11 Kas (5): GPT çağrılmayan olaylarda (kod hikâyesi) "hikâye GPT'ye verildi" yazılmaz (sadece metin)
          + ("" if trace.get("story_source_kind") == "code"
             else f" · son {trace.get('recent_count', 0)} hikâye GPT'ye verildi")),

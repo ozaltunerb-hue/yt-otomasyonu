@@ -194,7 +194,7 @@ class TestTidal(_Quiet):
         pool = es.FALLBACK_PEOPLE[TI]
         self.assertEqual(pool[6:], I_NEW)
         self.assertEqual(pool[1], "{N} people run inland as the wave hits.")   # I2 silinmedi
-        self.assertEqual(es.DISABLED_PEOPLE_LINES[TI], {"I2"})
+        self.assertEqual(es.DISABLED_PEOPLE_LINES[TI], {"I2", "I6"})   # 11 Kas (7): I6 pasif
         spec = es.build_spec(TI, None, "Coastal street of low shopfronts", "riviera", "T2", "W5", "red SUV", 4,
                              frame={"type": "K_R2", "pos_spot": None, "fg": "pencere", "mode": None},
                              light="driving rain and wind")

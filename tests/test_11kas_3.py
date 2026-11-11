@@ -297,6 +297,19 @@ class TestTidalRound5(_Quiet):
         seq = [r["beats"] for r in hd.simulate(self.T, 40)]
         self.assertEqual(len(set(seq)), 16)
 
+    def test_people_round7(self):
+        """11 Kas (7), Bahadır: I6 pasif (dalgaya doğru koşuyordu), I1 yeni metin."""
+        pool = es.FALLBACK_PEOPLE[self.T]
+        self.assertEqual(pool[0], "{N} pedestrians run from the wave into the nearest apartment entrance.")
+        self.assertEqual(pool[5], "{N} people run for the doorway of a seafront café.")   # silinmedi
+        self.assertEqual(es.DISABLED_PEOPLE_LINES[self.T], {"I2", "I6"})
+        self.assertEqual(gate.term_hits(pool[0], self.T), [])
+        for seed in range(1, 41):
+            p = ps.snapshot_event(self.T, seed)["prompt"]
+            self.assertNotIn("seafront café.", p.split("4-9s:")[0], seed)
+        from core.trace_format import _beat_block
+        self.assertEqual((_beat_block(self.T), _beat_block(es.WILDFIRE)), (2, es.RECENT_BEAT_BLOCK))
+
     def test_no_filler_phrase(self):
         self.assertIn(self.T, es.NO_TRANSITION_EVENTS)
         for seed in range(1, 41):
@@ -308,7 +321,8 @@ class TestTidalRound5(_Quiet):
         sc = asyncio.run(cp.build_creative_scene(None, self.T, [], [], _no_gpt))
         text = "\n".join(b for _, b in format_generation(sc["trace"]))
         self.assertNotIn("hikâye GPT'ye verildi", text)
-        self.assertIn("son 3 üretimin olayları elendi", text)   # seçim satırı aynen
+        # 11 Kas (7): onay metni olayın gerçek tekrar engelini gösterir (dev dalga 2)
+        self.assertIn("son 2 üretimin olayları elendi", text)
         gpt_trace = {**sc["trace"], "story_source_kind": "gpt"}
         self.assertIn("hikâye GPT'ye verildi", "\n".join(b for _, b in format_generation(gpt_trace)))
 

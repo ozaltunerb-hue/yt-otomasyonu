@@ -25,6 +25,12 @@
 
 ---
 
+## 📋 DEVİR: 11 Kasım (7) dev dalga insan cümleleri + onay metni
+
+Dev dalga I6 ("run for the doorway of a seafront café": dalgaya doğru) PASİF (`es.DISABLED_PEOPLE_LINES`); I1 "{N} pedestrians
+run from the wave into the nearest apartment entrance." (önceki kayıt `FALLBACK_PEOPLE_RETIRED[TIDAL]`). Onay metni "son N
+üretimin olayları elendi" olayın gerçek tekrar engelini yazar (`trace_format._beat_block`; dev dalga 2).
+
 ## 📋 DEVİR: 11 Kasım (6) dev dalga T8 otobüs + dışlama yok + tekrar engeli 2
 
 T8 "the {vehicle} is swept against a parked city bus and pinned there by the current" (çapa otobüs). Dev dalgada aktif

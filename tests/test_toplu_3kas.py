@@ -310,8 +310,11 @@ class TestPeopleAxis(_Quiet):
                 for bad in ("scatter", "scramble", "dash", "uphill", "higher", "up the street", "flee", "safety"):
                     if not (verbatim and bad == "up the street"):
                         self.assertNotIn(bad, low, t)
-        self.assertEqual(es.FALLBACK_PEOPLE[es.TIDAL][:2], (es.FALLBACK_PEOPLE_RETIRED[es.TIDAL][0],
-                                                            es.FALLBACK_PEOPLE_RETIRED[es.TIDAL][4]))
+        # 11 Kas (7), Bahadır: I1 metni değişti (önceki = FALLBACK_PEOPLE_RETIRED[TIDAL][0]); I2 eski cümle aynen
+        self.assertEqual(es.FALLBACK_PEOPLE[es.TIDAL][:2],
+                         ("{N} pedestrians run from the wave into the nearest apartment entrance.",
+                          es.FALLBACK_PEOPLE_RETIRED[es.TIDAL][4]))
+        self.assertEqual(es.FALLBACK_PEOPLE_RETIRED[es.TIDAL][0], "{N} pedestrians run from the wave toward the buildings.")
 
     def test_rotation(self):
         for e in (es.FLOOD, es.TIDAL):   # 6 Kas (kilit): selde I1-I6 geri
