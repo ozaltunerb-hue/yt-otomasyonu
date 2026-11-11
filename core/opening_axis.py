@@ -298,12 +298,15 @@ def candidate_beat_conflicts(event: str, letter: str) -> frozenset[str]:
 # rotasyon dışı (bütçe dışlaması, üretim aynı). Açılışsız kalan çiftler event_structure.BUDGET_PAIRS_11KAS_3'te
 _PYRO = "Pyroclastic cloud races down into a village street"
 _TIDAL = "Tidal wave surges over a coastal city street"
-BUDGET_TRIPLES_11KAS_3 = {
+# 11 Kas (4): kayıt (önceki tur); aktif liste BUDGET_TRIPLES_11KAS_3 sıfırdan hesaplandı
+BUDGET_TRIPLES_11KAS_3_ESKI = {
     _PYRO: {("E", p2, p3) for p2 in ("P2", "P4", "P7", "P8") for p3 in ("Q1", "Q3", "Q4", "Q5", "Q7", "Q8")},
     _TIDAL: {("C", "T2", "W11"), ("C", "T3", "W1"), ("C", "T3", "W10"), ("C", "T3", "W5"), ("C", "T7", "W1"),
              ("C", "T7", "W10"), ("C", "T7", "W11"), ("C", "T7", "W5"), ("D", "T2", "W10"), ("D", "T3", "W1"),
              ("D", "T3", "W10"), ("D", "T7", "W1"), ("D", "T7", "W10")},
 }
+# 11 Kas (4): 215 tavanı ve kısa hareket cümlesiyle hâlâ sığmayan tek kombinasyonlar (bu çiftlerde açılış A kalır)
+BUDGET_TRIPLES_11KAS_3: dict[str, set] = {_PYRO: {("E", "P8", "Q4"), ("E", "P8", "Q8")}}
 
 
 def allowed(event: str, env: str | None, b2: str, b3: str) -> list[str]:

@@ -1001,8 +1001,8 @@ class TestTidal(unittest.TestCase):
         # 3 Kas (sel doğrulama ayarı): T4 pasif (5 çift az)
         # 11 Kas (B3): W3, W4 pasif; W10-W12 (T8+W10 dışlı): 5 x 5 - 3 = 22 çift
         # 11 Kas (2) (0c): T5 pasif: 4 x 5 - 3 = 17 çift
-        # 11 Kas (3): bütçe dışlaması (T3, W11) (T3, W12) (T8, W5) (T8, W11) (T8, W12): 12 çift
-        self.assertEqual(n, 17 * 12 * 3)
+        # 11 Kas (4): bütçe dışlaması kalktı: 17 çift
+        self.assertEqual(n, 17 * 17 * 3)
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_w6_never_on_seawall(self):
@@ -1422,7 +1422,7 @@ class TestTornadoStructure(unittest.TestCase):
             # 11 Kas (2): E8 yeni; E4 E5 pasif
             "E8": "the tornado collapses the front wall of a waterfront house into the street, the rooms behind it torn "
                   "open",
-        }, {("C8", "E1"), ("C7", "E8")}, {}),
+        }, {("C8", "E1"), ("C7", "E8"), ("C8", "E7")}, {}),   # 11 Kas (4): (C8, E7)
         es.MARINA_TORNADO: ({
             # 23 Eki (hortum denetimi): Y1, Y3, Y5; Z1, Z2, Z3, Z6, Z7 yeni metin; Y3+Z4, Y3+Z2 eklendi
             "Y1": "the tornado shoves the {vehicle} sideways across the quay toward the water's edge",
@@ -1606,7 +1606,7 @@ class TestTornadoStructure(unittest.TestCase):
         # 23 Eki (hortum denetimi): karaya vurma 3 × 20 × 4 (C2+E1 ve E1 nokta dışlaması çıktı); marina 28 × 4 (Y3+Z4, Y3+Z2)
         # 29 Eki (4): marina 27 × 4 (Y5+Z3 dışlandı)
         # 11 Kas (2): karaya vurma C2 C5 E4 E5 pasif, C7 C8 E8 yeni, 2 hariç çift: 3 x 14 x 4
-        self.assertEqual(n, 168 + 72 + 228)   # 30 Eki (2): cadde (P5, Q3); 6 Kas: cadde P5 P7 pasif 19 çift; 6 Kas (2): marina Y5 Z7 pasif 18 çift
+        self.assertEqual(n, 156 + 72 + 228)   # 11 Kas (4): (C8, E7) dışlı, 13 çift   # 30 Eki (2): cadde (P5, Q3); 6 Kas: cadde P5 P7 pasif 19 çift; 6 Kas (2): marina Y5 Z7 pasif 18 çift
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -1949,7 +1949,8 @@ class TestFireStructure(unittest.TestCase):
             "L9": "the flames engulf a wooden garage and its roof caves in onto the car inside",
         }, {("K1", "L4"), ("K7", "L1"), ("K7", "L5"), ("K7", "L7"), ("K8", "L1"), ("K8", "L5"), ("K8", "L7"),
             ("K7", "L8"), ("K8", "L8"),
-            ("K9", "L7"), ("K9", "L8")},   # 11 Kas (3): K9 çatı çöker + ev/çatı çöker
+            ("K9", "L7"), ("K9", "L8"),   # 11 Kas (3): K9 çatı çöker + ev/çatı çöker
+            ("K2", "L9")},   # 11 Kas (4); (K9, L9) uygulanmadı (balkonda K9'un tek eşi kalırdı)
             {"L1": {"Balcony of a hillside house"}, "L5": {"Balcony of a hillside house"}}),
         es.FACADE_FIRE: ({
             "M6": "flaming debris smashes the windshield of the {vehicle} as it brakes hard",
@@ -2304,7 +2305,8 @@ class TestFireStructure(unittest.TestCase):
         # 11 Kas (2): orman K1 K5 L3 pasif, L8 L9 yeni (balkon 12, set 16 çift); ateş hortumu T1 pasif, T8 yeni (T8+U2 hariç)
         # 11 Kas (3): orman (K9, L7) (K9, L8) dışlı: balkon 10, set 14. Ateş hortumu bütçe dışlaması (T4, T8 hiçbir finalle
         # 205'e sığmıyor): nokta başına 11 çift
-        self.assertEqual(n, (10 + 14) * 4 + 12 * 4 * 4 + 11 * 6 * 4)   # 6 Kas: T5, T6, U6, U10 pasif, 22 çift
+        # 11 Kas (4): bütçe dışlaması kalktı (ateş hortumu 22 çift); orman (K2, L9) dışlı: balkon 9, set 13
+        self.assertEqual(n, (9 + 13) * 4 + 12 * 4 * 4 + 22 * 6 * 4)   # 6 Kas: T5, T6, U6, U10 pasif, 22 çift
         self.assertLess(longest, es.MAX_PROMPT_CHARS)
 
     def test_excluded_spots(self):
@@ -2574,7 +2576,8 @@ class TestHelicopter(unittest.TestCase):
         self.assertEqual({k: v["text"] for k, v in b["slice_2"].items()}, self.S2)
         self.assertEqual({k: v["text"] for k, v in b["slice_3"].items()}, self.S3)
         self.assertEqual(b["excluded_pairs"], {("F1", "G3"), ("F2", "G2"), ("F5", "G3"),
-                                               ("F2", "G8"), ("F4", "G8"), ("F4", "G9")})   # 11 Kas (2): aynı yapı iki kez
+                                               ("F2", "G8"), ("F4", "G8"), ("F4", "G9"),   # 11 Kas (2): aynı yapı iki kez
+                                               ("F2", "G9"), ("F6", "G3")})   # 11 Kas (4)
         self.assertEqual(b["excluded_views"], {})
         # kamera evi: yanan çatıya/eve su (F2, F5) balkon noktasında seçilmez (17 Eki: G4 çıktı, kısıtı onunla gitti)
         # 30 Eki (2): G3 yan eve devrilen ağaç aynı sebeple
@@ -2693,7 +2696,8 @@ class TestHelicopter(unittest.TestCase):
         # 17 Eki: G4 çıktı, 9-15s'de 5 madde. 30 Eki (2): G3 balkonda yok (F3, F4, F6 ile eşleşmesi düştü)
         # 11 Kas (2): F3 G1 G5 pasif, G8 G9 yeni; (F2, G8) (F4, G8) (F4, G9) hariç. Balkon 3 x 4 - 2, set 5 x 5 - 6
         # 11 Kas (3): bütçe dışlaması (F6, G2) (F6, G8)
-        self.assertEqual(len(balcony), 3 * 4 - 2 - 2)
+        # 11 Kas (4): bütçe dışlaması kalktı; (F2, G9) (F6, G3) dışlı ((F2, G6) uygulanmadı: F2'nin tek eşi kalırdı)
+        self.assertEqual(len(balcony), 3 * 4 - 2)
         self.assertEqual(len(pairs("Embankment above the village road")), 25 - 6 - 2)
         n = 0
         for spot in self.SPOTS:
@@ -2704,7 +2708,7 @@ class TestHelicopter(unittest.TestCase):
                     if issues:
                         self.fail(f"{spot}/{b2}+{b3}/{v}: {issues}")
                     n += 1
-        self.assertEqual(n, (8 + 17) * 4)   # 11 Kas (3): bütçe dışlaması   # 11 Kas (2) (önceki 16 + 27; 30 Eki (2): G3 balkonda yok)
+        self.assertEqual(n, (10 + 17) * 4)   # 11 Kas (4)   # 11 Kas (2) (önceki 16 + 27; 30 Eki (2): G3 balkonda yok)
         # 4-9s dışlaması helikopterden önceki olaylarda hiçbir şeyi değiştirmez (onların dışlamalarının hepsi 9-15s).
         # 10 Eki: volkanda da 4-9s kamera dışlaması var (TestVolcano)
         for e, b in es.EVENT_BEATS.items():
@@ -2850,7 +2854,8 @@ class TestVolcano(unittest.TestCase):
             "Q7": "the cloud front tears the roof off the house right below before swallowing it",
             "Q8": "the cloud front knocks down the front wall of the two-storey house across the street, then swallows it",
         }, {("P3", "Q3"), ("P1", "Q1"), ("P3", "Q6"), ("P6", "Q3"), ("P6", "Q6"), ("P1", "Q6"), ("P5", "Q1"),
-            ("P5", "Q4"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8"), ("P8", "Q6")},   # 11 Kas
+            ("P5", "Q4"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8"), ("P8", "Q6"),   # 11 Kas
+            ("P7", "Q1"), ("P7", "Q7"), ("P7", "Q8")},   # 11 Kas (4)
            {"P3": {RT, VB}, "Q3": {RT, VB}, "P6": {RT, VB}, "Q6": {RT, VB}, "Q7": {RT, VB}}),
         es.VOLCANIC_BOMBS: ({
             "R1": "a glowing rock punches through the roof of the {vehicle}",
@@ -2873,7 +2878,8 @@ class TestVolcano(unittest.TestCase):
             "T8": "a huge glowing rock hits a house and its upper floor erupts in flames",
             "T9": "a glowing rock smashes into a large parked truck and flames wrap the cab",
         }, {("R2", "T2"), ("R1", "T2"), ("R5", "T6"), ("R7", "T1"), ("R7", "T7"), ("R8", "T6"),
-            ("R1", "T9"), ("R2", "T9"), ("R1", "T7"), ("R2", "T7")},   # 18 Eki: yedeği sığmayan çift kalmadı
+            ("R1", "T9"), ("R2", "T9"), ("R1", "T7"), ("R2", "T7"),   # 18 Eki: yedeği sığmayan çift kalmadı
+            ("R7", "T6"), ("R7", "T8"), ("R8", "T8")},   # 11 Kas (4): ev vurulur iki kez
            {"T1": {RT, VB}, "T7": {RT, VB}}),
     }
     VALID = {
@@ -3335,7 +3341,8 @@ class TestVolcano(unittest.TestCase):
         # 28 + 13 + 13 (değişmedi)
         # 11 Kas (A4): kül bulutu 45 -> 56 çift (24 + 16 + 16)
         # 11 Kas (2): bombalar R3 T7 pasif (-18 çift x 4 araç)
-        self.assertEqual(n, (105 + 111) * 4 + 56 + 12 - 96 - 72)   # 3 Kas kilit istisnası: bombalar T5 pasif (-24 çift x 4 araç)
+        # 11 Kas (4): bombalar (R7, T6) (R7, T8) (R8, T8) (-9 çift x 4 araç), kül bulutu P7 ile Q1 Q7 Q8 (-7)
+        self.assertEqual(n, (105 + 111) * 4 + 56 + 12 - 96 - 72 - 36 - 7)   # 3 Kas kilit istisnası: bombalar T5 pasif (-24 çift x 4 araç)
         # önceki: 30 Eki (2): bombalar (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) +12
 
     def test_block_depth_and_never_runs_out(self):
@@ -3439,7 +3446,9 @@ class TestVolcanoClose13Oct(unittest.TestCase):
     # 30 Eki (2): araç iki kez (R1/R2 + T7) dışlaması onaylandı, bekleyen kalmadı
     PENDING = {}
     # 31 Eki (2), Bahadır: (R9, T5) kaldırıldı (gerekçesi yol idi)
-    LEGACY = {es.VOLCANIC_BOMBS: {("R7", "T7")}, es.PYROCLASTIC: {("P3", "Q6"), ("P6", "Q6")}}
+    # 11 Kas (4), Bahadır: aynı tür orta + final (elle; yapı etiketlerinde yok)
+    LEGACY = {es.VOLCANIC_BOMBS: {("R7", "T7"), ("R7", "T6"), ("R7", "T8"), ("R8", "T8")},
+              es.PYROCLASTIC: {("P3", "Q6"), ("P6", "Q6"), ("P7", "Q1"), ("P7", "Q7"), ("P7", "Q8")}}
     NEW = {es.ERUPTION: ("S4", "S5", "U4", "U5", "U6"), es.PYROCLASTIC: ("P4", "P5", "P6", "Q4", "Q5", "Q6"),
            es.VOLCANIC_BOMBS: ("R5", "T5", "T6")}   # 17 Eki: R6 çıktı (Parti 1 yenileri TestPoolCleanup17Oct)
 
@@ -3529,8 +3538,9 @@ class TestVolcanoClose13Oct(unittest.TestCase):
         self.assertEqual(sizes, {es.ERUPTION: (7, 7), es.PYROCLASTIC: (8, 8), es.VOLCANIC_BOMBS: (8, 7)})   # 11 Kas: P7, P8
         pairs = {e: [len(es.allowed_pairs(e, None, s)) for s in (self.HT, self.RT, self.VB)] for e in VOLC}
         # 11 Kas (A4): kül bulutu 4-9s P2 P4 P7 P8 (P1 P3 P5 pasif): önceki [23, 11, 11]
-        self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [24, 16, 16],
-                                 es.VOLCANIC_BOMBS: [28, 22, 22]})   # 11 Kas (2): R3 T7 pasif (önceki [38, 26, 26])
+        # 11 Kas (4): aynı tür dışlamaları (kül bulutu P7, bombalar R7/R8)
+        self.assertEqual(pairs, {es.ERUPTION: [43, 31, 31], es.PYROCLASTIC: [21, 14, 14],
+                                 es.VOLCANIC_BOMBS: [25, 19, 19]})   # 11 Kas (2): R3 T7 pasif (önceki [38, 26, 26])
         # önceki bombalar [46, 34, 34]; 18 Eki: sığmayan yok; 30 Eki (2): (R1, T7), (R2, T7); 31 Eki (2): (R9, T5) açıldı
         for e in VOLC:   # araçsız kül bulutu; patlama ve bombalarda araç sadece eski maddelerde
             for slot in ("slice_2", "slice_3"):
@@ -3587,18 +3597,18 @@ class TestVolcanoClose13Oct(unittest.TestCase):
             # cümlesi bir kelime kısa (önceki 95)
             # 11 Kas (3): bombalar HEDEF 8 (hareket cümlesi +21, tavan 205, GPT yok; sığma frame_budget'te); patlama
             # aynen
-            self.assertEqual(longest, 115 if e == es.VOLCANIC_BOMBS else 94)
+            self.assertEqual(longest, 104 if e == es.VOLCANIC_BOMBS else 94)   # 11 Kas (4): kısa hareket cümlesi
             if e == es.ERUPTION:
                 self.assertLessEqual(longest + 75 + 3, 175)
         # kapı yine durur: kül bulutu balkonda bütçeyi aşan hikâye -> 175 üstü -> kısaltma geri bildirimi. 21 Eki (genel
         # kalite): kül bulutu eki kısaldı (106 -> 95), aşım için hikâye 75 yerine 80 kelime
         # 11 Kas (A7): kül bulutu tavanı 205; aşım için hikâye 115 kelime
-        self.assertEqual(es.max_prompt_words(es.PYROCLASTIC), 205)
+        self.assertEqual(es.max_prompt_words(es.PYROCLASTIC), 215)   # 11 Kas (4): 215; aşım için hikâye 125 kelime
         spec, sl = TestVolcano.build(TestVolcano(), es.PYROCLASTIC, "P2", "Q2", spot=self.VB, people=4)
-        pad = 115 - len(es.plain_story(spec, sl).split())
+        pad = 125 - len(es.plain_story(spec, sl).split())
         long = {**sl, "slice_3": es.clean_slice(sl["slice_3"].rstrip(".") + " " + " ".join(["dust"] * pad))}
-        self.assertEqual(len(es.plain_story(spec, long).split()), 115)
-        self.assertGreater(len(es.assemble_prompt(spec, long).split()), 205)
+        self.assertEqual(len(es.plain_story(spec, long).split()), 125)
+        self.assertGreater(len(es.assemble_prompt(spec, long).split()), 215)
         issue = next(i for i in es.final_prompt_issues(spec, long, es.assemble_prompt(spec, long))
                      if i["rule"] == "volcano_prompt_words")
         self.assertIn("shorten the three fields to at most", issue["feedback"])
@@ -3636,7 +3646,8 @@ class TestVolcanoClose13Oct(unittest.TestCase):
                     spots.add(t["spot"])
                 import core.proven_axes as pa   # 31 Eki (3): sadece KANITLI noktalar (hit + paylaşılan)
                 self.assertEqual(spots, set(pa.spots(e, sk.view_spots(e, None))))
-                self.assertGreaterEqual(len(set(tags)), 20)
+                # 11 Kas (4): kül bulutu P7 dışlamalarıyla havuz küçüldü (yamaç terasında 21 çift): en az 19
+                self.assertGreaterEqual(len(set(tags)), 19)
                 self.assertLessEqual(most, es.max_prompt_words(e))   # 11 Kas (A7): kül bulutu 205
 
 
@@ -3761,7 +3772,8 @@ class TestTornadoAudit23Oct(unittest.TestCase):
 
     def test_exclusions(self):
         import core.opening_axis as ox
-        self.assertEqual(es.EVENT_BEATS[es.LANDFALL]["excluded_pairs"], {("C8", "E1"), ("C7", "E8")})   # 11 Kas (2)
+        self.assertEqual(es.EVENT_BEATS[es.LANDFALL]["excluded_pairs"], {("C8", "E1"), ("C7", "E8"),   # 11 Kas (2)
+                                                                         ("C8", "E7")})   # 11 Kas (4)
         self.assertEqual(es.EVENT_BEATS[es.LANDFALL]["excluded_spots"], {})
         self.assertEqual(ox.beat_conflicts(es.LANDFALL, "C"), {"C2"})
         self.assertEqual(ox.beat_conflicts(es.LANDFALL, "D"), {"E1", "E2", "E8"})   # 11 Kas (2): E8 bütçe (D deneme)

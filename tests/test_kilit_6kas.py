@@ -240,8 +240,10 @@ class TestFireTornadoLock(_Quiet):
         self.assertTrue(set(v["spot"].split()) and v["spot"] in es.FIRE_TOR_ENVS["forest_edge"]["spots"])
         # 11 Kas (3): T4 + U11 (5 Kas 9/10) devam + hareket cümleleriyle hiçbir rotasyon kadrajında 205'e sığmıyor:
         # bütçe dışlaması (es.BUDGET_PAIRS_11KAS_3); havuzda ve yasak çift listesinde değil, sadece bütçe
-        self.assertIn(("T4", "U11"), es.BUDGET_PAIRS_11KAS_3[FT])
-        self.assertNotIn(("T4", "U11"), es.EVENT_BEATS[FT]["excluded_pairs"])
+        # 11 Kas (4): kısa hareket cümlesi + 215 tavanıyla yeniden seçilebilir (önceki tur bütçe dışıydı)
+        self.assertIn(("T4", "U11"), es.BUDGET_PAIRS_11KAS_3_ESKI[FT])
+        self.assertIn(("T4", "U11"), [p for s in es.FIRE_TOR_ENVS["forest_edge"]["spots"]
+                                      for p in es.allowed_pairs(FT, None, s)])
 
 
 if __name__ == "__main__":

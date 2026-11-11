@@ -130,7 +130,7 @@ class TestAshCloud(_Quiet):
         self.assertNotIn("pyro_blast_word", {i["rule"] for i in es.gpt_added_issues(spec_b, sl)})
 
     def test_caps(self):
-        self.assertEqual(es.max_prompt_words(PY), 205)
+        self.assertEqual(es.max_prompt_words(PY), 215)   # 11 Kas (4)
         # 11 Kas (3): devam cümlesi (11 kelime) 9-15s'in parçası: hikâye 40-104; bombalar 205
         self.assertEqual(es.TOTAL_WORDS_BY_EVENT[PY], (40, 104))
         self.assertEqual(es.max_prompt_words(es.VOLCANIC_BOMBS), 205)
@@ -140,15 +140,14 @@ class TestAshCloud(_Quiet):
         for seed in range(1, 41):
             snap = ps.snapshot_event(PY, seed)
             self.assertNotIn("error", snap, seed)
-            self.assertLessEqual(len(snap["prompt"].split()), 205)
+            self.assertLessEqual(len(snap["prompt"].split()), 215)   # 11 Kas (4)
             seen_k.add(snap["axes"]["kadraj"])
             seen_op.add(snap["axes"]["acilis"])
             for w in ("fireball", "explosion", "nuclear", "mushroom"):
                 self.assertNotIn(w, snap["prompt"].lower())
         self.assertIn("K_V", seen_k)
-        # 11 Kas (3): açılış E (37 kelime) devam + hareket cümleleriyle hiçbir çiftte 205'e sığmıyor: bütçe dışlaması
-        # (ox.BUDGET_TRIPLES_11KAS_3), rotasyonda A
-        self.assertEqual(seen_op, {"A"})
+        # 11 Kas (4): kısa hareket cümlesi + 215 tavanı: E yeniden A ile sırayla (sadece E + P8 + Q4/Q8 bütçe dışı)
+        self.assertEqual(seen_op, {"A", "E"})
 
 
 class TestTidal(_Quiet):

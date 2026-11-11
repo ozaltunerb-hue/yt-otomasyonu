@@ -168,12 +168,12 @@ class TestMeteor(unittest.TestCase):
         self.assertEqual(es.max_prompt_chars(MET), es.MAX_PROMPT_CHARS)
         # 11 Kas 2026 (2), Bahadır (8): olay bazında ölçülen en büyük (yeni kadrajlar + birebir insan cümleleri)
         # 11 Kas (3): devam + hareket cümleleri: en fazla 205, karaya vurur 198
-        raised = {es.WILDFIRE: 205, es.HELICOPTER: 205, es.VOLCANIC_BOMBS: 205, es.VILLAGE: 205, es.TIDAL: 205,
-                  es.LANDFALL: 198, es.FIRE_TORNADO: 205}
+        raised = {es.WILDFIRE: 205, es.HELICOPTER: 205, es.VOLCANIC_BOMBS: 205, es.VILLAGE: 205, es.TIDAL: 215,
+                  es.LANDFALL: 198, es.FIRE_TORNADO: 215}   # 11 Kas (4): ateş hortumu, dev dalga 215
         for e, n in raised.items():
             self.assertEqual((es.max_prompt_words(e), es.max_constraints(e), es.max_prompt_chars(e)), (n, 8, 1400), e)
         for e in es.structured_events():
-            if e not in (MET, es.FLOOD, es.LIBERTY, es.PYROCLASTIC) and e not in raised:   # sel 185, Özgürlük Anıtı 205, kül bulutu 205
+            if e not in (MET, es.FLOOD, es.LIBERTY, es.PYROCLASTIC) and e not in raised:   # kül bulutu 215   # sel 185, Özgürlük Anıtı 205, kül bulutu 205
                 self.assertEqual((es.max_prompt_words(e), es.max_constraints(e), es.max_prompt_chars(e)),
                                  (175, 8, 1400), e)
         # 3 Kas (sel su kontrolü), Bahadır: sel 185 kelime (su seviyesi cümleleri)
@@ -182,7 +182,7 @@ class TestMeteor(unittest.TestCase):
         self.assertEqual((es.max_prompt_words(es.LIBERTY), es.max_constraints(es.LIBERTY),
                           es.max_prompt_chars(es.LIBERTY)), (205, 8, 1400))   # 4 Kas: Özgürlük Anıtı
         self.assertEqual((es.max_prompt_words(es.PYROCLASTIC), es.max_constraints(es.PYROCLASTIC),
-                          es.max_prompt_chars(es.PYROCLASTIC)), (205, 8, 1400))   # 11 Kas (A7): kül bulutu
+                          es.max_prompt_chars(es.PYROCLASTIC)), (215, 8, 1400))   # 11 Kas (4): kül bulutu 215
 
     def test_key_frames_envs_lights_locked(self):
         import core.creative_pipeline as cp

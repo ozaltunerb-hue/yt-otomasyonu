@@ -792,6 +792,8 @@ PROMPT_WORDS_BY_EVENT = {"Meteor slams into the sea off the coast": 205,   # 29 
 # 205; karaya vurur ölçülen en büyük 198. Hâlâ sığmayan kombinasyonlar bütçe dışlamasıyla kapalı (BUDGET_PAIRS_11KAS_3)
 PROMPT_WORDS_BY_EVENT.update({WILDFIRE: 205, HELICOPTER: 205, LANDFALL: 198, VOLCANIC_BOMBS: 205, VILLAGE: 205,
                               FIRE_TORNADO: 205, TIDAL: 205})
+# 11 Kas (4), Bahadır (2): ateş hortumu, kül bulutu, dev dalga 215 / 1400; diğerleri aynen
+PROMPT_WORDS_BY_EVENT.update({FIRE_TORNADO: 215, PYROCLASTIC: 215, TIDAL: 215})
 CONSTRAINTS_BY_EVENT = {"Meteor slams into the sea off the coast": 11}
 PROMPT_CHARS_BY_EVENT: dict[str, int] = {}
 
@@ -1455,7 +1457,8 @@ EVENT_BEATS = {
         # 18 Eki (2): E7 bina üst katı, 4-9s'de bina yok. 23 Eki: (C2, E1) çatı iki kez çıktı (C2'de kiremit yok); E1 ve
         # E2 (ikisi de çatı) aynı dilimde, birlikte seçilmez
         # 11 Kas (2): aynı enkaz/yapı iki dilimde yok: C8 + E1 (parçalar iki kez sokağa), C7 + E8 (ön cephe iki kez)
-        "excluded_pairs": {("C8", "E1"), ("C7", "E8")},
+        # 11 Kas (4), Bahadır (5): C8 (balkonlar kopar) + E7 (üst kat parçalanır)
+        "excluded_pairs": {("C8", "E1"), ("C7", "E8"), ("C8", "E7")},
         "excluded_views": {},
         # 23 Eki: E1'in kıyı mahallesi dışlaması çıktı (önceki "a house" kameranın durduğu verandalı ev gibi
         # çiziliyordu; şimdi "a waterfront building")
@@ -1653,7 +1656,10 @@ EVENT_BEATS = {
                            ("K7", "L8"), ("K8", "L8"),   # 11 Kas (2): evler iki kez (K7, K8 ile L8; L1/L5/L7 kuralı)
                            # 11 Kas (3), Bahadır (4): K9 (çatı çöker) L7 / L8 (ev/çatı çöker) ile eşleşmez. (K8, L1)
                            # (K8, L5) (K7, L1) zaten dışlı
-                           ("K9", "L7"), ("K9", "L8")},
+                           ("K9", "L7"), ("K9", "L8"),
+                           # 11 Kas (4), Bahadır (5): (K2, L9) araç ezilir iki kez. (K9, L9) UYGULANMADI: K9'un köy evi
+                           # balkonunda tek final eşi kalıyordu (L4; en az 2 eş kuralı)
+                           ("K2", "L9")},
         "excluded_views": {},
         # Kamera bir yamaç evinin balkonunda (Bahadır onayı, 8 Eki): ev çatısını yakan maddeler o noktada seçilmez
         "excluded_spots": {"L1": {"Balcony of a hillside house"}, "L5": {"Balcony of a hillside house"}},
@@ -1858,7 +1864,10 @@ EVENT_BEATS = {
                                            "caves in", "give way", "gives way")]},
         },
         # 11 Kas (2): aynı yapı iki dilimde yok: ev (F2, F4 ile G8), çatı çöküşü (F4 ile G9)
-        "excluded_pairs": {("F1", "G3"), ("F2", "G2"), ("F5", "G3"), ("F2", "G8"), ("F4", "G8"), ("F4", "G9")},
+        "excluded_pairs": {("F1", "G3"), ("F2", "G2"), ("F5", "G3"), ("F2", "G8"), ("F4", "G8"), ("F4", "G9"),
+                           # 11 Kas (4), Bahadır (5): çatı çöker iki kez (F2, G9), ağaç devrilir iki kez (F6, G3).
+                           # (F2, G6) UYGULANMADI: G9 ile birlikte F2'nin sette tek final eşi kalıyordu (G3)
+                           ("F2", "G9"), ("F6", "G3")},
         "excluded_views": {},
         # Kamera bir yamaç evinin balkonunda (orman yangınındaki L1/L5 gibi): yanan çatıya/eve su düşmesi (F2, F5)
         # ve alevin ıskalanan bir çatıya sıçraması (G4) kameranın durduğu ev gibi çizilebilir; o noktada seçilmez
@@ -1994,7 +2003,9 @@ EVENT_BEATS = {
         # Q8 (ev duvarı: P1, P5)
         "excluded_pairs": {("P3", "Q3"), ("P1", "Q1"), ("P3", "Q6"), ("P6", "Q3"), ("P6", "Q6"), ("P1", "Q6"),
                            ("P5", "Q1"), ("P5", "Q4"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8"),
-                           ("P8", "Q6")},   # 11 Kas: park arabaları iki dilimde yok (Q6 pasif, kural kaydı)
+                           ("P8", "Q6"),   # 11 Kas: park arabaları iki dilimde yok (Q6 pasif, kural kaydı)
+                           # 11 Kas (4), Bahadır (5): P7 (bulut ilk evleri yutar) + ev yutulur/çöker finalleri
+                           ("P7", "Q1"), ("P7", "Q7"), ("P7", "Q8")},
         "excluded_views": {},
         # Kamera evinin/terasın çatısı: çatı maddeleri (P3 kiremit, P6 sac çatı, Q3 baca, Q6 çatı döşemesi) çatı
         # terasında ve köy evi balkonunda seçilmez, sadece yamaç terasında
@@ -2057,7 +2068,9 @@ EVENT_BEATS = {
         # (R1, R2: T9 kamyon)
         "excluded_pairs": {("R2", "T2"), ("R1", "T2"), ("R5", "T6"),
                            ("R7", "T1"), ("R7", "T7"), ("R8", "T6"), ("R1", "T9"), ("R2", "T9"),
-                           ("R1", "T7"), ("R2", "T7")}   # 30 Eki (2), Bahadır: T7 araç (araç iki kez)
+                           ("R1", "T7"), ("R2", "T7"),   # 30 Eki (2), Bahadır: T7 araç (araç iki kez)
+                           # 11 Kas (4), Bahadır (5): ev vurulur iki kez
+                           ("R7", "T6"), ("R7", "T8"), ("R8", "T8")}
                           | _VOLC_BOMBS_GAPS,
         # 31 Eki (2), Bahadır: ("R9", "T5") kaldırıldı (gerekçesi "yol iki kez" idi; yeni R9 köşe dükkânı, yol değil)
         "excluded_views": {},
@@ -4679,15 +4692,17 @@ FALLBACK_PEOPLE_RETIRED[PYROCLASTIC] = (   # 6 Kas: kül bulutunun önceki yedek
     "{N} people run from the cloud.", "{N} residents dash down the street away from it.")
 # 🔥 Ateş hortumu: ortama göre (kilit cümle 28-29 kelime, en uzun beat çifti 39: insan cümlesi 6-7 kelime)
 FALLBACK_PEOPLE_FIRE_ENV = {
+    # 11 Kas (4), Bahadır (4): "dash" -> "run" (forest_edge/5, tree_street/5, village_woods/6); başka değişiklik yok.
+    # forest_edge/5 artık forest_edge/1 ile aynı metin (talimat birebir)
     "forest_edge": ("{N} people run between the houses below.", "{N} neighbors flee in the yard below.",
                     "{N} people sprint away right below.", "{N} residents run away in the street right below.",
-                    "{N} people dash between the houses below.", "{N} neighbors run through the yard below."),
+                    "{N} people run between the houses below.", "{N} neighbors run through the yard below."),
     "tree_street": ("{N} people run down the street below.", "{N} residents flee in the street below.",
                     "{N} people sprint away right below.", "{N} neighbors run along the street below.",
-                    "{N} people dash away in the street right below.", "{N} residents run across the street below."),
+                    "{N} people run away in the street right below.", "{N} residents run across the street below."),
     "village_woods": ("{N} villagers run between the houses below.", "{N} villagers flee down the street below.",
                       "{N} people sprint away right below.", "{N} villagers run through the yard below.",
-                      "{N} people run away in the street right below.", "{N} villagers dash in the gardens below."),
+                      "{N} people run away in the street right below.", "{N} villagers run in the gardens below."),
 }
 
 
@@ -4810,12 +4825,14 @@ WATER_LEVEL_LINES = {FLOOD: {"slice_2": "Water rises past the car windows.",
 # rotasyondaki hiçbir kadraj ve insan cümlesiyle sığmıyor (scripts/frame_budget.py döngüsü). Dışlanmasalar üretimdeki
 # sığma koruması rotasyon dışı kadraja düşer; ateş hortumunda tek sığan mod A (göz hizası, takip eden kamera): yüksek-sabit
 # kuralına aykırı. Açılışa bağlı olanlar opening_axis.BUDGET_TRIPLES_11KAS_3'te. Kayıt; açmak: kümeden çıkar
-BUDGET_PAIRS_11KAS_3 = {
+# 11 Kas (4): kayıt (önceki tur); aktif liste BUDGET_PAIRS_11KAS_3 madde 1-2'den sonra sıfırdan hesaplandı
+BUDGET_PAIRS_11KAS_3_ESKI = {
     FIRE_TORNADO: {("T4", "U1"), ("T4", "U2"), ("T4", "U7"), ("T4", "U8"), ("T4", "U9"), ("T4", "U11"),
                    ("T8", "U1"), ("T8", "U7"), ("T8", "U8"), ("T8", "U9"), ("T8", "U11")},
     HELICOPTER: {("F6", "G2"), ("F6", "G8")},
     TIDAL: {("T3", "W11"), ("T3", "W12"), ("T8", "W5"), ("T8", "W11"), ("T8", "W12")},   # rotasyon açılışı A ile
 }
+BUDGET_PAIRS_11KAS_3: dict[str, set] = {}
 # 11 Kas 2026 (3), Bahadır (2a): 9-15s cümlesinden hemen sonra birebir devam cümlesi (HEDEF 8). Dilim 9-15s'in parçası:
 # kod yedeği, birebir hâl ve son denetim aynı metni görür; 9-15s ve toplam kelime üst sınırı cümle kadar uzar
 CONTINUATION_LINES = {

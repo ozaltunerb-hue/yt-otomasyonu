@@ -36,7 +36,7 @@ CONT = {
     es.VILLAGE: "Until the last frame, the mud keeps pouring down the lane.",
     es.FIRE_TORNADO: "Until the last frame, the fire tornado keeps tearing through the houses.",
 }
-MOTION = "The disaster is already in full motion in the very first frame, and the action never calms down before the end."
+MOTION = "Full action from the very first frame to the last."   # 11 Kas (4): kısa hâl
 K_Y3 = ("Handheld footage filmed from the flat rooftop of a tall stone house at the bottom of the village, high vantage, "
         "facing up the slope with the lanes and houses below in frame; slight hand shake, the camera stays fixed, tilting "
         "only slightly, never descending, the debris torrent in frame, a low parapet edge in the foreground; one "
@@ -173,7 +173,16 @@ class TestFramesAndPairs(_Quiet):
         self.assertFalse(pairs & {("K9", "L7"), ("K9", "L8")})
 
     def test_budget_exclusions_recorded(self):
-        self.assertEqual(set(es.BUDGET_PAIRS_11KAS_3), {es.FIRE_TORNADO, es.HELICOPTER, es.TIDAL})
+        # 11 Kas (4): sıfırdan hesap: çift dışlaması kalmadı; tek bütçe dışlaması kül bulutu E + P8 + Q4/Q8
+        self.assertEqual(es.BUDGET_PAIRS_11KAS_3, {})
+        self.assertEqual(ox.BUDGET_TRIPLES_11KAS_3, {es.PYROCLASTIC: {("E", "P8", "Q4"), ("E", "P8", "Q8")}})
+        self.assertTrue(es.BUDGET_PAIRS_11KAS_3_ESKI and ox.BUDGET_TRIPLES_11KAS_3_ESKI)   # kayıt
+        ft = {p for s in sk.view_spots(es.FIRE_TORNADO, None) for p in es.allowed_pairs(es.FIRE_TORNADO, None, s)}
+        self.assertIn(("T4", "U11"), ft)
+        self.assertTrue({p for p in ft if p[0] == "T8"})
+        ti = {p for v in es.structure_views(es.TIDAL) for s in sk.view_spots(es.TIDAL, v)
+              for p in es.allowed_pairs(es.TIDAL, v, s)}
+        self.assertEqual(len({p[0] for p in ti}), 4)
         for e, pairs in es.BUDGET_PAIRS_11KAS_3.items():
             for view in es.structure_views(e):
                 for spot in sk.view_spots(e, view):
@@ -181,15 +190,15 @@ class TestFramesAndPairs(_Quiet):
         for e, triples in ox.BUDGET_TRIPLES_11KAS_3.items():
             for o, b2, b3 in triples:
                 self.assertNotIn(o, ox.allowed(e, None, b2, b3))
-        # kül bulutu E kodda (silinmedi), bütçe yüzünden hiçbir çiftte seçilmiyor
-        self.assertIn("E", ox.OPENINGS[es.PYROCLASTIC])
+        self.assertIn("E", ox.allowed(es.PYROCLASTIC, None, "P2", "Q1"))
 
 
 class TestCaps(_Quiet):
     def test_caps_max_205(self):
         caps = {e: es.max_prompt_words(e) for e in HEDEF}
+        # 11 Kas (4): ateş hortumu, kül bulutu, dev dalga 215
         self.assertEqual(caps, {es.WILDFIRE: 205, es.HELICOPTER: 205, es.LANDFALL: 198, es.VOLCANIC_BOMBS: 205,
-                                es.VILLAGE: 205, es.FIRE_TORNADO: 205, es.PYROCLASTIC: 205, es.TIDAL: 205})
+                                es.VILLAGE: 205, es.FIRE_TORNADO: 215, es.PYROCLASTIC: 215, es.TIDAL: 215})
         for e in HEDEF:
             self.assertEqual(es.max_prompt_chars(e), 1400)
 
@@ -204,6 +213,46 @@ class TestCaps(_Quiet):
                     low = snap["style_suffix"].lower()
                     for w in ("eye level", "pans to follow", "follows the"):
                         self.assertNotIn(w, low)   # sığma koruması hiçbir zaman alçak kameraya düşmez
+
+
+class TestRound4(_Quiet):
+    """11 Kas (4), Bahadır: kısa hareket cümlesi, 215 tavanı, ateş hortumu "dash" -> "run", aynı tür dışlamalar,
+    alçak kamera hiçbir koşulda yok."""
+
+    def test_fire_tornado_people_no_dash(self):
+        pools = es.FALLBACK_PEOPLE_FIRE_ENV
+        for env, pool in pools.items():
+            for t in pool:
+                self.assertNotIn("dash", t, (env, t))
+        self.assertEqual(pools["forest_edge"][4], "{N} people run between the houses below.")
+        self.assertEqual(pools["tree_street"][4], "{N} people run away in the street right below.")
+        self.assertEqual(pools["village_woods"][5], "{N} villagers run in the gardens below.")
+
+    def test_same_type_exclusions_and_min_partners(self):
+        applied = {es.WILDFIRE: {("K2", "L9")}, es.HELICOPTER: {("F2", "G9"), ("F6", "G3")},
+                   es.LANDFALL: {("C8", "E7"), ("C7", "E8")},
+                   es.VOLCANIC_BOMBS: {("R7", "T6"), ("R7", "T8"), ("R8", "T8")},
+                   es.PYROCLASTIC: {("P7", "Q1"), ("P7", "Q7"), ("P7", "Q8")}}
+        for e, pairs in applied.items():
+            self.assertTrue(pairs <= es.EVENT_BEATS[e]["excluded_pairs"], e)
+        # uygulanmayanlar (spot içinde ortanın tek final eşi kalıyordu)
+        self.assertNotIn(("K9", "L9"), es.EVENT_BEATS[es.WILDFIRE]["excluded_pairs"])
+        self.assertNotIn(("F2", "G6"), es.EVENT_BEATS[es.HELICOPTER]["excluded_pairs"])
+        for e in applied:
+            allp = set()
+            for v in es.structure_views(e):
+                for s in sk.view_spots(e, v):
+                    ps_ = es.allowed_pairs(e, v, s)
+                    allp |= set(ps_)
+                    for m in {a for a, _ in ps_}:
+                        self.assertGreaterEqual(len({d for a, d in ps_ if a == m}), 2, (e, s, m))
+            self.assertGreaterEqual(len({a for a, _ in allp}), 4, e)
+            self.assertGreaterEqual(len({d for _, d in allp}), 4, e)
+
+    def test_fit_guard_never_low_camera(self):
+        import inspect
+        src = inspect.getsource(cp._build_structured_scene)
+        self.assertIn("pa.frame_status(event, spot, a[1]) != pa.LOW", src)
 
 
 if __name__ == "__main__":

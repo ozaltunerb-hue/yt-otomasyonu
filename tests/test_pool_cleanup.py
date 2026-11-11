@@ -257,7 +257,7 @@ class TestCleanupRule(unittest.TestCase):
         self.assertEqual((sorted(b["slice_2"]), sorted(b["slice_3"])),
                          (["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8"],   # 11 Kas (A4): P7, P8
                           ["Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8"]))   # 6 Kas (2)
-        self.assertEqual(len(b["excluded_pairs"]), 13)   # 11 Kas: (P8, Q6)
+        self.assertEqual(len(b["excluded_pairs"]), 16)   # 11 Kas: (P8, Q6); 11 Kas (4): P7 ile Q1 Q7 Q8
         self.assertNotIn(es.PYROCLASTIC, es.RETIRED_BEATS)
 
     def test_every_group_at_least_four_and_every_spot_selectable(self):

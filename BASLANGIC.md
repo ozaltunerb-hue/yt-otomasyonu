@@ -25,6 +25,17 @@
 
 ---
 
+## 📋 DEVİR: 11 Kasım (4) kısa hareket cümlesi + 215 tavanı + bütçe dışlamaları geri açıldı
+
+Test `tests/test_11kas_3.py` (TestRound4). `sk.FULL_MOTION` = "Full action from the very first frame to the last."; ateş
+hortumu, kül bulutu, dev dalga tavanı 215 / 1400. Bütçe dışlamaları sıfırdan: çift dışlaması yok (`BUDGET_PAIRS_11KAS_3`
+boş; önceki liste `_ESKI` kayıt), sadece kül bulutu E + P8 + Q4 / Q8 (`ox.BUDGET_TRIPLES_11KAS_3`). Ateş hortumu T4 / T8
+(T4 + U11 dahil) ve dev dalga T8 geri, kül bulutu A + E sırayla. Ateş hortumu insan cümlelerinde "dash" -> "run"
+(forest_edge/5 artık forest_edge/1 ile aynı metin). Aynı tür dışlamaları: orman (K2, L9); helikopter (F2, G9) (F6, G3);
+karaya vurur (C8, E7); bombalar (R7, T6) (R7, T8) (R8, T8); kül bulutu P7 ile Q1 Q7 Q8. UYGULANMAYAN: orman (K9, L9) ve
+helikopter (F2, G6) (spot içinde ortanın tek final eşi kalıyordu). Sığma korumasında alçak mod A kamera hiçbir koşulda yok
+(`creative_pipeline`, `pa.LOW` süzgeci).
+
 ## 📋 DEVİR: 11 Kasım (3) HEDEF 8 hikâyesi tamamen koddan + devam/hareket cümleleri + bütçe dışlamaları
 
 Kie/GPT çağrısı yok; test `tests/test_11kas_3.py`. HEDEF 8 = orman, helikopter, karaya vurur, bombalar, heyelan köy, ateş

@@ -1103,6 +1103,8 @@ async def _build_structured_scene(domain, event, ship, spot, view, view_source, 
         # 31 Eki (3): rotasyondaki (KANITLI + koruma) kadrajlar önce; deneme kadrajı sadece hiçbiri sığmazsa
         import core.proven_axes as pa
         rot = pa.allowed_variants(event, spot, fx.all_frames(event, spot, pool, risky, blocked))
+        # 11 Kas (4), Bahadır: alçak "mod A" kamera (göz hizası / takip) hiçbir koşulda seçilmez, son çare de değil
+        alternatives = [a for a in alternatives if pa.frame_status(event, spot, a[1]) != pa.LOW]
         alternatives.sort(key=lambda a: (a[1] not in rot, a[0] != scene_env,
                                          (a[1]["type"] in last_k) + (a[1].get("mode") in last_mode)
                                          + (a[1].get("fg") in last_fg), a[1]["type"] in last_k))

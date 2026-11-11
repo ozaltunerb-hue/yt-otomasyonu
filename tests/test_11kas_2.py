@@ -281,11 +281,11 @@ class TestBuildAndCaps(_Quiet):
         # 11 Kas (3): devam + hareket cümleleri: tavan en fazla 205 (karaya vurur ölçülen 198); hikâye üst sınırı +
         # devam cümlesi
         self.assertEqual({e: es.max_prompt_words(e) for e in CHANGED},
-                         {WF: 205, HE: 205, LF: 198, VB: 205, VI: 205, FT: 205, PY: 205, TI: 205})
+                         {WF: 205, HE: 205, LF: 198, VB: 205, VI: 205, FT: 215, PY: 215, TI: 215})   # 11 Kas (4)
         self.assertEqual(es.TOTAL_WORDS_BY_EVENT[HE], (40, 92))
         self.assertEqual(es.TOTAL_WORDS_BY_EVENT[FT], (40, 87))
         for e in CHANGED:
-            self.assertLessEqual(es.max_prompt_words(e), 205)
+            self.assertLessEqual(es.max_prompt_words(e), 215)   # 11 Kas (4)
             self.assertEqual(es.max_prompt_chars(e), 1400)
 
     def test_40_seeds_build(self):

@@ -719,8 +719,8 @@ class TestFireTornadoGate(unittest.TestCase):
         longest = max(len(es.style_suffix(E, None, s, None, None).split()) for s in SPOTS)
         # 18 Eki (2): şekil cümlesi eklendi, kamera/giyim satırı ve iki nokta kısaldı: en uzun stil eki 96
         # 11 Kas (3): hareket cümlesi (+21): en uzun ek 117; tavan 205, sığmayan çiftler bütçe dışlamasıyla kapalı
-        self.assertEqual(longest, 117)
-        self.assertEqual(es.max_prompt_words(E), 205)
+        self.assertEqual(longest, 106)   # 11 Kas (4): kısa hareket cümlesi
+        self.assertEqual(es.max_prompt_words(E), 215)
         self.assertEqual(es.VOLC_MAX_PROMPT_WORDS, 175)
         self.assertIn(E, es.WORD_CAP_EVENTS)
         from core.trace_format import count_constraints

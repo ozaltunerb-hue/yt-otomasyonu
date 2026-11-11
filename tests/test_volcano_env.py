@@ -212,7 +212,7 @@ class TestVolcEnvPrompt(unittest.TestCase):
         self.assertLessEqual(worst_by[PY], 205)   # 11 Kas (A7): açılış A ile en uzun kül bulutu (kadraj yok)
         worst = worst_by[VB]   # bombalar (kilitli) aynen
         # 11 Kas (3): devam + hareket cümleleri, tavan 205 (önceki 174: 3 Kas kilit istisnası, 21 Eki, 31 Eki notları)
-        self.assertEqual(worst, 205)
+        self.assertEqual(worst, 195)   # 11 Kas (4): kısa hareket cümlesi
 
     def test_word_budget_keeps_gpt_prompt_within_175(self):
         """Bahadır kararı (18 Eki (3)): GPT'ye söylenen toplam = 175 - stil eki - 3 (en fazla kapının 75'i)."""
@@ -250,11 +250,13 @@ class TestVolcEnvPrompt(unittest.TestCase):
         self.assertEqual(es.EVENT_BEATS[VB]["excluded_pairs"],
                          {("R1", "T2"), ("R1", "T9"), ("R2", "T2"), ("R2", "T9"), ("R5", "T6"), ("R7", "T1"),
                           ("R7", "T7"), ("R8", "T6"),   # 31 Eki (2): (R9, T5) kaldırıldı
-                          ("R1", "T7"), ("R2", "T7")})   # 30 Eki (2), Bahadır: T7 araç (araç iki kez)
+                          ("R1", "T7"), ("R2", "T7"),   # 30 Eki (2), Bahadır: T7 araç (araç iki kez)
+                          ("R7", "T6"), ("R7", "T8"), ("R8", "T8")})   # 11 Kas (4)
         self.assertEqual(es.EVENT_BEATS[PY]["excluded_pairs"],
                          {("P1", "Q1"), ("P1", "Q6"), ("P3", "Q3"), ("P3", "Q6"), ("P5", "Q1"), ("P5", "Q4"),
                           ("P6", "Q3"), ("P6", "Q6"), ("P3", "Q7"), ("P6", "Q7"), ("P1", "Q8"), ("P5", "Q8"),
-                          ("P8", "Q6")})   # 11 Kas: park arabaları
+                          ("P8", "Q6"),   # 11 Kas: park arabaları
+                          ("P7", "Q1"), ("P7", "Q7"), ("P7", "Q8")})   # 11 Kas (4)
 
 
 class TestVolcEnvPipeline(unittest.TestCase):

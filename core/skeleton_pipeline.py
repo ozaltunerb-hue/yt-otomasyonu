@@ -1112,8 +1112,10 @@ VOLCANO_GUARDRAILS_LONG = VOLCANO_GUARDRAILS   # 21 Eki (genel kalite): kül bul
 # olabilir; 175 kelime için de kısa).
 # Bahadır'ın metni; ";" yerine virgül: stil eki en fazla 8 kısıt (count_constraints ";" ve "." ile sayar)
 REAL_TIME = "Everything moves in real time, never in slow motion, people run at full speed."
-# 11 Kas 2026 (3), Bahadır (2b): HEDEF 8'de kamera cümlesinden sonra, gerçek zaman cümlesinden önce birebir
-FULL_MOTION = "The disaster is already in full motion in the very first frame, and the action never calms down before the end."
+# 11 Kas 2026 (3), Bahadır (2b): HEDEF 8'de kamera cümlesinden sonra, gerçek zaman cümlesinden önce birebir.
+# 11 Kas (4), Bahadır (1): kısaldı. Önceki "The disaster is already in full motion in the very first frame, and the
+# action never calms down before the end."
+FULL_MOTION = "Full action from the very first frame to the last."
 FULL_MOTION_EVENTS = ("Wall of flames sweeps into a hillside neighborhood",
                       "Firefighting helicopter drops water on the flames racing toward a hillside neighborhood",
                       "Tornado making landfall", "Volcanic bombs slam into a village street",

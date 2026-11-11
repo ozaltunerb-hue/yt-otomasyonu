@@ -110,7 +110,7 @@ class TestWaterProfile(_Quiet):
                 extra = len(es.CONTINUATION_LINES[e].split()) if e in es.CONTINUATION_LINES else 0
                 self.assertEqual(es.slice_words(e, "slice_3"), (10, 24 + extra))
                 self.assertNotIn(e, es.WATER_LEVEL_LINES)
-        self.assertEqual(es.max_prompt_words(T), 205)   # 11 Kas (3): devam + hareket cümleleri
+        self.assertEqual(es.max_prompt_words(T), 215)   # 11 Kas (4)
 
 
 class TestPassiveAndActive(_Quiet):
