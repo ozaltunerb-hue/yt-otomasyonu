@@ -107,7 +107,7 @@ async def _credit(kie) -> float | None:
 async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_path: str = "",
                        domain: str | None = None, trigger: str = "auto", event: str | None = None,
                        mode: str | None = None, reporter: PipelineReporter | None = None, view: str | None = None,
-                       hit_env: str | None = None, approach_env: str | None = None):
+                       hit_env: str | None = None, approach_env: str | None = None, dalga24: bool = False):
     """
     Tam otonom video üretim pipeline'ı.
 
@@ -124,6 +124,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     view: şehir olaylarında Telegram bölge menüsünden seçilen görünüm (None = LRU).
     hit_env: 12 Kas, ⭐ Hit kalıbı modunda Telegram'da seçilen ortam (None = normal üretim).
     approach_env: 12 Kas (3), ⭐ Hit kalıbı · Yaklaşma modunda Telegram'da seçilen ortam (None = normal üretim).
+    dalga24: 12 Kas (5), ⭐ Hit kalıbı · 24 Eylül (dev dalga) modu (False = normal üretim).
     """
     if dry_run:
         settings.IS_DRY_RUN = True
@@ -173,6 +174,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 view=view,
                 **({"hit_env": hit_env} if hit_env else {}),
                 **({"approach_env": approach_env} if approach_env else {}),
+                **({"dalga24": True} if dalga24 else {}),
             )
             return result
         except (ContentFilterError, PreflightError) as err:
@@ -212,6 +214,7 @@ async def _execute_pipeline(
     view: str | None = None,
     hit_env: str | None = None,
     approach_env: str | None = None,
+    dalga24: bool = False,
 ) -> dict:
     """
     Pipeline'ın asıl implementasyonu.
@@ -239,6 +242,7 @@ async def _execute_pipeline(
         "view": view,
         **({"hit_env": hit_env} if hit_env else {}),   # 12 Kas: ⭐ Hit kalıbı
         **({"approach_env": approach_env} if approach_env else {}),   # 12 Kas (3): ⭐ Hit kalıbı · Yaklaşma
+        **({"dalga24": True} if dalga24 else {}),   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül
         # 21 Eki (Gece 1 / Aşama 3): seçimden önce kategorinin eksen geçmişi Notion'dan (iptaller dahil)
         "axes_loader": tracker.get_axes_records,
         # 21 Eki (Aşama 7): caption geçmişi (Paylaşımlar + son 20 üretilmiş caption)
@@ -350,6 +354,8 @@ async def _execute_pipeline(
                 info["hit_lines"] = structure["hit"]["lines"]
             if structure and structure.get("approach"):   # 12 Kas (3): ⭐ Hit kalıbı · Yaklaşma onay satırları
                 info["hit_lines"] = structure["approach"]["lines"]
+            if structure and structure.get("dalga24"):   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül onay satırları
+                info["hit_lines"] = structure["dalga24"]["lines"]
             meta.update({"final_prompt": info["prompt"], "story": info.get("story", ""),
                          "style_suffix": info.get("style_suffix", ""), "preflight": info.get("preflight") or {}})
             await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)

@@ -166,22 +166,28 @@ def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
              for a in trace.get("attempts") or []]
     beats = trace.get("beats") or "-"
     b2, _, b3 = beats.partition("+")
+    # 12 Kas (5): Hit kalıbı modlarında gerçek prompt parçaları ve etiketleri (normal yolda anahtar yok, metin aynı)
+    kv_l, b2_l, b3_l = trace.get("display_labels") or ("Kilit görsel (0-4s)", "4-9s olayı", "9-15s olayı")
+    repeat = (f"Tekrar önleme: {trace['repeat_note']}" if trace.get("repeat_note") else
+              f"Tekrar önleme: olay çifti {beats} (son {_beat_block(trace.get('event'))} üretimin olayları elendi, LRU)")
     return [
         ("🔍 1. Seçim (kod)",
          f"Hat: yapılandırılmış (kilit görsel + olay havuzu kodda, GPT sadece cümle yazar)\n"
          f"Kategori: {labels.get('domain') or trace.get('domain')}\n"
          f"Olay: {labels.get('event') or trace.get('event')}\n"
-         f"Yer: {trace.get('spot')}"
+         + (f"Mod: {trace['mode_label']}\n" if trace.get("mode_label") else "")
+         + f"Yer: {trace.get('spot')}"
          # 16 Eki: ateş hortumunda ortam Yer satırının yanında
          + (f" · ortam: {trace['fire_env_label_short']}" if trace.get("fire_env_label_short") else "")
          + f" · hava: {trace.get('weather')} · kişi aralığı: {lo}-{hi}\n"
          + (f"Görünüm: {trace['view']}" + (f" ({trace['view_source']})" if trace.get("view_source") else "")
             + "\n" if trace.get("view") else "") +
-         f"Kilit görsel (0-4s): {trace.get('key_visual')}\n"
-         f"Araç: {trace.get('vehicle')}\n"
-         f"4-9s olayı ({b2 or '-'}): {trace.get('beat_2_text', '-')}\n"
-         f"9-15s olayı ({b3 or '-'}): {trace.get('beat_3_text', '-')}\n"
-         f"Tekrar önleme: olay çifti {beats} (son {_beat_block(trace.get('event'))} üretimin olayları elendi, LRU)"
+         f"{kv_l}: {trace.get('key_visual')}\n"
+         + (f"Kamera: {trace['mode_camera']}\n" if trace.get("mode_camera") else "")
+         + f"Araç: {trace.get('vehicle')}\n"
+         f"{b2_l} ({b2 or '-'}): {trace.get('beat_2_text', '-')}\n"
+         f"{b3_l} ({b3 or '-'}): {trace.get('beat_3_text', '-')}\n"
+         + repeat
          # 11 Kas (5): GPT çağrılmayan olaylarda (kod hikâyesi) "hikâye GPT'ye verildi" yazılmaz (sadece metin)
          + ("" if trace.get("story_source_kind") == "code"
             else f" · son {trace.get('recent_count', 0)} hikâye GPT'ye verildi")),

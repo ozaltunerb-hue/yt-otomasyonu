@@ -179,6 +179,9 @@ def apply(scene: dict, env: str) -> dict:
                                 "residential area)",
                  "story_source": f"Hikâye: kod (birebir) · {MODE_LABEL}"}
     trace = {**(scene.get("trace") or {}), "mode": "hit", "hit_source": hit["source"]}
+    # 12 Kas (5): Onay görüntüsü gerçek hit parçalarını gösterir (prompt aynı)
+    shown, structure["axes_line"] = _hit_display(scene, structure, hit)
+    trace = {**shown, "mode": "hit", "hit_source": hit["source"]}
     return {**scene, "story": story, "style_suffix": HIT_TAIL[event], "prompt": prompt, "structure": structure,
             "trace": trace}
 
@@ -532,8 +535,9 @@ def yaklasma_apply(scene: dict, env: str, history: list[str] | None = None, rng=
                  "story_source": f"Hikâye: kod (birebir) · {APPROACH_MODE_LABEL}"}
     if st.get("axes_json"):
         structure["axes_json"] = _yaklasma_axes(st["axes_json"], new_tag, geo)
-    trace = {**(scene.get("trace") or {}), "mode": "yaklasma", "beats": new_tag, "cografya": geo,
-             "beat_2_text": yaklasma_mid(env, mid, vehicle)[:-1], "beat_3_text": _YK["finals"][final][:-1]}
+    # 12 Kas (5): Onay görüntüsü gerçek Yaklaşma parçalarını ve gerçek kamerayı gösterir (prompt aynı)
+    shown, structure["axes_line"] = _yaklasma_display(scene, structure, ap)
+    trace = {**shown, "mode": "yaklasma", "beats": new_tag, "cografya": geo}
     out = {**scene, "story": story, "plain_story": story, "style_suffix": tail, "prompt": prompt,
            "combo_key": combo, "structure": structure, "trace": trace}
     if scene.get("axes_json"):
@@ -576,4 +580,312 @@ def yaklasma_issues(structure: dict, info: dict) -> list[str]:
         out.append(f"prompt {len(text.split())} kelime (en fazla {YAKLASMA_MAX_WORDS})")
     if len(text) > YAKLASMA_MAX_CHARS:
         out.append(f"prompt {len(text)} karakter (en fazla {YAKLASMA_MAX_CHARS})")
+    return out
+
+
+# ── Onay görüntüsü (12 Kas 2026 (5), Bahadır): Hit kalıbı modlarında "1. Seçim", "3. Hikâye" ve "Eksenler" satırı Kie'ye
+# giden GERÇEK prompt'un parçalarını ve gerçek kamerasını gösterir (normal yolun açılışı / kamera modu gösterilmez).
+# Sadece görüntü: trace ve axes_line Kie prompt'una girmez (prompt metni aynı, snapshot diff 0).
+def mode_display(scene: dict, structure: dict, *, mode: str, camera: str, opening: str, mid: tuple[str, str],
+                 final: tuple[str, str], plain: str, axes: dict, repeat: str, vehicle: str | None = None,
+                 labels: tuple[str, str, str] | None = None, spot: str | None = None,
+                 weather: str = "-") -> tuple[dict, str]:
+    """(trace, axes_line): mid/final = (kod, metin)."""
+    trace = {**(scene.get("trace") or {}), "mode_label": mode, "mode_camera": camera, "key_visual": opening,
+             "beats": f"{mid[0]}+{final[0]}", "beat_2_text": mid[1], "beat_3_text": final[1], "vehicle": vehicle,
+             "story": plain, "story_words": len(plain.split()), "story_source_kind": "code",
+             "story_source": f"Hikâye: kod (birebir) · {mode}", "weather": weather, "repeat_note": repeat,
+             "attempts": []}
+    if labels:
+        trace["display_labels"] = labels
+    if spot:
+        trace["spot"] = spot
+    line = (f"Eksenler ({mode}): " + " · ".join(f"{k}={v if v not in (None, '') else '-'}" for k, v in axes.items())
+            + f"\nTekrar önleme: {repeat}")
+    return trace, line
+
+
+def _hit_display(scene: dict, structure: dict, hit: dict) -> tuple[dict, str]:
+    spec, s = structure["spec"], hit["slices"]
+    plain = " ".join([spec["key_visual"], s["slice_1_rest"], s["slice_2"], s["slice_3"]])
+    camera = "sabit (hit kalıbı: the camera stays fixed; rooftop terrace above a wooded residential area)"
+    axes = {"ortam": hit["env"], "araç": spec.get("vehicle"), "kişi": spec.get("people"), "orta": spec["beat_2"],
+            "final": spec["beat_3"], "kamera modu": "sabit (hit kalıbı)"}
+    return mode_display(scene, structure, mode=MODE_LABEL, camera=camera, opening=spec["key_visual"],
+                        mid=(spec["beat_2"], s["slice_2"]), final=(spec["beat_3"], s["slice_3"]), plain=plain,
+                        axes=axes, vehicle=spec.get("vehicle"),
+                        spot="Rooftop terrace above a wooded residential area (hit kalıbı)",
+                        repeat=f"olay çifti normal LRU (hit çifti {'+'.join(sorted(HIT_BANNED_PAIRS[FIRE_TORNADO])[0])} "
+                               "hiç gelmez)")
+
+
+def _yaklasma_display(scene: dict, structure: dict, ap: dict) -> tuple[dict, str]:
+    env, geo = ap["env"], ap["geo"]
+    mid_text = yaklasma_mid(env, ap["mid"], ap["vehicle"])
+    opening = yaklasma_opening(env, geo)
+    plain = " ".join([opening, yaklasma_people(env, ap["people"]), _YK["action"], mid_text, _YK["finals"][ap["final"]]])
+    cam = "takip" if ap["follow"] else "sabit"
+    axes = {"coğrafya": f"{geo} {_YK['geos'][geo]['name']}", "ortam": env, "araç": ap["vehicle"],
+            "kişi": ap["people"], "orta": ap["mid"], "final": ap["final"], "kamera modu": cam}
+    return mode_display(scene, structure, mode=APPROACH_MODE_LABEL,
+                        camera=f"{cam} ({yaklasma_camera_text(ap['follow'])}); rooftop terrace, {_YK['long_street'][env]}",
+                        opening=opening, mid=(ap["mid"], mid_text), final=(ap["final"], _YK["finals"][ap["final"]]),
+                        plain=plain, axes=axes, vehicle=ap["vehicle"],
+                        spot=f"Rooftop terrace looking down {_YK['long_street'][env]} (Yaklaşma kalıbı)",
+                        repeat=f"coğrafya son {YAKLASMA_GEO_BLOCK} elendi (G1 tohum) · orta O1-O5 LRU · final Y1-Y4 "
+                               "LRU (O1+Y1, O4+Y1 yasak)")
+
+
+# ── ⭐ Hit kalıbı · 24 Eylül (12 Kas 2026 (5), Bahadır): dev dalga ───────────────────────────────────────────────────
+# 24 Eyl hit'i (1,4M): sahil binasının yüksek balkonu, korkuluk görünür, gri kapalı gün; dalga karşıdaki dükkânların
+# arkasından yükselip caddeye çöker, arabalar oyuncak gibi sürüklenir, sel kameraya doğru gelir. Hikâye tamamen koddan,
+# GPT yok. Zaman etiketi (0-4s / 4-9s / 9-15s) YOK (hit prompt'ta da yoktu): bu mod kendi son denetimini kullanır,
+# yapılandırılmış hattın etiket denetimi bu moda uygulanmaz. Araç sürükleme yasağı SADECE bu modda kalkar (çekirdek
+# aksiyon ve F1/F2/F3); dev dalganın normal yolu ve diğer olaylar aynen. Seçim: normal hattın sahnesi (görünüm, combo
+# kaydı) kurulur, metni burada değiştirilir; kayıt A*+F* olarak yazılır.
+DALGA24_MODE_LABEL = "⭐ Hit kalıbı · 24 Eylül"
+DALGA24_EVENTS = (es.TIDAL,)
+# Kamera: True = yerinde durur, suyu izlemek için hafifçe döner; False = sabit (varsayılan True)
+DALGA24_KAMERA_TAKIP = True
+DALGA24_MAX_WORDS = 230
+DALGA24_MAX_CHARS = 1400
+DALGA24_GEO_BLOCK = 3
+DALGA24_GEO_SEED = ("D1",)        # 24 Eyl hit'i D1 sayılır: ilk üretimde D1 gelmez
+DALGA24_OPENING_BLOCK = 2
+DALGA24_OPENING_SEED = ("A2",)    # ilk üretimde A1 gelsin
+DALGA24_FINAL_BLOCK = 2
+DALGA_24EYLUL = {
+    "geos": {
+        "D1": {"name": "İngiltere", "place": "a grey British seaside town",
+               "shops": "the row of seafront shops and cafés with awnings"},
+        "D2": {"name": "Portekiz", "place": "a Portuguese seaside town", "shops": "the row of tiled shopfronts and cafés"},
+        "D3": {"name": "Japonya", "place": "a Japanese coastal town",
+               "shops": "the row of small shops with low tiled roofs"},
+        "D4": {"name": "Şili", "place": "a Chilean port town", "shops": "the row of colorful painted shopfronts"},
+        "D5": {"name": "İtalya", "place": "an Italian seaside town", "shops": "the row of pastel shopfronts with balconies"},
+        "D6": {"name": "Endonezya", "place": "an Indonesian coastal town",
+               "shops": "the row of small shophouses with tin roofs"},
+    },
+    "openings": {
+        "A1": {"desc": "binaların arkasından",
+               "text": "A colossal tidal wave rises behind {shops} across the street in {place} and crashes over their "
+                       "roofs into the street."},
+        "A2": {"desc": "caddenin başından",
+               "text": "A colossal tidal wave surges in from the sea at the far end of the street in {place} and rushes "
+                       "down it toward the camera, between {shops} on both sides."},
+    },
+    "people": "People watch from the rooftops across the street while others run along the street below.",
+    "core": "The wave sweeps parked cars into the storefronts; vehicles smash like toys against the windows as the "
+            "surging muddy water pushes half-submerged debris down the whole street toward the camera.",
+    "finals": {
+        "F1": "Right below the balcony, the flood slams the cars against the building and tears away its ground-floor "
+              "shopfronts.",
+        "F2": "Right below the balcony, a city bus is swept off the road and carried along by the flood, crashing into "
+              "the cars piled against the building.",
+        "F3": "Right below the balcony, the surge rips a café terrace and its awning off the building and drags them "
+              "down the street with the cars.",
+        "F4": "As the whole street turns into a raging river below the balcony, a second, even bigger wave rises on the "
+              "horizon.",
+    },
+    "camera": {True: "the camera stays in place and turns slightly to follow the water", False: "the camera stays fixed"},
+    "tail": ("Handheld phone footage filmed from a high balcony of a seafront building looking along the street, the "
+             "balcony railing visible in the foreground; slight hand shake, {camera}; one continuous shot, no zoom, no "
+             "cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Raw natural overcast light "
+             "under a grey sky, never glossy or cinematic; muddy brown water with real foam and debris. Real time, "
+             "never slow motion, people run at full speed. No readable signs, text or flags."),
+}
+_DZ = DALGA_24EYLUL
+_DZ_GEO_MEMORY: list[str] = []
+
+
+def dalga24_is_active(event: str | None) -> bool:
+    return event in DALGA24_EVENTS
+
+
+def dalga24_camera_text(follow: bool | None = None) -> str:
+    return _DZ["camera"][bool(DALGA24_KAMERA_TAKIP if follow is None else follow)]
+
+
+def dalga24_tail(follow: bool | None = None) -> str:
+    return _DZ["tail"].format(camera=dalga24_camera_text(follow))
+
+
+def dalga24_opening(geo: str, opening: str) -> str:
+    g = _DZ["geos"][geo]
+    return _DZ["openings"][opening]["text"].format(place=g["place"], shops=g["shops"])
+
+
+def dalga24_story(geo: str, opening: str, final: str) -> str:
+    """Etiketsiz hikâye (zaman etiketi yok): açılış + insan + çekirdek aksiyon + final."""
+    return " ".join([dalga24_opening(geo, opening), _DZ["people"], _DZ["core"], _DZ["finals"][final]])
+
+
+def dalga24_prompt(geo: str, opening: str, final: str, follow: bool | None = None) -> str:
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(dalga24_story(geo, opening, final), dalga24_tail(follow))
+
+
+def _block_pick(ids: list[str], seen: list[str], block: int, rng=None) -> str:
+    """Son `block` üretimin değeri elenir (aday kalmazsa derinlik 1, sonra 0), kalanlardan rastgele."""
+    import random
+    for depth in (block, 1, 0):
+        blocked = set(seen[-depth:]) if depth else set()
+        left = [x for x in ids if x not in blocked]
+        if left:
+            return (rng or random).choice(left)
+    return (rng or random).choice(ids)
+
+
+def dalga24_tags(history: list[str]) -> list[str]:
+    return [t for t in es.beat_history(es.TIDAL, history or []) if re.fullmatch(r"A\d+\+F\d+", t)]
+
+
+def dalga24_choose_opening(history: list[str], rng=None) -> str:
+    seen = list(DALGA24_OPENING_SEED) + [t.split("+")[0] for t in dalga24_tags(history)]
+    return _block_pick(list(_DZ["openings"]), seen, DALGA24_OPENING_BLOCK, rng)
+
+
+def dalga24_choose_final(history: list[str], rng=None) -> str:
+    return _block_pick(list(_DZ["finals"]), [t.split("+")[1] for t in dalga24_tags(history)], DALGA24_FINAL_BLOCK, rng)
+
+
+def dalga24_geo_history(records: list | None) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun coğrafyaları; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") == es.TIDAL and axes.get("mod") == "dalga24"
+                and axes.get("cografya") in _DZ["geos"]):
+            out.append(axes["cografya"])
+    return out
+
+
+def dalga24_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    seen = list(DALGA24_GEO_SEED) + list(_DZ_GEO_MEMORY if used is None else used)
+    return _block_pick(list(_DZ["geos"]), seen, DALGA24_GEO_BLOCK, rng)
+
+
+def dalga24_lines(dz: dict) -> str:
+    text = dz["prompt"]
+    return "\n".join([
+        f"Mod: {DALGA24_MODE_LABEL}",
+        f"Coğrafya: {dz['geo']} {_DZ['geos'][dz['geo']]['name']}",
+        f"Açılış: {dz['opening']} ({_DZ['openings'][dz['opening']]['desc']})",
+        f"Final: {dz['final']} «{_DZ['finals'][dz['final']]}»",
+        "Kamera: " + ("takip (yerinde durur, suyu izlemek için hafifçe döner)" if dz["follow"] else "sabit"),
+        f"Kelime: {len(text.split())} (en fazla {DALGA24_MAX_WORDS}) · karakter: {len(text)} "
+        f"(en fazla {DALGA24_MAX_CHARS})",
+        "Zaman etiketi: yok (24 Eyl hit prompt'unda da yoktu)",
+    ])
+
+
+def _dalga24_axes(js, tag: str, geo: str):
+    import json
+    try:
+        data = json.loads(js)
+    except (TypeError, ValueError):
+        return js
+    if isinstance(data.get("axes"), dict):
+        data["axes"]["beats"] = tag
+        data["axes"]["mod"] = "dalga24"
+        data["axes"]["cografya"] = geo
+    return json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def dalga24_apply(scene: dict, history: list[str] | None = None, rng=None, follow: bool | None = None,
+                  geo_used: list[str] | None = None) -> dict:
+    """Normal hattın kurduğu dev dalga sahnesinden (görünüm ve kayıt aynı) 24 Eylül kalıbı prompt'unu kurar. Coğrafya
+    D1-D6 (son 3 elenir, D1 tohum), açılış A1/A2 (son 2 elenir, A2 tohum: ilk üretim A1), final F1-F4 (son 2 elenir).
+    structure["dalga24"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
+    event = scene["event"]
+    st = scene.get("structure") or {}
+    spec = st.get("spec")
+    if not dalga24_is_active(event) or not spec:
+        raise es.StructureError(f"{DALGA24_MODE_LABEL} kurulamadı: {event}")
+    follow = bool(DALGA24_KAMERA_TAKIP if follow is None else follow)
+    geo = dalga24_choose_geo(geo_used, rng)
+    opening = dalga24_choose_opening(history or [], rng)
+    final = dalga24_choose_final(history or [], rng)
+    old_tag, new_tag = es.beat_tag(spec["beat_2"], spec["beat_3"]), es.beat_tag(opening, final)
+    with es._BEAT_LOCK:   # seçim anı hafızası: atılan T*+W* yerine bu üretimin gerçek çifti
+        mem = es._BEAT_MEMORY.get(event, [])
+        if mem and mem[-1] == old_tag:
+            mem[-1] = new_tag
+    _DZ_GEO_MEMORY.append(geo)
+    del _DZ_GEO_MEMORY[:-12]
+    story = dalga24_story(geo, opening, final)
+    tail = dalga24_tail(follow)
+    prompt = dalga24_prompt(geo, opening, final, follow)
+    dz = {"event": event, "geo": geo, "opening": opening, "final": final, "follow": follow, "story": story,
+          "suffix": tail, "prompt": prompt}
+    dz["lines"] = dalga24_lines(dz)
+    problems = dalga24_issues({**st, "dalga24": dz}, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{DALGA24_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = scene.get("combo_key", "")
+    if f"#{old_tag}|" in combo:
+        combo = combo.replace(f"#{old_tag}|", f"#{new_tag}|")
+    name = _DZ["geos"][geo]["name"]
+    cap_info = {**(st.get("caption_info") or {}), "opening": dalga24_opening(geo, opening),
+                "beat_2": _DZ["core"][:-1], "beat_3": _DZ["finals"][final][:-1]}
+    cam = "takip" if follow else "sabit"
+    structure = {**st, "dalga24": dz, "caption_info": cap_info,
+                 "environment": f"Coğrafya: {geo} {name} · kamera = {DALGA24_MODE_LABEL} (high balcony, {cam})",
+                 "story_source": f"Hikâye: kod (birebir) · {DALGA24_MODE_LABEL}"}
+    if st.get("axes_json"):
+        structure["axes_json"] = _dalga24_axes(st["axes_json"], new_tag, geo)
+    trace, axes_line = mode_display(
+        scene, structure, mode=DALGA24_MODE_LABEL,
+        camera=f"{cam} ({dalga24_camera_text(follow)}); high balcony, railing in foreground",
+        opening=dalga24_opening(geo, opening), mid=("çekirdek", _DZ["core"]), final=(final, _DZ["finals"][final]),
+        plain=story, labels=("Açılış", "Çekirdek aksiyon", "Final"),
+        spot="High balcony of a seafront building (24 Eylül kalıbı)", weather="overcast, grey sky (stil eki)",
+        axes={"coğrafya": f"{geo} {name}", "açılış": f"{opening} ({_DZ['openings'][opening]['desc']})",
+              "final": final, "kamera modu": cam},
+        repeat=f"coğrafya son {DALGA24_GEO_BLOCK} elendi (D1 tohum) · açılış son {DALGA24_OPENING_BLOCK} (A2 tohum) · "
+               f"final son {DALGA24_FINAL_BLOCK}")
+    # görünüm (normal hattın bölgesi) ve kişi aralığı prompt'ta yok: gösterilmez; kayıt etiketi beats_tag'de
+    trace = {**trace, "mode": "dalga24", "beats_tag": new_tag, "cografya": geo, "view": None, "view_source": None,
+             "count_range": ["-", "-"], "vehicle": "adı yok (parked cars, city bus)"}
+    structure["axes_line"] = axes_line
+    out = {**scene, "story": story, "plain_story": story, "style_suffix": tail, "prompt": prompt,
+           "combo_key": combo, "structure": structure, "trace": trace}
+    if scene.get("axes_json"):
+        out["axes_json"] = _dalga24_axes(scene["axes_json"], new_tag, geo)
+    return out
+
+
+def dalga24_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin 24 Eylül kalıbıyla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    dz = structure["dalga24"]
+    if dz.get("geo") not in _DZ["geos"]:
+        return [f"coğrafya D1-D6 değil ({dz.get('geo')})"]
+    if dz.get("opening") not in _DZ["openings"]:
+        return [f"açılış A1/A2 değil ({dz.get('opening')})"]
+    if dz.get("final") not in _DZ["finals"]:
+        return [f"final F1-F4 değil ({dz.get('final')})"]
+    out = []
+    story = dalga24_story(dz["geo"], dz["opening"], dz["final"])
+    prompt = dalga24_prompt(dz["geo"], dz["opening"], dz["final"], dz["follow"])
+    if info.get("style_suffix") != dalga24_tail(dz["follow"]):
+        out.append("stil eki 24 Eylül kalıbı değil")
+    if info.get("story") != story:
+        out.append("hikâye 24 Eylül kalıbıyla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt 24 Eylül kalıbıyla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    for bad in ("0-4s", "4-9s", "9-15s", "Full action", "Until the last frame"):
+        if bad in text:
+            out.append(f"bu modda olmayan ifade var: {bad}")
+    if len(text.split()) > DALGA24_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {DALGA24_MAX_WORDS})")
+    if len(text) > DALGA24_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {DALGA24_MAX_CHARS})")
     return out

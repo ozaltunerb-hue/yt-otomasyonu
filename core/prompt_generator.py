@@ -1214,6 +1214,17 @@ async def generate_creative_prompts(config: dict) -> dict:
             es.HIT_OVERRIDE.reset(token)
         scene = hp.yaklasma_apply(scene, approach_env, history,
                                   geo_used=hp.yaklasma_geo_history(seen_records.get("records")))
+    elif config.get("dalga24"):   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül (dev dalga, Telegram). GPT yok, etiket yok
+        import core.hit_prompts as hp
+        raw_loader, seen_records = config.get("axes_loader"), {}
+
+        def capture_loader(dom):
+            seen_records["records"] = raw_loader(dom)
+            return seen_records["records"]
+        scene = await build_creative_scene(config.get("domain") or None, config.get("event"), history, topics,
+                                           hp.no_gpt, axes_loader=capture_loader if raw_loader else None,
+                                           caption_ctx=caption_ctx if loader is not None else None)
+        scene = hp.dalga24_apply(scene, history, geo_used=hp.dalga24_geo_history(seen_records.get("records")))
     else:
         scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history,
                                            topics, _call_gpt, view=config.get("view") or None,

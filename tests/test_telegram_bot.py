@@ -223,6 +223,11 @@ class TestConfig(unittest.TestCase):
         self.assertRegex(reqs, r"(?m)^python-telegram-bot==\d+\.\d+(\.\d+)?$")
 
 
+def es_tidal() -> str:
+    import core.event_structure as es
+    return es.TIDAL
+
+
 def _buttons(markup):
     return [b for row in markup.inline_keyboard for b in row]
 
@@ -524,6 +529,10 @@ class TestRegionViewMenu(unittest.TestCase):
                 args, kwargs = upd.callback_query.edit_message_text.await_args
                 self.assertIn("Bölge: hangi görünüm?", args[0])
                 buttons = _buttons(kwargs["reply_markup"])
+                # 12 Kas (5): dev dalgada Geri'nin üstünde ⭐ Hit kalıbı · 24 Eylül (tests/test_dalga_24eylul.py)
+                if event == es_tidal():
+                    self.assertEqual(buttons[-2].text, "⭐ Hit kalıbı · 24 Eylül")
+                    buttons = buttons[:-2] + buttons[-1:]
                 self.assertEqual([b.text for b in buttons], self.LABELS)
                 self.assertEqual(buttons[0].callback_data, f"{bot.CALLBACK_PREFIX}v:{self.CITY}:{ei}:r")
                 self.assertEqual(buttons[-1].callback_data, f"{bot.CALLBACK_PREFIX}d:{self.CITY}")

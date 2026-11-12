@@ -407,6 +407,43 @@ def approach_confirm_text(domain: str, event: str, env: str, cfg: dict | None = 
             "(Y1-Y4). Coğrafya (G1-G5), orta/final kodu ve kelime sayısı ✋ Onay mesajında. Hikâye için GPT çağrılmaz.")
 
 
+# ── ⭐ Hit kalıbı · 24 Eylül (12 Kas 2026 (5), Bahadır): dev dalga, 24 Eyl hit kurgusu. Ortam sorulmaz (coğrafya LRU).
+# Adımlar: dz (onay metni) → dzok (üretim). Hikâye tamamen koddan (core/hit_prompts.py DALGA_24EYLUL), GPT yok
+DALGA24_BUTTON = "⭐ Hit kalıbı · 24 Eylül"
+
+
+def dalga24_view_keyboard(di: str, ei: str) -> InlineKeyboardMarkup:
+    """Bölge menüsü (aynen) + Geri'nin üstünde ⭐ Hit kalıbı · 24 Eylül."""
+    rows = [list(r) for r in view_keyboard(di, ei).inline_keyboard]
+    rows.insert(len(rows) - 1, [InlineKeyboardButton(DALGA24_BUTTON, callback_data=f"{CALLBACK_PREFIX}dz:{di}:{ei}")])
+    return InlineKeyboardMarkup(rows)
+
+
+def dalga24_produce_keyboard(di: str, ei: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}dzok:{di}:{ei}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def parse_dalga24(di_raw: str, eid: str) -> tuple[str, str] | None:
+    sel = parse_selection(di_raw, eid)
+    if sel is None or sel[1] is None or not _hp().dalga24_is_active(sel[1]):
+        return None
+    return sel
+
+
+def dalga24_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
+    hp = _hp()
+    return (confirm_text(domain, event, cfg)
+            + f"\n\nMod: {DALGA24_BUTTON}\n"
+            "Kamera: " + ("takip (yerinde durur, suyu izlemek için hafifçe döner)" if hp.DALGA24_KAMERA_TAKIP
+                          else "sabit")
+            + "\nSahil binasının yüksek balkonu, korkuluk görünür, gri kapalı gün; dalga dükkânların arkasından ya da "
+            "caddenin başından gelir, arabalar sürüklenir, sel kameraya doğru gelir. Coğrafya (D1-D6), açılış (A1/A2), "
+            "final (F1-F4), kelime sayısı ✋ Onay mesajında. Zaman etiketi yok. Hikâye için GPT çağrılmaz.")
+
+
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([[
         InlineKeyboardButton("✅ Kie'ye gönder", callback_data=f"{CALLBACK_PREFIX}ap:{token}:y"),
@@ -670,6 +707,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("ya", "yav", "yaok"):   # 12 Kas (3): ⭐ Hit kalıbı · Yaklaşma
         await _on_approach(query, context, action, args, cfg)
         return
+    if action in ("dz", "dzok"):   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül (dev dalga)
+        await _on_dalga24(query, context, action, args, cfg)
+        return
 
     sel, view = None, None
     if action == "d" and len(args) == 1:
@@ -691,7 +731,8 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         await query.edit_message_text(f"{DOMAIN_LABELS[domain]}: hangi olay?", reply_markup=event_keyboard(int(args[0])))
     elif action == "e" and event in REGION_VIEW_EVENTS:
         await query.edit_message_text(f"{DOMAIN_LABELS[domain]} / {EVENT_LABELS[event]}\nBölge: hangi görünüm?",
-                                      reply_markup=view_keyboard(*args))
+                                      reply_markup=dalga24_view_keyboard(*args) if _hp().dalga24_is_active(event)
+                                      else view_keyboard(*args))
     elif action == "e":
         keyboard = hit_confirm_keyboard(*args) if _hp().is_active(event) else confirm_keyboard(*args)
         await query.edit_message_text(confirm_text(domain, event, cfg), reply_markup=keyboard)
@@ -769,6 +810,31 @@ async def _on_approach(query, context, action: str, args: list[str], cfg: dict) 
             log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
         await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
                       approach_env=env)
+
+
+async def _on_dalga24(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """⭐ Hit kalıbı · 24 Eylül adımları: dz (onay metni) → dzok (üretim). Kie yine ✋ Onay'a bağlı."""
+    parsed = parse_dalga24(*args) if len(args) == 2 else None
+    if parsed is None:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    domain, event = parsed
+    if action == "dz":
+        await query.edit_message_text(dalga24_confirm_text(domain, event, cfg),
+                                      reply_markup=dalga24_produce_keyboard(*args))
+        return
+    run_cfg = dict(cfg)
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)} / {DALGA24_BUTTON}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
+                      dalga24=True)
 
 
 async def _on_caption_share(query, context, page: str) -> None:
@@ -871,7 +937,7 @@ def _run_pipeline_blocking(kwargs: dict) -> dict:
 
 async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg: dict | None = None,
                   bot_data: dict | None = None, view: str | None = None, hit_env: str | None = None,
-                  approach_env: str | None = None) -> None:
+                  approach_env: str | None = None, dalga24: bool = False) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -886,6 +952,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["hit_env"] = hit_env
     if approach_env:   # 12 Kas (3): ⭐ Hit kalıbı · Yaklaşma
         kwargs["approach_env"] = approach_env
+    if dalga24:   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül
+        kwargs["dalga24"] = True
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:
