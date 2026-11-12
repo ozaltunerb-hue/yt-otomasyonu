@@ -25,6 +25,24 @@
 
 ---
 
+## 📋 DEVİR: 12 Kasım ⭐ Hit kalıbı modları (2bb750f → 88b3b3c → 1915a2f → 82a8942, hepsi canlı)
+
+Hit seviyesi video için Telegram'da GPT'siz, hikâyesi tamamen koddan gelen modlar (`core/hit_prompts.py`). Her mod normal
+hattın sahnesini kurar (kayıt, görünüm), metni kendi kalıbıyla değiştirir, kendi son denetimini yapar (`*_issues`,
+`cp.submit_issues` dalı) ve yeniden yazımda aynı hikâyeyi döner. Normal yol, kilitli olaylar ve diğer modlar her turda 40
+tohum snapshot ile bayt bayt aynı doğrulandı.
+- Ateş hortumu "⭐ Hit kalıbı · Yaklaşma" v2 (`YAKLASMA_ATES_HORTUMU`; v1 `_V1` pasif): G1-G5 coğrafya (son 3, G1 tohum),
+  O1-O5 orta (T* bu modda yok; O5 araç savurma SADECE bu modda), Y1-Y4 final, O1+Y1 / O4+Y1 yasak. config `approach_env`.
+- Dev dalga "⭐ Hit kalıbı · 24 Eylül" (`DALGA_24EYLUL`): zaman etiketi YOK, D1-D6 / A1-A2 / F1-F4. config `dalga24`.
+- Kül bulutu "⭐ Hit kalıbı · Yaklaşma" (`YAKLASMA_KUL_BULUTU`): V1-V6 / K1-K4 (K2 araç savurma) / L1-L4, kendi araç havuzu,
+  kişi 3/4. config `kul_yaklasma`. Eski kül bulutu hit butonu gizli.
+- Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
+  hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
+- Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir
+  (normal yol metni aynı). Sınırlar 230 kelime / 1400 kr; Yaklaşma v2 ve kül bulutu en uzun kombinasyon TAM 230.
+- Testler: `tests/test_yaklasma.py`, `tests/test_dalga_24eylul.py`, `tests/test_kul_yaklasma.py` ("tüm kombinasyonlar" testi
+  metin uzarsa düşer). Railway logunda pipeline sonrası "Event loop is closed" (httpx aclose) zararsız, dokunulmadı.
+
 ## 📋 DEVİR: 11 Kasım (7) dev dalga insan cümleleri + onay metni
 
 Dev dalga I6 ("run for the doorway of a seafront café": dalgaya doğru) PASİF (`es.DISABLED_PEOPLE_LINES`); I1 "{N} pedestrians
