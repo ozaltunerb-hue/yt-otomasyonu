@@ -1182,10 +1182,23 @@ async def generate_creative_prompts(config: dict) -> dict:
             log.warning(f"⚠️ Caption geçmişi okunamadı, boş geçmişle devam: {e}")
             caption_warning = "⚠️ caption geçmişi Notion'dan okunamadı"
     caption_ctx = cap.build_context(posted, generated)
-    scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history, topics,
-                                       _call_gpt, view=config.get("view") or None,
-                                       axes_loader=config.get("axes_loader"),   # 21 Eki: Notion eksen geçmişi
-                                       caption_ctx=caption_ctx if loader is not None else None)
+    hit_env = config.get("hit_env")
+    if hit_env:   # 12 Kas: ⭐ Hit kalıbı (Telegram). Normal seçim, ortam zorlanır, hit çifti dışlanır; GPT yok
+        import core.event_structure as es
+        import core.hit_prompts as hp
+        token = es.HIT_OVERRIDE.set(hp.override(config.get("event"), hit_env))
+        try:
+            scene = await build_creative_scene(config.get("domain") or None, config.get("event"), history, topics,
+                                               hp.no_gpt, axes_loader=config.get("axes_loader"),
+                                               caption_ctx=caption_ctx if loader is not None else None)
+        finally:
+            es.HIT_OVERRIDE.reset(token)
+        scene = hp.apply(scene, hit_env)
+    else:
+        scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history,
+                                           topics, _call_gpt, view=config.get("view") or None,
+                                           axes_loader=config.get("axes_loader"),   # 21 Eki: Notion eksen geçmişi
+                                           caption_ctx=caption_ctx if loader is not None else None)
     domain, event, ship, story = scene["domain"], scene["event"], scene["ship"], scene["story"]
     # 21 Eki (Aşama 7): eski denizcilik odaklı metadata çağrısı (ayrı GPT çağrısı) kaldırıldı. Caption hikâye
     # çağrısının adaylarından (yapılandırılmış hat) ya da şablondan; Kie prompt'una girmez.

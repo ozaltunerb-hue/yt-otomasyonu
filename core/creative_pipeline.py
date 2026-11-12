@@ -715,6 +715,9 @@ async def rewrite_structured(structure: dict, reason: str, call_gpt) -> str:
     # 10 Eki, Bahadır: her denemenin tam metni ve sonucu kaydedilir (main.py Notion gövdesine yazar)
     entry = {"reason": reason, "attempts": [], "result": "?"}
     structure.setdefault("rewrite_log", []).append(entry)
+    if structure.get("hit"):   # 12 Kas: ⭐ Hit kalıbı, GPT yok; aynı hit kalıbı hikâyesi döner
+        entry["result"] = "⭐ Hit kalıbı: yeniden yazım yok, aynı hikâye"
+        return structure["hit"]["story"]
     if es.code_story(spec["event"]):
         # 11 Kas (3): HEDEF 8'de GPT yok; birebir hikâye yeniden yazılmaz (önceki davranışta da GPT metni birebir
         # dilimlerle değiştirildiği için aynı metin gidiyordu). Aynı birebir hikâye döner, gönderim hakkı kie_client'ta
@@ -744,6 +747,9 @@ async def rewrite_structured(structure: dict, reason: str, call_gpt) -> str:
 def submit_issues(structure: dict, info: dict) -> list[str]:
     """Kie'den hemen önce (main.before_submit): gönderilecek metin structure'dan yeniden kurulanla birebir aynı mı,
     stil eki beklenen mi, son denetim temiz mi. Boş liste = gönderilebilir."""
+    if structure.get("hit"):   # 12 Kas: ⭐ Hit kalıbı, kendi birebir yeniden kurulumu (core/hit_prompts.py)
+        import core.hit_prompts as hp
+        return hp.issues(structure, info)
     spec, slices = structure["spec"], structure["slices"]
     out = []
     if info.get("style_suffix") != spec["suffix"]:

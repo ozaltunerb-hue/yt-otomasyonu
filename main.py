@@ -106,7 +106,8 @@ async def _credit(kie) -> float | None:
 
 async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_path: str = "",
                        domain: str | None = None, trigger: str = "auto", event: str | None = None,
-                       mode: str | None = None, reporter: PipelineReporter | None = None, view: str | None = None):
+                       mode: str | None = None, reporter: PipelineReporter | None = None, view: str | None = None,
+                       hit_env: str | None = None):
     """
     Tam otonom video üretim pipeline'ı.
 
@@ -121,6 +122,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     event: verilirse senaryolar bu olayla üretilir (Telegram olay menüsü); ortam/gemi/kamera otomatik.
     mode: TEST (YouTube yok) / YAYIN. Verilmezse yükleme durumuna göre. reporter: Telegram ayrıntı/onay köprüsü.
     view: şehir olaylarında Telegram bölge menüsünden seçilen görünüm (None = LRU).
+    hit_env: 12 Kas, ⭐ Hit kalıbı modunda Telegram'da seçilen ortam (None = normal üretim).
     """
     if dry_run:
         settings.IS_DRY_RUN = True
@@ -168,6 +170,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 mode=mode,
                 reporter=reporter,
                 view=view,
+                **({"hit_env": hit_env} if hit_env else {}),
             )
             return result
         except (ContentFilterError, PreflightError) as err:
@@ -205,6 +208,7 @@ async def _execute_pipeline(
     mode: str = MODE_PUBLISH,
     reporter: PipelineReporter | None = None,
     view: str | None = None,
+    hit_env: str | None = None,
 ) -> dict:
     """
     Pipeline'ın asıl implementasyonu.
@@ -230,6 +234,7 @@ async def _execute_pipeline(
         "domain": domain,
         "event": event,
         "view": view,
+        **({"hit_env": hit_env} if hit_env else {}),   # 12 Kas: ⭐ Hit kalıbı
         # 21 Eki (Gece 1 / Aşama 3): seçimden önce kategorinin eksen geçmişi Notion'dan (iptaller dahil)
         "axes_loader": tracker.get_axes_records,
         # 21 Eki (Aşama 7): caption geçmişi (Paylaşımlar + son 20 üretilmiş caption)
@@ -337,6 +342,8 @@ async def _execute_pipeline(
                 info["story_source"] = structure["story_source"]
             if structure and structure.get("axes_line"):   # 21 Eki: eksenler + elenenler (+ Notion uyarısı)
                 info["axes_line"] = structure["axes_line"]
+            if structure and structure.get("hit"):   # 12 Kas: ⭐ Hit kalıbı mod satırı + değişen parçalar
+                info["hit_lines"] = structure["hit"]["lines"]
             meta.update({"final_prompt": info["prompt"], "story": info.get("story", ""),
                          "style_suffix": info.get("style_suffix", ""), "preflight": info.get("preflight") or {}})
             await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)

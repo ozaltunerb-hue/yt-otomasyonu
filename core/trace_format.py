@@ -221,6 +221,7 @@ def format_final_prompt(info: dict) -> tuple[str, str]:
     text = (f"{len(prompt.split())} kelime (hikaye {len((info.get('story') or '').split())} + stil eki "
             f"{len((info.get('style_suffix') or '').split())}) · stil ekinde {total} kısıt, {negative} olumsuz\n"
             f"Kie denemesi: {info.get('attempt', 1)}\n"
+            + (f"{info['hit_lines']}\n" if info.get("hit_lines") else "")   # 12 Kas: ⭐ Hit kalıbı
             + (f"{info['environment']}\n" if info.get("environment") else "")   # 14 Eki (4): çığ ortam satırı (16 Eki: ateş hortumu da)
             + (f"{info['story_source']}\n" if info.get("story_source") else "")   # 16 Eki: GPT ya da kod yedeği
             + (f"{info['axes_line']}\n" if info.get("axes_line") else "")   # 21 Eki: eksenler + tekrar önleme

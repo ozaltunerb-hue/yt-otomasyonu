@@ -13,6 +13,7 @@ veri eklemektir (EVENT_KEY_VISUAL + EVENT_BEATS); import anı denetimi eksik ver
 """
 from __future__ import annotations
 
+import contextvars
 import random
 import re
 import threading
@@ -3649,9 +3650,17 @@ def fire_env_of_spot(spot: str) -> str:
     raise StructureError(f"Ateş hortumu kamera noktası hiçbir ortamda yok: {spot}")
 
 
+# 12 Kas 2026, Bahadır: ⭐ Hit kalıbı modu (core/hit_prompts.py). Sadece o modda dolu: seçilen ortam zorlanır, hit
+# çifti dışlanır. Varsayılan None: normal üretim yolu birebir aynı
+HIT_OVERRIDE: contextvars.ContextVar = contextvars.ContextVar("hit_override", default=None)
+
+
 def choose_fire_env(rng: random.Random | None = None, used: list[str] | None = None) -> str:
     """Ortam: son FIRE_TOR_ENV_BLOCK üretimin ortamları elenir (aday kalmazsa 1, sonra 0). used: 21 Eki, Notion
     geçmişi (eskiden yeniye); None ise süreç hafızası."""
+    hit = HIT_OVERRIDE.get()
+    if hit and hit.get("fire_env"):   # 12 Kas: ⭐ Hit kalıbı (Telegram'da seçilen ortam)
+        return hit["fire_env"]
     if used is None:
         with _ENV_LOCK:
             used = list(_FIRE_TOR_ENV_MEMORY)
@@ -4005,6 +4014,9 @@ def allowed_pairs(event: str, view: str | None, spot: str) -> list[tuple[str, st
         return spot not in b["excluded_spots"].get(v, set())
     off = disabled_beats(event)   # 29 Eki: bayrakla kapalı beat'ler (meteor [DALGA]); 3 Kas: + SEL_DOGRULAMA
     budget = BUDGET_PAIRS_11KAS_3.get(event, set())   # 11 Kas (3): 205'e sığmayan çiftler
+    hit = HIT_OVERRIDE.get()
+    if hit:   # 12 Kas: ⭐ Hit kalıbı, hit videonun kendi çifti (ateş hortumu T4+U11) hiç seçilmez
+        budget = set(budget) | set(hit.get("banned_pairs", {}).get(event, set()))
     return [(v, d) for v in b["slice_2"] for d in b["slice_3"]
             if (v, d) not in b["excluded_pairs"] and (v, d) not in budget and ok2(v) and ok3(d) and v not in off
             and d not in off]
