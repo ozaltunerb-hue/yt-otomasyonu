@@ -7,6 +7,8 @@
 #
 # Normal üretim yolu DEĞİŞMEZ: mod sadece Telegram "⭐ Hit kalıbı" butonundan açılır (config["hit_env"]). Seçim normal
 # hattın kendisi (ortam zorlanır, T4+U11 dışlanır: es.HIT_OVERRIDE), metin burada hit kalıbına yerleştirilir. GPT yok.
+import re
+
 import core.event_structure as es
 
 FIRE_TORNADO = es.FIRE_TORNADO
@@ -211,18 +213,11 @@ def issues(structure: dict, info: dict) -> list[str]:
     return out
 
 
-# ── ⭐ Hit kalıbı · Yaklaşma (12 Kas 2026 (3), Bahadır) ────────────────────────────────────────────────────────────────
-# Hit videoların ortak kalıbı: tehdit uzaktan başlar, uzun bir cadde boyunca kameraya doğru ilerler, final kameranın hemen
-# altındaki yapıda olur, kamera yaklaşan tehdidi yavaşça takip eder. Prompt bunu açıkça ister. YENİ bir mod: ateş
-# hortumunun normal yolu ve yukarıdaki "⭐ Hit kalıbı" modu (8d9c264) birebir aynı kalır. GPT yok; hikâye tamamen koddan.
-# Seçim normal hattın kendisi (ortam zorlanır; 4-9s ateş hortumu orta havuzundan, LRU aynen); 9-15s bu moda özel Y1-Y4
-# (havuz U* finalleri kullanılmaz), LRU bu 4'ü arasında. Kayıt (combo_key) T*+Y* olarak yazılır.
-APPROACH_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma"
-# Kamera: True = yaklaşan hortumu yavaşça takip eder, False = sabit (Bahadır, varsayılan True)
-YAKLASMA_KAMERA_TAKIP = True
-YAKLASMA_MAX_WORDS = 230
-YAKLASMA_MAX_CHARS = 1400
-YAKLASMA_ATES_HORTUMU = {
+# ── ⭐ Hit kalıbı · Yaklaşma ─────────────────────────────────────────────────────────────────────────────────────────
+# v1 (12 Kas 2026 (3), Bahadır; 2bb750f): ortama göre açılış, "run up the street ... away from the fire tornado", 4-9s
+# ateş hortumu T* havuzu ("Halfway down the street, " öneki), Y1-Y4, "A rotating funnel of flame" stil eki. PASİF KAYIT:
+# v2 (aşağıda) bütün metinleri yeniden tanımladı. Silinmedi; hiçbir yol bu sözlüğü kullanmaz.
+YAKLASMA_ATES_HORTUMU_V1 = {
     "openings": {
         "forest_edge": "A colossal spinning fire tornado, a twisting funnel several times taller than the houses and "
                        "trees, tears out of a burning forest at the far end of the street and advances down the street "
@@ -265,7 +260,87 @@ YAKLASMA_ATES_HORTUMU = {
                       "T6": "araç döner"},
 }
 YAKLASMA_EVENTS = (FIRE_TORNADO,)
+
+# ── v2 (12 Kas 2026 (4), Bahadır): coğrafya ekseni + sürekli aksiyon + yan görünüm huni + O1-O5 ortaları ───────────────
+# Yaklaşma modunun TÜM metinleri yeniden tanımlandı (v1 yukarıda pasif kayıt). T* havuzu bu modda KULLANILMAZ (havuzda
+# aynen duruyor, normal yol ve ⭐ Hit kalıbı değişmez). O5 (araç tek parça fırlatılır) araç savurma yasağının SADECE bu
+# modda kaldırıldığı orta; başka hiçbir mod/olay/havuz bu metni görmez.
+APPROACH_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma"
+# Kamera: True = yaklaşan hortumu yavaşça takip eder, False = sabit (Bahadır, varsayılan True)
+YAKLASMA_KAMERA_TAKIP = True
+YAKLASMA_MAX_WORDS = 230
+YAKLASMA_MAX_CHARS = 1400
+# v1'in Y3 sığma koruması (12 Kas (3)): v2 metinleriyle bütün kombinasyonlar sınıra sığıyor, gereksiz. Pasif (False);
+# açılırsa yine sınırı aşan finali aday dışı bırakır
+YAKLASMA_SIGMA_KORUMASI = False
+YAKLASMA_TARIF = "yan görünüm (v2)"
+# Coğrafya: son YAKLASMA_GEO_BLOCK üretimin coğrafyası elenir. 5 Kas hit'i G1 sayılır: geçmişin en başına G1 işlenir
+YAKLASMA_GEO_BLOCK = 3
+YAKLASMA_GEO_SEED = ("G1",)
+YAKLASMA_ATES_HORTUMU = {
+    "geos": {
+        "G1": {"name": "Kaliforniya", "forest": "a burning pine forest", "houses": "wooden suburban houses"},
+        "G2": {"name": "Avustralya", "forest": "burning eucalyptus bushland",
+               "houses": "tin-roofed weatherboard houses"},
+        "G3": {"name": "Yunanistan", "forest": "a burning pine forest",
+               "houses": "whitewashed terracotta-roofed houses"},
+        "G4": {"name": "Kanada", "forest": "a burning spruce forest", "houses": "dark-roofed timber houses"},
+        "G5": {"name": "Portekiz", "forest": "a burning eucalyptus forest", "houses": "tile-roofed stone houses"},
+    },
+    "openings": {
+        "forest_edge": "A colossal fire tornado, a twisting funnel several times taller than the houses, tears out of "
+                       "{forest} at the far end of the street and advances toward the camera, engulfing the {houses} "
+                       "on both sides, flinging burning branches and roof shingles into the street.",
+        "tree_street": "A colossal fire tornado, a twisting funnel several times taller than the houses, tears out of "
+                       "{forest} at the far end of a tree-lined street and advances toward the camera, engulfing the "
+                       "{houses} on both sides, flinging burning branches and roof shingles into the street.",
+        "village_woods": "A colossal fire tornado, a twisting funnel several times taller than the houses, tears out "
+                         "of {forest} at the far end of the village road and advances toward the camera, engulfing the "
+                         "{houses} on both sides, flinging burning branches and roof shingles into the road.",
+    },
+    # village_woods'ta insan, orta ve stil cümlelerinde "street" yerine "road"
+    "street": {"forest_edge": "street", "tree_street": "street", "village_woods": "road"},
+    "long_street": {"forest_edge": "a long street", "tree_street": "a long street",
+                    "village_woods": "a long village road"},
+    "people": {2: "Two people run up the {street} below.", 3: "Three people run up the {street} below."},
+    "action": "Burning debris rains down from the very first frame.",
+    "mids": {
+        "O1": "Halfway down the street, the fire tornado rips the roof off a house and a power pole crashes across "
+              "the road just in front of the {vehicle}.",
+        "O2": "Halfway down the street, the base of the fire tornado sweeps over the {vehicle}, shattering its windows "
+              "and setting it ablaze.",
+        "O3": "Halfway down the street, the fire tornado uproots a tall burning tree and slams it across the road onto "
+              "the {vehicle}, crushing its hood.",
+        # 12 Kas (4), Bahadır (3. seçenek): "on either side of the road" çıktı (village_woods + O4 + Y4 + takip 231 kelimeydi)
+        "O4": "Halfway down the street, two houses burst into flames as the fire tornado passes between them, their "
+              "roofs peeling off into the funnel.",
+        "O5": "Halfway down the street, the fire tornado lifts the {vehicle} off the road and hurls it, in one piece, "
+              "into the burning front yard of a house.",
+    },
+    "finals": {
+        "Y1": "Right below the terrace, the fire tornado reaches the nearest house and tears its roof off, burning "
+              "boards spiraling up into the funnel.",
+        "Y2": "Right below the terrace, the fire tornado swallows the nearest house, its whole front wall ripped away "
+              "and sucked into the funnel.",
+        "Y3": "Right below the terrace, the porch and upper floor of the nearest house are torn apart, burning planks "
+              "whirling past the camera.",
+        "Y4": "Right below the terrace, the fire tornado rips the backyard shed and fence of the nearest house apart, "
+              "burning boards spiraling up past the camera.",
+    },
+    # iki çatı/ev yıkımı art arda olmasın (Bahadır)
+    "banned_pairs": {("O1", "Y1"), ("O4", "Y1")},
+    "vehicle_throw_mid": "O5",
+    "camera": {True: "the camera turns slowly to keep the tornado in frame", False: "the camera stays fixed"},
+    "tail": ("Handheld footage filmed on a rooftop terrace looking down {long_street}, high vantage, the tornado "
+             "growing larger in the frame as it approaches, top never cut off; slight hand shake, {camera}; one "
+             "continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never "
+             "CGI. Seen from the side, a tall funnel of flame narrowing toward the ground, spiral bands of fire "
+             "climbing its sides, debris orbiting it; never a plume, explosion, ring or hollow eye. Real time, never "
+             "slow motion, people run at full speed. No readable signs, text or flags."),
+}
 _YK = YAKLASMA_ATES_HORTUMU
+O5_WARNING = "⚠️ Araç savurma ortası (O5): videoda aracın tek parça kalıp kalmadığını kontrol et."
+_GEO_MEMORY: list[str] = []
 
 
 def yaklasma_is_active(event: str | None) -> bool:
@@ -277,12 +352,14 @@ def yaklasma_envs(event: str) -> tuple[str, ...]:
 
 
 def yaklasma_override(event: str, env: str) -> dict:
-    """es.HIT_OVERRIDE değeri: ortam zorlanır; savrulan/dönen/takla atan araç ortaları hiçbir çiftte seçilmez."""
+    """es.HIT_OVERRIDE değeri: ortam zorlanır (normal hattın 4-9s/9-15s seçimi bu modda atılır; ek dışlama yok)."""
     if not yaklasma_is_active(event) or env not in yaklasma_envs(event):
         raise ValueError(f"{APPROACH_MODE_LABEL} bu olay/ortamda yok: {event} / {env}")
-    finals = es.EVENT_BEATS[event]["slice_3"]
-    banned = {(t, u) for t in _YK["excluded_mids"] for u in finals}
-    return {"event": event, "fire_env": env, "banned_pairs": {event: banned}}
+    return {"event": event, "fire_env": env, "banned_pairs": {event: set()}}
+
+
+def _st(env: str, text: str) -> str:
+    return text.replace("street", "road") if _YK["street"][env] == "road" else text
 
 
 def yaklasma_camera_text(follow: bool | None = None) -> str:
@@ -293,6 +370,11 @@ def yaklasma_tail(env: str, follow: bool | None = None) -> str:
     return _YK["tail"].format(long_street=_YK["long_street"][env], camera=yaklasma_camera_text(follow))
 
 
+def yaklasma_opening(env: str, geo: str) -> str:
+    g = _YK["geos"][geo]
+    return _YK["openings"][env].format(forest=g["forest"], houses=g["houses"])
+
+
 def yaklasma_people(env: str, n: int) -> str:
     if n not in _YK["people"]:
         raise es.StructureError(f"{APPROACH_MODE_LABEL}: kişi sayısı 2 ya da 3 olmalı ({n})")
@@ -300,54 +382,97 @@ def yaklasma_people(env: str, n: int) -> str:
 
 
 def yaklasma_mid(env: str, mid: str, vehicle: str | None) -> str:
-    if mid in _YK["excluded_mids"]:
-        raise es.StructureError(f"{APPROACH_MODE_LABEL}: {mid} bu modda kullanılmaz ({_YK['excluded_mids'][mid]})")
-    s = es.beat_text(FIRE_TORNADO, "slice_2", mid, vehicle)
-    return _YK["mid_prefix"].format(street=_YK["street"][env]) + s[0].lower() + s[1:] + "."
+    if mid not in _YK["mids"]:
+        raise es.StructureError(f"{APPROACH_MODE_LABEL}: {mid} bu modda yok (orta O1-O5)")
+    return _st(env, _YK["mids"][mid]).format(vehicle=vehicle or "")
 
 
-def yaklasma_choose_final(event: str, history: list[str], rng=None, fits=None) -> str:
-    """Y1-Y4 arasında LRU: hiç kullanılmamış ya da en eski kullanılan final; eşitlikte rastgele. fits: sığma koruması
-    (12 Kas (3), Bahadır onayı): prompt'u 230 kelime / 1400 karaktere sığdırmayan final aday olmaz (Y3 + kamera takip,
-    tree_street T4/T8 ve village_woods T8: 768 kombinasyonun 20'si); LRU kalanlar arasında."""
+def _lru(ids: list[str], seen: list[str], rng=None) -> str:
     import random
-    seen = [t.split("+")[1] for t in es.beat_history(event, history or []) if "+" in t]
-    ids = [f for f in _YK["finals"] if fits is None or fits(f)]
-    if not ids:
-        raise es.StructureError(f"{APPROACH_MODE_LABEL}: hiçbir final sınıra sığmıyor")
     last = {f: max((i for i, x in enumerate(seen) if x == f), default=-1) for f in ids}
     lo = min(last.values())
     return (rng or random).choice([f for f in ids if last[f] == lo])
 
 
-def yaklasma_story(env: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
+def yaklasma_tags(event: str, history: list[str]) -> list[str]:
+    """Olay çifti geçmişi (eskiden yeniye), sadece bu modun O*+Y* kayıtları."""
+    return [t for t in es.beat_history(event, history or []) if re.fullmatch(r"O\d+\+Y\d+", t)]
+
+
+def yaklasma_choose_mid(event: str, history: list[str], rng=None) -> str:
+    """O1-O5 arasında LRU: hiç kullanılmamış ya da en eski kullanılan orta; eşitlikte rastgele."""
+    return _lru(list(_YK["mids"]), [t.split("+")[0] for t in yaklasma_tags(event, history)], rng)
+
+
+def yaklasma_choose_final(event: str, history: list[str], rng=None, fits=None, mid: str | None = None) -> str:
+    """Y1-Y4 arasında LRU; yasak çiftler (O1+Y1, O4+Y1) aday olmaz. fits: sığma koruması (YAKLASMA_SIGMA_KORUMASI)."""
+    ids = [f for f in _YK["finals"] if (mid, f) not in _YK["banned_pairs"] and (fits is None or fits(f))]
+    if not ids:
+        raise es.StructureError(f"{APPROACH_MODE_LABEL}: final adayı kalmadı (orta {mid})")
+    return _lru(ids, [t.split("+")[1] for t in yaklasma_tags(event, history)], rng)
+
+
+def yaklasma_geo_history(records: list | None) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun coğrafyaları; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") == FIRE_TORNADO and axes.get("mod") == "yaklasma"
+                and axes.get("cografya") in _YK["geos"]):
+            out.append(axes["cografya"])
+    return out
+
+
+def yaklasma_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    """Coğrafya: G1 (5 Kas hit'i) geçmişin başına işlenir, son YAKLASMA_GEO_BLOCK coğrafya elenir, kalanlardan rastgele.
+    used: Notion geçmişi (eskiden yeniye); None ise süreç hafızası."""
+    import random
+    seen = list(YAKLASMA_GEO_SEED) + list(_GEO_MEMORY if used is None else used)
+    blocked = set(seen[-YAKLASMA_GEO_BLOCK:])
+    cands = [g for g in _YK["geos"] if g not in blocked] or list(_YK["geos"])
+    return (rng or random).choice(cands)
+
+
+def yaklasma_story(env: str, geo: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
     a, b, c = es.SLICE_LABELS
-    return (f"{a}: {_YK['openings'][env]} {yaklasma_people(env, people)} {b}: {yaklasma_mid(env, mid, vehicle)} "
-            f"{c}: {_YK['finals'][final]}")
+    return (f"{a}: {yaklasma_opening(env, geo)} {yaklasma_people(env, people)} {_YK['action']} "
+            f"{b}: {yaklasma_mid(env, mid, vehicle)} {c}: {_YK['finals'][final]}")
 
 
-def yaklasma_prompt(env: str, people: int, mid: str, vehicle: str | None, final: str,
+def yaklasma_prompt(env: str, geo: str, people: int, mid: str, vehicle: str | None, final: str,
                     follow: bool | None = None) -> str:
     from core.creative_engine import join_story_and_style
-    return join_story_and_style(yaklasma_story(env, people, mid, vehicle, final), yaklasma_tail(env, follow))
+    return join_story_and_style(yaklasma_story(env, geo, people, mid, vehicle, final), yaklasma_tail(env, follow))
 
 
 def yaklasma_lines(ap: dict) -> str:
     """Onay mesajı satırları."""
     label = es.FIRE_TOR_ENVS[ap["env"]]["label"]
     text = ap["prompt"]
-    return "\n".join([
+    lines = [
         f"Mod: {APPROACH_MODE_LABEL}",
+        f"Coğrafya: {ap['geo']} {_YK['geos'][ap['geo']]['name']}",
         f"Ortam: {label} ({ap['env']})",
         f"Orta (4-9s): {ap['mid']} «{yaklasma_mid(ap['env'], ap['mid'], ap['vehicle'])}»",
         f"Final (9-15s): {ap['final']} «{_YK['finals'][ap['final']]}»",
         "Kamera: " + ("takip (yaklaşan hortumu yavaşça takip eder)" if ap["follow"] else "sabit"),
         f"Kelime: {len(text.split())} (en fazla {YAKLASMA_MAX_WORDS}) · karakter: {len(text)} "
         f"(en fazla {YAKLASMA_MAX_CHARS})",
-    ])
+        f"Hortum tarifi: {YAKLASMA_TARIF}",
+    ]
+    if ap["mid"] == _YK["vehicle_throw_mid"]:
+        lines.append(O5_WARNING)
+    return "\n".join(lines)
 
 
-def _yaklasma_axes(js, tag: str):
+def _yaklasma_axes(js, tag: str, geo: str):
     import json
     try:
         data = json.loads(js)
@@ -356,12 +481,14 @@ def _yaklasma_axes(js, tag: str):
     if isinstance(data.get("axes"), dict):
         data["axes"]["beats"] = tag
         data["axes"]["mod"] = "yaklasma"
+        data["axes"]["cografya"] = geo
     return json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def yaklasma_apply(scene: dict, env: str, history: list[str] | None = None, rng=None,
-                   follow: bool | None = None) -> dict:
-    """Normal hattın kurduğu sahneden (aynı ortam, orta, araç, kişi sayısı) Yaklaşma prompt'u kurar. 9-15s Y1-Y4 LRU.
+                   follow: bool | None = None, geo_used: list[str] | None = None) -> dict:
+    """Normal hattın kurduğu sahneden (aynı ortam, araç, kişi sayısı) Yaklaşma prompt'u kurar. Coğrafya G1-G5 (son 3
+    elenir), orta O1-O5 LRU, final Y1-Y4 LRU (yasak çiftler hariç). Normal hattın T*/U* seçimi atılır.
     structure["approach"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
     event = scene["event"]
     st = scene.get("structure") or {}
@@ -369,21 +496,26 @@ def yaklasma_apply(scene: dict, env: str, history: list[str] | None = None, rng=
     if not yaklasma_is_active(event) or not spec or spec.get("fire_env") != env:
         raise es.StructureError(f"{APPROACH_MODE_LABEL} kurulamadı: {event} / {env}")
     follow = bool(YAKLASMA_KAMERA_TAKIP if follow is None else follow)
-    mid, vehicle, people = spec["beat_2"], spec.get("vehicle"), spec.get("people")
+    vehicle, people = spec.get("vehicle"), spec.get("people")
+    geo = yaklasma_choose_geo(geo_used, rng)
+    mid = yaklasma_choose_mid(event, history or [], rng)
+
     def fits(f):
-        p = yaklasma_prompt(env, people, mid, vehicle, f, follow)
+        p = yaklasma_prompt(env, geo, people, mid, vehicle, f, follow)
         return len(p.split()) <= YAKLASMA_MAX_WORDS and len(p) <= YAKLASMA_MAX_CHARS
-    final = yaklasma_choose_final(event, history or [], rng, fits)
-    old_tag, new_tag = es.beat_tag(mid, spec["beat_3"]), es.beat_tag(mid, final)
-    with es._BEAT_LOCK:   # seçim anı hafızası: atılan U* yerine bu üretimin gerçek finali
+    final = yaklasma_choose_final(event, history or [], rng, fits if YAKLASMA_SIGMA_KORUMASI else None, mid)
+    old_tag, new_tag = es.beat_tag(spec["beat_2"], spec["beat_3"]), es.beat_tag(mid, final)
+    with es._BEAT_LOCK:   # seçim anı hafızası: atılan T*+U* yerine bu üretimin gerçek çifti
         mem = es._BEAT_MEMORY.get(event, [])
         if mem and mem[-1] == old_tag:
             mem[-1] = new_tag
-    story = yaklasma_story(env, people, mid, vehicle, final)
+    _GEO_MEMORY.append(geo)
+    del _GEO_MEMORY[:-12]
+    story = yaklasma_story(env, geo, people, mid, vehicle, final)
     tail = yaklasma_tail(env, follow)
-    prompt = yaklasma_prompt(env, people, mid, vehicle, final, follow)
-    ap = {"event": event, "env": env, "mid": mid, "final": final, "vehicle": vehicle, "people": people,
-          "follow": follow, "story": story, "suffix": tail, "prompt": prompt}
+    prompt = yaklasma_prompt(env, geo, people, mid, vehicle, final, follow)
+    ap = {"event": event, "env": env, "geo": geo, "mid": mid, "final": final, "vehicle": vehicle, "people": people,
+          "follow": follow, "story": story, "suffix": tail, "prompt": prompt, "version": 2}
     ap["lines"] = yaklasma_lines(ap)
     problems = yaklasma_issues({**st, "approach": ap}, {"prompt": prompt, "story": story, "style_suffix": tail})
     if problems:
@@ -392,20 +524,20 @@ def yaklasma_apply(scene: dict, env: str, history: list[str] | None = None, rng=
     if f"#{old_tag}|" in combo:
         combo = combo.replace(f"#{old_tag}|", f"#{new_tag}|")
     label = es.FIRE_TOR_ENVS[env]["label"]
-    cap_info = {**(st.get("caption_info") or {}), "opening": _YK["openings"][env],
+    cap_info = {**(st.get("caption_info") or {}), "opening": yaklasma_opening(env, geo),
                 "beat_2": yaklasma_mid(env, mid, vehicle)[:-1], "beat_3": _YK["finals"][final][:-1]}
     structure = {**st, "approach": ap, "caption_info": cap_info,
-                 "environment": f"Ortam: {label} ({env}) · kamera = {APPROACH_MODE_LABEL} (rooftop terrace, "
-                                f"{'takip' if follow else 'sabit'})",
+                 "environment": f"Ortam: {label} ({env}) · coğrafya {geo} {_YK['geos'][geo]['name']} · kamera = "
+                                f"{APPROACH_MODE_LABEL} (rooftop terrace, {'takip' if follow else 'sabit'})",
                  "story_source": f"Hikâye: kod (birebir) · {APPROACH_MODE_LABEL}"}
     if st.get("axes_json"):
-        structure["axes_json"] = _yaklasma_axes(st["axes_json"], new_tag)
-    trace = {**(scene.get("trace") or {}), "mode": "yaklasma", "beats": new_tag,
-             "beat_3_text": _YK["finals"][final][:-1]}
+        structure["axes_json"] = _yaklasma_axes(st["axes_json"], new_tag, geo)
+    trace = {**(scene.get("trace") or {}), "mode": "yaklasma", "beats": new_tag, "cografya": geo,
+             "beat_2_text": yaklasma_mid(env, mid, vehicle)[:-1], "beat_3_text": _YK["finals"][final][:-1]}
     out = {**scene, "story": story, "plain_story": story, "style_suffix": tail, "prompt": prompt,
            "combo_key": combo, "structure": structure, "trace": trace}
     if scene.get("axes_json"):
-        out["axes_json"] = _yaklasma_axes(scene["axes_json"], new_tag)
+        out["axes_json"] = _yaklasma_axes(scene["axes_json"], new_tag, geo)
     return out
 
 
@@ -413,13 +545,17 @@ def yaklasma_issues(structure: dict, info: dict) -> list[str]:
     """Kie'den hemen önce: gönderilecek metin Yaklaşma kalıbıyla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
     ap = structure["approach"]
     env, out = ap["env"], []
+    if ap.get("geo") not in _YK["geos"]:
+        return [f"coğrafya G1-G5 değil ({ap.get('geo')})"]
     if ap["final"] not in _YK["finals"]:
         return [f"final Y1-Y4 değil ({ap['final']})"]
-    if ap["mid"] in _YK["excluded_mids"] or ap["mid"] not in es.EVENT_BEATS[ap["event"]]["slice_2"]:
-        return [f"orta bu modda kullanılamaz ({ap['mid']})"]
+    if ap["mid"] not in _YK["mids"]:
+        return [f"orta O1-O5 değil ({ap['mid']})"]
+    if (ap["mid"], ap["final"]) in _YK["banned_pairs"]:
+        return [f"yasak çift ({ap['mid']}+{ap['final']})"]
     try:
-        story = yaklasma_story(env, ap["people"], ap["mid"], ap["vehicle"], ap["final"])
-        prompt = yaklasma_prompt(env, ap["people"], ap["mid"], ap["vehicle"], ap["final"], ap["follow"])
+        story = yaklasma_story(env, ap["geo"], ap["people"], ap["mid"], ap["vehicle"], ap["final"])
+        prompt = yaklasma_prompt(env, ap["geo"], ap["people"], ap["mid"], ap["vehicle"], ap["final"], ap["follow"])
     except es.StructureError as e:
         return [str(e)]
     if info.get("style_suffix") != yaklasma_tail(env, ap["follow"]):
@@ -432,9 +568,10 @@ def yaklasma_issues(structure: dict, info: dict) -> list[str]:
     for added in ADDED_LINES[FIRE_TORNADO]:
         if added in text:
             out.append(f"bu modda olmayan cümle var: {added}")
-    for bid in es.EVENT_BEATS[ap["event"]]["slice_3"]:
-        if es.beat_text(ap["event"], "slice_3", bid, ap["vehicle"]) in text:
-            out.append(f"havuz finali ({bid}) var")
+    for slot in ("slice_2", "slice_3"):
+        for bid in es.EVENT_BEATS[ap["event"]][slot]:
+            if es.beat_text(ap["event"], slot, bid, ap["vehicle"]) in text:
+                out.append(f"havuz maddesi ({bid}) var")
     if len(text.split()) > YAKLASMA_MAX_WORDS:
         out.append(f"prompt {len(text.split())} kelime (en fazla {YAKLASMA_MAX_WORDS})")
     if len(text) > YAKLASMA_MAX_CHARS:

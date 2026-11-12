@@ -1199,13 +1199,21 @@ async def generate_creative_prompts(config: dict) -> dict:
         import core.hit_prompts as hp
         approach_env = config["approach_env"]
         token = es.HIT_OVERRIDE.set(hp.yaklasma_override(config.get("event"), approach_env))
+        # 12 Kas (4): coğrafya geçmişi, seçimin zaten okuduğu Notion "Eksenler" kayıtlarından (ek okuma yok);
+        # okunamadıysa/yükleyici yoksa süreç hafızası
+        raw_loader, seen_records = config.get("axes_loader"), {}
+
+        def capture_loader(dom):
+            seen_records["records"] = raw_loader(dom)
+            return seen_records["records"]
         try:
             scene = await build_creative_scene(config.get("domain") or None, config.get("event"), history, topics,
-                                               hp.no_gpt, axes_loader=config.get("axes_loader"),
+                                               hp.no_gpt, axes_loader=capture_loader if raw_loader else None,
                                                caption_ctx=caption_ctx if loader is not None else None)
         finally:
             es.HIT_OVERRIDE.reset(token)
-        scene = hp.yaklasma_apply(scene, approach_env, history)
+        scene = hp.yaklasma_apply(scene, approach_env, history,
+                                  geo_used=hp.yaklasma_geo_history(seen_records.get("records")))
     else:
         scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history,
                                            topics, _call_gpt, view=config.get("view") or None,

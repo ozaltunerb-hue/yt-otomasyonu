@@ -402,8 +402,9 @@ def approach_confirm_text(domain: str, event: str, env: str, cfg: dict | None = 
             + f"\n\nMod: {APPROACH_BUTTON}\n"
             f"Ortam: {es.FIRE_TOR_ENVS[env]['label']} ({env})\n"
             "Kamera: " + ("takip (yaklaşan hortumu yavaşça takip eder)" if hp.YAKLASMA_KAMERA_TAKIP else "sabit")
-            + "\nHortum caddenin ucundan kameraya doğru gelir, final terasın hemen altındaki evde (Y1-Y4). 4-9s "
-            "orta olay havuzdan (T*). Orta/final kodu ve kelime sayısı ✋ Onay mesajında. Hikâye için GPT çağrılmaz.")
+            + f"\nHortum tarifi: {hp.YAKLASMA_TARIF}\n"
+            "Hortum caddenin ucundan kameraya doğru gelir, 4-9s orta O1-O5, final terasın hemen altındaki evde "
+            "(Y1-Y4). Coğrafya (G1-G5), orta/final kodu ve kelime sayısı ✋ Onay mesajında. Hikâye için GPT çağrılmaz.")
 
 
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
