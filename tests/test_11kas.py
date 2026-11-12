@@ -45,6 +45,9 @@ K_R = {"K_R1": "Handheld footage filmed from the flat rooftop of a six-story apa
        "K_R4": "Handheld footage filmed from the top-floor balcony of a seafront hotel right on the promenade, high "
                "vantage, wide angle, the sea and the coastal street directly below in frame; slight hand shake, the "
                "camera stays fixed, never descending, the camera never pans, turns or follows."}
+# 12 Kas (2): K_R1, K_R2, K_R4 "high vantage, wide angle, " sonrasına tehlikenin boyutu parçası (K_R3 pasif, aynen)
+K_R = {k: (v.replace("high vantage, wide angle, ", "high vantage, wide angle, " + "the tidal wave filling half the frame, its crest never cut off, people fleeing below, ", 1) if k != "K_R3" else v)
+       for k, v in K_R.items()}
 K_R_ACTIVE = {"K_R1", "K_R2", "K_R4"}
 W_NEW = {"W10": "the wave smashes through the front wall of a seafront house and pours inside",
          "W11": "the surge swallows the ground floors of a row of shopfronts and a roof caves in",

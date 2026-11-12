@@ -168,8 +168,8 @@ class TestMeteor(unittest.TestCase):
         self.assertEqual(es.max_prompt_chars(MET), es.MAX_PROMPT_CHARS)
         # 11 Kas 2026 (2), Bahadır (8): olay bazında ölçülen en büyük (yeni kadrajlar + birebir insan cümleleri)
         # 11 Kas (3): devam + hareket cümleleri: en fazla 205, karaya vurur 198
-        raised = {es.WILDFIRE: 205, es.HELICOPTER: 205, es.VOLCANIC_BOMBS: 205, es.VILLAGE: 205, es.TIDAL: 215,
-                  es.LANDFALL: 198, es.FIRE_TORNADO: 215}   # 11 Kas (4): ateş hortumu, dev dalga 215
+        raised = {es.WILDFIRE: 205, es.HELICOPTER: 205, es.VOLCANIC_BOMBS: 205, es.VILLAGE: 205, es.TIDAL: 230,
+                  es.LANDFALL: 198, es.FIRE_TORNADO: 215}   # 11 Kas (4): ateş hortumu, dev dalga 215; 12 Kas (3): dev dalga 230
         for e, n in raised.items():
             self.assertEqual((es.max_prompt_words(e), es.max_constraints(e), es.max_prompt_chars(e)), (n, 8, 1400), e)
         for e in es.structured_events():

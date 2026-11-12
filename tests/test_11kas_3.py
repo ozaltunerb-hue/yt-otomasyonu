@@ -201,7 +201,7 @@ class TestCaps(_Quiet):
         caps = {e: es.max_prompt_words(e) for e in HEDEF}
         # 11 Kas (4): ateş hortumu, kül bulutu, dev dalga 215
         self.assertEqual(caps, {es.WILDFIRE: 205, es.HELICOPTER: 205, es.LANDFALL: 198, es.VOLCANIC_BOMBS: 205,
-                                es.VILLAGE: 205, es.FIRE_TORNADO: 215, es.PYROCLASTIC: 215, es.TIDAL: 215})
+                                es.VILLAGE: 205, es.FIRE_TORNADO: 215, es.PYROCLASTIC: 215, es.TIDAL: 230})   # 12 Kas (3)
         for e in HEDEF:
             self.assertEqual(es.max_prompt_chars(e), 1400)
 

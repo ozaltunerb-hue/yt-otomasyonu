@@ -797,6 +797,9 @@ PROMPT_WORDS_BY_EVENT.update({WILDFIRE: 205, HELICOPTER: 205, LANDFALL: 198, VOL
                               FIRE_TORNADO: 205, TIDAL: 205})
 # 11 Kas (4), Bahadır (2): ateş hortumu, kül bulutu, dev dalga 215 / 1400; diğerleri aynen
 PROMPT_WORDS_BY_EVENT.update({FIRE_TORNADO: 215, PYROCLASTIC: 215, TIDAL: 215})
+# 12 Kas 2026, Bahadır (3): dev dalga K_R1/K_R2/K_R4 tehlikenin boyutu parçası (~16 kelime) 215'e sığmıyordu; sadece
+# dev dalga 230 kelime (karakter 1400 aynen). Diğer tavanlar aynen
+PROMPT_WORDS_BY_EVENT.update({TIDAL: 230})
 CONSTRAINTS_BY_EVENT = {"Meteor slams into the sea off the coast": 11}
 PROMPT_CHARS_BY_EVENT: dict[str, int] = {}
 

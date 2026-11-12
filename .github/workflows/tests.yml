@@ -17,9 +17,13 @@ jobs:
         with:
           python-version: "3.13"
           cache: pip
+      # 12 Kas 2026: apt yerine hazır action (GitHub makinesi Ubuntu paket sunucularına ulaşamıyordu, apt-get takıldı,
+      # 6e65e0f ve b145189 deploy'ları SKIPPED). ffmpeg gerektiren testler ffmpeg yoksa atlanır (skipUnless)
       - name: ffmpeg (hareket profili testi)
         timeout-minutes: 8
-        run: sudo apt-get update -o Acquire::Retries=3 && sudo apt-get install -y --no-install-recommends ffmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v3
+        with:
+          ffmpeg-version: release
       - run: pip install -r requirements.txt
       - name: unittest
         env:

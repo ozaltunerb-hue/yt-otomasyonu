@@ -21,6 +21,7 @@ PY, TI = es.PYROCLASTIC, es.TIDAL
 K_R4 = ("Handheld footage filmed from the top-floor balcony of a seafront hotel right on the promenade, high vantage, "
         "wide angle, the sea and the coastal street directly below in frame; slight hand shake, the camera stays fixed, "
         "never descending, the camera never pans, turns or follows.")
+K_R4 = K_R4.replace("high vantage, wide angle, ", "high vantage, wide angle, " + "the tidal wave filling half the frame, its crest never cut off, people fleeing below, ", 1)   # 12 Kas (2)
 I_NEW = ("{N} people sprint up the street toward the camera, the wave right behind them.",
          "{N} pedestrians run toward the camera and into the apartment entrance right below it.",
          # Bahadır onayıyla kısa hâl (verilen 20 kelimelik metin 0-4s sınırına, 18, sığmıyordu)

@@ -286,21 +286,24 @@ FRAME_NEVER_PANS = "the camera never pans, turns or follows"
 FRAME_STAYS_FIXED = "the camera stays fixed, never descending, "
 VERBATIM_FRAMES = {
     TIDAL: {
+        # 12 Kas 2026, Bahadır (2): K_R1, K_R2, K_R4'te "high vantage, wide angle, " sonrasına tehlikenin boyutu parçası
+        # (ateş hortumu kalıbı): "the tidal wave filling half the frame, its crest never cut off, people fleeing below, ".
+        # Önceki metinler aynı, bu parça olmadan. K_R3 (pasif) aynen
         # 11 Kas 2026 (8), Bahadır (1): K_R1, K_R2 ve kül bulutu K_V "Filmed from" -> "Handheld footage filmed from",
         # sabitlik cümlesinin başına "slight hand shake, " (diğer olayların kadraj kalıbı). Önceki metinler aynı, bu iki ek
         # olmadan
         "K_R1": ("Handheld footage filmed from the flat rooftop of a six-story apartment block right on the seafront, "
-                 "high vantage, wide angle, the whole coastal street and the sea behind it in frame; slight hand shake, "
+                 "high vantage, wide angle, the tidal wave filling half the frame, its crest never cut off, people fleeing below, the whole coastal street and the sea behind it in frame; slight hand shake, "
                  "the camera stays fixed, never descending, the camera never pans, turns or follows.", "parapet"),
         "K_R2": ("Handheld footage filmed from a top-floor window of a tall seafront hotel, high vantage, wide angle, "
-                 "looking straight down the coastal street toward the sea; slight hand shake, the camera stays fixed, "
+                 "the tidal wave filling half the frame, its crest never cut off, people fleeing below, looking straight down the coastal street toward the sea; slight hand shake, the camera stays fixed, "
                  "never descending, the camera never pans, turns or follows.", "pencere"),
         "K_R3": ("Filmed from a high rooftop terrace on the hillside just above the seafront, high vantage, wide angle, "
                  "the coastal street and the apartment blocks below in frame; the camera stays fixed, never descending, "
                  "the camera never pans, turns or follows.", "teras_korkuluk"),   # 11 Kas (8): PASİF (denize uzak)
         # 11 Kas 2026 (8), Bahadır (2): K_R3 yerine yakın kadraj (birebir; ön plan korkuluk köşesi)
         "K_R4": ("Handheld footage filmed from the top-floor balcony of a seafront hotel right on the promenade, high "
-                 "vantage, wide angle, the sea and the coastal street directly below in frame; slight hand shake, the "
+                 "vantage, wide angle, the tidal wave filling half the frame, its crest never cut off, people fleeing below, the sea and the coastal street directly below in frame; slight hand shake, the "
                  "camera stays fixed, never descending, the camera never pans, turns or follows.", "korkuluk"),
     },
     PYROCLASTIC: {
