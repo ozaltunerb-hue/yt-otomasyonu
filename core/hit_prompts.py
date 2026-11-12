@@ -889,3 +889,292 @@ def dalga24_issues(structure: dict, info: dict) -> list[str]:
     if len(text) > DALGA24_MAX_CHARS:
         out.append(f"prompt {len(text)} karakter (en fazla {DALGA24_MAX_CHARS})")
     return out
+
+
+# ── ⭐ Hit kalıbı · Yaklaşma (kül bulutu) (12 Kas 2026 (6), Bahadır) ───────────────────────────────────────────────────
+# Kül bulutu hit'i (13 Eki 11:23, P2+Q1): yamaç terası, köy caddesi, volkan kadrajda, bulut yamaçtan caddeye inip
+# kameraya doğru gelir. Ateş hortumu Yaklaşma ve dev dalga 24 Eylül yapısıyla birleşik. GPT yok, hikâye tamamen koddan.
+# Zaman etiketleri VAR (hit'te de vardı). Kül bulutunun normal yolu ve yukarıdaki kayıtlı hit prompt'u değişmez.
+# Araç savurma yasağı SADECE bu modda K2 için kalkar. Kül bulutunun normal hattında araç yok: araç bu modun kendi
+# havuzundan (son 2 elenir); kişi sayısı da bu modda 3 ya da 4 (normal hattın 3-6 aralığı kullanılmaz). Kayıt K*+L*.
+KUL_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (kül bulutu)"
+KUL_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
+KUL_EVENTS = (es.PYROCLASTIC,)
+# Kamera: True = terasta kalır, bulutu izlemek için yavaşça aşağı eğilir; False = terasta sabit (varsayılan True)
+KUL_YAKLASMA_KAMERA_TAKIP = True
+KUL_MAX_WORDS = 230
+KUL_MAX_CHARS = 1400
+KUL_GEO_BLOCK = 3
+KUL_GEO_SEED = ("V1",)          # ilk üretimde V1 gelmez
+KUL_VEHICLE_BLOCK = 2
+KUL_MID_BLOCK = 2
+KUL_FINAL_BLOCK = 2
+YAKLASMA_KUL_BULUTU = {
+    "geos": {
+        "V1": {"name": "İtalya", "volcano": "A broad grey volcano",
+               "place": "a village of stone houses with terracotta roofs"},
+        "V2": {"name": "Endonezya", "volcano": "A steep green volcano",
+               "place": "a village of tin-roofed houses among palm trees"},
+        "V3": {"name": "Japonya", "volcano": "A snow-capped cone volcano", "place": "a town of tiled-roof Japanese houses"},
+        "V4": {"name": "Şili", "volcano": "A snow-capped Andean volcano", "place": "a town of colorful wooden houses"},
+        "V5": {"name": "Guatemala", "volcano": "A towering cone volcano", "place": "a town of pastel colonial houses"},
+        "V6": {"name": "Filipinler", "volcano": "A perfectly cone-shaped volcano",
+               "place": "a town of concrete houses with tin roofs"},
+    },
+    "opening": "{volcano} rises above the far end of the street in {place} and erupts, sending a towering pyroclastic "
+               "cloud racing down its flank into the street and rolling toward the camera.",
+    "people": {3: "Three people run up the street below, away from the cloud.",
+               4: "Four people run up the street below, away from the cloud."},
+    "action": "Ash rains down from the very first frame.",
+    "vehicles": ("parked car", "pickup truck", "small bus"),
+    "mids": {
+        "K1": "Halfway down the street, the cloud snaps a row of street trees and power poles and they crash across the "
+              "road.",
+        "K2": "Halfway down the street, the cloud swallows a {vehicle} and hurls it, in one piece, against a house wall.",
+        "K3": "Halfway down the street, the blast of the cloud shatters every window along the street and tears the "
+              "shutters off the houses.",
+        "K4": "Halfway down the street, the cloud rolls over a {vehicle} trying to reverse away and buries it in grey "
+              "ash.",
+    },
+    "finals": {
+        "L1": "Right below the terrace, the cloud engulfs the nearest house and its front wall collapses, debris "
+              "swirling in the ash.",
+        "L2": "Right below the terrace, the cloud tears the roof off the nearest house and sweeps it away in pieces.",
+        "L3": "Right below the terrace, the cloud rips apart the garden wall and fence, hurling debris up toward the "
+              "camera.",
+        "L4": "Right below the terrace, the grey cloud surges over the nearest houses and swallows the street, darkness "
+              "racing up toward the camera.",
+    },
+    "vehicle_mids": ("K2", "K4"),
+    "vehicle_throw_mid": "K2",
+    "camera": {True: "the camera stays on the terrace and tilts down slowly to follow the cloud, never descending",
+               False: "the camera stays fixed on the terrace, never descending"},
+    "tail": ("Handheld footage shot from a terrace above the town, high vantage looking down the street toward the "
+             "erupting volcano, the whole volcano visible in the upper part of the frame, a corner of the terrace "
+             "railing in the foreground; slight hand shake, {camera}; one continuous shot, no zoom, no cuts, no face "
+             "close to the camera. Civilians in everyday clothes, never CGI. A dense, boiling grey pyroclastic cloud "
+             "growing larger in the frame as it approaches, never a thin smoke plume. Raw natural light under an "
+             "ash-grey sky lit orange by the eruption. Real time, never slow motion, people run at full speed. No "
+             "readable signs, text or flags."),
+}
+_KB = YAKLASMA_KUL_BULUTU
+K2_WARNING = "⚠️ Araç savurma ortası (K2): videoda aracın tek parça kalıp kalmadığını kontrol et."
+_KUL_GEO_MEMORY: list[str] = []
+_KUL_VEHICLE_MEMORY: list[str] = []
+
+
+def kul_is_active(event: str | None) -> bool:
+    return event in KUL_EVENTS
+
+
+def kul_camera_text(follow: bool | None = None) -> str:
+    return _KB["camera"][bool(KUL_YAKLASMA_KAMERA_TAKIP if follow is None else follow)]
+
+
+def kul_tail(follow: bool | None = None) -> str:
+    return _KB["tail"].format(camera=kul_camera_text(follow))
+
+
+def kul_opening(geo: str) -> str:
+    g = _KB["geos"][geo]
+    return _KB["opening"].format(volcano=g["volcano"], place=g["place"])
+
+
+def kul_people(n: int) -> str:
+    if n not in _KB["people"]:
+        raise es.StructureError(f"{KUL_MODE_LABEL}: kişi sayısı 3 ya da 4 olmalı ({n})")
+    return _KB["people"][n]
+
+
+def kul_mid(mid: str, vehicle: str | None) -> str:
+    if mid not in _KB["mids"]:
+        raise es.StructureError(f"{KUL_MODE_LABEL}: {mid} bu modda yok (orta K1-K4)")
+    if mid in _KB["vehicle_mids"] and vehicle not in _KB["vehicles"]:
+        raise es.StructureError(f"{KUL_MODE_LABEL}: {mid} için araç yok ({vehicle})")
+    return _KB["mids"][mid].format(vehicle=vehicle or "")
+
+
+def kul_story(geo: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
+    a, b, c = es.SLICE_LABELS
+    return (f"{a}: {kul_opening(geo)} {kul_people(people)} {_KB['action']} {b}: {kul_mid(mid, vehicle)} "
+            f"{c}: {_KB['finals'][final]}")
+
+
+def kul_prompt(geo: str, people: int, mid: str, vehicle: str | None, final: str, follow: bool | None = None) -> str:
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(kul_story(geo, people, mid, vehicle, final), kul_tail(follow))
+
+
+def kul_tags(history: list[str]) -> list[str]:
+    return [t for t in es.beat_history(es.PYROCLASTIC, history or []) if re.fullmatch(r"K\d+\+L\d+", t)]
+
+
+def kul_choose_mid(history: list[str], rng=None) -> str:
+    return _block_pick(list(_KB["mids"]), [t.split("+")[0] for t in kul_tags(history)], KUL_MID_BLOCK, rng)
+
+
+def kul_choose_final(history: list[str], rng=None) -> str:
+    return _block_pick(list(_KB["finals"]), [t.split("+")[1] for t in kul_tags(history)], KUL_FINAL_BLOCK, rng)
+
+
+def kul_axes_history(records: list | None, key: str) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") == es.PYROCLASTIC and axes.get("mod") == "kul_yaklasma"
+                and axes.get(key)):
+            out.append(axes[key])
+    return out
+
+
+def kul_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    seen = list(KUL_GEO_SEED) + list(_KUL_GEO_MEMORY if used is None else used)
+    return _block_pick(list(_KB["geos"]), seen, KUL_GEO_BLOCK, rng)
+
+
+def kul_choose_vehicle(used: list[str] | None = None, rng=None) -> str:
+    return _block_pick(list(_KB["vehicles"]), list(_KUL_VEHICLE_MEMORY if used is None else used),
+                       KUL_VEHICLE_BLOCK, rng)
+
+
+def kul_lines(kb: dict) -> str:
+    text = kb["prompt"]
+    lines = [
+        f"Mod: {KUL_MODE_LABEL}",
+        f"Coğrafya: {kb['geo']} {_KB['geos'][kb['geo']]['name']}",
+        f"Araç: {kb['vehicle']}" + ("" if kb["mid"] in _KB["vehicle_mids"] else " (bu ortada araç yok)"),
+        f"Orta (4-9s): {kb['mid']} «{kul_mid(kb['mid'], kb['vehicle'])}»",
+        f"Final (9-15s): {kb['final']} «{_KB['finals'][kb['final']]}»",
+        "Kamera: " + ("takip (terasta kalır, bulutu izlemek için yavaşça aşağı eğilir)" if kb["follow"]
+                      else "sabit (terasta)"),
+        f"Kelime: {len(text.split())} (en fazla {KUL_MAX_WORDS}) · karakter: {len(text)} (en fazla {KUL_MAX_CHARS})",
+    ]
+    if kb["mid"] == _KB["vehicle_throw_mid"]:
+        lines.append(K2_WARNING)
+    return "\n".join(lines)
+
+
+def _kul_axes(js, tag: str, geo: str, vehicle: str, people: int):
+    import json
+    try:
+        data = json.loads(js)
+    except (TypeError, ValueError):
+        return js
+    if isinstance(data.get("axes"), dict):
+        data["axes"].update({"beats": tag, "mod": "kul_yaklasma", "cografya": geo, "arac": vehicle,
+                             "vehicle": vehicle, "people": people})
+    return json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def kul_apply(scene: dict, history: list[str] | None = None, rng=None, follow: bool | None = None,
+              geo_used: list[str] | None = None, vehicle_used: list[str] | None = None) -> dict:
+    """Normal hattın kurduğu kül bulutu sahnesinden (kayıt aynı) Yaklaşma (kül bulutu) prompt'unu kurar. Coğrafya V1-V6
+    (son 3 elenir, V1 tohum), araç (son 2), orta K1-K4 (son 2), final L1-L4 (son 2), kişi 3/4.
+    structure["kul_yaklasma"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
+    import random
+    event = scene["event"]
+    st = scene.get("structure") or {}
+    spec = st.get("spec")
+    if not kul_is_active(event) or not spec:
+        raise es.StructureError(f"{KUL_MODE_LABEL} kurulamadı: {event}")
+    follow = bool(KUL_YAKLASMA_KAMERA_TAKIP if follow is None else follow)
+    r = rng or random
+    geo = kul_choose_geo(geo_used, r)
+    vehicle = kul_choose_vehicle(vehicle_used, r)
+    people = r.choice((3, 4))
+    mid = kul_choose_mid(history or [], r)
+    final = kul_choose_final(history or [], r)
+    old_tag, new_tag = es.beat_tag(spec["beat_2"], spec["beat_3"]), es.beat_tag(mid, final)
+    with es._BEAT_LOCK:   # seçim anı hafızası: atılan P*+Q* yerine bu üretimin gerçek çifti
+        mem = es._BEAT_MEMORY.get(event, [])
+        if mem and mem[-1] == old_tag:
+            mem[-1] = new_tag
+    for m, v in ((_KUL_GEO_MEMORY, geo), (_KUL_VEHICLE_MEMORY, vehicle)):
+        m.append(v)
+        del m[:-12]
+    story = kul_story(geo, people, mid, vehicle, final)
+    tail = kul_tail(follow)
+    prompt = kul_prompt(geo, people, mid, vehicle, final, follow)
+    kb = {"event": event, "geo": geo, "people": people, "vehicle": vehicle, "mid": mid, "final": final,
+          "follow": follow, "story": story, "suffix": tail, "prompt": prompt}
+    kb["lines"] = kul_lines(kb)
+    problems = kul_issues({**st, "kul_yaklasma": kb}, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{KUL_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = scene.get("combo_key", "")
+    if f"#{old_tag}|" in combo:
+        combo = combo.replace(f"#{old_tag}|", f"#{new_tag}|")
+    name = _KB["geos"][geo]["name"]
+    mid_text = kul_mid(mid, vehicle)
+    cap_info = {**(st.get("caption_info") or {}), "opening": kul_opening(geo), "people": people,
+                "beat_2": mid_text[:-1], "beat_3": _KB["finals"][final][:-1]}
+    cam = "takip" if follow else "sabit"
+    structure = {**st, "kul_yaklasma": kb, "caption_info": cap_info,
+                 "environment": f"Coğrafya: {geo} {name} · kamera = {KUL_MODE_LABEL} (terrace above the town, {cam})",
+                 "story_source": f"Hikâye: kod (birebir) · {KUL_MODE_LABEL}"}
+    if st.get("axes_json"):
+        structure["axes_json"] = _kul_axes(st["axes_json"], new_tag, geo, vehicle, people)
+    plain = " ".join([kul_opening(geo), kul_people(people), _KB["action"], mid_text, _KB["finals"][final]])
+    trace, axes_line = mode_display(
+        scene, structure, mode=KUL_MODE_LABEL, camera=f"{cam} ({kul_camera_text(follow)}); terrace above the town, "
+        "volcano in the upper part of the frame, railing corner in foreground",
+        opening=kul_opening(geo), mid=(mid, mid_text), final=(final, _KB["finals"][final]), plain=plain,
+        vehicle=vehicle if mid in _KB["vehicle_mids"] else f"{vehicle} (bu ortada araç yok)",
+        spot="Terrace above the town, looking down the street toward the volcano (Yaklaşma kalıbı)",
+        weather="ash-grey sky lit orange (stil eki)",
+        axes={"coğrafya": f"{geo} {name}", "araç": vehicle, "kişi": people, "orta": mid, "final": final,
+              "kamera modu": cam},
+        repeat=f"coğrafya son {KUL_GEO_BLOCK} elendi (V1 tohum) · araç son {KUL_VEHICLE_BLOCK} · orta son "
+               f"{KUL_MID_BLOCK} · final son {KUL_FINAL_BLOCK}")
+    # normal hattın ortam etiketi ve görünümü prompt'ta yok: gösterilmez
+    trace = {**trace, "mode": "kul_yaklasma", "cografya": geo, "count_range": [3, 4], "view": None,
+             "view_source": None, "fire_env_label_short": None}
+    structure["axes_line"] = axes_line
+    out = {**scene, "story": story, "plain_story": plain, "style_suffix": tail, "prompt": prompt,
+           "combo_key": combo, "structure": structure, "trace": trace}
+    if scene.get("axes_json"):
+        out["axes_json"] = _kul_axes(scene["axes_json"], new_tag, geo, vehicle, people)
+    return out
+
+
+def kul_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin bu kalıpla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    kb = structure["kul_yaklasma"]
+    if kb.get("geo") not in _KB["geos"]:
+        return [f"coğrafya V1-V6 değil ({kb.get('geo')})"]
+    if kb.get("mid") not in _KB["mids"]:
+        return [f"orta K1-K4 değil ({kb.get('mid')})"]
+    if kb.get("final") not in _KB["finals"]:
+        return [f"final L1-L4 değil ({kb.get('final')})"]
+    try:
+        story = kul_story(kb["geo"], kb["people"], kb["mid"], kb["vehicle"], kb["final"])
+        prompt = kul_prompt(kb["geo"], kb["people"], kb["mid"], kb["vehicle"], kb["final"], kb["follow"])
+    except es.StructureError as e:
+        return [str(e)]
+    out = []
+    if info.get("style_suffix") != kul_tail(kb["follow"]):
+        out.append("stil eki Yaklaşma (kül bulutu) kalıbı değil")
+    if info.get("story") != story:
+        out.append("hikâye kalıpla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    for bad in ("Full action", "Until the last frame"):
+        if bad in text:
+            out.append(f"bu modda olmayan ifade var: {bad}")
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > KUL_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {KUL_MAX_WORDS})")
+    if len(text) > KUL_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {KUL_MAX_CHARS})")
+    return out

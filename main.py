@@ -107,7 +107,8 @@ async def _credit(kie) -> float | None:
 async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_path: str = "",
                        domain: str | None = None, trigger: str = "auto", event: str | None = None,
                        mode: str | None = None, reporter: PipelineReporter | None = None, view: str | None = None,
-                       hit_env: str | None = None, approach_env: str | None = None, dalga24: bool = False):
+                       hit_env: str | None = None, approach_env: str | None = None, dalga24: bool = False,
+                       kul_yaklasma: bool = False):
     """
     Tam otonom video üretim pipeline'ı.
 
@@ -125,6 +126,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     hit_env: 12 Kas, ⭐ Hit kalıbı modunda Telegram'da seçilen ortam (None = normal üretim).
     approach_env: 12 Kas (3), ⭐ Hit kalıbı · Yaklaşma modunda Telegram'da seçilen ortam (None = normal üretim).
     dalga24: 12 Kas (5), ⭐ Hit kalıbı · 24 Eylül (dev dalga) modu (False = normal üretim).
+    kul_yaklasma: 12 Kas (6), ⭐ Hit kalıbı · Yaklaşma (kül bulutu) modu (False = normal üretim).
     """
     if dry_run:
         settings.IS_DRY_RUN = True
@@ -175,6 +177,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 **({"hit_env": hit_env} if hit_env else {}),
                 **({"approach_env": approach_env} if approach_env else {}),
                 **({"dalga24": True} if dalga24 else {}),
+                **({"kul_yaklasma": True} if kul_yaklasma else {}),
             )
             return result
         except (ContentFilterError, PreflightError) as err:
@@ -215,6 +218,7 @@ async def _execute_pipeline(
     hit_env: str | None = None,
     approach_env: str | None = None,
     dalga24: bool = False,
+    kul_yaklasma: bool = False,
 ) -> dict:
     """
     Pipeline'ın asıl implementasyonu.
@@ -243,6 +247,7 @@ async def _execute_pipeline(
         **({"hit_env": hit_env} if hit_env else {}),   # 12 Kas: ⭐ Hit kalıbı
         **({"approach_env": approach_env} if approach_env else {}),   # 12 Kas (3): ⭐ Hit kalıbı · Yaklaşma
         **({"dalga24": True} if dalga24 else {}),   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül
+        **({"kul_yaklasma": True} if kul_yaklasma else {}),   # 12 Kas (6): ⭐ Hit kalıbı · Yaklaşma (kül bulutu)
         # 21 Eki (Gece 1 / Aşama 3): seçimden önce kategorinin eksen geçmişi Notion'dan (iptaller dahil)
         "axes_loader": tracker.get_axes_records,
         # 21 Eki (Aşama 7): caption geçmişi (Paylaşımlar + son 20 üretilmiş caption)
@@ -356,6 +361,8 @@ async def _execute_pipeline(
                 info["hit_lines"] = structure["approach"]["lines"]
             if structure and structure.get("dalga24"):   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül onay satırları
                 info["hit_lines"] = structure["dalga24"]["lines"]
+            if structure and structure.get("kul_yaklasma"):   # 12 Kas (6): kül bulutu Yaklaşma onay satırları
+                info["hit_lines"] = structure["kul_yaklasma"]["lines"]
             meta.update({"final_prompt": info["prompt"], "story": info.get("story", ""),
                          "style_suffix": info.get("style_suffix", ""), "preflight": info.get("preflight") or {}})
             await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)

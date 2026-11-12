@@ -444,6 +444,43 @@ def dalga24_confirm_text(domain: str, event: str, cfg: dict | None = None) -> st
             "final (F1-F4), kelime sayısı ✋ Onay mesajında. Zaman etiketi yok. Hikâye için GPT çağrılmaz.")
 
 
+# ── ⭐ Hit kalıbı · Yaklaşma (kül bulutu) (12 Kas 2026 (6), Bahadır): ortam sorulmaz (coğrafya LRU). Adımlar: ky (onay
+# metni) → kyok (üretim). Kayıtlı kül bulutu hit prompt'unun butonu gizli kalır (hp.HIT_ACTIVE_EVENTS değişmedi)
+KUL_BUTTON = "⭐ Hit kalıbı · Yaklaşma"
+
+
+def kul_confirm_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    """Normal onay (✅ Üret / ❌ İptal) + altta ⭐ Hit kalıbı · Yaklaşma."""
+    rows = [list(r) for r in confirm_keyboard(di, eid).inline_keyboard]
+    rows.append([InlineKeyboardButton(KUL_BUTTON, callback_data=f"{CALLBACK_PREFIX}ky:{di}:{eid}")])
+    return InlineKeyboardMarkup(rows)
+
+
+def kul_produce_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}kyok:{di}:{eid}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def parse_kul(di_raw: str, eid: str) -> tuple[str, str] | None:
+    sel = parse_selection(di_raw, eid)
+    if sel is None or sel[1] is None or not _hp().kul_is_active(sel[1]):
+        return None
+    return sel
+
+
+def kul_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
+    hp = _hp()
+    return (confirm_text(domain, event, cfg)
+            + f"\n\nMod: {hp.KUL_MODE_LABEL}\n"
+            "Kamera: " + ("takip (terasta kalır, bulutu izlemek için yavaşça aşağı eğilir)" if hp.KUL_YAKLASMA_KAMERA_TAKIP
+                          else "sabit (terasta)")
+            + "\nYamaç terası, volkan kadrajın üst kısmında; bulut yamaçtan caddeye iner, kameraya doğru gelir. "
+            "Coğrafya (V1-V6), araç, orta (K1-K4), final (L1-L4), kelime sayısı ✋ Onay mesajında. Hikâye için GPT "
+            "çağrılmaz.")
+
+
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([[
         InlineKeyboardButton("✅ Kie'ye gönder", callback_data=f"{CALLBACK_PREFIX}ap:{token}:y"),
@@ -710,6 +747,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("dz", "dzok"):   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül (dev dalga)
         await _on_dalga24(query, context, action, args, cfg)
         return
+    if action in ("ky", "kyok"):   # 12 Kas (6): ⭐ Hit kalıbı · Yaklaşma (kül bulutu)
+        await _on_kul(query, context, action, args, cfg)
+        return
 
     sel, view = None, None
     if action == "d" and len(args) == 1:
@@ -734,7 +774,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                                       reply_markup=dalga24_view_keyboard(*args) if _hp().dalga24_is_active(event)
                                       else view_keyboard(*args))
     elif action == "e":
-        keyboard = hit_confirm_keyboard(*args) if _hp().is_active(event) else confirm_keyboard(*args)
+        keyboard = (hit_confirm_keyboard(*args) if _hp().is_active(event)
+                    else kul_confirm_keyboard(*args) if _hp().kul_is_active(event)   # 12 Kas (6)
+                    else confirm_keyboard(*args))
         await query.edit_message_text(confirm_text(domain, event, cfg), reply_markup=keyboard)
     elif action == "v":
         await query.edit_message_text(confirm_text(domain, event, cfg, view), reply_markup=confirm_keyboard(*args))
@@ -837,6 +879,30 @@ async def _on_dalga24(query, context, action: str, args: list[str], cfg: dict) -
                       dalga24=True)
 
 
+async def _on_kul(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """⭐ Hit kalıbı · Yaklaşma (kül bulutu) adımları: ky (onay metni) → kyok (üretim). Kie yine ✋ Onay'a bağlı."""
+    parsed = parse_kul(*args) if len(args) == 2 else None
+    if parsed is None:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    domain, event = parsed
+    if action == "ky":
+        await query.edit_message_text(kul_confirm_text(domain, event, cfg), reply_markup=kul_produce_keyboard(*args))
+        return
+    run_cfg = dict(cfg)
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)} / {KUL_BUTTON}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
+                      kul_yaklasma=True)
+
+
 async def _on_caption_share(query, context, page: str) -> None:
     """📤 Paylaştım: Paylaşımlar'a tek satır (aynı üretim için ikinci kez basılırsa yeni satır açmaz)."""
     import core.caption as cap
@@ -937,7 +1003,7 @@ def _run_pipeline_blocking(kwargs: dict) -> dict:
 
 async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg: dict | None = None,
                   bot_data: dict | None = None, view: str | None = None, hit_env: str | None = None,
-                  approach_env: str | None = None, dalga24: bool = False) -> None:
+                  approach_env: str | None = None, dalga24: bool = False, kul_yaklasma: bool = False) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -954,6 +1020,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["approach_env"] = approach_env
     if dalga24:   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül
         kwargs["dalga24"] = True
+    if kul_yaklasma:   # 12 Kas (6): ⭐ Hit kalıbı · Yaklaşma (kül bulutu)
+        kwargs["kul_yaklasma"] = True
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:

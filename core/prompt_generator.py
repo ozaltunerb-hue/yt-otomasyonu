@@ -1225,6 +1225,19 @@ async def generate_creative_prompts(config: dict) -> dict:
                                            hp.no_gpt, axes_loader=capture_loader if raw_loader else None,
                                            caption_ctx=caption_ctx if loader is not None else None)
         scene = hp.dalga24_apply(scene, history, geo_used=hp.dalga24_geo_history(seen_records.get("records")))
+    elif config.get("kul_yaklasma"):   # 12 Kas (6): ⭐ Hit kalıbı · Yaklaşma (kül bulutu, Telegram). GPT yok
+        import core.hit_prompts as hp
+        raw_loader, seen_records = config.get("axes_loader"), {}
+
+        def capture_loader(dom):
+            seen_records["records"] = raw_loader(dom)
+            return seen_records["records"]
+        scene = await build_creative_scene(config.get("domain") or None, config.get("event"), history, topics,
+                                           hp.no_gpt, axes_loader=capture_loader if raw_loader else None,
+                                           caption_ctx=caption_ctx if loader is not None else None)
+        recs = seen_records.get("records")
+        scene = hp.kul_apply(scene, history, geo_used=hp.kul_axes_history(recs, "cografya"),
+                             vehicle_used=hp.kul_axes_history(recs, "arac"))
     else:
         scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history,
                                            topics, _call_gpt, view=config.get("view") or None,
