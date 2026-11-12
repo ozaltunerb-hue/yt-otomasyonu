@@ -715,6 +715,9 @@ async def rewrite_structured(structure: dict, reason: str, call_gpt) -> str:
     # 10 Eki, Bahadır: her denemenin tam metni ve sonucu kaydedilir (main.py Notion gövdesine yazar)
     entry = {"reason": reason, "attempts": [], "result": "?"}
     structure.setdefault("rewrite_log", []).append(entry)
+    if structure.get("approach"):   # 12 Kas (3): ⭐ Hit kalıbı · Yaklaşma, GPT yok; aynı hikâye döner
+        entry["result"] = "⭐ Hit kalıbı · Yaklaşma: yeniden yazım yok, aynı hikâye"
+        return structure["approach"]["story"]
     if structure.get("hit"):   # 12 Kas: ⭐ Hit kalıbı, GPT yok; aynı hit kalıbı hikâyesi döner
         entry["result"] = "⭐ Hit kalıbı: yeniden yazım yok, aynı hikâye"
         return structure["hit"]["story"]
@@ -747,6 +750,9 @@ async def rewrite_structured(structure: dict, reason: str, call_gpt) -> str:
 def submit_issues(structure: dict, info: dict) -> list[str]:
     """Kie'den hemen önce (main.before_submit): gönderilecek metin structure'dan yeniden kurulanla birebir aynı mı,
     stil eki beklenen mi, son denetim temiz mi. Boş liste = gönderilebilir."""
+    if structure.get("approach"):   # 12 Kas (3): ⭐ Hit kalıbı · Yaklaşma, kendi birebir yeniden kurulumu
+        import core.hit_prompts as hp
+        return hp.yaklasma_issues(structure, info)
     if structure.get("hit"):   # 12 Kas: ⭐ Hit kalıbı, kendi birebir yeniden kurulumu (core/hit_prompts.py)
         import core.hit_prompts as hp
         return hp.issues(structure, info)

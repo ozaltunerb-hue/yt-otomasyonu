@@ -1194,6 +1194,18 @@ async def generate_creative_prompts(config: dict) -> dict:
         finally:
             es.HIT_OVERRIDE.reset(token)
         scene = hp.apply(scene, hit_env)
+    elif config.get("approach_env"):   # 12 Kas (3): ⭐ Hit kalıbı · Yaklaşma (Telegram). Ortam zorlanır; GPT yok
+        import core.event_structure as es
+        import core.hit_prompts as hp
+        approach_env = config["approach_env"]
+        token = es.HIT_OVERRIDE.set(hp.yaklasma_override(config.get("event"), approach_env))
+        try:
+            scene = await build_creative_scene(config.get("domain") or None, config.get("event"), history, topics,
+                                               hp.no_gpt, axes_loader=config.get("axes_loader"),
+                                               caption_ctx=caption_ctx if loader is not None else None)
+        finally:
+            es.HIT_OVERRIDE.reset(token)
+        scene = hp.yaklasma_apply(scene, approach_env, history)
     else:
         scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history,
                                            topics, _call_gpt, view=config.get("view") or None,
