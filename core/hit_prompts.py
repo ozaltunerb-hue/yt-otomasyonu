@@ -1212,7 +1212,8 @@ def kul_issues(structure: dict, info: dict) -> list[str]:
 # değişmez (eski orman hit butonu gizli kalır, HIT_ACTIVE_EVENTS değişmedi). Kayıt M*+N* (olay bazlı; normal orman
 # havuzu K*/L*). Araç bu modun kendi havuzundan (son 2), kişi 3/4. Yasak çift M2+N3 (iki kez ağaç). 13 Kas (2): M4 ve
 # N4 pasif (ORMAN_PASIF), orta/final LRU son 1, açılışta yangın ilk karede köyün içinde. "U-turn" bu modda yok (M1 hit
-# sahnesi, U dönüşü olmadan).
+# sahnesi, U dönüşü olmadan). 13 Kas (3): yangın ilk karede caddenin ortasında, ortalar "Just ahead of the flames,",
+# yasak çiftler M2+N2, M2+N3, M3+N2 (eski metinler ORMAN_OPENING_V2 / ORMAN_MIDS_V2, pasif).
 ORMAN_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (orman yangını)"
 ORMAN_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
 ORMAN_EVENTS = (es.WILDFIRE,)
@@ -1225,7 +1226,7 @@ ORMAN_GEO_SEED = ("R1",)          # ilk üretimde R1 gelmez
 ORMAN_VEHICLE_BLOCK = 2
 ORMAN_MID_BLOCK = 1      # 13 Kas (2): 3 aktif seçenek, son 1 elenir
 ORMAN_FINAL_BLOCK = 1
-ORMAN_BANNED_PAIRS = (("M2", "N3"),)   # 13 Kas (2): M4 pasif, M4+N1 geçersiz
+ORMAN_BANNED_PAIRS = (("M2", "N3"), ("M2", "N2"), ("M3", "N2"))   # 13 Kas (3): N2 zayıf eşleşmeler yasak
 YAKLASMA_ORMAN = {
     "geos": {
         "R1": {"name": "Kaliforniya", "forest": "pine-covered",
@@ -1239,17 +1240,18 @@ YAKLASMA_ORMAN = {
                "place": "a hillside village of tile-roofed stone houses"},
         "R6": {"name": "Şili", "forest": "pine-covered", "place": "a hillside town of colorful wooden houses"},
     },
-    # 13 Kas 2026 (2): yangın ilk karede köyün içinde (eski metin ORMAN_OPENING_V1, pasif)
-    "opening": "A towering wall of flames has already swept down the {forest} slope at the far end of the street and "
-               "is racing through the edge of {place} toward the camera, igniting roofs and trees as it comes.",
+    # 13 Kas 2026 (3): yangın ilk karede caddenin ortasında (eski metinler ORMAN_OPENING_V1/V2, pasif)
+    "opening": "A towering wall of flames has already swept down the {forest} slope and is racing halfway down the "
+               "street through {place} toward the camera, igniting roofs and trees as it comes.",
     "people": {3: "Three people run up the street below, away from the flames.",
                4: "Four people run up the street below, away from the flames."},
     "action": "Burning embers and thick smoke blow across the street from the very first frame.",
     "vehicles": ("white van", "pickup truck", "SUV"),
     "mids": {
-        "M1": "Halfway down the street, the {vehicle} speeds away as the wall of flames closes the road right behind it.",
-        "M2": "Halfway down the street, a huge burning pine crashes down onto the {vehicle}, crushing its roof.",
-        "M3": "Halfway down the street, the wall of flames swallows a parked {vehicle}, its windows bursting as it "
+        "M1": "Just ahead of the flames, the {vehicle} speeds away as the wall of flames closes the road right behind "
+              "it.",
+        "M2": "Just ahead of the flames, a huge burning pine crashes down onto the {vehicle}, crushing its roof.",
+        "M3": "Just ahead of the flames, the wall of flames swallows a parked {vehicle}, its windows bursting as it "
               "disappears into the fire.",
     },
     "finals": {
@@ -1273,6 +1275,15 @@ _OR = YAKLASMA_ORMAN
 # 13 Kas 2026 (2) öncesi açılış (2b35000), pasif; kullanılmaz.
 ORMAN_OPENING_V1 = ("A towering wall of flames sweeps down the {forest} slope at the far end of the street and slams "
                     "into the edge of {place}, igniting roofs and trees as it races toward the camera.")
+# 13 Kas 2026 (3) öncesi açılış ve ortalar (8de752a), pasif; kullanılmaz.
+ORMAN_OPENING_V2 = ("A towering wall of flames has already swept down the {forest} slope at the far end of the street "
+                    "and is racing through the edge of {place} toward the camera, igniting roofs and trees as it comes.")
+ORMAN_MIDS_V2 = {
+    "M1": "Halfway down the street, the {vehicle} speeds away as the wall of flames closes the road right behind it.",
+    "M2": "Halfway down the street, a huge burning pine crashes down onto the {vehicle}, crushing its roof.",
+    "M3": "Halfway down the street, the wall of flames swallows a parked {vehicle}, its windows bursting as it "
+          "disappears into the fire.",
+}
 # 13 Kas 2026 (2): M4 (araçsız orta) ve N4 pasif (bu modda seçilmez, kullanılmaz)
 ORMAN_PASIF = {
     "mids": {
@@ -1337,11 +1348,17 @@ def orman_tags(history: list[str]) -> list[str]:
 
 
 def orman_choose_mid(history: list[str], rng=None) -> str:
-    return _block_pick(list(_OR["mids"]), [t.split("+")[0] for t in orman_tags(history)], ORMAN_MID_BLOCK, rng)
+    """Orta: son 1 elenir. 13 Kas (3): yasak çiftler yüzünden son finalden sonra final adayı kalmayan orta (ör. son
+    final N1 iken yalnız N1'e gidebilen M2) aday değil; böyle orta yoksa tüm ortalar."""
+    tags = orman_tags(history)
+    recent = set([t.split("+")[1] for t in tags][-ORMAN_FINAL_BLOCK:]) if ORMAN_FINAL_BLOCK else set()
+    viable = [m for m in _OR["mids"]
+              if any((m, f) not in ORMAN_BANNED_PAIRS and f not in recent for f in _OR["finals"])]
+    return _block_pick(viable or list(_OR["mids"]), [t.split("+")[0] for t in tags], ORMAN_MID_BLOCK, rng)
 
 
 def orman_choose_final(history: list[str], mid: str, rng=None) -> str:
-    """Final: son 1 elenir; seçilen ortanın yasak eşi (M2→N3) hiç aday değil."""
+    """Final: son 1 elenir; seçilen ortanın yasak eşleri (M2→N2/N3, M3→N2) hiç aday değil."""
     banned = {f for m, f in ORMAN_BANNED_PAIRS if m == mid}
     return _block_pick([f for f in _OR["finals"] if f not in banned], [t.split("+")[1] for t in orman_tags(history)],
                        ORMAN_FINAL_BLOCK, rng)
@@ -1407,7 +1424,7 @@ def _orman_axes(js, tag: str, geo: str, vehicle: str, people: int):
 def orman_apply(scene: dict, history: list[str] | None = None, rng=None, follow: bool | None = None,
                 geo_used: list[str] | None = None, vehicle_used: list[str] | None = None) -> dict:
     """Normal hattın kurduğu orman yangını sahnesinden (kayıt aynı) Yaklaşma (orman yangını) prompt'unu kurar. Coğrafya
-    R1-R6 (son 3 elenir, R1 tohum), araç (son 2), orta M1-M3 (son 1), final N1-N3 (son 1; M2+N3 yasak), kişi 3/4.
+    R1-R6 (son 3 elenir, R1 tohum), araç (son 2), orta M1-M3 (son 1), final N1-N3 (son 1; M2+N2, M2+N3, M3+N2 yasak), kişi 3/4.
     M4 ve N4 pasif (ORMAN_PASIF).
     structure["orman_yaklasma"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
     import random
@@ -1465,7 +1482,7 @@ def orman_apply(scene: dict, history: list[str] | None = None, rng=None, follow:
         axes={"coğrafya": f"{geo} {name}", "araç": vehicle, "kişi": people, "orta": mid, "final": final,
               "kamera modu": cam},
         repeat=f"coğrafya son {ORMAN_GEO_BLOCK} elendi (R1 tohum) · araç son {ORMAN_VEHICLE_BLOCK} · orta son "
-               f"{ORMAN_MID_BLOCK} · final son {ORMAN_FINAL_BLOCK} (M2+N3 yasak)")
+               f"{ORMAN_MID_BLOCK} · final son {ORMAN_FINAL_BLOCK} (M2+N2, M2+N3, M3+N2 yasak)")
     # normal hattın ortam etiketi ve görünümü prompt'ta yok: gösterilmez
     trace = {**trace, "mode": "orman_yaklasma", "cografya": geo, "count_range": [3, 4], "view": None,
              "view_source": None, "fire_env_label_short": None}
