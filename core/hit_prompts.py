@@ -1203,3 +1203,297 @@ def kul_issues(structure: dict, info: dict) -> list[str]:
     if len(text) > KUL_MAX_CHARS:
         out.append(f"prompt {len(text)} karakter (en fazla {KUL_MAX_CHARS})")
     return out
+
+
+# ── ⭐ Hit kalıbı · Yaklaşma (orman yangını) (13 Kas 2026, Bahadır) ────────────────────────────────────────────────────
+# Orman yangını hit'i (9 Eki 21:52, K5+L4): yamaçtaki bir evin balkonundan caddeye ve yanan yamaca bakış, alev duvarı
+# ormanlık yamaçtan inip mahalleye çarpar, kamera alevleri takip eder. Kül bulutu Yaklaşma yapısıyla birleşik. GPT yok,
+# hikâye tamamen koddan, zaman etiketleri VAR. Orman yangınının normal yolu ve yukarıdaki kayıtlı orman hit prompt'u
+# değişmez (eski orman hit butonu gizli kalır, HIT_ACTIVE_EVENTS değişmedi). Kayıt M*+N* (olay bazlı; normal orman
+# havuzu K*/L*). Araç bu modun kendi havuzundan (son 2), kişi 3/4. Yasak çiftler M2+N3 (iki kez ağaç), M4+N1 (iki kez
+# ev çatısı). "U-turn" bu modda yok (M1 hit sahnesi, U dönüşü olmadan).
+ORMAN_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (orman yangını)"
+ORMAN_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
+ORMAN_EVENTS = (es.WILDFIRE,)
+# Kamera: True = alev duvarını takip eder (pan); False = sabit (varsayılan True)
+ORMAN_YAKLASMA_KAMERA_TAKIP = True
+ORMAN_MAX_WORDS = 230
+ORMAN_MAX_CHARS = 1400
+ORMAN_GEO_BLOCK = 3
+ORMAN_GEO_SEED = ("R1",)          # ilk üretimde R1 gelmez
+ORMAN_VEHICLE_BLOCK = 2
+ORMAN_MID_BLOCK = 2
+ORMAN_FINAL_BLOCK = 2
+ORMAN_BANNED_PAIRS = (("M2", "N3"), ("M4", "N1"))
+YAKLASMA_ORMAN = {
+    "geos": {
+        "R1": {"name": "Kaliforniya", "forest": "pine-covered",
+               "place": "a hillside neighborhood of wooden suburban houses"},
+        "R2": {"name": "Avustralya", "forest": "eucalyptus-covered",
+               "place": "a hillside neighborhood of tin-roofed weatherboard houses"},
+        "R3": {"name": "Yunanistan", "forest": "pine-covered",
+               "place": "a hillside village of whitewashed terracotta-roofed houses"},
+        "R4": {"name": "Kanada", "forest": "spruce-covered", "place": "a hillside town of dark-roofed timber houses"},
+        "R5": {"name": "Portekiz", "forest": "eucalyptus-covered",
+               "place": "a hillside village of tile-roofed stone houses"},
+        "R6": {"name": "Şili", "forest": "pine-covered", "place": "a hillside town of colorful wooden houses"},
+    },
+    "opening": "A towering wall of flames sweeps down the {forest} slope at the far end of the street and slams into "
+               "the edge of {place}, igniting roofs and trees as it races toward the camera.",
+    "people": {3: "Three people run up the street below, away from the flames.",
+               4: "Four people run up the street below, away from the flames."},
+    "action": "Burning embers and thick smoke blow across the street from the very first frame.",
+    "vehicles": ("white van", "pickup truck", "SUV"),
+    "mids": {
+        "M1": "Halfway down the street, the {vehicle} speeds away as the wall of flames closes the road right behind it.",
+        "M2": "Halfway down the street, a huge burning pine crashes down onto the {vehicle}, crushing its roof.",
+        "M3": "Halfway down the street, the wall of flames swallows a parked {vehicle}, its windows bursting as it "
+              "disappears into the fire.",
+        "M4": "Halfway down the street, two houses on either side of the road catch fire at once, flames pouring out of "
+              "their windows and roofs.",
+    },
+    "finals": {
+        "N1": "Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks "
+              "bursting up toward the camera.",
+        "N2": "Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, "
+              "burning planks collapsing in a shower of sparks.",
+        "N3": "Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as "
+              "flames pour inside.",
+        "N4": "Right below the balcony, the fire jumps the street and the wooden fence and carport below burst into "
+              "flames, heat and sparks rushing up toward the camera.",
+    },
+    "vehicle_mids": ("M1", "M2", "M3"),
+    "camera": {True: "the camera pans to follow the wall of flames as it approaches", False: "the camera stays fixed"},
+    "tail": ("Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, "
+             "high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, "
+             "{camera}; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday "
+             "clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or "
+             "strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at "
+             "full speed. No readable signs, text or flags."),
+}
+_OR = YAKLASMA_ORMAN
+_ORMAN_GEO_MEMORY: list[str] = []
+_ORMAN_VEHICLE_MEMORY: list[str] = []
+
+
+def orman_is_active(event: str | None) -> bool:
+    return event in ORMAN_EVENTS
+
+
+def orman_camera_text(follow: bool | None = None) -> str:
+    return _OR["camera"][bool(ORMAN_YAKLASMA_KAMERA_TAKIP if follow is None else follow)]
+
+
+def orman_tail(follow: bool | None = None) -> str:
+    return _OR["tail"].format(camera=orman_camera_text(follow))
+
+
+def orman_opening(geo: str) -> str:
+    g = _OR["geos"][geo]
+    return _OR["opening"].format(forest=g["forest"], place=g["place"])
+
+
+def orman_people(n: int) -> str:
+    if n not in _OR["people"]:
+        raise es.StructureError(f"{ORMAN_MODE_LABEL}: kişi sayısı 3 ya da 4 olmalı ({n})")
+    return _OR["people"][n]
+
+
+def orman_mid(mid: str, vehicle: str | None) -> str:
+    if mid not in _OR["mids"]:
+        raise es.StructureError(f"{ORMAN_MODE_LABEL}: {mid} bu modda yok (orta M1-M4)")
+    if mid in _OR["vehicle_mids"] and vehicle not in _OR["vehicles"]:
+        raise es.StructureError(f"{ORMAN_MODE_LABEL}: {mid} için araç yok ({vehicle})")
+    return _OR["mids"][mid].format(vehicle=vehicle or "")
+
+
+def orman_story(geo: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
+    if (mid, final) in ORMAN_BANNED_PAIRS:
+        raise es.StructureError(f"{ORMAN_MODE_LABEL}: {mid}+{final} yasak çift")
+    a, b, c = es.SLICE_LABELS
+    return (f"{a}: {orman_opening(geo)} {orman_people(people)} {_OR['action']} {b}: {orman_mid(mid, vehicle)} "
+            f"{c}: {_OR['finals'][final]}")
+
+
+def orman_prompt(geo: str, people: int, mid: str, vehicle: str | None, final: str, follow: bool | None = None) -> str:
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(orman_story(geo, people, mid, vehicle, final), orman_tail(follow))
+
+
+def orman_tags(history: list[str]) -> list[str]:
+    return [t for t in es.beat_history(es.WILDFIRE, history or []) if re.fullmatch(r"M\d+\+N\d+", t)]
+
+
+def orman_choose_mid(history: list[str], rng=None) -> str:
+    return _block_pick(list(_OR["mids"]), [t.split("+")[0] for t in orman_tags(history)], ORMAN_MID_BLOCK, rng)
+
+
+def orman_choose_final(history: list[str], mid: str, rng=None) -> str:
+    """Final: son 2 elenir; seçilen ortanın yasak eşi (M2→N3, M4→N1) hiç aday değil."""
+    banned = {f for m, f in ORMAN_BANNED_PAIRS if m == mid}
+    return _block_pick([f for f in _OR["finals"] if f not in banned], [t.split("+")[1] for t in orman_tags(history)],
+                       ORMAN_FINAL_BLOCK, rng)
+
+
+def orman_axes_history(records: list | None, key: str) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") == es.WILDFIRE and axes.get("mod") == "orman_yaklasma"
+                and axes.get(key)):
+            out.append(axes[key])
+    return out
+
+
+def orman_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    seen = list(ORMAN_GEO_SEED) + list(_ORMAN_GEO_MEMORY if used is None else used)
+    return _block_pick(list(_OR["geos"]), seen, ORMAN_GEO_BLOCK, rng)
+
+
+def orman_choose_vehicle(used: list[str] | None = None, rng=None) -> str:
+    return _block_pick(list(_OR["vehicles"]), list(_ORMAN_VEHICLE_MEMORY if used is None else used),
+                       ORMAN_VEHICLE_BLOCK, rng)
+
+
+def orman_camera_label(follow: bool) -> str:
+    return "takip (alev duvarını izlemek için döner)" if follow else "sabit"
+
+
+def orman_lines(ob: dict) -> str:
+    text = ob["prompt"]
+    return "\n".join([
+        f"Mod: {ORMAN_MODE_LABEL}",
+        f"Coğrafya: {ob['geo']} {_OR['geos'][ob['geo']]['name']}",
+        f"Araç: {ob['vehicle']}" + ("" if ob["mid"] in _OR["vehicle_mids"] else " (bu ortada araç yok)"),
+        f"Orta (4-9s): {ob['mid']} «{orman_mid(ob['mid'], ob['vehicle'])}»",
+        f"Final (9-15s): {ob['final']} «{_OR['finals'][ob['final']]}»",
+        "Kamera: " + orman_camera_label(ob["follow"]),
+        f"Kelime: {len(text.split())} (en fazla {ORMAN_MAX_WORDS}) · karakter: {len(text)} (en fazla {ORMAN_MAX_CHARS})",
+    ])
+
+
+def _orman_axes(js, tag: str, geo: str, vehicle: str, people: int):
+    import json
+    try:
+        data = json.loads(js)
+    except (TypeError, ValueError):
+        return js
+    if isinstance(data.get("axes"), dict):
+        data["axes"].update({"beats": tag, "mod": "orman_yaklasma", "cografya": geo, "arac": vehicle,
+                             "vehicle": vehicle, "people": people})
+    return json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def orman_apply(scene: dict, history: list[str] | None = None, rng=None, follow: bool | None = None,
+                geo_used: list[str] | None = None, vehicle_used: list[str] | None = None) -> dict:
+    """Normal hattın kurduğu orman yangını sahnesinden (kayıt aynı) Yaklaşma (orman yangını) prompt'unu kurar. Coğrafya
+    R1-R6 (son 3 elenir, R1 tohum), araç (son 2), orta M1-M4 (son 2), final N1-N4 (son 2; M2+N3, M4+N1 yasak), kişi 3/4.
+    structure["orman_yaklasma"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
+    import random
+    event = scene["event"]
+    st = scene.get("structure") or {}
+    spec = st.get("spec")
+    if not orman_is_active(event) or not spec:
+        raise es.StructureError(f"{ORMAN_MODE_LABEL} kurulamadı: {event}")
+    follow = bool(ORMAN_YAKLASMA_KAMERA_TAKIP if follow is None else follow)
+    r = rng or random
+    geo = orman_choose_geo(geo_used, r)
+    vehicle = orman_choose_vehicle(vehicle_used, r)
+    people = r.choice((3, 4))
+    mid = orman_choose_mid(history or [], r)
+    final = orman_choose_final(history or [], mid, r)
+    old_tag, new_tag = es.beat_tag(spec["beat_2"], spec["beat_3"]), es.beat_tag(mid, final)
+    with es._BEAT_LOCK:   # seçim anı hafızası: atılan K*+L* yerine bu üretimin gerçek çifti
+        mem = es._BEAT_MEMORY.get(event, [])
+        if mem and mem[-1] == old_tag:
+            mem[-1] = new_tag
+    for m, v in ((_ORMAN_GEO_MEMORY, geo), (_ORMAN_VEHICLE_MEMORY, vehicle)):
+        m.append(v)
+        del m[:-12]
+    story = orman_story(geo, people, mid, vehicle, final)
+    tail = orman_tail(follow)
+    prompt = orman_prompt(geo, people, mid, vehicle, final, follow)
+    ob = {"event": event, "geo": geo, "people": people, "vehicle": vehicle, "mid": mid, "final": final,
+          "follow": follow, "story": story, "suffix": tail, "prompt": prompt}
+    ob["lines"] = orman_lines(ob)
+    problems = orman_issues({**st, "orman_yaklasma": ob}, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{ORMAN_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = scene.get("combo_key", "")
+    if f"#{old_tag}|" in combo:
+        combo = combo.replace(f"#{old_tag}|", f"#{new_tag}|")
+    name = _OR["geos"][geo]["name"]
+    mid_text = orman_mid(mid, vehicle)
+    cap_info = {**(st.get("caption_info") or {}), "opening": orman_opening(geo), "people": people,
+                "beat_2": mid_text[:-1], "beat_3": _OR["finals"][final][:-1]}
+    cam = "takip" if follow else "sabit"
+    structure = {**st, "orman_yaklasma": ob, "caption_info": cap_info,
+                 "environment": f"Coğrafya: {geo} {name} · kamera = {ORMAN_MODE_LABEL} (balcony of a hillside house, "
+                                f"{cam})",
+                 "story_source": f"Hikâye: kod (birebir) · {ORMAN_MODE_LABEL}"}
+    if st.get("axes_json"):
+        structure["axes_json"] = _orman_axes(st["axes_json"], new_tag, geo, vehicle, people)
+    plain = " ".join([orman_opening(geo), orman_people(people), _OR["action"], mid_text, _OR["finals"][final]])
+    trace, axes_line = mode_display(
+        scene, structure, mode=ORMAN_MODE_LABEL, camera=f"{cam} ({orman_camera_text(follow)}); balcony of a hillside "
+        "house overlooking the street and the burning slope, railing corner in foreground",
+        opening=orman_opening(geo), mid=(mid, mid_text), final=(final, _OR["finals"][final]), plain=plain,
+        vehicle=vehicle if mid in _OR["vehicle_mids"] else f"{vehicle} (bu ortada araç yok)",
+        spot="Balcony of a hillside house overlooking the street and the burning slope (Yaklaşma kalıbı)",
+        weather="orange smoky sky (stil eki)",
+        axes={"coğrafya": f"{geo} {name}", "araç": vehicle, "kişi": people, "orta": mid, "final": final,
+              "kamera modu": cam},
+        repeat=f"coğrafya son {ORMAN_GEO_BLOCK} elendi (R1 tohum) · araç son {ORMAN_VEHICLE_BLOCK} · orta son "
+               f"{ORMAN_MID_BLOCK} · final son {ORMAN_FINAL_BLOCK} (M2+N3, M4+N1 yasak)")
+    # normal hattın ortam etiketi ve görünümü prompt'ta yok: gösterilmez
+    trace = {**trace, "mode": "orman_yaklasma", "cografya": geo, "count_range": [3, 4], "view": None,
+             "view_source": None, "fire_env_label_short": None}
+    structure["axes_line"] = axes_line
+    out = {**scene, "story": story, "plain_story": plain, "style_suffix": tail, "prompt": prompt,
+           "combo_key": combo, "structure": structure, "trace": trace}
+    if scene.get("axes_json"):
+        out["axes_json"] = _orman_axes(scene["axes_json"], new_tag, geo, vehicle, people)
+    return out
+
+
+def orman_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin bu kalıpla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    ob = structure["orman_yaklasma"]
+    if ob.get("geo") not in _OR["geos"]:
+        return [f"coğrafya R1-R6 değil ({ob.get('geo')})"]
+    if ob.get("mid") not in _OR["mids"]:
+        return [f"orta M1-M4 değil ({ob.get('mid')})"]
+    if ob.get("final") not in _OR["finals"]:
+        return [f"final N1-N4 değil ({ob.get('final')})"]
+    try:
+        story = orman_story(ob["geo"], ob["people"], ob["mid"], ob["vehicle"], ob["final"])
+        prompt = orman_prompt(ob["geo"], ob["people"], ob["mid"], ob["vehicle"], ob["final"], ob["follow"])
+    except es.StructureError as e:
+        return [str(e)]
+    out = []
+    if info.get("style_suffix") != orman_tail(ob["follow"]):
+        out.append("stil eki Yaklaşma (orman yangını) kalıbı değil")
+    if info.get("story") != story:
+        out.append("hikâye kalıpla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    for bad in ("Full action", "Until the last frame", "U-turn"):
+        if bad in text:
+            out.append(f"bu modda olmayan ifade var: {bad}")
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > ORMAN_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {ORMAN_MAX_WORDS})")
+    if len(text) > ORMAN_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {ORMAN_MAX_CHARS})")
+    return out

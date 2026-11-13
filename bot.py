@@ -481,6 +481,42 @@ def kul_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
             "çağrılmaz.")
 
 
+# ── ⭐ Hit kalıbı · Yaklaşma (orman yangını) (13 Kas 2026, Bahadır): ortam sorulmaz (coğrafya LRU). Adımlar: oy (onay
+# metni) → oyok (üretim). Kayıtlı orman hit prompt'unun butonu gizli kalır (hp.HIT_ACTIVE_EVENTS değişmedi)
+ORMAN_BUTTON = "⭐ Hit kalıbı · Yaklaşma"
+
+
+def orman_confirm_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    """Normal onay (✅ Üret / ❌ İptal) + altta ⭐ Hit kalıbı · Yaklaşma."""
+    rows = [list(r) for r in confirm_keyboard(di, eid).inline_keyboard]
+    rows.append([InlineKeyboardButton(ORMAN_BUTTON, callback_data=f"{CALLBACK_PREFIX}oy:{di}:{eid}")])
+    return InlineKeyboardMarkup(rows)
+
+
+def orman_produce_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}oyok:{di}:{eid}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def parse_orman(di_raw: str, eid: str) -> tuple[str, str] | None:
+    sel = parse_selection(di_raw, eid)
+    if sel is None or sel[1] is None or not _hp().orman_is_active(sel[1]):
+        return None
+    return sel
+
+
+def orman_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
+    hp = _hp()
+    return (confirm_text(domain, event, cfg)
+            + f"\n\nMod: {hp.ORMAN_MODE_LABEL}\n"
+            "Kamera: " + hp.orman_camera_label(hp.ORMAN_YAKLASMA_KAMERA_TAKIP)
+            + "\nYamaçtaki bir evin balkonu, korkuluk görünür; alev duvarı ormanlık yamaçtan iner, mahalleye çarpar, "
+            "kameraya doğru gelir. Coğrafya (R1-R6), araç, orta (M1-M4), final (N1-N4), kelime sayısı ✋ Onay "
+            "mesajında. Hikâye için GPT çağrılmaz.")
+
+
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([[
         InlineKeyboardButton("✅ Kie'ye gönder", callback_data=f"{CALLBACK_PREFIX}ap:{token}:y"),
@@ -750,6 +786,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("ky", "kyok"):   # 12 Kas (6): ⭐ Hit kalıbı · Yaklaşma (kül bulutu)
         await _on_kul(query, context, action, args, cfg)
         return
+    if action in ("oy", "oyok"):   # 13 Kas: ⭐ Hit kalıbı · Yaklaşma (orman yangını)
+        await _on_orman(query, context, action, args, cfg)
+        return
 
     sel, view = None, None
     if action == "d" and len(args) == 1:
@@ -776,6 +815,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     elif action == "e":
         keyboard = (hit_confirm_keyboard(*args) if _hp().is_active(event)
                     else kul_confirm_keyboard(*args) if _hp().kul_is_active(event)   # 12 Kas (6)
+                    else orman_confirm_keyboard(*args) if _hp().orman_is_active(event)   # 13 Kas
                     else confirm_keyboard(*args))
         await query.edit_message_text(confirm_text(domain, event, cfg), reply_markup=keyboard)
     elif action == "v":
@@ -903,6 +943,31 @@ async def _on_kul(query, context, action: str, args: list[str], cfg: dict) -> No
                       kul_yaklasma=True)
 
 
+async def _on_orman(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """⭐ Hit kalıbı · Yaklaşma (orman yangını) adımları: oy (onay metni) → oyok (üretim). Kie yine ✋ Onay'a bağlı."""
+    parsed = parse_orman(*args) if len(args) == 2 else None
+    if parsed is None:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    domain, event = parsed
+    if action == "oy":
+        await query.edit_message_text(orman_confirm_text(domain, event, cfg),
+                                      reply_markup=orman_produce_keyboard(*args))
+        return
+    run_cfg = dict(cfg)
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)} / {ORMAN_BUTTON}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
+                      orman_yaklasma=True)
+
+
 async def _on_caption_share(query, context, page: str) -> None:
     """📤 Paylaştım: Paylaşımlar'a tek satır (aynı üretim için ikinci kez basılırsa yeni satır açmaz)."""
     import core.caption as cap
@@ -1003,7 +1068,8 @@ def _run_pipeline_blocking(kwargs: dict) -> dict:
 
 async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg: dict | None = None,
                   bot_data: dict | None = None, view: str | None = None, hit_env: str | None = None,
-                  approach_env: str | None = None, dalga24: bool = False, kul_yaklasma: bool = False) -> None:
+                  approach_env: str | None = None, dalga24: bool = False, kul_yaklasma: bool = False,
+                  orman_yaklasma: bool = False) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1022,6 +1088,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["dalga24"] = True
     if kul_yaklasma:   # 12 Kas (6): ⭐ Hit kalıbı · Yaklaşma (kül bulutu)
         kwargs["kul_yaklasma"] = True
+    if orman_yaklasma:   # 13 Kas: ⭐ Hit kalıbı · Yaklaşma (orman yangını)
+        kwargs["orman_yaklasma"] = True
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:
