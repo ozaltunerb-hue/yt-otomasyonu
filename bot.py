@@ -513,7 +513,7 @@ def orman_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
             + f"\n\nMod: {hp.ORMAN_MODE_LABEL}\n"
             "Kamera: " + hp.orman_camera_label(hp.ORMAN_YAKLASMA_KAMERA_TAKIP)
             + "\nYamaçtaki bir evin balkonu, korkuluk görünür; alev duvarı ormanlık yamaçtan iner, mahalleye çarpar, "
-            "kameraya doğru gelir. Coğrafya (R1-R6), araç, orta (M1-M4), final (N1-N4), kelime sayısı ✋ Onay "
+            "kameraya doğru gelir. Coğrafya (R1-R6), araç, orta (M1-M3), final (N1-N3), kelime sayısı ✋ Onay "
             "mesajında. Hikâye için GPT çağrılmaz.")
 
 
