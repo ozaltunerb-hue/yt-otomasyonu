@@ -1527,3 +1527,288 @@ def orman_issues(structure: dict, info: dict) -> list[str]:
     if len(text) > ORMAN_MAX_CHARS:
         out.append(f"prompt {len(text)} karakter (en fazla {ORMAN_MAX_CHARS})")
     return out
+
+
+# ── ⭐ Hit kalıbı · Yaklaşma (helikopter) (13 Kas 2026, Bahadır) ──────────────────────────────────────────────────────
+# Göl kenarındaki bir kasabada yangın; helikopter çelik halatın ucundaki büyük kovayı gölden doldurur ve yangının üstüne
+# boşaltır. Diğer Yaklaşma modlarının yapısı: GPT yok, hikâye tamamen koddan, zaman etiketleri VAR. Helikopterin normal
+# yolu değişmez. Kayıt H*+J* (olay bazlı; normal helikopter havuzu F*/G*). Suyun öznesi HER ZAMAN kova: eski bir
+# üretimde "the helicopter's water" yüzünden su gövdeden döküldü; bu modda "helicopter's" hiç yok. Araç bu modun kendi
+# havuzundan (son 2), kişi 3/4, coğrafya L1-L6 (son 3, Türkiye yok, tohum yok), orta/final LRU son 1, yasak çift yok.
+HELI_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (helikopter)"
+HELI_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
+HELI_EVENTS = (es.HELICOPTER,)
+# Kamera: True = helikopteri izlemek için hafifçe döner; False = sabit (varsayılan True)
+HELI_YAKLASMA_KAMERA_TAKIP = True
+HELI_MAX_WORDS = 230
+HELI_MAX_CHARS = 1400
+HELI_GEO_BLOCK = 3
+HELI_VEHICLE_BLOCK = 2
+HELI_MID_BLOCK = 1
+HELI_FINAL_BLOCK = 1
+YAKLASMA_HELIKOPTER = {
+    "geos": {
+        "L1": {"name": "Kanada", "place": "a Canadian lakeside town of timber houses"},
+        "L2": {"name": "Kaliforniya", "place": "a lakeside mountain town of wooden cabins"},
+        "L3": {"name": "İtalya", "place": "an Italian lakeside town of terracotta-roofed stone houses"},
+        "L4": {"name": "İsviçre", "place": "a Swiss lakeside village of wooden chalets"},
+        "L5": {"name": "Yunanistan", "place": "a Greek lakeside village of whitewashed houses"},
+        "L6": {"name": "Avustralya", "place": "an Australian lakeside town of weatherboard houses"},
+    },
+    "opening": "The burning forest has already reached {place}, a towering wall of flames racing down the street toward "
+               "the camera, as a firefighting helicopter skims the lake below the terrace, filling the big bucket on "
+               "its steel cable.",
+    "people": {3: "Three people run along the lakeshore below.",
+               4: "Four people run along the lakeshore below."},
+    "vehicles": ("pickup truck", "SUV", "white van"),
+    "mids": {
+        "H1": "The helicopter lifts off the lake with the full bucket swinging on its cable and flies low over the "
+              "rooftops toward the flames, water dripping from the bucket.",
+        "H2": "Just ahead of the flames, a burning pine crashes onto a fleeing {vehicle}, crushing its hood, as the "
+              "helicopter flies low overhead with the full bucket.",
+        "H3": "Just ahead of the flames, the wall of fire swallows a parked {vehicle} as the helicopter roars low "
+              "overhead with the full bucket.",
+    },
+    "finals": {
+        "J1": "Right below the terrace, the bucket opens over the burning house and a massive curtain of water hits the "
+              "flames, bursting into white steam that rushes up toward the camera.",
+        "J2": "Right below the terrace, the bucket dumps its water onto the burning roof of the nearest house just as it "
+              "caves in, steam and sparks bursting up toward the camera.",
+        "J3": "Right below the terrace, the bucket releases its water onto the wall of flames at the lakeshore, steam "
+              "and spray blasting across the street toward the camera.",
+    },
+    "vehicle_mids": ("H2", "H3"),
+    "camera": {True: "the camera turns slightly to follow the helicopter", False: "the camera stays fixed"},
+    "tail": ("Handheld footage shot from a high terrace of a lakeside house overlooking the lake and the street, the "
+             "helicopter large and close in frame, a corner of the terrace railing in the foreground; slight hand "
+             "shake, {camera}; one continuous shot, no zoom, no cuts, no face close to the camera. Water pours only "
+             "from the bucket on the steel cable, never from the helicopter itself. Civilians in everyday clothes, "
+             "never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of "
+             "fire. Orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text "
+             "or flags."),
+}
+_HL = YAKLASMA_HELIKOPTER
+_HELI_GEO_MEMORY: list[str] = []
+_HELI_VEHICLE_MEMORY: list[str] = []
+
+
+def heli_is_active(event: str | None) -> bool:
+    return event in HELI_EVENTS
+
+
+def heli_camera_text(follow: bool | None = None) -> str:
+    return _HL["camera"][bool(HELI_YAKLASMA_KAMERA_TAKIP if follow is None else follow)]
+
+
+def heli_tail(follow: bool | None = None) -> str:
+    return _HL["tail"].format(camera=heli_camera_text(follow))
+
+
+def heli_opening(geo: str) -> str:
+    return _HL["opening"].format(place=_HL["geos"][geo]["place"])
+
+
+def heli_people(n: int) -> str:
+    if n not in _HL["people"]:
+        raise es.StructureError(f"{HELI_MODE_LABEL}: kişi sayısı 3 ya da 4 olmalı ({n})")
+    return _HL["people"][n]
+
+
+def heli_mid(mid: str, vehicle: str | None) -> str:
+    if mid not in _HL["mids"]:
+        raise es.StructureError(f"{HELI_MODE_LABEL}: {mid} bu modda yok (orta H1, H2, H3)")
+    if mid in _HL["vehicle_mids"] and vehicle not in _HL["vehicles"]:
+        raise es.StructureError(f"{HELI_MODE_LABEL}: {mid} için araç yok ({vehicle})")
+    return _HL["mids"][mid].format(vehicle=vehicle or "")
+
+
+def heli_final(final: str) -> str:
+    if final not in _HL["finals"]:
+        raise es.StructureError(f"{HELI_MODE_LABEL}: {final} bu modda yok (final J1, J2, J3)")
+    return _HL["finals"][final]
+
+
+def heli_story(geo: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
+    """Sıra: açılış + insan + orta + final (aksiyon / "Until the last frame" cümlesi yok)."""
+    a, b, c = es.SLICE_LABELS
+    return f"{a}: {heli_opening(geo)} {heli_people(people)} {b}: {heli_mid(mid, vehicle)} {c}: {heli_final(final)}"
+
+
+def heli_prompt(geo: str, people: int, mid: str, vehicle: str | None, final: str, follow: bool | None = None) -> str:
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(heli_story(geo, people, mid, vehicle, final), heli_tail(follow))
+
+
+def heli_tags(history: list[str]) -> list[str]:
+    return [t for t in es.beat_history(es.HELICOPTER, history or []) if re.fullmatch(r"H\d+\+J\d+", t)]
+
+
+def heli_choose_mid(history: list[str], rng=None) -> str:
+    return _block_pick(list(_HL["mids"]), [t.split("+")[0] for t in heli_tags(history)], HELI_MID_BLOCK, rng)
+
+
+def heli_choose_final(history: list[str], rng=None) -> str:
+    return _block_pick(list(_HL["finals"]), [t.split("+")[1] for t in heli_tags(history)], HELI_FINAL_BLOCK, rng)
+
+
+def heli_axes_history(records: list | None, key: str) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") == es.HELICOPTER and axes.get("mod") == "heli_yaklasma"
+                and axes.get(key)):
+            out.append(axes[key])
+    return out
+
+
+def heli_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    return _block_pick(list(_HL["geos"]), list(_HELI_GEO_MEMORY if used is None else used), HELI_GEO_BLOCK, rng)
+
+
+def heli_choose_vehicle(used: list[str] | None = None, rng=None) -> str:
+    return _block_pick(list(_HL["vehicles"]), list(_HELI_VEHICLE_MEMORY if used is None else used),
+                       HELI_VEHICLE_BLOCK, rng)
+
+
+def heli_camera_label(follow: bool) -> str:
+    return "takip (helikopteri izlemek için hafifçe döner)" if follow else "sabit"
+
+
+def heli_lines(hb: dict) -> str:
+    text = hb["prompt"]
+    return "\n".join([
+        f"Mod: {HELI_MODE_LABEL}",
+        f"Coğrafya: {hb['geo']} {_HL['geos'][hb['geo']]['name']}",
+        f"Araç: {hb['vehicle']}" + ("" if hb["mid"] in _HL["vehicle_mids"] else " (bu ortada araç yok)"),
+        f"Orta (4-9s): {hb['mid']} «{heli_mid(hb['mid'], hb['vehicle'])}»",
+        f"Final (9-15s): {hb['final']} «{heli_final(hb['final'])}»",
+        "Kamera: " + heli_camera_label(hb["follow"]),
+        f"Kelime: {len(text.split())} (en fazla {HELI_MAX_WORDS}) · karakter: {len(text)} (en fazla {HELI_MAX_CHARS})",
+    ])
+
+
+def _heli_axes(js, tag: str, geo: str, vehicle: str, people: int):
+    import json
+    try:
+        data = json.loads(js)
+    except (TypeError, ValueError):
+        return js
+    if isinstance(data.get("axes"), dict):
+        data["axes"].update({"beats": tag, "mod": "heli_yaklasma", "cografya": geo, "arac": vehicle,
+                             "vehicle": vehicle, "people": people})
+    return json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def heli_apply(scene: dict, history: list[str] | None = None, rng=None, follow: bool | None = None,
+               geo_used: list[str] | None = None, vehicle_used: list[str] | None = None) -> dict:
+    """Normal hattın kurduğu helikopter sahnesinden (kayıt aynı) Yaklaşma (helikopter) prompt'unu kurar. Coğrafya L1-L6
+    (son 3 elenir), araç (son 2), orta H1-H3 (son 1), final J1-J3 (son 1), kişi 3/4.
+    structure["heli_yaklasma"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
+    import random
+    event = scene["event"]
+    st = scene.get("structure") or {}
+    spec = st.get("spec")
+    if not heli_is_active(event) or not spec:
+        raise es.StructureError(f"{HELI_MODE_LABEL} kurulamadı: {event}")
+    follow = bool(HELI_YAKLASMA_KAMERA_TAKIP if follow is None else follow)
+    r = rng or random
+    geo = heli_choose_geo(geo_used, r)
+    vehicle = heli_choose_vehicle(vehicle_used, r)
+    people = r.choice((3, 4))
+    mid = heli_choose_mid(history or [], r)
+    final = heli_choose_final(history or [], r)
+    old_tag, new_tag = es.beat_tag(spec["beat_2"], spec["beat_3"]), es.beat_tag(mid, final)
+    with es._BEAT_LOCK:   # seçim anı hafızası: atılan F*+G* yerine bu üretimin gerçek çifti
+        mem = es._BEAT_MEMORY.get(event, [])
+        if mem and mem[-1] == old_tag:
+            mem[-1] = new_tag
+    for m, v in ((_HELI_GEO_MEMORY, geo), (_HELI_VEHICLE_MEMORY, vehicle)):
+        m.append(v)
+        del m[:-12]
+    story = heli_story(geo, people, mid, vehicle, final)
+    tail = heli_tail(follow)
+    prompt = heli_prompt(geo, people, mid, vehicle, final, follow)
+    hb = {"event": event, "geo": geo, "people": people, "vehicle": vehicle, "mid": mid, "final": final,
+          "follow": follow, "story": story, "suffix": tail, "prompt": prompt}
+    hb["lines"] = heli_lines(hb)
+    problems = heli_issues({**st, "heli_yaklasma": hb}, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{HELI_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = scene.get("combo_key", "")
+    if f"#{old_tag}|" in combo:
+        combo = combo.replace(f"#{old_tag}|", f"#{new_tag}|")
+    name = _HL["geos"][geo]["name"]
+    mid_text, final_text = heli_mid(mid, vehicle), heli_final(final)
+    cap_info = {**(st.get("caption_info") or {}), "opening": heli_opening(geo), "people": people,
+                "beat_2": mid_text[:-1], "beat_3": final_text[:-1]}
+    cam = "takip" if follow else "sabit"
+    structure = {**st, "heli_yaklasma": hb, "caption_info": cap_info,
+                 "environment": f"Coğrafya: {geo} {name} · kamera = {HELI_MODE_LABEL} (high terrace of a lakeside "
+                                f"house, {cam})",
+                 "story_source": f"Hikâye: kod (birebir) · {HELI_MODE_LABEL}"}
+    if st.get("axes_json"):
+        structure["axes_json"] = _heli_axes(st["axes_json"], new_tag, geo, vehicle, people)
+    plain = " ".join([heli_opening(geo), heli_people(people), mid_text, final_text])
+    trace, axes_line = mode_display(
+        scene, structure, mode=HELI_MODE_LABEL, camera=f"{cam} ({heli_camera_text(follow)}); high terrace of a "
+        "lakeside house overlooking the lake and the street, terrace railing corner in foreground",
+        opening=heli_opening(geo), mid=(mid, mid_text), final=(final, final_text), plain=plain,
+        vehicle=vehicle if mid in _HL["vehicle_mids"] else f"{vehicle} (bu ortada araç yok)",
+        spot="High terrace of a lakeside house overlooking the lake and the street (Yaklaşma kalıbı)",
+        weather="orange smoky sky (stil eki)",
+        axes={"coğrafya": f"{geo} {name}", "araç": vehicle if mid in _HL["vehicle_mids"] else "yok",
+              "kişi": people, "orta": mid, "final": final, "kamera modu": cam},
+        repeat=f"coğrafya son {HELI_GEO_BLOCK} elendi · araç son {HELI_VEHICLE_BLOCK} · orta son {HELI_MID_BLOCK} · "
+               f"final son {HELI_FINAL_BLOCK} (yasak çift yok)")
+    # normal hattın ortam etiketi ve görünümü prompt'ta yok: gösterilmez
+    trace = {**trace, "mode": "heli_yaklasma", "cografya": geo, "count_range": [3, 4], "view": None,
+             "view_source": None, "fire_env_label_short": None}
+    structure["axes_line"] = axes_line
+    out = {**scene, "story": story, "plain_story": plain, "style_suffix": tail, "prompt": prompt,
+           "combo_key": combo, "structure": structure, "trace": trace}
+    if scene.get("axes_json"):
+        out["axes_json"] = _heli_axes(scene["axes_json"], new_tag, geo, vehicle, people)
+    return out
+
+
+def heli_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin bu kalıpla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    hb = structure["heli_yaklasma"]
+    if hb.get("geo") not in _HL["geos"]:
+        return [f"coğrafya L1-L6 değil ({hb.get('geo')})"]
+    if hb.get("mid") not in _HL["mids"]:
+        return [f"orta H1, H2, H3 değil ({hb.get('mid')})"]
+    if hb.get("final") not in _HL["finals"]:
+        return [f"final J1, J2, J3 değil ({hb.get('final')})"]
+    try:
+        story = heli_story(hb["geo"], hb["people"], hb["mid"], hb["vehicle"], hb["final"])
+        prompt = heli_prompt(hb["geo"], hb["people"], hb["mid"], hb["vehicle"], hb["final"], hb["follow"])
+    except es.StructureError as e:
+        return [str(e)]
+    out = []
+    if info.get("style_suffix") != heli_tail(hb["follow"]):
+        out.append("stil eki Yaklaşma (helikopter) kalıbı değil")
+    if info.get("story") != story:
+        out.append("hikâye kalıpla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    for bad in ("Full action", "Until the last frame", "helicopter's"):
+        if bad in text:
+            out.append(f"bu modda olmayan ifade var: {bad}")
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > HELI_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {HELI_MAX_WORDS})")
+    if len(text) > HELI_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {HELI_MAX_CHARS})")
+    return out

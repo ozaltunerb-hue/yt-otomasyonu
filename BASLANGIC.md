@@ -36,6 +36,10 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
 - Dev dalga "⭐ Hit kalıbı · 24 Eylül" (`DALGA_24EYLUL`): zaman etiketi YOK, D1-D6 / A1-A2 / F1-F4. config `dalga24`.
 - Kül bulutu "⭐ Hit kalıbı · Yaklaşma" (`YAKLASMA_KUL_BULUTU`): V1-V6 / K1-K4 (K2 araç savurma) / L1-L4, kendi araç havuzu,
   kişi 3/4. config `kul_yaklasma`. Eski kül bulutu hit butonu gizli.
+- Helikopter "⭐ Hit kalıbı · Yaklaşma" (13 Kas, `YAKLASMA_HELIKOPTER`): göl kenarı kasaba, kova gölden dolar ve yangına
+  boşalır. L1-L6 (son 3, Türkiye yok) / H1-H3 orta (H1 araçsız) / J1-J3 final (son 1, yasak çift yok), araç son 2,
+  kişi 3/4. Suyun öznesi HER ZAMAN kova ("helicopter's" yasak, son denetimde de). config `heli_yaklasma`, bot hy/hyok.
+  Test `tests/test_heli_yaklasma.py`; en uzun kombinasyon 224/1333.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir
