@@ -477,7 +477,7 @@ def kul_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
             "Kamera: " + ("takip (terasta kalır, bulutu izlemek için yavaşça aşağı eğilir)" if hp.KUL_YAKLASMA_KAMERA_TAKIP
                           else "sabit (terasta)")
             + "\nYamaç terası, volkan kadrajın üst kısmında; bulut yamaçtan caddeye iner, kameraya doğru gelir. "
-            "Coğrafya (V1-V6), araç, orta (K1-K4), final (L1-L4), kelime sayısı ✋ Onay mesajında. Hikâye için GPT "
+            "Coğrafya (V1-V6), araç, orta (K1/K2/K5), final (L1/L2/L4), kelime sayısı ✋ Onay mesajında. Hikâye için GPT "
             "çağrılmaz.")
 
 

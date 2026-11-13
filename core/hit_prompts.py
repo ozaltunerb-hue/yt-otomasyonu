@@ -907,8 +907,8 @@ KUL_MAX_CHARS = 1400
 KUL_GEO_BLOCK = 3
 KUL_GEO_SEED = ("V1",)          # ilk üretimde V1 gelmez
 KUL_VEHICLE_BLOCK = 2
-KUL_MID_BLOCK = 2
-KUL_FINAL_BLOCK = 2
+KUL_MID_BLOCK = 1      # 13 Kas (2): 3 aktif seçenek, son 1 elenir
+KUL_FINAL_BLOCK = 1
 YAKLASMA_KUL_BULUTU = {
     "geos": {
         "V1": {"name": "İtalya", "volcano": "A broad grey volcano",
@@ -933,21 +933,17 @@ YAKLASMA_KUL_BULUTU = {
         "K1": "Halfway down the street, the cloud snaps a row of street trees and power poles and they crash across the "
               "road.",
         "K2": "Halfway down the street, the cloud swallows a {vehicle} and hurls it, in one piece, against a house wall.",
-        "K3": "Halfway down the street, the blast of the cloud shatters every window and tears the shutters off the "
-              "houses.",
-        "K4": "Halfway down the street, the cloud rolls over a {vehicle} trying to reverse away and buries it in grey "
-              "ash.",
+        "K5": "Halfway down the street, the blast of the cloud slams a {vehicle} sideways into a shopfront, glass "
+              "exploding around it.",
     },
     "finals": {
         "L1": "Right below the terrace, the cloud engulfs the nearest house and its front wall collapses, debris "
               "swirling in the ash.",
         "L2": "Right below the terrace, the cloud tears the roof off the nearest house and sweeps it away in pieces.",
-        "L3": "Right below the terrace, the cloud rips apart the garden wall and fence, hurling debris up toward the "
-              "camera.",
         "L4": "Right below the terrace, the grey cloud surges over the nearest houses and swallows the street, darkness "
               "racing up toward the camera.",
     },
-    "vehicle_mids": ("K2", "K4"),
+    "vehicle_mids": ("K2", "K5"),
     "vehicle_throw_mid": "K2",
     "camera": {True: "the camera stays on the terrace and tilts down slowly to follow the cloud, never descending",
                False: "the camera stays fixed on the terrace, never descending"},
@@ -970,6 +966,19 @@ KUL_TAIL_V1 = ("Handheld footage shot from a terrace above the town, high vantag
                "growing larger in the frame as it approaches, never a thin smoke plume. Raw natural light under an "
                "ash-grey sky lit orange by the eruption. Real time, never slow motion, people run at full speed. No "
                "readable signs, text or flags.")
+# 13 Kas 2026 (2): zayıf seçenekler pasif (bu modda seçilmez, kullanılmaz)
+KUL_PASIF = {
+    "mids": {
+        "K3": "Halfway down the street, the blast of the cloud shatters every window and tears the shutters off the "
+              "houses.",
+        "K4": "Halfway down the street, the cloud rolls over a {vehicle} trying to reverse away and buries it in grey "
+              "ash.",
+    },
+    "finals": {
+        "L3": "Right below the terrace, the cloud rips apart the garden wall and fence, hurling debris up toward the "
+              "camera.",
+    },
+}
 KUL_V5_VOLCANO_V1 = "A towering cone volcano"
 KUL_K3_V1 = ("Halfway down the street, the blast of the cloud shatters every window along the street and tears the "
              "shutters off the houses.")
@@ -1003,7 +1012,7 @@ def kul_people(n: int) -> str:
 
 def kul_mid(mid: str, vehicle: str | None) -> str:
     if mid not in _KB["mids"]:
-        raise es.StructureError(f"{KUL_MODE_LABEL}: {mid} bu modda yok (orta K1-K4)")
+        raise es.StructureError(f"{KUL_MODE_LABEL}: {mid} bu modda yok (orta K1, K2, K5)")
     if mid in _KB["vehicle_mids"] and vehicle not in _KB["vehicles"]:
         raise es.StructureError(f"{KUL_MODE_LABEL}: {mid} için araç yok ({vehicle})")
     return _KB["mids"][mid].format(vehicle=vehicle or "")
@@ -1092,7 +1101,8 @@ def _kul_axes(js, tag: str, geo: str, vehicle: str, people: int):
 def kul_apply(scene: dict, history: list[str] | None = None, rng=None, follow: bool | None = None,
               geo_used: list[str] | None = None, vehicle_used: list[str] | None = None) -> dict:
     """Normal hattın kurduğu kül bulutu sahnesinden (kayıt aynı) Yaklaşma (kül bulutu) prompt'unu kurar. Coğrafya V1-V6
-    (son 3 elenir, V1 tohum), araç (son 2), orta K1-K4 (son 2), final L1-L4 (son 2), kişi 3/4.
+    (son 3 elenir, V1 tohum), araç (son 2), orta K1/K2/K5 (son 1), final L1/L2/L4 (son 1), kişi 3/4.
+    K3, K4, L3 pasif (KUL_PASIF).
     structure["kul_yaklasma"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
     import random
     event = scene["event"]
@@ -1166,9 +1176,9 @@ def kul_issues(structure: dict, info: dict) -> list[str]:
     if kb.get("geo") not in _KB["geos"]:
         return [f"coğrafya V1-V6 değil ({kb.get('geo')})"]
     if kb.get("mid") not in _KB["mids"]:
-        return [f"orta K1-K4 değil ({kb.get('mid')})"]
+        return [f"orta K1/K2/K5 değil ({kb.get('mid')})"]
     if kb.get("final") not in _KB["finals"]:
-        return [f"final L1-L4 değil ({kb.get('final')})"]
+        return [f"final L1/L2/L4 değil ({kb.get('final')})"]
     try:
         story = kul_story(kb["geo"], kb["people"], kb["mid"], kb["vehicle"], kb["final"])
         prompt = kul_prompt(kb["geo"], kb["people"], kb["mid"], kb["vehicle"], kb["final"], kb["follow"])

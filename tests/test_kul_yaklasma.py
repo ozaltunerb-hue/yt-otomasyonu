@@ -75,8 +75,8 @@ class TestTexts(_Quiet):
         self.assertEqual(hp.kul_people(4), "Four people run up the street below, away from the cloud.")
         self.assertEqual(KB["action"], ACTION)
         self.assertEqual(KB["vehicles"], ("parked car", "pickup truck", "small bus"))
-        self.assertEqual(sorted(KB["mids"]), ["K1", "K2", "K3", "K4"])
-        self.assertEqual(sorted(KB["finals"]), ["L1", "L2", "L3", "L4"])
+        self.assertEqual(sorted(KB["mids"]), ["K1", "K2", "K5"])
+        self.assertEqual(sorted(KB["finals"]), ["L1", "L2", "L4"])
         self.assertEqual(hp.kul_camera_text(True), FOLLOW)
         self.assertEqual(hp.kul_camera_text(False), FIXED)
         for f in (True, False):
@@ -103,8 +103,8 @@ class TestTexts(_Quiet):
         self.assertIn("toward the erupting volcano, the whole volcano visible", hp.KUL_TAIL_V1)
         self.assertNotEqual(KB["opening"], hp.KUL_OPENING_V1)
         self.assertEqual(KB["geos"]["V5"]["volcano"], "A tall cone volcano")
-        self.assertEqual(hp.kul_mid("K3", None), "Halfway down the street, the blast of the cloud shatters every window "
-                                                 "and tears the shutters off the houses.")
+        self.assertEqual(hp.KUL_PASIF["mids"]["K3"], "Halfway down the street, the blast of the cloud shatters every "
+                                                     "window and tears the shutters off the houses.")
         self.assertEqual(hp.KUL_V5_VOLCANO_V1, "A towering cone volcano")
         self.assertIn("every window along the street", hp.KUL_K3_V1)
 
@@ -112,14 +112,43 @@ class TestTexts(_Quiet):
         for v in KB["vehicles"]:
             self.assertEqual(hp.kul_mid("K2", v), f"Halfway down the street, the cloud swallows a {v} and hurls it, in "
                                                   "one piece, against a house wall.")
-            self.assertIn(f"rolls over a {v} trying to reverse away", hp.kul_mid("K4", v))
-            for m in ("K1", "K3"):
+            self.assertEqual(hp.kul_mid("K5", v), f"Halfway down the street, the blast of the cloud slams a {v} "
+                                                  "sideways into a shopfront, glass exploding around it.")
+            self.assertNotIn("{", hp.kul_mid("K5", v))
+            for m in ("K1",):
                 text = hp.kul_mid(m, v)
                 self.assertNotIn(v, text)
                 for w in ("car", "truck", "bus", "vehicle", "{"):
                     self.assertNotIn(w, text)
         with self.assertRaises(es.StructureError):
             hp.kul_mid("K2", None)
+        with self.assertRaises(es.StructureError):
+            hp.kul_mid("K5", None)
+        self.assertEqual(KB["vehicle_mids"], ("K2", "K5"))
+
+    def test_weak_options_passive_13kas(self):
+        """13 Kas (2): K3, K4, L3 pasif (KUL_PASIF'te, silinmedi); bu modda hiç seçilmez; LRU son 1."""
+        self.assertEqual(sorted(hp.KUL_PASIF["mids"]), ["K3", "K4"])
+        self.assertEqual(sorted(hp.KUL_PASIF["finals"]), ["L3"])
+        self.assertIn("trying to reverse away and buries it in grey ash", hp.KUL_PASIF["mids"]["K4"])
+        self.assertIn("rips apart the garden wall and fence", hp.KUL_PASIF["finals"]["L3"])
+        for m in ("K3", "K4"):
+            self.assertNotIn(m, KB["mids"])
+            with self.assertRaises(es.StructureError):
+                hp.kul_mid(m, "parked car")
+        self.assertNotIn("L3", KB["finals"])
+        self.assertEqual((hp.KUL_MID_BLOCK, hp.KUL_FINAL_BLOCK), (1, 1))
+        passive = [hp.KUL_PASIF["mids"]["K3"], hp.KUL_PASIF["mids"]["K4"].split("{vehicle}")[1],
+                   hp.KUL_PASIF["finals"]["L3"]]
+        for seed in range(1, 31):
+            reset()
+            random.seed(seed)
+            for _ in range(4):
+                kb = gen()["structure"]["kul_yaklasma"]
+                self.assertIn(kb["mid"], ("K1", "K2", "K5"))
+                self.assertIn(kb["final"], ("L1", "L2", "L4"))
+                for t in passive:
+                    self.assertNotIn(t, kb["prompt"])
 
     def test_all_combos_within_limits(self):
         """Coğrafya × kişi × araç × orta × final × kamera: hepsi ≤ 230 kelime ve ≤ 1400 karakter."""
@@ -134,7 +163,7 @@ class TestTexts(_Quiet):
                                 n += 1
                                 if len(p.split()) > hp.KUL_MAX_WORDS or len(p) > hp.KUL_MAX_CHARS:
                                     over.append((g, ppl, v, m, f, follow, len(p.split()), len(p)))
-        self.assertEqual(n, 1152)
+        self.assertEqual(n, 648)
         self.assertEqual(over, [])
 
     def test_sentences_only_in_this_mode(self):
@@ -227,7 +256,7 @@ class TestKulMode(_Quiet):
             reset()
             random.seed(seed)
             runs = [self._check(gen()) for _ in range(8)]
-            for key, block in (("geo", 3), ("vehicle", 2), ("mid", 2), ("final", 2)):
+            for key, block in (("geo", 3), ("vehicle", 2), ("mid", 1), ("final", 1)):
                 vals = [r[key] for r in runs]
                 for i in range(len(vals)):
                     self.assertNotIn(vals[i], vals[max(0, i - block):i], (seed, key, vals))
@@ -238,10 +267,10 @@ class TestKulMode(_Quiet):
         def combo(tag):
             return f"{DOMAIN}|none|{PY.lower()}|rooftop terrace facing the erupting volcano##{tag}|bystander_handheld"
         reset()
-        hist = [combo("K1+L1"), combo("P2+Q1"), combo("K3+L4")]
+        hist = [combo("K1+L1"), combo("P2+Q1"), combo("K5+L4")]
         for s in range(30):
-            self.assertIn(hp.kul_choose_mid(hist, random.Random(s)), ("K2", "K4"))
-            self.assertIn(hp.kul_choose_final(hist, random.Random(s)), ("L2", "L3"))
+            self.assertIn(hp.kul_choose_mid(hist, random.Random(s)), ("K1", "K2"))
+            self.assertIn(hp.kul_choose_final(hist, random.Random(s)), ("L1", "L2"))
         recs = [{"eksenler": json.dumps({"event": PY, "axes": {"mod": "kul_yaklasma", "cografya": g, "arac": v}})}
                 for g, v in (("V2", "small bus"), ("V3", "parked car"), ("V4", "small bus"))] + [{"eksenler": "x"}]
         self.assertEqual(hp.kul_axes_history(recs, "cografya"), ["V2", "V3", "V4"])
