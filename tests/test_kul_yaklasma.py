@@ -69,8 +69,8 @@ class TestTexts(_Quiet):
         self.assertEqual(sorted(KB["geos"]), ["V1", "V2", "V3", "V4", "V5", "V6"])
         self.assertEqual(hp.kul_opening("V1"),
                          "A broad grey volcano rises above the far end of the street in a village of stone houses with "
-                         "terracotta roofs and erupts, sending a towering pyroclastic cloud racing down its flank into "
-                         "the street and rolling toward the camera.")
+                         "terracotta roofs and erupts violently, a massive explosion column bursting from its summit as a "
+                         "pyroclastic cloud races down its flank into the street, rolling toward the camera.")
         self.assertEqual(hp.kul_people(3), "Three people run up the street below, away from the cloud.")
         self.assertEqual(hp.kul_people(4), "Four people run up the street below, away from the cloud.")
         self.assertEqual(KB["action"], ACTION)
@@ -81,8 +81,32 @@ class TestTexts(_Quiet):
         self.assertEqual(hp.kul_camera_text(False), FIXED)
         for f in (True, False):
             t = hp.kul_tail(f)
-            self.assertIn("the whole volcano visible in the upper part of the frame", t)
+            self.assertIn("the whole erupting volcano visible in the upper part of the frame", t)
+            self.assertIn("high vantage looking down the street, the whole erupting volcano visible", t)
+            self.assertIn("grey pyroclastic cloud growing larger as it approaches", t)
+            self.assertNotIn("toward the erupting volcano", t)
+            self.assertNotIn("in the frame as it approaches", t)
             self.assertIn("a corner of the terrace railing in the foreground", t)
+
+    def test_strong_eruption_opening_13kas(self):
+        """13 Kas: güçlü patlama açılışı; "towering" bu modun hiçbir prompt'unda yok; eski metinler _V1 pasif."""
+        for g in KB["geos"]:
+            o = hp.kul_opening(g)
+            self.assertIn("erupts violently", o)
+            self.assertIn("a massive explosion column bursting from its summit", o)
+        for g in KB["geos"]:
+            for m in KB["mids"]:
+                for f in KB["finals"]:
+                    for follow in (True, False):
+                        self.assertNotIn("towering", hp.kul_prompt(g, 3, m, "parked car", f, follow), (g, m, f))
+        self.assertIn("erupts, sending a towering pyroclastic cloud", hp.KUL_OPENING_V1)
+        self.assertIn("toward the erupting volcano, the whole volcano visible", hp.KUL_TAIL_V1)
+        self.assertNotEqual(KB["opening"], hp.KUL_OPENING_V1)
+        self.assertEqual(KB["geos"]["V5"]["volcano"], "A tall cone volcano")
+        self.assertEqual(hp.kul_mid("K3", None), "Halfway down the street, the blast of the cloud shatters every window "
+                                                 "and tears the shutters off the houses.")
+        self.assertEqual(hp.KUL_V5_VOLCANO_V1, "A towering cone volcano")
+        self.assertIn("every window along the street", hp.KUL_K3_V1)
 
     def test_vehicle_fill(self):
         for v in KB["vehicles"]:
@@ -116,7 +140,8 @@ class TestTexts(_Quiet):
     def test_sentences_only_in_this_mode(self):
         marks = [K2_TEXT, "trying to reverse away and buries it in grey ash", "Ash rains down from the very first frame",
                  "darkness racing up toward the camera", "tilts down slowly to follow the cloud",
-                 "rolling toward the camera", "the whole volcano visible in the upper part of the frame"]
+                 "rolling toward the camera", "the whole erupting volcano visible in the upper part of the frame",
+                 "a massive explosion column bursting from its summit"]
         pools = json.dumps({e: {s: {k: v["text"] for k, v in b[s].items()} for s in ("slice_2", "slice_3")}
                             for e, b in es.EVENT_BEATS.items()})
         others = (pools + json.dumps(hp.HIT_PROMPTS) + json.dumps(hp.YAKLASMA_ATES_HORTUMU, default=str)
@@ -150,7 +175,9 @@ class TestKulMode(_Quiet):
         self.assertIn(g["place"], prompt)
         opening = prompt.split(" 4-9s: ")[0]
         self.assertTrue(prompt.startswith(f"0-4s: {hp.kul_opening(kb['geo'])} "))
-        self.assertIn("erupts", opening)
+        self.assertIn("erupts violently", opening)
+        self.assertIn("a massive explosion column bursting from its summit", opening)
+        self.assertNotIn("towering", prompt)
         self.assertIn("rolling toward the camera", opening)
         self.assertIn(f" {hp.kul_people(kb['people'])} {ACTION} 4-9s: ", prompt)
         self.assertIn(kb["vehicle"], KB["vehicles"])
@@ -159,7 +186,7 @@ class TestKulMode(_Quiet):
             self.assertIn(lab, prompt)
         self.assertNotIn("Full action", prompt)
         self.assertNotIn("Until the last frame", prompt)
-        self.assertIn("the whole volcano visible in the upper part of the frame", prompt)
+        self.assertIn("the whole erupting volcano visible in the upper part of the frame", prompt)
         self.assertIn("a corner of the terrace railing in the foreground", prompt)
         self.assertTrue(prompt.endswith(" " + hp.kul_tail(kb["follow"])))
         self.assertEqual(sc["style_suffix"], hp.kul_tail(kb["follow"]))

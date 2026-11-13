@@ -917,12 +917,14 @@ YAKLASMA_KUL_BULUTU = {
                "place": "a village of tin-roofed houses among palm trees"},
         "V3": {"name": "Japonya", "volcano": "A snow-capped cone volcano", "place": "a town of tiled-roof Japanese houses"},
         "V4": {"name": "Şili", "volcano": "A snow-capped Andean volcano", "place": "a town of colorful wooden houses"},
-        "V5": {"name": "Guatemala", "volcano": "A towering cone volcano", "place": "a town of pastel colonial houses"},
+        "V5": {"name": "Guatemala", "volcano": "A tall cone volcano", "place": "a town of pastel colonial houses"},
         "V6": {"name": "Filipinler", "volcano": "A perfectly cone-shaped volcano",
                "place": "a town of concrete houses with tin roofs"},
     },
-    "opening": "{volcano} rises above the far end of the street in {place} and erupts, sending a towering pyroclastic "
-               "cloud racing down its flank into the street and rolling toward the camera.",
+    # 13 Kas 2026: güçlü patlama açılışı (eski metin KUL_OPENING_V1, pasif)
+    "opening": "{volcano} rises above the far end of the street in {place} and erupts violently, a massive explosion "
+               "column bursting from its summit as a pyroclastic cloud races down its flank into the street, rolling "
+               "toward the camera.",
     "people": {3: "Three people run up the street below, away from the cloud.",
                4: "Four people run up the street below, away from the cloud."},
     "action": "Ash rains down from the very first frame.",
@@ -931,8 +933,8 @@ YAKLASMA_KUL_BULUTU = {
         "K1": "Halfway down the street, the cloud snaps a row of street trees and power poles and they crash across the "
               "road.",
         "K2": "Halfway down the street, the cloud swallows a {vehicle} and hurls it, in one piece, against a house wall.",
-        "K3": "Halfway down the street, the blast of the cloud shatters every window along the street and tears the "
-              "shutters off the houses.",
+        "K3": "Halfway down the street, the blast of the cloud shatters every window and tears the shutters off the "
+              "houses.",
         "K4": "Halfway down the street, the cloud rolls over a {vehicle} trying to reverse away and buries it in grey "
               "ash.",
     },
@@ -949,15 +951,28 @@ YAKLASMA_KUL_BULUTU = {
     "vehicle_throw_mid": "K2",
     "camera": {True: "the camera stays on the terrace and tilts down slowly to follow the cloud, never descending",
                False: "the camera stays fixed on the terrace, never descending"},
-    "tail": ("Handheld footage shot from a terrace above the town, high vantage looking down the street toward the "
-             "erupting volcano, the whole volcano visible in the upper part of the frame, a corner of the terrace "
+    "tail": ("Handheld footage shot from a terrace above the town, high vantage looking down the street, the whole "
+             "erupting volcano visible in the upper part of the frame, a corner of the terrace "
              "railing in the foreground; slight hand shake, {camera}; one continuous shot, no zoom, no cuts, no face "
              "close to the camera. Civilians in everyday clothes, never CGI. A dense, boiling grey pyroclastic cloud "
-             "growing larger in the frame as it approaches, never a thin smoke plume. Raw natural light under an "
+             "growing larger as it approaches, never a thin smoke plume. Raw natural light under an "
              "ash-grey sky lit orange by the eruption. Real time, never slow motion, people run at full speed. No "
              "readable signs, text or flags."),
 }
 _KB = YAKLASMA_KUL_BULUTU
+# 13 Kas 2026 öncesi metinler (82a8942), pasif; kullanılmaz.
+KUL_OPENING_V1 = ("{volcano} rises above the far end of the street in {place} and erupts, sending a towering pyroclastic "
+                  "cloud racing down its flank into the street and rolling toward the camera.")
+KUL_TAIL_V1 = ("Handheld footage shot from a terrace above the town, high vantage looking down the street toward the "
+               "erupting volcano, the whole volcano visible in the upper part of the frame, a corner of the terrace "
+               "railing in the foreground; slight hand shake, {camera}; one continuous shot, no zoom, no cuts, no face "
+               "close to the camera. Civilians in everyday clothes, never CGI. A dense, boiling grey pyroclastic cloud "
+               "growing larger in the frame as it approaches, never a thin smoke plume. Raw natural light under an "
+               "ash-grey sky lit orange by the eruption. Real time, never slow motion, people run at full speed. No "
+               "readable signs, text or flags.")
+KUL_V5_VOLCANO_V1 = "A towering cone volcano"
+KUL_K3_V1 = ("Halfway down the street, the blast of the cloud shatters every window along the street and tears the "
+             "shutters off the houses.")
 K2_WARNING = "⚠️ Araç savurma ortası (K2): videoda aracın tek parça kalıp kalmadığını kontrol et."
 _KUL_GEO_MEMORY: list[str] = []
 _KUL_VEHICLE_MEMORY: list[str] = []
