@@ -1277,6 +1277,25 @@ async def generate_creative_prompts(config: dict) -> dict:
         recs = seen_records.get("records")
         scene = hp.hortum_apply(scene, history, geo_used=hp.hortum_axes_history(recs, "cografya"),
                                 vehicle_used=hp.hortum_axes_history(recs, "arac"))
+    elif config.get("cadde_yaklasma"):   # 15 Kas: ⭐ Hit kalıbı · Yaklaşma (cadde, hortum sahil caddesi). GPT yok
+        import core.event_structure as es
+        import core.hit_prompts as hp
+        raw_loader, seen_records = config.get("axes_loader"), {}
+
+        def capture_loader(dom):
+            seen_records["records"] = raw_loader(dom)
+            return seen_records["records"]
+        # cadde kilitli değil (normal yolda GPT yazar): bu üretimde normal sahne kod hikâyesiyle kurulur, GPT çağrılmaz
+        token = es.CODE_STORY_FORCE.set(frozenset({config.get("event")}))
+        try:
+            scene = await build_creative_scene(config.get("domain") or None, config.get("event"), history, topics,
+                                               hp.no_gpt, axes_loader=capture_loader if raw_loader else None,
+                                               caption_ctx=caption_ctx if loader is not None else None)
+        finally:
+            es.CODE_STORY_FORCE.reset(token)
+        recs = seen_records.get("records")
+        scene = hp.cadde_apply(scene, history, geo_used=hp.cadde_axes_history(recs, "cografya"),
+                               vehicle_used=hp.cadde_axes_history(recs, "arac"))
     else:
         scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history,
                                            topics, _call_gpt, view=config.get("view") or None,

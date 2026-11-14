@@ -5031,8 +5031,13 @@ CODE_STORY_EVENTS = (WILDFIRE, HELICOPTER, LANDFALL, VOLCANIC_BOMBS, VILLAGE, FI
 VERBATIM_SLICES = {e: e not in VERBATIM_OFF_EVENTS or e in CODE_STORY_EVENTS for e in EVENT_KEY_VISUAL}
 
 
+# 15 Kas 2026: ⭐ Hit kalıbı · Yaklaşma (cadde) gibi modlar, olayı kilitli olmasa da bu üretimde GPT hikâye çağrısı
+# yapılmasın diye olayı geçici olarak "hikâye koddan" sayar (varsayılan boş: normal yol aynen)
+CODE_STORY_FORCE: contextvars.ContextVar = contextvars.ContextVar("code_story_force", default=frozenset())
+
+
 def code_story(event: str) -> bool:
-    return event in CODE_STORY_EVENTS
+    return event in CODE_STORY_EVENTS or event in CODE_STORY_FORCE.get()
 
 
 def verbatim_on(event: str) -> bool:

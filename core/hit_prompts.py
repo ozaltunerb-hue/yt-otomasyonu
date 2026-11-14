@@ -1921,44 +1921,79 @@ HORTUM_VEHICLE_BLOCK = 2
 HORTUM_MID_BLOCK = 1
 HORTUM_FINAL_BLOCK = 1
 YAKLASMA_HORTUM = {
+    # 15 Kas 2026, Bahadır: her coğrafyanın kendi yer metni (place) ve SAHNE cümlesi (scene; stil ekinde kamera
+    # cümlesinin hemen arkasında). Eski yer metinleri HORTUM_PASIF G1_V1-G6_V1.
     "geos": {
-        "G1": {"name": "Norveç", "place": "a Norwegian harbor town of colorful wooden fishing houses"},
-        "G2": {"name": "İtalya", "place": "an Italian harbor town of pastel houses climbing the hillside"},
-        "G3": {"name": "İrlanda", "place": "an Irish harbor town of colorful terraced houses"},
-        "G4": {"name": "Danimarka", "place": "a Danish harbor town of colorful canal houses"},
-        "G5": {"name": "Brezilya", "place": "a Brazilian harbor town of colorful colonial houses"},
-        "G6": {"name": "Hindistan", "place": "an Indian harbor town of colorful Portuguese-style houses"},
+        "G1": {"name": "Norveç",
+               "place": "a Norwegian fishing harbor of red wooden boathouses and white wooden houses",
+               "scene": "Setting: red wooden boathouses on stilts along a fjord quay, white wooden houses and steep "
+                        "green mountains behind."},
+        "G2": {"name": "İtalya", "place": "an Italian harbor town of pastel houses climbing the hillside",
+               "scene": "Setting: tall pastel houses with green shutters stacked up a steep hillside above a small "
+                        "stone harbor."},
+        "G3": {"name": "İrlanda", "place": "an Irish harbor town of painted terraced houses",
+               "scene": "Setting: painted two-storey terraced houses with slate roofs along a stone harbor wall, a "
+                        "grey Atlantic sea."},
+        "G4": {"name": "Danimarka", "place": "a Danish harbor town of brick canal houses",
+               "scene": "Setting: narrow brick houses with steep tiled roofs along a canal quay with old wooden "
+                        "boats."},
+        "G5": {"name": "Brezilya", "place": "a Brazilian harbor town of colonial houses",
+               "scene": "Setting: low whitewashed colonial houses with blue and yellow trim, a cobblestone seafront "
+                        "street, palm trees and fishing boats."},
+        "G6": {"name": "Hindistan", "place": "an Indian harbor town of Portuguese-style houses",
+               "scene": "Setting: weathered Portuguese-style houses with balconies and flat roofs, a seafront road, "
+                        "wooden fishing boats pulled up on the shore."},
     },
     "opening": "The tornado makes landfall from the sea at {place}, crosses the seafront road and flips a parked car "
                "onto its side, then heads up the street toward the camera.",
     "people": {3: "Three people run away from the tornado.",
                5: "Five people run away from the tornado."},
     "vehicles": ("pickup truck", "delivery van", "SUV"),
+    # 15 Kas: aktif ortalar O1 (yeni: araç havaya) + O2; ikisinde de araç var. Eski O1 ve O3 HORTUM_PASIF (O1_V1, O3_V1)
     "mids": {
-        "O1": "The tornado shoves the {vehicle} sideways across the street and slams it into the far curb.",
+        "O1": "The tornado lifts the {vehicle} off the street, spins it through the air and smashes it down onto the "
+              "quay.",
         "O2": "The tornado lifts the {vehicle} off the quay and hurls it, in one piece, into the harbor water.",
-        "O3": "The tornado rips the moored sailboats out of the water and flings them onto the quay.",
     },
+    # 15 Kas: F1/F2'den "colorful" çıktı (eskiler HORTUM_PASIF F1_V1, F2_V1)
     "finals": {
-        "F1": "Right across from the window, the tornado tears the roof off a colorful house, the pieces flying past "
-              "the camera.",
-        "F2": "Right across from the window, the tornado rips the whole front wall off a colorful house, furniture "
-              "swirling up into the funnel.",
+        "F1": "Right across from the window, the tornado tears the roof off a house, the pieces flying past the camera.",
+        "F2": "Right across from the window, the tornado rips the whole front wall off a house, furniture swirling up "
+              "into the funnel.",
         "F3": "Right below the window, the tornado hits the row of houses, roofs and balconies peeling off one after "
               "another.",
     },
     "vehicle_mids": ("O1", "O2"),
     "camera": "the camera stays fixed, tilting only slightly",
+    # 15 Kas: sabit "Setting: ..." cümlesi çıktı (HORTUM_PASIF STIL_V1); {scene} = seçilen coğrafyanın sahne cümlesi
     "tail": ("Handheld footage filmed through an open upper-floor window across from the harbor street, high vantage; "
              "slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always "
              "in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face "
-             "close to the camera. Setting: colorful houses along a stone quay with small sailboats. All people are "
-             "ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in "
-             "real time, never in slow motion, people run at full speed."),
+             "close to the camera. {scene} All people are ordinary civilians in everyday clothes, no hazmat suits, "
+             "natural light, never CGI. Everything moves in real time, never in slow motion, people run at full "
+             "speed."),
+}
+# Pasif kayıt (15 Kas 2026, Bahadır): 15 Kas üretimlerinde sabit sahne cümlesi her ülkede aynı renkli liman evlerini
+# çizdirdi, O3 kadrajı tekne havuzuna kilitledi (İtalya 4/10), O1 (kaldırıma itme) iki üretimde de çizilmedi.
+# Bu metinler hiçbir üretimde seçilmez.
+HORTUM_PASIF = {
+    "G1_V1": "a Norwegian harbor town of colorful wooden fishing houses",
+    "G2_V1": "an Italian harbor town of pastel houses climbing the hillside",
+    "G3_V1": "an Irish harbor town of colorful terraced houses",
+    "G4_V1": "a Danish harbor town of colorful canal houses",
+    "G5_V1": "a Brazilian harbor town of colorful colonial houses",
+    "G6_V1": "an Indian harbor town of colorful Portuguese-style houses",
+    "STIL_V1": "Setting: colorful houses along a stone quay with small sailboats.",
+    "O1_V1": "The tornado shoves the {vehicle} sideways across the street and slams it into the far curb.",
+    "O3_V1": "The tornado rips the moored sailboats out of the water and flings them onto the quay.",
+    "F1_V1": "Right across from the window, the tornado tears the roof off a colorful house, the pieces flying past "
+             "the camera.",
+    "F2_V1": "Right across from the window, the tornado rips the whole front wall off a colorful house, furniture "
+             "swirling up into the funnel.",
 }
 HORTUM_O2_WARNING = "⚠️ Araç savurma ortası (O2): videoda aracın tek parça kalıp kalmadığını kontrol et."
 HORTUM_REQUIRED = ("high vantage", "open upper-floor window")
-HORTUM_FORBIDDEN = ("Full action", "Until the last frame")
+HORTUM_FORBIDDEN = ("colorful houses along a stone quay", "Full action", "Until the last frame")
 _HT = YAKLASMA_HORTUM
 _HORTUM_GEO_MEMORY: list[str] = []
 _HORTUM_VEHICLE_MEMORY: list[str] = []
@@ -1972,8 +2007,13 @@ def hortum_camera_text(follow: bool | None = None) -> str:
     return _HT["camera"]
 
 
-def hortum_tail(follow: bool | None = None) -> str:
-    return _HT["tail"]
+def hortum_scene(geo: str) -> str:
+    return _HT["geos"][geo]["scene"]
+
+
+def hortum_tail(geo: str, follow: bool | None = None) -> str:
+    """15 Kas: stil eki coğrafyaya bağlı (kamera cümlesinin hemen arkasında seçilen coğrafyanın sahne cümlesi)."""
+    return _HT["tail"].format(scene=hortum_scene(geo))
 
 
 def hortum_opening(geo: str) -> str:
@@ -1988,7 +2028,7 @@ def hortum_people(n: int) -> str:
 
 def hortum_mid(mid: str, vehicle: str | None) -> str:
     if mid not in _HT["mids"]:
-        raise es.StructureError(f"{HORTUM_MODE_LABEL}: {mid} bu modda yok (orta O1, O2, O3)")
+        raise es.StructureError(f"{HORTUM_MODE_LABEL}: {mid} bu modda yok (orta O1, O2)")
     if mid in _HT["vehicle_mids"] and vehicle not in _HT["vehicles"]:
         raise es.StructureError(f"{HORTUM_MODE_LABEL}: {mid} için araç yok ({vehicle})")
     return _HT["mids"][mid].format(vehicle=vehicle or "")
@@ -2009,7 +2049,7 @@ def hortum_story(geo: str, people: int, mid: str, vehicle: str | None, final: st
 
 def hortum_prompt(geo: str, people: int, mid: str, vehicle: str | None, final: str, follow: bool | None = None) -> str:
     from core.creative_engine import join_story_and_style
-    return join_story_and_style(hortum_story(geo, people, mid, vehicle, final), hortum_tail(follow))
+    return join_story_and_style(hortum_story(geo, people, mid, vehicle, final), hortum_tail(geo, follow))
 
 
 def hortum_tags(history: list[str]) -> list[str]:
@@ -2057,6 +2097,7 @@ def hortum_lines(tb: dict) -> str:
     lines = [
         f"Mod: {HORTUM_MODE_LABEL}",
         f"Coğrafya: {tb['geo']} {_HT['geos'][tb['geo']]['name']}",
+        f"Sahne: «{hortum_scene(tb['geo'])}»",   # 15 Kas: seçilen coğrafyanın sahne cümlesi
         f"Araç: {tb['vehicle']}" + ("" if tb["mid"] in _HT["vehicle_mids"] else " (bu ortada araç yok)"),
         f"Orta (4-9s): {tb['mid']} «{hortum_mid(tb['mid'], tb['vehicle'])}»",
         f"Final (9-15s): {tb['final']} «{hortum_final(tb['final'])}»",
@@ -2083,7 +2124,8 @@ def _hortum_axes(js, tag: str, geo: str, vehicle: str | None, people: int):
 def hortum_apply(scene: dict, history: list[str] | None = None, rng=None, follow: bool | None = None,
                  geo_used: list[str] | None = None, vehicle_used: list[str] | None = None) -> dict:
     """Normal hattın kurduğu "hortum karaya vurur" sahnesinden (kayıt aynı) Yaklaşma (hortum) prompt'unu kurar.
-    Coğrafya G1-G6 (son 3 elenir, G3 tohum), araç (son 2), orta O1-O3 (son 1), final F1-F3 (son 1), kişi 3/5.
+    Coğrafya G1-G6 (son 3 elenir, G3 tohum), araç (son 2), orta O1-O2 (son 1), final F1-F3 (son 1), kişi 3/5.
+    15 Kas: iki ortada da araç var, araç geçmişi her üretimde ilerler.
     structure["hortum_yaklasma"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
     import random
     event = scene["event"]
@@ -2110,7 +2152,7 @@ def hortum_apply(scene: dict, history: list[str] | None = None, rng=None, follow
             m.append(v)
             del m[:-12]
     story = hortum_story(geo, people, mid, vehicle, final)
-    tail = hortum_tail(follow)
+    tail = hortum_tail(geo, follow)
     prompt = hortum_prompt(geo, people, mid, vehicle, final, follow)
     tb = {"event": event, "geo": geo, "people": people, "vehicle": vehicle, "mid": mid, "final": final,
           "follow": follow, "story": story, "suffix": tail, "prompt": prompt}
@@ -2155,8 +2197,9 @@ def hortum_apply(scene: dict, history: list[str] | None = None, rng=None, follow
 
 
 def hortum_camera_issues(text: str, geo: str | None = None) -> list[str]:
-    """Kie öncesi son kontrol: "high vantage", "open upper-floor window" ve G1-G6'dan birinin place metni var;
-    "Full action" ve "Until the last frame" yok. İhlal = gönderilmez."""
+    """Kie öncesi son kontrol: "high vantage", "open upper-floor window", G1-G6'dan birinin place metni ve aynı
+    coğrafyanın sahne cümlesi var; eski sabit sahne ("colorful houses along a stone quay"), "Full action" ve
+    "Until the last frame" yok. İhlal = gönderilmez."""
     out = []
     for need in HORTUM_REQUIRED:
         if need not in text:
@@ -2166,6 +2209,11 @@ def hortum_camera_issues(text: str, geo: str | None = None) -> list[str]:
         out.append("G1-G6 yer metni yok")
     elif geo is not None and places != [geo]:
         out.append(f"yer metni seçilen coğrafya değil ({geo}: {places})")
+    scenes = [g for g, v in _HT["geos"].items() if v["scene"] in text]   # 15 Kas: coğrafyanın sahne cümlesi
+    if not scenes:
+        out.append("G1-G6 sahne cümlesi yok")
+    elif geo is not None and scenes != [geo]:
+        out.append(f"sahne cümlesi seçilen coğrafya değil ({geo}: {scenes})")
     for bad in HORTUM_FORBIDDEN:
         if bad in text:
             out.append(f"bu modda olmayan ifade var: {bad}")
@@ -2178,7 +2226,7 @@ def hortum_issues(structure: dict, info: dict) -> list[str]:
     if tb.get("geo") not in _HT["geos"]:
         return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
     if tb.get("mid") not in _HT["mids"]:
-        return [f"orta O1, O2, O3 değil ({tb.get('mid')})"]
+        return [f"orta O1, O2 değil ({tb.get('mid')})"]
     if tb.get("final") not in _HT["finals"]:
         return [f"final F1, F2, F3 değil ({tb.get('final')})"]
     try:
@@ -2187,7 +2235,7 @@ def hortum_issues(structure: dict, info: dict) -> list[str]:
     except es.StructureError as e:
         return [str(e)]
     out = []
-    if info.get("style_suffix") != hortum_tail(tb["follow"]):
+    if info.get("style_suffix") != hortum_tail(tb["geo"], tb["follow"]):
         out.append("stil eki Yaklaşma (hortum) kalıbı değil")
     if info.get("story") != story:
         out.append("hikâye kalıpla yeniden kurulanla birebir aynı değil")
@@ -2202,4 +2250,304 @@ def hortum_issues(structure: dict, info: dict) -> list[str]:
         out.append(f"prompt {len(text.split())} kelime (en fazla {HORTUM_MAX_WORDS})")
     if len(text) > HORTUM_MAX_CHARS:
         out.append(f"prompt {len(text)} karakter (en fazla {HORTUM_MAX_CHARS})")
+    return out
+
+
+# ── ⭐ Hit kalıbı · Yaklaşma (cadde) (15 Kas 2026, Bahadır) ───────────────────────────────────────────────────────────
+# Kaynak: 17 Eki hit'i (1,2M; "Hortum sahil caddesini süpürür", Onay P6+Q3, beyaz minibüs, yüksek cam korkuluklu
+# balkon). YAKLASMA_HORTUM ile aynı düzen: GPT yok, hikâye tamamen koddan, zaman etiketleri VAR. "Hortum sahil caddesini
+# süpürür" normal yolu değişmez. Kayıt O*+F* (olay bazlı; normal cadde havuzu P*/Q*). Coğrafya G1-G6 (son 3, G1 tohum:
+# ilk 3 üretimde G1 gelmez), araç bu modun kendi havuzundan (son 2), kişi 3/5, orta/final LRU son 1, yasak çift yok.
+# İki ortada da araç var (araç savurma bu modda serbest).
+CADDE_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (cadde)"
+CADDE_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
+CADDE_EVENTS = (es.AVENUE,)
+CADDE_MAX_WORDS = 230
+CADDE_MAX_CHARS = 1400
+CADDE_GEO_BLOCK = 3
+CADDE_GEO_SEED = ("G1",)           # G1 başlangıçta "kullanıldı": ilk 3 üretimde G1 gelmez
+CADDE_VEHICLE_BLOCK = 2
+CADDE_MID_BLOCK = 1
+CADDE_FINAL_BLOCK = 1
+YAKLASMA_CADDE = {
+    "geos": {
+        "G1": {"name": "ABD", "place": "a Californian beach town"},
+        "G2": {"name": "Brezilya", "place": "a Brazilian beach city with wavy mosaic sidewalks"},
+        "G3": {"name": "Avustralya", "place": "an Australian beach city lined with high-rise hotels"},
+        "G4": {"name": "Meksika", "place": "a Mexican beach town of colorful low buildings"},
+        "G5": {"name": "İspanya", "place": "a Spanish seaside town of white apartment blocks"},
+        "G6": {"name": "Hindistan", "place": "an Indian seaside city of pastel apartment blocks"},
+    },
+    "opening": "A violent tornado sweeps down a palm-lined coastal avenue of {place}, hurling signs, branches and "
+               "debris along the road, and heads straight toward the camera.",
+    "people": {3: "Three people sprint along the sidewalk toward the camera, fleeing the tornado.",
+               5: "Five people sprint along the sidewalk toward the camera, fleeing the tornado."},
+    "vehicles": ("white van", "pickup truck", "SUV"),
+    "mids": {
+        "O1": "The tornado sweeps the {vehicle} up into the air, spins it, and crashes it down across the avenue.",
+        "O2": "The tornado flips the {vehicle} and sends it rolling over and over down the avenue toward the camera.",
+    },
+    "finals": {
+        "F1": "Right across from the balcony, the tornado tears the roof off an apartment building, the pieces flying "
+              "past the camera.",
+        "F2": "Right across from the balcony, the tornado rips the balconies and front wall off an apartment building, "
+              "debris flying past the camera.",
+        "F3": "Right below the balcony, the tornado rips the palm trees out by the roots and hurls them past the "
+              "camera.",
+    },
+    "vehicle_mids": ("O1", "O2"),
+    "camera": "the camera stays fixed, tilting only slightly",
+    "tail": ("Handheld footage shot from a high balcony with a glass railing across the avenue, high vantage; slight "
+             "hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in "
+             "frame, the glass railing in the foreground; one continuous shot, no zoom, no cuts, no person or face "
+             "close to the camera. Setting: a wide palm-lined avenue with parked cars and the sea at its end. All "
+             "people are ordinary civilians in everyday clothes, no hazmat suits, natural light under grey storm "
+             "clouds, never CGI. Everything moves in real time, never in slow motion, people run at full speed."),
+}
+CADDE_VEHICLE_WARNING = "⚠️ Araç ortası: videoda aracın tek parça kalıp kalmadığını kontrol et."
+CADDE_REQUIRED = ("high vantage", "glass railing")
+CADDE_FORBIDDEN = ("pans to follow", "eye level", "Full action", "Until the last frame")
+_CD = YAKLASMA_CADDE
+_CADDE_GEO_MEMORY: list[str] = []
+_CADDE_VEHICLE_MEMORY: list[str] = []
+
+
+def cadde_is_active(event: str | None) -> bool:
+    return event in CADDE_EVENTS
+
+
+def cadde_camera_text(follow: bool | None = None) -> str:
+    return _CD["camera"]
+
+
+def cadde_tail(follow: bool | None = None) -> str:
+    return _CD["tail"]
+
+
+def cadde_opening(geo: str) -> str:
+    return _CD["opening"].format(place=_CD["geos"][geo]["place"])
+
+
+def cadde_people(n: int) -> str:
+    if n not in _CD["people"]:
+        raise es.StructureError(f"{CADDE_MODE_LABEL}: kişi sayısı 3 ya da 5 olmalı ({n})")
+    return _CD["people"][n]
+
+
+def cadde_mid(mid: str, vehicle: str | None) -> str:
+    if mid not in _CD["mids"]:
+        raise es.StructureError(f"{CADDE_MODE_LABEL}: {mid} bu modda yok (orta O1, O2)")
+    if mid in _CD["vehicle_mids"] and vehicle not in _CD["vehicles"]:
+        raise es.StructureError(f"{CADDE_MODE_LABEL}: {mid} için araç yok ({vehicle})")
+    return _CD["mids"][mid].format(vehicle=vehicle or "")
+
+
+def cadde_final(final: str) -> str:
+    if final not in _CD["finals"]:
+        raise es.StructureError(f"{CADDE_MODE_LABEL}: {final} bu modda yok (final F1, F2, F3)")
+    return _CD["finals"][final]
+
+
+def cadde_story(geo: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
+    """Sıra: açılış + insan + orta + final (aksiyon / "Until the last frame" cümlesi yok)."""
+    a, b, c = es.SLICE_LABELS
+    return (f"{a}: {cadde_opening(geo)} {cadde_people(people)} {b}: {cadde_mid(mid, vehicle)} "
+            f"{c}: {cadde_final(final)}")
+
+
+def cadde_prompt(geo: str, people: int, mid: str, vehicle: str | None, final: str, follow: bool | None = None) -> str:
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(cadde_story(geo, people, mid, vehicle, final), cadde_tail(follow))
+
+
+def cadde_tags(history: list[str]) -> list[str]:
+    return [t for t in es.beat_history(es.AVENUE, history or []) if re.fullmatch(r"O\d+\+F\d+", t)]
+
+
+def cadde_choose_mid(history: list[str], rng=None) -> str:
+    return _block_pick(list(_CD["mids"]), [t.split("+")[0] for t in cadde_tags(history)], CADDE_MID_BLOCK, rng)
+
+
+def cadde_choose_final(history: list[str], rng=None) -> str:
+    return _block_pick(list(_CD["finals"]), [t.split("+")[1] for t in cadde_tags(history)], CADDE_FINAL_BLOCK, rng)
+
+
+def cadde_axes_history(records: list | None, key: str) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") == es.AVENUE and axes.get("mod") == "cadde_yaklasma"
+                and axes.get(key)):
+            out.append(axes[key])
+    return out
+
+
+def cadde_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    seen = list(CADDE_GEO_SEED) + list(_CADDE_GEO_MEMORY if used is None else used)
+    return _block_pick(list(_CD["geos"]), seen, CADDE_GEO_BLOCK, rng)
+
+
+def cadde_choose_vehicle(used: list[str] | None = None, rng=None) -> str:
+    return _block_pick(list(_CD["vehicles"]), list(_CADDE_VEHICLE_MEMORY if used is None else used),
+                       CADDE_VEHICLE_BLOCK, rng)
+
+
+def cadde_lines(tb: dict) -> str:
+    text = tb["prompt"]
+    lines = [
+        f"Mod: {CADDE_MODE_LABEL}",
+        f"Coğrafya: {tb['geo']} {_CD['geos'][tb['geo']]['name']}",
+        f"Araç: {tb['vehicle']}" + ("" if tb["mid"] in _CD["vehicle_mids"] else " (bu ortada araç yok)"),
+        f"Orta (4-9s): {tb['mid']} «{cadde_mid(tb['mid'], tb['vehicle'])}»",
+        f"Final (9-15s): {tb['final']} «{cadde_final(tb['final'])}»",
+        f"Kişi: {tb['people']}",
+        "Kamera: sabit (hafifçe eğilir, cam korkuluklu yüksek balkon)",
+        f"Kelime: {len(text.split())} (en fazla {CADDE_MAX_WORDS}) · karakter: {len(text)} (en fazla {CADDE_MAX_CHARS})",
+    ]
+    if tb["mid"] in _CD["vehicle_mids"]:
+        lines.append(CADDE_VEHICLE_WARNING)
+    return "\n".join(lines)
+
+
+def _cadde_axes(js, tag: str, geo: str, vehicle: str | None, people: int):
+    import json
+    try:
+        data = json.loads(js)
+    except (TypeError, ValueError):
+        return js
+    if isinstance(data.get("axes"), dict):
+        data["axes"].update({"beats": tag, "mod": "cadde_yaklasma", "cografya": geo, "arac": vehicle,
+                             "vehicle": vehicle, "people": people})
+    return json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def cadde_apply(scene: dict, history: list[str] | None = None, rng=None, follow: bool | None = None,
+                geo_used: list[str] | None = None, vehicle_used: list[str] | None = None) -> dict:
+    """Normal hattın kurduğu "hortum sahil caddesini süpürür" sahnesinden (kayıt aynı) Yaklaşma (cadde) prompt'unu
+    kurar. Coğrafya G1-G6 (son 3 elenir, G1 tohum), araç (son 2), orta O1-O2 (son 1), final F1-F3 (son 1), kişi 3/5.
+    structure["cadde_yaklasma"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
+    import random
+    event = scene["event"]
+    st = scene.get("structure") or {}
+    spec = st.get("spec")
+    if not cadde_is_active(event) or not spec:
+        raise es.StructureError(f"{CADDE_MODE_LABEL} kurulamadı: {event}")
+    follow = False   # kamera sabit, sadece hafifçe eğilir (stil eki birebir)
+    r = rng or random
+    geo = cadde_choose_geo(geo_used, r)
+    vehicle = cadde_choose_vehicle(vehicle_used, r)
+    people = r.choice((3, 5))
+    mid = cadde_choose_mid(history or [], r)
+    final = cadde_choose_final(history or [], r)
+    old_tag, new_tag = es.beat_tag(spec["beat_2"], spec["beat_3"]), es.beat_tag(mid, final)
+    with es._BEAT_LOCK:   # seçim anı hafızası: atılan P*+Q* yerine bu üretimin gerçek çifti
+        mem = es._BEAT_MEMORY.get(event, [])
+        if mem and mem[-1] == old_tag:
+            mem[-1] = new_tag
+    has_vehicle = mid in _CD["vehicle_mids"]
+    for m, v in ((_CADDE_GEO_MEMORY, geo), (_CADDE_VEHICLE_MEMORY, vehicle if has_vehicle else None)):
+        if v is not None:
+            m.append(v)
+            del m[:-12]
+    story = cadde_story(geo, people, mid, vehicle, final)
+    tail = cadde_tail(follow)
+    prompt = cadde_prompt(geo, people, mid, vehicle, final, follow)
+    tb = {"event": event, "geo": geo, "people": people, "vehicle": vehicle, "mid": mid, "final": final,
+          "follow": follow, "story": story, "suffix": tail, "prompt": prompt}
+    tb["lines"] = cadde_lines(tb)
+    problems = cadde_issues({**st, "cadde_yaklasma": tb}, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{CADDE_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = scene.get("combo_key", "")
+    if f"#{old_tag}|" in combo:
+        combo = combo.replace(f"#{old_tag}|", f"#{new_tag}|")
+    name = _CD["geos"][geo]["name"]
+    mid_text, final_text = cadde_mid(mid, vehicle), cadde_final(final)
+    cap_info = {**(st.get("caption_info") or {}), "opening": cadde_opening(geo), "people": people,
+                "beat_2": mid_text[:-1], "beat_3": final_text[:-1]}
+    structure = {**st, "cadde_yaklasma": tb, "caption_info": cap_info,
+                 "environment": f"Coğrafya: {geo} {name} · kamera = {CADDE_MODE_LABEL} (high balcony with a glass "
+                                "railing across the avenue, high vantage, sabit)",
+                 "story_source": f"Hikâye: kod (birebir) · {CADDE_MODE_LABEL}"}
+    if st.get("axes_json"):
+        structure["axes_json"] = _cadde_axes(st["axes_json"], new_tag, geo, vehicle if has_vehicle else None, people)
+    plain = " ".join([cadde_opening(geo), cadde_people(people), mid_text, final_text])
+    trace, axes_line = mode_display(
+        scene, structure, mode=CADDE_MODE_LABEL, camera=f"sabit ({cadde_camera_text(follow)}); high balcony with a "
+        "glass railing across the avenue, high vantage, glass railing in the foreground",
+        opening=cadde_opening(geo), mid=(mid, mid_text), final=(final, final_text), plain=plain,
+        vehicle=vehicle if has_vehicle else f"{vehicle} (bu ortada araç yok)",
+        spot="High balcony with a glass railing across the avenue (Yaklaşma kalıbı)",
+        weather="yok (stil ekinde natural light under grey storm clouds)",
+        axes={"coğrafya": f"{geo} {name}", "araç": vehicle if has_vehicle else "yok",
+              "kişi": people, "orta": mid, "final": final, "kamera modu": "sabit"},
+        repeat=f"coğrafya son {CADDE_GEO_BLOCK} elendi (G1 tohum) · araç son {CADDE_VEHICLE_BLOCK} · orta son "
+               f"{CADDE_MID_BLOCK} · final son {CADDE_FINAL_BLOCK} (yasak çift yok)")
+    # normal hattın ortam etiketi ve görünümü prompt'ta yok: gösterilmez
+    trace = {**trace, "mode": "cadde_yaklasma", "cografya": geo, "count_range": [3, 5], "view": None,
+             "view_source": None, "fire_env_label_short": None}
+    structure["axes_line"] = axes_line
+    out = {**scene, "story": story, "plain_story": plain, "style_suffix": tail, "prompt": prompt,
+           "combo_key": combo, "structure": structure, "trace": trace}
+    if scene.get("axes_json"):
+        out["axes_json"] = _cadde_axes(scene["axes_json"], new_tag, geo, vehicle if has_vehicle else None, people)
+    return out
+
+
+def cadde_camera_issues(text: str, geo: str | None = None) -> list[str]:
+    """Kie öncesi son kontrol: "high vantage", "glass railing" ve G1-G6'dan birinin place metni var; "pans to
+    follow", "eye level", "Full action" ve "Until the last frame" yok. İhlal = gönderilmez."""
+    out = []
+    for need in CADDE_REQUIRED:
+        if need not in text:
+            out.append(f'"{need}" eksik')
+    places = [g for g, v in _CD["geos"].items() if v["place"] in text]
+    if not places:
+        out.append("G1-G6 yer metni yok")
+    elif geo is not None and places != [geo]:
+        out.append(f"yer metni seçilen coğrafya değil ({geo}: {places})")
+    for bad in CADDE_FORBIDDEN:
+        if bad in text:
+            out.append(f"bu modda olmayan ifade var: {bad}")
+    return out
+
+
+def cadde_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin bu kalıpla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    tb = structure["cadde_yaklasma"]
+    if tb.get("geo") not in _CD["geos"]:
+        return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
+    if tb.get("mid") not in _CD["mids"]:
+        return [f"orta O1, O2 değil ({tb.get('mid')})"]
+    if tb.get("final") not in _CD["finals"]:
+        return [f"final F1, F2, F3 değil ({tb.get('final')})"]
+    try:
+        story = cadde_story(tb["geo"], tb["people"], tb["mid"], tb["vehicle"], tb["final"])
+        prompt = cadde_prompt(tb["geo"], tb["people"], tb["mid"], tb["vehicle"], tb["final"], tb["follow"])
+    except es.StructureError as e:
+        return [str(e)]
+    out = []
+    if info.get("style_suffix") != cadde_tail(tb["follow"]):
+        out.append("stil eki Yaklaşma (cadde) kalıbı değil")
+    if info.get("story") != story:
+        out.append("hikâye kalıpla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    out += cadde_camera_issues(text, tb["geo"])
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > CADDE_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {CADDE_MAX_WORDS})")
+    if len(text) > CADDE_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {CADDE_MAX_CHARS})")
     return out

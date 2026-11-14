@@ -585,8 +585,44 @@ def hortum_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str
             + f"\n\nMod: {hp.HORTUM_MODE_LABEL}\n"
             "Kamera: sabit (hafifçe eğilir)"
             + "\nLiman caddesinin karşısındaki açık üst kat penceresi, pencere çerçevesi bir yanda; hortum denizden "
-            "karaya çıkar, sahil yolunu geçer, caddeden kameraya doğru gelir. Coğrafya (G1-G6), araç, orta (O1-O3), "
+            "karaya çıkar, sahil yolunu geçer, caddeden kameraya doğru gelir. Coğrafya (G1-G6), araç, orta (O1-O2), "
             "final (F1-F3), kelime sayısı ✋ Onay mesajında. Hikâye için GPT çağrılmaz.")
+
+
+# ── ⭐ Hit kalıbı · Yaklaşma (cadde) (15 Kas 2026, Bahadır): 17 Eki hit'i (1,2M) kalıbı; ortam sorulmaz (coğrafya
+# LRU). Adımlar: cy (onay metni) → cyok (üretim). "Hortum sahil caddesini süpürür" normal yolu değişmez
+CADDE_BUTTON = "⭐ Hit kalıbı · Yaklaşma"
+
+
+def cadde_confirm_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    """Normal onay (✅ Üret / ❌ İptal) + altta ⭐ Hit kalıbı · Yaklaşma."""
+    rows = [list(r) for r in confirm_keyboard(di, eid).inline_keyboard]
+    rows.append([InlineKeyboardButton(CADDE_BUTTON, callback_data=f"{CALLBACK_PREFIX}cy:{di}:{eid}")])
+    return InlineKeyboardMarkup(rows)
+
+
+def cadde_produce_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}cyok:{di}:{eid}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def parse_cadde(di_raw: str, eid: str) -> tuple[str, str] | None:
+    sel = parse_selection(di_raw, eid)
+    if sel is None or sel[1] is None or not _hp().cadde_is_active(sel[1]):
+        return None
+    return sel
+
+
+def cadde_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
+    hp = _hp()
+    return (confirm_text(domain, event, cfg)
+            + f"\n\nMod: {hp.CADDE_MODE_LABEL}\n"
+            "Kamera: sabit (hafifçe eğilir, cam korkuluklu yüksek balkon)"
+            + "\nCaddenin karşısındaki yüksek balkon, cam korkuluk önde; hortum palmiyeli sahil caddesinden kameraya "
+            "doğru gelir. Coğrafya (G1-G6), araç, orta (O1-O2), final (F1-F3), kişi sayısı, kelime sayısı ✋ Onay "
+            "mesajında. Hikâye için GPT çağrılmaz.")
 
 
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
@@ -867,6 +903,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("ty", "tyok"):   # 14 Kas: ⭐ Hit kalıbı · Yaklaşma (hortum)
         await _on_hortum(query, context, action, args, cfg)
         return
+    if action in ("cy", "cyok"):   # 15 Kas: ⭐ Hit kalıbı · Yaklaşma (cadde)
+        await _on_cadde(query, context, action, args, cfg)
+        return
 
     sel, view = None, None
     if action == "d" and len(args) == 1:
@@ -896,6 +935,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                     else orman_confirm_keyboard(*args) if _hp().orman_is_active(event)   # 13 Kas
                     else heli_confirm_keyboard(*args) if _hp().heli_is_active(event)   # 13 Kas: helikopter
                     else hortum_confirm_keyboard(*args) if _hp().hortum_is_active(event)   # 14 Kas: hortum
+                    else cadde_confirm_keyboard(*args) if _hp().cadde_is_active(event)   # 15 Kas: cadde
                     else confirm_keyboard(*args))
         await query.edit_message_text(confirm_text(domain, event, cfg), reply_markup=keyboard)
     elif action == "v":
@@ -1098,6 +1138,31 @@ async def _on_hortum(query, context, action: str, args: list[str], cfg: dict) ->
                       hortum_yaklasma=True)
 
 
+async def _on_cadde(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """⭐ Hit kalıbı · Yaklaşma (cadde) adımları: cy (onay metni) → cyok (üretim). Kie yine ✋ Onay'a bağlı."""
+    parsed = parse_cadde(*args) if len(args) == 2 else None
+    if parsed is None:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    domain, event = parsed
+    if action == "cy":
+        await query.edit_message_text(cadde_confirm_text(domain, event, cfg),
+                                      reply_markup=cadde_produce_keyboard(*args))
+        return
+    run_cfg = dict(cfg)
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)} / {CADDE_BUTTON}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
+                      cadde_yaklasma=True)
+
+
 async def _on_caption_share(query, context, page: str) -> None:
     """📤 Paylaştım: Paylaşımlar'a tek satır (aynı üretim için ikinci kez basılırsa yeni satır açmaz)."""
     import core.caption as cap
@@ -1200,7 +1265,7 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                   bot_data: dict | None = None, view: str | None = None, hit_env: str | None = None,
                   approach_env: str | None = None, dalga24: bool = False, kul_yaklasma: bool = False,
                   orman_yaklasma: bool = False, heli_yaklasma: bool = False,
-                  hortum_yaklasma: bool = False) -> None:
+                  hortum_yaklasma: bool = False, cadde_yaklasma: bool = False) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1225,6 +1290,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["heli_yaklasma"] = True
     if hortum_yaklasma:   # 14 Kas: ⭐ Hit kalıbı · Yaklaşma (hortum)
         kwargs["hortum_yaklasma"] = True
+    if cadde_yaklasma:   # 15 Kas: ⭐ Hit kalıbı · Yaklaşma (cadde)
+        kwargs["cadde_yaklasma"] = True
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:

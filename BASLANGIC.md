@@ -46,6 +46,27 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   3/5. Kie öncesi `hortum_camera_issues`: "high vantage", "open upper-floor window" ve G1-G6 yer metni zorunlu. config
   `hortum_yaklasma`, bot ty/tyok. "Hortum karaya vurur" normal yolu (kilitli) değişmez. Test
   `tests/test_hortum_yaklasma.py`; 324 kombinasyon, en uzun 182/1073.
+  - **15 Kas güncellemesi** (commit "hortum: Yaklasma cografya sahneleri + O1 guclu + O3 pasif + cadde Hit kalibi
+    Yaklasma"). Sebep, 15 Kas üretimleri: stil ekindeki sabit "Setting: colorful houses along a stone quay with small
+    sailboats." her ülkede aynı renkli liman evlerini çizdirdi; O3 kadrajı tekne havuzuna kilitledi (İtalya 4/10); O1
+    (aracı kaldırıma itme) iki üretimde de çizilmedi. Değişiklik: her coğrafyanın yeni `place` metni + kendi `scene`
+    cümlesi (stil ekinde kamera cümlesinin hemen arkasında; `hortum_tail(geo)`), sabit cümle `HORTUM_PASIF["STIL_V1"]`.
+    Yeni O1 "lifts the {vehicle} off the street, spins it through the air and smashes it down onto the quay"; O2 aynı;
+    eski O1 ve O3 pasif (O1_V1, O3_V1). Aktif orta O1, O2 (ikisinde araç: araç geçmişi ve Notion `arac` her üretimde).
+    F1/F2'den "colorful" çıktı (F1_V1, F2_V1). Eski yer metinleri G1_V1-G6_V1 (G2 metni aynı kaldı). Kie öncesi ek
+    zorunlu: seçilen sahne cümlesi; ek yasak: "colorful houses along a stone quay". Onay'da Coğrafya altında "Sahne:"
+    satırı. 216 kombinasyon, en uzun 193/1139 (G1 + pickup truck + O1 + F2). Geçmişteki eski O3 kaydı LRU'yu bozmaz.
+- Cadde "⭐ Hit kalıbı · Yaklaşma (cadde)" (15 Kas, `YAKLASMA_CADDE`): "🌪️ Hortum sahil caddesini süpürür" olayı. Temel
+  17 Eki hit'i (1,2M; Onay P6+Q3, beyaz minibüs, yüksek cam korkuluklu balkon). Hortum moduyla aynı düzen: G1-G6 sahil
+  şehri (ABD, Brezilya, Avustralya, Meksika, İspanya, Hindistan; son 3, G1 tohum: ilk 3 üretimde G1 gelmez) / O1-O2 orta
+  (ikisi de araçlı) / F1-F3 final (son 1, yasak çift yok), araç white van/pickup truck/SUV son 2, kişi 3/5. Stil eki
+  sabit (cam korkuluklu yüksek balkon, palmiyeli cadde, gri fırtına bulutu). Kie öncesi `cadde_camera_issues`: "high
+  vantage", "glass railing", yer metni zorunlu; "pans to follow", "eye level", "Full action", "Until the last frame"
+  yasak. Cadde kilitli değil (normal yolda GPT yazar): bu modda normal sahne `es.CODE_STORY_FORCE` ile kod hikâyesinden
+  kurulur, GPT çağrılmaz (varsayılan boş, normal yol aynen). Onay'da O1/O2 "⚠️ Araç ortası" uyarısı. config
+  `cadde_yaklasma`, bot cy/cyok (sahil caddesi onay ekranında Üret/İptal altında). Normal sahil caddesi yolu değişmez.
+  Test `tests/test_cadde_yaklasma.py`; 216 kombinasyon, en uzun 189 kelime (G2 + white van + O1 + F2) / 1141 kr (G3 +
+  pickup truck + O2 + F2). 40 tohum: 19 olay + 10 eski mod diff 0, sadece hortum modu değişti.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir
