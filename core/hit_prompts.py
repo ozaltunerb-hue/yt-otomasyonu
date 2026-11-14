@@ -1530,10 +1530,10 @@ def orman_issues(structure: dict, info: dict) -> list[str]:
 
 
 # ── ⭐ Hit kalıbı · Yaklaşma (helikopter) (13 Kas 2026, Bahadır) ──────────────────────────────────────────────────────
-# Göl kenarındaki bir kasabada yangın; helikopter çelik halatın ucundaki büyük kovayı gölden doldurur ve yangının üstüne
-# boşaltır. Diğer Yaklaşma modlarının yapısı: GPT yok, hikâye tamamen koddan, zaman etiketleri VAR. Helikopterin normal
-# yolu değişmez. Kayıt H*+J* (olay bazlı; normal helikopter havuzu F*/G*). Suyun öznesi HER ZAMAN kova: eski bir
-# üretimde "the helicopter's water" yüzünden su gövdeden döküldü; bu modda "helicopter's" hiç yok. Araç bu modun kendi
+# Göl kenarındaki bir kasabada yangın evlerin içinde; gövde tanklı ağır yangın helikopteri gölün üstünde alçakta durup
+# sarkan hortumla tankına su emer ve suyu gövdesinin altındaki tanktan yangına boşaltır (14 Kas (2): kova kaldırıldı). Diğer Yaklaşma modlarının yapısı: GPT yok, hikâye tamamen koddan, zaman etiketleri VAR. Helikopterin normal
+# yolu değişmez. Kayıt H*+J* (olay bazlı; normal helikopter havuzu F*/G*). Suyun kaynağı her zaman "belly tank"; "helicopter's",
+# "bucket" ve "cable" bu modda hiç yok. Araç bu modun kendi
 # havuzundan (son 2), kişi 3/4, coğrafya L1-L6 (son 3, Türkiye yok, tohum yok), orta/final LRU son 1, yasak çift yok.
 HELI_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (helikopter)"
 HELI_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
@@ -1555,38 +1555,52 @@ YAKLASMA_HELIKOPTER = {
         "L5": {"name": "Yunanistan", "place": "a Greek lakeside village of whitewashed houses"},
         "L6": {"name": "Avustralya", "place": "an Australian lakeside town of weatherboard houses"},
     },
-    "opening": "The burning forest has already reached {place}, a towering wall of flames racing down the street toward "
-               "the camera, as a firefighting helicopter skims the lake below the terrace, filling the big orange "
-               "bucket hanging on a long steel cable far below it.",
+    "opening": "The burning forest has already reached {place}, a towering wall of flames racing through the houses "
+               "along the lakeshore, as a heavy firefighting helicopter hovers low over the lake below the terrace, "
+               "sucking water into its belly tank through a thick hanging hose.",
     "people": {3: "Three people run along the lakeshore below.",
                4: "Four people run along the lakeshore below."},
     "vehicles": ("pickup truck", "SUV", "white van"),
     "mids": {
-        "H1": "The helicopter lifts off the lake, the full bucket swinging far below on its cable, and flies low over "
-              "the rooftops toward the flames.",
+        "H1": "The helicopter lifts off the lake, water streaming from its hanging hose, and flies low over the "
+              "rooftops toward the burning houses.",
         "H2": "Just ahead of the flames, a burning pine crashes onto a fleeing {vehicle}, crushing its hood, as the "
-              "helicopter passes overhead with the full bucket swinging far below it.",
-        "H3": "Just ahead of the flames, the wall of fire swallows a parked {vehicle} as the helicopter passes overhead "
-              "with the full bucket swinging far below it.",
+              "heavy helicopter passes low overhead.",
+        "H3": "Just ahead of the flames, the wall of fire swallows a parked {vehicle} as the heavy helicopter passes "
+              "low overhead.",
     },
     "finals": {
-        "J1": "The helicopter hovers over the burning houses down the street and the hanging bucket opens, a massive "
-              "curtain of water falling from it onto the flames and bursting into white steam.",
-        "J2": "The helicopter stops over the burning roof of a house down the street and the bucket far below it dumps "
-              "its water straight onto the flames, the roof hissing into steam as it caves in.",
-        "J3": "The helicopter sweeps along the wall of flames at the lakeshore and the bucket empties onto it, a long "
-              "sheet of water crashing onto the fire and bursting into steam.",
+        "J1": "The helicopter hovers over the burning houses and opens its belly tank, a massive curtain of water "
+              "crashing onto the flames and bursting into white steam.",
+        "J2": "The helicopter stops over a burning roof and releases its belly tank straight onto it, the roof hissing "
+              "into steam as it caves in.",
+        "J3": "The helicopter sweeps low along the wall of flames at the lakeshore, a long sheet of water pouring from "
+              "its belly tank onto the fire and bursting into steam.",
     },
     "vehicle_mids": ("H2", "H3"),
     # 14 Kas 2026: kamera bu modda her zaman sabit; takip cümlesi hiç çıkmaz (eski HELI_CAMERA_V1, pasif)
     "camera": "the camera stays fixed",
     "tail": ("Handheld footage shot from a high terrace of a lakeside house overlooking the lake and the street, the "
-             "helicopter clearly visible in the middle distance, crossing the frame sideways, never flying toward or "
-             "over the camera, a corner of the terrace railing in the foreground; slight hand shake, the camera stays "
-             "fixed; one continuous shot, no zoom, no cuts. Water falls only out of the bottom of the hanging bucket, "
-             "never from the body of the helicopter. Never CGI. Realistic wildfire: towering, roaring flames and thick "
-             "smoke, never thin lines of fire. Real time, never slow motion. No readable signs, text or flags."),
+             "heavy helicopter in the middle distance, crossing the frame sideways, never flying toward or over the "
+             "camera, a corner of the terrace railing in the foreground; slight hand shake, the camera stays fixed; "
+             "one continuous shot, no zoom, no cuts. The water lands only on the burning houses and flames. Never "
+             "CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines of fire. Real time, "
+             "never slow motion. No readable signs, text or flags."),
 }
+# 14 Kas 2026 (2) (Bahadır): üç üretimde de su kovadan değil gövdeden döküldü, son üretimde yanmayan evlere düştü.
+# Kova kaldırıldı, gövde tanklı ağır yangın helikopteri geldi. 96b3d25 kovalı metinler pasif:
+HELI_OPENING_V2 = 'The burning forest has already reached {place}, a towering wall of flames racing down the street toward the camera, as a firefighting helicopter skims the lake below the terrace, filling the big orange bucket hanging on a long steel cable far below it.'
+HELI_MIDS_V2 = {
+    'H1': 'The helicopter lifts off the lake, the full bucket swinging far below on its cable, and flies low over the rooftops toward the flames.',
+    'H2': 'Just ahead of the flames, a burning pine crashes onto a fleeing {vehicle}, crushing its hood, as the helicopter passes overhead with the full bucket swinging far below it.',
+    'H3': 'Just ahead of the flames, the wall of fire swallows a parked {vehicle} as the helicopter passes overhead with the full bucket swinging far below it.',
+}
+HELI_FINALS_V2 = {
+    'J1': 'The helicopter hovers over the burning houses down the street and the hanging bucket opens, a massive curtain of water falling from it onto the flames and bursting into white steam.',
+    'J2': 'The helicopter stops over the burning roof of a house down the street and the bucket far below it dumps its water straight onto the flames, the roof hissing into steam as it caves in.',
+    'J3': 'The helicopter sweeps along the wall of flames at the lakeshore and the bucket empties onto it, a long sheet of water crashing onto the fire and bursting into steam.',
+}
+HELI_TAIL_V2 = 'Handheld footage shot from a high terrace of a lakeside house overlooking the lake and the street, the helicopter clearly visible in the middle distance, crossing the frame sideways, never flying toward or over the camera, a corner of the terrace railing in the foreground; slight hand shake, the camera stays fixed; one continuous shot, no zoom, no cuts. Water falls only out of the bottom of the hanging bucket, never from the body of the helicopter. Never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines of fire. Real time, never slow motion. No readable signs, text or flags.'
 # 14 Kas 2026 (Bahadır): ilk üretimde helikopter kameraya geldi, su terasın altına (yangının olmadığı yere) ve
 # gövdeden döküldü ("Right below the terrace ... toward the camera" finalleri + takip kamerası). Eski metinler pasif:
 HELI_OPENING_V1 = ("The burning forest has already reached {place}, a towering wall of flames racing down the street "
@@ -1800,16 +1814,20 @@ HELI_NO_FLY_PHRASE = "never flying toward or over the camera"
 
 
 def heli_camera_issues(text: str, geo: str) -> list[str]:
-    """14 Kas: "toward the camera" sadece açılışta, "over the camera" sadece yasak cümlesinde, "terrace" sadece açılış ve
-    stil ekinde. Açılış ve stil eki birer kez çıkarılır; kalan metinde bu ifadeler geçerse gönderilmez."""
+    """14 Kas (2): "toward the camera" hiç yok (yasak cümlesi "never flying toward or over the camera" bu ifadeyi
+    içermez), "over the camera" sadece yasak cümlesinde, "terrace" sadece açılış ve stil ekinde, "bucket" ve "cable"
+    hiç yok. Açılış ve stil eki birer kez çıkarılır; kalan metinde bu ifadeler geçerse gönderilmez."""
     out = []
     no_opening = text.replace(heli_opening(geo), "", 1)
-    if "toward the camera" in no_opening:
-        out.append('"toward the camera" açılış dışında geçiyor')
+    if "toward the camera" in text:
+        out.append('"toward the camera" geçiyor')
     if "over the camera" in no_opening.replace(HELI_NO_FLY_PHRASE, "", 1):
         out.append('"over the camera" yasak cümlesi dışında geçiyor')
     if "terrace" in no_opening.replace(_HL["tail"], "", 1):
         out.append('"terrace" açılış ve stil eki dışında geçiyor')
+    for bad in ("bucket", "cable"):
+        if bad in text.lower():
+            out.append(f'"{bad}" bu modda yok')
     return out
 
 
