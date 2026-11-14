@@ -1538,8 +1538,8 @@ def orman_issues(structure: dict, info: dict) -> list[str]:
 HELI_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (helikopter)"
 HELI_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
 HELI_EVENTS = (es.HELICOPTER,)
-# Kamera: True = helikopteri izlemek için hafifçe döner; False = sabit (varsayılan True)
-HELI_YAKLASMA_KAMERA_TAKIP = True
+# Kamera: 14 Kas 2026'dan beri bu modda her zaman sabit (varsayılan False). True verilse bile takip cümlesi çıkmaz.
+HELI_YAKLASMA_KAMERA_TAKIP = False
 HELI_MAX_WORDS = 230
 HELI_MAX_CHARS = 1400
 HELI_GEO_BLOCK = 3
@@ -1556,37 +1556,54 @@ YAKLASMA_HELIKOPTER = {
         "L6": {"name": "Avustralya", "place": "an Australian lakeside town of weatherboard houses"},
     },
     "opening": "The burning forest has already reached {place}, a towering wall of flames racing down the street toward "
-               "the camera, as a firefighting helicopter skims the lake below the terrace, filling the big bucket on "
-               "its steel cable.",
+               "the camera, as a firefighting helicopter skims the lake below the terrace, filling the big orange "
+               "bucket hanging on a long steel cable far below it.",
     "people": {3: "Three people run along the lakeshore below.",
                4: "Four people run along the lakeshore below."},
     "vehicles": ("pickup truck", "SUV", "white van"),
     "mids": {
-        "H1": "The helicopter lifts off the lake with the full bucket swinging on its cable and flies low over the "
-              "rooftops toward the flames, water dripping from the bucket.",
+        "H1": "The helicopter lifts off the lake, the full bucket swinging far below on its cable, and flies low over "
+              "the rooftops toward the flames.",
         "H2": "Just ahead of the flames, a burning pine crashes onto a fleeing {vehicle}, crushing its hood, as the "
-              "helicopter flies low overhead with the full bucket.",
-        "H3": "Just ahead of the flames, the wall of fire swallows a parked {vehicle} as the helicopter roars low "
-              "overhead with the full bucket.",
+              "helicopter passes overhead with the full bucket swinging far below it.",
+        "H3": "Just ahead of the flames, the wall of fire swallows a parked {vehicle} as the helicopter passes overhead "
+              "with the full bucket swinging far below it.",
     },
     "finals": {
-        "J1": "Right below the terrace, the bucket opens over the burning house and a massive curtain of water hits the "
-              "flames, bursting into white steam that rushes up toward the camera.",
-        "J2": "Right below the terrace, the bucket dumps its water onto the burning roof of the nearest house just as it "
-              "caves in, steam and sparks bursting up toward the camera.",
-        "J3": "Right below the terrace, the bucket releases its water onto the wall of flames at the lakeshore, steam "
-              "and spray blasting across the street toward the camera.",
+        "J1": "The helicopter hovers over the burning houses down the street and the hanging bucket opens, a massive "
+              "curtain of water falling from it onto the flames and bursting into white steam.",
+        "J2": "The helicopter stops over the burning roof of a house down the street and the bucket far below it dumps "
+              "its water straight onto the flames, the roof hissing into steam as it caves in.",
+        "J3": "The helicopter sweeps along the wall of flames at the lakeshore and the bucket empties onto it, a long "
+              "sheet of water crashing onto the fire and bursting into steam.",
     },
     "vehicle_mids": ("H2", "H3"),
-    "camera": {True: "the camera turns slightly to follow the helicopter", False: "the camera stays fixed"},
+    # 14 Kas 2026: kamera bu modda her zaman sabit; takip cümlesi hiç çıkmaz (eski HELI_CAMERA_V1, pasif)
+    "camera": "the camera stays fixed",
     "tail": ("Handheld footage shot from a high terrace of a lakeside house overlooking the lake and the street, the "
-             "helicopter large and close in frame, a corner of the terrace railing in the foreground; slight hand "
-             "shake, {camera}; one continuous shot, no zoom, no cuts, no face close to the camera. Water pours only "
-             "from the bucket on the steel cable, never from the helicopter itself. Civilians in everyday clothes, "
-             "never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of "
-             "fire. Orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text "
-             "or flags."),
+             "helicopter clearly visible in the middle distance, crossing the frame sideways, never flying toward or "
+             "over the camera, a corner of the terrace railing in the foreground; slight hand shake, the camera stays "
+             "fixed; one continuous shot, no zoom, no cuts. Water falls only out of the bottom of the hanging bucket, "
+             "never from the body of the helicopter. Never CGI. Realistic wildfire: towering, roaring flames and thick "
+             "smoke, never thin lines of fire. Real time, never slow motion. No readable signs, text or flags."),
 }
+# 14 Kas 2026 (Bahadır): ilk üretimde helikopter kameraya geldi, su terasın altına (yangının olmadığı yere) ve
+# gövdeden döküldü ("Right below the terrace ... toward the camera" finalleri + takip kamerası). Eski metinler pasif:
+HELI_OPENING_V1 = ("The burning forest has already reached {place}, a towering wall of flames racing down the street "
+                   "toward the camera, as a firefighting helicopter skims the lake below the terrace, filling the big "
+                   "bucket on its steel cable.")
+HELI_MIDS_V1 = {
+    "H1": 'The helicopter lifts off the lake with the full bucket swinging on its cable and flies low over the rooftops toward the flames, water dripping from the bucket.',
+    "H2": 'Just ahead of the flames, a burning pine crashes onto a fleeing {vehicle}, crushing its hood, as the helicopter flies low overhead with the full bucket.',
+    "H3": 'Just ahead of the flames, the wall of fire swallows a parked {vehicle} as the helicopter roars low overhead with the full bucket.',
+}
+HELI_FINALS_V1 = {
+    "J1": 'Right below the terrace, the bucket opens over the burning house and a massive curtain of water hits the flames, bursting into white steam that rushes up toward the camera.',
+    "J2": 'Right below the terrace, the bucket dumps its water onto the burning roof of the nearest house just as it caves in, steam and sparks bursting up toward the camera.',
+    "J3": 'Right below the terrace, the bucket releases its water onto the wall of flames at the lakeshore, steam and spray blasting across the street toward the camera.',
+}
+HELI_CAMERA_V1 = {True: 'the camera turns slightly to follow the helicopter', False: 'the camera stays fixed'}
+HELI_TAIL_V1 = 'Handheld footage shot from a high terrace of a lakeside house overlooking the lake and the street, the helicopter large and close in frame, a corner of the terrace railing in the foreground; slight hand shake, {camera}; one continuous shot, no zoom, no cuts, no face close to the camera. Water pours only from the bucket on the steel cable, never from the helicopter itself. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.'
 _HL = YAKLASMA_HELIKOPTER
 _HELI_GEO_MEMORY: list[str] = []
 _HELI_VEHICLE_MEMORY: list[str] = []
@@ -1597,11 +1614,11 @@ def heli_is_active(event: str | None) -> bool:
 
 
 def heli_camera_text(follow: bool | None = None) -> str:
-    return _HL["camera"][bool(HELI_YAKLASMA_KAMERA_TAKIP if follow is None else follow)]
+    return _HL["camera"]   # 14 Kas: her zaman sabit
 
 
 def heli_tail(follow: bool | None = None) -> str:
-    return _HL["tail"].format(camera=heli_camera_text(follow))
+    return _HL["tail"]   # 14 Kas: kamera stil ekinde birebir sabit
 
 
 def heli_opening(geo: str) -> str:
@@ -1679,7 +1696,7 @@ def heli_choose_vehicle(used: list[str] | None = None, rng=None) -> str:
 
 
 def heli_camera_label(follow: bool) -> str:
-    return "takip (helikopteri izlemek için hafifçe döner)" if follow else "sabit"
+    return "sabit"   # 14 Kas: bu modda takip yok
 
 
 def heli_lines(hb: dict) -> str:
@@ -1718,7 +1735,7 @@ def heli_apply(scene: dict, history: list[str] | None = None, rng=None, follow: 
     spec = st.get("spec")
     if not heli_is_active(event) or not spec:
         raise es.StructureError(f"{HELI_MODE_LABEL} kurulamadı: {event}")
-    follow = bool(HELI_YAKLASMA_KAMERA_TAKIP if follow is None else follow)
+    follow = False   # 14 Kas: bu modda kamera her zaman sabit (bayrak ya da parametre takibi açmaz)
     r = rng or random
     geo = heli_choose_geo(geo_used, r)
     vehicle = heli_choose_vehicle(vehicle_used, r)
@@ -1763,7 +1780,7 @@ def heli_apply(scene: dict, history: list[str] | None = None, rng=None, follow: 
         opening=heli_opening(geo), mid=(mid, mid_text), final=(final, final_text), plain=plain,
         vehicle=vehicle if mid in _HL["vehicle_mids"] else f"{vehicle} (bu ortada araç yok)",
         spot="High terrace of a lakeside house overlooking the lake and the street (Yaklaşma kalıbı)",
-        weather="orange smoky sky (stil eki)",
+        weather="yok (stil ekinde gökyüzü yok)",
         axes={"coğrafya": f"{geo} {name}", "araç": vehicle if mid in _HL["vehicle_mids"] else "yok",
               "kişi": people, "orta": mid, "final": final, "kamera modu": cam},
         repeat=f"coğrafya son {HELI_GEO_BLOCK} elendi · araç son {HELI_VEHICLE_BLOCK} · orta son {HELI_MID_BLOCK} · "
@@ -1776,6 +1793,23 @@ def heli_apply(scene: dict, history: list[str] | None = None, rng=None, follow: 
            "combo_key": combo, "structure": structure, "trace": trace}
     if scene.get("axes_json"):
         out["axes_json"] = _heli_axes(scene["axes_json"], new_tag, geo, vehicle, people)
+    return out
+
+
+HELI_NO_FLY_PHRASE = "never flying toward or over the camera"
+
+
+def heli_camera_issues(text: str, geo: str) -> list[str]:
+    """14 Kas: "toward the camera" sadece açılışta, "over the camera" sadece yasak cümlesinde, "terrace" sadece açılış ve
+    stil ekinde. Açılış ve stil eki birer kez çıkarılır; kalan metinde bu ifadeler geçerse gönderilmez."""
+    out = []
+    no_opening = text.replace(heli_opening(geo), "", 1)
+    if "toward the camera" in no_opening:
+        out.append('"toward the camera" açılış dışında geçiyor')
+    if "over the camera" in no_opening.replace(HELI_NO_FLY_PHRASE, "", 1):
+        out.append('"over the camera" yasak cümlesi dışında geçiyor')
+    if "terrace" in no_opening.replace(_HL["tail"], "", 1):
+        out.append('"terrace" açılış ve stil eki dışında geçiyor')
     return out
 
 
@@ -1801,9 +1835,10 @@ def heli_issues(structure: dict, info: dict) -> list[str]:
     if info.get("prompt") != prompt:
         out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
     text = info.get("prompt", "")
-    for bad in ("Full action", "Until the last frame", "helicopter's"):
+    for bad in ("Full action", "Until the last frame", "helicopter's", "turns slightly to follow"):
         if bad in text:
             out.append(f"bu modda olmayan ifade var: {bad}")
+    out += heli_camera_issues(text, hb["geo"])
     for lab in es.SLICE_LABELS:
         if f"{lab}: " not in text:
             out.append(f"zaman etiketi eksik: {lab}")

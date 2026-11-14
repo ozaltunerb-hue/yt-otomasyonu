@@ -2,6 +2,7 @@
 # Göl kenarındaki kasabada yangın; helikopter çelik halatın ucundaki büyük kovayı gölden doldurup yangının üstüne boşaltır.
 # GPT yok, zaman etiketleri var. Suyun öznesi her zaman kova ("helicopter's" yok). Helikopterin normal yolu ve diğer
 # bütün olay/modlar değişmez. Ağ yok.
+# 14 Kas 2026: su yangına kovadan; helikopter kameraya gelmez, kamera her zaman sabit, finallerde "terrace"/"toward the camera" yok.
 import asyncio
 import json
 import logging
@@ -36,30 +37,30 @@ PLACES = {"L1": ("Kanada", "a Canadian lakeside town of timber houses"),
           "L5": ("Yunanistan", "a Greek lakeside village of whitewashed houses"),
           "L6": ("Avustralya", "an Australian lakeside town of weatherboard houses")}
 MIDS = {
-    "H1": "The helicopter lifts off the lake with the full bucket swinging on its cable and flies low over the rooftops "
-          "toward the flames, water dripping from the bucket.",
+    "H1": "The helicopter lifts off the lake, the full bucket swinging far below on its cable, and flies low over the "
+          "rooftops toward the flames.",
     "H2": "Just ahead of the flames, a burning pine crashes onto a fleeing {vehicle}, crushing its hood, as the "
-          "helicopter flies low overhead with the full bucket.",
-    "H3": "Just ahead of the flames, the wall of fire swallows a parked {vehicle} as the helicopter roars low overhead "
-          "with the full bucket.",
+          "helicopter passes overhead with the full bucket swinging far below it.",
+    "H3": "Just ahead of the flames, the wall of fire swallows a parked {vehicle} as the helicopter passes overhead with "
+          "the full bucket swinging far below it.",
 }
 FINALS = {
-    "J1": "Right below the terrace, the bucket opens over the burning house and a massive curtain of water hits the "
-          "flames, bursting into white steam that rushes up toward the camera.",
-    "J2": "Right below the terrace, the bucket dumps its water onto the burning roof of the nearest house just as it "
-          "caves in, steam and sparks bursting up toward the camera.",
-    "J3": "Right below the terrace, the bucket releases its water onto the wall of flames at the lakeshore, steam and "
-          "spray blasting across the street toward the camera.",
+    "J1": "The helicopter hovers over the burning houses down the street and the hanging bucket opens, a massive "
+          "curtain of water falling from it onto the flames and bursting into white steam.",
+    "J2": "The helicopter stops over the burning roof of a house down the street and the bucket far below it dumps its "
+          "water straight onto the flames, the roof hissing into steam as it caves in.",
+    "J3": "The helicopter sweeps along the wall of flames at the lakeshore and the bucket empties onto it, a long sheet "
+          "of water crashing onto the fire and bursting into steam.",
 }
 OPENING = ("The burning forest has already reached {place}, a towering wall of flames racing down the street toward the "
-           "camera, as a firefighting helicopter skims the lake below the terrace, filling the big bucket on its steel "
-           "cable.")
+           "camera, as a firefighting helicopter skims the lake below the terrace, filling the big orange bucket "
+           "hanging on a long steel cable far below it.")
 TAIL = ("Handheld footage shot from a high terrace of a lakeside house overlooking the lake and the street, the "
-        "helicopter large and close in frame, a corner of the terrace railing in the foreground; slight hand shake, "
-        "{camera}; one continuous shot, no zoom, no cuts, no face close to the camera. Water pours only from the bucket "
-        "on the steel cable, never from the helicopter itself. Civilians in everyday clothes, never CGI. Realistic "
-        "wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Orange smoky sky. Real "
-        "time, never slow motion, people run at full speed. No readable signs, text or flags.")
+        "helicopter clearly visible in the middle distance, crossing the frame sideways, never flying toward or over "
+        "the camera, a corner of the terrace railing in the foreground; slight hand shake, the camera stays fixed; one "
+        "continuous shot, no zoom, no cuts. Water falls only out of the bottom of the hanging bucket, never from the "
+        "body of the helicopter. Never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin "
+        "lines of fire. Real time, never slow motion. No readable signs, text or flags.")
 VEHICLE_WORDS = ("pickup", "truck", "SUV", "van", "car", "vehicle", "{")
 
 
@@ -107,7 +108,7 @@ def all_combos():
 class TestTexts(_Quiet):
     def test_verbatim_texts(self):
         self.assertEqual(hp.HELI_MODE_LABEL, "⭐ Hit kalıbı · Yaklaşma (helikopter)")
-        self.assertIs(hp.HELI_YAKLASMA_KAMERA_TAKIP, True)
+        self.assertIs(hp.HELI_YAKLASMA_KAMERA_TAKIP, False)
         self.assertEqual({g: (HL["geos"][g]["name"], HL["geos"][g]["place"]) for g in HL["geos"]}, PLACES)
         for g, (_, place) in PLACES.items():
             self.assertEqual(hp.heli_opening(g), OPENING.format(place=place))
@@ -119,10 +120,17 @@ class TestTexts(_Quiet):
         self.assertEqual(HL["vehicles"], ("pickup truck", "SUV", "white van"))
         self.assertEqual(HL["mids"], MIDS)
         self.assertEqual(HL["finals"], FINALS)
-        self.assertEqual(hp.heli_camera_text(True), FOLLOW)
+        self.assertEqual(hp.heli_camera_text(True), FIXED)   # 14 Kas: takip bu modda yok
         self.assertEqual(hp.heli_camera_text(False), FIXED)
-        self.assertEqual(hp.heli_tail(True), TAIL.format(camera=FOLLOW))
-        self.assertEqual(hp.heli_tail(False), TAIL.format(camera=FIXED))
+        self.assertEqual(hp.heli_tail(True), TAIL)
+        self.assertEqual(hp.heli_tail(False), TAIL)
+        self.assertEqual(hp.heli_camera_label(True), "sabit")
+        # eski metinler silinmedi, pasif kayıtta
+        self.assertIn("Right below the terrace", hp.HELI_FINALS_V1["J1"])
+        self.assertEqual(hp.HELI_CAMERA_V1[True], FOLLOW)
+        self.assertIn("filling the big bucket on its steel cable", hp.HELI_OPENING_V1)
+        self.assertIn("{camera}", hp.HELI_TAIL_V1)
+        self.assertIn("water dripping from the bucket", hp.HELI_MIDS_V1["H1"])
         self.assertEqual((hp.HELI_GEO_BLOCK, hp.HELI_VEHICLE_BLOCK, hp.HELI_MID_BLOCK, hp.HELI_FINAL_BLOCK),
                          (3, 2, 1, 1))
         self.assertEqual((hp.HELI_MAX_WORDS, hp.HELI_MAX_CHARS), (230, 1400))
@@ -160,23 +168,33 @@ class TestTexts(_Quiet):
             self.assertIn(PLACES[g][1], p)
             for bad in ("Turkish", "Turkey", "helicopter's", "Full action", "Until the last frame"):
                 self.assertNotIn(bad, p)
-            self.assertIn("never from the helicopter itself", p)
-            self.assertIn("never thin lines or strips of fire", p)
+            self.assertIn("never from the body of the helicopter", p)
+            self.assertIn("never thin lines of fire", p)
+            for need in ("never flying toward or over the camera", "Water falls only out of the bottom of the hanging "
+                         "bucket", "the camera stays fixed"):
+                self.assertIn(need, p)
+            self.assertNotIn("turns slightly to follow", p)
+            self.assertEqual(hp.heli_camera_issues(p, g), [], key)
             self.assertIn("a corner of the terrace railing in the foreground", p)
             self.assertTrue(p.startswith("0-4s: "))
             for lab in (" 4-9s: ", " 9-15s: "):
                 self.assertIn(lab, p)
             opening, rest = p.split(" 4-9s: ")
             self.assertIn("toward the camera", opening)
-            self.assertIn("filling the big bucket on its steel cable", opening)
-            mid_part = rest.split(" 9-15s: ")[0]
+            self.assertIn("bucket hanging on a long steel cable far below it", opening)
+            mid_part, final_part = rest.split(" 9-15s: ")
+            final_part = final_part.split(" Handheld footage")[0]
+            self.assertEqual(final_part, FINALS[f])
+            for bad in ("terrace", "toward the camera", "over the camera"):
+                self.assertNotIn(bad, final_part, key)
+                self.assertNotIn(bad, mid_part, key)
             if m == "H1":
                 for word in VEHICLE_WORDS:
                     self.assertNotIn(word, mid_part, key)
             else:
                 self.assertIn(f" {v}", mid_part, key)
                 self.assertEqual(sum(f" {x}" in mid_part for x in HL["vehicles"]), 1, key)
-            self.assertIn(f"slight hand shake, {FOLLOW if follow else FIXED}; one continuous shot", p)
+            self.assertIn(f"slight hand shake, {FIXED}; one continuous shot", p)   # takip parametresi etkisiz
             pos = [p.find(x) for x in ("0-4s: ", " people run along the lakeshore below.", " 4-9s: ", " 9-15s: ",
                                        " Handheld footage")]
             self.assertNotIn(-1, pos)
@@ -187,8 +205,10 @@ class TestTexts(_Quiet):
     def test_water_subject_is_always_the_bucket(self):
         """Eski üretimde "the helicopter's water" suyu gövdeden döktü: suyun öznesi her zaman kova."""
         for f, text in FINALS.items():
-            self.assertTrue(text.startswith("Right below the terrace, the bucket "), f)
-        self.assertIn("water dripping from the bucket", MIDS["H1"])
+            self.assertIn("bucket", text, f)
+            for bad in ("terrace", "toward the camera", "camera"):
+                self.assertNotIn(bad, text, f)
+        self.assertIn("never from the body of the helicopter", TAIL)
         for text in list(MIDS.values()) + list(FINALS.values()) + [OPENING, TAIL]:
             self.assertNotIn("helicopter's", text)
             self.assertNotIn("helicopter drops", text)
@@ -199,7 +219,8 @@ class TestTexts(_Quiet):
                  "Three people run along the lakeshore below.", "Four people run along the lakeshore below.",
                  MIDS["H1"], MIDS["H2"].split("{vehicle}")[1], MIDS["H3"].split("{vehicle}")[1],
                  "a burning pine crashes onto a fleeing", "the wall of fire swallows a parked",
-                 *FINALS.values(), FOLLOW, "never from the helicopter itself",
+                 *FINALS.values(), "never from the body of the helicopter",
+                 "bucket hanging on a long steel cable far below it", "Water falls only out of the bottom of the hanging",
                  "Handheld footage shot from a high terrace of a lakeside house", *[p for _, p in PLACES.values()]]
         # not: "a corner of the terrace railing in the foreground" başka bir modun stil ekinde de var (ortak ifade)
         pools = json.dumps({e: {s: {k: v["text"] for k, v in b[s].items()} for s in ("slice_2", "slice_3")}
@@ -301,11 +322,15 @@ class TestHeliMode(_Quiet):
             axes = json.loads(d["axes_json"])["axes"]
             self.assertEqual((axes["mod"], axes["cografya"], axes["arac"]), ("heli_yaklasma", hb["geo"], hb["vehicle"]))
 
-    def test_camera_follow_and_fixed(self):
+    def test_camera_always_fixed(self):
+        """14 Kas: kamera her zaman sabit; bayrak True olsa bile takip cümlesi çıkmaz."""
         for seed in range(1, 6):
-            p = build(seed)["scenes"][0]["prompt"]
-            self.assertIn(f"slight hand shake, {FOLLOW}; one continuous shot", p)
-        with patch.object(hp, "HELI_YAKLASMA_KAMERA_TAKIP", False):
+            d = build(seed)
+            p = d["scenes"][0]["prompt"]
+            self.assertIn(f"slight hand shake, {FIXED}; one continuous shot", p)
+            self.assertNotIn(FOLLOW, p)
+            self.assertIs(d["structure"]["heli_yaklasma"]["follow"], False)
+        with patch.object(hp, "HELI_YAKLASMA_KAMERA_TAKIP", True):
             for seed in range(1, 11):
                 d = build(seed)
                 self._check(d)
@@ -324,8 +349,20 @@ class TestHeliMode(_Quiet):
         self.assertEqual(cp.submit_issues(st, info), [])
         self.assertTrue(cp.submit_issues(st, {**info, "prompt": sc["prompt"].replace(
             "No readable signs", f"{sk.FULL_MOTION} No readable signs")}))
-        self.assertTrue(cp.submit_issues(st, {**info, "prompt": sc["prompt"].replace("the bucket", "the helicopter's "
-                                                                                     "bucket", 1)}))
+        # 14 Kas: Kie öncesi son kontrol, kamera/teras ifadeleri yalnız izinli yerlerde
+        for old_s, new_s in ((" 9-15s: The helicopter", " 9-15s: Right below the terrace, the helicopter"),
+                             (" 9-15s: The helicopter", " 9-15s: Moving toward the camera, the helicopter"),
+                             (" 9-15s: The helicopter", " 9-15s: Flying over the camera, the helicopter"),
+                             ("No readable signs", "The camera turns slightly to follow the helicopter. No readable signs")):
+            bad_prompt = sc["prompt"].replace(old_s, new_s, 1)
+            self.assertNotEqual(bad_prompt, sc["prompt"])
+            self.assertTrue(cp.submit_issues(st, {**info, "prompt": bad_prompt}), new_s)
+            self.assertTrue(hp.heli_issues(st, {**info, "prompt": bad_prompt}), new_s)
+        self.assertTrue(hp.heli_camera_issues(sc["prompt"].replace(" 9-15s: The helicopter",
+                                                                   " 9-15s: Right below the terrace, the helicopter", 1),
+                                              st["heli_yaklasma"]["geo"]))
+        self.assertTrue(cp.submit_issues(st, {**info, "prompt": sc["prompt"].replace("the big orange bucket",
+                                                                                     "the helicopter's bucket", 1)}))
         for bad in ({"geo": "R1"}, {"geo": "L7"}, {"mid": "M1"}, {"final": "N1"}, {"people": 6}, {"mid": "H4"},
                     {"final": "J4"}, {"mid": "H2", "vehicle": None}):
             self.assertTrue(cp.submit_issues({**st, "heli_yaklasma": {**st["heli_yaklasma"], **bad}}, info), bad)
@@ -341,7 +378,7 @@ class TestHeliMode(_Quiet):
         self.assertEqual(lines[2], f"Araç: {hb['vehicle']}" + (" (bu ortada araç yok)" if hb["mid"] == "H1" else ""))
         self.assertEqual(lines[3], f"Orta (4-9s): {hb['mid']} «{hp.heli_mid(hb['mid'], hb['vehicle'])}»")
         self.assertEqual(lines[4], f"Final (9-15s): {hb['final']} «{FINALS[hb['final']]}»")
-        self.assertEqual(lines[5], "Kamera: takip (helikopteri izlemek için hafifçe döner)")
+        self.assertEqual(lines[5], "Kamera: sabit")
         self.assertEqual(lines[6], f"Kelime: {len(sc['prompt'].split())} (en fazla 230) · karakter: "
                                    f"{len(sc['prompt'])} (en fazla 1400)")
         self.assertEqual(len(lines), 7)
@@ -353,9 +390,10 @@ class TestHeliMode(_Quiet):
             self.assertIn(part, sc["prompt"])
             self.assertIn(part, sel)
             self.assertIn(part, story)
-        self.assertIn(FOLLOW, sel)
+        self.assertIn(FIXED, sel)
+        self.assertNotIn(FOLLOW, shown)
         self.assertIn("Mod: ⭐ Hit kalıbı · Yaklaşma (helikopter)", sel)
-        self.assertIn("kamera modu=takip", st["axes_line"])
+        self.assertIn("kamera modu=sabit", st["axes_line"])
         self.assertIn(f"orta={hb['mid']}", st["axes_line"])
         self.assertIn(f"final={hb['final']}", st["axes_line"])
         self.assertIn(f"coğrafya={hb['geo']} {PLACES[hb['geo']][0]}", st["axes_line"])
@@ -385,8 +423,8 @@ class TestHeliMode(_Quiet):
             self.assertNotIn("heli_yaklasma", d["structure"])
             self.assertNotIn("mode_label", d["trace"])
             p = d["scenes"][0]["prompt"]
-            for x in ("filling the big bucket on its steel cable", "never from the helicopter itself",
-                      "Right below the terrace", "run along the lakeshore below", FOLLOW):
+            for x in ("bucket hanging on a long steel cable far below it", "never from the body of the helicopter",
+                      "never flying toward or over the camera", "run along the lakeshore below", FOLLOW):
                 self.assertNotIn(x, p)
 
 
@@ -438,7 +476,7 @@ class TestHeliPipelineAndBot(_Quiet):
         asyncio.run(bot.on_callback(upd, ctx))
         text = upd.callback_query.edit_message_text.await_args.args[0]
         self.assertIn("Mod: ⭐ Hit kalıbı · Yaklaşma (helikopter)", text)
-        self.assertIn("Kamera: takip (helikopteri izlemek için hafifçe döner)", text)
+        self.assertIn("Kamera: sabit", text)
         upd = _update(data=f"uret:hyok:{di}:{ei}")
         runner = AsyncMock(return_value={"success": False, "reason": "cancelled"})
         with patch.object(bot.pipeline, "run_pipeline", runner), patch.object(bot, "_production_lock", asyncio.Lock()):
