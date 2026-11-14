@@ -88,7 +88,9 @@ TAIL = ("Handheld footage filmed through an open upper-floor window across from 
 
 def tail(g: str) -> str:
     return TAIL.format(scene=SCENES[g])
-O2_WARNING = "⚠️ Araç savurma ortası (O2): videoda aracın tek parça kalıp kalmadığını kontrol et."
+O2_WARNING = "⚠️ Araç savurma ortası (O2): videoda aracın tek parça kalıp kalmadığını kontrol et."   # 15 Kas (2) öncesi
+# 15 Kas (2): yeni O1 de aracı havaya kaldırıyor; uyarı O1 ve O2'de (sadece Onay satırı, prompt metni aynı)
+WARNING = "⚠️ Araç ortası: videoda aracın tek parça kalıp kalmadığını kontrol et."
 VEHICLE_WORDS = ("pickup", "truck", "van", "SUV", "car", "vehicle", "{")
 TURKEY = ("Turkish", "Turkey", "Türk", "Istanbul", "İstanbul", "Izmir", "Bodrum")
 
@@ -158,7 +160,9 @@ class TestTexts(_Quiet):
                           tail(g))   # sahne cümlesi kamera cümlesinin hemen arkasında
             self.assertNotIn("colorful", PLACES[g][1] + SCENES[g])
         self.assertEqual(hp.HORTUM_PASIF, PASIF)
-        self.assertEqual(hp.HORTUM_O2_WARNING, O2_WARNING)
+        self.assertEqual(hp.HORTUM_O2_WARNING, O2_WARNING)   # pasif, kullanılmıyor
+        self.assertEqual(hp.HORTUM_VEHICLE_WARNING, WARNING)
+        self.assertEqual(hp.HORTUM_WARNING_MIDS, ("O1", "O2"))
         self.assertEqual(hp.HORTUM_GEO_SEED, ("G3",))
         self.assertEqual((hp.HORTUM_GEO_BLOCK, hp.HORTUM_VEHICLE_BLOCK, hp.HORTUM_MID_BLOCK, hp.HORTUM_FINAL_BLOCK),
                          (3, 2, 1, 1))
@@ -448,12 +452,11 @@ class TestHortumMode(_Quiet):
         self.assertEqual(lines[6], "Kamera: sabit (hafifçe eğilir, açık üst kat penceresi)")
         self.assertEqual(lines[7], f"Kelime: {len(sc['prompt'].split())} (en fazla 230) · karakter: "
                                    f"{len(sc['prompt'])} (en fazla 1400)")
-        if tb["mid"] == "O2":
-            self.assertEqual(lines[8], O2_WARNING)
-            self.assertEqual(len(lines), 9)
-        else:
-            self.assertNotIn(O2_WARNING, tb["lines"])
-            self.assertEqual(len(lines), 8)
+        self.assertIn(tb["mid"], ("O1", "O2"))
+        self.assertEqual(lines[8], WARNING)   # 15 Kas (2): O1 ve O2'de
+        self.assertEqual(len(lines), 9)
+        self.assertNotIn(O2_WARNING, tb["lines"])
+        self.assertNotIn(WARNING, sc["prompt"])
         shown = sections_to_text(format_generation(d["trace"])) + "\n" + st["axes_line"]
         sel, _, rest = shown.partition("🔍 2.")
         story = rest.split("🔍 3. Hikâye\n", 1)[1]
@@ -481,6 +484,21 @@ class TestHortumMode(_Quiet):
             if seen == {"O1", "O2"}:
                 break
         self.assertEqual(seen, {"O1", "O2"})
+
+    def test_warning_o1_o2_prompt_unchanged(self):
+        """15 Kas (2): uyarı O1 ve O2'de; 40 tohumun prompt metni uyarı değişikliğinden önceki haliyle birebir."""
+        import hashlib
+        prompts, seen = [], set()
+        for seed in range(1, 41):
+            d = build(seed)
+            tb = d["structure"]["hortum_yaklasma"]
+            prompts.append(d["scenes"][0]["prompt"])
+            self.assertTrue(tb["lines"].endswith("\n" + WARNING), (seed, tb["mid"]))
+            self.assertNotIn(WARNING, d["scenes"][0]["prompt"])
+            seen.add(tb["mid"])
+        self.assertEqual(seen, {"O1", "O2"})
+        self.assertEqual(hashlib.sha256("\n".join(prompts).encode()).hexdigest(),
+                         "dd4c4d78a0614c5b668d6a7214bcb6fd3ad3d76b38d3c2c55efdfec04c5e95ec")
 
     def test_40_seeds_never_o3_and_vehicle_always(self):
         for seed in range(1, 41):

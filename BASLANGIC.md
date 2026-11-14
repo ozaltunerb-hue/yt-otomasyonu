@@ -67,6 +67,21 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   `cadde_yaklasma`, bot cy/cyok (sahil caddesi onay ekranında Üret/İptal altında). Normal sahil caddesi yolu değişmez.
   Test `tests/test_cadde_yaklasma.py`; 216 kombinasyon, en uzun 189 kelime (G2 + white van + O1 + F2) / 1141 kr (G3 +
   pickup truck + O2 + F2). 40 tohum: 19 olay + 10 eski mod diff 0, sadece hortum modu değişti.
+  - **15 Kas (2) alçak ölçek güncellemesi** (commit "cadde Yaklasma: alcak olcek + park halindeki arac + hortum O1
+    uyarisi"). Sebep: 15 Kas ilk cadde Yaklaşma üretimi (İspanya, O1 + F2) 6/10 aldı. "white apartment blocks",
+    "high-rise hotels", "high balcony" ve "wide avenue" ifadeleri kamerayı 10. kata çıkardı; cadde dev bir bulvar oldu,
+    insanlar ve araç küçücük kaldı. Savrulan minibüs yere indikten sonra yoluna devam etti (sürülen araç olarak çizildi).
+    Hedef hit'in ölçeği: alçak binalar, iki şeritli cadde, 3. kat balkon, park halindeki araç savrulup hurda kalır.
+    Değişiklik: G3 "low-rise surf shops and cafes", G5 "low whitewashed houses", G6 "an Indian seaside town of low pastel
+    buildings" (G1/G2/G4, LRU, G1 tohumu aynı). O1/O2 "a parked {vehicle}", O1 tavanının üstüne çakılıp hurda kalır, O2
+    yuvarlanıp yan yatmış ezik halde durur. F1/F2 "the building across the street". Stil eki "third-floor balcony" +
+    "a two-lane palm-lined avenue with cars parked on both sides, low-rise buildings, the sea at its end". Eski metinler
+    `CADDE_PASIF` (G3_V1, G5_V1, G6_V1, O1_V1, O2_V1, F1_V1, F2_V1, STIL_V1, KAMERA_SATIRI_V1). Kie öncesi ek zorunlu:
+    "third-floor balcony", "a parked"; ek yasak: "high-rise", "apartment block", "wide palm-lined avenue". Onay kamera
+    satırı `CADDE_CAMERA_LINE` "cam korkuluklu 3. kat balkon" (bot ön ekranı da). 216 kombinasyon, en uzun 205 kelime
+    (G3 + white van + O1 + F2, eşitleri var) / 1239 kr (G3 + pickup truck + O2 + F2). Açılış, insan, araç aynı.
+    Hortum Yaklaşma: Onay uyarısı artık O1 ve O2'de (`HORTUM_VEHICLE_WARNING` = cadde uyarısıyla aynı metin; eski
+    `HORTUM_O2_WARNING` pasif). Hortum prompt metni değişmedi (40 tohum prompt hash'i testte kilitli).
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir

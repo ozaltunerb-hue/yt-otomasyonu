@@ -3,6 +3,9 @@
 # balkon). YAKLASMA_HORTUM ile aynı düzen: GPT yok, hikâye koddan birebir, zaman etiketleri var. Coğrafya G1-G6 (son 3,
 # G1 tohum: ilk 3 üretimde G1 yok), araç son 2, orta O1-O2 / final F1-F3 son 1. Normal "sahil caddesi" yolu ve bütün
 # diğer olay/modlar değişmez. Ağ yok.
+# 15 Kas (2): ilk üretim (İspanya, O1+F2) 6/10 aldı; kamera 10. kata çıktı, savrulan minibüs yoluna devam etti. Alçak
+# ölçek (G3/G5/G6), park halindeki araç hurda kalır (O1/O2), karşıdaki bina (F1/F2), 3. kat balkon + iki şeritli cadde
+# (stil eki). Eski metinler CADDE_PASIF (_V1); aktif prompt'ta hiç çıkmaz.
 import asyncio
 import json
 import logging
@@ -30,34 +33,63 @@ CT = hp.YAKLASMA_CADDE
 DOMAIN = "coastal_tornado_landfall"
 PLACES = {"G1": ("ABD", "a Californian beach town"),
           "G2": ("Brezilya", "a Brazilian beach city with wavy mosaic sidewalks"),
-          "G3": ("Avustralya", "an Australian beach city lined with high-rise hotels"),
+          "G3": ("Avustralya", "an Australian beach town of low-rise surf shops and cafes"),
           "G4": ("Meksika", "a Mexican beach town of colorful low buildings"),
-          "G5": ("İspanya", "a Spanish seaside town of white apartment blocks"),
-          "G6": ("Hindistan", "an Indian seaside city of pastel apartment blocks")}
+          "G5": ("İspanya", "a Spanish seaside town of low whitewashed houses"),
+          "G6": ("Hindistan", "an Indian seaside town of low pastel buildings")}
 OPENING = ("A violent tornado sweeps down a palm-lined coastal avenue of {place}, hurling signs, branches and debris "
            "along the road, and heads straight toward the camera.")
 PEOPLE = {3: "Three people sprint along the sidewalk toward the camera, fleeing the tornado.",
           5: "Five people sprint along the sidewalk toward the camera, fleeing the tornado."}
 VEHICLES = ("white van", "pickup truck", "SUV")
 MIDS = {
-    "O1": "The tornado sweeps the {vehicle} up into the air, spins it, and crashes it down across the avenue.",
-    "O2": "The tornado flips the {vehicle} and sends it rolling over and over down the avenue toward the camera.",
+    "O1": "The tornado sweeps a parked {vehicle} up into the air, spins it, and slams it down on its roof across the "
+          "avenue, where it stays wrecked.",
+    "O2": "The tornado flips a parked {vehicle} and sends it rolling over and over down the avenue toward the camera "
+          "until it stops, crushed, on its side.",
 }
 FINALS = {
-    "F1": "Right across from the balcony, the tornado tears the roof off an apartment building, the pieces flying past "
-          "the camera.",
-    "F2": "Right across from the balcony, the tornado rips the balconies and front wall off an apartment building, "
-          "debris flying past the camera.",
+    "F1": "Right across from the balcony, the tornado tears the roof off the building across the street, the pieces "
+          "flying past the camera.",
+    "F2": "Right across from the balcony, the tornado rips the balconies and front wall off the building across the "
+          "street, debris flying past the camera.",
     "F3": "Right below the balcony, the tornado rips the palm trees out by the roots and hurls them past the camera.",
 }
-TAIL = ("Handheld footage shot from a high balcony with a glass railing across the avenue, high vantage; slight hand "
-        "shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the glass "
-        "railing in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. "
-        "Setting: a wide palm-lined avenue with parked cars and the sea at its end. All people are ordinary civilians "
-        "in everyday clothes, no hazmat suits, natural light under grey storm clouds, never CGI. Everything moves in "
-        "real time, never in slow motion, people run at full speed.")
+TAIL = ("Handheld footage shot from a third-floor balcony with a glass railing across the avenue, high vantage; slight "
+        "hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in frame, the "
+        "glass railing in the foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. "
+        "Setting: a two-lane palm-lined avenue with cars parked on both sides, low-rise buildings, the sea at its end. "
+        "All people are ordinary civilians in everyday clothes, no hazmat suits, natural light under grey storm "
+        "clouds, never CGI. Everything moves in real time, never in slow motion, people run at full speed.")
 WARNING = "⚠️ Araç ortası: videoda aracın tek parça kalıp kalmadığını kontrol et."
-FORBIDDEN = ("pans to follow", "eye level", "Full action", "Until the last frame")
+CAMERA_LINE = "Kamera: sabit (hafifçe eğilir, cam korkuluklu 3. kat balkon)"
+REQUIRED = ("high vantage", "glass railing", "third-floor balcony", "a parked")
+FORBIDDEN = ("pans to follow", "eye level", "Full action", "Until the last frame", "high-rise", "apartment block",
+             "wide palm-lined avenue")
+PASIF = {
+    "G3_V1": "an Australian beach city lined with high-rise hotels",
+    "G5_V1": "a Spanish seaside town of white apartment blocks",
+    "G6_V1": "an Indian seaside city of pastel apartment blocks",
+    "O1_V1": "The tornado sweeps the {vehicle} up into the air, spins it, and crashes it down across the avenue.",
+    "O2_V1": "The tornado flips the {vehicle} and sends it rolling over and over down the avenue toward the camera.",
+    "F1_V1": "Right across from the balcony, the tornado tears the roof off an apartment building, the pieces flying "
+             "past the camera.",
+    "F2_V1": "Right across from the balcony, the tornado rips the balconies and front wall off an apartment building, "
+             "debris flying past the camera.",
+    "STIL_V1": ("Handheld footage shot from a high balcony with a glass railing across the avenue, high vantage; slight "
+                "hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in "
+                "frame, the glass railing in the foreground; one continuous shot, no zoom, no cuts, no person or face "
+                "close to the camera. Setting: a wide palm-lined avenue with parked cars and the sea at its end. All "
+                "people are ordinary civilians in everyday clothes, no hazmat suits, natural light under grey storm "
+                "clouds, never CGI. Everything moves in real time, never in slow motion, people run at full speed."),
+    "KAMERA_SATIRI_V1": "Kamera: sabit (hafifçe eğilir, cam korkuluklu yüksek balkon)",
+}
+# aktif prompt'ta hiç çıkmaması gereken eski parçalar (sabit cümleler + eski ortaların araçtan sonraki kısmı)
+OLD_MARKS = (PASIF["G3_V1"], PASIF["G5_V1"], PASIF["G6_V1"], PASIF["F1_V1"], PASIF["F2_V1"], PASIF["STIL_V1"],
+             " up into the air, spins it, and crashes it down across the avenue.",
+             " down the avenue toward the camera. ", "an apartment building", "a high balcony",
+             "Setting: a wide palm-lined avenue with parked cars and the sea at its end.", "white apartment blocks",
+             "high-rise hotels", "wide avenue", "The tornado sweeps the ", "The tornado flips the ")
 
 
 class _Quiet(unittest.TestCase):
@@ -122,14 +154,33 @@ class TestTexts(_Quiet):
         self.assertEqual((hp.CADDE_GEO_BLOCK, hp.CADDE_VEHICLE_BLOCK, hp.CADDE_MID_BLOCK, hp.CADDE_FINAL_BLOCK),
                          (3, 2, 1, 1))
         self.assertEqual((hp.CADDE_MAX_WORDS, hp.CADDE_MAX_CHARS), (230, 1400))
-        self.assertEqual(hp.CADDE_REQUIRED, ("high vantage", "glass railing"))
+        self.assertEqual(hp.CADDE_REQUIRED, REQUIRED)
         self.assertEqual(hp.CADDE_FORBIDDEN, FORBIDDEN)
+        self.assertEqual(hp.CADDE_CAMERA_LINE, CAMERA_LINE)
+        self.assertEqual(CT["opening"], OPENING)   # açılış, insan, araçlar aynen (15 Kas (2))
+        self.assertEqual(CT["camera"], "the camera stays fixed, tilting only slightly")
+
+    def test_passive_not_active(self):
+        """15 Kas (2): değişen her eski metin CADDE_PASIF'te _V1; aktif kalıpta ve 216 prompt'un hiçbirinde yok."""
+        self.assertEqual(hp.CADDE_PASIF, PASIF)
+        active = json.dumps(CT, ensure_ascii=False)
+        for key, old in PASIF.items():
+            if key != "KAMERA_SATIRI_V1":
+                self.assertNotIn(old, active, key)
+        for _, p in all_combos():
+            for m in OLD_MARKS:
+                self.assertNotIn(m, p, m)
+        for seed in range(1, 41):
+            d = build(seed)
+            for m in OLD_MARKS:
+                self.assertNotIn(m, d["scenes"][0]["prompt"], (seed, m))
+            self.assertNotIn(PASIF["KAMERA_SATIRI_V1"], d["structure"]["cadde_yaklasma"]["lines"])
 
     def test_vehicle_fill(self):
         for v in VEHICLES:
             for m in MIDS:
                 self.assertEqual(hp.cadde_mid(m, v), MIDS[m].format(vehicle=v))
-                self.assertIn(f"the {v} ", hp.cadde_mid(m, v))
+                self.assertIn(f"a parked {v} ", hp.cadde_mid(m, v))
         for m in MIDS:
             with self.assertRaises(es.StructureError):
                 hp.cadde_mid(m, None)
@@ -161,17 +212,18 @@ class TestTexts(_Quiet):
                 self.assertNotIn(bad, p)
         self.assertEqual(n, 6 * 2 * 3 * 2 * 3)
         self.assertEqual(over, [])
-        self.assertEqual(words[0], 189)
-        self.assertEqual(hp.cadde_prompt("G2", 3, "O1", "white van", "F2").split().__len__(), 189)
-        self.assertEqual(chars, (1141, ("G3", 3, "pickup truck", "O2", "F2")))
+        self.assertEqual(words[0], 205)
+        self.assertEqual(len(hp.cadde_prompt("G3", 3, "O1", "white van", "F2").split()), 205)   # talimattaki hesap
+        self.assertEqual(chars, (1239, ("G3", 3, "pickup truck", "O2", "F2")))
 
     def test_sentences_only_in_this_mode(self):
         """Bu modun cümleleri başka hiçbir olayda / modda çıkmaz."""
         marks = ["sweeps down a palm-lined coastal avenue of", "and heads straight toward the camera.",
                  *PEOPLE.values(), *[t.split("{vehicle}")[1] for t in MIDS.values()], *FINALS.values(),
-                 "Handheld footage shot from a high balcony with a glass railing across the avenue",
+                 "Handheld footage shot from a third-floor balcony with a glass railing across the avenue",
                  "the glass railing in the foreground",
-                 "Setting: a wide palm-lined avenue with parked cars and the sea at its end.",
+                 "Setting: a two-lane palm-lined avenue with cars parked on both sides, low-rise buildings, the sea at "
+                 "its end.",
                  "natural light under grey storm clouds", *[p for _, p in PLACES.values()]]
         pools = json.dumps({e: {s: {k: v["text"] for k, v in b[s].items()} for s in ("slice_2", "slice_3")}
                             for e, b in es.EVENT_BEATS.items()}, ensure_ascii=False)
@@ -207,7 +259,12 @@ class TestCaddeMode(_Quiet):
         self.assertEqual(prompt, hp.cadde_prompt(tb["geo"], tb["people"], tb["mid"], tb["vehicle"], tb["final"]))
         self.assertTrue(prompt.endswith(" " + TAIL))
         self.assertEqual(sc["style_suffix"], TAIL)
-        self.assertIn(f"the {tb['vehicle']} ", prompt)
+        self.assertIn(f"a parked {tb['vehicle']} ", prompt)
+        self.assertIn(PLACES[tb["geo"]][1], prompt)
+        for need in REQUIRED:
+            self.assertIn(need, prompt)
+        for bad in FORBIDDEN:
+            self.assertNotIn(bad, prompt)
         self.assertLessEqual(len(prompt.split()), 230)
         self.assertLessEqual(len(prompt), 1400)
         self.assertIn(f"#{tb['mid']}+{tb['final']}|", d["combo_key"])
@@ -308,6 +365,10 @@ class TestCaddeMode(_Quiet):
                              ("people run at full speed.", "people run at full speed. Full action from the very first "
                                                            "frame to the last."),
                              ("people run at full speed.", "people run at full speed. Until the last frame, it rages."),
+                             ("third-floor balcony", "tenth-floor balcony"), ("a parked", "a moving"),
+                             ("low-rise buildings", "high-rise buildings"),
+                             ("never CGI.", "never CGI. A white apartment block."),
+                             ("a two-lane palm-lined avenue", "a wide palm-lined avenue"),
                              ("4-9s: ", "")):
             bad = p0.replace(old_s, new_s)
             self.assertNotEqual(bad, p0, old_s)
@@ -315,6 +376,11 @@ class TestCaddeMode(_Quiet):
             self.assertTrue(cp.submit_issues(st, {**info, "prompt": bad}), new_s)
         self.assertIn('"high vantage" eksik', hp.cadde_camera_issues(p0.replace("high vantage", "vantage"), tb["geo"]))
         self.assertIn('"glass railing" eksik', hp.cadde_camera_issues(p0.replace("glass railing", "rail"), tb["geo"]))
+        self.assertIn('"third-floor balcony" eksik',
+                      hp.cadde_camera_issues(p0.replace("third-floor balcony", "high balcony"), tb["geo"]))
+        self.assertIn('"a parked" eksik', hp.cadde_camera_issues(p0.replace("a parked", "the"), tb["geo"]))
+        for old in (PASIF["G3_V1"], PASIF["G5_V1"], PASIF["G6_V1"]):   # eski yer metinleri yasak ifadeye takılır
+            self.assertTrue(hp.cadde_camera_issues(p0.replace(place, old), tb["geo"]), old)
         self.assertIn("G1-G6 yer metni yok", hp.cadde_camera_issues(p0.replace(place, "a town"), tb["geo"]))
         for bad in FORBIDDEN:
             self.assertIn(f"bu modda olmayan ifade var: {bad}", hp.cadde_camera_issues(p0 + f" {bad}.", tb["geo"]))
@@ -341,7 +407,7 @@ class TestCaddeMode(_Quiet):
             f"Orta (4-9s): {tb['mid']} «{MIDS[tb['mid']].format(vehicle=tb['vehicle'])}»",
             f"Final (9-15s): {tb['final']} «{FINALS[tb['final']]}»",
             f"Kişi: {tb['people']}",
-            "Kamera: sabit (hafifçe eğilir, cam korkuluklu yüksek balkon)",
+            CAMERA_LINE,
             f"Kelime: {len(sc['prompt'].split())} (en fazla 230) · karakter: {len(sc['prompt'])} (en fazla 1400)",
             WARNING])   # O1 ve O2'de uyarı
         shown = sections_to_text(format_generation(d["trace"])) + "\n" + st["axes_line"]
@@ -384,7 +450,7 @@ class TestCaddeMode(_Quiet):
             self.assertNotIn("mode_label", d["trace"])
             p = d["scenes"][0]["prompt"]
             for x in ("glass railing in the foreground", "coastal avenue of", *PEOPLE.values(),
-                      *[pl for _, pl in PLACES.values()]):
+                      *[pl for _, pl in PLACES.values()], "third-floor balcony", TAIL):
                 self.assertNotIn(x, p)
             self.assertNotRegex(d["combo_key"], r"#O\d\+F\d\|")
         for seed in range(1, 6):   # baseline ile birebir (20 tohumluk prompt_snapshot)
@@ -441,7 +507,8 @@ class TestCaddePipelineAndBot(_Quiet):
         asyncio.run(bot.on_callback(upd, ctx))
         text = upd.callback_query.edit_message_text.await_args.args[0]
         self.assertIn("Mod: ⭐ Hit kalıbı · Yaklaşma (cadde)", text)
-        self.assertIn("Kamera: sabit (hafifçe eğilir, cam korkuluklu yüksek balkon)", text)
+        self.assertIn(CAMERA_LINE, text)
+        self.assertNotIn("yüksek balkon", text)
         kb2 = upd.callback_query.edit_message_text.await_args.kwargs["reply_markup"]
         self.assertEqual([b.text for r in kb2.inline_keyboard for b in r], ["✅ Üret", "❌ İptal"])
         upd = _update(data=f"uret:cyok:{di}:{ei}")

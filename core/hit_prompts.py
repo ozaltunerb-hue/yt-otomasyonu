@@ -1991,7 +1991,10 @@ HORTUM_PASIF = {
     "F2_V1": "Right across from the window, the tornado rips the whole front wall off a colorful house, furniture "
              "swirling up into the funnel.",
 }
-HORTUM_O2_WARNING = "⚠️ Araç savurma ortası (O2): videoda aracın tek parça kalıp kalmadığını kontrol et."
+HORTUM_O2_WARNING = "⚠️ Araç savurma ortası (O2): videoda aracın tek parça kalıp kalmadığını kontrol et."  # pasif (15 Kas (2) öncesi)
+# 15 Kas (2): yeni O1 de aracı havaya kaldırıyor; uyarı O1 ve O2'de (prompt metni değişmedi)
+HORTUM_VEHICLE_WARNING = "⚠️ Araç ortası: videoda aracın tek parça kalıp kalmadığını kontrol et."
+HORTUM_WARNING_MIDS = ("O1", "O2")
 HORTUM_REQUIRED = ("high vantage", "open upper-floor window")
 HORTUM_FORBIDDEN = ("colorful houses along a stone quay", "Full action", "Until the last frame")
 _HT = YAKLASMA_HORTUM
@@ -2104,8 +2107,8 @@ def hortum_lines(tb: dict) -> str:
         "Kamera: sabit (hafifçe eğilir, açık üst kat penceresi)",
         f"Kelime: {len(text.split())} (en fazla {HORTUM_MAX_WORDS}) · karakter: {len(text)} (en fazla {HORTUM_MAX_CHARS})",
     ]
-    if tb["mid"] == "O2":
-        lines.append(HORTUM_O2_WARNING)
+    if tb["mid"] in HORTUM_WARNING_MIDS:
+        lines.append(HORTUM_VEHICLE_WARNING)
     return "\n".join(lines)
 
 
@@ -2273,40 +2276,70 @@ YAKLASMA_CADDE = {
     "geos": {
         "G1": {"name": "ABD", "place": "a Californian beach town"},
         "G2": {"name": "Brezilya", "place": "a Brazilian beach city with wavy mosaic sidewalks"},
-        "G3": {"name": "Avustralya", "place": "an Australian beach city lined with high-rise hotels"},
+        # 15 Kas (2): alçak ölçek (eski G3/G5/G6 yer metinleri CADDE_PASIF G3_V1, G5_V1, G6_V1)
+        "G3": {"name": "Avustralya", "place": "an Australian beach town of low-rise surf shops and cafes"},
         "G4": {"name": "Meksika", "place": "a Mexican beach town of colorful low buildings"},
-        "G5": {"name": "İspanya", "place": "a Spanish seaside town of white apartment blocks"},
-        "G6": {"name": "Hindistan", "place": "an Indian seaside city of pastel apartment blocks"},
+        "G5": {"name": "İspanya", "place": "a Spanish seaside town of low whitewashed houses"},
+        "G6": {"name": "Hindistan", "place": "an Indian seaside town of low pastel buildings"},
     },
     "opening": "A violent tornado sweeps down a palm-lined coastal avenue of {place}, hurling signs, branches and "
                "debris along the road, and heads straight toward the camera.",
     "people": {3: "Three people sprint along the sidewalk toward the camera, fleeing the tornado.",
                5: "Five people sprint along the sidewalk toward the camera, fleeing the tornado."},
     "vehicles": ("white van", "pickup truck", "SUV"),
+    # 15 Kas (2): araç park halinde, savrulup hurda halinde kalır (eski O1/O2 CADDE_PASIF O1_V1, O2_V1)
     "mids": {
-        "O1": "The tornado sweeps the {vehicle} up into the air, spins it, and crashes it down across the avenue.",
-        "O2": "The tornado flips the {vehicle} and sends it rolling over and over down the avenue toward the camera.",
+        "O1": "The tornado sweeps a parked {vehicle} up into the air, spins it, and slams it down on its roof across "
+              "the avenue, where it stays wrecked.",
+        "O2": "The tornado flips a parked {vehicle} and sends it rolling over and over down the avenue toward the "
+              "camera until it stops, crushed, on its side.",
     },
+    # 15 Kas (2): "an apartment building" yerine karşıdaki bina (eski F1/F2 CADDE_PASIF F1_V1, F2_V1)
     "finals": {
-        "F1": "Right across from the balcony, the tornado tears the roof off an apartment building, the pieces flying "
-              "past the camera.",
-        "F2": "Right across from the balcony, the tornado rips the balconies and front wall off an apartment building, "
-              "debris flying past the camera.",
+        "F1": "Right across from the balcony, the tornado tears the roof off the building across the street, the "
+              "pieces flying past the camera.",
+        "F2": "Right across from the balcony, the tornado rips the balconies and front wall off the building across "
+              "the street, debris flying past the camera.",
         "F3": "Right below the balcony, the tornado rips the palm trees out by the roots and hurls them past the "
               "camera.",
     },
     "vehicle_mids": ("O1", "O2"),
     "camera": "the camera stays fixed, tilting only slightly",
-    "tail": ("Handheld footage shot from a high balcony with a glass railing across the avenue, high vantage; slight "
-             "hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always in "
-             "frame, the glass railing in the foreground; one continuous shot, no zoom, no cuts, no person or face "
-             "close to the camera. Setting: a wide palm-lined avenue with parked cars and the sea at its end. All "
-             "people are ordinary civilians in everyday clothes, no hazmat suits, natural light under grey storm "
-             "clouds, never CGI. Everything moves in real time, never in slow motion, people run at full speed."),
+    # 15 Kas (2): 3. kat balkon + iki şeritli cadde, alçak binalar (eski stil eki CADDE_PASIF STIL_V1)
+    "tail": ("Handheld footage shot from a third-floor balcony with a glass railing across the avenue, high vantage; "
+             "slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always "
+             "in frame, the glass railing in the foreground; one continuous shot, no zoom, no cuts, no person or face "
+             "close to the camera. Setting: a two-lane palm-lined avenue with cars parked on both sides, low-rise "
+             "buildings, the sea at its end. All people are ordinary civilians in everyday clothes, no hazmat suits, "
+             "natural light under grey storm clouds, never CGI. Everything moves in real time, never in slow motion, "
+             "people run at full speed."),
 }
+# 15 Kas (2), Bahadır: ilk cadde üretimi (İspanya, O1+F2) 6/10. "white apartment blocks", "high-rise hotels", "high
+# balcony", "wide avenue" kamerayı 10. kata çıkardı; savrulan minibüs yere inip yoluna devam etti. Eski metinler pasif.
+CADDE_PASIF = {
+    "G3_V1": "an Australian beach city lined with high-rise hotels",
+    "G5_V1": "a Spanish seaside town of white apartment blocks",
+    "G6_V1": "an Indian seaside city of pastel apartment blocks",
+    "O1_V1": "The tornado sweeps the {vehicle} up into the air, spins it, and crashes it down across the avenue.",
+    "O2_V1": "The tornado flips the {vehicle} and sends it rolling over and over down the avenue toward the camera.",
+    "F1_V1": "Right across from the balcony, the tornado tears the roof off an apartment building, the pieces flying "
+             "past the camera.",
+    "F2_V1": "Right across from the balcony, the tornado rips the balconies and front wall off an apartment building, "
+             "debris flying past the camera.",
+    "STIL_V1": ("Handheld footage shot from a high balcony with a glass railing across the avenue, high vantage; "
+                "slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado "
+                "always in frame, the glass railing in the foreground; one continuous shot, no zoom, no cuts, no "
+                "person or face close to the camera. Setting: a wide palm-lined avenue with parked cars and the sea "
+                "at its end. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light "
+                "under grey storm clouds, never CGI. Everything moves in real time, never in slow motion, people run "
+                "at full speed."),
+    "KAMERA_SATIRI_V1": "Kamera: sabit (hafifçe eğilir, cam korkuluklu yüksek balkon)",
+}
+CADDE_CAMERA_LINE = "Kamera: sabit (hafifçe eğilir, cam korkuluklu 3. kat balkon)"
 CADDE_VEHICLE_WARNING = "⚠️ Araç ortası: videoda aracın tek parça kalıp kalmadığını kontrol et."
-CADDE_REQUIRED = ("high vantage", "glass railing")
-CADDE_FORBIDDEN = ("pans to follow", "eye level", "Full action", "Until the last frame")
+CADDE_REQUIRED = ("high vantage", "glass railing", "third-floor balcony", "a parked")
+CADDE_FORBIDDEN = ("pans to follow", "eye level", "Full action", "Until the last frame", "high-rise",
+                   "apartment block", "wide palm-lined avenue")
 _CD = YAKLASMA_CADDE
 _CADDE_GEO_MEMORY: list[str] = []
 _CADDE_VEHICLE_MEMORY: list[str] = []
@@ -2409,7 +2442,7 @@ def cadde_lines(tb: dict) -> str:
         f"Orta (4-9s): {tb['mid']} «{cadde_mid(tb['mid'], tb['vehicle'])}»",
         f"Final (9-15s): {tb['final']} «{cadde_final(tb['final'])}»",
         f"Kişi: {tb['people']}",
-        "Kamera: sabit (hafifçe eğilir, cam korkuluklu yüksek balkon)",
+        CADDE_CAMERA_LINE,
         f"Kelime: {len(text.split())} (en fazla {CADDE_MAX_WORDS}) · karakter: {len(text)} (en fazla {CADDE_MAX_CHARS})",
     ]
     if tb["mid"] in _CD["vehicle_mids"]:
@@ -2474,18 +2507,18 @@ def cadde_apply(scene: dict, history: list[str] | None = None, rng=None, follow:
     cap_info = {**(st.get("caption_info") or {}), "opening": cadde_opening(geo), "people": people,
                 "beat_2": mid_text[:-1], "beat_3": final_text[:-1]}
     structure = {**st, "cadde_yaklasma": tb, "caption_info": cap_info,
-                 "environment": f"Coğrafya: {geo} {name} · kamera = {CADDE_MODE_LABEL} (high balcony with a glass "
-                                "railing across the avenue, high vantage, sabit)",
+                 "environment": f"Coğrafya: {geo} {name} · kamera = {CADDE_MODE_LABEL} (third-floor balcony with a "
+                                "glass railing across the avenue, high vantage, sabit)",
                  "story_source": f"Hikâye: kod (birebir) · {CADDE_MODE_LABEL}"}
     if st.get("axes_json"):
         structure["axes_json"] = _cadde_axes(st["axes_json"], new_tag, geo, vehicle if has_vehicle else None, people)
     plain = " ".join([cadde_opening(geo), cadde_people(people), mid_text, final_text])
     trace, axes_line = mode_display(
-        scene, structure, mode=CADDE_MODE_LABEL, camera=f"sabit ({cadde_camera_text(follow)}); high balcony with a "
-        "glass railing across the avenue, high vantage, glass railing in the foreground",
+        scene, structure, mode=CADDE_MODE_LABEL, camera=f"sabit ({cadde_camera_text(follow)}); third-floor balcony "
+        "with a glass railing across the avenue, high vantage, glass railing in the foreground",
         opening=cadde_opening(geo), mid=(mid, mid_text), final=(final, final_text), plain=plain,
         vehicle=vehicle if has_vehicle else f"{vehicle} (bu ortada araç yok)",
-        spot="High balcony with a glass railing across the avenue (Yaklaşma kalıbı)",
+        spot="Third-floor balcony with a glass railing across the avenue (Yaklaşma kalıbı)",
         weather="yok (stil ekinde natural light under grey storm clouds)",
         axes={"coğrafya": f"{geo} {name}", "araç": vehicle if has_vehicle else "yok",
               "kişi": people, "orta": mid, "final": final, "kamera modu": "sabit"},
@@ -2503,8 +2536,8 @@ def cadde_apply(scene: dict, history: list[str] | None = None, rng=None, follow:
 
 
 def cadde_camera_issues(text: str, geo: str | None = None) -> list[str]:
-    """Kie öncesi son kontrol: "high vantage", "glass railing" ve G1-G6'dan birinin place metni var; "pans to
-    follow", "eye level", "Full action" ve "Until the last frame" yok. İhlal = gönderilmez."""
+    """Kie öncesi son kontrol: CADDE_REQUIRED ("high vantage", "glass railing", "third-floor balcony", "a parked")
+    ve G1-G6'dan birinin place metni var; CADDE_FORBIDDEN'dan hiçbiri yok. İhlal = gönderilmez."""
     out = []
     for need in CADDE_REQUIRED:
         if need not in text:
