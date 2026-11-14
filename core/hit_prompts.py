@@ -1901,3 +1901,305 @@ def heli_issues(structure: dict, info: dict) -> list[str]:
     if len(text) > HELI_MAX_CHARS:
         out.append(f"prompt {len(text)} karakter (en fazla {HELI_MAX_CHARS})")
     return out
+
+
+# ── ⭐ Hit kalıbı · Yaklaşma (hortum) (14 Kas 2026, Bahadır) ──────────────────────────────────────────────────────────
+# Kaynak: kanal rekoru "It came off the sea and straight into the harbor town" (1 Kas paylaşımı, 10M+). Üretim 31 Eki
+# 09:52, coastal_tornado_landfall, C1+E1, pencere kadrajı, pickup truck. Hit prompt'unun kamera/kadraj/stil cümleleri
+# neredeyse birebir; açılış, O1 ve F1 hit'in kendi sahneleri. Diğer Yaklaşma modlarının yapısı: GPT yok, hikâye tamamen
+# koddan, zaman etiketleri VAR. "Hortum karaya vurur" normal yolu (KİLİTLİ) değişmez. Kayıt O*+F* (olay bazlı; normal
+# karaya vurur havuzu C*/E*). Coğrafya G1-G6 (son 3, Türkiye yok, G3 tohum: ilk üretimde G3 gelmez), araç bu modun
+# kendi havuzundan (son 2), kişi 3/5, orta/final LRU son 1, yasak çift yok. Araç savurma (O1/O2) bu modda serbest.
+HORTUM_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (hortum)"
+HORTUM_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
+HORTUM_EVENTS = (es.LANDFALL,)
+HORTUM_MAX_WORDS = 230
+HORTUM_MAX_CHARS = 1400
+HORTUM_GEO_BLOCK = 3
+HORTUM_GEO_SEED = ("G3",)          # ilk üretimde G3 gelmez (rekor videoya en çok benzeyen)
+HORTUM_VEHICLE_BLOCK = 2
+HORTUM_MID_BLOCK = 1
+HORTUM_FINAL_BLOCK = 1
+YAKLASMA_HORTUM = {
+    "geos": {
+        "G1": {"name": "Norveç", "place": "a Norwegian harbor town of colorful wooden fishing houses"},
+        "G2": {"name": "İtalya", "place": "an Italian harbor town of pastel houses climbing the hillside"},
+        "G3": {"name": "İrlanda", "place": "an Irish harbor town of colorful terraced houses"},
+        "G4": {"name": "Danimarka", "place": "a Danish harbor town of colorful canal houses"},
+        "G5": {"name": "Brezilya", "place": "a Brazilian harbor town of colorful colonial houses"},
+        "G6": {"name": "Hindistan", "place": "an Indian harbor town of colorful Portuguese-style houses"},
+    },
+    "opening": "The tornado makes landfall from the sea at {place}, crosses the seafront road and flips a parked car "
+               "onto its side, then heads up the street toward the camera.",
+    "people": {3: "Three people run away from the tornado.",
+               5: "Five people run away from the tornado."},
+    "vehicles": ("pickup truck", "delivery van", "SUV"),
+    "mids": {
+        "O1": "The tornado shoves the {vehicle} sideways across the street and slams it into the far curb.",
+        "O2": "The tornado lifts the {vehicle} off the quay and hurls it, in one piece, into the harbor water.",
+        "O3": "The tornado rips the moored sailboats out of the water and flings them onto the quay.",
+    },
+    "finals": {
+        "F1": "Right across from the window, the tornado tears the roof off a colorful house, the pieces flying past "
+              "the camera.",
+        "F2": "Right across from the window, the tornado rips the whole front wall off a colorful house, furniture "
+              "swirling up into the funnel.",
+        "F3": "Right below the window, the tornado hits the row of houses, roofs and balconies peeling off one after "
+              "another.",
+    },
+    "vehicle_mids": ("O1", "O2"),
+    "camera": "the camera stays fixed, tilting only slightly",
+    "tail": ("Handheld footage filmed through an open upper-floor window across from the harbor street, high vantage; "
+             "slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always "
+             "in frame, the open window frame at one side; one continuous shot, no zoom, no cuts, no person or face "
+             "close to the camera. Setting: colorful houses along a stone quay with small sailboats. All people are "
+             "ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in "
+             "real time, never in slow motion, people run at full speed."),
+}
+HORTUM_O2_WARNING = "⚠️ Araç savurma ortası (O2): videoda aracın tek parça kalıp kalmadığını kontrol et."
+HORTUM_REQUIRED = ("high vantage", "open upper-floor window")
+HORTUM_FORBIDDEN = ("Full action", "Until the last frame")
+_HT = YAKLASMA_HORTUM
+_HORTUM_GEO_MEMORY: list[str] = []
+_HORTUM_VEHICLE_MEMORY: list[str] = []
+
+
+def hortum_is_active(event: str | None) -> bool:
+    return event in HORTUM_EVENTS
+
+
+def hortum_camera_text(follow: bool | None = None) -> str:
+    return _HT["camera"]
+
+
+def hortum_tail(follow: bool | None = None) -> str:
+    return _HT["tail"]
+
+
+def hortum_opening(geo: str) -> str:
+    return _HT["opening"].format(place=_HT["geos"][geo]["place"])
+
+
+def hortum_people(n: int) -> str:
+    if n not in _HT["people"]:
+        raise es.StructureError(f"{HORTUM_MODE_LABEL}: kişi sayısı 3 ya da 5 olmalı ({n})")
+    return _HT["people"][n]
+
+
+def hortum_mid(mid: str, vehicle: str | None) -> str:
+    if mid not in _HT["mids"]:
+        raise es.StructureError(f"{HORTUM_MODE_LABEL}: {mid} bu modda yok (orta O1, O2, O3)")
+    if mid in _HT["vehicle_mids"] and vehicle not in _HT["vehicles"]:
+        raise es.StructureError(f"{HORTUM_MODE_LABEL}: {mid} için araç yok ({vehicle})")
+    return _HT["mids"][mid].format(vehicle=vehicle or "")
+
+
+def hortum_final(final: str) -> str:
+    if final not in _HT["finals"]:
+        raise es.StructureError(f"{HORTUM_MODE_LABEL}: {final} bu modda yok (final F1, F2, F3)")
+    return _HT["finals"][final]
+
+
+def hortum_story(geo: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
+    """Sıra: açılış + insan + orta + final (aksiyon / "Until the last frame" cümlesi yok)."""
+    a, b, c = es.SLICE_LABELS
+    return (f"{a}: {hortum_opening(geo)} {hortum_people(people)} {b}: {hortum_mid(mid, vehicle)} "
+            f"{c}: {hortum_final(final)}")
+
+
+def hortum_prompt(geo: str, people: int, mid: str, vehicle: str | None, final: str, follow: bool | None = None) -> str:
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(hortum_story(geo, people, mid, vehicle, final), hortum_tail(follow))
+
+
+def hortum_tags(history: list[str]) -> list[str]:
+    return [t for t in es.beat_history(es.LANDFALL, history or []) if re.fullmatch(r"O\d+\+F\d+", t)]
+
+
+def hortum_choose_mid(history: list[str], rng=None) -> str:
+    return _block_pick(list(_HT["mids"]), [t.split("+")[0] for t in hortum_tags(history)], HORTUM_MID_BLOCK, rng)
+
+
+def hortum_choose_final(history: list[str], rng=None) -> str:
+    return _block_pick(list(_HT["finals"]), [t.split("+")[1] for t in hortum_tags(history)], HORTUM_FINAL_BLOCK, rng)
+
+
+def hortum_axes_history(records: list | None, key: str) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") == es.LANDFALL and axes.get("mod") == "hortum_yaklasma"
+                and axes.get(key)):
+            out.append(axes[key])
+    return out
+
+
+def hortum_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    seen = list(HORTUM_GEO_SEED) + list(_HORTUM_GEO_MEMORY if used is None else used)
+    return _block_pick(list(_HT["geos"]), seen, HORTUM_GEO_BLOCK, rng)
+
+
+def hortum_choose_vehicle(used: list[str] | None = None, rng=None) -> str:
+    return _block_pick(list(_HT["vehicles"]), list(_HORTUM_VEHICLE_MEMORY if used is None else used),
+                       HORTUM_VEHICLE_BLOCK, rng)
+
+
+def hortum_lines(tb: dict) -> str:
+    text = tb["prompt"]
+    lines = [
+        f"Mod: {HORTUM_MODE_LABEL}",
+        f"Coğrafya: {tb['geo']} {_HT['geos'][tb['geo']]['name']}",
+        f"Araç: {tb['vehicle']}" + ("" if tb["mid"] in _HT["vehicle_mids"] else " (bu ortada araç yok)"),
+        f"Orta (4-9s): {tb['mid']} «{hortum_mid(tb['mid'], tb['vehicle'])}»",
+        f"Final (9-15s): {tb['final']} «{hortum_final(tb['final'])}»",
+        "Kamera: sabit (hafifçe eğilir, açık üst kat penceresi)",
+        f"Kelime: {len(text.split())} (en fazla {HORTUM_MAX_WORDS}) · karakter: {len(text)} (en fazla {HORTUM_MAX_CHARS})",
+    ]
+    if tb["mid"] == "O2":
+        lines.append(HORTUM_O2_WARNING)
+    return "\n".join(lines)
+
+
+def _hortum_axes(js, tag: str, geo: str, vehicle: str | None, people: int):
+    import json
+    try:
+        data = json.loads(js)
+    except (TypeError, ValueError):
+        return js
+    if isinstance(data.get("axes"), dict):
+        data["axes"].update({"beats": tag, "mod": "hortum_yaklasma", "cografya": geo, "arac": vehicle,
+                             "vehicle": vehicle, "people": people})
+    return json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def hortum_apply(scene: dict, history: list[str] | None = None, rng=None, follow: bool | None = None,
+                 geo_used: list[str] | None = None, vehicle_used: list[str] | None = None) -> dict:
+    """Normal hattın kurduğu "hortum karaya vurur" sahnesinden (kayıt aynı) Yaklaşma (hortum) prompt'unu kurar.
+    Coğrafya G1-G6 (son 3 elenir, G3 tohum), araç (son 2), orta O1-O3 (son 1), final F1-F3 (son 1), kişi 3/5.
+    structure["hortum_yaklasma"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
+    import random
+    event = scene["event"]
+    st = scene.get("structure") or {}
+    spec = st.get("spec")
+    if not hortum_is_active(event) or not spec:
+        raise es.StructureError(f"{HORTUM_MODE_LABEL} kurulamadı: {event}")
+    follow = False   # kamera sabit, sadece hafifçe eğilir (stil eki birebir)
+    r = rng or random
+    geo = hortum_choose_geo(geo_used, r)
+    vehicle = hortum_choose_vehicle(vehicle_used, r)
+    people = r.choice((3, 5))
+    mid = hortum_choose_mid(history or [], r)
+    final = hortum_choose_final(history or [], r)
+    old_tag, new_tag = es.beat_tag(spec["beat_2"], spec["beat_3"]), es.beat_tag(mid, final)
+    with es._BEAT_LOCK:   # seçim anı hafızası: atılan C*+E* yerine bu üretimin gerçek çifti
+        mem = es._BEAT_MEMORY.get(event, [])
+        if mem and mem[-1] == old_tag:
+            mem[-1] = new_tag
+    has_vehicle = mid in _HT["vehicle_mids"]
+    # araç hafızası sadece aracın gerçekten prompt'a girdiği ortada (O1/O2) ilerler (Notion "arac" ile aynı)
+    for m, v in ((_HORTUM_GEO_MEMORY, geo), (_HORTUM_VEHICLE_MEMORY, vehicle if has_vehicle else None)):
+        if v is not None:
+            m.append(v)
+            del m[:-12]
+    story = hortum_story(geo, people, mid, vehicle, final)
+    tail = hortum_tail(follow)
+    prompt = hortum_prompt(geo, people, mid, vehicle, final, follow)
+    tb = {"event": event, "geo": geo, "people": people, "vehicle": vehicle, "mid": mid, "final": final,
+          "follow": follow, "story": story, "suffix": tail, "prompt": prompt}
+    tb["lines"] = hortum_lines(tb)
+    problems = hortum_issues({**st, "hortum_yaklasma": tb}, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{HORTUM_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = scene.get("combo_key", "")
+    if f"#{old_tag}|" in combo:
+        combo = combo.replace(f"#{old_tag}|", f"#{new_tag}|")
+    name = _HT["geos"][geo]["name"]
+    mid_text, final_text = hortum_mid(mid, vehicle), hortum_final(final)
+    cap_info = {**(st.get("caption_info") or {}), "opening": hortum_opening(geo), "people": people,
+                "beat_2": mid_text[:-1], "beat_3": final_text[:-1]}
+    structure = {**st, "hortum_yaklasma": tb, "caption_info": cap_info,
+                 "environment": f"Coğrafya: {geo} {name} · kamera = {HORTUM_MODE_LABEL} (open upper-floor window "
+                                "across from the harbor street, high vantage, sabit)",
+                 "story_source": f"Hikâye: kod (birebir) · {HORTUM_MODE_LABEL}"}
+    if st.get("axes_json"):
+        structure["axes_json"] = _hortum_axes(st["axes_json"], new_tag, geo, vehicle if has_vehicle else None, people)
+    plain = " ".join([hortum_opening(geo), hortum_people(people), mid_text, final_text])
+    trace, axes_line = mode_display(
+        scene, structure, mode=HORTUM_MODE_LABEL, camera=f"sabit ({hortum_camera_text(follow)}); open upper-floor "
+        "window across from the harbor street, high vantage, open window frame at one side",
+        opening=hortum_opening(geo), mid=(mid, mid_text), final=(final, final_text), plain=plain,
+        vehicle=vehicle if has_vehicle else f"{vehicle} (bu ortada araç yok)",
+        spot="Open upper-floor window across from the harbor street (Yaklaşma kalıbı)",
+        weather="yok (stil ekinde natural light)",
+        axes={"coğrafya": f"{geo} {name}", "araç": vehicle if has_vehicle else "yok",
+              "kişi": people, "orta": mid, "final": final, "kamera modu": "sabit"},
+        repeat=f"coğrafya son {HORTUM_GEO_BLOCK} elendi (G3 tohum) · araç son {HORTUM_VEHICLE_BLOCK} · orta son "
+               f"{HORTUM_MID_BLOCK} · final son {HORTUM_FINAL_BLOCK} (yasak çift yok)")
+    # normal hattın ortam etiketi ve görünümü prompt'ta yok: gösterilmez
+    trace = {**trace, "mode": "hortum_yaklasma", "cografya": geo, "count_range": [3, 5], "view": None,
+             "view_source": None, "fire_env_label_short": None}
+    structure["axes_line"] = axes_line
+    out = {**scene, "story": story, "plain_story": plain, "style_suffix": tail, "prompt": prompt,
+           "combo_key": combo, "structure": structure, "trace": trace}
+    if scene.get("axes_json"):
+        out["axes_json"] = _hortum_axes(scene["axes_json"], new_tag, geo, vehicle if has_vehicle else None, people)
+    return out
+
+
+def hortum_camera_issues(text: str, geo: str | None = None) -> list[str]:
+    """Kie öncesi son kontrol: "high vantage", "open upper-floor window" ve G1-G6'dan birinin place metni var;
+    "Full action" ve "Until the last frame" yok. İhlal = gönderilmez."""
+    out = []
+    for need in HORTUM_REQUIRED:
+        if need not in text:
+            out.append(f'"{need}" eksik')
+    places = [g for g, v in _HT["geos"].items() if v["place"] in text]
+    if not places:
+        out.append("G1-G6 yer metni yok")
+    elif geo is not None and places != [geo]:
+        out.append(f"yer metni seçilen coğrafya değil ({geo}: {places})")
+    for bad in HORTUM_FORBIDDEN:
+        if bad in text:
+            out.append(f"bu modda olmayan ifade var: {bad}")
+    return out
+
+
+def hortum_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin bu kalıpla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    tb = structure["hortum_yaklasma"]
+    if tb.get("geo") not in _HT["geos"]:
+        return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
+    if tb.get("mid") not in _HT["mids"]:
+        return [f"orta O1, O2, O3 değil ({tb.get('mid')})"]
+    if tb.get("final") not in _HT["finals"]:
+        return [f"final F1, F2, F3 değil ({tb.get('final')})"]
+    try:
+        story = hortum_story(tb["geo"], tb["people"], tb["mid"], tb["vehicle"], tb["final"])
+        prompt = hortum_prompt(tb["geo"], tb["people"], tb["mid"], tb["vehicle"], tb["final"], tb["follow"])
+    except es.StructureError as e:
+        return [str(e)]
+    out = []
+    if info.get("style_suffix") != hortum_tail(tb["follow"]):
+        out.append("stil eki Yaklaşma (hortum) kalıbı değil")
+    if info.get("story") != story:
+        out.append("hikâye kalıpla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    out += hortum_camera_issues(text, tb["geo"])
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > HORTUM_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {HORTUM_MAX_WORDS})")
+    if len(text) > HORTUM_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {HORTUM_MAX_CHARS})")
+    return out

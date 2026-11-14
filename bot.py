@@ -553,6 +553,42 @@ def heli_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
             "sayısı ✋ Onay mesajında. Hikâye için GPT çağrılmaz.")
 
 
+# ── ⭐ Hit kalıbı · Yaklaşma (hortum) (14 Kas 2026, Bahadır): kanal rekoru (10M+) kalıbı; ortam sorulmaz (coğrafya
+# LRU). Adımlar: ty (onay metni) → tyok (üretim). "Hortum karaya vurur" normal yolu (kilitli) değişmez
+HORTUM_BUTTON = "⭐ Hit kalıbı · Yaklaşma"
+
+
+def hortum_confirm_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    """Normal onay (✅ Üret / ❌ İptal) + altta ⭐ Hit kalıbı · Yaklaşma."""
+    rows = [list(r) for r in confirm_keyboard(di, eid).inline_keyboard]
+    rows.append([InlineKeyboardButton(HORTUM_BUTTON, callback_data=f"{CALLBACK_PREFIX}ty:{di}:{eid}")])
+    return InlineKeyboardMarkup(rows)
+
+
+def hortum_produce_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}tyok:{di}:{eid}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def parse_hortum(di_raw: str, eid: str) -> tuple[str, str] | None:
+    sel = parse_selection(di_raw, eid)
+    if sel is None or sel[1] is None or not _hp().hortum_is_active(sel[1]):
+        return None
+    return sel
+
+
+def hortum_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
+    hp = _hp()
+    return (confirm_text(domain, event, cfg)
+            + f"\n\nMod: {hp.HORTUM_MODE_LABEL}\n"
+            "Kamera: sabit (hafifçe eğilir)"
+            + "\nLiman caddesinin karşısındaki açık üst kat penceresi, pencere çerçevesi bir yanda; hortum denizden "
+            "karaya çıkar, sahil yolunu geçer, caddeden kameraya doğru gelir. Coğrafya (G1-G6), araç, orta (O1-O3), "
+            "final (F1-F3), kelime sayısı ✋ Onay mesajında. Hikâye için GPT çağrılmaz.")
+
+
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([[
         InlineKeyboardButton("✅ Kie'ye gönder", callback_data=f"{CALLBACK_PREFIX}ap:{token}:y"),
@@ -828,6 +864,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("hy", "hyok"):   # 13 Kas: ⭐ Hit kalıbı · Yaklaşma (helikopter)
         await _on_heli(query, context, action, args, cfg)
         return
+    if action in ("ty", "tyok"):   # 14 Kas: ⭐ Hit kalıbı · Yaklaşma (hortum)
+        await _on_hortum(query, context, action, args, cfg)
+        return
 
     sel, view = None, None
     if action == "d" and len(args) == 1:
@@ -856,6 +895,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                     else kul_confirm_keyboard(*args) if _hp().kul_is_active(event)   # 12 Kas (6)
                     else orman_confirm_keyboard(*args) if _hp().orman_is_active(event)   # 13 Kas
                     else heli_confirm_keyboard(*args) if _hp().heli_is_active(event)   # 13 Kas: helikopter
+                    else hortum_confirm_keyboard(*args) if _hp().hortum_is_active(event)   # 14 Kas: hortum
                     else confirm_keyboard(*args))
         await query.edit_message_text(confirm_text(domain, event, cfg), reply_markup=keyboard)
     elif action == "v":
@@ -1033,6 +1073,31 @@ async def _on_heli(query, context, action: str, args: list[str], cfg: dict) -> N
                       heli_yaklasma=True)
 
 
+async def _on_hortum(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """⭐ Hit kalıbı · Yaklaşma (hortum) adımları: ty (onay metni) → tyok (üretim). Kie yine ✋ Onay'a bağlı."""
+    parsed = parse_hortum(*args) if len(args) == 2 else None
+    if parsed is None:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    domain, event = parsed
+    if action == "ty":
+        await query.edit_message_text(hortum_confirm_text(domain, event, cfg),
+                                      reply_markup=hortum_produce_keyboard(*args))
+        return
+    run_cfg = dict(cfg)
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)} / {HORTUM_BUTTON}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
+                      hortum_yaklasma=True)
+
+
 async def _on_caption_share(query, context, page: str) -> None:
     """📤 Paylaştım: Paylaşımlar'a tek satır (aynı üretim için ikinci kez basılırsa yeni satır açmaz)."""
     import core.caption as cap
@@ -1134,7 +1199,8 @@ def _run_pipeline_blocking(kwargs: dict) -> dict:
 async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg: dict | None = None,
                   bot_data: dict | None = None, view: str | None = None, hit_env: str | None = None,
                   approach_env: str | None = None, dalga24: bool = False, kul_yaklasma: bool = False,
-                  orman_yaklasma: bool = False, heli_yaklasma: bool = False) -> None:
+                  orman_yaklasma: bool = False, heli_yaklasma: bool = False,
+                  hortum_yaklasma: bool = False) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1157,6 +1223,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["orman_yaklasma"] = True
     if heli_yaklasma:   # 13 Kas: ⭐ Hit kalıbı · Yaklaşma (helikopter)
         kwargs["heli_yaklasma"] = True
+    if hortum_yaklasma:   # 14 Kas: ⭐ Hit kalıbı · Yaklaşma (hortum)
+        kwargs["hortum_yaklasma"] = True
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:

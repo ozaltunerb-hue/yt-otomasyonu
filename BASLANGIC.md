@@ -40,6 +40,12 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   boşalır. L1-L6 (son 3, Türkiye yok) / H1-H3 orta (H1 araçsız) / J1-J3 final (son 1, yasak çift yok), araç son 2,
   kişi 3/4. Suyun öznesi HER ZAMAN kova ("helicopter's" yasak, son denetimde de). config `heli_yaklasma`, bot hy/hyok.
   Test `tests/test_heli_yaklasma.py`; en uzun kombinasyon 224/1333.
+- Hortum "⭐ Hit kalıbı · Yaklaşma (hortum)" (14 Kas, `YAKLASMA_HORTUM`): kanal rekoru (10M+, 31 Eki C1+E1, pencere
+  kadrajı) kalıbı. Liman kasabası G1-G6 (son 3, G3 tohum: ilk üretimde G3 gelmez, Türkiye yok) / O1-O3 orta (O1 = hit C1,
+  O3 araçsız; araç savurma serbest) / F1-F3 final (son 1, yasak çift yok), araç pickup truck/delivery van/SUV son 2, kişi
+  3/5. Kie öncesi `hortum_camera_issues`: "high vantage", "open upper-floor window" ve G1-G6 yer metni zorunlu. config
+  `hortum_yaklasma`, bot ty/tyok. "Hortum karaya vurur" normal yolu (kilitli) değişmez. Test
+  `tests/test_hortum_yaklasma.py`; 324 kombinasyon, en uzun 182/1073.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir
