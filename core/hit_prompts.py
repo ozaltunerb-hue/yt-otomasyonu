@@ -1555,36 +1555,46 @@ YAKLASMA_HELIKOPTER = {
         "L5": {"name": "Yunanistan", "place": "a Greek lakeside village of whitewashed houses and olive trees"},
         "L6": {"name": "Avustralya", "place": "an Australian lakeside town of weatherboard houses among eucalyptus"},
     },
-    "opening": "The burning forest has reached {place} on the shore of a wide lake, and the houses across the street "
-               "from the terrace are on fire, as a huge orange S-64 Skycrane helicopter with a big belly tank hovers "
-               "low over the lake, its snorkel hose dipped into the water, rotor wash rippling the surface.",
-    "people": {3: "Three people run along the street below.",
-               4: "Four people run along the street below."},
+    # 14 Kas 2026 (4) v5 (Bahadır): kamera yangın tarafında yüksek binanın en üst kat balkonunda, göl uzakta
+    "opening": "Wildfire is burning through {place}, the houses right below engulfed in towering flames, while far out "
+               "on the distant lake an orange S-64 Skycrane hovers low, a long hose hanging from its belly, its end "
+               "sunk deep in the water, filling its belly tank.",
+    "people": {3: "Three people run below.",
+               4: "Four people run below."},
     "vehicles": ("pickup truck", "SUV", "white van"),
     "mids": {
-        "H1": "Across the street, the flames swallow a parked {vehicle} as the Skycrane lifts off the lake and heads "
-              "for the burning houses.",
-        "H2": "Across the street, a huge burning pine crashes onto a parked {vehicle}, crushing it in a shower of "
-              "sparks, as the Skycrane lifts off the lake.",
+        "H1": "Down in the street, the flames swallow a parked {vehicle} as the Skycrane flies in from the distant lake.",
+        "H2": "Down in the street, a huge burning pine crashes onto a parked {vehicle}, crushing it, as the Skycrane "
+              "flies in from the distant lake.",
         "H3": "Across the street, a burning roof collapses in a burst of sparks as a {vehicle} speeds away and the "
-              "Skycrane lifts off the lake.",
+              "Skycrane flies in from the distant lake.",
     },
     "finals": {
-        "J1": "The Skycrane hovers right above the burning houses across the street and dumps its whole belly tank, a "
-              "massive curtain of water slamming onto the flames and exploding into a huge cloud of white steam.",
-        "J2": "The Skycrane sweeps low over the burning houses across the street, releasing a long sheet of water from "
-              "its belly tank straight onto the flames, the fire hissing into white steam.",
+        "J1": "The Skycrane stops right above the burning houses below, in front of the camera, and dumps its belly "
+              "tank onto their roofs, a massive curtain of water exploding into white steam.",
+        "J2": "The Skycrane sweeps low over the burning roofs below, in front of the camera, releasing its belly tank "
+              "onto the flames, the fire hissing into white steam.",
     },
     "vehicle_mids": ("H1", "H2", "H3"),
     # 14 Kas 2026: kamera bu modda her zaman sabit; takip cümlesi hiç çıkmaz (eski HELI_CAMERA_V1, pasif)
     "camera": "the camera stays fixed",
-    "tail": ("Handheld footage shot from a high terrace overlooking the lake and the burning houses across the street, "
-             "the Skycrane large in frame, flying from the lake to the burning houses, never over the camera, a corner "
-             "of the terrace railing in the foreground; slight hand shake, the camera stays fixed; one continuous "
-             "shot, no zoom, no cuts. Water comes only out of the belly tank and lands right on the flames. "
-             "Realistic wildfire: towering, roaring flames and thick smoke, never thin lines of fire. Real time, never "
-             "slow motion. No readable signs, text or flags."),   # 14 Kas (3): 230 sınırı için "Never CGI. " çıktı
+    "tail": ("Handheld footage from the top-floor balcony of a tall building, high vantage looking steeply down on "
+             "the burning houses and the street, the lake far in the distance beyond them, the Skycrane large in "
+             "frame, never flying over the camera, a corner of the balcony railing in the foreground; slight hand "
+             "shake, the camera stays fixed; one continuous shot, no zoom, no cuts. Water comes only out of the belly "
+             "tank and lands right on the burning roofs, never on the camera. Realistic wildfire: towering, roaring "
+             "flames and thick smoke, never thin lines of fire. Real time, never slow motion. No readable signs, text "
+             "or flags."),
 }
+# 14 Kas 2026 (4) (Bahadır), v5: v4 üretiminde stil ekinde "high vantage" olmadığı için kamera yer seviyesine indi, göl
+# kameranın önüne geldi ve yanan evler karşı kıyıda kaldı, hortum göle su püskürttü, orta olaylar uzakta kaldı. Kamera
+# yangın tarafında yüksekte, göl uzakta, hortumun ucu suya batık, su kameranın önündeki yanan çatılara. b925c79 metinleri
+# pasif (coğrafya L1-L6 aynen aktif):
+HELI_OPENING_V4 = 'The burning forest has reached {place} on the shore of a wide lake, and the houses across the street from the terrace are on fire, as a huge orange S-64 Skycrane helicopter with a big belly tank hovers low over the lake, its snorkel hose dipped into the water, rotor wash rippling the surface.'
+HELI_PEOPLE_V4 = {3: 'Three people run along the street below.', 4: 'Four people run along the street below.'}
+HELI_MIDS_V4 = {'H1': 'Across the street, the flames swallow a parked {vehicle} as the Skycrane lifts off the lake and heads for the burning houses.', 'H2': 'Across the street, a huge burning pine crashes onto a parked {vehicle}, crushing it in a shower of sparks, as the Skycrane lifts off the lake.', 'H3': 'Across the street, a burning roof collapses in a burst of sparks as a {vehicle} speeds away and the Skycrane lifts off the lake.'}
+HELI_FINALS_V4 = {'J1': 'The Skycrane hovers right above the burning houses across the street and dumps its whole belly tank, a massive curtain of water slamming onto the flames and exploding into a huge cloud of white steam.', 'J2': 'The Skycrane sweeps low over the burning houses across the street, releasing a long sheet of water from its belly tank straight onto the flames, the fire hissing into white steam.'}
+HELI_TAIL_V4 = 'Handheld footage shot from a high terrace overlooking the lake and the burning houses across the street, the Skycrane large in frame, flying from the lake to the burning houses, never over the camera, a corner of the terrace railing in the foreground; slight hand shake, the camera stays fixed; one continuous shot, no zoom, no cuts. Water comes only out of the belly tank and lands right on the flames. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines of fire. Real time, never slow motion. No readable signs, text or flags.'
 # 14 Kas 2026 (3) (Bahadır), v4: 4 üretimde "heavy firefighting helicopter" standart helikopter çizildi, "sucking water /
 # water streaming from its hose" göle su dökme gibi çizildi, final hedefi belirsizdi, orta olaylar uzaktaydı, göl ve
 # ülke belirsizdi. S-64 Skycrane, hedef terasın karşısındaki yanan evler. 97d3b76 metinleri pasif:
@@ -1790,18 +1800,18 @@ def heli_apply(scene: dict, history: list[str] | None = None, rng=None, follow: 
                 "beat_2": mid_text[:-1], "beat_3": final_text[:-1]}
     cam = "takip" if follow else "sabit"
     structure = {**st, "heli_yaklasma": hb, "caption_info": cap_info,
-                 "environment": f"Coğrafya: {geo} {name} · kamera = {HELI_MODE_LABEL} (high terrace of a lakeside "
-                                f"house, {cam})",
+                 "environment": f"Coğrafya: {geo} {name} · kamera = {HELI_MODE_LABEL} (top-floor balcony of a tall "
+                                f"building, high vantage, {cam})",
                  "story_source": f"Hikâye: kod (birebir) · {HELI_MODE_LABEL}"}
     if st.get("axes_json"):
         structure["axes_json"] = _heli_axes(st["axes_json"], new_tag, geo, vehicle, people)
     plain = " ".join([heli_opening(geo), heli_people(people), mid_text, final_text])
     trace, axes_line = mode_display(
-        scene, structure, mode=HELI_MODE_LABEL, camera=f"{cam} ({heli_camera_text(follow)}); high terrace of a "
-        "lakeside house overlooking the lake and the street, terrace railing corner in foreground",
+        scene, structure, mode=HELI_MODE_LABEL, camera=f"{cam} ({heli_camera_text(follow)}); top-floor balcony of a "
+        "tall building, high vantage over the burning houses, lake far beyond, balcony railing corner in foreground",
         opening=heli_opening(geo), mid=(mid, mid_text), final=(final, final_text), plain=plain,
         vehicle=vehicle if mid in _HL["vehicle_mids"] else f"{vehicle} (bu ortada araç yok)",
-        spot="High terrace of a lakeside house overlooking the lake and the street (Yaklaşma kalıbı)",
+        spot="Top-floor balcony of a tall building above the burning houses, lake far beyond (Yaklaşma kalıbı)",
         weather="yok (stil ekinde gökyüzü yok)",
         axes={"coğrafya": f"{geo} {name}", "araç": vehicle if mid in _HL["vehicle_mids"] else "yok",
               "kişi": people, "orta": mid, "final": final, "kamera modu": cam},
@@ -1818,25 +1828,26 @@ def heli_apply(scene: dict, history: list[str] | None = None, rng=None, follow: 
     return out
 
 
-HELI_NO_FLY_PHRASE = "never over the camera"
+HELI_NO_FLY_PHRASE = "never flying over the camera"
+HELI_NO_WATER_ON_CAMERA = "never on the camera"
+HELI_FORBIDDEN = ("helicopter's", "bucket", "cable", "terrace", "streaming", "sucking", "spray", "pouring",
+                  "toward the camera")
+HELI_REQUIRED = ("S-64 Skycrane", "belly tank", "high vantage", "its end sunk deep in the water")
 
 
 def heli_camera_issues(text: str, geo: str) -> list[str]:
-    """14 Kas (2)+(3): "toward the camera" hiç yok (yasak cümlesi "never over the camera" bu ifadeyi
-    içermez), "over the camera" sadece yasak cümlesinde, "terrace" sadece açılış ve stil ekinde, "bucket" ve "cable"
-    hiç yok. Açılış ve stil eki birer kez çıkarılır; kalan metinde bu ifadeler geçerse gönderilmez."""
+    """14 Kas (4) v5: yasak ifadeler hiçbir yerde yok; "over the camera" sadece "never flying over the camera",
+    "on the camera" sadece "never on the camera" içinde; zorunlu ifadeler her prompt'ta var. İhlal = gönderilmez."""
     out = []
-    no_opening = text.replace(heli_opening(geo), "", 1)
-    if "toward the camera" in text:
-        out.append('"toward the camera" geçiyor')
-    if "over the camera" in no_opening.replace(HELI_NO_FLY_PHRASE, "", 1):
-        out.append('"over the camera" yasak cümlesi dışında geçiyor')
-    if "terrace" in no_opening.replace(_HL["tail"], "", 1):
-        out.append('"terrace" açılış ve stil eki dışında geçiyor')
-    for bad in ("bucket", "cable", "streaming", "sucking"):
-        if bad in text.lower():
+    low = text.lower()
+    for bad in HELI_FORBIDDEN:
+        if bad.lower() in low:
             out.append(f'"{bad}" bu modda yok')
-    for need in ("S-64 Skycrane", "belly tank"):   # 14 Kas (3) v4
+    if "over the camera" in text.replace(HELI_NO_FLY_PHRASE, "", 1):
+        out.append(f'"over the camera" "{HELI_NO_FLY_PHRASE}" dışında geçiyor')
+    if "on the camera" in text.replace(HELI_NO_WATER_ON_CAMERA, "", 1):
+        out.append(f'"on the camera" "{HELI_NO_WATER_ON_CAMERA}" dışında geçiyor')
+    for need in HELI_REQUIRED:
         if need not in text:
             out.append(f'"{need}" eksik')
     return out
