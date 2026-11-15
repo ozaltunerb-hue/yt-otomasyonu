@@ -34,38 +34,66 @@ PLACES = {"G1": ("ABD", "a New York avenue of brownstone buildings"),
           "G2": ("Fransa", "a Paris boulevard of cream stone buildings"),
           "G3": ("İngiltere", "a London street of red-brick terraces"),
           "G4": ("Almanya", "a Berlin boulevard lined with linden trees"),
-          "G5": ("Brezilya", "a Rio de Janeiro avenue of palm trees and pastel buildings"),
+          "G5": ("Brezilya", "a Rio avenue of palm trees and pastel buildings"),
           "G6": ("Hindistan", "a Mumbai street of old colonial buildings")}
-# Talimattaki metinler kelimesi kelimesine (zaman etiketleri dahil)
-OPENING = ("0-4s: The storm's eye opens in the black sky above {place}, and a wall of white frost races down the street "
-           "toward the camera, freezing a fountain's spray in mid-air.")
-PEOPLE = {5: "Five people and a dog sprint toward the camera ahead of it.",
-          6: "Six people and a dog sprint toward the camera ahead of it."}
+# Talimattaki metinler kelimesi kelimesine (zaman etiketleri dahil). 15 Kas (2): göz halka, yüksek kamera, fıskiye çıktı,
+# uzak donma, F2 kısaldı, G5 kısaldı (eskiler DONMA_PASIF *_V1).
+OPENING = ("0-4s: Above {place}, the storm's eye opens, a vast circular hole in the black clouds with a calm pale sky "
+           "inside the ring, and a wall of white frost races down the street toward the camera, freezing everything it "
+           "passes.")
+PEOPLE = {5: "Five people and a dog sprint down the middle of the street ahead of it.",
+          6: "Six people and a dog sprint down the middle of the street ahead of it."}
 VEHICLES = ("city bus", "taxi", "delivery van")
 MIDS = {
-    "O1": ("4-9s: The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and "
-           "a moving {vehicle} freezes white and slides sideways into a lamppost."),
-    "O2": ("4-9s: The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and "
-           "a {vehicle} freezes mid-turn and tips over onto its side."),
+    "O1": ("4-9s: The frost catches the people and the dog mid-stride, far below the camera, freezing them solid into "
+           "ice statues, and a moving {vehicle} freezes white and slides sideways into a lamppost."),
+    "O2": ("4-9s: The frost catches the people and the dog mid-stride, far below the camera, freezing them solid into "
+           "ice statues, and a {vehicle} freezes mid-turn and tips over onto its side."),
 }
 FINALS = {
     "F1": ("9-15s: Right across the street, the frost climbs the building, its windows bursting white with ice, then "
            "ice races over the balcony railing in front of the camera."),
-    "F2": ("9-15s: Right below the balcony, a tree and a row of parked cars freeze solid, the tree splitting with a "
-           "crack, and white frost creeps up the railing in front of the camera."),
+    "F2": ("9-15s: Right below the balcony, a tree and parked cars freeze solid, the tree splitting with a crack, and "
+           "frost creeps up the railing in front of the camera."),
     "F3": ("9-15s: The frost wall hits the camera's building, ice racing up the facade and over the balcony railing as "
            "frost spreads across the edges of the frame."),
 }
-TAIL = ("Handheld footage shot by a person standing on a high balcony across the street, normal lens; slight hand "
-        "shake, the camera stays fixed, tilting only slightly, the storm's eye always visible in the sky; one continuous "
-        "shot, no zoom, no cuts. Everything the frost touches freezes instantly and stays frozen white; frozen people "
-        "stand still like statues, no blood, no injuries, no faces close to the camera. Raw natural light under a dark "
-        "storm sky, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion, "
-        "people run at full speed.")
-REQUIRED = ("storm's eye", "freez", "normal lens", "no blood")
-FORBIDDEN = ("pans to follow", "Full action", "Until the last frame", "blood-", "corpse", "dead")
+TAIL = ("Handheld footage shot by a person standing on a high balcony across the street, high vantage looking down over "
+        "the street, normal lens; slight hand shake, the camera stays fixed, tilting only slightly, the storm's eye "
+        "always visible in the sky; one continuous shot, no zoom, no cuts. No funnel, no tornado. Everything the frost "
+        "touches freezes instantly and stays frozen white; frozen people stand still like statues, no blood, no "
+        "injuries, no faces close to the camera. Natural light under a dark sky, never CGI. Everything moves in real "
+        "time, never in slow motion, people run at full speed.")
+REQUIRED = ("storm's eye", "circular hole", "freez", "high vantage", "normal lens", "No funnel", "no blood",
+            "far below the camera")
+FORBIDDEN = ("fountain", "pans to follow", "Full action", "Until the last frame", "blood-", "corpse", "dead")
+# Eski (15 Kas ilk) metinler: pasif kayıtta birebir, aktif prompt'ta hiç yok
+V1 = {
+    "G5_V1": "a Rio de Janeiro avenue of palm trees and pastel buildings",
+    "OPENING_V1": ("The storm's eye opens in the black sky above {place}, and a wall of white frost races down the "
+                   "street toward the camera, freezing a fountain's spray in mid-air."),
+    "PEOPLE_V1": {5: "Five people and a dog sprint toward the camera ahead of it.",
+                  6: "Six people and a dog sprint toward the camera ahead of it."},
+    "O1_V1": ("The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and a "
+              "moving {vehicle} freezes white and slides sideways into a lamppost."),
+    "O2_V1": ("The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and a "
+              "{vehicle} freezes mid-turn and tips over onto its side."),
+    "F2_V1": ("Right below the balcony, a tree and a row of parked cars freeze solid, the tree splitting with a crack, "
+              "and white frost creeps up the railing in front of the camera."),
+    "TAIL_V1": ("Handheld footage shot by a person standing on a high balcony across the street, normal lens; slight "
+                "hand shake, the camera stays fixed, tilting only slightly, the storm's eye always visible in the sky; "
+                "one continuous shot, no zoom, no cuts. Everything the frost touches freezes instantly and stays frozen "
+                "white; frozen people stand still like statues, no blood, no injuries, no faces close to the camera. "
+                "Raw natural light under a dark storm sky, never glossy or CGI. No readable signs or text. Everything "
+                "moves in real time, never in slow motion, people run at full speed."),
+    "TAIL_SHORTEN_V1": "No readable signs or text.",
+    "WARNING_V1": "⚠️ Donma: insanlar ve köpek kanlı/yaralı değil, buz heykel gibi donmuş mu kontrol et.",
+    "REQUIRED_V1": ("storm's eye", "freez", "normal lens", "no blood"),
+    "FORBIDDEN_V1": ("pans to follow", "Full action", "Until the last frame", "blood-", "corpse", "dead"),
+}
 CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, sabit)"
-WARNING = "⚠️ Donma: insanlar ve köpek kanlı/yaralı değil, buz heykel gibi donmuş mu kontrol et."
+WARNING = ("⚠️ Donma: insanlar ve köpek kanlı/yaralı değil, buz heykel gibi donmuş mu kontrol et. "
+           "Kamera yüksekte mi, gökte huni değil halka şeklinde göz mü?")
 # Diğer 19 olay (normal yol) + 12 mod, 40 tohum: değişiklikten ÖNCEKİ kodla (4cbdd4f) üretilen kaydın SHA-256'sı
 OTHERS_SHA256 = "d651fa4985c878bec19e64f0e248a540aaa40f9ce55f26241f1b88afc1898436"
 
@@ -173,9 +201,13 @@ class TestTexts(_Quiet):
         self.assertEqual(DF["vehicle_mids"], ("O1", "O2"))
         self.assertEqual(hp.donma_tail(), TAIL)
         self.assertEqual(DF["tail"], TAIL)
-        self.assertFalse(hp.DONMA_SHORTENED)   # yedek kısaltma kullanılmadı (en uzun 213 kelime)
-        self.assertEqual(hp.DONMA_TAIL_SHORTEN, "No readable signs or text.")
+        self.assertFalse(hp.DONMA_SHORTENED)   # yedek kısaltma kullanılmadı (15 Kas (2): en uzun 225 kelime)
+        self.assertEqual(hp.DONMA_TAIL_SHORTEN,
+                         "Everything moves in real time, never in slow motion, people run at full speed.")
+        self.assertEqual(hp.DONMA_TAIL_SHORTEN_TO, "People run at full speed.")
         self.assertIn(hp.DONMA_TAIL_SHORTEN, TAIL)
+        with patch.object(hp, "DONMA_SHORTENED", True):   # yedek açılırsa yalnız bu cümle kısalır
+            self.assertEqual(hp.donma_tail(), TAIL.replace(hp.DONMA_TAIL_SHORTEN, "People run at full speed."))
         self.assertEqual((hp.DONMA_GEO_BLOCK, hp.DONMA_VEHICLE_BLOCK, hp.DONMA_MID_BLOCK, hp.DONMA_FINAL_BLOCK),
                          (3, 2, 1, 1))
         self.assertEqual((hp.DONMA_MAX_WORDS, hp.DONMA_MAX_CHARS), (230, 1400))
@@ -187,10 +219,11 @@ class TestTexts(_Quiet):
         # sıra: açılış + insan + orta + final + stil eki
         self.assertEqual(hp.donma_prompt("G3", 6, "O2", "taxi", "F3"), expected("G3", 6, "taxi", "O2", "F3"))
         self.assertEqual(hp.donma_prompt("G1", 5, "O1", "city bus", "F1"),
-                         "0-4s: The storm's eye opens in the black sky above a New York avenue of brownstone buildings, "
-                         "and a wall of white frost races down the street toward the camera, freezing a fountain's "
-                         "spray in mid-air. Five people and a dog sprint toward the camera ahead of it. 4-9s: The frost "
-                         "catches the people and the dog mid-stride, freezing them solid into white ice statues, and a "
+                         "0-4s: Above a New York avenue of brownstone buildings, the storm's eye opens, a vast "
+                         "circular hole in the black clouds with a calm pale sky inside the ring, and a wall of white "
+                         "frost races down the street toward the camera, freezing everything it passes. Five people and "
+                         "a dog sprint down the middle of the street ahead of it. 4-9s: The frost catches the people "
+                         "and the dog mid-stride, far below the camera, freezing them solid into ice statues, and a "
                          "moving city bus freezes white and slides sideways into a lamppost. 9-15s: Right across the "
                          "street, the frost climbs the building, its windows bursting white with ice, then ice races "
                          "over the balcony railing in front of the camera. " + TAIL)
@@ -214,8 +247,8 @@ class TestTexts(_Quiet):
             hp.donma_opening("G7")
 
     def test_all_combos_within_limits(self):
-        """216 kombinasyon: hepsi ≤ 230 kelime, ≤ 1400 karakter. Talimattaki hesap: en uzun G5 + city bus + O1 + F2 =
-        213 kelime, en uzun karakter G5 + delivery van + O1 + F2 = 1204, en kısa 200 kelime."""
+        """216 kombinasyon: hepsi ≤ 230 kelime, ≤ 1400 karakter. 15 Kas (2) talimattaki hesap: en kısa 218 kelime, en
+        uzun G5 + city bus + O1 + F2 = 225 kelime, en uzun karakter G5 + delivery van + O1 + F1 = 1285."""
         n, over = 0, []
         words, chars = [], []
         for key, p in all_combos():
@@ -232,14 +265,39 @@ class TestTexts(_Quiet):
             self.assertTrue(p.endswith(" " + TAIL))
             for bad in FORBIDDEN + (sk.FULL_MOTION,):
                 self.assertNotIn(bad.lower(), p.lower())
+            for need in REQUIRED:
+                self.assertIn(need.lower(), p.lower(), (key, need))
+            self.assertNotIn("fountain", p.lower(), key)
         self.assertEqual(n, 6 * 2 * 3 * 2 * 3)
         self.assertEqual(over, [])
-        self.assertEqual(max(words)[0], 213)
-        self.assertEqual(min(words)[0], 200)
-        self.assertEqual(len(hp.donma_prompt("G5", 5, "O1", "city bus", "F2").split()), 213)
-        self.assertEqual(max(chars)[0], 1204)
-        self.assertEqual(max(chars)[1], ("G5", 5, "delivery van", "O1", "F2"))
-        self.assertEqual(len(hp.donma_prompt("G5", 5, "O1", "delivery van", "F2")), 1204)
+        self.assertEqual(max(words)[0], 225)
+        self.assertEqual(min(words)[0], 218)
+        self.assertEqual(len(hp.donma_prompt("G5", 5, "O1", "city bus", "F2").split()), 225)
+        self.assertEqual(max(chars)[0], 1285)
+        self.assertEqual(max(chars)[1], ("G5", 5, "delivery van", "O1", "F1"))
+        self.assertEqual(len(hp.donma_prompt("G5", 5, "O1", "delivery van", "F1")), 1285)
+        self.assertLessEqual(max(chars)[0], 1400)
+
+    def test_v1_texts_passive_and_never_active(self):
+        """Değişen eski metinler DONMA_PASIF'te birebir; 216 aktif prompt'un hiçbirinde ve 40 tohum üretimde yok."""
+        self.assertEqual(hp.DONMA_PASIF, V1)
+        marks = [V1["G5_V1"], V1["OPENING_V1"].split("{place}")[0], V1["OPENING_V1"].split("{place}")[1],
+                 *V1["PEOPLE_V1"].values(), *[t.split("{vehicle}")[0] for t in (V1["O1_V1"], V1["O2_V1"])],
+                 V1["F2_V1"], V1["TAIL_V1"], "Raw natural light under a dark storm sky", "white ice statues",
+                 "a row of parked cars", "fountain's spray", V1["TAIL_SHORTEN_V1"]]
+        for _, p in all_combos():
+            for m in marks:
+                self.assertNotIn(m, p, m)
+        self.assertNotIn(hp.DONMA_WARNING, (V1["WARNING_V1"],))
+        self.assertNotEqual(hp.DONMA_REQUIRED, V1["REQUIRED_V1"])
+        self.assertNotEqual(hp.DONMA_FORBIDDEN, V1["FORBIDDEN_V1"])
+        self.assertTrue(set(V1["REQUIRED_V1"]) <= set(REQUIRED))   # eski zorunlular hâlâ zorunlu
+        self.assertTrue(set(V1["FORBIDDEN_V1"]) <= set(FORBIDDEN))   # eski yasaklar hâlâ yasak
+        for seed in range(1, 41):
+            p = build(seed)["scenes"][0]["prompt"]
+            for m in marks:
+                self.assertNotIn(m, p, (seed, m))
+            self.assertNotIn("fountain", p.lower(), seed)
 
 
 class TestDonmaScene(_Quiet):
@@ -599,7 +657,7 @@ class TestOthersUntouched(_Quiet):
         self.assertEqual(snapshot_hash(self.snap), OTHERS_SHA256)
 
     def test_sentences_only_in_this_category(self):
-        marks = ["The storm's eye opens in the black sky above", *PEOPLE.values(),
+        marks = ["the storm's eye opens, a vast circular hole", *PEOPLE.values(),
                  *[t.split("{vehicle}")[1] for t in DF["mids"].values()],
                  "The frost catches the people and the dog mid-stride", *DF["finals"].values(), TAIL,
                  DF["camera"], *[p for _, p in PLACES.values()], "storm's eye", "frost", "freez"]

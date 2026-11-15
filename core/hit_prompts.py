@@ -2641,44 +2641,76 @@ DONMA_FIRTINA = {
         "G2": {"name": "Fransa", "place": "a Paris boulevard of cream stone buildings"},
         "G3": {"name": "İngiltere", "place": "a London street of red-brick terraces"},
         "G4": {"name": "Almanya", "place": "a Berlin boulevard lined with linden trees"},
-        "G5": {"name": "Brezilya", "place": "a Rio de Janeiro avenue of palm trees and pastel buildings"},
+        # 15 Kas (2): G5 kısaldı (eski metin DONMA_PASIF G5_V1)
+        "G5": {"name": "Brezilya", "place": "a Rio avenue of palm trees and pastel buildings"},
         "G6": {"name": "Hindistan", "place": "a Mumbai street of old colonial buildings"},
     },
-    "opening": "The storm's eye opens in the black sky above {place}, and a wall of white frost races down the street "
-               "toward the camera, freezing a fountain's spray in mid-air.",
-    "people": {5: "Five people and a dog sprint toward the camera ahead of it.",
-               6: "Six people and a dog sprint toward the camera ahead of it."},
+    # 15 Kas (2): ilk üretim (Londra, O2 + F3, 7,5/10): fıskiye kamerayı sokak seviyesine indirdi, göz huni gibi
+    # çizildi, donan yüzler kameraya yakındı, otobüs devrilmedi. Göz artık gökte halka; fıskiye çıktı; insanlar
+    # caddenin ortasında, donma kameranın çok altında. Eski metinler DONMA_PASIF (*_V1), pasif.
+    "opening": "Above {place}, the storm's eye opens, a vast circular hole in the black clouds with a calm pale sky "
+               "inside the ring, and a wall of white frost races down the street toward the camera, freezing "
+               "everything it passes.",
+    "people": {5: "Five people and a dog sprint down the middle of the street ahead of it.",
+               6: "Six people and a dog sprint down the middle of the street ahead of it."},
     "vehicles": ("city bus", "taxi", "delivery van"),
     "mids": {
-        "O1": "The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and a "
-              "moving {vehicle} freezes white and slides sideways into a lamppost.",
-        "O2": "The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and a "
-              "{vehicle} freezes mid-turn and tips over onto its side.",
+        "O1": "The frost catches the people and the dog mid-stride, far below the camera, freezing them solid into ice "
+              "statues, and a moving {vehicle} freezes white and slides sideways into a lamppost.",
+        "O2": "The frost catches the people and the dog mid-stride, far below the camera, freezing them solid into ice "
+              "statues, and a {vehicle} freezes mid-turn and tips over onto its side.",
     },
     "finals": {
         "F1": "Right across the street, the frost climbs the building, its windows bursting white with ice, then ice "
               "races over the balcony railing in front of the camera.",
-        "F2": "Right below the balcony, a tree and a row of parked cars freeze solid, the tree splitting with a crack, "
-              "and white frost creeps up the railing in front of the camera.",
+        "F2": "Right below the balcony, a tree and parked cars freeze solid, the tree splitting with a crack, and frost "
+              "creeps up the railing in front of the camera.",
         "F3": "The frost wall hits the camera's building, ice racing up the facade and over the balcony railing as "
               "frost spreads across the edges of the frame.",
     },
     "vehicle_mids": ("O1", "O2"),
     "camera": "the camera stays fixed, tilting only slightly, the storm's eye always visible in the sky",
-    "tail": ("Handheld footage shot by a person standing on a high balcony across the street, normal lens; slight hand "
-             "shake, the camera stays fixed, tilting only slightly, the storm's eye always visible in the sky; one "
-             "continuous shot, no zoom, no cuts. Everything the frost touches freezes instantly and stays frozen "
-             "white; frozen people stand still like statues, no blood, no injuries, no faces close to the camera. Raw "
-             "natural light under a dark storm sky, never glossy or CGI. No readable signs or text. Everything moves "
-             "in real time, never in slow motion, people run at full speed."),
+    "tail": ("Handheld footage shot by a person standing on a high balcony across the street, high vantage looking "
+             "down over the street, normal lens; slight hand shake, the camera stays fixed, tilting only slightly, the "
+             "storm's eye always visible in the sky; one continuous shot, no zoom, no cuts. No funnel, no tornado. "
+             "Everything the frost touches freezes instantly and stays frozen white; frozen people stand still like "
+             "statues, no blood, no injuries, no faces close to the camera. Natural light under a dark sky, never CGI. "
+             "Everything moves in real time, never in slow motion, people run at full speed."),
 }
-# Önceden onaylı yedek kısaltma (bir kombinasyon 230 kelimeyi aşarsa stil ekinden çıkacak cümle). 15 Kas: gerekmedi.
-DONMA_TAIL_SHORTEN = "No readable signs or text."
+# 15 Kas (2): değişen eski metinler (pasif, hiçbir aktif prompt'ta çıkmaz)
+DONMA_PASIF = {
+    "G5_V1": "a Rio de Janeiro avenue of palm trees and pastel buildings",
+    "OPENING_V1": ("The storm's eye opens in the black sky above {place}, and a wall of white frost races down the "
+                   "street toward the camera, freezing a fountain's spray in mid-air."),
+    "PEOPLE_V1": {5: "Five people and a dog sprint toward the camera ahead of it.",
+                  6: "Six people and a dog sprint toward the camera ahead of it."},
+    "O1_V1": ("The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and a "
+              "moving {vehicle} freezes white and slides sideways into a lamppost."),
+    "O2_V1": ("The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and a "
+              "{vehicle} freezes mid-turn and tips over onto its side."),
+    "F2_V1": ("Right below the balcony, a tree and a row of parked cars freeze solid, the tree splitting with a crack, "
+              "and white frost creeps up the railing in front of the camera."),
+    "TAIL_V1": ("Handheld footage shot by a person standing on a high balcony across the street, normal lens; slight "
+                "hand shake, the camera stays fixed, tilting only slightly, the storm's eye always visible in the sky; "
+                "one continuous shot, no zoom, no cuts. Everything the frost touches freezes instantly and stays frozen "
+                "white; frozen people stand still like statues, no blood, no injuries, no faces close to the camera. "
+                "Raw natural light under a dark storm sky, never glossy or CGI. No readable signs or text. Everything "
+                "moves in real time, never in slow motion, people run at full speed."),
+    "TAIL_SHORTEN_V1": "No readable signs or text.",
+    "WARNING_V1": "⚠️ Donma: insanlar ve köpek kanlı/yaralı değil, buz heykel gibi donmuş mu kontrol et.",
+    "REQUIRED_V1": ("storm's eye", "freez", "normal lens", "no blood"),
+    "FORBIDDEN_V1": ("pans to follow", "Full action", "Until the last frame", "blood-", "corpse", "dead"),
+}
+# Önceden onaylı yedek kısaltma (bir kombinasyon 230 kelimeyi aşarsa stil ekinde bu cümle kısalır). 15 Kas (2): gerekmedi.
+DONMA_TAIL_SHORTEN = "Everything moves in real time, never in slow motion, people run at full speed."
+DONMA_TAIL_SHORTEN_TO = "People run at full speed."
 DONMA_SHORTENED = False
 DONMA_CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, sabit)"
-DONMA_WARNING = "⚠️ Donma: insanlar ve köpek kanlı/yaralı değil, buz heykel gibi donmuş mu kontrol et."
-DONMA_REQUIRED = ("storm's eye", "freez", "normal lens", "no blood")
-DONMA_FORBIDDEN = ("pans to follow", "Full action", "Until the last frame", "blood-", "corpse", "dead")
+DONMA_WARNING = ("⚠️ Donma: insanlar ve köpek kanlı/yaralı değil, buz heykel gibi donmuş mu kontrol et. "
+                 "Kamera yüksekte mi, gökte huni değil halka şeklinde göz mü?")
+DONMA_REQUIRED = ("storm's eye", "circular hole", "freez", "high vantage", "normal lens", "No funnel", "no blood",
+                  "far below the camera")
+DONMA_FORBIDDEN = ("fountain", "pans to follow", "Full action", "Until the last frame", "blood-", "corpse", "dead")
 _DF = DONMA_FIRTINA
 _DONMA_GEO_MEMORY: list[str] = []
 _DONMA_VEHICLE_MEMORY: list[str] = []
@@ -2695,7 +2727,7 @@ def donma_camera_text() -> str:
 def donma_tail() -> str:
     tail = _DF["tail"]
     if DONMA_SHORTENED:
-        tail = tail.replace(" " + DONMA_TAIL_SHORTEN, "")
+        tail = tail.replace(DONMA_TAIL_SHORTEN, DONMA_TAIL_SHORTEN_TO)
     return tail
 
 
@@ -2853,7 +2885,7 @@ def donma_build_scene(domain: str | None, event: str | None, history: list[str] 
         camera=f"hit kamerası ({donma_camera_text()}); high balcony across the street, normal lens",
         opening=opening, mid=(mid, mid_text), final=(final, final_text), plain=plain, vehicle=vehicle,
         spot="High balcony across the street (hit kamerası, yüksek balkon, normal lens, sabit)",
-        weather="yok (stil ekinde raw natural light under a dark storm sky)",
+        weather="yok (stil ekinde natural light under a dark sky)",
         axes={"coğrafya": f"{geo} {name}", "araç": vehicle, "kişi": people, "orta": mid, "final": final,
               "kamera modu": "sabit"},
         repeat=repeat)
@@ -2880,8 +2912,9 @@ def donma_build_scene(domain: str | None, event: str | None, history: list[str] 
 
 
 def donma_camera_issues(text: str, geo: str | None = None) -> list[str]:
-    """Kie öncesi son kontrol: DONMA_REQUIRED ("storm's eye", "freez", "normal lens", "no blood") ve seçilen G'nin
-    place metni var; DONMA_FORBIDDEN'dan hiçbiri yok (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
+    """Kie öncesi son kontrol: DONMA_REQUIRED ("storm's eye", "circular hole", "freez", "high vantage", "normal lens",
+    "No funnel", "no blood", "far below the camera") ve seçilen G'nin place metni var; DONMA_FORBIDDEN'dan ("fountain"
+    dahil) hiçbiri yok (büyük/küçük harf fark etmez). İhlal = gönderilmez. Eski listeler DONMA_PASIF."""
     out = []
     low = (text or "").lower()
     for need in DONMA_REQUIRED:

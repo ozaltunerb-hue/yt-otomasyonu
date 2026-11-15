@@ -118,6 +118,21 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   "Eksenler" JSON'unda metin (`kategori: "Donduran fırtına"`); Paylaşımlar "Kategori" caption'dan. 216 kombinasyon: en
   kısa 200, en uzun 213 kelime (G5 + city bus/delivery van + O1 + F2) / 1204 kr (G5 + delivery van + O1 + F2); yedek
   kısaltma ("No readable signs or text.") gerekmedi. Test `tests/test_donma_firtina.py`. 40 tohum: 19 olay + 12 mod diff 0.
+  - **15 Kas (2)** (commit "donma: goz halka + yuksek kamera + fiskiye cikti + uzak donma"). Sebep: ilk donduran fırtına
+    üretimi (Londra, O2 + F3) Kie'den geçti, 7,5/10 aldı. Donma anı ve final çok iyiydi. Sorunlar: (1) açılıştaki
+    fıskiye kamerayı sokak seviyesine, ön bahçeye indirdi; (2) fırtınanın gözü siyah bir huni, yani hortum gibi çizildi;
+    (3) donan insanların yüzleri kameraya çok yakındı; (4) otobüs devrilmedi. Değişenler (eskiler `DONMA_PASIF` *_V1,
+    pasif): G5 "a Rio avenue of palm trees and pastel buildings"; açılış "Above {place}, the storm's eye opens, a vast
+    circular hole in the black clouds with a calm pale sky inside the ring, ... freezing everything it passes." (fıskiye
+    çıktı); insan "... sprint down the middle of the street ahead of it."; O1/O2 "far below the camera" + "ice statues";
+    F2 "a tree and parked cars ... and frost creeps up the railing"; stil eki "high vantage looking down over the street"
+    + "No funnel, no tornado." + "Natural light under a dark sky, never CGI." ("No readable signs or text." çıktı).
+    F1, F3, araçlar, bütün LRU'lar aynı. Yedek kısaltma artık "Everything moves in real time, never in slow motion, people
+    run at full speed." → "People run at full speed." (`DONMA_TAIL_SHORTEN_TO`); gerekmedi. 216 kombinasyon: en kısa
+    218, en uzun 225 kelime (G5 + city bus/delivery van + O1 + F2) / 1285 kr (G5 + delivery van + O1 + F1). Kie öncesi
+    zorunlu: "storm's eye", "circular hole", "freez", "high vantage", "normal lens", "No funnel", "no blood", "far below
+    the camera" + place; yasak: "fountain" + eskiler. Onay uyarısına: "Kamera yüksekte mi, gökte huni değil halka
+    şeklinde göz mü?". 40 tohum: 19 olay + 12 mod diff 0.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir
