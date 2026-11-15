@@ -174,6 +174,23 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   → `kse` → `ksok`, ✋ Onay Kie'den önce. Notion: kategori Eksenler JSON'unda `kategori` = "Kasırga" (metin), Paylaşımlar
   "Kategori" caption'dan ("Kasırga", seçenek ilk yazımda oluşur); caption tabloları + caption_sim bu olayı tanıyor.
   Testler `tests/test_kasirga.py`; 40 tohum: 19 olay + 13 mod (donma dahil) diff 0 (`OTHERS_SHA256`, ed5a9ab hâli).
+- **15 Kas (5)**: 🌀 Kasırga şiddet güncellemesi (commit "kasirga: kategori 5 siddet + saganak + kaos + agac O3 + sabit
+  kamera + yeni F2"). SEBEP: ilk kasırga üretimi (Florida, O2 + F2) 7/10 aldı. Çok gerçekçiydi, tentenin pikabın üstüne
+  çakılması iyiydi. Ama kasırga hissi yoktu: yağmur hiç çizilmedi, gökyüzü aydınlıktı; palmiyeler hafif eğildi; "heavy
+  hand shake" kamerayı sağa sola döndürdü; palmiye finali okunmadı. Bahadır'ın notu: gerçek kasırga videolarında ağaçlar
+  kökünden sökülür, çok şiddetli yağmur yağar, tam bir kaos olur. Hedef: gerçekçiliği koruyarak gerçek kasırga şiddeti.
+  DEĞİŞİKLİK: açılış "Category 5 hurricane winds and torrential sideways rain ... debris flying everywhere in total
+  chaos."; insan cümlesine "one knocked off his feet by a gust"; yeni O3 (kökünden sökülen ağaç park halindeki araca
+  çöker; araçlı); yeni F2 (karşıdaki dükkânın ön cephesi kopar); stil eki kamera "the camera stays fixed on the street,
+  shaking in the wind", ışık "dark grey sky in pouring rain"; G5 "a Cuban seaside town" ("street" tekrarı düzeldi). Eski
+  metinler `hp.KASIRGA_PASIF` (_V1: G5, açılış, insan, F2, kamera, stil eki, Onay kamera satırı, uyarı, hava, bot
+  açıklaması, zorunlu liste, vehicle_mids, görünüm metinleri). Kie öncesi zorunlu: "Category 5", "torrential sideways
+  rain", "normal lens", "stays fixed on the street", "pouring rain", "No tornado funnel" + place; yasak listeye "heavy
+  hand shake" eklendi. Onay kamera satırı "Kamera: hit kamerası (yüksek balkon, normal lens, sabit, rüzgârla sarsılır,
+  lenste yağmur)", uyarıya "Sağanak yağmur, karanlık gökyüzü ve kaos var mı?". O1-O3 hepsi araçlı: araç geçmişi her
+  üretimde ilerler, Notion `arac` yazılır. 324 kombinasyon: en kısa 174 kelime, en uzun 183 (G1 + pickup truck + O2 + F1
+  dahil eşit uzunlukta çok kombinasyon), en uzun 1063 kr (G3 + pickup truck + O2 + F2). Olay kapısı küçük harfe bakmıyor
+  ("hurricane winds" geçiyor), eş anlamlı eklenmedi. 40 tohum: diğer 19 olay + 13 mod + kilitli hash diff 0.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir

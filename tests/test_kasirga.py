@@ -4,6 +4,9 @@
 # birebir, zaman etiketleri var, normal hattın sahnesi yok (olay yapılandırılmış havuzda değil). Coğrafya G1-G6 (son 3),
 # araç son 2, orta O1-O2 / final F1-F3 son 1, kişi 4/5. Diğer 20 olay/kategori ve bütün modlar birebir aynı (40 tohum).
 # Ağ yok.
+# 15 Kas (5): ilk üretim (Florida, O2 + F2) 7/10, kasırga hissi yoktu (yağmur yok, aydınlık gök, hafif eğilen palmiye,
+# "heavy hand shake" kamerayı döndürdü, palmiye finali okunmadı). Kategori 5 şiddet + sağanak + kaos, O3 (kökünden
+# sökülen ağaç), yeni F2 (dükkân cephesi), kamera sabit; G5 "street" tekrarı düzeldi. Eski metinler hp.KASIRGA_PASIF.
 import asyncio
 import hashlib
 import json
@@ -35,40 +38,77 @@ PLACES = {"G1": ("ABD", "a Florida beach town of low pastel houses"),
           "G2": ("Filipinler", "a Philippine coastal town of tin-roofed houses"),
           "G3": ("Meksika", "a Mexican Caribbean town of colorful concrete houses"),
           "G4": ("Hindistan", "an Indian coastal town of old concrete buildings"),
-          "G5": ("Küba", "a Cuban seaside street of faded colonial houses"),
+          "G5": ("Küba", "a Cuban seaside town of faded colonial houses"),
           "G6": ("Japonya", "a Japanese coastal town of low tiled houses")}
 # Talimattaki metinler kelimesi kelimesine (zaman etiketleri dahil)
-OPENING = ("0-4s: Hurricane winds and sideways rain hammer a street in {place}, palm trees bending almost flat as metal "
-           "roof sheets tear loose and fly across the road.")
+OPENING = ("0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in {place}, palm trees bent "
+           "almost flat, branches, roof sheets and debris flying everywhere in total chaos.")
 PEOPLE = {4: "Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to "
-             "railings.",
+             "railings, one knocked off his feet by a gust.",
           5: "Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to "
-             "railings."}
+             "railings, one knocked off his feet by a gust."}
 VEHICLES = ("pickup truck", "SUV", "small car")
 MIDS = {
     "O1": "4-9s: A violent gust flips a parked {vehicle} onto its roof and sends it skidding across the wet road.",
     "O2": ("4-9s: A shop awning and a sheet of metal roofing rip loose and slam down onto a parked {vehicle}, smashing "
            "its windows."),
+    "O3": ("4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked {vehicle}, crushing "
+           "its roof."),
 }
 FINALS = {
     "F1": ("9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying "
            "past the camera."),
-    "F2": ("9-15s: Right below the balcony, a tall palm tree snaps in half and crashes onto the parked cars, debris "
-           "slamming into the balcony railing."),
+    "F2": ("9-15s: Right across the street, the wind rips the entire front wall off a shop, glass and debris blasting "
+           "past the camera."),
     "F3": "9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
 }
-TAIL = ("Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; heavy "
-        "hand shake from the wind, rain streaking across the lens; no zoom, no cuts. No tornado funnel, no flood waves. "
-        "Bystanders wear everyday clothes. Raw natural light under a dark storm sky, never glossy or CGI. No readable "
-        "signs or text. Everything moves in real time, never in slow motion.")
-REQUIRED = ("Hurricane", "sideways rain", "normal lens", "No tornado funnel")
+TAIL = ("Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the "
+        "camera stays fixed on the street, shaking in the wind, rain streaking across the lens; no zoom, no cuts. No "
+        "tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in "
+        "pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow "
+        "motion.")
+REQUIRED = ("Category 5", "torrential sideways rain", "normal lens", "stays fixed on the street", "pouring rain",
+            "No tornado funnel")
 FORBIDDEN = ("tornado", "funnel", "twister", "waterspout", "surge", "tsunami", "tidal", "flood wave", "pans to follow",
-             "Full action", "Until the last frame")
+             "Full action", "Until the last frame", "heavy hand shake")
 NEGATION = "No tornado funnel, no flood waves."
 EVENT_LABEL = "🌀 Kasırga kıyı kasabasını döver"
-CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, rüzgârla sarsılan el, lenste yağmur)"
+CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, sabit, rüzgârla sarsılır, lenste yağmur)"
 WARNING = ("⚠️ Gerçekçilik: gökte huni yok mu, sel dalgası yok mu, insanlar rüzgârla gerçekten boğuşuyor mu, video "
-           "yapay görünüyor mu?")
+           "yapay görünüyor mu? Sağanak yağmur, karanlık gökyüzü ve kaos var mı?")
+# 15 Kas (5): değişen eski metinler pasif kayıtta (hp.KASIRGA_PASIF) birebir
+PASIF = {
+    "G5_V1": "a Cuban seaside street of faded colonial houses",
+    "OPENING_V1": ("Hurricane winds and sideways rain hammer a street in {place}, palm trees bending almost flat as "
+                   "metal roof sheets tear loose and fly across the road."),
+    "PEOPLE_V1": {4: "Four people struggle along the sidewalk toward the camera, bent double against the wind, "
+                     "clinging to railings.",
+                  5: "Five people struggle along the sidewalk toward the camera, bent double against the wind, "
+                     "clinging to railings."},
+    "F2_V1": ("Right below the balcony, a tall palm tree snaps in half and crashes onto the parked cars, debris "
+              "slamming into the balcony railing."),
+    "VEHICLE_MIDS_V1": ("O1", "O2"),
+    "CAMERA_V1": "heavy hand shake from the wind, rain streaking across the lens; no zoom, no cuts",
+    "TAIL_V1": ("Handheld footage shot by a person standing on a high balcony across the street, eye level, normal "
+                "lens; heavy hand shake from the wind, rain streaking across the lens; no zoom, no cuts. No tornado "
+                "funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark storm sky, "
+                "never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."),
+    "CAMERA_LINE_V1": "Kamera: hit kamerası (yüksek balkon, normal lens, rüzgârla sarsılan el, lenste yağmur)",
+    "WARNING_V1": ("⚠️ Gerçekçilik: gökte huni yok mu, sel dalgası yok mu, insanlar rüzgârla gerçekten boğuşuyor mu, "
+                   "video yapay görünüyor mu?"),
+    "WEATHER_V1": "kasırga rüzgârı ve yatay yağmur (stil ekinde raw natural light under a dark storm sky)",
+    "CONFIRM_DESC_V1": ("Kasırga rüzgârı ve yatay yağmur kıyı kasabasının caddesini döver: palmiyeler yatar, çatı "
+                        "sacları uçar. İnsanlar rüzgâra karşı boğuşarak kameraya doğru ilerler; park halindeki araç "
+                        "devrilir ya da üstüne tente ve sac düşer; final caddenin karşısında ya da balkonun altında. "
+                        "Huni yok, sel dalgası yok."),
+    "REQUIRED_V1": ("Hurricane", "sideways rain", "normal lens", "No tornado funnel"),
+    "SPOT_DISPLAY_V1": "High balcony across the street (hit kamerası, yüksek balkon, normal lens, rüzgârla sarsılan el)",
+    "CAMERA_MODE_V1": "elde, rüzgârla sarsılan",
+}
+# Aktif prompt'ta asla çıkmaması gereken eski parçalar
+OLD_PROMPT_BITS = [PASIF["G5_V1"], *PASIF["OPENING_V1"].split("{place}"), *PASIF["PEOPLE_V1"].values(),
+                   PASIF["F2_V1"], PASIF["CAMERA_V1"], PASIF["TAIL_V1"], "Raw natural light under a dark storm sky",
+                   "a tall palm tree snaps in half", "a Cuban seaside street"]
 # Diğer 19 olay (normal yol) + 12 mod + ❄️ Donduran fırtına, 40 tohum: değişiklikten ÖNCEKİ kodla (ed5a9ab) üretilen
 # kaydın SHA-256'sı
 OTHERS_SHA256 = "0f17e5f5bec700860e7bdff73111d8518d651936a1dd62e276dcbaa75f96f860"
@@ -178,7 +218,7 @@ class TestTexts(_Quiet):
         self.assertEqual(KS["vehicles"], VEHICLES)
         self.assertEqual({k: f"{b}: {v}" for k, v in KS["mids"].items()}, MIDS)
         self.assertEqual({k: f"{c}: {v}" for k, v in KS["finals"].items()}, FINALS)
-        self.assertEqual(KS["vehicle_mids"], ("O1", "O2"))
+        self.assertEqual(KS["vehicle_mids"], ("O1", "O2", "O3"))
         self.assertEqual(hp.kasirga_tail(), TAIL)
         self.assertEqual(KS["tail"], TAIL)
         self.assertIn(hp.kasirga_camera_text(), TAIL)
@@ -195,12 +235,52 @@ class TestTexts(_Quiet):
         # sıra: açılış + insan + orta + final + stil eki
         self.assertEqual(hp.kasirga_prompt("G3", 5, "O2", "SUV", "F3"), expected("G3", 5, "SUV", "O2", "F3"))
         self.assertEqual(hp.kasirga_prompt("G1", 4, "O1", "pickup truck", "F1"),
-                         "0-4s: Hurricane winds and sideways rain hammer a street in a Florida beach town of low pastel "
-                         "houses, palm trees bending almost flat as metal roof sheets tear loose and fly across the "
-                         "road. Four people struggle along the sidewalk toward the camera, bent double against the "
-                         "wind, clinging to railings. 4-9s: A violent gust flips a parked pickup truck onto its roof and "
-                         "sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the "
-                         "whole roof off a house, metal sheets and tiles flying past the camera. " + TAIL)
+                         "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida "
+                         "beach town of low pastel houses, palm trees bent almost flat, branches, roof sheets and debris "
+                         "flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, "
+                         "bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: "
+                         "A violent gust flips a parked pickup truck onto its roof and sends it skidding across the wet "
+                         "road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets "
+                         "and tiles flying past the camera. " + TAIL)
+        self.assertEqual(hp.kasirga_prompt("G5", 5, "O3", "small car", "F2"),
+                         "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban "
+                         "seaside town of faded colonial houses, palm trees bent almost flat, branches, roof sheets and "
+                         "debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the "
+                         "camera, bent double against the wind, clinging to railings, one knocked off his feet by a "
+                         "gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked "
+                         "small car, crushing its roof. 9-15s: Right across the street, the wind rips the entire front "
+                         "wall off a shop, glass and debris blasting past the camera. " + TAIL)
+        self.assertEqual(hp.KASIRGA_WEATHER, "kategori 5 kasırga rüzgârı ve sağanak yatay yağmur (stil ekinde dark grey "
+                                             "sky in pouring rain)")
+
+    def test_passive_v1_texts(self):
+        """15 Kas (5): değişen her eski metin KASIRGA_PASIF'te _V1 olarak birebir; hiçbir aktif prompt'ta (324
+        kombinasyon + 40 tohum) ve aktif Onay/kamera metninde çıkmaz."""
+        self.assertEqual(hp.KASIRGA_PASIF, PASIF)
+        for (g, ppl, v, m, f), p in all_combos():
+            for bit in OLD_PROMPT_BITS:
+                self.assertNotIn(bit, p, (g, ppl, v, m, f, bit))
+            self.assertNotIn("heavy hand shake", p.lower())
+        for seed in range(1, 41):
+            d = build(seed)
+            sc, tb = d["scenes"][0], d["structure"]["kasirga"]
+            for bit in OLD_PROMPT_BITS:
+                for text in (sc["prompt"], sc["story"], sc["style_suffix"]):
+                    self.assertNotIn(bit, text, (seed, bit))
+            for old in ("CAMERA_LINE_V1", "WARNING_V1", "SPOT_DISPLAY_V1", "CAMERA_MODE_V1"):
+                self.assertNotIn(PASIF[old] + "\n", tb["lines"] + "\n", (seed, old))
+            self.assertNotIn("rüzgârla sarsılan el", json.dumps(d["trace"], ensure_ascii=False), seed)
+        for old, new in (("CAMERA_LINE_V1", hp.KASIRGA_CAMERA_LINE), ("WARNING_V1", hp.KASIRGA_WARNING),
+                         ("WEATHER_V1", hp.KASIRGA_WEATHER), ("CONFIRM_DESC_V1", hp.KASIRGA_CONFIRM_DESC),
+                         ("REQUIRED_V1", hp.KASIRGA_REQUIRED), ("TAIL_V1", hp.kasirga_tail()),
+                         ("CAMERA_V1", hp.kasirga_camera_text()), ("VEHICLE_MIDS_V1", KS["vehicle_mids"])):
+            self.assertNotEqual(PASIF[old], new, old)
+        # eski stil eki yeni Kie öncesi denetimden geçmez (heavy hand shake yasak, yeni zorunlular eksik)
+        p = hp.kasirga_prompt("G1", 4, "O1", "SUV", "F1").replace(TAIL, PASIF["TAIL_V1"])
+        issues = hp.kasirga_camera_issues(p, "G1")
+        self.assertIn("bu kategoride olmayan ifade var: heavy hand shake", issues)
+        self.assertIn('"stays fixed on the street" eksik', issues)
+        self.assertIn('"pouring rain" eksik', issues)
 
     def test_vehicle_fill_and_bad_ids(self):
         for v in VEHICLES:
@@ -211,7 +291,7 @@ class TestTexts(_Quiet):
                 hp.kasirga_mid(m, None)
             with self.assertRaises(es.StructureError):
                 hp.kasirga_mid(m, "taxi")   # bu kategorinin havuzunda değil
-        for bad in ("O3", "P6", "C1"):
+        for bad in ("O4", "P6", "C1"):
             with self.assertRaises(es.StructureError):
                 hp.kasirga_mid(bad, "SUV")
         for bad in ("F4", "Q3"):
@@ -221,9 +301,10 @@ class TestTexts(_Quiet):
             hp.kasirga_opening("G7")
 
     def test_all_combos_within_limits(self):
-        """216 kombinasyon: hepsi ≤ 230 kelime, ≤ 1400 karakter. Talimattaki hesap: en kısa 156 kelime; en uzun 167
-        kelime (G1 + pickup truck + O2 + F2); en uzun karakter 971 (G3 + pickup truck + O2 + F2). Zorunlu/yasak ifade
-        kontrolü ve ana hattın zorunlu olay denetimi her kombinasyonda geçer."""
+        """15 Kas (5): 324 kombinasyon (6 × 2 × 3 × 3 × 3): hepsi ≤ 230 kelime, ≤ 1400 karakter. En kısa 174 kelime;
+        en uzun 183 kelime (G1 + pickup truck + O2 + F1 dahil eşit uzunlukta birçok kombinasyon); en uzun karakter 1063
+        (G3 + pickup truck + O2 + F2; talimattaki G3 + pickup truck + O3 + F2 1059). Zorunlu/yasak ifade kontrolü ve
+        ana hattın zorunlu olay denetimi her kombinasyonda geçer."""
         n, over, words, chars = 0, [], [], []
         for key, p in all_combos():
             n += 1
@@ -246,14 +327,17 @@ class TestTexts(_Quiet):
             # her açılışta, eş anlamlı gerekmedi
             self.assertEqual(pg.event_fidelity_issues(EVENT, hp.kasirga_story(g, ppl, m, v, f)), [], key)
             self.assertEqual(pg.event_fidelity_issues(EVENT, p), [], key)
-        self.assertEqual(n, 6 * 2 * 3 * 2 * 3)
+        self.assertEqual(n, 6 * 2 * 3 * 3 * 3)
+        self.assertEqual(n, 324)
         self.assertEqual(over, [])
-        self.assertEqual(min(words)[0], 156)
-        self.assertEqual(max(words)[0], 167)
-        self.assertEqual(len(hp.kasirga_prompt("G1", 5, "O2", "pickup truck", "F2").split()), 167)
-        self.assertEqual(max(chars)[0], 971)
+        self.assertEqual(min(words)[0], 174)
+        self.assertEqual(max(words)[0], 183)
+        self.assertEqual(len(hp.kasirga_prompt("G1", 4, "O2", "pickup truck", "F1").split()), 183)
+        self.assertEqual(max(chars)[0], 1063)
         self.assertEqual(max(chars)[1][0::2], ("G3", "pickup truck", "F2"))
-        self.assertEqual(len(hp.kasirga_prompt("G3", 5, "O2", "pickup truck", "F2")), 971)
+        self.assertEqual(max(chars)[1][3], "O2")
+        self.assertEqual(len(hp.kasirga_prompt("G3", 5, "O2", "pickup truck", "F2")), 1063)
+        self.assertEqual(len(hp.kasirga_prompt("G3", 5, "O3", "pickup truck", "F2")), 1059)
 
     def test_event_gate_without_synonym(self):
         """Olay kapısı bu olayda da açık ve geçiyor: iç anahtarın kökleri (hurr, wind, batt, coas, town) içinden
@@ -265,6 +349,10 @@ class TestTexts(_Quiet):
         self.assertTrue(pg.event_fidelity_issues(EVENT, "Rain falls on the beach."))
         self.assertTrue(pg.event_fidelity_issues(EVENT, "A hurricane."))
         self.assertEqual(pg.event_fidelity_issues(EVENT, "Hurricane winds hammer the street."), [])
+        # 15 Kas (5): açılış artık "Category 5 hurricane winds" (küçük harf); kapı harf büyüklüğüne bakmaz
+        self.assertEqual(pg.event_fidelity_issues(EVENT, "Category 5 hurricane winds hammer the street."), [])
+        for g, (_, place) in PLACES.items():
+            self.assertEqual(pg.event_fidelity_issues(EVENT, hp.kasirga_opening(g)), [], g)
         self.assertEqual([e for e in es.structured_events() if "hurr" in pg._event_stems(e)], [])
 
 
@@ -357,7 +445,7 @@ class TestKasirgaScene(_Quiet):
             tb = d["structure"]["kasirga"]
             self.assertIn(tb["geo"], ("G4", "G5", "G6"))      # son 3 (G1, G2, G3) elenir
             self.assertEqual(tb["vehicle"], "small car")      # son 2 (pickup truck, SUV) elenir
-            self.assertEqual(tb["mid"], "O2")                 # son 1 (O1) elenir
+            self.assertIn(tb["mid"], ("O2", "O3"))            # son 1 (O1) elenir
             self.assertIn(tb["final"], ("F1", "F2"))          # son 1 (F3) elenir
             axes = json.loads(d["axes_json"])
             self.assertEqual(axes["event"], EVENT)
@@ -379,7 +467,7 @@ class TestKasirgaScene(_Quiet):
             reset()
             tags = hp.kasirga_tags(hist)
             self.assertEqual(tags, ["O2+F2"])
-            self.assertEqual(hp.kasirga_choose_mid(tags, random.Random(s)), "O1")
+            self.assertIn(hp.kasirga_choose_mid(tags, random.Random(s)), ("O1", "O3"))
             self.assertIn(hp.kasirga_choose_final(tags, random.Random(s)), ("F1", "F3"))
         donma = [f"{hp.DONMA_DOMAIN}|none|{hp.DONMA_EVENT.lower()}|x##O1+F2|bystander_handheld"]
         self.assertEqual(hp.kasirga_tags(donma), [])   # donma kaydı bu kategoriyi etkilemez
@@ -413,7 +501,7 @@ class TestKasirgaScene(_Quiet):
         self.assertTrue(hp.kasirga_camera_issues(p0 + " A storm surge floods the road.", tb["geo"]))
         # cümle değişirse (ör. "no flood waves" çıkarsa) "No tornado funnel" zorunlu ifadesi yine aranır
         self.assertIn('"No tornado funnel" eksik', hp.kasirga_camera_issues(p0.replace(NEGATION, ""), tb["geo"]))
-        for bad in ({"geo": "G7"}, {"mid": "P6"}, {"mid": "O3"}, {"final": "Q3"}, {"people": 6},
+        for bad in ({"geo": "G7"}, {"mid": "P6"}, {"mid": "O4"}, {"final": "Q3"}, {"people": 6},
                     {"mid": "O1", "vehicle": None}, {"vehicle": "taxi"}):
             self.assertTrue(cp.submit_issues({**st, "kasirga": {**tb, **bad}}, info), bad)
         self.assertTrue(cp.submit_issues(st, {**info, "style_suffix": "x"}))
@@ -453,6 +541,9 @@ class TestKasirgaScene(_Quiet):
             self.assertEqual(lines[10], WARNING)
             self.assertEqual(len(lines), 11)
             seen.add(tb["mid"])
+            # O1-O3 hepsinde araç: araç geçmişi her üretimde ilerler, Notion Eksenler'e araç yazılır
+            self.assertEqual(hp._KASIRGA_VEHICLE_MEMORY[-1], tb["vehicle"])
+            self.assertEqual(json.loads(d["axes_json"])["axes"]["arac"], tb["vehicle"])
             shown = sections_to_text(format_generation(d["trace"], {"domain": "🌀 Kasırga",
                                                                     "event": hp.KASIRGA_EVENT_LABEL}))
             self.assertIn(hp.KASIRGA_WEATHER, shown)
@@ -466,7 +557,7 @@ class TestKasirgaScene(_Quiet):
             self.assertEqual(body.count("Eksenler (🌀 Kasırga)"), 1)
             self.assertIn(WARNING, body)
             self.assertIn("\n\n" + sc["prompt"], body)
-        self.assertEqual(seen, {"O1", "O2"})
+        self.assertEqual(seen, {"O1", "O2", "O3"})   # 15 Kas (5): O3 40 tohumda seçilebiliyor
 
     def test_notion_category_and_caption(self):
         """Notion üretim kaydında kategori "Eksenler" JSON'unda metin ("Kasırga"), donmadaki gibi; Paylaşımlar
@@ -652,10 +743,12 @@ class TestOthersUntouched(_Quiet):
         self.assertEqual(snapshot_hash(self.snap), OTHERS_SHA256)
 
     def test_sentences_only_in_this_category(self):
-        marks = ["Hurricane winds and sideways rain hammer", *PEOPLE.values(),
+        marks = ["Category 5 hurricane winds and torrential sideways rain hammer", *PEOPLE.values(),
                  *[t.split("{vehicle}")[0] for t in KS["mids"].values()], *KS["finals"].values(), TAIL,
                  KS["camera"], *[p for _, p in PLACES.values()], "sideways rain", "bent double against the wind",
-                 "cartwheels down the road", "peels the whole roof off", "Hurricane"]
+                 "cartwheels down the road", "peels the whole roof off", "Hurricane", "Category 5",
+                 "ripped out by its roots", "rips the entire front wall off a shop", "dark grey sky in pouring rain",
+                 "one knocked off his feet by a gust"]
         pools = json.dumps({e: {s: {k: v["text"] for k, v in b[s].items()} for s in ("slice_2", "slice_3")}
                             for e, b in es.EVENT_BEATS.items()}, ensure_ascii=False)
         others = pools + json.dumps(es.EVENT_KEY_VISUAL, ensure_ascii=False)

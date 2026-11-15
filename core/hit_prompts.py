@@ -3008,6 +3008,8 @@ def donma_issues(structure: dict, info: dict) -> list[str]:
 # düzen (GPT yok, hikâye koddan birebir, zaman etiketleri var, normal hattın sahnesi YOK: olay yapılandırılmış havuzda
 # değil, rastgele domain rotasyonu ve snapshot'lar değişmesin diye sahne burada kurulur: kasirga_build_scene).
 # Coğrafya G1-G6 (son 3), araç son 2, orta/final son 1, kişi 4/5. Kayıt O*+F* (combo + Eksenler).
+# 15 Kas (5): kategori 5 şiddet + sağanak + kaos; O3 (kökünden sökülen ağaç), yeni F2 (dükkân cephesi), kamera sabit
+# (rüzgârla sarsılır, "heavy hand shake" yasak). Eski metinler KASIRGA_PASIF (_V1).
 KASIRGA_MODE_LABEL = "🌀 Kasırga"
 KASIRGA_DOMAIN = "hurricane_disasters"                 # Combo Key'in ilk parçası (Notion eksen sorgusu bununla)
 KASIRGA_EVENT = "Hurricane winds batter a coastal town"   # Notion "Olay"; normal havuzda (DOMAIN_ATTRIBUTES) yok
@@ -3027,49 +3029,84 @@ KASIRGA = {
         "G2": {"name": "Filipinler", "place": "a Philippine coastal town of tin-roofed houses"},
         "G3": {"name": "Meksika", "place": "a Mexican Caribbean town of colorful concrete houses"},
         "G4": {"name": "Hindistan", "place": "an Indian coastal town of old concrete buildings"},
-        "G5": {"name": "Küba", "place": "a Cuban seaside street of faded colonial houses"},
+        "G5": {"name": "Küba", "place": "a Cuban seaside town of faded colonial houses"},
         "G6": {"name": "Japonya", "place": "a Japanese coastal town of low tiled houses"},
     },
-    "opening": "Hurricane winds and sideways rain hammer a street in {place}, palm trees bending almost flat as metal "
-               "roof sheets tear loose and fly across the road.",
+    "opening": ("Category 5 hurricane winds and torrential sideways rain hammer a street in {place}, palm trees bent "
+                "almost flat, branches, roof sheets and debris flying everywhere in total chaos."),
     "people": {4: "Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging "
-                  "to railings.",
+                  "to railings, one knocked off his feet by a gust.",
                5: "Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging "
-                  "to railings."},
+                  "to railings, one knocked off his feet by a gust."},
     "vehicles": ("pickup truck", "SUV", "small car"),
     "mids": {
         "O1": "A violent gust flips a parked {vehicle} onto its roof and sends it skidding across the wet road.",
         "O2": "A shop awning and a sheet of metal roofing rip loose and slam down onto a parked {vehicle}, smashing "
               "its windows.",
+        "O3": "A big tree is ripped out by its roots and crashes across the road onto a parked {vehicle}, crushing its "
+              "roof.",
     },
     "finals": {
         "F1": "Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past "
               "the camera.",
-        "F2": "Right below the balcony, a tall palm tree snaps in half and crashes onto the parked cars, debris "
-              "slamming into the balcony railing.",
+        "F2": "Right across the street, the wind rips the entire front wall off a shop, glass and debris blasting past "
+              "the camera.",
         "F3": "Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
     },
-    "vehicle_mids": ("O1", "O2"),
-    "camera": "heavy hand shake from the wind, rain streaking across the lens; no zoom, no cuts",
+    "vehicle_mids": ("O1", "O2", "O3"),
+    "camera": "the camera stays fixed on the street, shaking in the wind, rain streaking across the lens; no zoom, no "
+              "cuts",
     "tail": ("Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; "
-             "heavy hand shake from the wind, rain streaking across the lens; no zoom, no cuts. No tornado funnel, no "
-             "flood waves. Bystanders wear everyday clothes. Raw natural light under a dark storm sky, never glossy or "
-             "CGI. No readable signs or text. Everything moves in real time, never in slow motion."),
+             "the camera stays fixed on the street, shaking in the wind, rain streaking across the lens; no zoom, no "
+             "cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark "
+             "grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, "
+             "never in slow motion."),
 }
-KASIRGA_CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, rüzgârla sarsılan el, lenste yağmur)"
+KASIRGA_CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, sabit, rüzgârla sarsılır, lenste yağmur)"
 KASIRGA_WARNING = ("⚠️ Gerçekçilik: gökte huni yok mu, sel dalgası yok mu, insanlar rüzgârla gerçekten boğuşuyor mu, "
-                   "video yapay görünüyor mu?")
-KASIRGA_WEATHER = "kasırga rüzgârı ve yatay yağmur (stil ekinde raw natural light under a dark storm sky)"
-KASIRGA_CONFIRM_DESC = ("Kasırga rüzgârı ve yatay yağmur kıyı kasabasının caddesini döver: palmiyeler yatar, çatı "
-                        "sacları uçar. İnsanlar rüzgâra karşı boğuşarak kameraya doğru ilerler; park halindeki araç "
-                        "devrilir ya da üstüne tente ve sac düşer; final caddenin karşısında ya da balkonun altında. "
-                        "Huni yok, sel dalgası yok.")
+                   "video yapay görünüyor mu? Sağanak yağmur, karanlık gökyüzü ve kaos var mı?")
+KASIRGA_WEATHER = "kategori 5 kasırga rüzgârı ve sağanak yatay yağmur (stil ekinde dark grey sky in pouring rain)"
+KASIRGA_CONFIRM_DESC = ("Kategori 5 kasırga rüzgârı ve sağanak yatay yağmur kıyı kasabasının caddesini döver: "
+                        "palmiyeler yatar, dallar, çatı sacları ve enkaz her yere uçar. İnsanlar rüzgâra karşı "
+                        "boğuşarak kameraya doğru ilerler, biri rüzgârla yere düşer; park halindeki araç devrilir, "
+                        "üstüne tente ve sac düşer ya da kökünden sökülen ağaç üstüne çöker; final caddenin "
+                        "karşısında. Huni yok, sel dalgası yok.")
 # Kie öncesi son kontrol (büyük/küçük harf fark etmez). Yasak ifadeler, stil ekindeki "No tornado funnel, no flood
 # waves." cümlesi metinden çıkarıldıktan sonra aranır.
-KASIRGA_REQUIRED = ("Hurricane", "sideways rain", "normal lens", "No tornado funnel")
+KASIRGA_REQUIRED = ("Category 5", "torrential sideways rain", "normal lens", "stays fixed on the street", "pouring rain",
+                    "No tornado funnel")
 KASIRGA_FORBIDDEN = ("tornado", "funnel", "twister", "waterspout", "surge", "tsunami", "tidal", "flood wave",
-                     "pans to follow", "Full action", "Until the last frame")
+                     "pans to follow", "Full action", "Until the last frame", "heavy hand shake")
 KASIRGA_NEGATION = "No tornado funnel, no flood waves."
+# 15 Kas (5): değişen eski metinler (pasif, hiçbir aktif prompt'ta çıkmaz)
+KASIRGA_PASIF = {
+    "G5_V1": "a Cuban seaside street of faded colonial houses",
+    "OPENING_V1": ("Hurricane winds and sideways rain hammer a street in {place}, palm trees bending almost flat as "
+                   "metal roof sheets tear loose and fly across the road."),
+    "PEOPLE_V1": {4: "Four people struggle along the sidewalk toward the camera, bent double against the wind, "
+                     "clinging to railings.",
+                  5: "Five people struggle along the sidewalk toward the camera, bent double against the wind, "
+                     "clinging to railings."},
+    "F2_V1": ("Right below the balcony, a tall palm tree snaps in half and crashes onto the parked cars, debris "
+              "slamming into the balcony railing."),
+    "VEHICLE_MIDS_V1": ("O1", "O2"),
+    "CAMERA_V1": "heavy hand shake from the wind, rain streaking across the lens; no zoom, no cuts",
+    "TAIL_V1": ("Handheld footage shot by a person standing on a high balcony across the street, eye level, normal "
+                "lens; heavy hand shake from the wind, rain streaking across the lens; no zoom, no cuts. No tornado "
+                "funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark storm sky, "
+                "never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."),
+    "CAMERA_LINE_V1": "Kamera: hit kamerası (yüksek balkon, normal lens, rüzgârla sarsılan el, lenste yağmur)",
+    "WARNING_V1": ("⚠️ Gerçekçilik: gökte huni yok mu, sel dalgası yok mu, insanlar rüzgârla gerçekten boğuşuyor mu, "
+                   "video yapay görünüyor mu?"),
+    "WEATHER_V1": "kasırga rüzgârı ve yatay yağmur (stil ekinde raw natural light under a dark storm sky)",
+    "CONFIRM_DESC_V1": ("Kasırga rüzgârı ve yatay yağmur kıyı kasabasının caddesini döver: palmiyeler yatar, çatı "
+                        "sacları uçar. İnsanlar rüzgâra karşı boğuşarak kameraya doğru ilerler; park halindeki araç "
+                        "devrilir ya da üstüne tente ve sac düşer; final caddenin karşısında ya da balkonun altında. "
+                        "Huni yok, sel dalgası yok."),
+    "REQUIRED_V1": ("Hurricane", "sideways rain", "normal lens", "No tornado funnel"),
+    "SPOT_DISPLAY_V1": "High balcony across the street (hit kamerası, yüksek balkon, normal lens, rüzgârla sarsılan el)",
+    "CAMERA_MODE_V1": "elde, rüzgârla sarsılan",
+}
 _KS = KASIRGA
 _KASIRGA_GEO_MEMORY: list[str] = []
 _KASIRGA_VEHICLE_MEMORY: list[str] = []
@@ -3101,7 +3138,7 @@ def kasirga_people(n: int) -> str:
 
 def kasirga_mid(mid: str, vehicle: str | None) -> str:
     if mid not in _KS["mids"]:
-        raise es.StructureError(f"{KASIRGA_MODE_LABEL}: {mid} bu kategoride yok (orta O1, O2)")
+        raise es.StructureError(f"{KASIRGA_MODE_LABEL}: {mid} bu kategoride yok (orta O1-O3)")
     if mid in _KS["vehicle_mids"] and vehicle not in _KS["vehicles"]:
         raise es.StructureError(f"{KASIRGA_MODE_LABEL}: {mid} için araç yok ({vehicle})")
     return _KS["mids"][mid].format(vehicle=vehicle or "")
@@ -3235,10 +3272,10 @@ def kasirga_build_scene(domain: str | None, event: str | None, history: list[str
         {"trace": base_trace}, {}, mode=KASIRGA_MODE_LABEL,
         camera=f"hit kamerası ({kasirga_camera_text()}); high balcony across the street, eye level, normal lens",
         opening=opening, mid=(mid, mid_text), final=(final, final_text), plain=plain, vehicle=vehicle,
-        spot="High balcony across the street (hit kamerası, yüksek balkon, normal lens, rüzgârla sarsılan el)",
+        spot="High balcony across the street (hit kamerası, yüksek balkon, normal lens, sabit, rüzgârla sarsılır)",
         weather=KASIRGA_WEATHER,
         axes={"coğrafya": f"{geo} {name}", "araç": vehicle, "kişi": people, "orta": mid, "final": final,
-              "kamera modu": "elde, rüzgârla sarsılan"},
+              "kamera modu": "elde, sabit, rüzgârla sarsılır"},
         repeat=repeat)
     trace = {**trace, "mode": "kasirga", "cografya": geo, "axes_source": history_source}
     tb = {"event": KASIRGA_EVENT, "geo": geo, "people": people, "vehicle": vehicle, "mid": mid, "final": final,
@@ -3263,10 +3300,11 @@ def kasirga_build_scene(domain: str | None, event: str | None, history: list[str
 
 
 def kasirga_camera_issues(text: str, geo: str | None = None) -> list[str]:
-    """Kie öncesi son kontrol: KASIRGA_REQUIRED ("Hurricane", "sideways rain", "normal lens", "No tornado funnel") ve
-    seçilen G'nin place metni var; stil ekindeki "No tornado funnel, no flood waves." cümlesi çıkarıldıktan sonra
-    KASIRGA_FORBIDDEN'dan (tornado, funnel, twister, waterspout, surge, tsunami, tidal, flood wave, pans to follow, Full
-    action, Until the last frame) hiçbiri yok (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
+    """Kie öncesi son kontrol: KASIRGA_REQUIRED ("Category 5", "torrential sideways rain", "normal lens", "stays fixed
+    on the street", "pouring rain", "No tornado funnel") ve seçilen G'nin place metni var; stil ekindeki "No tornado
+    funnel, no flood waves." cümlesi çıkarıldıktan sonra KASIRGA_FORBIDDEN'dan (tornado, funnel, twister, waterspout,
+    surge, tsunami, tidal, flood wave, pans to follow, Full action, Until the last frame, heavy hand shake) hiçbiri yok
+    (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
     out = []
     text = text or ""
     low = text.lower()
@@ -3291,7 +3329,7 @@ def kasirga_issues(structure: dict, info: dict) -> list[str]:
     if tb.get("geo") not in _KS["geos"]:
         return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
     if tb.get("mid") not in _KS["mids"]:
-        return [f"orta O1, O2 değil ({tb.get('mid')})"]
+        return [f"orta O1-O3 değil ({tb.get('mid')})"]
     if tb.get("final") not in _KS["finals"]:
         return [f"final F1, F2, F3 değil ({tb.get('final')})"]
     try:
