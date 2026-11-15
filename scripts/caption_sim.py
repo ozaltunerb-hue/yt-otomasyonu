@@ -34,6 +34,17 @@ def beat_rotation(event: str, runs: int, rng: random.Random) -> list[dict]:
     """Üretimdeki gibi: LRU beat ÇİFTİ üzerinde (Eksenler "beats" = "Y2+Z7"), çift tekrar etmez; tek bir beat art arda
     gelebilir. İzinli çiftler rastgele sırayla, araç rastgele. 21 Eki (Aşama 7.1)."""
     import core.event_structure as es
+    import core.hit_prompts as hp
+    if event == hp.DONMA_EVENT:   # 15 Kas: ❄️ Donduran fırtına (normal havuzda yok; O1-O2 / F1-F3, kendi araçları)
+        pairs = [(x, y) for x in hp.DONMA_FIRTINA["mids"] for y in hp.DONMA_FIRTINA["finals"]]
+        rng.shuffle(pairs)
+        out = []
+        for i in range(runs):
+            x, y = pairs[i % len(pairs)]
+            veh = rng.choice(hp.DONMA_FIRTINA["vehicles"])
+            out.append({"beat_2": hp.donma_caption_beat(hp.donma_mid(x, veh)),
+                        "beat_3": hp.donma_caption_beat(hp.donma_final(y))})
+        return out
     b = es.EVENT_BEATS[event]
     bad = b.get("excluded_pairs", set())
     pairs = [(x, y) for x in b["slice_2"] for y in b["slice_3"] if (x, y) not in bad]

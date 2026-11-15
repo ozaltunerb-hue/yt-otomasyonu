@@ -111,6 +111,7 @@ AVA_V, AVA_S, AVA_F = ("Avalanche slams into a mountain village", "Avalanche cra
 EQ_A, EQ_O = "Earthquake collapses an apartment block", "Earthquake collapses a row of old stone houses"
 METEOR = "Meteor slams into the sea off the coast"   # 29 Eki
 LIBERTY = "Tornado tears past the Statue of Liberty into Battery Park"   # 4 Kas
+DONMA = "Storm's eye freezes the city"   # 15 Kas: ❄️ Donduran fırtına (core.hit_prompts.DONMA_EVENT)
 
 # Paylaşımlar "Kategori" select (21 Eki eşlemesi)
 SHARE_CATEGORY = {FLOOD: "Sel", TIDAL: "Dev dalga", MUDSLIDE: "Heyelan", SLOPE: "Heyelan", VILLAGE: "Heyelan",
@@ -118,7 +119,8 @@ SHARE_CATEGORY = {FLOOD: "Sel", TIDAL: "Dev dalga", MUDSLIDE: "Heyelan", SLOPE: 
                   FIRE_TORNADO: "Yangın", HELICOPTER: "Yangın", PYRO: "Volkan", BOMBS: "Volkan", AVA_V: "Çığ",
                   AVA_S: "Çığ", AVA_F: "Çığ", EQ_A: "Deprem", EQ_O: "Deprem",
                   METEOR: "Meteor",   # 29 Eki: Notion select seçeneği ilk yazımda oluşur (mevcut kayıtlara dokunulmaz)
-                  LIBERTY: "Hortum"}   # 4 Kas: Özgürlük Anıtı hortumu (cadde hortumu gibi)
+                  LIBERTY: "Hortum",   # 4 Kas: Özgürlük Anıtı hortumu (cadde hortumu gibi)
+                  DONMA: "Donduran fırtına"}   # 15 Kas: Notion select seçeneği ilk yazımda oluşur
 _POOL = {
     "sel": (("#extremeweather", "#naturepower", "#disaster", "#severeweather"),
             ("#flashflood", "#flood", "#floodwater", "#flooding", "#rainstorm", "#stormdamage", "#weatherwatch")),
@@ -139,11 +141,13 @@ _POOL = {
                ("#buildingcollapse", "#collapse", "#structuralfailure", "#urbandisaster", "#dustcloud")),
     "meteor": (("#naturepower", "#disaster", "#extremeevents", "#catastrophe"),   # 29 Eki
                ("#meteor", "#meteorite", "#fireball", "#impact", "#asteroid", "#space", "#coastline")),
+    "donma": (("#extremeweather", "#severeweather", "#naturepower", "#disaster"),   # 15 Kas: ❄️ Donduran fırtına
+              ("#flashfreeze", "#icestorm", "#frozencity", "#deepfreeze", "#polarvortex", "#coldwave", "#frost")),
 }
 TAG_POOL = {FLOOD: "sel", TIDAL: "dalga", MUDSLIDE: "heyelan", SLOPE: "heyelan", VILLAGE: "heyelan", LANDFALL: "hortum",
             MARINA: "hortum", AVENUE: "hortum", WILDFIRE: "yangın", FACADE: "yangın", FIRE_TORNADO: "yangın",
             HELICOPTER: "yangın", PYRO: "volkan", BOMBS: "volkan", AVA_V: "çığ", AVA_S: "çığ", AVA_F: "çığ",
-            EQ_A: "deprem", EQ_O: "deprem", METEOR: "meteor", LIBERTY: "hortum"}
+            EQ_A: "deprem", EQ_O: "deprem", METEOR: "meteor", LIBERTY: "hortum", DONMA: "donma"}
 # Olaya özgü etiketler sadece kendi olayında (ör. #firetornado sadece ateş hortumu)
 TAG_ONLY = {"#firetornado": {FIRE_TORNADO}, "#aerialfirefighting": {HELICOPTER}, "#waterspout": {MARINA, LANDFALL},
             "#skiresort": {AVA_S}, "#mountainroad": {SLOPE}, "#pyroclasticflow": {PYRO}, "#lavabombs": {BOMBS},
@@ -193,6 +197,7 @@ VARS = {
     EQ_O: ("Building Collapse", "a Row of Old Houses", "🧱", "Old Stone Houses", "on an Old Street"),
     METEOR: ("Meteor", "a Coastal Town", "☄️", "Seafront Villas", "off a Coastal Town"),   # 29 Eki
     LIBERTY: ("Wedge Tornado", "Battery Park", "🗽", "Waterfront Trees", "at Battery Park"),   # 4 Kas
+    DONMA: ("Flash Freeze", "the City", "❄️", "City Streets", "in the City"),   # 15 Kas: ❄️ Donduran fırtına
 }
 PLURAL_THREATS = {BOMBS}   # fiil uyumu: "Volcanic Bombs Tear", "Flash Flood Tears"
 WITNESS = {"balkon": "the Balcony", "çatı": "the Rooftop", "pencere": "an Upper Window", "tepe": "the Hillside",

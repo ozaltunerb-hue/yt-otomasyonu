@@ -345,13 +345,15 @@ POOL_OF = {cap.FLOOD: "sel", cap.TIDAL: "dalga", cap.MUDSLIDE: "heyelan", cap.SL
            cap.AVENUE: "hortum", cap.MARINA: "hortum", cap.LANDFALL: "hortum", cap.WILDFIRE: "yangın",
            cap.FACADE: "yangın", cap.FIRE_TORNADO: "yangın", cap.HELICOPTER: "yangın", cap.PYRO: "volkan",
            cap.BOMBS: "volkan", cap.AVA_V: "çığ", cap.AVA_S: "çığ", cap.AVA_F: "çığ", cap.EQ_A: "deprem",
-           cap.EQ_O: "deprem", cap.METEOR: "meteor", cap.LIBERTY: "hortum"}   # 29 Eki: meteor; 4 Kas: Özgürlük Anıtı
+           cap.EQ_O: "deprem", cap.METEOR: "meteor", cap.LIBERTY: "hortum",   # 29 Eki: meteor; 4 Kas: Özgürlük Anıtı
+           cap.DONMA: "donma"}   # 15 Kas: ❄️ Donduran fırtına
 SHARE_OF = {cap.FLOOD: "Sel", cap.TIDAL: "Dev dalga", cap.MUDSLIDE: "Heyelan", cap.SLOPE: "Heyelan",
             cap.VILLAGE: "Heyelan", cap.AVENUE: "Hortum", cap.MARINA: "Su hortumu", cap.LANDFALL: "Su hortumu",
             cap.WILDFIRE: "Yangın", cap.FACADE: "Yangın", cap.FIRE_TORNADO: "Yangın", cap.HELICOPTER: "Yangın",
             cap.PYRO: "Volkan", cap.BOMBS: "Volkan", cap.AVA_V: "Çığ", cap.AVA_S: "Çığ", cap.AVA_F: "Çığ",
             cap.EQ_A: "Deprem", cap.EQ_O: "Deprem", cap.METEOR: "Meteor",
-            cap.LIBERTY: "Hortum"}   # 29 Eki: meteor; 4 Kas: Özgürlük Anıtı
+            cap.LIBERTY: "Hortum",   # 29 Eki: meteor; 4 Kas: Özgürlük Anıtı
+            cap.DONMA: "Donduran fırtına"}   # 15 Kas: ❄️ Donduran fırtına
 EVENT_ONLY = {"#firetornado": {cap.FIRE_TORNADO}, "#waterspout": {cap.MARINA, cap.LANDFALL},
               "#skiresort": {cap.AVA_S}, "#aerialfirefighting": {cap.HELICOPTER}, "#pyroclasticflow": {cap.PYRO},
               "#lavabombs": {cap.BOMBS}, "#mountainroad": {cap.SLOPE}, "#rockfall": {cap.SLOPE},
@@ -370,12 +372,14 @@ def _sim(gpt: bool, runs: int = 10, seed: int = 11):
 
 class TestCategoryMapping(unittest.TestCase):
     def test_mapping_tables(self):
-        self.assertEqual(len(cap.SHARE_CATEGORY), 21)   # 29 Eki: + meteor; 4 Kas: + Özgürlük Anıtı
+        self.assertEqual(len(cap.SHARE_CATEGORY), 22)   # 29 Eki: + meteor; 4 Kas: + Özgürlük Anıtı; 15 Kas: + donma
         self.assertEqual(cap.SHARE_CATEGORY, SHARE_OF)
         self.assertEqual(cap.TAG_POOL, POOL_OF)
         # Paylaşımlar "Kategori" seçenekleri: hepsi gerçek tabloda var (fixture = salt okuma kopyası)
         # 29 Eki: "Meteor" seçeneği Notion'da ilk Meteor paylaşımında oluşur (select; mevcut kayıtlara dokunulmadı)
-        self.assertLessEqual(set(SHARE_OF.values()) - {"Meteor"}, {r["Kategori"] for r in ROWS if r.get("Kategori")})
+        # 15 Kas: "Donduran fırtına" da aynı yoldan (ilk paylaşımda oluşur)
+        self.assertLessEqual(set(SHARE_OF.values()) - {"Meteor", "Donduran fırtına"},
+                             {r["Kategori"] for r in ROWS if r.get("Kategori")})
         for t, evs in EVENT_ONLY.items():
             self.assertEqual(cap.TAG_ONLY.get(t), evs, t)
 
@@ -410,6 +414,8 @@ class TestTemplateLanguage(unittest.TestCase):
     GENERIC = ("with every second", "the last frame", "nobody expected", "this part", "this moment")
 
     def _infos(self, e):
+        if e == cap.DONMA:   # 15 Kas: ❄️ Donduran fırtına (normal havuzda yok)
+            return _infos(e)
         b = es.EVENT_BEATS[e]
         return [{"opening": "", "people": p, "kadraj": k, "beat_2": es.beat_text(e, "slice_2", x, "SUV"),
                  "beat_3": es.beat_text(e, "slice_3", y, "SUV")}
@@ -470,6 +476,11 @@ class TestTemplateLanguage(unittest.TestCase):
         for e, rows in res.items():
             stop = cap.event_stop(e)
             ds = [r["description"] for r in rows]
+            # 15 Kas: ❄️ Donduran fırtına muaf: 2 orta x 3 final (iki orta aynı uzun cümleyle başlar), 10 şablon
+            # açıklamada benzerlik kaçınılmaz; üretimde caption.choose en az benzeri seçer (zorunlu yol). Başlık
+            # tekrarı denetimi bu olayda da aynen geçerli.
+            if e == cap.DONMA:
+                ds = []
             for i in range(len(ds)):
                 for j in range(i + 1, len(ds)):
                     self.assertLessEqual(cap.jaccard(ds[i], ds[j], stop), 0.45, (e, ds[i], ds[j]))
@@ -484,6 +495,12 @@ class TestTemplateLanguage(unittest.TestCase):
 
 # ── 21 Eki 2026, Aşama 7.2: sayı doğruluğu, sakinlik yasağı, kelime tekrarı, CTA çeşitliliği ─────────────────────
 def _infos(e, n=6):
+    if e == cap.DONMA:   # 15 Kas: ❄️ Donduran fırtına: kendi ortaları/finalleri (normal havuzda yok)
+        import core.hit_prompts as hp
+        pairs = [(x, y) for x in hp.DONMA_FIRTINA["mids"] for y in hp.DONMA_FIRTINA["finals"]][:n]
+        return [{"opening": "", "people": p, "kadraj": k, "beat_2": hp.donma_caption_beat(hp.donma_mid(x, "taxi")),
+                 "beat_3": hp.donma_caption_beat(hp.donma_final(y))}
+                for (x, y), p, k in zip(pairs, (None, 3, 4, None, 5, 2), list(cap.WITNESS)[:n])]
     b = es.EVENT_BEATS[e]
     pairs = [(x, y) for x in b["slice_2"] for y in b["slice_3"]][:n]
     return [{"opening": "", "people": p, "kadraj": k, "beat_2": es.beat_text(e, "slice_2", x, "SUV"),

@@ -239,9 +239,11 @@ class TestKeyboard(unittest.TestCase):
         # 2 Eki: + ⛰️ Heyelan; 8 Eki: + 🔥 Yangın; 10 Eki: + 🌋 Volkan; 13 Eki: + ❄️ Çığ; 14 Eki: + 🏚️ Deprem
         # 29 Eki: + ☄️ Meteor; feribot, tersane, marina & yat pasif (menüde yok, numaralar değişmedi)
         # 3 Kas (devam): kruvaziyer (3) ve plaj & sahil (6) pasif (kamera kuralı); numaralar değişmedi
-        self.assertEqual(len(buttons), 8)
+        # 15 Kas: + ❄️ Donduran fırtına (kod hikâyeli ayrı kategori, en altta tek düğme; DOMAIN_LABELS'ta yok)
+        self.assertEqual(len(buttons), 9)
         self.assertEqual([b.callback_data for b in buttons], [f"{bot.CALLBACK_PREFIX}d:{i}"
-                                                              for i in (4, 5, 7, 8, 9, 10, 11, 12)])
+                                                              for i in (4, 5, 7, 8, 9, 10, 11, 12)]
+                         + [f"{bot.CALLBACK_PREFIX}df"])
 
     def test_event_labels_match_pool(self):
         pool = [e for a in DOMAIN_ATTRIBUTES.values() for e in a["events"]]
@@ -353,7 +355,7 @@ class TestHandlers(unittest.TestCase):
         upd, runner = self._click("back")
         runner.assert_not_awaited()
         markup = upd.callback_query.edit_message_text.await_args.kwargs["reply_markup"]
-        self.assertEqual(len(_buttons(markup)), 15)   # 13 kategori + 🔍 Ayrıntı / ✋ Onay (TUR 29; 2 Eki heyelan; 8 Eki yangın; 10 Eki volkan; 13 Eki çığ; 14 Eki deprem; 29 Eki meteor)
+        self.assertEqual(len(_buttons(markup)), 16)   # 15 Kas: + ❄️ Donduran fırtına; 13 kategori + 🔍 Ayrıntı / ✋ Onay (TUR 29; 2 Eki heyelan; 8 Eki yangın; 10 Eki volkan; 13 Eki çığ; 14 Eki deprem; 29 Eki meteor)
 
     def test_cancel_does_not_run(self):
         upd, runner = self._click("x")
@@ -402,7 +404,7 @@ class TestHandlers(unittest.TestCase):
         ctx, upd = _context(), _update()
         asyncio.run(bot.cmd_uret(upd, ctx))
         kwargs = upd.effective_message.reply_text.await_args.kwargs
-        self.assertEqual(len([b for r in kwargs["reply_markup"].inline_keyboard for b in r]), 15)   # 2 Eki: 8 kategori; 8 Eki: 9 kategori; 10 Eki: 10 kategori; 13 Eki: 11 (çığ); 14 Eki: 12 (deprem); 29 Eki: 13 (meteor; deniz bu sınıfta açık)
+        self.assertEqual(len([b for r in kwargs["reply_markup"].inline_keyboard for b in r]), 16)   # 15 Kas: + ❄️ Donduran fırtına; 2 Eki: 8 kategori; 8 Eki: 9 kategori; 10 Eki: 10 kategori; 13 Eki: 11 (çığ); 14 Eki: 12 (deprem); 29 Eki: 13 (meteor; deniz bu sınıfta açık)
         self.assertIn("🧪 TEST", upd.effective_message.reply_text.await_args.args[0])
 
     def test_uret_busy(self):

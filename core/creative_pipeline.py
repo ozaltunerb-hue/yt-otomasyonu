@@ -711,10 +711,13 @@ async def rewrite_structured(structure: dict, reason: str, call_gpt) -> str:
     Kie'ye yeniden gönderim hakkı yine tek (kie_client). Kilit görsel, etiketler, olaylar ve stil eki koddan yeniden
     kurulur. Kapıdan ya da son denetimden geçmezse StructureError (akış durur). Başarılıysa structure["slices"]
     güncellenir, yeni etiketli hikâye döner."""
-    spec = structure["spec"]
     # 10 Eki, Bahadır: her denemenin tam metni ve sonucu kaydedilir (main.py Notion gövdesine yazar)
     entry = {"reason": reason, "attempts": [], "result": "?"}
     structure.setdefault("rewrite_log", []).append(entry)
+    if structure.get("donma_firtina"):   # 15 Kas: ❄️ Donduran fırtına, GPT yok, spec yok; aynı hikâye (yeni yazım yok)
+        entry["result"] = "❄️ Donduran fırtına: yeniden yazım yok, aynı hikâye"
+        return structure["donma_firtina"]["story"]
+    spec = structure["spec"]
     if structure.get("cadde_yaklasma"):   # 15 Kas: ⭐ Hit kalıbı · Yaklaşma (cadde), GPT yok; aynı hikâye
         entry["result"] = "⭐ Hit kalıbı · Yaklaşma (cadde): yeniden yazım yok, aynı hikâye"
         return structure["cadde_yaklasma"]["story"]
@@ -768,6 +771,9 @@ async def rewrite_structured(structure: dict, reason: str, call_gpt) -> str:
 def submit_issues(structure: dict, info: dict) -> list[str]:
     """Kie'den hemen önce (main.before_submit): gönderilecek metin structure'dan yeniden kurulanla birebir aynı mı,
     stil eki beklenen mi, son denetim temiz mi. Boş liste = gönderilebilir."""
+    if structure.get("donma_firtina"):   # 15 Kas: ❄️ Donduran fırtına, kendi yeniden kurulumu + zorunlu/yasak ifadeler
+        import core.hit_prompts as hp
+        return hp.donma_issues(structure, info)
     if structure.get("cadde_yaklasma"):   # 15 Kas: ⭐ Hit kalıbı · Yaklaşma (cadde), kendi yeniden kurulumu
         import core.hit_prompts as hp
         return hp.cadde_issues(structure, info)

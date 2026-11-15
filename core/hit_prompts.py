@@ -2613,3 +2613,319 @@ def cadde_issues(structure: dict, info: dict) -> list[str]:
     if len(text) > CADDE_MAX_CHARS:
         out.append(f"prompt {len(text)} karakter (en fazla {CADDE_MAX_CHARS})")
     return out
+
+
+# ── ❄️ Donduran fırtına (15 Kas 2026, Bahadır) ─────────────────────────────────────────────────────────────────────────
+# Yeni kategori, tek olay: "❄️ Fırtınanın gözü şehri dondurur". İlham: The Day After Tomorrow (şehir merkezi, fırtınanın
+# gözü gökyüzünde görünür, geçtiği her şeyi anında dondurur). Karar (15 Kas, Bahadır): insanlar kaçarken donar, sokakta
+# köpek de donar, kan yok; Kie reddederse öğrenmiş oluruz. YAKLASMA_CADDE ile aynı düzen (GPT yok, hikâye koddan
+# birebir, zaman etiketleri var), ama normal hattın sahnesi YOK: olay yapılandırılmış havuzda değil, sahne tamamen
+# burada kurulur (donma_build_scene). Diğer olaylar, kategoriler ve modlar değişmez. Kayıt O*+F* (combo + Eksenler).
+# Coğrafya G1-G6 (son 3), araç son 2, orta/final son 1, kişi 5/6, yasak çift yok.
+DONMA_MODE_LABEL = "❄️ Donduran fırtına"
+DONMA_DOMAIN = "frozen_storm_disasters"          # Combo Key'in ilk parçası (Notion eksen sorgusu bununla)
+DONMA_EVENT = "Storm's eye freezes the city"     # Notion "Olay"; normal havuzda (DOMAIN_ATTRIBUTES) yok
+DONMA_CATEGORY_LABEL = "❄️ Donduran fırtına"     # Telegram kategori düğmesi
+DONMA_EVENT_LABEL = "❄️ Fırtınanın gözü şehri dondurur"   # Telegram olay düğmesi
+DONMA_NOTION_CATEGORY = "Donduran fırtına"       # Notion: Eksenler "kategori" (metin) + Paylaşımlar "Kategori"
+DONMA_MAX_WORDS = 230
+DONMA_MAX_CHARS = 1400
+DONMA_GEO_BLOCK = 3
+DONMA_VEHICLE_BLOCK = 2
+DONMA_MID_BLOCK = 1
+DONMA_FINAL_BLOCK = 1
+DONMA_SPOT = "high balcony across the street"
+DONMA_FIRTINA = {
+    "geos": {
+        "G1": {"name": "ABD", "place": "a New York avenue of brownstone buildings"},
+        "G2": {"name": "Fransa", "place": "a Paris boulevard of cream stone buildings"},
+        "G3": {"name": "İngiltere", "place": "a London street of red-brick terraces"},
+        "G4": {"name": "Almanya", "place": "a Berlin boulevard lined with linden trees"},
+        "G5": {"name": "Brezilya", "place": "a Rio de Janeiro avenue of palm trees and pastel buildings"},
+        "G6": {"name": "Hindistan", "place": "a Mumbai street of old colonial buildings"},
+    },
+    "opening": "The storm's eye opens in the black sky above {place}, and a wall of white frost races down the street "
+               "toward the camera, freezing a fountain's spray in mid-air.",
+    "people": {5: "Five people and a dog sprint toward the camera ahead of it.",
+               6: "Six people and a dog sprint toward the camera ahead of it."},
+    "vehicles": ("city bus", "taxi", "delivery van"),
+    "mids": {
+        "O1": "The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and a "
+              "moving {vehicle} freezes white and slides sideways into a lamppost.",
+        "O2": "The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and a "
+              "{vehicle} freezes mid-turn and tips over onto its side.",
+    },
+    "finals": {
+        "F1": "Right across the street, the frost climbs the building, its windows bursting white with ice, then ice "
+              "races over the balcony railing in front of the camera.",
+        "F2": "Right below the balcony, a tree and a row of parked cars freeze solid, the tree splitting with a crack, "
+              "and white frost creeps up the railing in front of the camera.",
+        "F3": "The frost wall hits the camera's building, ice racing up the facade and over the balcony railing as "
+              "frost spreads across the edges of the frame.",
+    },
+    "vehicle_mids": ("O1", "O2"),
+    "camera": "the camera stays fixed, tilting only slightly, the storm's eye always visible in the sky",
+    "tail": ("Handheld footage shot by a person standing on a high balcony across the street, normal lens; slight hand "
+             "shake, the camera stays fixed, tilting only slightly, the storm's eye always visible in the sky; one "
+             "continuous shot, no zoom, no cuts. Everything the frost touches freezes instantly and stays frozen "
+             "white; frozen people stand still like statues, no blood, no injuries, no faces close to the camera. Raw "
+             "natural light under a dark storm sky, never glossy or CGI. No readable signs or text. Everything moves "
+             "in real time, never in slow motion, people run at full speed."),
+}
+# Önceden onaylı yedek kısaltma (bir kombinasyon 230 kelimeyi aşarsa stil ekinden çıkacak cümle). 15 Kas: gerekmedi.
+DONMA_TAIL_SHORTEN = "No readable signs or text."
+DONMA_SHORTENED = False
+DONMA_CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, sabit)"
+DONMA_WARNING = "⚠️ Donma: insanlar ve köpek kanlı/yaralı değil, buz heykel gibi donmuş mu kontrol et."
+DONMA_REQUIRED = ("storm's eye", "freez", "normal lens", "no blood")
+DONMA_FORBIDDEN = ("pans to follow", "Full action", "Until the last frame", "blood-", "corpse", "dead")
+_DF = DONMA_FIRTINA
+_DONMA_GEO_MEMORY: list[str] = []
+_DONMA_VEHICLE_MEMORY: list[str] = []
+
+
+def donma_is_active(event: str | None) -> bool:
+    return event == DONMA_EVENT
+
+
+def donma_camera_text() -> str:
+    return _DF["camera"]
+
+
+def donma_tail() -> str:
+    tail = _DF["tail"]
+    if DONMA_SHORTENED:
+        tail = tail.replace(" " + DONMA_TAIL_SHORTEN, "")
+    return tail
+
+
+def donma_opening(geo: str) -> str:
+    if geo not in _DF["geos"]:
+        raise es.StructureError(f"{DONMA_MODE_LABEL}: {geo} bu kategoride yok (coğrafya G1-G6)")
+    return _DF["opening"].format(place=_DF["geos"][geo]["place"])
+
+
+def donma_people(n: int) -> str:
+    if n not in _DF["people"]:
+        raise es.StructureError(f"{DONMA_MODE_LABEL}: kişi sayısı 5 ya da 6 olmalı ({n})")
+    return _DF["people"][n]
+
+
+def donma_mid(mid: str, vehicle: str | None) -> str:
+    if mid not in _DF["mids"]:
+        raise es.StructureError(f"{DONMA_MODE_LABEL}: {mid} bu kategoride yok (orta O1, O2)")
+    if mid in _DF["vehicle_mids"] and vehicle not in _DF["vehicles"]:
+        raise es.StructureError(f"{DONMA_MODE_LABEL}: {mid} için araç yok ({vehicle})")
+    return _DF["mids"][mid].format(vehicle=vehicle or "")
+
+
+def donma_final(final: str) -> str:
+    if final not in _DF["finals"]:
+        raise es.StructureError(f"{DONMA_MODE_LABEL}: {final} bu kategoride yok (final F1, F2, F3)")
+    return _DF["finals"][final]
+
+
+def donma_story(geo: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
+    """Sıra: açılış + insan + orta + final (zaman etiketleriyle)."""
+    a, b, c = es.SLICE_LABELS
+    return (f"{a}: {donma_opening(geo)} {donma_people(people)} {b}: {donma_mid(mid, vehicle)} "
+            f"{c}: {donma_final(final)}")
+
+
+def donma_prompt(geo: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
+    """Prompt = açılış + insan + orta + final + stil eki."""
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(donma_story(geo, people, mid, vehicle, final), donma_tail())
+
+
+def donma_tags(history: list[str]) -> list[str]:
+    """Combo Key'lerden + süreç hafızasından O*+F* çiftleri (eskiden yeniye)."""
+    return [t for t in es.beat_history(DONMA_EVENT, history or []) if re.fullmatch(r"O\d+\+F\d+", t)]
+
+
+def donma_choose_mid(tags: list[str], rng=None) -> str:
+    return _block_pick(list(_DF["mids"]), [t.split("+")[0] for t in tags], DONMA_MID_BLOCK, rng)
+
+
+def donma_choose_final(tags: list[str], rng=None) -> str:
+    return _block_pick(list(_DF["finals"]), [t.split("+")[1] for t in tags], DONMA_FINAL_BLOCK, rng)
+
+
+def donma_axes_history(records: list | None, key: str) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu kategorinin `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") == DONMA_EVENT and axes.get("mod") == "donma_firtina"
+                and axes.get(key)):
+            out.append(axes[key])
+    return out
+
+
+def donma_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    seen = list(_DONMA_GEO_MEMORY if used is None else used)
+    return _block_pick(list(_DF["geos"]), seen, DONMA_GEO_BLOCK, rng)
+
+
+def donma_choose_vehicle(used: list[str] | None = None, rng=None) -> str:
+    return _block_pick(list(_DF["vehicles"]), list(_DONMA_VEHICLE_MEMORY if used is None else used),
+                       DONMA_VEHICLE_BLOCK, rng)
+
+
+def donma_lines(tb: dict) -> str:
+    """✋ Onay satırları: mod, coğrafya, araç, orta, final, kişi, kamera, kelime/karakter, eksenler, tekrar önleme,
+    donma uyarısı."""
+    text = tb["prompt"]
+    lines = [
+        f"Mod: {DONMA_MODE_LABEL}",
+        f"Coğrafya: {tb['geo']} {_DF['geos'][tb['geo']]['name']}",
+        f"Araç: {tb['vehicle']}",
+        f"Orta (4-9s): {tb['mid']} «{donma_mid(tb['mid'], tb['vehicle'])}»",
+        f"Final (9-15s): {tb['final']} «{donma_final(tb['final'])}»",
+        f"Kişi: {tb['people']}",
+        DONMA_CAMERA_LINE,
+        f"Kelime: {len(text.split())} (en fazla {DONMA_MAX_WORDS}) · karakter: {len(text)} (en fazla {DONMA_MAX_CHARS})",
+    ]
+    if tb.get("axes_line"):
+        lines.append(tb["axes_line"])
+    lines.append(DONMA_WARNING)
+    return "\n".join(lines)
+
+
+def donma_caption_beat(text: str) -> str:
+    """Caption açıklama şablonu için beat cümlesi: ilk harf küçük, son nokta yok (normal hattın beat_text biçimi)."""
+    t = text.rstrip(".")
+    return t[:1].lower() + t[1:]
+
+
+def donma_axes_json(tag: str, geo: str, vehicle: str, people: int, excluded: dict | None = None) -> str:
+    import core.axes_history as ah
+    axes = {"spot": DONMA_SPOT, "view": None, "light": None, "vehicle": vehicle, "people": people, "beats": tag,
+            "mod": "donma_firtina", "kategori": DONMA_NOTION_CATEGORY, "cografya": geo, "arac": vehicle}
+    return ah.axes_json(DONMA_EVENT, axes, excluded)
+
+
+def donma_build_scene(domain: str | None, event: str | None, history: list[str] | None = None,
+                      records: list | None = None, rng=None, history_source: str = "bellek") -> dict:
+    """❄️ Donduran fırtına sahnesi: GPT yok, normal hat yok. records = Notion "Eksenler" ham kayıtları (None =
+    okunamadı / yükleyici yok: süreç hafızası). Coğrafya son 3, araç son 2, orta/final son 1, kişi 5/6.
+    structure["donma_firtina"] Kie öncesi son denetimin (submit_issues) kaynağıdır."""
+    import random
+    from core.skeleton_pipeline import SKELETON_CAMERA
+    if domain not in (None, DONMA_DOMAIN) or not donma_is_active(event):
+        raise es.StructureError(f"{DONMA_MODE_LABEL} kurulamadı: {domain} / {event}")
+    r = rng or random
+    geo_used = donma_axes_history(records, "cografya")
+    vehicle_used = donma_axes_history(records, "arac")
+    tags = donma_axes_history(records, "beats") if records is not None else donma_tags(history or [])
+    geo = donma_choose_geo(geo_used, r)
+    vehicle = donma_choose_vehicle(vehicle_used, r)
+    people = r.choice((5, 6))
+    mid = donma_choose_mid(tags, r)
+    final = donma_choose_final(tags, r)
+    tag = es.beat_tag(mid, final)
+    es.remember_beats(DONMA_EVENT, tag)   # seçim anı hafızası (TEST/iptal da sayılır)
+    for m, v in ((_DONMA_GEO_MEMORY, geo), (_DONMA_VEHICLE_MEMORY, vehicle)):
+        m.append(v)
+        del m[:-12]
+    story = donma_story(geo, people, mid, vehicle, final)
+    tail = donma_tail()
+    prompt = donma_prompt(geo, people, mid, vehicle, final)
+    name = _DF["geos"][geo]["name"]
+    mid_text, final_text = donma_mid(mid, vehicle), donma_final(final)
+    opening = donma_opening(geo)
+    plain = " ".join([opening, donma_people(people), mid_text, final_text])
+    repeat = (f"coğrafya son {DONMA_GEO_BLOCK} elendi · araç son {DONMA_VEHICLE_BLOCK} · orta son {DONMA_MID_BLOCK} · "
+              f"final son {DONMA_FINAL_BLOCK} (yasak çift yok)")
+    base_trace = {"pipeline": "creative", "structured": True, "domain": DONMA_DOMAIN, "event": DONMA_EVENT,
+                  "ship": "None", "camera": SKELETON_CAMERA, "view": None, "view_source": None,
+                  "place": _DF["geos"][geo]["place"], "count_range": [5, 6], "people_running": people,
+                  "outcome": "-", "recent_count": 0}
+    trace, axes_line = mode_display(
+        {"trace": base_trace}, {}, mode=DONMA_MODE_LABEL,
+        camera=f"hit kamerası ({donma_camera_text()}); high balcony across the street, normal lens",
+        opening=opening, mid=(mid, mid_text), final=(final, final_text), plain=plain, vehicle=vehicle,
+        spot="High balcony across the street (hit kamerası, yüksek balkon, normal lens, sabit)",
+        weather="yok (stil ekinde raw natural light under a dark storm sky)",
+        axes={"coğrafya": f"{geo} {name}", "araç": vehicle, "kişi": people, "orta": mid, "final": final,
+              "kamera modu": "sabit"},
+        repeat=repeat)
+    trace = {**trace, "mode": "donma_firtina", "cografya": geo, "axes_source": history_source}
+    tb = {"event": DONMA_EVENT, "geo": geo, "people": people, "vehicle": vehicle, "mid": mid, "final": final,
+          "story": story, "suffix": tail, "prompt": prompt, "axes_line": axes_line}
+    tb["lines"] = donma_lines(tb)
+    excluded = {"cografya": [g for g in _DF["geos"] if g in (geo_used if geo_used is not None
+                                                             else _DONMA_GEO_MEMORY[:-1])[-DONMA_GEO_BLOCK:]]}
+    axes_json = donma_axes_json(tag, geo, vehicle, people, excluded)
+    structure = {"donma_firtina": tb, "axes_json": axes_json, "axes_line": None, "environment": None,
+                 "story_source": f"Hikâye: kod (birebir) · {DONMA_MODE_LABEL}", "story_source_kind": "code",
+                 "caption_info": {"opening": opening, "people": people, "kadraj": "balkon",
+                                  # caption şablonları normal beat'ler gibi küçük harfle başlayan cümle bekler
+                                  "beat_2": donma_caption_beat(mid_text), "beat_3": donma_caption_beat(final_text)},
+                 "caption_candidates": None}
+    problems = donma_issues(structure, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{DONMA_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = f"{DONMA_DOMAIN}|none|{DONMA_EVENT.lower()}|{DONMA_SPOT}##{tag}|{SKELETON_CAMERA}"
+    return {"domain": DONMA_DOMAIN, "event": DONMA_EVENT, "ship": None, "spot": DONMA_SPOT, "story": story,
+            "plain_story": plain, "style_suffix": tail, "prompt": prompt, "combo_key": combo, "trace": trace,
+            "structure": structure, "axes_json": axes_json}
+
+
+def donma_camera_issues(text: str, geo: str | None = None) -> list[str]:
+    """Kie öncesi son kontrol: DONMA_REQUIRED ("storm's eye", "freez", "normal lens", "no blood") ve seçilen G'nin
+    place metni var; DONMA_FORBIDDEN'dan hiçbiri yok (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
+    out = []
+    low = (text or "").lower()
+    for need in DONMA_REQUIRED:
+        if need.lower() not in low:
+            out.append(f'"{need}" eksik')
+    places = [g for g, v in _DF["geos"].items() if v["place"] in (text or "")]
+    if not places:
+        out.append("G1-G6 yer metni yok")
+    elif geo is not None and places != [geo]:
+        out.append(f"yer metni seçilen coğrafya değil ({geo}: {places})")
+    for bad in DONMA_FORBIDDEN:
+        if bad.lower() in low:
+            out.append(f"bu kategoride olmayan ifade var: {bad}")
+    return out
+
+
+def donma_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin bu kalıpla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    tb = structure["donma_firtina"]
+    if tb.get("geo") not in _DF["geos"]:
+        return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
+    if tb.get("mid") not in _DF["mids"]:
+        return [f"orta O1, O2 değil ({tb.get('mid')})"]
+    if tb.get("final") not in _DF["finals"]:
+        return [f"final F1, F2, F3 değil ({tb.get('final')})"]
+    try:
+        story = donma_story(tb["geo"], tb["people"], tb["mid"], tb["vehicle"], tb["final"])
+        prompt = donma_prompt(tb["geo"], tb["people"], tb["mid"], tb["vehicle"], tb["final"])
+    except es.StructureError as e:
+        return [str(e)]
+    out = []
+    if info.get("style_suffix") != donma_tail():
+        out.append("stil eki Donduran fırtına kalıbı değil")
+    if info.get("story") != story:
+        out.append("hikâye kalıpla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    out += donma_camera_issues(text, tb["geo"])
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > DONMA_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {DONMA_MAX_WORDS})")
+    if len(text) > DONMA_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {DONMA_MAX_CHARS})")
+    return out

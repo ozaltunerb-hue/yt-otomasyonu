@@ -256,6 +256,8 @@ def domain_keyboard(cfg: dict | None = None) -> InlineKeyboardMarkup:
     buttons = [InlineKeyboardButton(label, callback_data=f"{CALLBACK_PREFIX}d:{i}")
                for i, (d, label) in enumerate(DOMAIN_LABELS.items()) if domain_active(d)]   # 29 Eki: pasif yok
     rows = [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
+    # 15 Kas: ❄️ Donduran fırtına, kod hikâyeli ayrı kategori (normal havuzda yok; sıra numaraları değişmez)
+    rows.append([InlineKeyboardButton(DONMA_CATEGORY_BUTTON, callback_data=f"{CALLBACK_PREFIX}df")])
     if cfg is not None:
         rows.append([InlineKeyboardButton(f"🔍 Ayrıntı: {_onoff(cfg['detail'])}", callback_data=f"{CALLBACK_PREFIX}t:d"),
                      InlineKeyboardButton(f"✋ Onay: {_onoff(cfg['approval'])}", callback_data=f"{CALLBACK_PREFIX}t:o")])
@@ -626,6 +628,46 @@ def cadde_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
             "mesajında. Hikâye için GPT çağrılmaz.")
 
 
+# ── ❄️ Donduran fırtına (15 Kas 2026, Bahadır): kod hikâyeli yeni kategori, tek olay. Normal kategori havuzunda
+# (DOMAIN_LABELS / DOMAIN_ATTRIBUTES) YOK: düğmesi kategori menüsünün sonunda ayrı satır, sıra numaraları değişmez.
+# Adımlar: df (olay menüsü) → dfe (onay metni) → dfok (üretim) → Kie'den önce ✋ Onay. Hikâye için GPT çağrılmaz.
+DONMA_CATEGORY_BUTTON = "❄️ Donduran fırtına"
+CODE_DOMAIN_LABELS = {"frozen_storm_disasters": DONMA_CATEGORY_BUTTON}
+CODE_EVENT_LABELS = {"Storm's eye freezes the city": "❄️ Fırtınanın gözü şehri dondurur"}
+
+
+def donma_event_keyboard() -> InlineKeyboardMarkup:
+    """Tek olay + 🔙 Geri (🎲 Rastgele yok: kategoride tek olay var)."""
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(_hp().DONMA_EVENT_LABEL, callback_data=f"{CALLBACK_PREFIX}dfe")],
+        [InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}back")],
+    ])
+
+
+def donma_produce_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}dfok"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def donma_confirm_text(cfg: dict | None = None) -> str:
+    hp = _hp()
+    cfg = cfg or default_cfg()
+    return (f"Kategori: {DONMA_CATEGORY_BUTTON}\n"
+            f"Olay: {hp.DONMA_EVENT_LABEL}\n"
+            f"Mod: {mode_label(cfg['mode'])}\n"
+            f"🔍 Ayrıntı: {_onoff(cfg['detail'])} · ✋ Onay: {_onoff(cfg['approval'])}\n"
+            "Tahmini maliyet: ~175 Kie kredisi + 1 danışman preflight GPT çağrısı (hikâye için GPT yok)\n\n"
+            "Üretim sadece ✅ Üret'e basınca başlar."
+            + ("\n✋ Onay açık: Kie'ye göndermeden önce son prompt'u gösterip onay isteyeceğim." if cfg["approval"] else "")
+            + f"\n\nMod: {hp.DONMA_MODE_LABEL}\n"
+            + hp.DONMA_CAMERA_LINE
+            + "\nFırtınanın gözü şehrin üstünde açılır, beyaz don caddeden kameraya doğru gelir; kaçan insanlar ve köpek "
+            "buz heykel gibi donar (kan yok), araç donup kayar ya da devrilir; final kameranın balkonunda. Coğrafya "
+            "(G1-G6), araç, orta (O1-O2), final (F1-F3), kişi sayısı, kelime sayısı ✋ Onay mesajında.")
+
+
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([[
         InlineKeyboardButton("✅ Kie'ye gönder", callback_data=f"{CALLBACK_PREFIX}ap:{token}:y"),
@@ -703,6 +745,8 @@ def parse_selection(di_raw: str, eid: str | None = None) -> tuple[str, str | Non
 
 
 def selection_label(event: str | None) -> str:
+    if event and event not in EVENT_LABELS and event in CODE_EVENT_LABELS:   # 15 Kas: ❄️ Donduran fırtına
+        return CODE_EVENT_LABELS[event]
     return EVENT_LABELS[event] if event else RANDOM_LABEL
 
 
@@ -906,6 +950,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         return
     if action in ("cy", "cyok"):   # 15 Kas: ⭐ Hit kalıbı · Yaklaşma (cadde)
         await _on_cadde(query, context, action, args, cfg)
+        return
+    if action in ("df", "dfe", "dfok"):   # 15 Kas: ❄️ Donduran fırtına
+        await _on_donma(query, context, action, args, cfg)
         return
 
     sel, view = None, None
@@ -1164,6 +1211,32 @@ async def _on_cadde(query, context, action: str, args: list[str], cfg: dict) -> 
                       cadde_yaklasma=True)
 
 
+async def _on_donma(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """❄️ Donduran fırtına adımları: df (olay menüsü) → dfe (onay metni) → dfok (üretim). Kie yine ✋ Onay'a bağlı."""
+    if args:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    hp = _hp()
+    if action == "df":
+        await query.edit_message_text(f"{DONMA_CATEGORY_BUTTON}: hangi olay?", reply_markup=donma_event_keyboard())
+        return
+    if action == "dfe":
+        await query.edit_message_text(donma_confirm_text(cfg), reply_markup=donma_produce_keyboard())
+        return
+    run_cfg = dict(cfg)
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {DONMA_CATEGORY_BUTTON} / {hp.DONMA_EVENT_LABEL}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), hp.DONMA_DOMAIN, hp.DONMA_EVENT, cfg=run_cfg,
+                      bot_data=context.bot_data, donma_firtina=True)
+
+
 async def _on_caption_share(query, context, page: str) -> None:
     """📤 Paylaştım: Paylaşımlar'a tek satır (aynı üretim için ikinci kez basılırsa yeni satır açmaz)."""
     import core.caption as cap
@@ -1174,7 +1247,8 @@ async def _on_caption_share(query, context, page: str) -> None:
         return
     try:
         row, new = await asyncio.to_thread(NotionTracker.add_shared_post, state["caption"],
-                                           EVENT_LABELS.get(state.get("event"), state.get("event") or ""),
+                                           EVENT_LABELS.get(state.get("event"))
+                                           or CODE_EVENT_LABELS.get(state.get("event"), state.get("event") or ""),
                                            state["page_id"], cap.today_tr())
     except Exception as e:
         log.warning(f"⚠️ Paylaşımlar'a yazılamadı: {e}")
@@ -1266,7 +1340,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                   bot_data: dict | None = None, view: str | None = None, hit_env: str | None = None,
                   approach_env: str | None = None, dalga24: bool = False, kul_yaklasma: bool = False,
                   orman_yaklasma: bool = False, heli_yaklasma: bool = False,
-                  hortum_yaklasma: bool = False, cadde_yaklasma: bool = False) -> None:
+                  hortum_yaklasma: bool = False, cadde_yaklasma: bool = False,
+                  donma_firtina: bool = False) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1274,7 +1349,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
     bot_data = bot_data if bot_data is not None else {}
     reporter = TelegramReporter(bot, chat_id, asyncio.get_running_loop(), bot_data.setdefault("approvals", {}),
                                 cfg["detail"], cfg["approval"],
-                                {"domain": DOMAIN_LABELS.get(domain, domain), "event": selection_label(event)})
+                                {"domain": DOMAIN_LABELS.get(domain) or CODE_DOMAIN_LABELS.get(domain, domain),
+                                 "event": selection_label(event)})
     kwargs = {"domain": domain, "event": event, "trigger": "manual", "mode": cfg["mode"],
               "skip_upload": cfg["mode"] == MODE_TEST, "reporter": reporter, "view": view}
     if hit_env:   # 12 Kas: ⭐ Hit kalıbı (Telegram'da seçilen ortam)
@@ -1293,6 +1369,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["hortum_yaklasma"] = True
     if cadde_yaklasma:   # 15 Kas: ⭐ Hit kalıbı · Yaklaşma (cadde)
         kwargs["cadde_yaklasma"] = True
+    if donma_firtina:   # 15 Kas: ❄️ Donduran fırtına
+        kwargs["donma_firtina"] = True
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:

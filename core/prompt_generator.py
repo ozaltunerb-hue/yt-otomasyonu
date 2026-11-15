@@ -1296,6 +1296,20 @@ async def generate_creative_prompts(config: dict) -> dict:
         recs = seen_records.get("records")
         scene = hp.cadde_apply(scene, history, geo_used=hp.cadde_axes_history(recs, "cografya"),
                                vehicle_used=hp.cadde_axes_history(recs, "arac"))
+    elif config.get("donma_firtina"):   # 15 Kas: ❄️ Donduran fırtına (yeni kategori, tek olay). GPT yok, normal hat yok
+        import core.hit_prompts as hp
+        records, source, raw_loader = None, "yok", config.get("axes_loader")
+        if raw_loader:   # Notion "Eksenler" geçmişi (iptaller dahil); okunamazsa süreç hafızası, üretim durmaz
+            try:
+                records = await asyncio.to_thread(raw_loader, hp.DONMA_DOMAIN)
+                if records is not None and not isinstance(records, list):
+                    raise TypeError(f"eksen geçmişi liste değil: {type(records).__name__}")
+                source = "notion" if records is not None else "bellek"
+            except Exception as e:   # noqa: BLE001 - okuma hatası üretimi durdurmaz
+                log.warning(f"⚠️ Donduran fırtına eksen geçmişi okunamadı, süreç hafızasıyla devam: {e}")
+                records, source = None, "bellek"
+        scene = hp.donma_build_scene(config.get("domain") or None, config.get("event") or hp.DONMA_EVENT, history,
+                                     records, history_source=source)
     else:
         scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history,
                                            topics, _call_gpt, view=config.get("view") or None,

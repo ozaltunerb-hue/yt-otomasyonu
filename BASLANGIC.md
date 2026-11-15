@@ -102,6 +102,22 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
     diğer modların kuralları aynı. Onay kamera satırı "Kamera: hit kamerası (yüksek balkon, normal lens, hafif takip)",
     bot ön ekranı da. 216 kombinasyon: en kısa 143 kelime / 884 kr, en uzun 158 kelime (G3 + white van + O2 + F2) / 958
     kr (G3 + pickup truck + O2 + F2). 40 tohum: sadece cadde modu değişti, diğer her yer diff 0.
+- ❄️ Donduran fırtına (15 Kas, YENİ KATEGORİ, `DONMA_FIRTINA`; commit "yeni kategori: Donduran firtina (kod hikaye)"):
+  tek olay "❄️ Fırtınanın gözü şehri dondurur" (`DONMA_EVENT` "Storm's eye freezes the city", domain
+  `frozen_storm_disasters`). İlham The Day After Tomorrow. Karar (15 Kas, Bahadır): insanlar kaçarken donar, sokakta köpek
+  de donar, kan yok; Kie reddederse öğrenmiş oluruz. Parçalar: G1-G6 şehir caddesi (ABD/New York, Fransa/Paris,
+  İngiltere/Londra, Almanya/Berlin, Brezilya/Rio, Hindistan/Mumbai; son 3), açılış (fırtınanın gözü + beyaz don duvarı +
+  donan fıskiye), insan 5/6 kişi + köpek, araç city bus/taxi/delivery van (son 2), O1 (araç donup direğe kayar) / O2 (araç
+  donup yan yatar) (son 1), F1 karşı bina / F2 balkon altı ağaç + park halindeki arabalar / F3 kameranın binası (son 1),
+  stil eki yüksek balkon + normal lens + sabit + kan yok. Normal hat YOK: olay yapılandırılmış havuzda değil, sahne
+  `hp.donma_build_scene` ile tamamen koddan (GPT hikâye çağrısı yok; danışman preflight eskisi gibi). Kie öncesi
+  `donma_camera_issues`: zorunlu "storm's eye", "freez", "normal lens", "no blood" + place; yasak "pans to follow", "Full
+  action", "Until the last frame", "blood-", "corpse", "dead". Kie reddinde mevcut davranış (aynı prompt bir kez daha,
+  ikinci retta dur, ret mesajı Telegram'a). Bot: kategori menüsünün sonunda ayrı düğme (df → dfe → dfok; DOMAIN_LABELS ve
+  sıra numaraları değişmedi), config `donma_firtina`. Notion: üretim veritabanında "Kategori" alanı yok, kategori
+  "Eksenler" JSON'unda metin (`kategori: "Donduran fırtına"`); Paylaşımlar "Kategori" caption'dan. 216 kombinasyon: en
+  kısa 200, en uzun 213 kelime (G5 + city bus/delivery van + O1 + F2) / 1204 kr (G5 + delivery van + O1 + F2); yedek
+  kısaltma ("No readable signs or text.") gerekmedi. Test `tests/test_donma_firtina.py`. 40 tohum: 19 olay + 12 mod diff 0.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir
