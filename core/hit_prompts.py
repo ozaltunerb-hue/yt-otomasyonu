@@ -2262,6 +2262,11 @@ def hortum_issues(structure: dict, info: dict) -> list[str]:
 # süpürür" normal yolu değişmez. Kayıt O*+F* (olay bazlı; normal cadde havuzu P*/Q*). Coğrafya G1-G6 (son 3, G1 tohum:
 # ilk 3 üretimde G1 gelmez), araç bu modun kendi havuzundan (son 2), kişi 3/5, orta/final LRU son 1, yasak çift yok.
 # İki ortada da araç var (araç savurma bu modda serbest).
+# 15 Kas (3), Bahadır: mod hit'ten çok uzaklaştı (200 kelime, geniş açı, uzun kamera kuralları, "the sea at its end");
+# 15 Kas Meksika üretiminde hortum ilk 6 sn caddenin ucunda kaldı, video 2/10. Hit'in kendi Kie prompt'una dönüldü,
+# metin birebir, 4 değişiklik: coğrafya kelimesi, park halindeki araç + hurda, kameraya yakın final, "pans to follow"
+# yerine hafif takip. "eye level, normal lens" hit'in ifadesi (normal lens hortumu büyük ve yakın gösterir), bu modda
+# serbest. Kişi 5/6 (hit'in cümlesi). Önceki metinlerin hepsi CADDE_PASIF (_V2).
 CADDE_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (cadde)"
 CADDE_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
 CADDE_EVENTS = (es.AVENUE,)
@@ -2282,37 +2287,33 @@ YAKLASMA_CADDE = {
         "G5": {"name": "İspanya", "place": "a Spanish seaside town of low whitewashed houses"},
         "G6": {"name": "Hindistan", "place": "an Indian seaside town of low pastel buildings"},
     },
+    # 15 Kas (3): hit'in metni (eski açılış, insan, orta, final, stil eki CADDE_PASIF *_V2)
     "opening": "A violent tornado sweeps down a palm-lined coastal avenue of {place}, hurling signs, branches and "
-               "debris along the road, and heads straight toward the camera.",
-    "people": {3: "Three people sprint along the sidewalk toward the camera, fleeing the tornado.",
-               5: "Five people sprint along the sidewalk toward the camera, fleeing the tornado."},
+               "debris along the road.",
+    "people": {5: "Five people scramble in a panic, sprinting down the sidewalk to escape its furious path.",
+               6: "Six people scramble in a panic, sprinting down the sidewalk to escape its furious path."},
     "vehicles": ("white van", "pickup truck", "SUV"),
-    # 15 Kas (2): araç park halinde, savrulup hurda halinde kalır (eski O1/O2 CADDE_PASIF O1_V1, O2_V1)
     "mids": {
-        "O1": "The tornado sweeps a parked {vehicle} up into the air, spins it, and slams it down on its roof across "
-              "the avenue, where it stays wrecked.",
-        "O2": "The tornado flips a parked {vehicle} and sends it rolling over and over down the avenue toward the "
-              "camera until it stops, crushed, on its side.",
+        "O1": "The tornado lifts a parked {vehicle} skyward, spinning it wildly before it crashes, wrecked, onto the "
+              "avenue.",
+        "O2": "The tornado flips a parked {vehicle} and sends it rolling over and over down the avenue until it stops, "
+              "crushed, on its roof.",
     },
-    # 15 Kas (2): "an apartment building" yerine karşıdaki bina (eski F1/F2 CADDE_PASIF F1_V1, F2_V1)
     "finals": {
-        "F1": "Right across from the balcony, the tornado tears the roof off the building across the street, the "
-              "pieces flying past the camera.",
-        "F2": "Right across from the balcony, the tornado rips the balconies and front wall off the building across "
-              "the street, debris flying past the camera.",
+        "F1": "Right across the street, the tornado tears the roof off a building, the pieces flying past the camera.",
+        "F2": "Right across the street, the tornado rips the balconies and front wall off a building, debris flying "
+              "past the camera.",
         "F3": "Right below the balcony, the tornado rips the palm trees out by the roots and hurls them past the "
               "camera.",
     },
     "vehicle_mids": ("O1", "O2"),
-    "camera": "the camera stays fixed, tilting only slightly",
-    # 15 Kas (2): 3. kat balkon + iki şeritli cadde, alçak binalar (eski stil eki CADDE_PASIF STIL_V1)
-    "tail": ("Handheld footage shot from a third-floor balcony with a glass railing across the avenue, high vantage; "
-             "slight hand shake, the camera stays fixed, tilting only slightly, never descending, the tornado always "
-             "in frame, the glass railing in the foreground; one continuous shot, no zoom, no cuts, no person or face "
-             "close to the camera. Setting: a two-lane palm-lined avenue with cars parked on both sides, low-rise "
-             "buildings, the sea at its end. All people are ordinary civilians in everyday clothes, no hazmat suits, "
-             "natural light under grey storm clouds, never CGI. Everything moves in real time, never in slow motion, "
-             "people run at full speed."),
+    "camera": "the camera follows the tornado only slightly, keeping the avenue in frame",
+    # 15 Kas (3): hit'in eki birebir, sadece "pans to follow" yerine hafif takip
+    "tail": ("Handheld footage shot by a person standing on a high balcony across the street, overlooking the avenue, "
+             "eye level, normal lens; slight hand shake, the camera follows the tornado only slightly, keeping the "
+             "avenue in frame; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; "
+             "emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or "
+             "CGI; no white hazmat suits."),
 }
 # 15 Kas (2), Bahadır: ilk cadde üretimi (İspanya, O1+F2) 6/10. "white apartment blocks", "high-rise hotels", "high
 # balcony", "wide avenue" kamerayı 10. kata çıkardı; savrulan minibüs yere inip yoluna devam etti. Eski metinler pasif.
@@ -2334,12 +2335,40 @@ CADDE_PASIF = {
                 "under grey storm clouds, never CGI. Everything moves in real time, never in slow motion, people run "
                 "at full speed."),
     "KAMERA_SATIRI_V1": "Kamera: sabit (hafifçe eğilir, cam korkuluklu yüksek balkon)",
+    # 15 Kas (3): hit prompt'una dönüş; 15 Kas (2) metinlerinin hepsi (açılış, insan 3/5 ve F3 ilk sürümden beri aynıydı)
+    "ACILIS_V2": "A violent tornado sweeps down a palm-lined coastal avenue of {place}, hurling signs, branches and "
+                 "debris along the road, and heads straight toward the camera.",
+    "INSAN_3_V2": "Three people sprint along the sidewalk toward the camera, fleeing the tornado.",
+    "INSAN_5_V2": "Five people sprint along the sidewalk toward the camera, fleeing the tornado.",
+    "O1_V2": "The tornado sweeps a parked {vehicle} up into the air, spins it, and slams it down on its roof across "
+             "the avenue, where it stays wrecked.",
+    "O2_V2": "The tornado flips a parked {vehicle} and sends it rolling over and over down the avenue toward the "
+             "camera until it stops, crushed, on its side.",
+    "F1_V2": "Right across from the balcony, the tornado tears the roof off the building across the street, the "
+             "pieces flying past the camera.",
+    "F2_V2": "Right across from the balcony, the tornado rips the balconies and front wall off the building across "
+             "the street, debris flying past the camera.",
+    "F3_V2": "Right below the balcony, the tornado rips the palm trees out by the roots and hurls them past the "
+             "camera.",
+    "KAMERA_V2": "the camera stays fixed, tilting only slightly",
+    "STIL_V2": ("Handheld footage shot from a third-floor balcony with a glass railing across the avenue, high "
+                "vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the "
+                "tornado always in frame, the glass railing in the foreground; one continuous shot, no zoom, no cuts, "
+                "no person or face close to the camera. Setting: a two-lane palm-lined avenue with cars parked on both "
+                "sides, low-rise buildings, the sea at its end. All people are ordinary civilians in everyday clothes, "
+                "no hazmat suits, natural light under grey storm clouds, never CGI. Everything moves in real time, "
+                "never in slow motion, people run at full speed."),
+    "KAMERA_SATIRI_V2": "Kamera: sabit (hafifçe eğilir, cam korkuluklu 3. kat balkon)",
+    "ZORUNLU_V2": ("high vantage", "glass railing", "third-floor balcony", "a parked"),
+    "YASAK_V2": ("pans to follow", "eye level", "Full action", "Until the last frame", "high-rise", "apartment block",
+                 "wide palm-lined avenue"),
 }
-CADDE_CAMERA_LINE = "Kamera: sabit (hafifçe eğilir, cam korkuluklu 3. kat balkon)"
+CADDE_CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, hafif takip)"
 CADDE_VEHICLE_WARNING = "⚠️ Araç ortası: videoda aracın tek parça kalıp kalmadığını kontrol et."
-CADDE_REQUIRED = ("high vantage", "glass railing", "third-floor balcony", "a parked")
-CADDE_FORBIDDEN = ("pans to follow", "eye level", "Full action", "Until the last frame", "high-rise",
-                   "apartment block", "wide palm-lined avenue")
+# 15 Kas (3): "eye level" bu modda serbest (hit'in ifadesi); diğer modların yasakları aynı
+CADDE_REQUIRED = ("high balcony across the street", "normal lens", "a parked")
+CADDE_FORBIDDEN = ("pans to follow", "third-floor", "glass railing", "the sea at its end", "Full action",
+                   "Until the last frame")
 _CD = YAKLASMA_CADDE
 _CADDE_GEO_MEMORY: list[str] = []
 _CADDE_VEHICLE_MEMORY: list[str] = []
@@ -2363,7 +2392,7 @@ def cadde_opening(geo: str) -> str:
 
 def cadde_people(n: int) -> str:
     if n not in _CD["people"]:
-        raise es.StructureError(f"{CADDE_MODE_LABEL}: kişi sayısı 3 ya da 5 olmalı ({n})")
+        raise es.StructureError(f"{CADDE_MODE_LABEL}: kişi sayısı 5 ya da 6 olmalı ({n})")
     return _CD["people"][n]
 
 
@@ -2465,7 +2494,7 @@ def _cadde_axes(js, tag: str, geo: str, vehicle: str | None, people: int):
 def cadde_apply(scene: dict, history: list[str] | None = None, rng=None, follow: bool | None = None,
                 geo_used: list[str] | None = None, vehicle_used: list[str] | None = None) -> dict:
     """Normal hattın kurduğu "hortum sahil caddesini süpürür" sahnesinden (kayıt aynı) Yaklaşma (cadde) prompt'unu
-    kurar. Coğrafya G1-G6 (son 3 elenir, G1 tohum), araç (son 2), orta O1-O2 (son 1), final F1-F3 (son 1), kişi 3/5.
+    kurar. Coğrafya G1-G6 (son 3 elenir, G1 tohum), araç (son 2), orta O1-O2 (son 1), final F1-F3 (son 1), kişi 5/6.
     structure["cadde_yaklasma"] Kie öncesi son denetimin (submit_issues) ve yeniden yazımın kaynağıdır."""
     import random
     event = scene["event"]
@@ -2473,11 +2502,11 @@ def cadde_apply(scene: dict, history: list[str] | None = None, rng=None, follow:
     spec = st.get("spec")
     if not cadde_is_active(event) or not spec:
         raise es.StructureError(f"{CADDE_MODE_LABEL} kurulamadı: {event}")
-    follow = False   # kamera sabit, sadece hafifçe eğilir (stil eki birebir)
+    follow = False   # 15 Kas (3): hafif takip stil ekinin içinde (birebir); ayrı takip seçeneği yok
     r = rng or random
     geo = cadde_choose_geo(geo_used, r)
     vehicle = cadde_choose_vehicle(vehicle_used, r)
-    people = r.choice((3, 5))
+    people = r.choice((5, 6))
     mid = cadde_choose_mid(history or [], r)
     final = cadde_choose_final(history or [], r)
     old_tag, new_tag = es.beat_tag(spec["beat_2"], spec["beat_3"]), es.beat_tag(mid, final)
@@ -2507,25 +2536,25 @@ def cadde_apply(scene: dict, history: list[str] | None = None, rng=None, follow:
     cap_info = {**(st.get("caption_info") or {}), "opening": cadde_opening(geo), "people": people,
                 "beat_2": mid_text[:-1], "beat_3": final_text[:-1]}
     structure = {**st, "cadde_yaklasma": tb, "caption_info": cap_info,
-                 "environment": f"Coğrafya: {geo} {name} · kamera = {CADDE_MODE_LABEL} (third-floor balcony with a "
-                                "glass railing across the avenue, high vantage, sabit)",
+                 "environment": f"Coğrafya: {geo} {name} · kamera = {CADDE_MODE_LABEL} (high balcony across the "
+                                "street, eye level, normal lens, hafif takip)",
                  "story_source": f"Hikâye: kod (birebir) · {CADDE_MODE_LABEL}"}
     if st.get("axes_json"):
         structure["axes_json"] = _cadde_axes(st["axes_json"], new_tag, geo, vehicle if has_vehicle else None, people)
     plain = " ".join([cadde_opening(geo), cadde_people(people), mid_text, final_text])
     trace, axes_line = mode_display(
-        scene, structure, mode=CADDE_MODE_LABEL, camera=f"sabit ({cadde_camera_text(follow)}); third-floor balcony "
-        "with a glass railing across the avenue, high vantage, glass railing in the foreground",
+        scene, structure, mode=CADDE_MODE_LABEL, camera=f"hit kamerası ({cadde_camera_text(follow)}); high balcony "
+        "across the street, overlooking the avenue, eye level, normal lens",
         opening=cadde_opening(geo), mid=(mid, mid_text), final=(final, final_text), plain=plain,
         vehicle=vehicle if has_vehicle else f"{vehicle} (bu ortada araç yok)",
-        spot="Third-floor balcony with a glass railing across the avenue (Yaklaşma kalıbı)",
-        weather="yok (stil ekinde natural light under grey storm clouds)",
+        spot="High balcony across the street, overlooking the avenue (Yaklaşma kalıbı, hit kamerası)",
+        weather="yok (stil ekinde raw natural light matching the weather)",
         axes={"coğrafya": f"{geo} {name}", "araç": vehicle if has_vehicle else "yok",
-              "kişi": people, "orta": mid, "final": final, "kamera modu": "sabit"},
+              "kişi": people, "orta": mid, "final": final, "kamera modu": "hafif takip"},
         repeat=f"coğrafya son {CADDE_GEO_BLOCK} elendi (G1 tohum) · araç son {CADDE_VEHICLE_BLOCK} · orta son "
                f"{CADDE_MID_BLOCK} · final son {CADDE_FINAL_BLOCK} (yasak çift yok)")
     # normal hattın ortam etiketi ve görünümü prompt'ta yok: gösterilmez
-    trace = {**trace, "mode": "cadde_yaklasma", "cografya": geo, "count_range": [3, 5], "view": None,
+    trace = {**trace, "mode": "cadde_yaklasma", "cografya": geo, "count_range": [5, 6], "view": None,
              "view_source": None, "fire_env_label_short": None}
     structure["axes_line"] = axes_line
     out = {**scene, "story": story, "plain_story": plain, "style_suffix": tail, "prompt": prompt,
@@ -2536,8 +2565,8 @@ def cadde_apply(scene: dict, history: list[str] | None = None, rng=None, follow:
 
 
 def cadde_camera_issues(text: str, geo: str | None = None) -> list[str]:
-    """Kie öncesi son kontrol: CADDE_REQUIRED ("high vantage", "glass railing", "third-floor balcony", "a parked")
-    ve G1-G6'dan birinin place metni var; CADDE_FORBIDDEN'dan hiçbiri yok. İhlal = gönderilmez."""
+    """Kie öncesi son kontrol (15 Kas (3)): CADDE_REQUIRED ("high balcony across the street", "normal lens",
+    "a parked") ve seçilen G'nin place metni var; CADDE_FORBIDDEN'dan hiçbiri yok. İhlal = gönderilmez."""
     out = []
     for need in CADDE_REQUIRED:
         if need not in text:

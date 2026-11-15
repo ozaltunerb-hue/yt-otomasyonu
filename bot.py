@@ -620,8 +620,9 @@ def cadde_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
     return (confirm_text(domain, event, cfg)
             + f"\n\nMod: {hp.CADDE_MODE_LABEL}\n"
             + hp.CADDE_CAMERA_LINE
-            + "\nCaddenin karşısındaki 3. kat balkon, cam korkuluk önde; hortum iki şeritli palmiyeli sahil caddesinden "
-            "kameraya doğru gelir; park halindeki araç savrulup hurda halinde kalır. Coğrafya (G1-G6), araç, orta (O1-O2), final (F1-F3), kişi sayısı, kelime sayısı ✋ Onay "
+            + "\nHit'in kendi prompt'u: caddenin karşısındaki yüksek balkon, normal lens, kamera hortumu sadece hafifçe "
+            "takip eder; hortum palmiyeli sahil caddesini süpürür; park halindeki araç savrulup hurda halinde kalır; "
+            "final kameraya yakın. Coğrafya (G1-G6), araç, orta (O1-O2), final (F1-F3), kişi sayısı, kelime sayısı ✋ Onay "
             "mesajında. Hikâye için GPT çağrılmaz.")
 
 

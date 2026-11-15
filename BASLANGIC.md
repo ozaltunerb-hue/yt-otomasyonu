@@ -82,6 +82,26 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
     (G3 + white van + O1 + F2, eşitleri var) / 1239 kr (G3 + pickup truck + O2 + F2). Açılış, insan, araç aynı.
     Hortum Yaklaşma: Onay uyarısı artık O1 ve O2'de (`HORTUM_VEHICLE_WARNING` = cadde uyarısıyla aynı metin; eski
     `HORTUM_O2_WARNING` pasif). Hortum prompt metni değişmedi (40 tohum prompt hash'i testte kilitli).
+  - **15 Kas (3) hit prompt'una dönüş** (commit "cadde Yaklasma: hit promptuna donus (normal lens, hafif takip)").
+    Sebep: mod 17 Eki hit'inden (1,2M) çok uzaklaştı: 200 kelime, geniş açı, uzun kamera kuralları, "the sea at its
+    end". 15 Kas Meksika üretiminde hortum ilk 6 saniye caddenin ucunda kaldı, video 2/10. Karar: hit'in kendi Kie
+    prompt'u birebir, sadece 4 değişiklik: (1) coğrafya kelimesi, (2) park halindeki araç ve hurda kalması, (3) kameraya
+    yakın final, (4) "pans to follow" yerine hafif takip (hit'te kamera hortumu takip edip döndüğü için final
+    kaybolmuştu). "eye level, normal lens" hit'te vardı ve kamera yine yüksekte çıktı; normal lens hortumu büyük ve yakın
+    gösteriyor, bu yüzden geri geldi. Yeni metin: açılış "...coastal avenue of {place}, hurling signs, branches and
+    debris along the road.", insan hit'in cümlesi (kişi 5/6: "... people scramble in a panic, sprinting down the sidewalk
+    to escape its furious path."), O1 "lifts a parked {vehicle} skyward ... crashes, wrecked, onto the avenue", O2
+    "... until it stops, crushed, on its roof", F1/F2 "Right across the street, ... a building", F3 aynı, stil eki hit'in
+    eki ("Handheld footage shot by a person standing on a high balcony across the street, overlooking the avenue, eye
+    level, normal lens; slight hand shake, the camera follows the tornado only slightly, keeping the avenue in frame; no
+    zoom, no cuts. ..."). Coğrafya G1-G6 metinleri, LRU'lar ve G1 tohumu aynı. Önceki metinlerin hepsi `CADDE_PASIF`
+    (_V2: ACILIS, INSAN_3, INSAN_5, O1, O2, F1, F2, F3, KAMERA, STIL, KAMERA_SATIRI, ZORUNLU, YASAK; açılış, insan ve F3
+    için ilk kayıt bu _V2'dir, F3_V2 aktif F3 ile aynı). Kie öncesi kontrol (eski kuralların yerine): zorunlu "high
+    balcony across the street", "normal lens", "a parked" + seçilen place; yasak "pans to follow", "third-floor", "glass
+    railing", "the sea at its end", "Full action", "Until the last frame". "eye level" yasağı sadece bu modda kalktı,
+    diğer modların kuralları aynı. Onay kamera satırı "Kamera: hit kamerası (yüksek balkon, normal lens, hafif takip)",
+    bot ön ekranı da. 216 kombinasyon: en kısa 143 kelime / 884 kr, en uzun 158 kelime (G3 + white van + O2 + F2) / 958
+    kr (G3 + pickup truck + O2 + F2). 40 tohum: sadece cadde modu değişti, diğer her yer diff 0.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir
