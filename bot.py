@@ -633,7 +633,7 @@ def cadde_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
 # Adımlar: df (olay menüsü) → dfe (onay metni) → dfok (üretim) → Kie'den önce ✋ Onay. Hikâye için GPT çağrılmaz.
 DONMA_CATEGORY_BUTTON = "❄️ Donduran fırtına"
 CODE_DOMAIN_LABELS = {"frozen_storm_disasters": DONMA_CATEGORY_BUTTON}
-CODE_EVENT_LABELS = {"Storm's eye freezes the city": "❄️ Fırtınanın gözü şehri dondurur"}
+CODE_EVENT_LABELS = {"Storm's eye freezes the city": "❄️ Buz fırtınası şehri dondurur"}   # 15 Kas (3): sadece etiket
 
 
 def donma_event_keyboard() -> InlineKeyboardMarkup:
@@ -663,9 +663,8 @@ def donma_confirm_text(cfg: dict | None = None) -> str:
             + ("\n✋ Onay açık: Kie'ye göndermeden önce son prompt'u gösterip onay isteyeceğim." if cfg["approval"] else "")
             + f"\n\nMod: {hp.DONMA_MODE_LABEL}\n"
             + hp.DONMA_CAMERA_LINE
-            + "\nFırtınanın gözü şehrin üstünde açılır, beyaz don caddeden kameraya doğru gelir; kaçan insanlar ve köpek "
-            "buz heykel gibi donar (kan yok), araç donup kayar ya da devrilir; final kameranın balkonunda. Coğrafya "
-            "(G1-G6), araç, orta (O1-O2), final (F1-F3), kişi sayısı, kelime sayısı ✋ Onay mesajında.")
+            + "\n" + hp.DONMA_CONFIRM_DESC   # 15 Kas (3): fırtına cephesi (eski metin hp.DONMA_PASIF CONFIRM_DESC_V2)
+            + " Coğrafya (G1-G6), araç, orta (O1-O2), final (F1-F3), kişi sayısı, kelime sayısı ✋ Onay mesajında.")
 
 
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:

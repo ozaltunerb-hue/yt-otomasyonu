@@ -979,6 +979,8 @@ _EVENT_SYNONYMS = {
     "stre": {"road", "aven", "boul", "inte"},                        # street: road, avenue, boulevard, intersection
     "gust": {"wind", "blas", "squa"},                                # gust: wind, blast, squall
     "rogu": {"gian", "mons", "towe", "mass"},                        # rogue wave: giant, monster, towering, massive
+    # 15 Kas (3): ❄️ Donduran fırtına iç anahtarı "Storm's eye freezes the city" aynı kaldı, hikâye artık "blizzard"
+    "stor": {"bliz"},                                                # storm: blizzard
 }
 
 # Kelime öbeği eşanlamlıları (Bahadır onayı, 30 Eyl): hortum hikâyeleri "touches down" ve "toward the shore"

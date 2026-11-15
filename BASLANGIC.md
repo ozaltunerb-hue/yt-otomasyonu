@@ -133,6 +133,26 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
     zorunlu: "storm's eye", "circular hole", "freez", "high vantage", "normal lens", "No funnel", "no blood", "far below
     the camera" + place; yasak: "fountain" + eskiler. Onay uyarısına: "Kamera yüksekte mi, gökte huni değil halka
     şeklinde göz mü?". 40 tohum: 19 olay + 12 mod diff 0.
+  - **15 Kas (3)** (commit "donma: goz yerine buz firtinasi cephesi, 1. surume donus"). Sebep: 2. sürüm (New York) çok
+    yapay çıktı. "Circular hole" tarifi bilim kurgu bir göz ve ışık sütunu çizdirdi. Buz dalga gibi aktı. İnsanlar ve
+    köpek daha donmadan heykel gibi kayarak geldi. 1. sürüm (Londra) daha gerçekçiydi; tek sorunu fıskiyenin kamerayı
+    yere indirmesiydi. Göz iki denemede de çalışmadı (biri hortuma, biri bilim kurguya benzedi). Gözden tamamen
+    vazgeçildi; tehdit caddeden gelen bir kar ve buz fırtınası cephesi oldu. Bahadır'ın altın kuralı: video asla yapay
+    görünmeyecek. Metinler 1. sürüme döndü (insan, O1, O2, F2 = *_V1). Değişenler: açılış "A freezing blizzard front of
+    dense, swirling snow and ice rolls down {place} toward the camera, ..." (göz yok, fıskiye yok); F3 "frost wall" yerine
+    "blizzard"; stil eki 1. sürüm + "high vantage" + "the blizzard always in frame". Coğrafya (G5 kısa hâli dahil),
+    araçlar ve bütün LRU'lar aynı. 2. sürüm metinlerinin hepsi `DONMA_PASIF` *_V2 (açılış, insan, O1, O2, F2, F3, kamera,
+    stil eki, olay etiketi, uyarı, zorunlu/yasak, hava satırı, bot ön ekran açıklaması), pasif. Görünen olay adı "❄️ Buz
+    fırtınası şehri dondurur" (sadece etiket; `DONMA_EVENT` iç anahtarı, LRU geçmişi ve Notion alanları aynı). Kie öncesi
+    zorunlu: "blizzard", "freez", "high vantage", "normal lens", "no blood", "never glossy or CGI" + place; yasak:
+    "storm's eye", "circular hole", "fountain", "far below the camera", "pans to follow", "Full action", "Until the last
+    frame", "blood-", "corpse", "dead". Onay uyarısı: "⚠️ Gerçekçilik: insanlar ve köpek donmadan önce gerçekten koşuyor mu
+    (kaymıyor mu), kan/yara yok mu, kamera yüksekte mi, video yapay görünüyor mu?". Onay/izleme hava satırı
+    `DONMA_WEATHER`, bot ön ekranı `DONMA_CONFIRM_DESC`. Zorunlu olay denetimi (`event_fidelity_issues`) iç anahtar
+    "Storm's eye freezes the city"nin 2 kökünü arıyor; yeni hikâyede yalnız "free" kalıyordu, her üretim Kie'den önce
+    duracaktı. Bahadır onayıyla `_EVENT_SYNONYMS`'e `"stor": {"bliz"}` eklendi (sadece ekleme; normal hatta "stor" kökü
+    taşıyan olay yok). 216 kombinasyon: en kısa 202 kelime / 1178 kr, en uzun 214 kelime (G5 + city bus/delivery van + O1
+    + F2) / 1232 kr (G5 + delivery van + O1 + F2); yedek kısaltma gerekmedi. 40 tohum: 19 olay + 12 mod diff 0.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir

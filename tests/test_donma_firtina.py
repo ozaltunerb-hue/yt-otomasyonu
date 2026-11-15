@@ -3,6 +3,9 @@
 # koddan birebir, zaman etiketleri var. Normal hattın sahnesi yok (olay yapılandırılmış havuzda değil). Coğrafya G1-G6
 # (son 3), araç son 2, orta O1-O2 / final F1-F3 son 1, kişi 5/6. Karar: insanlar kaçarken donar, köpek de donar, kan
 # yok; Kie reddederse öğrenmiş oluruz. Diğer 19 olay ve bütün modlar birebir aynı (40 tohum). Ağ yok.
+# 15 Kas (3): 2. sürüm (göz halka) çok yapay çıktı; gözden vazgeçildi, tehdit caddeden gelen kar ve buz fırtınası
+# cephesi. Metinler 1. sürüme döndü (açılış fırtına cephesi, F3 "blizzard", stil eki "high vantage" + "the blizzard
+# always in frame"). Görünen ad "❄️ Buz fırtınası şehri dondurur" (iç anahtar aynı). 2. sürüm DONMA_PASIF *_V2.
 import asyncio
 import hashlib
 import json
@@ -36,37 +39,36 @@ PLACES = {"G1": ("ABD", "a New York avenue of brownstone buildings"),
           "G4": ("Almanya", "a Berlin boulevard lined with linden trees"),
           "G5": ("Brezilya", "a Rio avenue of palm trees and pastel buildings"),
           "G6": ("Hindistan", "a Mumbai street of old colonial buildings")}
-# Talimattaki metinler kelimesi kelimesine (zaman etiketleri dahil). 15 Kas (2): göz halka, yüksek kamera, fıskiye çıktı,
-# uzak donma, F2 kısaldı, G5 kısaldı (eskiler DONMA_PASIF *_V1).
-OPENING = ("0-4s: Above {place}, the storm's eye opens, a vast circular hole in the black clouds with a calm pale sky "
-           "inside the ring, and a wall of white frost races down the street toward the camera, freezing everything it "
-           "passes.")
-PEOPLE = {5: "Five people and a dog sprint down the middle of the street ahead of it.",
-          6: "Six people and a dog sprint down the middle of the street ahead of it."}
+# Talimattaki metinler kelimesi kelimesine (zaman etiketleri dahil). 15 Kas (3): fırtına cephesi, 1. sürüme dönüş.
+OPENING = ("0-4s: A freezing blizzard front of dense, swirling snow and ice rolls down {place} toward the camera, and "
+           "everything it swallows turns white with frost in an instant, trees and parked cars freezing solid.")
+PEOPLE = {5: "Five people and a dog sprint toward the camera ahead of it.",
+          6: "Six people and a dog sprint toward the camera ahead of it."}
 VEHICLES = ("city bus", "taxi", "delivery van")
 MIDS = {
-    "O1": ("4-9s: The frost catches the people and the dog mid-stride, far below the camera, freezing them solid into "
-           "ice statues, and a moving {vehicle} freezes white and slides sideways into a lamppost."),
-    "O2": ("4-9s: The frost catches the people and the dog mid-stride, far below the camera, freezing them solid into "
-           "ice statues, and a {vehicle} freezes mid-turn and tips over onto its side."),
+    "O1": ("4-9s: The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and "
+           "a moving {vehicle} freezes white and slides sideways into a lamppost."),
+    "O2": ("4-9s: The frost catches the people and the dog mid-stride, freezing them solid into white ice statues, and "
+           "a {vehicle} freezes mid-turn and tips over onto its side."),
 }
 FINALS = {
     "F1": ("9-15s: Right across the street, the frost climbs the building, its windows bursting white with ice, then "
            "ice races over the balcony railing in front of the camera."),
-    "F2": ("9-15s: Right below the balcony, a tree and parked cars freeze solid, the tree splitting with a crack, and "
-           "frost creeps up the railing in front of the camera."),
-    "F3": ("9-15s: The frost wall hits the camera's building, ice racing up the facade and over the balcony railing as "
+    "F2": ("9-15s: Right below the balcony, a tree and a row of parked cars freeze solid, the tree splitting with a "
+           "crack, and white frost creeps up the railing in front of the camera."),
+    "F3": ("9-15s: The blizzard hits the camera's building, ice racing up the facade and over the balcony railing as "
            "frost spreads across the edges of the frame."),
 }
-TAIL = ("Handheld footage shot by a person standing on a high balcony across the street, high vantage looking down over "
-        "the street, normal lens; slight hand shake, the camera stays fixed, tilting only slightly, the storm's eye "
-        "always visible in the sky; one continuous shot, no zoom, no cuts. No funnel, no tornado. Everything the frost "
-        "touches freezes instantly and stays frozen white; frozen people stand still like statues, no blood, no "
-        "injuries, no faces close to the camera. Natural light under a dark sky, never CGI. Everything moves in real "
-        "time, never in slow motion, people run at full speed.")
-REQUIRED = ("storm's eye", "circular hole", "freez", "high vantage", "normal lens", "No funnel", "no blood",
-            "far below the camera")
-FORBIDDEN = ("fountain", "pans to follow", "Full action", "Until the last frame", "blood-", "corpse", "dead")
+TAIL = ("Handheld footage shot by a person standing on a high balcony across the street, high vantage, normal lens; "
+        "slight hand shake, the camera stays fixed, tilting only slightly, the blizzard always in frame; one continuous "
+        "shot, no zoom, no cuts. Everything the frost touches freezes instantly and stays frozen white; frozen people "
+        "stand still like statues, no blood, no injuries, no faces close to the camera. Raw natural light under a dark "
+        "storm sky, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow "
+        "motion, people run at full speed.")
+CAMERA = "the camera stays fixed, tilting only slightly, the blizzard always in frame"
+REQUIRED = ("blizzard", "freez", "high vantage", "normal lens", "no blood", "never glossy or CGI")
+FORBIDDEN = ("storm's eye", "circular hole", "fountain", "far below the camera", "pans to follow", "Full action",
+             "Until the last frame", "blood-", "corpse", "dead")
 # Eski (15 Kas ilk) metinler: pasif kayıtta birebir, aktif prompt'ta hiç yok
 V1 = {
     "G5_V1": "a Rio de Janeiro avenue of palm trees and pastel buildings",
@@ -91,9 +93,46 @@ V1 = {
     "REQUIRED_V1": ("storm's eye", "freez", "normal lens", "no blood"),
     "FORBIDDEN_V1": ("pans to follow", "Full action", "Until the last frame", "blood-", "corpse", "dead"),
 }
+# 2. sürüm (15 Kas (2), göz halka) metinleri: pasif kayıtta birebir, aktif prompt'ta hiç yok
+V2 = {
+    "OPENING_V2": ("Above {place}, the storm's eye opens, a vast circular hole in the black clouds with a calm pale sky "
+                   "inside the ring, and a wall of white frost races down the street toward the camera, freezing "
+                   "everything it passes."),
+    "PEOPLE_V2": {5: "Five people and a dog sprint down the middle of the street ahead of it.",
+                  6: "Six people and a dog sprint down the middle of the street ahead of it."},
+    "O1_V2": ("The frost catches the people and the dog mid-stride, far below the camera, freezing them solid into ice "
+              "statues, and a moving {vehicle} freezes white and slides sideways into a lamppost."),
+    "O2_V2": ("The frost catches the people and the dog mid-stride, far below the camera, freezing them solid into ice "
+              "statues, and a {vehicle} freezes mid-turn and tips over onto its side."),
+    "F2_V2": ("Right below the balcony, a tree and parked cars freeze solid, the tree splitting with a crack, and frost "
+              "creeps up the railing in front of the camera."),
+    "F3_V2": ("The frost wall hits the camera's building, ice racing up the facade and over the balcony railing as "
+              "frost spreads across the edges of the frame."),
+    "CAMERA_V2": "the camera stays fixed, tilting only slightly, the storm's eye always visible in the sky",
+    "TAIL_V2": ("Handheld footage shot by a person standing on a high balcony across the street, high vantage looking "
+                "down over the street, normal lens; slight hand shake, the camera stays fixed, tilting only slightly, "
+                "the storm's eye always visible in the sky; one continuous shot, no zoom, no cuts. No funnel, no "
+                "tornado. Everything the frost touches freezes instantly and stays frozen white; frozen people stand "
+                "still like statues, no blood, no injuries, no faces close to the camera. Natural light under a dark "
+                "sky, never CGI. Everything moves in real time, never in slow motion, people run at full speed."),
+    "EVENT_LABEL_V2": "❄️ Fırtınanın gözü şehri dondurur",
+    "WARNING_V2": ("⚠️ Donma: insanlar ve köpek kanlı/yaralı değil, buz heykel gibi donmuş mu kontrol et. "
+                   "Kamera yüksekte mi, gökte huni değil halka şeklinde göz mü?"),
+    "REQUIRED_V2": ("storm's eye", "circular hole", "freez", "high vantage", "normal lens", "No funnel", "no blood",
+                    "far below the camera"),
+    "FORBIDDEN_V2": ("fountain", "pans to follow", "Full action", "Until the last frame", "blood-", "corpse", "dead"),
+    "WEATHER_V2": "yok (stil ekinde natural light under a dark sky)",
+    "CONFIRM_DESC_V2": ("Fırtınanın gözü şehrin üstünde açılır, beyaz don caddeden kameraya doğru gelir; kaçan insanlar "
+                        "ve köpek buz heykel gibi donar (kan yok), araç donup kayar ya da devrilir; final kameranın "
+                        "balkonunda."),
+}
+EVENT_LABEL = "❄️ Buz fırtınası şehri dondurur"
 CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, sabit)"
-WARNING = ("⚠️ Donma: insanlar ve köpek kanlı/yaralı değil, buz heykel gibi donmuş mu kontrol et. "
-           "Kamera yüksekte mi, gökte huni değil halka şeklinde göz mü?")
+WARNING = ("⚠️ Gerçekçilik: insanlar ve köpek donmadan önce gerçekten koşuyor mu (kaymıyor mu), kan/yara yok mu, "
+           "kamera yüksekte mi, video yapay görünüyor mu?")
+CONFIRM_DESC = ("Kar ve buz fırtınası cephesi caddeden kameraya doğru gelir; dokunduğu her şey anında beyaz donar. Kaçan "
+                "insanlar ve köpek buz heykel gibi donar (kan yok), araç donup kayar ya da devrilir; final kameranın "
+                "balkonunda.")
 # Diğer 19 olay (normal yol) + 12 mod, 40 tohum: değişiklikten ÖNCEKİ kodla (4cbdd4f) üretilen kaydın SHA-256'sı
 OTHERS_SHA256 = "d651fa4985c878bec19e64f0e248a540aaa40f9ce55f26241f1b88afc1898436"
 
@@ -184,7 +223,9 @@ class TestTexts(_Quiet):
     def test_verbatim_texts(self):
         self.assertEqual(hp.DONMA_MODE_LABEL, "❄️ Donduran fırtına")
         self.assertEqual(hp.DONMA_CATEGORY_LABEL, "❄️ Donduran fırtına")
-        self.assertEqual(hp.DONMA_EVENT_LABEL, "❄️ Fırtınanın gözü şehri dondurur")
+        self.assertEqual(hp.DONMA_EVENT_LABEL, EVENT_LABEL)
+        self.assertEqual(hp.DONMA_CONFIRM_DESC, CONFIRM_DESC)
+        self.assertEqual(DF["camera"], CAMERA)
         self.assertEqual((hp.DONMA_EVENT, hp.DONMA_DOMAIN), (EVENT, DOMAIN))
         self.assertEqual({g: (DF["geos"][g]["name"], DF["geos"][g]["place"]) for g in DF["geos"]}, PLACES)
         a, b, c = es.SLICE_LABELS
@@ -201,7 +242,7 @@ class TestTexts(_Quiet):
         self.assertEqual(DF["vehicle_mids"], ("O1", "O2"))
         self.assertEqual(hp.donma_tail(), TAIL)
         self.assertEqual(DF["tail"], TAIL)
-        self.assertFalse(hp.DONMA_SHORTENED)   # yedek kısaltma kullanılmadı (15 Kas (2): en uzun 225 kelime)
+        self.assertFalse(hp.DONMA_SHORTENED)   # yedek kısaltma kullanılmadı (15 Kas (3): en uzun 214 kelime)
         self.assertEqual(hp.DONMA_TAIL_SHORTEN,
                          "Everything moves in real time, never in slow motion, people run at full speed.")
         self.assertEqual(hp.DONMA_TAIL_SHORTEN_TO, "People run at full speed.")
@@ -219,14 +260,17 @@ class TestTexts(_Quiet):
         # sıra: açılış + insan + orta + final + stil eki
         self.assertEqual(hp.donma_prompt("G3", 6, "O2", "taxi", "F3"), expected("G3", 6, "taxi", "O2", "F3"))
         self.assertEqual(hp.donma_prompt("G1", 5, "O1", "city bus", "F1"),
-                         "0-4s: Above a New York avenue of brownstone buildings, the storm's eye opens, a vast "
-                         "circular hole in the black clouds with a calm pale sky inside the ring, and a wall of white "
-                         "frost races down the street toward the camera, freezing everything it passes. Five people and "
-                         "a dog sprint down the middle of the street ahead of it. 4-9s: The frost catches the people "
-                         "and the dog mid-stride, far below the camera, freezing them solid into ice statues, and a "
-                         "moving city bus freezes white and slides sideways into a lamppost. 9-15s: Right across the "
-                         "street, the frost climbs the building, its windows bursting white with ice, then ice races "
-                         "over the balcony railing in front of the camera. " + TAIL)
+                         "0-4s: A freezing blizzard front of dense, swirling snow and ice rolls down a New York avenue "
+                         "of brownstone buildings toward the camera, and everything it swallows turns white with frost "
+                         "in an instant, trees and parked cars freezing solid. Five people and a dog sprint toward the "
+                         "camera ahead of it. 4-9s: The frost catches the people and the dog mid-stride, freezing them "
+                         "solid into white ice statues, and a moving city bus freezes white and slides sideways into a "
+                         "lamppost. 9-15s: Right across the street, the frost climbs the building, its windows bursting "
+                         "white with ice, then ice races over the balcony railing in front of the camera. " + TAIL)
+        # 1. sürüme dönüş: insan, O1, O2, F2 metinleri 1. sürümle birebir
+        self.assertEqual(DF["people"], V1["PEOPLE_V1"])
+        self.assertEqual((DF["mids"]["O1"], DF["mids"]["O2"], DF["finals"]["F2"]),
+                         (V1["O1_V1"], V1["O2_V1"], V1["F2_V1"]))
 
     def test_vehicle_fill_and_bad_ids(self):
         for v in VEHICLES:
@@ -247,8 +291,8 @@ class TestTexts(_Quiet):
             hp.donma_opening("G7")
 
     def test_all_combos_within_limits(self):
-        """216 kombinasyon: hepsi ≤ 230 kelime, ≤ 1400 karakter. 15 Kas (2) talimattaki hesap: en kısa 218 kelime, en
-        uzun G5 + city bus + O1 + F2 = 225 kelime, en uzun karakter G5 + delivery van + O1 + F1 = 1285."""
+        """216 kombinasyon: hepsi ≤ 230 kelime, ≤ 1400 karakter. 15 Kas (3) talimattaki hesap: en kısa 202 kelime, en
+        uzun G5 + city bus + O1 + F2 = 214 kelime, en uzun karakter G5 + delivery van + O1 + F2 = 1232."""
         n, over = 0, []
         words, chars = [], []
         for key, p in all_combos():
@@ -268,36 +312,70 @@ class TestTexts(_Quiet):
             for need in REQUIRED:
                 self.assertIn(need.lower(), p.lower(), (key, need))
             self.assertNotIn("fountain", p.lower(), key)
+            self.assertNotIn("storm's eye", p.lower(), key)
+            # main.py zorunlu olay denetimi (iç anahtar "Storm's eye freezes the city"): blizzard = storm eş anlamlısı
+            self.assertEqual(pg.event_fidelity_issues(EVENT, hp.donma_story(g, ppl, m, v, f)), [], key)
         self.assertEqual(n, 6 * 2 * 3 * 2 * 3)
         self.assertEqual(over, [])
-        self.assertEqual(max(words)[0], 225)
-        self.assertEqual(min(words)[0], 218)
-        self.assertEqual(len(hp.donma_prompt("G5", 5, "O1", "city bus", "F2").split()), 225)
-        self.assertEqual(max(chars)[0], 1285)
-        self.assertEqual(max(chars)[1], ("G5", 5, "delivery van", "O1", "F1"))
-        self.assertEqual(len(hp.donma_prompt("G5", 5, "O1", "delivery van", "F1")), 1285)
+        self.assertEqual(max(words)[0], 214)
+        self.assertEqual(min(words)[0], 202)
+        self.assertEqual(len(hp.donma_prompt("G5", 5, "O1", "city bus", "F2").split()), 214)
+        self.assertEqual(max(chars)[0], 1232)
+        self.assertEqual(max(chars)[1], ("G5", 5, "delivery van", "O1", "F2"))
+        self.assertEqual(len(hp.donma_prompt("G5", 5, "O1", "delivery van", "F2")), 1232)
         self.assertLessEqual(max(chars)[0], 1400)
 
-    def test_v1_texts_passive_and_never_active(self):
-        """Değişen eski metinler DONMA_PASIF'te birebir; 216 aktif prompt'un hiçbirinde ve 40 tohum üretimde yok."""
-        self.assertEqual(hp.DONMA_PASIF, V1)
-        marks = [V1["G5_V1"], V1["OPENING_V1"].split("{place}")[0], V1["OPENING_V1"].split("{place}")[1],
-                 *V1["PEOPLE_V1"].values(), *[t.split("{vehicle}")[0] for t in (V1["O1_V1"], V1["O2_V1"])],
-                 V1["F2_V1"], V1["TAIL_V1"], "Raw natural light under a dark storm sky", "white ice statues",
-                 "a row of parked cars", "fountain's spray", V1["TAIL_SHORTEN_V1"]]
+    def test_passive_texts_never_active(self):
+        """_V1 (1. sürüm) ve _V2 (2. sürüm) metinleri DONMA_PASIF'te birebir. 2. sürüm metinlerinin ve 1. sürümün geri
+        dönmeyen parçalarının (G5 uzun, açılış/fıskiye, eski stil eki) hiçbiri 216 aktif prompt'ta ve 40 tohumda yok."""
+        self.assertEqual(hp.DONMA_PASIF, {**V1, **V2})
+        marks = [V1["G5_V1"], *V1["OPENING_V1"].split("{place}"), V1["TAIL_V1"], "fountain's spray",
+                 *V2["OPENING_V2"].split("{place}"), *V2["PEOPLE_V2"].values(),
+                 *[t.split("{vehicle}")[0] for t in (V2["O1_V2"], V2["O2_V2"])], V2["F2_V2"], V2["F3_V2"],
+                 V2["CAMERA_V2"], V2["TAIL_V2"], "frost wall", "No funnel", "circular hole", "far below the camera",
+                 "storm's eye", "Natural light under a dark sky, never CGI", "middle of the street"]
         for _, p in all_combos():
             for m in marks:
-                self.assertNotIn(m, p, m)
-        self.assertNotIn(hp.DONMA_WARNING, (V1["WARNING_V1"],))
-        self.assertNotEqual(hp.DONMA_REQUIRED, V1["REQUIRED_V1"])
-        self.assertNotEqual(hp.DONMA_FORBIDDEN, V1["FORBIDDEN_V1"])
-        self.assertTrue(set(V1["REQUIRED_V1"]) <= set(REQUIRED))   # eski zorunlular hâlâ zorunlu
+                self.assertNotIn(m.lower(), p.lower(), m)
+        for old in (V1["WARNING_V1"], V2["WARNING_V2"]):
+            self.assertNotEqual(hp.DONMA_WARNING, old)
+        self.assertNotEqual(hp.DONMA_EVENT_LABEL, V2["EVENT_LABEL_V2"])
+        self.assertNotEqual(hp.DONMA_CONFIRM_DESC, V2["CONFIRM_DESC_V2"])
+        self.assertNotEqual(hp.DONMA_WEATHER, V2["WEATHER_V2"])
+        self.assertNotEqual(hp.DONMA_REQUIRED, V2["REQUIRED_V2"])
         self.assertTrue(set(V1["FORBIDDEN_V1"]) <= set(FORBIDDEN))   # eski yasaklar hâlâ yasak
+        self.assertTrue(set(V2["FORBIDDEN_V2"]) <= set(FORBIDDEN))
+        for gone in ("storm's eye", "circular hole", "far below the camera"):   # eski zorunlular artık yasak
+            self.assertIn(gone, FORBIDDEN)
         for seed in range(1, 41):
-            p = build(seed)["scenes"][0]["prompt"]
+            d = build(seed)
+            p = d["scenes"][0]["prompt"]
             for m in marks:
-                self.assertNotIn(m, p, (seed, m))
-            self.assertNotIn("fountain", p.lower(), seed)
+                self.assertNotIn(m.lower(), p.lower(), (seed, m))
+            shown = d["structure"]["donma_firtina"]["lines"].lower()
+            for bad in ("storm's eye", "fountain", "fırtınanın gözü", "halka", "huni"):
+                self.assertNotIn(bad, p.lower(), (seed, bad))
+                self.assertNotIn(bad, shown, (seed, bad))
+
+    def test_event_gate_synonym(self):
+        """15 Kas (3): "stor" ← "bliz" eş anlamlısı (sadece ekleme). Normal hatta "stor" kökü taşıyan olay yok; blizzard
+        geçmeyen ve sadece "freez" taşıyan bir metin hâlâ reddedilir."""
+        self.assertEqual(pg._EVENT_SYNONYMS["stor"], {"bliz"})
+        self.assertEqual([e for e in es.structured_events() if "stor" in pg._event_stems(e)], [])
+        self.assertTrue(pg.event_fidelity_issues(EVENT, "The frost freezes everything on the street."))
+        self.assertEqual(pg.event_fidelity_issues(EVENT, "A blizzard rolls in and freezes everything."), [])
+
+    def test_no_eye_or_fountain_in_any_active_prompt(self):
+        """ "storm's eye" ve "fountain" hiçbir aktif donma prompt'unda (216 kombinasyon + 40 tohum), stil ekinde,
+        kamera metninde ve aktif metin havuzunda yok."""
+        active = json.dumps({k: v for k, v in DF.items()}, ensure_ascii=False).lower()
+        for bad in ("storm's eye", "fountain"):
+            self.assertNotIn(bad, active)
+            self.assertNotIn(bad, hp.donma_tail().lower())
+            for _, p in all_combos():
+                self.assertNotIn(bad, p.lower())
+            for seed in range(1, 41):
+                self.assertNotIn(bad, build(seed)["scenes"][0]["prompt"].lower(), seed)
 
 
 class TestDonmaScene(_Quiet):
@@ -480,6 +558,7 @@ class TestDonmaScene(_Quiet):
             seen.add(tb["mid"])
             shown = sections_to_text(format_generation(d["trace"], {"domain": "❄️ Donduran fırtına",
                                                                     "event": hp.DONMA_EVENT_LABEL}))
+            self.assertIn(hp.DONMA_WEATHER, shown)
             self.assertIn("Mod: ❄️ Donduran fırtına", shown)
             self.assertIn("Hikâye: kod (birebir) · ❄️ Donduran fırtına", shown)
             self.assertNotIn("GPT'ye verildi", shown)
@@ -586,7 +665,7 @@ class TestDonmaPipelineAndBot(_Quiet):
         self.assertIn("Kie içerik filtresi", texts)
         self.assertIn("prohibited content", texts)
         self.assertEqual(runner.await_args.kwargs["reporter"].labels,
-                         {"domain": "❄️ Donduran fırtına", "event": "❄️ Fırtınanın gözü şehri dondurur"})
+                         {"domain": "❄️ Donduran fırtına", "event": EVENT_LABEL})
 
     def test_bot_button_and_flow(self):
         import bot
@@ -604,16 +683,18 @@ class TestDonmaPipelineAndBot(_Quiet):
         call = upd.callback_query.edit_message_text.await_args
         self.assertIn("❄️ Donduran fırtına", call.args[0])
         labels = [b.text for r in call.kwargs["reply_markup"].inline_keyboard for b in r]
-        self.assertEqual(labels, ["❄️ Fırtınanın gözü şehri dondurur", "🔙 Geri"])
+        self.assertEqual(labels, [EVENT_LABEL, "🔙 Geri"])
         cbs = [b.callback_data for r in call.kwargs["reply_markup"].inline_keyboard for b in r]
         self.assertEqual(cbs, ["uret:dfe", "uret:back"])
         upd = _update(data="uret:dfe")
         asyncio.run(bot.on_callback(upd, ctx))
         call = upd.callback_query.edit_message_text.await_args
         text = call.args[0]
-        for part in ("Kategori: ❄️ Donduran fırtına", "Olay: ❄️ Fırtınanın gözü şehri dondurur",
-                     "Mod: ❄️ Donduran fırtına", CAMERA_LINE, "✋ Onay"):
+        for part in ("Kategori: ❄️ Donduran fırtına", f"Olay: {EVENT_LABEL}",
+                     "Mod: ❄️ Donduran fırtına", CAMERA_LINE, "✋ Onay", CONFIRM_DESC):
             self.assertIn(part, text)
+        for gone in ("gözü", "Fırtınanın", "halka"):
+            self.assertNotIn(gone, text)
         self.assertEqual([b.text for r in call.kwargs["reply_markup"].inline_keyboard for b in r], ["✅ Üret", "❌ İptal"])
         upd = _update(data="uret:dfok")
         runner = AsyncMock(return_value={"success": False, "reason": "cancelled"})
@@ -626,7 +707,8 @@ class TestDonmaPipelineAndBot(_Quiet):
             self.assertNotIn(other, kw)
         self.assertTrue(kw["reporter"].needs_approval)
         started = upd.callback_query.edit_message_text.await_args_list[0].args[0]
-        self.assertIn("🚀 Üretim başladı: ❄️ Donduran fırtına / ❄️ Fırtınanın gözü şehri dondurur", started)
+        self.assertIn(f"🚀 Üretim başladı: ❄️ Donduran fırtına / {EVENT_LABEL}", started)
+        self.assertEqual(bot.CODE_EVENT_LABELS, {EVENT: EVENT_LABEL})   # sadece etiket; iç anahtar aynı
         for bad in ("uret:df:1", "uret:dfe:0", "uret:dfok:x"):
             upd = _update(data=bad)
             asyncio.run(bot.on_callback(upd, ctx))
@@ -657,7 +739,7 @@ class TestOthersUntouched(_Quiet):
         self.assertEqual(snapshot_hash(self.snap), OTHERS_SHA256)
 
     def test_sentences_only_in_this_category(self):
-        marks = ["the storm's eye opens, a vast circular hole", *PEOPLE.values(),
+        marks = ["A freezing blizzard front of dense, swirling snow", *PEOPLE.values(),
                  *[t.split("{vehicle}")[1] for t in DF["mids"].values()],
                  "The frost catches the people and the dog mid-stride", *DF["finals"].values(), TAIL,
                  DF["camera"], *[p for _, p in PLACES.values()], "storm's eye", "frost", "freez"]
