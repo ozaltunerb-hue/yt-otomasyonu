@@ -3000,3 +3000,319 @@ def donma_issues(structure: dict, info: dict) -> list[str]:
     if len(text) > DONMA_MAX_CHARS:
         out.append(f"prompt {len(text)} karakter (en fazla {DONMA_MAX_CHARS})")
     return out
+
+
+# ── 🌀 Kasırga (15 Kas 2026 (4), Bahadır) ─────────────────────────────────────────────────────────────────────────────
+# Yeni kategori, tek olay: "🌀 Kasırga kıyı kasabasını döver". Odak rüzgâr: hortum (huni) yok, dev dalga/sel dalgası
+# yok. Altın kural: video asla yapay görünmez; kısa, sade, gerçek görüntülere benzer prompt. DONMA_FIRTINA ile aynı
+# düzen (GPT yok, hikâye koddan birebir, zaman etiketleri var, normal hattın sahnesi YOK: olay yapılandırılmış havuzda
+# değil, rastgele domain rotasyonu ve snapshot'lar değişmesin diye sahne burada kurulur: kasirga_build_scene).
+# Coğrafya G1-G6 (son 3), araç son 2, orta/final son 1, kişi 4/5. Kayıt O*+F* (combo + Eksenler).
+KASIRGA_MODE_LABEL = "🌀 Kasırga"
+KASIRGA_DOMAIN = "hurricane_disasters"                 # Combo Key'in ilk parçası (Notion eksen sorgusu bununla)
+KASIRGA_EVENT = "Hurricane winds batter a coastal town"   # Notion "Olay"; normal havuzda (DOMAIN_ATTRIBUTES) yok
+KASIRGA_CATEGORY_LABEL = "🌀 Kasırga"                   # Telegram kategori düğmesi
+KASIRGA_EVENT_LABEL = "🌀 Kasırga kıyı kasabasını döver"   # Telegram olay düğmesi
+KASIRGA_NOTION_CATEGORY = "Kasırga"                     # Notion: Eksenler "kategori" (metin) + Paylaşımlar "Kategori"
+KASIRGA_MAX_WORDS = 230
+KASIRGA_MAX_CHARS = 1400
+KASIRGA_GEO_BLOCK = 3
+KASIRGA_VEHICLE_BLOCK = 2
+KASIRGA_MID_BLOCK = 1
+KASIRGA_FINAL_BLOCK = 1
+KASIRGA_SPOT = "high balcony across the street"
+KASIRGA = {
+    "geos": {
+        "G1": {"name": "ABD", "place": "a Florida beach town of low pastel houses"},
+        "G2": {"name": "Filipinler", "place": "a Philippine coastal town of tin-roofed houses"},
+        "G3": {"name": "Meksika", "place": "a Mexican Caribbean town of colorful concrete houses"},
+        "G4": {"name": "Hindistan", "place": "an Indian coastal town of old concrete buildings"},
+        "G5": {"name": "Küba", "place": "a Cuban seaside street of faded colonial houses"},
+        "G6": {"name": "Japonya", "place": "a Japanese coastal town of low tiled houses"},
+    },
+    "opening": "Hurricane winds and sideways rain hammer a street in {place}, palm trees bending almost flat as metal "
+               "roof sheets tear loose and fly across the road.",
+    "people": {4: "Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging "
+                  "to railings.",
+               5: "Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging "
+                  "to railings."},
+    "vehicles": ("pickup truck", "SUV", "small car"),
+    "mids": {
+        "O1": "A violent gust flips a parked {vehicle} onto its roof and sends it skidding across the wet road.",
+        "O2": "A shop awning and a sheet of metal roofing rip loose and slam down onto a parked {vehicle}, smashing "
+              "its windows.",
+    },
+    "finals": {
+        "F1": "Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past "
+              "the camera.",
+        "F2": "Right below the balcony, a tall palm tree snaps in half and crashes onto the parked cars, debris "
+              "slamming into the balcony railing.",
+        "F3": "Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+    },
+    "vehicle_mids": ("O1", "O2"),
+    "camera": "heavy hand shake from the wind, rain streaking across the lens; no zoom, no cuts",
+    "tail": ("Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; "
+             "heavy hand shake from the wind, rain streaking across the lens; no zoom, no cuts. No tornado funnel, no "
+             "flood waves. Bystanders wear everyday clothes. Raw natural light under a dark storm sky, never glossy or "
+             "CGI. No readable signs or text. Everything moves in real time, never in slow motion."),
+}
+KASIRGA_CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, rüzgârla sarsılan el, lenste yağmur)"
+KASIRGA_WARNING = ("⚠️ Gerçekçilik: gökte huni yok mu, sel dalgası yok mu, insanlar rüzgârla gerçekten boğuşuyor mu, "
+                   "video yapay görünüyor mu?")
+KASIRGA_WEATHER = "kasırga rüzgârı ve yatay yağmur (stil ekinde raw natural light under a dark storm sky)"
+KASIRGA_CONFIRM_DESC = ("Kasırga rüzgârı ve yatay yağmur kıyı kasabasının caddesini döver: palmiyeler yatar, çatı "
+                        "sacları uçar. İnsanlar rüzgâra karşı boğuşarak kameraya doğru ilerler; park halindeki araç "
+                        "devrilir ya da üstüne tente ve sac düşer; final caddenin karşısında ya da balkonun altında. "
+                        "Huni yok, sel dalgası yok.")
+# Kie öncesi son kontrol (büyük/küçük harf fark etmez). Yasak ifadeler, stil ekindeki "No tornado funnel, no flood
+# waves." cümlesi metinden çıkarıldıktan sonra aranır.
+KASIRGA_REQUIRED = ("Hurricane", "sideways rain", "normal lens", "No tornado funnel")
+KASIRGA_FORBIDDEN = ("tornado", "funnel", "twister", "waterspout", "surge", "tsunami", "tidal", "flood wave",
+                     "pans to follow", "Full action", "Until the last frame")
+KASIRGA_NEGATION = "No tornado funnel, no flood waves."
+_KS = KASIRGA
+_KASIRGA_GEO_MEMORY: list[str] = []
+_KASIRGA_VEHICLE_MEMORY: list[str] = []
+
+
+def kasirga_is_active(event: str | None) -> bool:
+    return event == KASIRGA_EVENT
+
+
+def kasirga_camera_text() -> str:
+    return _KS["camera"]
+
+
+def kasirga_tail() -> str:
+    return _KS["tail"]
+
+
+def kasirga_opening(geo: str) -> str:
+    if geo not in _KS["geos"]:
+        raise es.StructureError(f"{KASIRGA_MODE_LABEL}: {geo} bu kategoride yok (coğrafya G1-G6)")
+    return _KS["opening"].format(place=_KS["geos"][geo]["place"])
+
+
+def kasirga_people(n: int) -> str:
+    if n not in _KS["people"]:
+        raise es.StructureError(f"{KASIRGA_MODE_LABEL}: kişi sayısı 4 ya da 5 olmalı ({n})")
+    return _KS["people"][n]
+
+
+def kasirga_mid(mid: str, vehicle: str | None) -> str:
+    if mid not in _KS["mids"]:
+        raise es.StructureError(f"{KASIRGA_MODE_LABEL}: {mid} bu kategoride yok (orta O1, O2)")
+    if mid in _KS["vehicle_mids"] and vehicle not in _KS["vehicles"]:
+        raise es.StructureError(f"{KASIRGA_MODE_LABEL}: {mid} için araç yok ({vehicle})")
+    return _KS["mids"][mid].format(vehicle=vehicle or "")
+
+
+def kasirga_final(final: str) -> str:
+    if final not in _KS["finals"]:
+        raise es.StructureError(f"{KASIRGA_MODE_LABEL}: {final} bu kategoride yok (final F1, F2, F3)")
+    return _KS["finals"][final]
+
+
+def kasirga_story(geo: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
+    """Sıra: açılış + insan + orta + final (zaman etiketleriyle)."""
+    a, b, c = es.SLICE_LABELS
+    return (f"{a}: {kasirga_opening(geo)} {kasirga_people(people)} {b}: {kasirga_mid(mid, vehicle)} "
+            f"{c}: {kasirga_final(final)}")
+
+
+def kasirga_prompt(geo: str, people: int, mid: str, vehicle: str | None, final: str) -> str:
+    """Prompt = açılış + insan + orta + final + stil eki."""
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(kasirga_story(geo, people, mid, vehicle, final), kasirga_tail())
+
+
+def kasirga_tags(history: list[str]) -> list[str]:
+    """Combo Key'lerden + süreç hafızasından O*+F* çiftleri (eskiden yeniye)."""
+    return [t for t in es.beat_history(KASIRGA_EVENT, history or []) if re.fullmatch(r"O\d+\+F\d+", t)]
+
+
+def kasirga_choose_mid(tags: list[str], rng=None) -> str:
+    return _block_pick(list(_KS["mids"]), [t.split("+")[0] for t in tags], KASIRGA_MID_BLOCK, rng)
+
+
+def kasirga_choose_final(tags: list[str], rng=None) -> str:
+    return _block_pick(list(_KS["finals"]), [t.split("+")[1] for t in tags], KASIRGA_FINAL_BLOCK, rng)
+
+
+def kasirga_axes_history(records: list | None, key: str) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu kategorinin `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") == KASIRGA_EVENT and axes.get("mod") == "kasirga"
+                and axes.get(key)):
+            out.append(axes[key])
+    return out
+
+
+def kasirga_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    seen = list(_KASIRGA_GEO_MEMORY if used is None else used)
+    return _block_pick(list(_KS["geos"]), seen, KASIRGA_GEO_BLOCK, rng)
+
+
+def kasirga_choose_vehicle(used: list[str] | None = None, rng=None) -> str:
+    return _block_pick(list(_KS["vehicles"]), list(_KASIRGA_VEHICLE_MEMORY if used is None else used),
+                       KASIRGA_VEHICLE_BLOCK, rng)
+
+
+def kasirga_lines(tb: dict) -> str:
+    """✋ Onay satırları: mod, coğrafya, araç, orta, final, kişi, kamera, kelime/karakter, eksenler, tekrar önleme,
+    gerçekçilik uyarısı."""
+    text = tb["prompt"]
+    lines = [
+        f"Mod: {KASIRGA_MODE_LABEL}",
+        f"Coğrafya: {tb['geo']} {_KS['geos'][tb['geo']]['name']}",
+        f"Araç: {tb['vehicle']}",
+        f"Orta (4-9s): {tb['mid']} «{kasirga_mid(tb['mid'], tb['vehicle'])}»",
+        f"Final (9-15s): {tb['final']} «{kasirga_final(tb['final'])}»",
+        f"Kişi: {tb['people']}",
+        KASIRGA_CAMERA_LINE,
+        f"Kelime: {len(text.split())} (en fazla {KASIRGA_MAX_WORDS}) · karakter: {len(text)} "
+        f"(en fazla {KASIRGA_MAX_CHARS})",
+    ]
+    if tb.get("axes_line"):
+        lines.append(tb["axes_line"])
+    lines.append(KASIRGA_WARNING)
+    return "\n".join(lines)
+
+
+def kasirga_axes_json(tag: str, geo: str, vehicle: str, people: int, excluded: dict | None = None) -> str:
+    import core.axes_history as ah
+    axes = {"spot": KASIRGA_SPOT, "view": None, "light": None, "vehicle": vehicle, "people": people, "beats": tag,
+            "mod": "kasirga", "kategori": KASIRGA_NOTION_CATEGORY, "cografya": geo, "arac": vehicle}
+    return ah.axes_json(KASIRGA_EVENT, axes, excluded)
+
+
+def kasirga_build_scene(domain: str | None, event: str | None, history: list[str] | None = None,
+                        records: list | None = None, rng=None, history_source: str = "bellek") -> dict:
+    """🌀 Kasırga sahnesi: GPT yok, normal hat yok. records = Notion "Eksenler" ham kayıtları (None = okunamadı /
+    yükleyici yok: süreç hafızası). Coğrafya son 3, araç son 2, orta/final son 1, kişi 4/5. structure["kasirga"] Kie
+    öncesi son denetimin (submit_issues) kaynağıdır."""
+    import random
+    from core.skeleton_pipeline import SKELETON_CAMERA
+    if domain not in (None, KASIRGA_DOMAIN) or not kasirga_is_active(event):
+        raise es.StructureError(f"{KASIRGA_MODE_LABEL} kurulamadı: {domain} / {event}")
+    r = rng or random
+    geo_used = kasirga_axes_history(records, "cografya")
+    vehicle_used = kasirga_axes_history(records, "arac")
+    tags = kasirga_axes_history(records, "beats") if records is not None else kasirga_tags(history or [])
+    geo = kasirga_choose_geo(geo_used, r)
+    vehicle = kasirga_choose_vehicle(vehicle_used, r)
+    people = r.choice((4, 5))
+    mid = kasirga_choose_mid(tags, r)
+    final = kasirga_choose_final(tags, r)
+    tag = es.beat_tag(mid, final)
+    es.remember_beats(KASIRGA_EVENT, tag)   # seçim anı hafızası (TEST/iptal da sayılır)
+    for m, v in ((_KASIRGA_GEO_MEMORY, geo), (_KASIRGA_VEHICLE_MEMORY, vehicle)):
+        m.append(v)
+        del m[:-12]
+    story = kasirga_story(geo, people, mid, vehicle, final)
+    tail = kasirga_tail()
+    prompt = kasirga_prompt(geo, people, mid, vehicle, final)
+    name = _KS["geos"][geo]["name"]
+    mid_text, final_text = kasirga_mid(mid, vehicle), kasirga_final(final)
+    opening = kasirga_opening(geo)
+    plain = " ".join([opening, kasirga_people(people), mid_text, final_text])
+    repeat = (f"coğrafya son {KASIRGA_GEO_BLOCK} elendi · araç son {KASIRGA_VEHICLE_BLOCK} · orta son "
+              f"{KASIRGA_MID_BLOCK} · final son {KASIRGA_FINAL_BLOCK} (yasak çift yok)")
+    base_trace = {"pipeline": "creative", "structured": True, "domain": KASIRGA_DOMAIN, "event": KASIRGA_EVENT,
+                  "ship": "None", "camera": SKELETON_CAMERA, "view": None, "view_source": None,
+                  "place": _KS["geos"][geo]["place"], "count_range": [4, 5], "people_running": people,
+                  "outcome": "-", "recent_count": 0}
+    trace, axes_line = mode_display(
+        {"trace": base_trace}, {}, mode=KASIRGA_MODE_LABEL,
+        camera=f"hit kamerası ({kasirga_camera_text()}); high balcony across the street, eye level, normal lens",
+        opening=opening, mid=(mid, mid_text), final=(final, final_text), plain=plain, vehicle=vehicle,
+        spot="High balcony across the street (hit kamerası, yüksek balkon, normal lens, rüzgârla sarsılan el)",
+        weather=KASIRGA_WEATHER,
+        axes={"coğrafya": f"{geo} {name}", "araç": vehicle, "kişi": people, "orta": mid, "final": final,
+              "kamera modu": "elde, rüzgârla sarsılan"},
+        repeat=repeat)
+    trace = {**trace, "mode": "kasirga", "cografya": geo, "axes_source": history_source}
+    tb = {"event": KASIRGA_EVENT, "geo": geo, "people": people, "vehicle": vehicle, "mid": mid, "final": final,
+          "story": story, "suffix": tail, "prompt": prompt, "axes_line": axes_line}
+    tb["lines"] = kasirga_lines(tb)
+    excluded = {"cografya": [g for g in _KS["geos"] if g in (geo_used if geo_used is not None
+                                                             else _KASIRGA_GEO_MEMORY[:-1])[-KASIRGA_GEO_BLOCK:]]}
+    axes_json = kasirga_axes_json(tag, geo, vehicle, people, excluded)
+    structure = {"kasirga": tb, "axes_json": axes_json, "axes_line": None, "environment": None,
+                 "story_source": f"Hikâye: kod (birebir) · {KASIRGA_MODE_LABEL}", "story_source_kind": "code",
+                 "caption_info": {"opening": opening, "people": people, "kadraj": "balkon",
+                                  # caption şablonları normal beat'ler gibi küçük harfle başlayan cümle bekler
+                                  "beat_2": donma_caption_beat(mid_text), "beat_3": donma_caption_beat(final_text)},
+                 "caption_candidates": None}
+    problems = kasirga_issues(structure, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{KASIRGA_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = f"{KASIRGA_DOMAIN}|none|{KASIRGA_EVENT.lower()}|{KASIRGA_SPOT}##{tag}|{SKELETON_CAMERA}"
+    return {"domain": KASIRGA_DOMAIN, "event": KASIRGA_EVENT, "ship": None, "spot": KASIRGA_SPOT, "story": story,
+            "plain_story": plain, "style_suffix": tail, "prompt": prompt, "combo_key": combo, "trace": trace,
+            "structure": structure, "axes_json": axes_json}
+
+
+def kasirga_camera_issues(text: str, geo: str | None = None) -> list[str]:
+    """Kie öncesi son kontrol: KASIRGA_REQUIRED ("Hurricane", "sideways rain", "normal lens", "No tornado funnel") ve
+    seçilen G'nin place metni var; stil ekindeki "No tornado funnel, no flood waves." cümlesi çıkarıldıktan sonra
+    KASIRGA_FORBIDDEN'dan (tornado, funnel, twister, waterspout, surge, tsunami, tidal, flood wave, pans to follow, Full
+    action, Until the last frame) hiçbiri yok (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
+    out = []
+    text = text or ""
+    low = text.lower()
+    for need in KASIRGA_REQUIRED:
+        if need.lower() not in low:
+            out.append(f'"{need}" eksik')
+    places = [g for g, v in _KS["geos"].items() if v["place"] in text]
+    if not places:
+        out.append("G1-G6 yer metni yok")
+    elif geo is not None and places != [geo]:
+        out.append(f"yer metni seçilen coğrafya değil ({geo}: {places})")
+    rest = text.replace(KASIRGA_NEGATION, " ").lower()
+    for bad in KASIRGA_FORBIDDEN:
+        if bad.lower() in rest:
+            out.append(f"bu kategoride olmayan ifade var: {bad}")
+    return out
+
+
+def kasirga_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin bu kalıpla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    tb = structure["kasirga"]
+    if tb.get("geo") not in _KS["geos"]:
+        return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
+    if tb.get("mid") not in _KS["mids"]:
+        return [f"orta O1, O2 değil ({tb.get('mid')})"]
+    if tb.get("final") not in _KS["finals"]:
+        return [f"final F1, F2, F3 değil ({tb.get('final')})"]
+    try:
+        story = kasirga_story(tb["geo"], tb["people"], tb["mid"], tb["vehicle"], tb["final"])
+        prompt = kasirga_prompt(tb["geo"], tb["people"], tb["mid"], tb["vehicle"], tb["final"])
+    except es.StructureError as e:
+        return [str(e)]
+    out = []
+    if info.get("style_suffix") != kasirga_tail():
+        out.append("stil eki Kasırga kalıbı değil")
+    if info.get("story") != story:
+        out.append("hikâye kalıpla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    out += kasirga_camera_issues(text, tb["geo"])
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > KASIRGA_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {KASIRGA_MAX_WORDS})")
+    if len(text) > KASIRGA_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {KASIRGA_MAX_CHARS})")
+    return out

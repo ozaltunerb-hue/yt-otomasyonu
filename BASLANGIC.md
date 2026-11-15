@@ -153,6 +153,27 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
     duracaktı. Bahadır onayıyla `_EVENT_SYNONYMS`'e `"stor": {"bliz"}` eklendi (sadece ekleme; normal hatta "stor" kökü
     taşıyan olay yok). 216 kombinasyon: en kısa 202 kelime / 1178 kr, en uzun 214 kelime (G5 + city bus/delivery van + O1
     + F2) / 1232 kr (G5 + delivery van + O1 + F2); yedek kısaltma gerekmedi. 40 tohum: 19 olay + 12 mod diff 0.
+  - **15 Kas (4) rafa kalktı.** Donduran fırtına 3 denemeden sonra rafa kalktı. Seedance "insan koşarken donup buz
+    heykele dönüşür" sahnesini gerçekçi çizemedi: figürler kaydı ya da donduktan sonra koşmaya devam etti. Göz ve
+    fırtına cephesi hortum gibi çizildi. Mod kodda kalıyor, menüde kalabilir, dokunulmadı.
+- **15 Kas (4)**: 🌀 Kasırga (YENİ KATEGORİ, `KASIRGA`; commit "yeni kategori: Kasirga (kod hikaye)"). Tek olay "🌀
+  Kasırga kıyı kasabasını döver" (iç anahtar `KASIRGA_EVENT` "Hurricane winds batter a coastal town", domain
+  `hurricane_disasters`). Bahadır'ın altın kuralı: video asla yapay görünmeyecek; kısa, sade, gerçek görüntülere benzer
+  prompt. Odak rüzgâr: hortumla ilgisi yok (huni yok), dev dalga/sel dalgası yok. Yapı `DONMA_FIRTINA` ile aynı: GPT
+  yok, hikâye koddan birebir (`hp.kasirga_build_scene`), olay yapılandırılmış havuzda değil (rastgele domain rotasyonu ve
+  snapshot'lar değişmesin diye `es.CODE_STORY_FORCE` yolu kullanılmadı; o yol olayın normal havuzda olmasını ister).
+  Coğrafya G1-G6 (son 3): Florida, Filipinler, Meksika Karayip, Hindistan, Küba, Japonya. Kişi 4/5, araç pickup truck /
+  SUV / small car (son 2), orta O1 (araç devrilir) / O2 (tente + çatı sacı araca), final F1 (karşı evin çatısı) / F2
+  (balkon altında palmiye) / F3 (boş reklam panosu), orta/final son 1. Prompt: açılış + insan + orta + final + stil eki
+  (eye level, normal lens, rüzgârla sarsılan el, lenste yağmur; "No tornado funnel, no flood waves."). 216 kombinasyon:
+  en kısa 156 kelime, en uzun 167 kelime (G1 + pickup truck + O2 + F2), en uzun 971 kr (G3 + pickup truck + O2 + F2).
+  Kie öncesi zorunlu: "Hurricane", "sideways rain", "normal lens", "No tornado funnel" + place; yasak (stil ekindeki
+  olumsuzlama cümlesi çıkarıldıktan sonra, harf büyüklüğü fark etmez): tornado, funnel, twister, waterspout, surge,
+  tsunami, tidal, flood wave, pans to follow, Full action, Until the last frame. Zorunlu olay denetimi açık: "Hurricane
+  winds" her açılışta (hurr + wind), eş anlamlı eklenmedi. Bot: kategori menüsünün sonunda (donmanın altında) `uret:ks`
+  → `kse` → `ksok`, ✋ Onay Kie'den önce. Notion: kategori Eksenler JSON'unda `kategori` = "Kasırga" (metin), Paylaşımlar
+  "Kategori" caption'dan ("Kasırga", seçenek ilk yazımda oluşur); caption tabloları + caption_sim bu olayı tanıyor.
+  Testler `tests/test_kasirga.py`; 40 tohum: 19 olay + 13 mod (donma dahil) diff 0 (`OTHERS_SHA256`, ed5a9ab hâli).
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir

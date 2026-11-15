@@ -109,7 +109,8 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                        mode: str | None = None, reporter: PipelineReporter | None = None, view: str | None = None,
                        hit_env: str | None = None, approach_env: str | None = None, dalga24: bool = False,
                        kul_yaklasma: bool = False, orman_yaklasma: bool = False, heli_yaklasma: bool = False,
-                       hortum_yaklasma: bool = False, cadde_yaklasma: bool = False, donma_firtina: bool = False):
+                       hortum_yaklasma: bool = False, cadde_yaklasma: bool = False, donma_firtina: bool = False,
+                       kasirga: bool = False):
     """
     Tam otonom video üretim pipeline'ı.
 
@@ -133,6 +134,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     hortum_yaklasma: 14 Kas, ⭐ Hit kalıbı · Yaklaşma (hortum karaya vurur) modu (False = normal üretim).
     cadde_yaklasma: 15 Kas, ⭐ Hit kalıbı · Yaklaşma (cadde, hortum sahil caddesi) modu (False = normal üretim).
     donma_firtina: 15 Kas, ❄️ Donduran fırtına kategorisi (tek olay, hikâye koddan, GPT yok).
+    kasirga: 15 Kas (4), 🌀 Kasırga kategorisi (tek olay, hikâye koddan, GPT yok).
     """
     if dry_run:
         settings.IS_DRY_RUN = True
@@ -189,6 +191,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 **({"hortum_yaklasma": True} if hortum_yaklasma else {}),
                 **({"cadde_yaklasma": True} if cadde_yaklasma else {}),
                 **({"donma_firtina": True} if donma_firtina else {}),
+                **({"kasirga": True} if kasirga else {}),
             )
             return result
         except (ContentFilterError, PreflightError) as err:
@@ -235,6 +238,7 @@ async def _execute_pipeline(
     hortum_yaklasma: bool = False,
     cadde_yaklasma: bool = False,
     donma_firtina: bool = False,
+    kasirga: bool = False,
 ) -> dict:
     """
     Pipeline'ın asıl implementasyonu.
@@ -269,6 +273,7 @@ async def _execute_pipeline(
         **({"hortum_yaklasma": True} if hortum_yaklasma else {}),   # 14 Kas: ⭐ Hit kalıbı · Yaklaşma (hortum)
         **({"cadde_yaklasma": True} if cadde_yaklasma else {}),   # 15 Kas: ⭐ Hit kalıbı · Yaklaşma (cadde)
         **({"donma_firtina": True} if donma_firtina else {}),   # 15 Kas: ❄️ Donduran fırtına
+        **({"kasirga": True} if kasirga else {}),   # 15 Kas (4): 🌀 Kasırga
         # 21 Eki (Gece 1 / Aşama 3): seçimden önce kategorinin eksen geçmişi Notion'dan (iptaller dahil)
         "axes_loader": tracker.get_axes_records,
         # 21 Eki (Aşama 7): caption geçmişi (Paylaşımlar + son 20 üretilmiş caption)
@@ -394,6 +399,8 @@ async def _execute_pipeline(
                 info["hit_lines"] = structure["cadde_yaklasma"]["lines"]
             if structure and structure.get("donma_firtina"):   # 15 Kas: ❄️ Donduran fırtına onay satırları
                 info["hit_lines"] = structure["donma_firtina"]["lines"]
+            if structure and structure.get("kasirga"):   # 15 Kas (4): 🌀 Kasırga onay satırları
+                info["hit_lines"] = structure["kasirga"]["lines"]
             meta.update({"final_prompt": info["prompt"], "story": info.get("story", ""),
                          "style_suffix": info.get("style_suffix", ""), "preflight": info.get("preflight") or {}})
             await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)
