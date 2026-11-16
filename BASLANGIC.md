@@ -191,6 +191,25 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   üretimde ilerler, Notion `arac` yazılır. 324 kombinasyon: en kısa 174 kelime, en uzun 183 (G1 + pickup truck + O2 + F1
   dahil eşit uzunlukta çok kombinasyon), en uzun 1063 kr (G3 + pickup truck + O2 + F2). Olay kapısı küçük harfe bakmıyor
   ("hurricane winds" geçiyor), eş anlamlı eklenmedi. 40 tohum: diğer 19 olay + 13 mod + kilitli hash diff 0.
+- **16 Kas**: 🔥 Ateş hortumu "⭐ Hit kopyası" modu (`HIT_KOPYA_ATES`; commit "ates hortumu: Hit kopyasi modu (4 Kas hit
+  promptu birebir)"). SEBEP: ateş hortumu Yaklaşma modundan çıkan video (Portekiz, 16 Kas paylaşımı) zayıf kaldı. Hortum
+  uzaktan başladığı için ilk saniyeler boştu. En iyi ateş hortumu (6 Kas paylaşımı, 5 Kas 00:13 üretimi, Notion üretim
+  kaydı "Filmed as the truck is swept away", T4+U11, forest_edge, çatı terası) tamamen farklıydı: hortum ilk saniyeden
+  kadrajın yarısını dolduran bir dev. KARAR: "Hit kopyası" yöntemi. Hit'in Kie prompt'u (`HIT_PROMPTS[FIRE_TORNADO]`)
+  kelimesi kelimesine kullanılır, sadece coğrafya (`{place}`, "into a residential area of {place}") ve araç
+  (`{vehicle}`) değişir. GPT çağrılmaz. Yaklaşma modu pasif: butonu menüden kalktı (`bot.APPROACH_MENU = False`), kodu ve
+  `ya/yav/yaok` adımları duruyor. NOT: Notion üretim veritabanındaki "Prompt" alanı her üretimin Kie prompt'unu
+  saklıyor; gelecekteki hit kopyaları oradan alınacak. Yapı `KASIRGA`/`DONMA_FIRTINA` ile aynı kod-hikâye yolu
+  (`hp.hit_kopya_build_scene`, config/structure anahtarı `hit_kopya_ates`, Notion `axes.mod` = `hit_kopya_ates`).
+  Coğrafya G1-G6 (Kanada göl kasabası, Avustralya, Portekiz, Kaliforniya, Yunanistan, Şili; son 3, G3 tohumu: ilk 3
+  üretimde Portekiz gelmez), araç pickup truck / SUV / delivery van (son 2). Combo `##HK:G*` (olay çifti değil, normal
+  hattın T*/U* LRU'su etkilenmez). 18 kombinasyon: en kısa 178 kelime (G4 + SUV), en uzun 180 kelime, en uzun 1059 kr
+  (G3 + pickup truck). Kie öncesi zorunlu: "several times taller than the houses", "the tornado filling half the frame",
+  "rooftop terrace", "never CGI" + place; yasak: "pans to follow", "Full action", "Until the last frame", "approaches
+  from", "in the distance". Olay kapısı eş anlamlı eklemeden geçiyor. Bot: ateş hortumu onay ekranında "⭐ Hit kalıbı"
+  yanında "⭐ Hit kopyası" (`uret:hk` → `hkok`), ✋ Onay Kie'den önce; Onay satırları mod, coğrafya, araç, kaynak,
+  kelime/karakter, eksenler, tekrar önleme, "⚠️ Hit karşılaştırması". Test `tests/test_hit_kopya_ates.py`; 40 tohum:
+  diğer 19 olay + 13 mod + 🌀 Kasırga diff 0 (`OTHERS_SHA256`, 20124a8 hâli).
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir

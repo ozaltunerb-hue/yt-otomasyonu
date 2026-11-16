@@ -277,8 +277,9 @@ class TestHitTelegram(_Quiet):
         asyncio.run(self.bot.on_callback(upd, ctx))
         kb = upd.callback_query.edit_message_text.await_args.kwargs["reply_markup"]
         labels = [b.text for b in self._buttons(kb)]
-        # 12 Kas (3): yanında ⭐ Hit kalıbı · Yaklaşma (tests/test_yaklasma.py)
-        self.assertEqual(labels, ["✅ Üret", "❌ İptal", "⭐ Hit kalıbı", "⭐ Hit kalıbı · Yaklaşma"])
+        # 12 Kas (3): yanında ⭐ Hit kalıbı · Yaklaşma vardı; 16 Kas: Yaklaşma menüden kalktı, yerine ⭐ Hit kopyası
+        # (tests/test_hit_kopya_ates.py)
+        self.assertEqual(labels, ["✅ Üret", "❌ İptal", "⭐ Hit kalıbı", "⭐ Hit kopyası"])
         # diğer olaylarda yok (orman yangını, kül bulutu dahil)
         for d in self.bot.DOMAIN_KEYS:
             if not self.bot.domain_active(d):

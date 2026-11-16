@@ -405,7 +405,11 @@ class TestYaklasmaTelegram(_Quiet):
         asyncio.run(self.bot.on_callback(upd, ctx))
         kb = upd.callback_query.edit_message_text.await_args.kwargs["reply_markup"]
         rows = [[b.text for b in r] for r in kb.inline_keyboard]
-        self.assertEqual(rows[-1], ["⭐ Hit kalıbı", "⭐ Hit kalıbı · Yaklaşma"])
+        # 16 Kas: Yaklaşma menüden kalktı (bot.APPROACH_MENU = False), adımları duruyor; açılırsa yine Hit kalıbı'nın yanında
+        self.assertEqual(rows[-1], ["⭐ Hit kalıbı", "⭐ Hit kopyası"])
+        with patch.object(self.bot, "APPROACH_MENU", True):
+            rows = [[b.text for b in r] for r in self.bot.hit_confirm_keyboard(self.di, self.ei).inline_keyboard]
+        self.assertEqual(rows[-1], ["⭐ Hit kalıbı", "⭐ Hit kalıbı · Yaklaşma", "⭐ Hit kopyası"])
         for b in self._buttons(kb):
             self.assertLessEqual(len(b.callback_data.encode()), 64)
 

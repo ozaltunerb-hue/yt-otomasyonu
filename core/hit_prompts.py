@@ -3354,3 +3354,264 @@ def kasirga_issues(structure: dict, info: dict) -> list[str]:
     if len(text) > KASIRGA_MAX_CHARS:
         out.append(f"prompt {len(text)} karakter (en fazla {KASIRGA_MAX_CHARS})")
     return out
+
+
+# ── ⭐ Hit kopyası (ateş hortumu) (16 Kas 2026, Bahadır) ─────────────────────────────────────────────────────────────
+# Sebep: ateş hortumu Yaklaşma modundan çıkan video (Portekiz, 16 Kas paylaşımı) zayıf kaldı, hortum uzaktan başladığı
+# için ilk saniyeler boştu. En iyi ateş hortumu (6 Kas paylaşımı, 5 Kas 00:13 üretimi, "Filmed as the truck is swept
+# away", T4+U11, forest_edge, çatı terası; HIT_PROMPTS[FIRE_TORNADO]) tamamen farklıydı: hortum ilk saniyeden
+# kadrajın yarısını dolduran bir dev. Karar: "Hit kopyası" yöntemi. Hit'in Kie prompt'u kelimesi kelimesine kullanılır,
+# sadece coğrafya ({place}) ve araç ({vehicle}) değişir. GPT çağrılmaz. Yaklaşma modu pasif (menüde yok, kodu duruyor).
+# Gelecekteki hit kopyaları Notion üretim veritabanının "Prompt" alanından alınır.
+# KASIRGA / DONMA_FIRTINA ile aynı kod-hikâye yolu: normal hattın sahnesi kurulmaz (hit_kopya_build_scene). Olay
+# normal havuzdaki ateş hortumu (FIRE_TORNADO); kayıt combo "##HK:G*" (olay çifti değil: normal hattın T*/U* LRU'su
+# etkilenmez) + Eksenler mod=hit_kopya_ates, cografya, arac.
+HIT_KOPYA_MODE_LABEL = "⭐ Hit kopyası (ateş hortumu)"
+HIT_KOPYA_BUTTON = "⭐ Hit kopyası"                 # Telegram: ateş hortumu onay ekranı, ⭐ Hit kalıbı'nın yanında
+HIT_KOPYA_EVENTS = (FIRE_TORNADO,)
+HIT_KOPYA_DOMAIN = "fire_disasters"
+HIT_KOPYA_MOD = "hit_kopya_ates"                    # config bayrağı, structure anahtarı, Notion axes.mod
+HIT_KOPYA_SOURCE = "Kaynak: 5 Kas 00:13 üretimi (6 Kas paylaşımı), birebir"
+HIT_KOPYA_MAX_WORDS = 230
+HIT_KOPYA_MAX_CHARS = 1400
+HIT_KOPYA_GEO_BLOCK = 3
+HIT_KOPYA_GEO_SEED = ("G3",)     # 16 Kas Portekiz paylaşımıyla benzemesin: geçmişin en başına G3 "kullanıldı" işlenir
+HIT_KOPYA_VEHICLE_BLOCK = 2
+HIT_KOPYA_SPOT = "rooftop terrace above a wooded residential area"
+HIT_KOPYA_ATES = {
+    "geos": {
+        "G1": {"name": "Kanada", "place": "a Canadian lakeside town"},
+        "G2": {"name": "Avustralya", "place": "an Australian bush town"},
+        "G3": {"name": "Portekiz", "place": "a Portuguese hillside village"},
+        "G4": {"name": "ABD", "place": "a Californian suburb"},
+        "G5": {"name": "Yunanistan", "place": "a Greek coastal town"},
+        "G6": {"name": "Şili", "place": "a Chilean hillside town"},
+    },
+    "vehicles": ("pickup truck", "SUV", "delivery van"),
+    # Kelimesi kelimesine hit prompt'u (HIT_PROMPTS[FIRE_TORNADO]); sadece "of {place}" eklendi, "pickup truck" →
+    # {vehicle}
+    "template": (
+        "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, "
+        "tears out of a burning forest into a residential area of {place}, its wide base engulfing the houses. Two "
+        "people run away in the street below. 4-9s: The {vehicle} is shoved sideways as the huge base of the fire "
+        "tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, "
+        "burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, "
+        "high vantage, the tornado filling half the frame, top never cut off, two or three people fleeing below; "
+        "slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no "
+        "person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating "
+        "funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, "
+        "never in slow motion, people run at full speed. No readable signs, text or flags."),
+    "tail_start": "Handheld footage filmed on a rooftop terrace",
+}
+HIT_KOPYA_REQUIRED = ("several times taller than the houses", "the tornado filling half the frame", "rooftop terrace",
+                      "never CGI")
+HIT_KOPYA_FORBIDDEN = ("pans to follow", "Full action", "Until the last frame", "approaches from", "in the distance")
+HIT_KOPYA_WARNING = ("⚠️ Hit karşılaştırması: hortum ilk saniyeden kadrajın yarısını dolduruyor mu, video 6 Kas "
+                     "hit'iyle boy ölçüşür mü?")
+HIT_KOPYA_CONFIRM_DESC = ("5 Kas 00:13 üretiminin (6 Kas paylaşımı) Kie prompt'u kelimesi kelimesine; sadece coğrafya "
+                          "(G1-G6) ve araç değişir. Dev ateş hortumu ilk saniyeden kadrajın yarısını doldurur, ormandan "
+                          "yerleşime çıkar, araç yana savrulur, karşıdaki ahşap garaj parçalanır. Çatı terası, sabit "
+                          "kamera. Coğrafya, araç, kelime sayısı ✋ Onay mesajında. Hikâye için GPT çağrılmaz.")
+_HKA = HIT_KOPYA_ATES
+_HIT_KOPYA_GEO_MEMORY: list[str] = []
+_HIT_KOPYA_VEHICLE_MEMORY: list[str] = []
+
+
+def hit_kopya_is_active(event: str | None) -> bool:
+    return event in HIT_KOPYA_EVENTS
+
+
+def _hit_kopya_split() -> tuple[str, str]:
+    t = _HKA["template"]
+    i = t.index(" " + _HKA["tail_start"])
+    return t[:i], t[i + 1:]
+
+
+def hit_kopya_tail() -> str:
+    return _hit_kopya_split()[1]
+
+
+def _hit_kopya_check(geo: str, vehicle: str) -> None:
+    if geo not in _HKA["geos"]:
+        raise es.StructureError(f"{HIT_KOPYA_MODE_LABEL}: {geo} bu modda yok (coğrafya G1-G6)")
+    if vehicle not in _HKA["vehicles"]:
+        raise es.StructureError(f"{HIT_KOPYA_MODE_LABEL}: araç bu modda yok ({vehicle})")
+
+
+def hit_kopya_story(geo: str, vehicle: str) -> str:
+    """Zaman etiketli hikâye (hit prompt'unun stil ekinden önceki kısmı), sadece {place} ve {vehicle} dolar."""
+    _hit_kopya_check(geo, vehicle)
+    return _hit_kopya_split()[0].format(place=_HKA["geos"][geo]["place"], vehicle=vehicle)
+
+
+def hit_kopya_prompt(geo: str, vehicle: str) -> str:
+    """Prompt = şablon (kelimesi kelimesine), sadece {place} ve {vehicle} dolar. join_story_and_style ile aynı metin."""
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(hit_kopya_story(geo, vehicle), hit_kopya_tail())
+
+
+def hit_kopya_axes_history(records: list | None, key: str) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") in HIT_KOPYA_EVENTS and axes.get("mod") == HIT_KOPYA_MOD
+                and axes.get(key)):
+            out.append(axes[key])
+    return out
+
+
+def hit_kopya_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    """Son 3 coğrafya elenir; geçmişin en başında G3 tohumu (16 Kas Portekiz paylaşımı)."""
+    seen = list(HIT_KOPYA_GEO_SEED) + list(_HIT_KOPYA_GEO_MEMORY if used is None else used)
+    return _block_pick(list(_HKA["geos"]), seen, HIT_KOPYA_GEO_BLOCK, rng)
+
+
+def hit_kopya_choose_vehicle(used: list[str] | None = None, rng=None) -> str:
+    return _block_pick(list(_HKA["vehicles"]), list(_HIT_KOPYA_VEHICLE_MEMORY if used is None else used),
+                       HIT_KOPYA_VEHICLE_BLOCK, rng)
+
+
+def hit_kopya_lines(tb: dict) -> str:
+    """✋ Onay satırları: mod, coğrafya, araç, kaynak, kelime/karakter, eksenler + tekrar önleme, hit karşılaştırması."""
+    text = tb["prompt"]
+    g = _HKA["geos"][tb["geo"]]
+    lines = [
+        f"Mod: {HIT_KOPYA_MODE_LABEL}",
+        f"Coğrafya: {tb['geo']} {g['name']} «{g['place']}»",
+        f"Araç: {tb['vehicle']}",
+        HIT_KOPYA_SOURCE,
+        f"Kelime: {len(text.split())} (en fazla {HIT_KOPYA_MAX_WORDS}) · karakter: {len(text)} "
+        f"(en fazla {HIT_KOPYA_MAX_CHARS})",
+    ]
+    if tb.get("axes_line"):
+        lines.append(tb["axes_line"])
+    lines.append(HIT_KOPYA_WARNING)
+    return "\n".join(lines)
+
+
+def hit_kopya_axes_json(geo: str, vehicle: str, excluded: dict | None = None) -> str:
+    import core.axes_history as ah
+    axes = {"spot": HIT_KOPYA_SPOT, "view": None, "light": None, "vehicle": vehicle, "people": 2,
+            "beats": f"HK:{geo}", "mod": HIT_KOPYA_MOD, "cografya": geo, "arac": vehicle}
+    return ah.axes_json(FIRE_TORNADO, axes, excluded)
+
+
+def hit_kopya_build_scene(domain: str | None, event: str | None, history: list[str] | None = None,
+                          records: list | None = None, rng=None, history_source: str = "bellek") -> dict:
+    """⭐ Hit kopyası (ateş hortumu) sahnesi: GPT yok, normal hat yok. records = Notion "Eksenler" ham kayıtları (None =
+    okunamadı / yükleyici yok: süreç hafızası). Coğrafya son 3 (G3 tohum), araç son 2. structure["hit_kopya_ates"] Kie
+    öncesi son denetimin (submit_issues) kaynağıdır."""
+    import random
+    from core.skeleton_pipeline import SKELETON_CAMERA
+    if domain not in (None, HIT_KOPYA_DOMAIN) or not hit_kopya_is_active(event):
+        raise es.StructureError(f"{HIT_KOPYA_MODE_LABEL} kurulamadı: {domain} / {event}")
+    r = rng or random
+    geo_used = hit_kopya_axes_history(records, "cografya")
+    vehicle_used = hit_kopya_axes_history(records, "arac")
+    geo = hit_kopya_choose_geo(geo_used, r)
+    vehicle = hit_kopya_choose_vehicle(vehicle_used, r)
+    for m, v in ((_HIT_KOPYA_GEO_MEMORY, geo), (_HIT_KOPYA_VEHICLE_MEMORY, vehicle)):
+        m.append(v)
+        del m[:-12]
+    story = hit_kopya_story(geo, vehicle)
+    tail = hit_kopya_tail()
+    prompt = hit_kopya_prompt(geo, vehicle)
+    g = _HKA["geos"][geo]
+    a, b, c = es.SLICE_LABELS
+    opening = story.split(f"{b}: ")[0][len(f"{a}: "):].strip()
+    mid_text = story.split(f"{b}: ")[1].split(f" {c}: ")[0]
+    final_text = story.split(f"{c}: ")[1]
+    plain = " ".join([opening, mid_text, final_text])
+    seen_geo = list(HIT_KOPYA_GEO_SEED) + list(geo_used if geo_used is not None else _HIT_KOPYA_GEO_MEMORY[:-1])
+    seen_veh = list(vehicle_used if vehicle_used is not None else _HIT_KOPYA_VEHICLE_MEMORY[:-1])
+    repeat = (f"coğrafya son {HIT_KOPYA_GEO_BLOCK} elendi (G3 tohum) · araç son {HIT_KOPYA_VEHICLE_BLOCK} · olaylar "
+              "sabit (hit'in kendisi)")
+    base_trace = {"pipeline": "creative", "structured": True, "domain": HIT_KOPYA_DOMAIN, "event": FIRE_TORNADO,
+                  "ship": "None", "camera": SKELETON_CAMERA, "view": None, "view_source": None,
+                  "place": g["place"], "count_range": [2, 3], "people_running": 2, "outcome": "-",
+                  "recent_count": 0}
+    trace, axes_line = mode_display(
+        {"trace": base_trace}, {}, mode=HIT_KOPYA_MODE_LABEL,
+        camera="hit kamerası (the camera stays fixed); rooftop terrace above a wooded residential area, high vantage",
+        opening=opening, mid=("T4", mid_text), final=("U11", final_text), plain=plain, vehicle=vehicle,
+        spot="Rooftop terrace above a wooded residential area (hit kopyası, birebir)",
+        axes={"coğrafya": f"{geo} {g['name']}", "araç": vehicle, "olaylar": "T4+U11 (hit, sabit)",
+              "kamera modu": "elde, sabit (hit)"},
+        repeat=repeat)
+    trace = {**trace, "mode": HIT_KOPYA_MOD, "cografya": geo, "axes_source": history_source}
+    tb = {"event": FIRE_TORNADO, "geo": geo, "vehicle": vehicle, "story": story, "suffix": tail, "prompt": prompt,
+          "axes_line": axes_line}
+    tb["lines"] = hit_kopya_lines(tb)
+    excluded = {"cografya": [x for x in _HKA["geos"] if x in seen_geo[-HIT_KOPYA_GEO_BLOCK:]],
+                "arac": [x for x in _HKA["vehicles"] if x in seen_veh[-HIT_KOPYA_VEHICLE_BLOCK:]]}
+    axes_json = hit_kopya_axes_json(geo, vehicle, excluded)
+    structure = {HIT_KOPYA_MOD: tb, "axes_json": axes_json, "axes_line": None, "environment": None,
+                 "story_source": f"Hikâye: kod (birebir) · {HIT_KOPYA_MODE_LABEL}", "story_source_kind": "code",
+                 "caption_info": {"opening": opening, "people": 2, "kadraj": "çatı",
+                                  "beat_2": donma_caption_beat(mid_text), "beat_3": donma_caption_beat(final_text)},
+                 "caption_candidates": None}
+    problems = hit_kopya_issues(structure, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{HIT_KOPYA_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = f"{HIT_KOPYA_DOMAIN}|none|{FIRE_TORNADO.lower()}|{HIT_KOPYA_SPOT}##HK:{geo}|{SKELETON_CAMERA}"
+    return {"domain": HIT_KOPYA_DOMAIN, "event": FIRE_TORNADO, "ship": None, "spot": HIT_KOPYA_SPOT, "story": story,
+            "plain_story": plain, "style_suffix": tail, "prompt": prompt, "combo_key": combo, "trace": trace,
+            "structure": structure, "axes_json": axes_json}
+
+
+def hit_kopya_camera_issues(text: str, geo: str | None = None) -> list[str]:
+    """Kie öncesi son kontrol: HIT_KOPYA_REQUIRED ("several times taller than the houses", "the tornado filling half
+    the frame", "rooftop terrace", "never CGI") ve seçilen G'nin place metni var; HIT_KOPYA_FORBIDDEN'dan ("pans to
+    follow", "Full action", "Until the last frame", "approaches from", "in the distance") hiçbiri yok (büyük/küçük harf
+    fark etmez). İhlal = gönderilmez."""
+    out = []
+    text = text or ""
+    low = text.lower()
+    for need in HIT_KOPYA_REQUIRED:
+        if need.lower() not in low:
+            out.append(f'"{need}" eksik')
+    places = [g for g, v in _HKA["geos"].items() if v["place"] in text]
+    if not places:
+        out.append("G1-G6 yer metni yok")
+    elif geo is not None and places != [geo]:
+        out.append(f"yer metni seçilen coğrafya değil ({geo}: {places})")
+    for bad in HIT_KOPYA_FORBIDDEN:
+        if bad.lower() in low:
+            out.append(f"bu modda olmayan ifade var: {bad}")
+    return out
+
+
+def hit_kopya_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin şablondan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    tb = structure[HIT_KOPYA_MOD]
+    if tb.get("geo") not in _HKA["geos"]:
+        return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
+    if tb.get("vehicle") not in _HKA["vehicles"]:
+        return [f"araç bu modda yok ({tb.get('vehicle')})"]
+    story = hit_kopya_story(tb["geo"], tb["vehicle"])
+    prompt = hit_kopya_prompt(tb["geo"], tb["vehicle"])
+    out = []
+    if info.get("style_suffix") != hit_kopya_tail():
+        out.append("stil eki hit kopyası değil")
+    if info.get("story") != story:
+        out.append("hikâye şablonla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt şablonla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    out += hit_kopya_camera_issues(text, tb["geo"])
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > HIT_KOPYA_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {HIT_KOPYA_MAX_WORDS})")
+    if len(text) > HIT_KOPYA_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {HIT_KOPYA_MAX_CHARS})")
+    return out

@@ -720,6 +720,9 @@ async def rewrite_structured(structure: dict, reason: str, call_gpt) -> str:
     if structure.get("kasirga"):   # 15 Kas (4): 🌀 Kasırga, GPT yok, spec yok; aynı hikâye (yeni yazım yok)
         entry["result"] = "🌀 Kasırga: yeniden yazım yok, aynı hikâye"
         return structure["kasirga"]["story"]
+    if structure.get("hit_kopya_ates"):   # 16 Kas: ⭐ Hit kopyası (ateş hortumu), GPT yok, spec yok; aynı hikâye
+        entry["result"] = "⭐ Hit kopyası (ateş hortumu): yeniden yazım yok, aynı hikâye"
+        return structure["hit_kopya_ates"]["story"]
     spec = structure["spec"]
     if structure.get("cadde_yaklasma"):   # 15 Kas: ⭐ Hit kalıbı · Yaklaşma (cadde), GPT yok; aynı hikâye
         entry["result"] = "⭐ Hit kalıbı · Yaklaşma (cadde): yeniden yazım yok, aynı hikâye"
@@ -780,6 +783,9 @@ def submit_issues(structure: dict, info: dict) -> list[str]:
     if structure.get("kasirga"):   # 15 Kas (4): 🌀 Kasırga, kendi yeniden kurulumu + zorunlu/yasak ifadeler
         import core.hit_prompts as hp
         return hp.kasirga_issues(structure, info)
+    if structure.get("hit_kopya_ates"):   # 16 Kas: ⭐ Hit kopyası (ateş hortumu), birebir + zorunlu/yasak ifadeler
+        import core.hit_prompts as hp
+        return hp.hit_kopya_issues(structure, info)
     if structure.get("cadde_yaklasma"):   # 15 Kas: ⭐ Hit kalıbı · Yaklaşma (cadde), kendi yeniden kurulumu
         import core.hit_prompts as hp
         return hp.cadde_issues(structure, info)

@@ -320,8 +320,12 @@ def hit_confirm_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
     rows = [list(r) for r in confirm_keyboard(di, eid).inline_keyboard]
     row = [InlineKeyboardButton(HIT_BUTTON, callback_data=f"{CALLBACK_PREFIX}h:{di}:{eid}")]
     sel = parse_selection(di, eid)
-    if sel is not None and _hp().yaklasma_is_active(sel[1]):   # 12 Kas (3): yanında ⭐ Hit kalıbı · Yaklaşma
+    # 16 Kas: ⭐ Hit kalıbı · Yaklaşma (ateş hortumu) menüden kalktı (APPROACH_MENU = False); kodu ve ya/yav/yaok adımları
+    # duruyor. Yerine ⭐ Hit kopyası
+    if APPROACH_MENU and sel is not None and _hp().yaklasma_is_active(sel[1]):
         row.append(InlineKeyboardButton(APPROACH_BUTTON, callback_data=f"{CALLBACK_PREFIX}ya:{di}:{eid}"))
+    if sel is not None and _hp().hit_kopya_is_active(sel[1]):   # 16 Kas: ⭐ Hit kopyası (ateş hortumu)
+        row.append(InlineKeyboardButton(HIT_KOPYA_BUTTON, callback_data=f"{CALLBACK_PREFIX}hk:{di}:{eid}"))
     rows.append(row)
     return InlineKeyboardMarkup(rows)
 
@@ -368,6 +372,7 @@ def hit_confirm_text(domain: str, event: str, env: str, cfg: dict | None = None)
 # ── ⭐ Hit kalıbı · Yaklaşma (12 Kas 2026 (3), Bahadır): tehdit uzaktan cadde boyunca kameraya doğru gelir, final hemen
 # alttaki evde. Hikâye tamamen koddan (core/hit_prompts.py YAKLASMA_ATES_HORTUMU), GPT yok. Adımlar: ya → yav → yaok
 APPROACH_BUTTON = "⭐ Hit kalıbı · Yaklaşma"
+APPROACH_MENU = False   # 16 Kas: menüde yok (pasif); True yaparsan buton geri gelir
 
 
 def approach_env_keyboard(di: str, eid: str, event: str) -> InlineKeyboardMarkup:
@@ -409,6 +414,34 @@ def approach_confirm_text(domain: str, event: str, env: str, cfg: dict | None = 
             + f"\nHortum tarifi: {hp.YAKLASMA_TARIF}\n"
             "Hortum caddenin ucundan kameraya doğru gelir, 4-9s orta O1-O5, final terasın hemen altındaki evde "
             "(Y1-Y4). Coğrafya (G1-G5), orta/final kodu ve kelime sayısı ✋ Onay mesajında. Hikâye için GPT çağrılmaz.")
+
+
+# ── ⭐ Hit kopyası (ateş hortumu) (16 Kas 2026, Bahadır): 5 Kas 00:13 üretiminin (6 Kas paylaşımı) Kie prompt'u
+# kelimesi kelimesine, sadece coğrafya ve araç değişir (core/hit_prompts.py HIT_KOPYA_ATES). GPT yok. Adımlar: hk (onay
+# metni) → hkok (üretim). Kie yine ✋ Onay'a bağlı
+HIT_KOPYA_BUTTON = "⭐ Hit kopyası"
+
+
+def hit_kopya_produce_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}hkok:{di}:{eid}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def parse_hit_kopya(di_raw: str, eid: str) -> tuple[str, str] | None:
+    sel = parse_selection(di_raw, eid)
+    if sel is None or sel[1] is None or not _hp().hit_kopya_is_active(sel[1]):
+        return None
+    return sel
+
+
+def hit_kopya_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
+    hp = _hp()
+    return (confirm_text(domain, event, cfg)
+            + f"\n\nMod: {hp.HIT_KOPYA_MODE_LABEL}\n"
+            + hp.HIT_KOPYA_SOURCE
+            + "\n" + hp.HIT_KOPYA_CONFIRM_DESC)
 
 
 # ── ⭐ Hit kalıbı · 24 Eylül (12 Kas 2026 (5), Bahadır): dev dalga, 24 Eyl hit kurgusu. Ortam sorulmaz (coğrafya LRU).
@@ -968,8 +1001,11 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("h", "hv", "hok"):   # 12 Kas: ⭐ Hit kalıbı
         await _on_hit(query, context, action, args, cfg)
         return
-    if action in ("ya", "yav", "yaok"):   # 12 Kas (3): ⭐ Hit kalıbı · Yaklaşma
+    if action in ("ya", "yav", "yaok"):   # 12 Kas (3): ⭐ Hit kalıbı · Yaklaşma (16 Kas: menüde yok, adımlar duruyor)
         await _on_approach(query, context, action, args, cfg)
+        return
+    if action in ("hk", "hkok"):   # 16 Kas: ⭐ Hit kopyası (ateş hortumu)
+        await _on_hit_kopya(query, context, action, args, cfg)
         return
     if action in ("dz", "dzok"):   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül (dev dalga)
         await _on_dalga24(query, context, action, args, cfg)
@@ -1101,6 +1137,31 @@ async def _on_approach(query, context, action: str, args: list[str], cfg: dict) 
             log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
         await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
                       approach_env=env)
+
+
+async def _on_hit_kopya(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """⭐ Hit kopyası (ateş hortumu) adımları: hk (onay metni) → hkok (üretim). Kie yine ✋ Onay'a bağlı."""
+    parsed = parse_hit_kopya(*args) if len(args) == 2 else None
+    if parsed is None:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    domain, event = parsed
+    if action == "hk":
+        await query.edit_message_text(hit_kopya_confirm_text(domain, event, cfg),
+                                      reply_markup=hit_kopya_produce_keyboard(*args))
+        return
+    run_cfg = dict(cfg)
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)} / {HIT_KOPYA_BUTTON}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
+                      hit_kopya_ates=True)
 
 
 async def _on_dalga24(query, context, action: str, args: list[str], cfg: dict) -> None:
@@ -1408,7 +1469,7 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                   approach_env: str | None = None, dalga24: bool = False, kul_yaklasma: bool = False,
                   orman_yaklasma: bool = False, heli_yaklasma: bool = False,
                   hortum_yaklasma: bool = False, cadde_yaklasma: bool = False,
-                  donma_firtina: bool = False, kasirga: bool = False) -> None:
+                  donma_firtina: bool = False, kasirga: bool = False, hit_kopya_ates: bool = False) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1440,6 +1501,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["donma_firtina"] = True
     if kasirga:   # 15 Kas (4): 🌀 Kasırga
         kwargs["kasirga"] = True
+    if hit_kopya_ates:   # 16 Kas: ⭐ Hit kopyası (ateş hortumu)
+        kwargs["hit_kopya_ates"] = True
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:
