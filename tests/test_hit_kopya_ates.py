@@ -47,8 +47,13 @@ PLACES = {"G1": ("Kanada", "a Canadian lakeside town"), "G2": ("Avustralya", "an
           "G5": ("Yunanistan", "a Greek coastal town"), "G6": ("Şili", "a Chilean hillside town")}
 VEHICLES = ("pickup truck", "SUV", "delivery van")
 TAIL = HIT_PROMPT[HIT_PROMPT.index("Handheld footage"):]
+# 17 Kas: SADECE hareket. Hit metnine iki ekleme (hortum ilk iki üretimde, Yunanistan ve Kanada, neredeyse yerinde
+# durdu). Hit metniyle izin verilen farklar: {place}, {vehicle} ve bu iki ekleme.
+ADD_OPENING = "racing fast across the neighborhood,"
+ADD_TAIL = "The fire tornado keeps moving fast the whole time, never standing still."
+NEW_TAIL = TAIL.replace("explosion. ", "explosion. " + ADD_TAIL + " ", 1)
 REQUIRED = ("several times taller than the houses", "the tornado filling half the frame", "rooftop terrace",
-            "never CGI")
+            "never CGI", "racing fast across the neighborhood", "never standing still")
 FORBIDDEN = ("pans to follow", "Full action", "Until the last frame", "approaches from", "in the distance")
 SOURCE = "Kaynak: 5 Kas 00:13 üretimi (6 Kas paylaşımı), birebir"
 WARNING = ("⚠️ Hit karşılaştırması: hortum ilk saniyeden kadrajın yarısını dolduruyor mu, video 6 Kas hit'iyle boy "
@@ -89,9 +94,12 @@ def build(seed: int) -> dict:
 
 
 def expected(g: str, v: str) -> str:
-    """Hit prompt'unun kendisinden: "residential area" (ilk) → "residential area of {place}", "pickup truck" → araç."""
-    return HIT_PROMPT.replace("into a residential area,", f"into a residential area of {PLACES[g][1]},", 1) \
-                     .replace("The pickup truck is shoved", f"The {v} is shoved", 1)
+    """Hit prompt'unun kendisinden: "residential area" (ilk) → "residential area of {place}, racing fast across the
+    neighborhood,", "pickup truck" → araç, stil ekine "never standing still" cümlesi (17 Kas)."""
+    return HIT_PROMPT.replace("into a residential area,",
+                              f"into a residential area of {PLACES[g][1]}, {ADD_OPENING}", 1) \
+                     .replace("The pickup truck is shoved", f"The {v} is shoved", 1) \
+                     .replace("explosion. ", "explosion. " + ADD_TAIL + " ", 1)
 
 
 def others_snapshot() -> dict:
@@ -125,13 +133,36 @@ def snapshot_hash(data: dict) -> str:
 
 class TestTemplate(_Quiet):
     def test_template_is_hit_prompt_verbatim(self):
-        """Şablon = hit prompt'u; tek fark "of {place}" ve araç yeri."""
+        """Şablon = hit prompt'u; farklar yalnızca "of {place}", araç yeri ve 17 Kas'ın iki hareket eklemesi."""
         self.assertEqual(hp.HIT_PROMPTS[FT]["prompt"], HIT_PROMPT)
         t = HK["template"]
         self.assertEqual(t.count("{place}"), 1)
         self.assertEqual(t.count("{vehicle}"), 1)
-        self.assertEqual(t.replace(" of {place}", "", 1).replace("{vehicle}", "pickup truck"), HIT_PROMPT)
-        self.assertEqual(hp.hit_kopya_tail(), TAIL)
+        self.assertEqual(t.count(ADD_OPENING), 1)
+        self.assertEqual(t.count(ADD_TAIL), 1)
+        self.assertIn("residential area of {place}, " + ADD_OPENING + " its wide base engulfing the houses.", t)
+        self.assertIn("never a straight plume or explosion. " + ADD_TAIL + " Everything moves in real time", t)
+        self.assertEqual(t.replace(" of {place}", "", 1).replace("{vehicle}", "pickup truck")
+                         .replace(" " + ADD_OPENING, "", 1).replace(" " + ADD_TAIL, "", 1), HIT_PROMPT)
+        self.assertEqual(hp.hit_kopya_tail(), NEW_TAIL)
+
+    def test_v1_template_passive(self):
+        """16 Kas şablonu HIT_KOPYA_ATES_V1 pasif kayıtta: birebir eski metin, aktif şablon değil."""
+        v1 = hp.HIT_KOPYA_PASIF["HIT_KOPYA_ATES_V1"]
+        self.assertIs(v1, hp.HIT_KOPYA_ATES_V1)
+        self.assertEqual(v1["template"].replace(" of {place}", "", 1).replace("{vehicle}", "pickup truck"), HIT_PROMPT)
+        self.assertEqual(v1["tail_start"], HK["tail_start"])
+        self.assertNotIn(ADD_OPENING, v1["template"])
+        self.assertNotIn(ADD_TAIL, v1["template"])
+        self.assertNotEqual(v1["template"], HK["template"])
+        for g in PLACES:
+            for v in VEHICLES:
+                self.assertNotIn(v1["template"].split(" Handheld")[0].format(place=PLACES[g][1], vehicle=v),
+                                 hp.hit_kopya_prompt(g, v))
+
+    def test_required_list(self):
+        self.assertEqual(hp.HIT_KOPYA_REQUIRED, REQUIRED)
+        self.assertEqual(hp.HIT_KOPYA_FORBIDDEN, FORBIDDEN)
         self.assertEqual(hp.HIT_KOPYA_MODE_LABEL, "⭐ Hit kopyası (ateş hortumu)")
         self.assertEqual({g: (v["name"], v["place"]) for g, v in HK["geos"].items()}, PLACES)
         self.assertEqual(HK["vehicles"], VEHICLES)
@@ -144,16 +175,17 @@ class TestTemplate(_Quiet):
             for v in VEHICLES:
                 p = hp.hit_kopya_prompt(g, v)
                 self.assertEqual(p, expected(g, v), (g, v))
-                self.assertEqual(p, hp.hit_kopya_story(g, v) + " " + TAIL)
+                self.assertEqual(p, hp.hit_kopya_story(g, v) + " " + NEW_TAIL)
                 words.append((len(p.split()), g, v))
                 chars.append((len(p), g, v))
                 self.assertLessEqual(len(p.split()), 230)
                 self.assertLessEqual(len(p), 1400)
                 self.assertEqual(hp.hit_kopya_camera_issues(p, g), [])
         self.assertEqual(len(words), 18)
-        self.assertEqual(min(w for w, *_ in words), 178)
-        self.assertEqual(max(w for w, *_ in words), 180)
-        self.assertEqual(max(chars), (1059, "G3", "pickup truck"))
+        self.assertEqual(min(w for w, *_ in words), 195)   # 17 Kas (önce 178-180, en uzun 1059)
+        self.assertEqual(max(w for w, *_ in words), 197)
+        self.assertEqual(min(chars), (1151, "G4", "SUV"))
+        self.assertEqual(max(chars), (1169, "G3", "pickup truck"))
 
     def test_bad_ids(self):
         with self.assertRaises(es.StructureError):
@@ -178,7 +210,7 @@ class TestScene(_Quiet):
         self.assertIn(tb["geo"], PLACES)
         self.assertIn(tb["vehicle"], VEHICLES)
         self.assertEqual(prompt, expected(tb["geo"], tb["vehicle"]))
-        self.assertEqual(sc["style_suffix"], TAIL)
+        self.assertEqual(sc["style_suffix"], NEW_TAIL)
         for need in REQUIRED + (PLACES[tb["geo"]][1],):
             self.assertIn(need, prompt)
         for bad in FORBIDDEN:
@@ -345,7 +377,7 @@ class TestPipelineAndBot(_Quiet):
         self.assertIn(WARNING, info["hit_lines"])
         self.assertEqual(t.create.await_count, 1)
         self.assertEqual(t.create.await_args.args[1], info["prompt"])
-        self.assertTrue(info["prompt"].endswith(TAIL))
+        self.assertTrue(info["prompt"].endswith(NEW_TAIL))
         axes = [c.args[0] for c in t.tracker.record_axes.call_args_list]
         self.assertEqual(json.loads(axes[0])["axes"]["mod"], "hit_kopya_ates")
 

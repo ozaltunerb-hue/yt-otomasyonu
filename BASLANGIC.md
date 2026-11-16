@@ -210,6 +210,16 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   yanında "⭐ Hit kopyası" (`uret:hk` → `hkok`), ✋ Onay Kie'den önce; Onay satırları mod, coğrafya, araç, kaynak,
   kelime/karakter, eksenler, tekrar önleme, "⚠️ Hit karşılaştırması". Test `tests/test_hit_kopya_ates.py`; 40 tohum:
   diğer 19 olay + 13 mod + 🌀 Kasırga diff 0 (`OTHERS_SHA256`, 20124a8 hâli).
+- **17 Kas**: 🔥 Ateş hortumu "⭐ Hit kopyası": hortum hızlı ilerler (commit "hit kopyasi ates: hortum hizli ilerler
+  (sadece hareket)"). SEBEP: Hit kopyası ilk iki üretim (Yunanistan, Kanada): hortum ilk saniyeden büyük ve hortum
+  şekli Kanada'da iyi, ama iki videoda da hortum neredeyse yerinde duruyor, ilerlemiyor. Bahadır'ın kararı: SADECE
+  hortumun hızlı ilerlemesi düzeltilecek, başka hiçbir şeye dokunulmayacak. Şablonda iki ekleme: açılışa "…residential
+  area of {place}, racing fast across the neighborhood, its wide base engulfing the houses."; stil ekinde "A rotating
+  funnel of flame with orbiting debris, never a straight plume or explosion." arkasına "The fire tornado keeps moving
+  fast the whole time, never standing still." Coğrafya, araç, LRU'lar, olaylar (T4, U11), kamera ve diğer bütün
+  cümleler aynen. Eski şablon `hp.HIT_KOPYA_ATES_V1` (`hp.HIT_KOPYA_PASIF`), pasif. Kie öncesi zorunlu listeye "racing
+  fast across the neighborhood" ve "never standing still" eklendi, yasak liste aynı. 18 kombinasyon: en kısa 195
+  kelime / 1151 kr (G4 + SUV), en uzun 197 kelime / 1169 kr (G3 + pickup truck). 40 tohum: diğer her yerde diff 0.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir

@@ -3389,7 +3389,26 @@ HIT_KOPYA_ATES = {
     },
     "vehicles": ("pickup truck", "SUV", "delivery van"),
     # Kelimesi kelimesine hit prompt'u (HIT_PROMPTS[FIRE_TORNADO]); sadece "of {place}" eklendi, "pickup truck" →
-    # {vehicle}
+    # {vehicle}. 17 Kas: ilk iki üretimde (Yunanistan, Kanada) hortum neredeyse yerinde durdu; SADECE hareket
+    # düzeltildi: açılışa "racing fast across the neighborhood," + stil ekine "The fire tornado keeps moving fast the
+    # whole time, never standing still." (eski şablon HIT_KOPYA_PASIF["HIT_KOPYA_ATES_V1"], pasif)
+    "template": (
+        "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, "
+        "tears out of a burning forest into a residential area of {place}, racing fast across the neighborhood, its "
+        "wide base engulfing the houses. Two "
+        "people run away in the street below. 4-9s: The {vehicle} is shoved sideways as the huge base of the fire "
+        "tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, "
+        "burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, "
+        "high vantage, the tornado filling half the frame, top never cut off, two or three people fleeing below; "
+        "slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no "
+        "person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating "
+        "funnel of flame with orbiting debris, never a straight plume or explosion. The fire tornado keeps moving "
+        "fast the whole time, never standing still. Everything moves in real time, "
+        "never in slow motion, people run at full speed. No readable signs, text or flags."),
+    "tail_start": "Handheld footage filmed on a rooftop terrace",
+}
+# 17 Kas: pasif kayıt (kullanılmaz, silinmez). 16 Kas bbc301b şablonu, hareket eklemeleri öncesi.
+HIT_KOPYA_ATES_V1 = {
     "template": (
         "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, "
         "tears out of a burning forest into a residential area of {place}, its wide base engulfing the houses. Two "
@@ -3403,8 +3422,10 @@ HIT_KOPYA_ATES = {
         "never in slow motion, people run at full speed. No readable signs, text or flags."),
     "tail_start": "Handheld footage filmed on a rooftop terrace",
 }
+HIT_KOPYA_PASIF = {"HIT_KOPYA_ATES_V1": HIT_KOPYA_ATES_V1}
+# 17 Kas: "racing fast across the neighborhood" + "never standing still" eklendi (hareket)
 HIT_KOPYA_REQUIRED = ("several times taller than the houses", "the tornado filling half the frame", "rooftop terrace",
-                      "never CGI")
+                      "never CGI", "racing fast across the neighborhood", "never standing still")
 HIT_KOPYA_FORBIDDEN = ("pans to follow", "Full action", "Until the last frame", "approaches from", "in the distance")
 HIT_KOPYA_WARNING = ("⚠️ Hit karşılaştırması: hortum ilk saniyeden kadrajın yarısını dolduruyor mu, video 6 Kas "
                      "hit'iyle boy ölçüşür mü?")
@@ -3569,7 +3590,8 @@ def hit_kopya_build_scene(domain: str | None, event: str | None, history: list[s
 
 def hit_kopya_camera_issues(text: str, geo: str | None = None) -> list[str]:
     """Kie öncesi son kontrol: HIT_KOPYA_REQUIRED ("several times taller than the houses", "the tornado filling half
-    the frame", "rooftop terrace", "never CGI") ve seçilen G'nin place metni var; HIT_KOPYA_FORBIDDEN'dan ("pans to
+    the frame", "rooftop terrace", "never CGI", 17 Kas: "racing fast across the neighborhood", "never standing still")
+    ve seçilen G'nin place metni var; HIT_KOPYA_FORBIDDEN'dan ("pans to
     follow", "Full action", "Until the last frame", "approaches from", "in the distance") hiçbiri yok (büyük/küçük harf
     fark etmez). İhlal = gönderilmez."""
     out = []
