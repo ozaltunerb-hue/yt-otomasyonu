@@ -3645,9 +3645,10 @@ def hit_kopya_issues(structure: dict, info: dict) -> list[str]:
 # koddan birebir, zaman etiketleri metnin içinde; normal hattın sahnesi YOK: olay yapılandırılmış havuzda değil,
 # rastgele domain rotasyonu ve snapshot'lar değişmesin diye sahne burada kurulur: yer_yarilmasi_build_scene).
 # Prompt = AÇILIŞ + " " + ORTA + " " + FİNAL + " " + STİL (metinler Bahadır'ın talimatından birebir). Coğrafya G1-G6
-# (son 3), orta O1-O2 (son 1), final F1-F2 (son 1). Araç ve kişi sayısı ekseni yok (metinde sabit). Kayıt O*+F*
-# (combo + Eksenler).
-YER_YARILMASI_MODE_LABEL = "Yer yarılması · kod hikâye (v2: açık yarık + balkon kilidi)"   # ✋ Onay "Mod:" (18 Kas)
+# (son 3). 18 Kas (v3): orta tek seçenek O2 (otobüs), final tek seçenek F1 (bina); O1 ve F2 pasif (_PASIF), tek
+# seçenekte orta/final LRU atlanır. Araç ve kişi sayısı ekseni yok (metinde sabit). Kayıt O*+F* (combo + Eksenler).
+YER_YARILMASI_MODE_LABEL = "Yer yarılması · kod hikâye (v3: ilk saniyede yarılma + otobüs + bina)"   # ✋ Onay (18 Kas v3)
+YER_YARILMASI_MODE_LABEL_V2 = "Yer yarılması · kod hikâye (v2: açık yarık + balkon kilidi)"   # pasif (18 Kas v2)
 YER_YARILMASI_MODE_LABEL_V1 = "Yer yarılması · kod hikâye"   # pasif (17 Kas)
 YER_YARILMASI_DOMAIN = "fissure_disasters"                    # Combo Key'in ilk parçası (Notion eksen sorgusu bununla)
 YER_YARILMASI_EVENT = "Earthquake fissure splits a city avenue"   # Notion "Olay"; normal havuzda (DOMAIN_ATTRIBUTES) yok
@@ -3672,28 +3673,53 @@ YER_YARILMASI = {
         "G5": {"name": "Şili", "place": "a busy avenue of Santiago with the Andes rising behind it"},
         "G6": {"name": "Japonya", "place": "a busy shopping street lined with narrow buildings in a Japanese city"},
     },
-    # 18 Kas: v2 açılış (yarık ilk karede zaten açık, uzun düz yarık); eski metin YER_YARILMASI_OPENING_V1 (pasif)
-    "opening": ("A massive earthquake fissure has already torn open down the middle of {place}, a long, straight chasm "
-                "running down the length of the avenue, its edges still collapsing as it keeps ripping wider toward "
-                "the camera. Five or six people sprint away along the sidewalks as the ground drops behind them."),
+    # 18 Kas v3: açılış (ilk saniyede yarılma, düzensiz yarık); v2 metni YER_YARILMASI_OPENING_V2, v1 _V1 (pasif)
+    "opening": ("In the very first second {place} violently splits open down the middle, slabs of asphalt heaving up "
+                "as a long, jagged earthquake fissure tears toward the camera. Five or six people sprint away along "
+                "the sidewalks."),
+    # 18 Kas v3: tek orta O2 (otobüs); O1 pasif (YER_YARILMASI_MIDS_PASIF), v2 ortaları YER_YARILMASI_MIDS_V2
     "mids": {
-        "O1": "Parked cars along the edge tip over and slide nose-first into the chasm, one after another.",
-        "O2": "A city bus at the edge tilts sideways and topples into the chasm in a burst of dust.",
+        "O2": "A city bus on the edge tilts sideways and topples into the fissure in a burst of dust.",
     },
+    # 18 Kas v3: tek final F1 (bina); F2 pasif (YER_YARILMASI_FINALS_PASIF), v2 finalleri YER_YARILMASI_FINALS_V2
     "finals": {
-        "F1": "The front of a building on the far side of the chasm leans out and collapses into it in a roar of dust "
-              "and debris.",
-        "F2": "A whole section of the avenue, cars still on it, drops straight down into the chasm.",
+        "F1": "The front of a building on the far side leans out and collapses into the fissure in a roar of dust and "
+              "debris.",
     },
-    # 18 Kas: v2 stil (balkon korkuluğu + kamera kilidi); eski metin YER_YARILMASI_TAIL_V1 (pasif)
-    "tail": ("Handheld footage shot by a person standing on a high balcony across the avenue, eye level, normal lens; "
-             "slight hand shake, the camera stays fixed on the avenue, shaking with the quake; no zoom, no cuts. "
-             "The balcony railing stays at the bottom of the frame the whole time; the camera never moves forward or "
-             "tilts down into the chasm. Bystanders wear everyday clothes. Raw natural daylight, dust in the air, "
-             "never glossy or CGI. A real earthquake fissure of torn asphalt, soil and rock, no lava, no fire, no "
-             "glowing light, no explosions, no flood water. No readable signs or text. Everything moves in real time, "
-             "never in slow motion, people run at full speed."),
+    # 18 Kas v3: stil (balkon kilidi + hiç sakin an yok + düzensiz gerçek yarık); v2 metni YER_YARILMASI_TAIL_V2
+    "tail": ("Handheld footage shot by a person standing on a high balcony across the avenue, normal lens; slight hand "
+             "shake, the camera stays fixed on the avenue, shaking with the quake; no zoom, no cuts. The balcony "
+             "railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down "
+             "into the fissure. The ground keeps shaking and the fissure keeps tearing wider the whole time, never a "
+             "calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never a clean straight "
+             "trench, never glossy or CGI; no lava, no fire, no glowing light, no explosions, no flood water. No "
+             "readable signs or text. Everything moves in real time, never in slow motion, people run at full speed."),
 }
+# 18 Kas v3: v2 metinleri PASİF kopya (silinmedi, hiçbir yol kullanmaz; geri dönüş için)
+YER_YARILMASI_OPENING_V2 = ("A massive earthquake fissure has already torn open down the middle of {place}, a long, "
+                            "straight chasm running down the length of the avenue, its edges still collapsing as it "
+                            "keeps ripping wider toward the camera. Five or six people sprint away along the sidewalks "
+                            "as the ground drops behind them.")
+YER_YARILMASI_MIDS_V2 = {
+    "O1": "Parked cars along the edge tip over and slide nose-first into the chasm, one after another.",
+    "O2": "A city bus at the edge tilts sideways and topples into the chasm in a burst of dust.",
+}
+YER_YARILMASI_FINALS_V2 = {
+    "F1": "The front of a building on the far side of the chasm leans out and collapses into it in a roar of dust "
+          "and debris.",
+    "F2": "A whole section of the avenue, cars still on it, drops straight down into the chasm.",
+}
+YER_YARILMASI_TAIL_V2 = ("Handheld footage shot by a person standing on a high balcony across the avenue, eye level, "
+                         "normal lens; slight hand shake, the camera stays fixed on the avenue, shaking with the quake; "
+                         "no zoom, no cuts. The balcony railing stays at the bottom of the frame the whole time; the "
+                         "camera never moves forward or tilts down into the chasm. Bystanders wear everyday clothes. "
+                         "Raw natural daylight, dust in the air, never glossy or CGI. A real earthquake fissure of torn "
+                         "asphalt, soil and rock, no lava, no fire, no glowing light, no explosions, no flood water. No "
+                         "readable signs or text. Everything moves in real time, never in slow motion, people run at "
+                         "full speed.")
+# 18 Kas v3: pasif beat'ler (seçilmez): O1 park halindeki arabalar, F2 yol parçası (v2 metinleri)
+YER_YARILMASI_MIDS_PASIF = {"O1": YER_YARILMASI_MIDS_V2["O1"]}
+YER_YARILMASI_FINALS_PASIF = {"F2": YER_YARILMASI_FINALS_V2["F2"]}
 # 18 Kas: v1 metinleri PASİF kopya (silinmedi, hiçbir yol kullanmaz; geri dönüş için)
 YER_YARILMASI_OPENING_V1 = ("A massive earthquake fissure rips open down the middle of {place}, the asphalt splitting "
                             "apart and collapsing into a deep, wide chasm that races along the avenue toward the camera. "
@@ -3704,22 +3730,34 @@ YER_YARILMASI_TAIL_V1 = ("Handheld footage shot by a person standing on a high b
                          "daylight, dust in the air, never glossy or CGI. A real earthquake fissure of torn asphalt, "
                          "soil and rock, no lava, no fire, no glowing light, no explosions, no flood water. No readable "
                          "signs or text. Everything moves in real time, never in slow motion, people run at full speed.")
-YER_YARILMASI_CAMERA_LINE = ("Kamera: hit kamerası (caddenin karşısında yüksek balkon, göz hizası, normal lens, sabit, "
-                             "depremle sarsılır)")
+YER_YARILMASI_CAMERA_LINE = ("Kamera: hit kamerası (caddenin karşısında yüksek balkon, normal lens, sabit, depremle "
+                             "sarsılır, korkuluk kadrajın altında)")   # 18 Kas v3
+YER_YARILMASI_CAMERA_LINE_V2 = ("Kamera: hit kamerası (caddenin karşısında yüksek balkon, göz hizası, normal lens, "
+                                "sabit, depremle sarsılır)")   # pasif
 YER_YARILMASI_WARNING = ("⚠️ Gerçekçilik: yarık gerçek asfalt, toprak ve kaya mı (lav, ateş, parlama yok mu), insanlar "
                          "tam hızla koşuyor mu, video yapay görünüyor mu?")
-YER_YARILMASI_WEATHER = "gündüz, doğal ışık, havada toz (stil ekinde raw natural daylight, dust in the air)"
-YER_YARILMASI_CONFIRM_DESC = ("Büyük bir deprem yarığı caddenin ortasından açılır: asfalt yarılır, derin ve geniş bir "
+YER_YARILMASI_WEATHER = "gündüz, doğal ışık (stil ekinde ışık satırı yok)"   # 18 Kas v3
+YER_YARILMASI_WEATHER_V2 = "gündüz, doğal ışık, havada toz (stil ekinde raw natural daylight, dust in the air)"   # pasif
+YER_YARILMASI_CONFIRM_DESC = ("İlk saniyede cadde ortadan yarılır: asfalt kalkar, düzensiz uzun bir deprem yarığı "
+                              "kameraya doğru yırtılır. Beş altı kişi kaldırımlardan kaçar. Ortada bir şehir otobüsü "
+                              "yarığa devrilir; finalde karşıdaki binanın cephesi yarığa çöker. Zemin hiç durmadan "
+                              "sarsılır. Lav yok, ateş yok, sel suyu yok.")   # 18 Kas v3
+YER_YARILMASI_CONFIRM_DESC_V2 = ("Büyük bir deprem yarığı caddenin ortasından açılır: asfalt yarılır, derin ve geniş bir "
                               "uçuruma çöker, yarık caddeden kameraya doğru ilerler. Beş altı kişi kaldırımlardan "
                               "kaçar. Ortada park halindeki arabalar ya da bir şehir otobüsü uçuruma devrilir; finalde "
                               "karşıdaki binanın cephesi ya da caddenin bir bölümü uçuruma çöker. Lav yok, ateş yok, "
                               "sel suyu yok.")
 # Kie öncesi son kontrol (büyük/küçük harf fark etmez)
-# 18 Kas: v2 zorunlu + yasak ekleri (açık yarık, düz yarık, balkon kilidi; çukur/krater ve "yarılır" yok)
-YER_YARILMASI_REQUIRED = ("earthquake fissure", "chasm", "high balcony", "normal lens", "has already torn open",
-                          "long, straight chasm", "balcony railing stays", "never moves forward")
+# 18 Kas v3: ilk saniyede yarılma, düzensiz yarık, balkon kilidi, hiç sakin an yok; v1/v2'nin açık/düz yarık
+# ifadeleri, park halindeki arabalar ve yol parçası artık yasak. v2 listeleri _V2 (pasif)
+YER_YARILMASI_REQUIRED = ("very first second", "jagged earthquake fissure", "high balcony", "normal lens",
+                          "balcony railing stays", "never moves forward", "never a calm moment")
 YER_YARILMASI_FORBIDDEN = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion", "sinkhole", "crater",
-                           "rips open")
+                           "has already torn open", "straight chasm", "parked cars", "section of the avenue")
+YER_YARILMASI_REQUIRED_V2 = ("earthquake fissure", "chasm", "high balcony", "normal lens", "has already torn open",
+                             "long, straight chasm", "balcony railing stays", "never moves forward")
+YER_YARILMASI_FORBIDDEN_V2 = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion", "sinkhole", "crater",
+                              "rips open")
 _YY = YER_YARILMASI
 _YER_YARILMASI_GEO_MEMORY: list[str] = []
 
@@ -3740,13 +3778,14 @@ def yer_yarilmasi_opening(geo: str) -> str:
 
 def yer_yarilmasi_mid(mid: str) -> str:
     if mid not in _YY["mids"]:
-        raise es.StructureError(f"{YER_YARILMASI_MODE_LABEL}: {mid} bu kategoride yok (orta O1-O2)")
+        raise es.StructureError(f"{YER_YARILMASI_MODE_LABEL}: {mid} bu kategoride yok (orta {'/'.join(_YY['mids'])})")
     return _YY["mids"][mid]
 
 
 def yer_yarilmasi_final(final: str) -> str:
     if final not in _YY["finals"]:
-        raise es.StructureError(f"{YER_YARILMASI_MODE_LABEL}: {final} bu kategoride yok (final F1-F2)")
+        raise es.StructureError(f"{YER_YARILMASI_MODE_LABEL}: {final} bu kategoride yok (final "
+                                f"{'/'.join(_YY['finals'])})")
     return _YY["finals"][final]
 
 
@@ -3767,12 +3806,19 @@ def yer_yarilmasi_tags(history: list[str]) -> list[str]:
     return [t for t in es.beat_history(YER_YARILMASI_EVENT, history or []) if re.fullmatch(r"O\d+\+F\d+", t)]
 
 
+def _yy_pick(ids: list[str], seen: list[str], block: int, rng=None) -> str:
+    """Tek seçenek varsa LRU atlanır (rastgelelik tüketilmez); birden çoksa son `block` elenir."""
+    if len(ids) == 1:
+        return ids[0]
+    return _block_pick(ids, seen, block, rng)
+
+
 def yer_yarilmasi_choose_mid(tags: list[str], rng=None) -> str:
-    return _block_pick(list(_YY["mids"]), [t.split("+")[0] for t in tags], YER_YARILMASI_MID_BLOCK, rng)
+    return _yy_pick(list(_YY["mids"]), [t.split("+")[0] for t in tags], YER_YARILMASI_MID_BLOCK, rng)
 
 
 def yer_yarilmasi_choose_final(tags: list[str], rng=None) -> str:
-    return _block_pick(list(_YY["finals"]), [t.split("+")[1] for t in tags], YER_YARILMASI_FINAL_BLOCK, rng)
+    return _yy_pick(list(_YY["finals"]), [t.split("+")[1] for t in tags], YER_YARILMASI_FINAL_BLOCK, rng)
 
 
 def yer_yarilmasi_axes_history(records: list | None, key: str) -> list[str] | None:
@@ -3858,7 +3904,7 @@ def yer_yarilmasi_build_scene(domain: str | None, event: str | None, history: li
     trace, axes_line = mode_display(
         {"trace": base_trace}, {}, mode=YER_YARILMASI_MODE_LABEL,
         camera="hit kamerası (the camera stays fixed on the avenue, shaking with the quake); high balcony across the "
-               "avenue, eye level, normal lens",
+               "avenue, normal lens",
         opening=opening, mid=(mid, mid_text), final=(final, final_text), plain=plain, vehicle=None,
         spot="High balcony across the avenue (hit kamerası, yüksek balkon, normal lens, sabit, depremle sarsılır)",
         weather=YER_YARILMASI_WEATHER,
@@ -3888,10 +3934,11 @@ def yer_yarilmasi_build_scene(domain: str | None, event: str | None, history: li
 
 
 def yer_yarilmasi_camera_issues(text: str, geo: str | None = None) -> list[str]:
-    """Kie öncesi son kontrol: YER_YARILMASI_REQUIRED (earthquake fissure, chasm, high balcony, normal lens, has
-    already torn open, long, straight chasm, balcony railing stays, never moves forward) ve seçilen G'nin place metni
-    var; YER_YARILMASI_FORBIDDEN'dan (tornado, funnel, tsunami, drone, aerial, slow-motion, sinkhole, crater, rips open)
-    hiçbiri yok (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
+    """Kie öncesi son kontrol: YER_YARILMASI_REQUIRED (v3: very first second, jagged earthquake fissure, high balcony,
+    normal lens, balcony railing stays, never moves forward, never a calm moment) ve seçilen G'nin place metni var;
+    YER_YARILMASI_FORBIDDEN'dan (tornado, funnel, tsunami, drone, aerial, slow-motion, sinkhole, crater, has already
+    torn open, straight chasm, parked cars, section of the avenue) hiçbiri yok (büyük/küçük harf fark etmez). İhlal =
+    gönderilmez."""
     out = []
     text = text or ""
     low = text.lower()
@@ -3915,9 +3962,9 @@ def yer_yarilmasi_issues(structure: dict, info: dict) -> list[str]:
     if tb.get("geo") not in _YY["geos"]:
         return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
     if tb.get("mid") not in _YY["mids"]:
-        return [f"orta O1-O2 değil ({tb.get('mid')})"]
+        return [f"orta aktif seçenek değil ({tb.get('mid')})"]
     if tb.get("final") not in _YY["finals"]:
-        return [f"final F1-F2 değil ({tb.get('final')})"]
+        return [f"final aktif seçenek değil ({tb.get('final')})"]
     story = yer_yarilmasi_story(tb["geo"], tb["mid"], tb["final"])
     prompt = yer_yarilmasi_prompt(tb["geo"], tb["mid"], tb["final"])
     out = []

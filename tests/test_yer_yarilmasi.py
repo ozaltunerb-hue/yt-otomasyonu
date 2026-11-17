@@ -2,6 +2,8 @@
 # (core/hit_prompts.py YER_YARILMASI). KASIRGA ile aynı kod-hikâye yolu: GPT yok, hikâye koddan birebir.
 # Prompt = AÇILIŞ + " " + ORTA + " " + FİNAL + " " + STİL; metinler talimattan birebir (aşağıda bağımsız kopya).
 # Coğrafya G1-G6 (son 3), orta O1-O2 (son 1), final F1-F2 (son 1). Diğer 19 olay ve 15 mod birebir aynı (40 tohum).
+# 18 Kas v3: ilk saniyede yarılma (düzensiz yarık), tek orta O2 (otobüs), tek final F1 (bina); O1/F2 pasif (_PASIF),
+# v2 açılış/stil/orta/final _V2 pasif kopya. Coğrafya havuzu ve LRU (son 3) aynen.
 # Ağ yok, Kie yok, GPT yok.
 import asyncio
 import hashlib
@@ -30,12 +32,16 @@ EVENT = "Earthquake fissure splits a city avenue"
 DOMAIN = "fissure_disasters"
 EVENT_LABEL = "🌍 Cadde yarılır"
 CATEGORY = "🌍 Yer yarılması"
-MODE_LABEL = "Yer yarılması · kod hikâye (v2: açık yarık + balkon kilidi)"   # 18 Kas
+MODE_LABEL = "Yer yarılması · kod hikâye (v3: ilk saniyede yarılma + otobüs + bina)"   # 18 Kas v3
+MODE_LABEL_V2 = "Yer yarılması · kod hikâye (v2: açık yarık + balkon kilidi)"
 MODE_LABEL_V1 = "Yer yarılması · kod hikâye"
-# Talimat metinleri, birebir (18 Kas v2: yarık ilk karede açık, uzun düz yarık, balkon kilidi)
-OPENING = ("0-4s: A massive earthquake fissure has already torn open down the middle of {place}, a long, straight "
-           "chasm running down the length of the avenue, its edges still collapsing as it keeps ripping wider toward "
-           "the camera. Five or six people sprint away along the sidewalks as the ground drops behind them.")
+# Talimat metinleri, birebir (18 Kas v3: ilk saniyede yarılma, düzensiz yarık, otobüs + bina, hiç sakin an yok)
+OPENING = ("0-4s: In the very first second {place} violently splits open down the middle, slabs of asphalt heaving up "
+           "as a long, jagged earthquake fissure tears toward the camera. Five or six people sprint away along the "
+           "sidewalks.")
+OPENING_V2 = ("A massive earthquake fissure has already torn open down the middle of {place}, a long, straight chasm "
+              "running down the length of the avenue, its edges still collapsing as it keeps ripping wider toward the "
+              "camera. Five or six people sprint away along the sidewalks as the ground drops behind them.")
 OPENING_V1 = ("A massive earthquake fissure rips open down the middle of {place}, the asphalt splitting apart and "
               "collapsing into a deep, wide chasm that races along the avenue toward the camera. Five or six people "
               "sprint away along the sidewalks as the ground drops behind them.")
@@ -48,15 +54,29 @@ PLACES = {
     "G6": "a busy shopping street lined with narrow buildings in a Japanese city",
 }
 MIDS = {
-    "O1": "4-9s: Parked cars along the edge tip over and slide nose-first into the chasm, one after another.",
-    "O2": "4-9s: A city bus at the edge tilts sideways and topples into the chasm in a burst of dust.",
+    "O2": "4-9s: A city bus on the edge tilts sideways and topples into the fissure in a burst of dust.",
 }
 FINALS = {
-    "F1": "9-15s: The front of a building on the far side of the chasm leans out and collapses into it in a roar of "
-          "dust and debris.",
-    "F2": "9-15s: A whole section of the avenue, cars still on it, drops straight down into the chasm.",
+    "F1": "9-15s: The front of a building on the far side leans out and collapses into the fissure in a roar of dust "
+          "and debris.",
 }
-STYLE = ("Handheld footage shot by a person standing on a high balcony across the avenue, eye level, normal lens; "
+MIDS_V2 = {
+    "O1": "Parked cars along the edge tip over and slide nose-first into the chasm, one after another.",
+    "O2": "A city bus at the edge tilts sideways and topples into the chasm in a burst of dust.",
+}
+FINALS_V2 = {
+    "F1": "The front of a building on the far side of the chasm leans out and collapses into it in a roar of dust "
+          "and debris.",
+    "F2": "A whole section of the avenue, cars still on it, drops straight down into the chasm.",
+}
+STYLE = ("Handheld footage shot by a person standing on a high balcony across the avenue, normal lens; slight hand "
+         "shake, the camera stays fixed on the avenue, shaking with the quake; no zoom, no cuts. The balcony railing "
+         "stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the "
+         "fissure. The ground keeps shaking and the fissure keeps tearing wider the whole time, never a calm moment. "
+         "Real earthquake footage: irregular broken asphalt, soil and rock, never a clean straight trench, never "
+         "glossy or CGI; no lava, no fire, no glowing light, no explosions, no flood water. No readable signs or "
+         "text. Everything moves in real time, never in slow motion, people run at full speed.")
+STYLE_V2 = ("Handheld footage shot by a person standing on a high balcony across the avenue, eye level, normal lens; "
          "slight hand shake, the camera stays fixed on the avenue, shaking with the quake; no zoom, no cuts. "
          "The balcony railing stays at the bottom of the frame the whole time; the camera never moves forward or "
          "tilts down into the chasm. Bystanders wear everyday clothes. Raw natural daylight, dust in the air, "
@@ -69,16 +89,20 @@ STYLE_V1 = ("Handheld footage shot by a person standing on a high balcony across
          "never glossy or CGI. A real earthquake fissure of torn asphalt, soil and rock, no lava, no fire, no glowing "
          "light, no explosions, no flood water. No readable signs or text. Everything moves in real time, never in "
          "slow motion, people run at full speed.")
-REQUIRED = ("earthquake fissure", "chasm", "high balcony", "normal lens", "has already torn open",
-            "long, straight chasm", "balcony railing stays", "never moves forward")
-FORBIDDEN = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion", "sinkhole", "crater", "rips open")
-# 18 Kas v2 öncesi (318ee24) Yer yarılması 40 tohum kaydı: fark yalnızca açılış + stil olmalı (aşağıdaki test)
-V1_REQUIRED = ("earthquake fissure", "chasm", "high balcony", "normal lens")
-V1_FORBIDDEN = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion")
+REQUIRED = ("very first second", "jagged earthquake fissure", "high balcony", "normal lens", "balcony railing stays",
+            "never moves forward", "never a calm moment")
+FORBIDDEN = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion", "sinkhole", "crater",
+             "has already torn open", "straight chasm", "parked cars", "section of the avenue")
+REQUIRED_V2 = ("earthquake fissure", "chasm", "high balcony", "normal lens", "has already torn open",
+               "long, straight chasm", "balcony railing stays", "never moves forward")
+FORBIDDEN_V2 = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion", "sinkhole", "crater", "rips open")
+# v2 (8b4341f) 40 tohumun coğrafya seçimleri (tohum 1-40, G1-G6 rakamı): v3'te birebir aynı kalmalı
+V2_GEOS = "2122553245443123526622364661551155536624"
 # Değişiklikten önceki kod (a4d9673): 19 olay (normal yol) + 13 mod + 🌀 Kasırga + ⭐ Hit kopyası, 40 tohum
 OTHERS_SHA256 = "608f98ca3e858ea0192ba221ea34be82d2f8c49b3572c2312974b6b24b8c353f"
 # 🌍 Yer yarılması kendi 40 tohum kilidi (prompt / hikâye / stil eki / combo / eksenler)
-YY_SHA256 = "c31ea61471a8edd6753fa16eb845e7e68116ba61e9e6bb413e942909e7889e14"      # 18 Kas v2
+YY_SHA256 = "99c49edd54ed8e199503487e7ae02d9beba87f289648910771b0a76ad77106cb"      # 18 Kas v3
+YY_V2_SHA256 = "c31ea61471a8edd6753fa16eb845e7e68116ba61e9e6bb413e942909e7889e14"   # 8b4341f (v2)
 YY_V1_SHA256 = "8ee10bac6fb9fb6c6add729e93ee2b786784eaf5998f71e2f131af3037cada63"   # 318ee24 (v1)
 
 
@@ -161,13 +185,6 @@ def yy_snapshot() -> dict:
     return runs
 
 
-def to_v1(text: str) -> str:
-    """v2 açılış + stil metnini v1'e çevirir (başka hiçbir şeye dokunmaz)."""
-    for new, old in zip(hp.YER_YARILMASI["opening"].split("{place}"), OPENING_V1.split("{place}")):
-        text = text.replace(new, old)
-    return text.replace(STYLE, STYLE_V1)
-
-
 def snapshot_hash(data: dict) -> str:
     return hashlib.sha256(json.dumps(data, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
 
@@ -200,10 +217,15 @@ class TestTemplate(_Quiet):
             hp.yer_yarilmasi_mid("O3")
         with self.assertRaises(es.StructureError):
             hp.yer_yarilmasi_final("F3")
+        for bad in ("O1",):   # pasif beat aktif yoldan istenemez
+            with self.assertRaises(es.StructureError):
+                hp.yer_yarilmasi_mid(bad)
+        with self.assertRaises(es.StructureError):
+            hp.yer_yarilmasi_final("F2")
         self.assertNotIn("—", hp.YER_YARILMASI_CONFIRM_DESC + hp.YER_YARILMASI_WARNING)   # em-dash yok
 
-    def test_all_24_combos_within_limits(self):
-        """6 coğrafya × 2 orta × 2 final = 24: hepsi ≤ 230 kelime, ≤ 1400 karakter (v2: 210-226 kelime, 1190-1251
+    def test_all_6_combos_within_limits(self):
+        """v3: 6 coğrafya × 1 orta × 1 final = 6: hepsi ≤ 230 kelime, ≤ 1400 karakter (212-217 kelime, 1190-1214
         karakter); zorunlu ifadelerin hepsi var, yasakların hiçbiri yok; olay kapısı eş anlamlısız geçer."""
         n, words, chars = 0, [], []
         for key, p in all_combos():
@@ -224,33 +246,63 @@ class TestTemplate(_Quiet):
             self.assertEqual(hp.yer_yarilmasi_camera_issues(p, g), [], key)
             self.assertEqual(pg.event_fidelity_issues(EVENT, hp.yer_yarilmasi_story(g, m, f)), [], key)
             self.assertEqual(pg.event_fidelity_issues(EVENT, p), [], key)
-        self.assertEqual(n, 24)
-        self.assertEqual((min(words), max(words)), (210, 226))
-        self.assertEqual((min(chars), max(chars)), (1190, 1251))
-        self.assertEqual(len(hp.yer_yarilmasi_prompt("G2", "O2", "F1").split()), 226)
-        self.assertEqual(len(hp.yer_yarilmasi_prompt("G2", "O1", "F1")), 1251)
-        self.assertIn(" the whole time;", STYLE)   # 230 aşılmadı: önceden onaylı kısaltma uygulanmadı
+        self.assertEqual(n, 6)
+        self.assertEqual((min(words), max(words)), (212, 217))
+        self.assertEqual((min(chars), max(chars)), (1190, 1214))
+        self.assertEqual(len(hp.yer_yarilmasi_prompt("G2", "O2", "F1").split()), 217)
+        self.assertEqual(len(hp.yer_yarilmasi_prompt("G2", "O2", "F1")), 1214)
 
-    def test_v1_passive_copies(self):
-        """18 Kas: v1 açılış/stil/etiket silinmedi, pasif kopya; hiçbir aktif yol kullanmaz."""
+    def test_v1_v2_passive_copies(self):
+        """v1 ve v2 açılış/stil/etiket/orta/final silinmedi, pasif kopya; O1 ve F2 pasif beat; hiçbir aktif yol
+        kullanmaz, seçilmez."""
         self.assertEqual(hp.YER_YARILMASI_OPENING_V1, OPENING_V1)
         self.assertEqual(hp.YER_YARILMASI_TAIL_V1, STYLE_V1)
         self.assertEqual(hp.YER_YARILMASI_MODE_LABEL_V1, MODE_LABEL_V1)
-        self.assertNotEqual(hp.YER_YARILMASI["opening"], OPENING_V1)
-        self.assertNotEqual(hp.yer_yarilmasi_tail(), STYLE_V1)
-        for (g, m, f), p in all_combos():
-            self.assertNotIn(OPENING_V1.format(place=PLACES[g]), p)
-            self.assertNotIn(STYLE_V1, p)
-            self.assertNotIn("hi-vis", p)
-            # v1 metniyle kurulan prompt yeni kapıdan geçmez (eski metin geri sızarsa Kie'ye gitmez)
-            old = (f"0-4s: {OPENING_V1.format(place=PLACES[g])} {MIDS[m]} {FINALS[f]} {STYLE_V1}")
-            self.assertTrue(hp.yer_yarilmasi_camera_issues(old, g), (g, m, f))
-        self.assertEqual(hp.YER_YARILMASI_REQUIRED[:4], V1_REQUIRED)    # mevcut zorunlular aynen
-        self.assertEqual(hp.YER_YARILMASI_FORBIDDEN[:6], V1_FORBIDDEN)  # mevcut yasaklar aynen
+        self.assertEqual(hp.YER_YARILMASI_OPENING_V2, OPENING_V2)
+        self.assertEqual(hp.YER_YARILMASI_TAIL_V2, STYLE_V2)
+        self.assertEqual(hp.YER_YARILMASI_MODE_LABEL_V2, MODE_LABEL_V2)
+        self.assertEqual(hp.YER_YARILMASI_MIDS_V2, MIDS_V2)
+        self.assertEqual(hp.YER_YARILMASI_FINALS_V2, FINALS_V2)
+        self.assertEqual(hp.YER_YARILMASI_REQUIRED_V2, REQUIRED_V2)
+        self.assertEqual(hp.YER_YARILMASI_FORBIDDEN_V2, FORBIDDEN_V2)
+        self.assertEqual(hp.YER_YARILMASI_MIDS_PASIF, {"O1": MIDS_V2["O1"]})
+        self.assertEqual(hp.YER_YARILMASI_FINALS_PASIF, {"F2": FINALS_V2["F2"]})
+        self.assertEqual(list(hp.YER_YARILMASI["mids"]), ["O2"])
+        self.assertEqual(list(hp.YER_YARILMASI["finals"]), ["F1"])
+        for old_open, old_style, old_mids, old_finals in ((OPENING_V1, STYLE_V1, MIDS_V2, FINALS_V2),
+                                                          (OPENING_V2, STYLE_V2, MIDS_V2, FINALS_V2)):
+            self.assertNotEqual(hp.YER_YARILMASI["opening"], old_open)
+            self.assertNotEqual(hp.yer_yarilmasi_tail(), old_style)
+            for (g, m, f), p in all_combos():
+                self.assertNotIn(old_open.format(place=PLACES[g]), p)
+                self.assertNotIn(old_style, p)
+                self.assertNotIn("hi-vis", p)
+                for t in list(old_mids.values()) + list(old_finals.values()):
+                    self.assertNotIn(t, p)
+                # eski metinle kurulan prompt yeni kapıdan geçmez (eski metin geri sızarsa Kie'ye gitmez)
+                for om in old_mids:
+                    for of in old_finals:
+                        old = f"0-4s: {old_open.format(place=PLACES[g])} 4-9s: {old_mids[om]} 9-15s: " \
+                              f"{old_finals[of]} {old_style}"
+                        self.assertTrue(hp.yer_yarilmasi_camera_issues(old, g), (g, om, of))
+        # pasif beat'ler 40 tohumda ve dolu/boş geçmişte hiç seçilmez
+        for s in range(50):
+            for tags in ([], ["O2+F1"], ["O1+F2"], ["O2+F1", "O2+F1"]):
+                self.assertEqual(hp.yer_yarilmasi_choose_mid(tags, random.Random(s)), "O2")
+                self.assertEqual(hp.yer_yarilmasi_choose_final(tags, random.Random(s)), "F1")
         import inspect
         src = inspect.getsource(hp.yer_yarilmasi_build_scene) + inspect.getsource(hp.yer_yarilmasi_prompt)
-        for name in ("_V1",):
+        for name in ("_V1", "_V2", "_PASIF"):
             self.assertNotIn(name, src)
+
+    def test_single_option_skips_lru(self):
+        """Tek seçenekli orta/final: LRU atlanır, hata yok, rastgelelik tüketilmez (coğrafya seçimi etkilenmez)."""
+        r = random.Random(5)
+        state = r.getstate()
+        self.assertEqual(hp.yer_yarilmasi_choose_mid(["O2+F1"] * 5, r), "O2")
+        self.assertEqual(hp.yer_yarilmasi_choose_final(["O2+F1"] * 5, r), "F1")
+        self.assertEqual(r.getstate(), state)
+        self.assertEqual(hp._yy_pick(["A", "B"], ["A"], 1, random.Random(1)), "B")   # çok seçenekte LRU çalışır
 
     def test_event_gate_without_synonym(self):
         """Olay kapısı açık ve eş anlamlı eklemeden geçiyor: iç anahtarın kökleri içinden "eart" + "fiss" + "aven"
@@ -292,21 +344,18 @@ class TestScene(_Quiet):
                 seen.add((tb["geo"], tb["mid"], tb["final"]))
         gpt.assert_not_called()
         normal.assert_not_called()
-        self.assertGreater(len(seen), 12)
+        self.assertEqual(len(seen), 6)   # v3: 6 coğrafya × O2 × F1, hepsi görüldü
         self.assertEqual(es.CODE_STORY_FORCE.get(), frozenset())
         self.assertFalse(es.is_structured(EVENT))   # normal havuzda yok
 
     def test_lru(self):
-        """Coğrafya son 3, orta son 1, final son 1 tekrar etmez."""
+        """Coğrafya son 3 tekrar etmez; v3: orta/final tek seçenek (hep O2 + F1, hata yok)."""
         geos, mids, finals = set(), set(), set()
         for seed in range(1, 16):
             reset()
             random.seed(seed)
             runs = [self._check(gen()) for _ in range(10)]
-            for key in ("mid", "final"):
-                vals = [r[key] for r in runs]
-                for i in range(1, len(vals)):
-                    self.assertNotEqual(vals[i], vals[i - 1], (seed, key, vals))
+            self.assertEqual({(r["mid"], r["final"]) for r in runs}, {("O2", "F1")})
             g = [r["geo"] for r in runs]
             for i in range(len(g)):
                 self.assertNotIn(g[i], g[max(0, i - 3):i], (seed, g))
@@ -335,8 +384,8 @@ class TestScene(_Quiet):
             d = gen(axes_loader=lambda dom: calls.append(dom) or recs)
             tb = d["structure"]["yer_yarilmasi"]
             self.assertIn(tb["geo"], ("G4", "G5", "G6"))   # son 3 (G1, G2, G3) elenir
-            self.assertEqual(tb["mid"], "O2")              # son 1 (O1) elenir
-            self.assertEqual(tb["final"], "F1")            # son 1 (F2) elenir
+            self.assertEqual(tb["mid"], "O2")              # tek seçenek
+            self.assertEqual(tb["final"], "F1")            # tek seçenek
             axes = json.loads(d["axes_json"])
             self.assertEqual(axes["event"], EVENT)
             self.assertEqual((axes["axes"]["mod"], axes["axes"]["cografya"], axes["axes"]["beats"],
@@ -357,7 +406,7 @@ class TestScene(_Quiet):
             reset()
             tags = hp.yer_yarilmasi_tags(hist)
             self.assertEqual(tags, ["O2+F2"])
-            self.assertEqual(hp.yer_yarilmasi_choose_mid(tags, random.Random(s)), "O1")
+            self.assertEqual(hp.yer_yarilmasi_choose_mid(tags, random.Random(s)), "O2")    # tek seçenek, LRU yok
             self.assertEqual(hp.yer_yarilmasi_choose_final(tags, random.Random(s)), "F1")
             self.assertNotIn(hp.yer_yarilmasi_choose_geo(["G1", "G2", "G3"], random.Random(s)), ("G1", "G2", "G3"))
         ks = [f"{hp.KASIRGA_DOMAIN}|none|{hp.KASIRGA_EVENT.lower()}|x##O1+F2|bystander_handheld"]
@@ -384,7 +433,7 @@ class TestScene(_Quiet):
                 self.assertIn(f"bu kategoride olmayan ifade var: {bad}",
                               hp.yer_yarilmasi_camera_issues(text, tb["geo"]), form)
                 self.assertTrue(cp.submit_issues(st, {**info, "prompt": text}), form)
-        for bad in ({"geo": "G7"}, {"mid": "O3"}, {"final": "F3"}):
+        for bad in ({"geo": "G7"}, {"mid": "O3"}, {"final": "F3"}, {"mid": "O1"}, {"final": "F2"}):
             self.assertTrue(cp.submit_issues({**st, "yer_yarilmasi": {**tb, **bad}}, info), bad)
         self.assertTrue(cp.submit_issues(st, {**info, "style_suffix": "x"}))
         self.assertTrue(cp.submit_issues(st, {**info, "prompt": p0.replace("4-9s: ", "")}))
@@ -404,7 +453,7 @@ class TestScene(_Quiet):
             sc, st = d["scenes"][0], d["structure"]
             tb = st["yer_yarilmasi"]
             lines = tb["lines"].split("\n")
-            self.assertEqual(lines[0], "Mod: Yer yarılması · kod hikâye (v2: açık yarık + balkon kilidi)")
+            self.assertEqual(lines[0], "Mod: Yer yarılması · kod hikâye (v3: ilk saniyede yarılma + otobüs + bina)")
             self.assertTrue(lines[1].startswith(f"Coğrafya: {tb['geo']} "), lines[1])
             self.assertIn(PLACES[tb["geo"]], lines[1])
             self.assertEqual(lines[2], f"Orta (4-9s): {tb['mid']} «{MIDS[tb['mid']][6:]}»")
@@ -497,7 +546,7 @@ class TestPipelineAndBot(_Quiet):
         self.assertNotIn("REWRITTEN BY PREFLIGHT", sent)
         info = [c[1] for c in rep.calls if c[0] == "approve"][0]
         self.assertEqual(sent, info["prompt"])
-        self.assertTrue(sent.startswith("0-4s: A massive earthquake fissure"))
+        self.assertTrue(sent.startswith("0-4s: In the very first second "))
         self.assertTrue(sent.endswith(STYLE))
 
     def test_kie_rejection_existing_behavior(self):
@@ -568,16 +617,15 @@ class TestPipelineAndBot(_Quiet):
 
 
 class TestOwnSnapshot(_Quiet):
-    def test_yy_40_seeds_only_opening_and_style_changed(self):
-        """18 Kas v2: 40 tohumda seçimler (G/O/F), combo ve eksenler v1 ile aynı; açılış + stil v1'e çevrilince kayıt
-        v1 kilidiyle (318ee24) birebir. Yeni kilit YY_SHA256."""
+    def test_yy_40_seeds_v3_lock(self):
+        """18 Kas v3: 40 tohum kilidi YY_SHA256 (v2 kaydı YY_V2_SHA256, v1 YY_V1_SHA256 saklı). Coğrafya seçimleri
+        tohum tohum v2 ile birebir (havuz + LRU aynen); orta/final hep O2 + F1."""
         snap = yy_snapshot()
         self.assertEqual(snapshot_hash(snap), YY_SHA256)
-        back = {s: {**r, "prompt": to_v1(r["prompt"]), "story": to_v1(r["story"]), "suffix": to_v1(r["suffix"])}
-                for s, r in snap.items()}
-        for r in snap.values():
-            self.assertNotEqual(to_v1(r["prompt"]), r["prompt"])
-        self.assertEqual(snapshot_hash(back), YY_V1_SHA256)
+        self.assertNotIn(snapshot_hash(snap), (YY_V2_SHA256, YY_V1_SHA256))
+        order = sorted(snap, key=int)
+        self.assertEqual("".join(snap[s]["axes"]["axes"]["cografya"][1] for s in order), V2_GEOS)
+        self.assertEqual({snap[s]["axes"]["axes"]["beats"] for s in order}, {"O2+F1"})
 
 
 class TestOthersUntouched(_Quiet):
