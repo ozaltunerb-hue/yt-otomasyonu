@@ -775,7 +775,7 @@ def yer_yarilmasi_confirm_text(cfg: dict | None = None) -> str:
             + f"\n\nMod: {hp.YER_YARILMASI_MODE_LABEL}\n"
             + hp.YER_YARILMASI_CAMERA_LINE
             + "\n" + hp.YER_YARILMASI_CONFIRM_DESC
-            + " Coğrafya (G1-G6), orta (O1-O2), final (F1-F2), kelime sayısı ve tam prompt ✋ Onay mesajında.")
+            + " Coğrafya (G1-G6), orta (O3), final (F3), kelime sayısı ve tam prompt ✋ Onay mesajında.")
 
 
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
