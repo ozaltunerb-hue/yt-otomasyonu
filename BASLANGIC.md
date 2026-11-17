@@ -245,6 +245,14 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   yasağa + sinkhole, crater, rips open. 24 kombinasyon 210-226 kelime / 1190-1251 kr. Onay "Mod: Yer yarılması · kod
   hikâye (v2: açık yarık + balkon kilidi)". O/F/G ve LRU aynı. Kendi 40 tohum kilidi `YY_SHA256` (v1'e çevrilince
   `YY_V1_SHA256`: fark yalnızca açılış + stil).
+  **18 Kas v3 (816dc36):** ilk saniyede yarılma, tek orta O2 (otobüs), tek final F1 (bina); O1/F2 `_PASIF`, v2 `_V2`.
+  Tek seçenekte `_yy_pick` LRU atlar (rastgelelik tüketmez, coğrafya seçimi tohum tohum aynı).
+  **18 Kas v4 (e0ca7fd, canlı, deploy 04188ff0):** yarık caddeyi yatay (soldan sağa) kameranın önünden keser, kamera
+  çaprazdaki köşe binanın çatı terası, tek orta O3 (otobüs fren yapar), tek final F3 (köşe binası kadrajda büyük). v3
+  açılış/O2/F1/stil/listeler/etiket/kamera satırı/onay açıklaması/spot `_V3` pasif. Spot (combo + Eksenler) "rooftop
+  terrace of a corner building", caption kadraj "teras". 6 kombinasyon 222-227 kelime / 1256-1280 kr. `YY_SHA256`
+  14a7c607…, `YY_V3_SHA256` 99c49edd…, `OTHERS_SHA256` 608f98ca… aynen. Testler `.venv` Python'u ile (sistem
+  Python'unda telegram yok). Açık: gerçek Telegram üretim testi.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir
