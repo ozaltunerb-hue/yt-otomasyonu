@@ -260,6 +260,8 @@ def domain_keyboard(cfg: dict | None = None) -> InlineKeyboardMarkup:
     rows.append([InlineKeyboardButton(DONMA_CATEGORY_BUTTON, callback_data=f"{CALLBACK_PREFIX}df")])
     # 15 Kas (4): 🌀 Kasırga, kod hikâyeli ayrı kategori (normal havuzda yok; sıra numaraları değişmez)
     rows.append([InlineKeyboardButton(KASIRGA_CATEGORY_BUTTON, callback_data=f"{CALLBACK_PREFIX}ks")])
+    # 17 Kas: 🌍 Yer yarılması, kod hikâyeli ayrı kategori (normal havuzda yok; sıra numaraları değişmez)
+    rows.append([InlineKeyboardButton(YER_YARILMASI_CATEGORY_BUTTON, callback_data=f"{CALLBACK_PREFIX}yy")])
     if cfg is not None:
         rows.append([InlineKeyboardButton(f"🔍 Ayrıntı: {_onoff(cfg['detail'])}", callback_data=f"{CALLBACK_PREFIX}t:d"),
                      InlineKeyboardButton(f"✋ Onay: {_onoff(cfg['approval'])}", callback_data=f"{CALLBACK_PREFIX}t:o")])
@@ -668,10 +670,13 @@ def cadde_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
 # Adımlar: df (olay menüsü) → dfe (onay metni) → dfok (üretim) → Kie'den önce ✋ Onay. Hikâye için GPT çağrılmaz.
 DONMA_CATEGORY_BUTTON = "❄️ Donduran fırtına"
 KASIRGA_CATEGORY_BUTTON = "🌀 Kasırga"   # 15 Kas (4)
+YER_YARILMASI_CATEGORY_BUTTON = "🌍 Yer yarılması"   # 17 Kas
 CODE_DOMAIN_LABELS = {"frozen_storm_disasters": DONMA_CATEGORY_BUTTON,
-                      "hurricane_disasters": KASIRGA_CATEGORY_BUTTON}   # 15 Kas (4): + 🌀 Kasırga
+                      "hurricane_disasters": KASIRGA_CATEGORY_BUTTON,   # 15 Kas (4): + 🌀 Kasırga
+                      "fissure_disasters": YER_YARILMASI_CATEGORY_BUTTON}   # 17 Kas: + 🌍 Yer yarılması
 CODE_EVENT_LABELS = {"Storm's eye freezes the city": "❄️ Buz fırtınası şehri dondurur",   # 15 Kas (3): sadece etiket
-                     "Hurricane winds batter a coastal town": "🌀 Kasırga kıyı kasabasını döver"}   # 15 Kas (4)
+                     "Hurricane winds batter a coastal town": "🌀 Kasırga kıyı kasabasını döver",   # 15 Kas (4)
+                     "Earthquake fissure splits a city avenue": "🌍 Cadde yarılır"}   # 17 Kas
 
 
 def donma_event_keyboard() -> InlineKeyboardMarkup:
@@ -737,6 +742,40 @@ def kasirga_confirm_text(cfg: dict | None = None) -> str:
             + hp.KASIRGA_CAMERA_LINE
             + "\n" + hp.KASIRGA_CONFIRM_DESC
             + " Coğrafya (G1-G6), araç, orta (O1-O2), final (F1-F3), kişi sayısı, kelime sayısı ✋ Onay mesajında.")
+
+
+# ── 🌍 Yer yarılması (17 Kas 2026, Bahadır): kod hikâyeli yeni kategori, tek olay. Normal kategori havuzunda
+# (DOMAIN_LABELS / DOMAIN_ATTRIBUTES) YOK: düğmesi kategori menüsünün sonunda ayrı satır, sıra numaraları değişmez.
+# Adımlar: yy (olay menüsü) → yye (onay metni) → yyok (üretim) → Kie'den önce ✋ Onay. Hikâye için GPT çağrılmaz.
+def yer_yarilmasi_event_keyboard() -> InlineKeyboardMarkup:
+    """Tek olay + 🔙 Geri (🎲 Rastgele yok: kategoride tek olay var)."""
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(_hp().YER_YARILMASI_EVENT_LABEL, callback_data=f"{CALLBACK_PREFIX}yye")],
+        [InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}back")],
+    ])
+
+
+def yer_yarilmasi_produce_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}yyok"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def yer_yarilmasi_confirm_text(cfg: dict | None = None) -> str:
+    hp = _hp()
+    cfg = cfg or default_cfg()
+    return (f"Kategori: {YER_YARILMASI_CATEGORY_BUTTON}\n"
+            f"Olay: {hp.YER_YARILMASI_EVENT_LABEL}\n"
+            f"Mod: {mode_label(cfg['mode'])}\n"
+            f"🔍 Ayrıntı: {_onoff(cfg['detail'])} · ✋ Onay: {_onoff(cfg['approval'])}\n"
+            "Tahmini maliyet: ~175 Kie kredisi + 1 danışman preflight GPT çağrısı (hikâye için GPT yok)\n\n"
+            "Üretim sadece ✅ Üret'e basınca başlar."
+            + ("\n✋ Onay açık: Kie'ye göndermeden önce son prompt'u gösterip onay isteyeceğim." if cfg["approval"] else "")
+            + f"\n\nMod: {hp.YER_YARILMASI_MODE_LABEL}\n"
+            + hp.YER_YARILMASI_CAMERA_LINE
+            + "\n" + hp.YER_YARILMASI_CONFIRM_DESC
+            + " Coğrafya (G1-G6), orta (O1-O2), final (F1-F2), kelime sayısı ve tam prompt ✋ Onay mesajında.")
 
 
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
@@ -816,7 +855,7 @@ def parse_selection(di_raw: str, eid: str | None = None) -> tuple[str, str | Non
 
 
 def selection_label(event: str | None) -> str:
-    if event and event not in EVENT_LABELS and event in CODE_EVENT_LABELS:   # 15 Kas: ❄️ Donduran fırtına, 🌀 Kasırga
+    if event and event not in EVENT_LABELS and event in CODE_EVENT_LABELS:   # 15 Kas: ❄️, 🌀; 17 Kas: 🌍
         return CODE_EVENT_LABELS[event]
     return EVENT_LABELS[event] if event else RANDOM_LABEL
 
@@ -1030,6 +1069,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         return
     if action in ("ks", "kse", "ksok"):   # 15 Kas (4): 🌀 Kasırga
         await _on_kasirga(query, context, action, args, cfg)
+        return
+    if action in ("yy", "yye", "yyok"):   # 17 Kas: 🌍 Yer yarılması
+        await _on_yer_yarilmasi(query, context, action, args, cfg)
         return
 
     sel, view = None, None
@@ -1365,6 +1407,33 @@ async def _on_kasirga(query, context, action: str, args: list[str], cfg: dict) -
                       bot_data=context.bot_data, kasirga=True)
 
 
+async def _on_yer_yarilmasi(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """🌍 Yer yarılması adımları: yy (olay menüsü) → yye (onay metni) → yyok (üretim). Kie yine ✋ Onay'a bağlı."""
+    if args:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    hp = _hp()
+    if action == "yy":
+        await query.edit_message_text(f"{YER_YARILMASI_CATEGORY_BUTTON}: hangi olay?",
+                                      reply_markup=yer_yarilmasi_event_keyboard())
+        return
+    if action == "yye":
+        await query.edit_message_text(yer_yarilmasi_confirm_text(cfg), reply_markup=yer_yarilmasi_produce_keyboard())
+        return
+    run_cfg = dict(cfg)
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {YER_YARILMASI_CATEGORY_BUTTON} / {hp.YER_YARILMASI_EVENT_LABEL}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), hp.YER_YARILMASI_DOMAIN, hp.YER_YARILMASI_EVENT,
+                      cfg=run_cfg, bot_data=context.bot_data, yer_yarilmasi=True)
+
+
 async def _on_caption_share(query, context, page: str) -> None:
     """📤 Paylaştım: Paylaşımlar'a tek satır (aynı üretim için ikinci kez basılırsa yeni satır açmaz)."""
     import core.caption as cap
@@ -1469,7 +1538,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                   approach_env: str | None = None, dalga24: bool = False, kul_yaklasma: bool = False,
                   orman_yaklasma: bool = False, heli_yaklasma: bool = False,
                   hortum_yaklasma: bool = False, cadde_yaklasma: bool = False,
-                  donma_firtina: bool = False, kasirga: bool = False, hit_kopya_ates: bool = False) -> None:
+                  donma_firtina: bool = False, kasirga: bool = False, hit_kopya_ates: bool = False,
+                  yer_yarilmasi: bool = False) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1503,6 +1573,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["kasirga"] = True
     if hit_kopya_ates:   # 16 Kas: ⭐ Hit kopyası (ateş hortumu)
         kwargs["hit_kopya_ates"] = True
+    if yer_yarilmasi:   # 17 Kas: 🌍 Yer yarılması
+        kwargs["yer_yarilmasi"] = True
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:

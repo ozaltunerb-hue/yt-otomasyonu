@@ -220,6 +220,23 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   cümleler aynen. Eski şablon `hp.HIT_KOPYA_ATES_V1` (`hp.HIT_KOPYA_PASIF`), pasif. Kie öncesi zorunlu listeye "racing
   fast across the neighborhood" ve "never standing still" eklendi, yasak liste aynı. 18 kombinasyon: en kısa 195
   kelime / 1151 kr (G4 + SUV), en uzun 197 kelime / 1169 kr (G3 + pickup truck). 40 tohum: diğer her yerde diff 0.
+- **17 Kas (2)**: 🌍 Yer yarılması (YENİ KATEGORİ, `YER_YARILMASI`; 2012 filmi esinli; commit "yeni kategori: Yer
+  yarilmasi (kod hikaye)"). Tek olay "🌍 Cadde yarılır" (iç anahtar `YER_YARILMASI_EVENT` "Earthquake fissure splits a
+  city avenue", domain `fissure_disasters`). Yapı `KASIRGA` ile aynı: GPT yok, hikâye koddan birebir
+  (`hp.yer_yarilmasi_build_scene`), olay normal havuzda değil (Kasırga gibi `es.CODE_STORY_FORCE` yerine kendi sahnesi;
+  o yol olayın normal havuzda olmasını ister, havuza eklemek domain rotasyonunu ve snapshot'ları değiştirirdi). Prompt =
+  AÇILIŞ + ORTA + FİNAL + STİL, metinler Bahadır'ın talimatından birebir. Coğrafya G1-G6 (son 3): Güney Kaliforniya
+  bulvarı, ABD şehir merkezi, Mexico City, São Paulo, Santiago, Japon alışveriş caddesi. Orta O1 (park halindeki
+  arabalar uçuruma kayar) / O2 (şehir otobüsü devrilir), final F1 (karşı binanın cephesi çöker) / F2 (caddenin bir
+  bölümü araçlarla çöker), orta/final son 1. Araç ve kişi ekseni yok (metinde sabit "Five or six people"). 24
+  kombinasyon: en kısa 185 kelime / 1059 kr (G4 + O2 + F2), en uzun 201 kelime (G2 + O2 + F1) / 1120 kr (G2 + O1 + F1).
+  Kie öncesi zorunlu: "earthquake fissure", "chasm", "high balcony", "normal lens" + place; yasak (harf büyüklüğü fark
+  etmez): tornado, funnel, tsunami, drone, aerial, slow-motion. Zorunlu olay denetimi açık, eş anlamlı gerekmedi (eart +
+  fiss + aven her açılışta). Bot: kategori menüsünün sonunda (Kasırga'nın altında) `uret:yy` → `yye` → `yyok`, ✋ Onay
+  Kie'den önce; Onay "Mod: Yer yarılması · kod hikâye", G/O/F kodları ve tam prompt. Preflight danışman (prompt
+  değişmez). Notion: Eksenler `kategori` = "Yer yarılması", Paylaşımlar "Kategori" caption'dan (seçenek ilk yazımda
+  oluşur; #earthquake yasaklı etiket olduğu için kullanılmaz). Testler `tests/test_yer_yarilmasi.py`; 40 tohum: 19 olay
+  + 15 mod (Kasırga ve Hit kopyası dahil) diff 0 (`OTHERS_SHA256`, a4d9673 hâli).
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir
