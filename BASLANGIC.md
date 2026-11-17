@@ -237,6 +237,14 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   değişmez). Notion: Eksenler `kategori` = "Yer yarılması", Paylaşımlar "Kategori" caption'dan (seçenek ilk yazımda
   oluşur; #earthquake yasaklı etiket olduğu için kullanılmaz). Testler `tests/test_yer_yarilmasi.py`; 40 tohum: 19 olay
   + 15 mod (Kasırga ve Hit kopyası dahil) diff 0 (`OTHERS_SHA256`, a4d9673 hâli).
+  **18 Kas v2 (açık yarık + balkon kilidi):** açılış "has already torn open ... a long, straight chasm ... keeps ripping
+  wider" (yarık ilk karede açık, yuvarlak çukur değil düz yarık); stile "The balcony railing stays at the bottom of the
+  frame the whole time; the camera never moves forward or tilts down into the chasm." eklendi, ", never hi-vis PPE on
+  civilians" çıktı. Eski metinler `YER_YARILMASI_OPENING_V1` / `YER_YARILMASI_TAIL_V1` / `YER_YARILMASI_MODE_LABEL_V1`
+  (pasif). Zorunluya + "has already torn open", "long, straight chasm", "balcony railing stays", "never moves forward";
+  yasağa + sinkhole, crater, rips open. 24 kombinasyon 210-226 kelime / 1190-1251 kr. Onay "Mod: Yer yarılması · kod
+  hikâye (v2: açık yarık + balkon kilidi)". O/F/G ve LRU aynı. Kendi 40 tohum kilidi `YY_SHA256` (v1'e çevrilince
+  `YY_V1_SHA256`: fark yalnızca açılış + stil).
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir

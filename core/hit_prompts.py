@@ -3647,7 +3647,8 @@ def hit_kopya_issues(structure: dict, info: dict) -> list[str]:
 # Prompt = AÇILIŞ + " " + ORTA + " " + FİNAL + " " + STİL (metinler Bahadır'ın talimatından birebir). Coğrafya G1-G6
 # (son 3), orta O1-O2 (son 1), final F1-F2 (son 1). Araç ve kişi sayısı ekseni yok (metinde sabit). Kayıt O*+F*
 # (combo + Eksenler).
-YER_YARILMASI_MODE_LABEL = "Yer yarılması · kod hikâye"      # ✋ Onay "Mod:" satırı (talimat birebir)
+YER_YARILMASI_MODE_LABEL = "Yer yarılması · kod hikâye (v2: açık yarık + balkon kilidi)"   # ✋ Onay "Mod:" (18 Kas)
+YER_YARILMASI_MODE_LABEL_V1 = "Yer yarılması · kod hikâye"   # pasif (17 Kas)
 YER_YARILMASI_DOMAIN = "fissure_disasters"                    # Combo Key'in ilk parçası (Notion eksen sorgusu bununla)
 YER_YARILMASI_EVENT = "Earthquake fissure splits a city avenue"   # Notion "Olay"; normal havuzda (DOMAIN_ATTRIBUTES) yok
 YER_YARILMASI_CATEGORY_LABEL = "🌍 Yer yarılması"             # Telegram kategori düğmesi
@@ -3671,9 +3672,10 @@ YER_YARILMASI = {
         "G5": {"name": "Şili", "place": "a busy avenue of Santiago with the Andes rising behind it"},
         "G6": {"name": "Japonya", "place": "a busy shopping street lined with narrow buildings in a Japanese city"},
     },
-    "opening": ("A massive earthquake fissure rips open down the middle of {place}, the asphalt splitting apart and "
-                "collapsing into a deep, wide chasm that races along the avenue toward the camera. Five or six people "
-                "sprint away along the sidewalks as the ground drops behind them."),
+    # 18 Kas: v2 açılış (yarık ilk karede zaten açık, uzun düz yarık); eski metin YER_YARILMASI_OPENING_V1 (pasif)
+    "opening": ("A massive earthquake fissure has already torn open down the middle of {place}, a long, straight chasm "
+                "running down the length of the avenue, its edges still collapsing as it keeps ripping wider toward "
+                "the camera. Five or six people sprint away along the sidewalks as the ground drops behind them."),
     "mids": {
         "O1": "Parked cars along the edge tip over and slide nose-first into the chasm, one after another.",
         "O2": "A city bus at the edge tilts sideways and topples into the chasm in a burst of dust.",
@@ -3683,13 +3685,25 @@ YER_YARILMASI = {
               "and debris.",
         "F2": "A whole section of the avenue, cars still on it, drops straight down into the chasm.",
     },
+    # 18 Kas: v2 stil (balkon korkuluğu + kamera kilidi); eski metin YER_YARILMASI_TAIL_V1 (pasif)
     "tail": ("Handheld footage shot by a person standing on a high balcony across the avenue, eye level, normal lens; "
              "slight hand shake, the camera stays fixed on the avenue, shaking with the quake; no zoom, no cuts. "
-             "Bystanders wear everyday clothes, never hi-vis PPE on civilians. Raw natural daylight, dust in the air, "
+             "The balcony railing stays at the bottom of the frame the whole time; the camera never moves forward or "
+             "tilts down into the chasm. Bystanders wear everyday clothes. Raw natural daylight, dust in the air, "
              "never glossy or CGI. A real earthquake fissure of torn asphalt, soil and rock, no lava, no fire, no "
              "glowing light, no explosions, no flood water. No readable signs or text. Everything moves in real time, "
              "never in slow motion, people run at full speed."),
 }
+# 18 Kas: v1 metinleri PASİF kopya (silinmedi, hiçbir yol kullanmaz; geri dönüş için)
+YER_YARILMASI_OPENING_V1 = ("A massive earthquake fissure rips open down the middle of {place}, the asphalt splitting "
+                            "apart and collapsing into a deep, wide chasm that races along the avenue toward the camera. "
+                            "Five or six people sprint away along the sidewalks as the ground drops behind them.")
+YER_YARILMASI_TAIL_V1 = ("Handheld footage shot by a person standing on a high balcony across the avenue, eye level, "
+                         "normal lens; slight hand shake, the camera stays fixed on the avenue, shaking with the quake; "
+                         "no zoom, no cuts. Bystanders wear everyday clothes, never hi-vis PPE on civilians. Raw natural "
+                         "daylight, dust in the air, never glossy or CGI. A real earthquake fissure of torn asphalt, "
+                         "soil and rock, no lava, no fire, no glowing light, no explosions, no flood water. No readable "
+                         "signs or text. Everything moves in real time, never in slow motion, people run at full speed.")
 YER_YARILMASI_CAMERA_LINE = ("Kamera: hit kamerası (caddenin karşısında yüksek balkon, göz hizası, normal lens, sabit, "
                              "depremle sarsılır)")
 YER_YARILMASI_WARNING = ("⚠️ Gerçekçilik: yarık gerçek asfalt, toprak ve kaya mı (lav, ateş, parlama yok mu), insanlar "
@@ -3701,8 +3715,11 @@ YER_YARILMASI_CONFIRM_DESC = ("Büyük bir deprem yarığı caddenin ortasından
                               "karşıdaki binanın cephesi ya da caddenin bir bölümü uçuruma çöker. Lav yok, ateş yok, "
                               "sel suyu yok.")
 # Kie öncesi son kontrol (büyük/küçük harf fark etmez)
-YER_YARILMASI_REQUIRED = ("earthquake fissure", "chasm", "high balcony", "normal lens")
-YER_YARILMASI_FORBIDDEN = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion")
+# 18 Kas: v2 zorunlu + yasak ekleri (açık yarık, düz yarık, balkon kilidi; çukur/krater ve "yarılır" yok)
+YER_YARILMASI_REQUIRED = ("earthquake fissure", "chasm", "high balcony", "normal lens", "has already torn open",
+                          "long, straight chasm", "balcony railing stays", "never moves forward")
+YER_YARILMASI_FORBIDDEN = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion", "sinkhole", "crater",
+                           "rips open")
 _YY = YER_YARILMASI
 _YER_YARILMASI_GEO_MEMORY: list[str] = []
 
@@ -3871,8 +3888,9 @@ def yer_yarilmasi_build_scene(domain: str | None, event: str | None, history: li
 
 
 def yer_yarilmasi_camera_issues(text: str, geo: str | None = None) -> list[str]:
-    """Kie öncesi son kontrol: YER_YARILMASI_REQUIRED ("earthquake fissure", "chasm", "high balcony", "normal lens") ve
-    seçilen G'nin place metni var; YER_YARILMASI_FORBIDDEN'dan (tornado, funnel, tsunami, drone, aerial, slow-motion)
+    """Kie öncesi son kontrol: YER_YARILMASI_REQUIRED (earthquake fissure, chasm, high balcony, normal lens, has
+    already torn open, long, straight chasm, balcony railing stays, never moves forward) ve seçilen G'nin place metni
+    var; YER_YARILMASI_FORBIDDEN'dan (tornado, funnel, tsunami, drone, aerial, slow-motion, sinkhole, crater, rips open)
     hiçbiri yok (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
     out = []
     text = text or ""

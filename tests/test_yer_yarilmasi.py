@@ -30,11 +30,15 @@ EVENT = "Earthquake fissure splits a city avenue"
 DOMAIN = "fissure_disasters"
 EVENT_LABEL = "🌍 Cadde yarılır"
 CATEGORY = "🌍 Yer yarılması"
-MODE_LABEL = "Yer yarılması · kod hikâye"
-# Talimat metinleri, birebir
-OPENING = ("0-4s: A massive earthquake fissure rips open down the middle of {place}, the asphalt splitting apart and "
-           "collapsing into a deep, wide chasm that races along the avenue toward the camera. Five or six people "
-           "sprint away along the sidewalks as the ground drops behind them.")
+MODE_LABEL = "Yer yarılması · kod hikâye (v2: açık yarık + balkon kilidi)"   # 18 Kas
+MODE_LABEL_V1 = "Yer yarılması · kod hikâye"
+# Talimat metinleri, birebir (18 Kas v2: yarık ilk karede açık, uzun düz yarık, balkon kilidi)
+OPENING = ("0-4s: A massive earthquake fissure has already torn open down the middle of {place}, a long, straight "
+           "chasm running down the length of the avenue, its edges still collapsing as it keeps ripping wider toward "
+           "the camera. Five or six people sprint away along the sidewalks as the ground drops behind them.")
+OPENING_V1 = ("A massive earthquake fissure rips open down the middle of {place}, the asphalt splitting apart and "
+              "collapsing into a deep, wide chasm that races along the avenue toward the camera. Five or six people "
+              "sprint away along the sidewalks as the ground drops behind them.")
 PLACES = {
     "G1": "a wide palm-lined boulevard in a Southern Californian city",
     "G2": "a busy downtown avenue of brick buildings and glass towers in an American city",
@@ -54,14 +58,28 @@ FINALS = {
 }
 STYLE = ("Handheld footage shot by a person standing on a high balcony across the avenue, eye level, normal lens; "
          "slight hand shake, the camera stays fixed on the avenue, shaking with the quake; no zoom, no cuts. "
+         "The balcony railing stays at the bottom of the frame the whole time; the camera never moves forward or "
+         "tilts down into the chasm. Bystanders wear everyday clothes. Raw natural daylight, dust in the air, "
+         "never glossy or CGI. A real earthquake fissure of torn asphalt, soil and rock, no lava, no fire, no glowing "
+         "light, no explosions, no flood water. No readable signs or text. Everything moves in real time, never in "
+         "slow motion, people run at full speed.")
+STYLE_V1 = ("Handheld footage shot by a person standing on a high balcony across the avenue, eye level, normal lens; "
+         "slight hand shake, the camera stays fixed on the avenue, shaking with the quake; no zoom, no cuts. "
          "Bystanders wear everyday clothes, never hi-vis PPE on civilians. Raw natural daylight, dust in the air, "
          "never glossy or CGI. A real earthquake fissure of torn asphalt, soil and rock, no lava, no fire, no glowing "
          "light, no explosions, no flood water. No readable signs or text. Everything moves in real time, never in "
          "slow motion, people run at full speed.")
-REQUIRED = ("earthquake fissure", "chasm", "high balcony", "normal lens")
-FORBIDDEN = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion")
+REQUIRED = ("earthquake fissure", "chasm", "high balcony", "normal lens", "has already torn open",
+            "long, straight chasm", "balcony railing stays", "never moves forward")
+FORBIDDEN = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion", "sinkhole", "crater", "rips open")
+# 18 Kas v2 öncesi (318ee24) Yer yarılması 40 tohum kaydı: fark yalnızca açılış + stil olmalı (aşağıdaki test)
+V1_REQUIRED = ("earthquake fissure", "chasm", "high balcony", "normal lens")
+V1_FORBIDDEN = ("tornado", "funnel", "tsunami", "drone", "aerial", "slow-motion")
 # Değişiklikten önceki kod (a4d9673): 19 olay (normal yol) + 13 mod + 🌀 Kasırga + ⭐ Hit kopyası, 40 tohum
 OTHERS_SHA256 = "608f98ca3e858ea0192ba221ea34be82d2f8c49b3572c2312974b6b24b8c353f"
+# 🌍 Yer yarılması kendi 40 tohum kilidi (prompt / hikâye / stil eki / combo / eksenler)
+YY_SHA256 = "c31ea61471a8edd6753fa16eb845e7e68116ba61e9e6bb413e942909e7889e14"      # 18 Kas v2
+YY_V1_SHA256 = "8ee10bac6fb9fb6c6add729e93ee2b786784eaf5998f71e2f131af3037cada63"   # 318ee24 (v1)
 
 
 class _Quiet(unittest.TestCase):
@@ -127,6 +145,29 @@ def others_snapshot() -> dict:
     return snap
 
 
+def yy_snapshot() -> dict:
+    """🌍 Yer yarılması 40 tohum: prompt, hikâye, stil eki, combo, eksenler (caption hariç)."""
+    runs = {}
+    for s in range(1, 41):
+        reset()
+        random.seed(s)
+        with patch.object(pg, "_call_gpt", AsyncMock(side_effect=AssertionError("GPT"))):
+            d = gen()
+        sc = d["scenes"][0]
+        axes = json.loads(d["axes_json"])
+        axes.pop("caption", None)
+        runs[str(s)] = {"prompt": sc["prompt"], "story": sc["story"], "suffix": sc["style_suffix"],
+                        "combo": d["combo_key"], "axes": axes}
+    return runs
+
+
+def to_v1(text: str) -> str:
+    """v2 açılış + stil metnini v1'e çevirir (başka hiçbir şeye dokunmaz)."""
+    for new, old in zip(hp.YER_YARILMASI["opening"].split("{place}"), OPENING_V1.split("{place}")):
+        text = text.replace(new, old)
+    return text.replace(STYLE, STYLE_V1)
+
+
 def snapshot_hash(data: dict) -> str:
     return hashlib.sha256(json.dumps(data, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
 
@@ -162,7 +203,7 @@ class TestTemplate(_Quiet):
         self.assertNotIn("—", hp.YER_YARILMASI_CONFIRM_DESC + hp.YER_YARILMASI_WARNING)   # em-dash yok
 
     def test_all_24_combos_within_limits(self):
-        """6 coğrafya × 2 orta × 2 final = 24: hepsi ≤ 230 kelime, ≤ 1400 karakter (185-201 kelime, 1059-1120
+        """6 coğrafya × 2 orta × 2 final = 24: hepsi ≤ 230 kelime, ≤ 1400 karakter (v2: 210-226 kelime, 1190-1251
         karakter); zorunlu ifadelerin hepsi var, yasakların hiçbiri yok; olay kapısı eş anlamlısız geçer."""
         n, words, chars = 0, [], []
         for key, p in all_combos():
@@ -184,10 +225,32 @@ class TestTemplate(_Quiet):
             self.assertEqual(pg.event_fidelity_issues(EVENT, hp.yer_yarilmasi_story(g, m, f)), [], key)
             self.assertEqual(pg.event_fidelity_issues(EVENT, p), [], key)
         self.assertEqual(n, 24)
-        self.assertEqual((min(words), max(words)), (185, 201))
-        self.assertEqual((min(chars), max(chars)), (1059, 1120))
-        self.assertEqual(len(hp.yer_yarilmasi_prompt("G2", "O2", "F1").split()), 201)
-        self.assertEqual(len(hp.yer_yarilmasi_prompt("G2", "O1", "F1")), 1120)
+        self.assertEqual((min(words), max(words)), (210, 226))
+        self.assertEqual((min(chars), max(chars)), (1190, 1251))
+        self.assertEqual(len(hp.yer_yarilmasi_prompt("G2", "O2", "F1").split()), 226)
+        self.assertEqual(len(hp.yer_yarilmasi_prompt("G2", "O1", "F1")), 1251)
+        self.assertIn(" the whole time;", STYLE)   # 230 aşılmadı: önceden onaylı kısaltma uygulanmadı
+
+    def test_v1_passive_copies(self):
+        """18 Kas: v1 açılış/stil/etiket silinmedi, pasif kopya; hiçbir aktif yol kullanmaz."""
+        self.assertEqual(hp.YER_YARILMASI_OPENING_V1, OPENING_V1)
+        self.assertEqual(hp.YER_YARILMASI_TAIL_V1, STYLE_V1)
+        self.assertEqual(hp.YER_YARILMASI_MODE_LABEL_V1, MODE_LABEL_V1)
+        self.assertNotEqual(hp.YER_YARILMASI["opening"], OPENING_V1)
+        self.assertNotEqual(hp.yer_yarilmasi_tail(), STYLE_V1)
+        for (g, m, f), p in all_combos():
+            self.assertNotIn(OPENING_V1.format(place=PLACES[g]), p)
+            self.assertNotIn(STYLE_V1, p)
+            self.assertNotIn("hi-vis", p)
+            # v1 metniyle kurulan prompt yeni kapıdan geçmez (eski metin geri sızarsa Kie'ye gitmez)
+            old = (f"0-4s: {OPENING_V1.format(place=PLACES[g])} {MIDS[m]} {FINALS[f]} {STYLE_V1}")
+            self.assertTrue(hp.yer_yarilmasi_camera_issues(old, g), (g, m, f))
+        self.assertEqual(hp.YER_YARILMASI_REQUIRED[:4], V1_REQUIRED)    # mevcut zorunlular aynen
+        self.assertEqual(hp.YER_YARILMASI_FORBIDDEN[:6], V1_FORBIDDEN)  # mevcut yasaklar aynen
+        import inspect
+        src = inspect.getsource(hp.yer_yarilmasi_build_scene) + inspect.getsource(hp.yer_yarilmasi_prompt)
+        for name in ("_V1",):
+            self.assertNotIn(name, src)
 
     def test_event_gate_without_synonym(self):
         """Olay kapısı açık ve eş anlamlı eklemeden geçiyor: iç anahtarın kökleri içinden "eart" + "fiss" + "aven"
@@ -341,7 +404,7 @@ class TestScene(_Quiet):
             sc, st = d["scenes"][0], d["structure"]
             tb = st["yer_yarilmasi"]
             lines = tb["lines"].split("\n")
-            self.assertEqual(lines[0], "Mod: Yer yarılması · kod hikâye")
+            self.assertEqual(lines[0], "Mod: Yer yarılması · kod hikâye (v2: açık yarık + balkon kilidi)")
             self.assertTrue(lines[1].startswith(f"Coğrafya: {tb['geo']} "), lines[1])
             self.assertIn(PLACES[tb["geo"]], lines[1])
             self.assertEqual(lines[2], f"Orta (4-9s): {tb['mid']} «{MIDS[tb['mid']][6:]}»")
@@ -502,6 +565,19 @@ class TestPipelineAndBot(_Quiet):
         for b in (b for m in (kb, bot.yer_yarilmasi_event_keyboard(), bot.yer_yarilmasi_produce_keyboard())
                   for r in m.inline_keyboard for b in r):
             self.assertLessEqual(len(b.callback_data.encode()), 64)
+
+
+class TestOwnSnapshot(_Quiet):
+    def test_yy_40_seeds_only_opening_and_style_changed(self):
+        """18 Kas v2: 40 tohumda seçimler (G/O/F), combo ve eksenler v1 ile aynı; açılış + stil v1'e çevrilince kayıt
+        v1 kilidiyle (318ee24) birebir. Yeni kilit YY_SHA256."""
+        snap = yy_snapshot()
+        self.assertEqual(snapshot_hash(snap), YY_SHA256)
+        back = {s: {**r, "prompt": to_v1(r["prompt"]), "story": to_v1(r["story"]), "suffix": to_v1(r["suffix"])}
+                for s, r in snap.items()}
+        for r in snap.values():
+            self.assertNotEqual(to_v1(r["prompt"]), r["prompt"])
+        self.assertEqual(snapshot_hash(back), YY_V1_SHA256)
 
 
 class TestOthersUntouched(_Quiet):
