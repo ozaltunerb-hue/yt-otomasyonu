@@ -211,6 +211,13 @@ def others_snapshot() -> dict:
               ("orman", {"orman_yaklasma": True}, es.WILDFIRE), ("heli", {"heli_yaklasma": True}, es.HELICOPTER),
               ("hortum", {"hortum_yaklasma": True}, es.LANDFALL), ("cadde", {"cadde_yaklasma": True}, es.AVENUE)]
     for name, flags, ev in modes:
+        if name == "orman":
+            # 20 Kas 2026: orman Yaklaşma v4 bilerek değişti. Bu kilit diğer olay/modlar içindir; orman kaydı v3
+            # (3c0369c) fixture'ından gelir (ORMAN_V3_SHA256), canlı v4 test_orman_yaklasma ORMAN_SHA256 ile kilitli.
+            with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", "orman_v3_runs_40.json"),
+                      encoding="utf-8") as fh:
+                out["modes"][name] = json.load(fh)
+            continue
         out["modes"][name] = {str(s): mode_run(flags, ev, s) for s in range(1, 41)}
     return out
 

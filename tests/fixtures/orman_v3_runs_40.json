@@ -1,0 +1,1591 @@
+{
+ "1": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M3+N3",
+    "cografya": "R5",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "balkon",
+    "kamera_modu": "B",
+    "kamera_noktasi": "Balcony of a hillside house",
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "boş",
+    "ortam": "B",
+    "people": 4,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "kamera_modu": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "10": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M3+N1",
+    "cografya": "R5",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "balkon",
+    "kamera_modu": "B",
+    "kamera_noktasi": "Balcony of a hillside house",
+    "key": "default",
+    "light": "gusty dry wind under an orange smoky sky",
+    "mod": "orman_yaklasma",
+    "on_plan": "korkuluk",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "kamera_modu": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "11": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M1+N3",
+    "cografya": "R6",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "hot dry wind and thick smoke haze",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Embankment above the village road",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M1+N3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside town of colorful wooden houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside town of colorful wooden houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "12": {
+  "axes": {
+   "axes": {
+    "acilis": "B",
+    "arac": "white van",
+    "beats": "M2+N1",
+    "cografya": "R5",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Embankment above the village road",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M2+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the white van, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the white van, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "13": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "white van",
+    "beats": "M1+N1",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "balkon",
+    "kamera_modu": null,
+    "kamera_noktasi": "Balcony of a hillside house",
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "korkuluk",
+    "ortam": "B",
+    "people": 3,
+    "spot": "Embankment above the village road",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M1+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the white van speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the white van speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "14": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M3+N3",
+    "cografya": "R4",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "harsh bright midday sun through the smoke",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "15": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "white van",
+    "beats": "M3+N1",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "balkon",
+    "kamera_modu": "B",
+    "kamera_noktasi": "Balcony of a hillside house",
+    "key": "default",
+    "light": "gusty dry wind under an orange smoky sky",
+    "mod": "orman_yaklasma",
+    "on_plan": "korkuluk",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "kamera_modu": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked white van, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked white van, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "16": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M2+N1",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "gusty dry wind under an orange smoky sky",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Embankment above the village road",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M2+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the pickup truck, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the pickup truck, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "17": {
+  "axes": {
+   "axes": {
+    "acilis": "B",
+    "arac": "SUV",
+    "beats": "M1+N1",
+    "cografya": "R6",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "B",
+    "people": 4,
+    "spot": "Embankment above the village road",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M1+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside town of colorful wooden houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside town of colorful wooden houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "18": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M1+N2",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "hot dry wind and thick smoke haze",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M1+N2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the pickup truck speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, burning planks collapsing in a shower of sparks. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the pickup truck speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, burning planks collapsing in a shower of sparks.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "19": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M3+N1",
+    "cografya": "R4",
+    "env": null,
+    "insan": "I1",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "hot dry wind and thick smoke haze",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked SUV, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked SUV, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "2": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M3+N1",
+    "cografya": "R4",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "hot dry wind and thick smoke haze",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "20": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M1+N1",
+    "cografya": "R2",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M1+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the pickup truck speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the pickup truck speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "21": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M3+N1",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "gusty dry wind under an orange smoky sky",
+    "mod": "orman_yaklasma",
+    "on_plan": "boş",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "22": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M1+N1",
+    "cografya": "R2",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M1+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "23": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M1+N3",
+    "cografya": "R5",
+    "env": null,
+    "insan": "I1",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "B",
+    "people": 4,
+    "spot": "Embankment above the village road",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M1+N3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "24": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "white van",
+    "beats": "M3+N1",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I1",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "gusty dry wind under an orange smoky sky",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Embankment above the village road",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked white van, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked white van, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "25": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M2+N1",
+    "cografya": "R2",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Embankment above the village road",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M2+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the pickup truck, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the pickup truck, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "26": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M3+N1",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "balkon",
+    "kamera_modu": "B",
+    "kamera_noktasi": "Balcony of a hillside house",
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "boş",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "kamera_modu": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "27": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "white van",
+    "beats": "M3+N3",
+    "cografya": "R2",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "harsh bright midday sun through the smoke",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Embankment above the village road",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M3+N3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked white van, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked white van, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "28": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M2+N1",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "gusty dry wind under an orange smoky sky",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M2+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the SUV, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the SUV, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "29": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M1+N1",
+    "cografya": "R5",
+    "env": null,
+    "insan": "I1",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "hot dry wind and thick smoke haze",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M1+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the pickup truck speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the pickup truck speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "3": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M3+N1",
+    "cografya": "R6",
+    "env": null,
+    "insan": "I1",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "B",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside town of colorful wooden houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside town of colorful wooden houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "30": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M3+N1",
+    "cografya": "R2",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Embankment above the village road",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "31": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "white van",
+    "beats": "M3+N1",
+    "cografya": "R2",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "balkon",
+    "kamera_modu": "B",
+    "kamera_noktasi": "Balcony of a hillside house",
+    "key": "default",
+    "light": "hot dry wind and thick smoke haze",
+    "mod": "orman_yaklasma",
+    "on_plan": "boş",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "kamera_modu": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked white van, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked white van, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "32": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "white van",
+    "beats": "M1+N2",
+    "cografya": "R5",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "hot dry wind and thick smoke haze",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M1+N2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the white van speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, burning planks collapsing in a shower of sparks. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the white van speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, burning planks collapsing in a shower of sparks.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "33": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M3+N3",
+    "cografya": "R6",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "hot dry wind and thick smoke haze",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside town of colorful wooden houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked SUV, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside town of colorful wooden houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked SUV, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "34": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M2+N1",
+    "cografya": "R5",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "gusty dry wind under an orange smoky sky",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "B",
+    "people": 3,
+    "spot": "Embankment above the village road",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M2+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the pickup truck, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the pickup truck, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "35": {
+  "axes": {
+   "axes": {
+    "acilis": "B",
+    "arac": "pickup truck",
+    "beats": "M3+N1",
+    "cografya": "R4",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "harsh bright midday sun through the smoke",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Embankment above the village road",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "36": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M1+N2",
+    "cografya": "R2",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Embankment above the village road",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M1+N2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, burning planks collapsing in a shower of sparks. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, burning planks collapsing in a shower of sparks.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "37": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M3+N3",
+    "cografya": "R5",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "balkon",
+    "kamera_modu": "B",
+    "kamera_noktasi": "Balcony of a hillside house",
+    "key": "default",
+    "light": "gusty dry wind under an orange smoky sky",
+    "mod": "orman_yaklasma",
+    "on_plan": "korkuluk",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "kamera_modu": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked SUV, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside village of tile-roofed stone houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked SUV, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "38": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M2+N1",
+    "cografya": "R4",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "harsh bright midday sun through the smoke",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 4,
+    "spot": "Embankment above the village road",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M2+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the SUV, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the SUV, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "39": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "pickup truck",
+    "beats": "M3+N3",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I1",
+    "kadraj": "balkon",
+    "kamera_modu": "B",
+    "kamera_noktasi": "Balcony of a hillside house",
+    "key": "default",
+    "light": "harsh bright midday sun through the smoke",
+    "mod": "orman_yaklasma",
+    "on_plan": "boş",
+    "ortam": "B",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "kamera_modu": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked pickup truck, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "4": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "white van",
+    "beats": "M1+N2",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M1+N2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the white van speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, burning planks collapsing in a shower of sparks. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the white van speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, burning planks collapsing in a shower of sparks.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "40": {
+  "axes": {
+   "axes": {
+    "acilis": "B",
+    "arac": "SUV",
+    "beats": "M1+N2",
+    "cografya": "R4",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "harsh bright midday sun through the smoke",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Embankment above the village road",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M1+N2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, burning planks collapsing in a shower of sparks. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the spruce-covered slope and is racing halfway down the street through a hillside town of dark-roofed timber houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, burning planks collapsing in a shower of sparks.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "5": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M1+N1",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Embankment above the village road",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M1+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the SUV speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "6": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M3+N3",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "K_O3",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "heavy smoke and scorching still air",
+    "mod": "orman_yaklasma",
+    "on_plan": "pencere_kenari",
+    "ortam": "B",
+    "people": 4,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M3+N3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked SUV, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked SUV, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "7": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "white van",
+    "beats": "M3+N1",
+    "cografya": "R6",
+    "env": null,
+    "insan": "I4",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "hot dry wind and thick smoke haze",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "B",
+    "people": 4,
+    "spot": "Embankment above the village road",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M3+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside town of colorful wooden houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked white van, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside town of colorful wooden houses toward the camera, igniting roofs and trees as it comes. Four people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the wall of flames swallows a parked white van, its windows bursting as it disappears into the fire. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "8": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "white van",
+    "beats": "M1+N3",
+    "cografya": "R2",
+    "env": null,
+    "insan": "I2",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "harsh bright midday sun through the smoke",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##M1+N3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the white van speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the eucalyptus-covered slope and is racing halfway down the street through a hillside neighborhood of tin-roofed weatherboard houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, the white van speeds away as the wall of flames closes the road right behind it. 9-15s: Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as flames pour inside.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "9": {
+  "axes": {
+   "axes": {
+    "acilis": "A",
+    "arac": "SUV",
+    "beats": "M2+N1",
+    "cografya": "R3",
+    "env": null,
+    "insan": "I3",
+    "kadraj": "çatı",
+    "kamera_modu": null,
+    "kamera_noktasi": null,
+    "key": "default",
+    "light": "hot dry wind and thick smoke haze",
+    "mod": "orman_yaklasma",
+    "on_plan": "parapet",
+    "ortam": "A",
+    "people": 3,
+    "spot": "Embankment above the village road",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "acilis": [],
+    "insan": [],
+    "kadraj": [],
+    "light": [],
+    "on_plan": [],
+    "ortam": [],
+    "people": [],
+    "vehicle": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|embankment above the village road##M2+N1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the SUV, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera. Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames has already swept down the pine-covered slope and is racing halfway down the street through a hillside village of whitewashed terracotta-roofed houses toward the camera, igniting roofs and trees as it comes. Three people run up the street below, away from the flames. Burning embers and thick smoke blow across the street from the very first frame. 4-9s: Just ahead of the flames, a huge burning pine crashes down onto the SUV, crushing its roof. 9-15s: Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of sparks bursting up toward the camera.",
+  "suffix": "Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, the camera pans to follow the wall of flames as it approaches; one continuous shot, no zoom, no cuts, no face close to the camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or flags."
+ }
+}

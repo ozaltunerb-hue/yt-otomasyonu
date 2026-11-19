@@ -1,6 +1,7 @@
 # 13 Kas 2026, Bahadır: orman yangını "⭐ Hit kalıbı · Yaklaşma" modu (core/hit_prompts.py YAKLASMA_ORMAN).
 # Orman yangını hit'i (9 Eki 21:52, K5+L4) + kül bulutu Yaklaşma yapısı. GPT yok, zaman etiketleri var. Orman yangınının
 # normal yolu, kayıtlı orman hit prompt'u ve diğer bütün olay/modlar değişmez. Ağ yok.
+# 20 Kas 2026 v4 ("ilk 3 saniye olay kuralı"): ilk karede yanan ev, büyük kadraj, action hikâyede yok, M1/N2 pasif.
 import asyncio
 import hashlib
 import json
@@ -29,9 +30,30 @@ OR = hp.YAKLASMA_ORMAN
 DOMAIN = "fire_disasters"
 FOLLOW = "the camera pans to follow the wall of flames as it approaches"
 FIXED = "the camera stays fixed"
-ACTION = "Burning embers and thick smoke blow across the street from the very first frame."
-BANNED = {("M2", "N3"), ("M2", "N2"), ("M3", "N2")}
+# 20 Kas 2026 v4 ("ilk 3 saniye olay kuralı", Bahadır): metinler birebir
+OPENING = ("From the very first frame {place} is burning: the house across the street, big in frame, bursts into flames "
+           "from ground to roof, windows blowing out, as a towering wall of flames races down the {forest} slope toward "
+           "the camera.")
+MIDS = {"M2": "In the middle of the street, big in frame, a huge burning tree crashes down onto the {vehicle}, crushing "
+              "its roof in a burst of sparks.",
+        "M3": "In the middle of the street, big in frame, the wall of flames swallows a parked {vehicle}, its windows "
+              "bursting as it disappears into the fire."}
+FINALS = {"N1": "Right below the balcony, big in frame, the flames reach the nearest house and its roof caves in, a "
+                "fountain of sparks bursting up toward the camera.",
+          "N3": "Right below the balcony, big in frame, a burning tree topples onto the nearest house, smashing through "
+                "its roof as flames pour inside."}
+CALM = "The fire keeps spreading the whole time, never a calm moment."
+ACTION = "Burning embers and thick smoke blow across the street from the very first frame."   # v4: hikâyede yok
+BANNED = {("M2", "N3")}
+BANNED_V3 = {("M2", "N3"), ("M2", "N2"), ("M3", "N2")}
+REQUIRED = ("From the very first frame", "big in frame", "never a calm moment")
+FORBIDDEN = ("Full action", "Until the last frame", "U-turn", "speeds away", "wooden deck", "halfway down the street",
+             "Burning embers")
 VEHICLE_WORDS = ("van", "truck", "SUV", "car", "vehicle", "{")
+# 40 tohum kilidi (prompt / hikâye / stil eki / combo / eksenler; caption hariç). v3 kaydı fixtures/orman_v3_runs_40.json
+ORMAN_SHA256 = "f1fe3b66f3a905b331974265d31dc9282a6811a7686f656c1401231ab931d62f"      # 20 Kas v4
+ORMAN_V3_SHA256 = "95661aaea8cc185c6d836a658337575e5ca6390abd061f1e41569831cb4741a9"   # 3c0369c (v3)
+V3_FIXTURE = os.path.join(ROOT, "tests", "fixtures", "orman_v3_runs_40.json")
 
 
 class _Quiet(unittest.TestCase):
@@ -77,9 +99,45 @@ def all_combos():
                             yield (g, ppl, v, m, f, follow), hp.orman_prompt(g, ppl, m, v, f, follow)
 
 
+def snapshot_hash(data: dict) -> str:
+    return hashlib.sha256(json.dumps(data, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
+
+
+def orman_snapshot() -> dict:
+    """Diğer testlerin others_snapshot "orman" kaydıyla aynı biçim (domain None, GPT yok, caption hariç); 40 tohum."""
+    def strip(js):
+        try:
+            d = json.loads(js)
+        except (TypeError, ValueError):
+            return js
+        d.pop("caption", None)
+        return d
+    runs = {}
+    for s in range(1, 41):
+        ps.reset_memory()
+        for name in dir(hp):
+            if name.startswith("_") and name.endswith("_MEMORY") and isinstance(getattr(hp, name), list):
+                getattr(hp, name).clear()
+        random.seed(s)
+        with patch.object(pg, "_call_gpt", AsyncMock(side_effect=AssertionError("GPT"))):
+            d = asyncio.run(pg.generate_creative_prompts({"domain": None, "event": WF, "orman_yaklasma": True,
+                                                         "used_combos": [], "recent_topics": []}))
+        sc = d["scenes"][0]
+        runs[str(s)] = {"prompt": sc["prompt"], "story": sc["story"], "suffix": sc["style_suffix"],
+                        "combo": d["combo_key"], "axes": strip(d.get("axes_json", ""))}
+    return runs
+
+
+def load_v3_runs() -> dict:
+    """v3 (3c0369c) 40 tohum kaydı; diğer testlerin OTHERS_SHA256 kilidi orman kaydı olarak bunu kullanır."""
+    with open(V3_FIXTURE, encoding="utf-8") as f:
+        return json.load(f)
+
+
 class TestTexts(_Quiet):
     def test_verbatim_texts(self):
         self.assertEqual(hp.ORMAN_MODE_LABEL, "⭐ Hit kalıbı · Yaklaşma (orman yangını)")
+        self.assertEqual(hp.ORMAN_VERSION_LABEL, "Sürüm: v4 (ilk 3 saniye olay)")
         self.assertIs(hp.ORMAN_YAKLASMA_KAMERA_TAKIP, True)
         self.assertEqual(sorted(OR["geos"]), ["R1", "R2", "R3", "R4", "R5", "R6"])
         geos = {"R1": ("pine-covered", "a hillside neighborhood of wooden suburban houses"),
@@ -88,137 +146,156 @@ class TestTexts(_Quiet):
                 "R4": ("spruce-covered", "a hillside town of dark-roofed timber houses"),
                 "R5": ("eucalyptus-covered", "a hillside village of tile-roofed stone houses"),
                 "R6": ("pine-covered", "a hillside town of colorful wooden houses")}
+        self.assertEqual(OR["opening"], OPENING)
         for g, (forest, place) in geos.items():
             self.assertEqual((OR["geos"][g]["forest"], OR["geos"][g]["place"]), (forest, place))
             self.assertEqual(hp.orman_opening(g),
-                             f"A towering wall of flames has already swept down the {forest} slope and is racing "
-                             f"halfway down the street through {place} toward the camera, igniting roofs and trees as "
-                             "it comes.")
+                             f"From the very first frame {place} is burning: the house across the street, big in "
+                             "frame, bursts into flames from ground to roof, windows blowing out, as a towering wall "
+                             f"of flames races down the {forest} slope toward the camera.")
         self.assertEqual([OR["geos"][g]["name"] for g in sorted(OR["geos"])],
                          ["Kaliforniya", "Avustralya", "Yunanistan", "Kanada", "Portekiz", "Şili"])
         self.assertEqual(hp.orman_people(3), "Three people run up the street below, away from the flames.")
         self.assertEqual(hp.orman_people(4), "Four people run up the street below, away from the flames.")
         self.assertEqual(OR["action"], ACTION)
         self.assertEqual(OR["vehicles"], ("white van", "pickup truck", "SUV"))
-        self.assertEqual(sorted(OR["mids"]), ["M1", "M2", "M3"])
-        self.assertEqual(sorted(OR["finals"]), ["N1", "N2", "N3"])
-        self.assertEqual(OR["finals"]["N1"], "Right below the balcony, the flames reach the nearest house and its roof "
-                                             "caves in, a fountain of sparks bursting up toward the camera.")
-        self.assertEqual(OR["finals"]["N2"], "Right below the balcony, the wall of flames engulfs the garden and wooden "
-                                             "deck of the nearest house, burning planks collapsing in a shower of "
-                                             "sparks.")
-        self.assertEqual(OR["finals"]["N3"], "Right below the balcony, a burning tree topples onto the nearest house, "
-                                             "smashing through its roof as flames pour inside.")
-        self.assertEqual(hp.ORMAN_PASIF["finals"]["N4"], "Right below the balcony, the fire jumps the street and the "
-                                                         "wooden fence and carport below burst into flames, heat and "
-                                                         "sparks rushing up toward the camera.")
+        self.assertEqual(OR["mids"], MIDS)
+        self.assertEqual(OR["finals"], FINALS)
+        self.assertEqual(OR["vehicle_mids"], ("M2", "M3"))
         self.assertEqual(hp.orman_camera_text(True), FOLLOW)
         self.assertEqual(hp.orman_camera_text(False), FIXED)
         self.assertEqual(hp.orman_tail(True),
                          "Handheld footage shot from the balcony of a hillside house overlooking the street and the "
                          "burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; "
                          f"slight hand shake, {FOLLOW}; one continuous shot, no zoom, no cuts, no face close to the "
+                         f"camera. {CALM} Civilians in everyday clothes, never CGI. Realistic wildfire: towering, "
+                         "roaring flames and thick smoke, never thin lines or strips of fire. Raw natural light under "
+                         "an orange smoky sky. Real time, never slow motion, people run at full speed. No readable "
+                         "signs, text or flags.")
+        self.assertEqual(OR["tail"], hp.ORMAN_TAIL_V1.replace("no face close to the camera.",
+                                                              f"no face close to the camera. {CALM}", 1))
+        self.assertEqual((hp.ORMAN_GEO_BLOCK, hp.ORMAN_VEHICLE_BLOCK, hp.ORMAN_MID_BLOCK, hp.ORMAN_FINAL_BLOCK),
+                         (3, 2, 1, 1))
+        self.assertEqual(hp.ORMAN_BANNED_PAIRS, (("M2", "N3"),))
+        self.assertEqual((hp.ORMAN_REQUIRED, hp.ORMAN_FORBIDDEN), (REQUIRED, FORBIDDEN))
+        self.assertEqual((hp.ORMAN_MAX_WORDS, hp.ORMAN_MAX_CHARS), (230, 1400))
+
+    def test_passive_texts_kept_never_chosen(self):
+        """v3 metinleri (ORMAN_*_V3, ORMAN_ACTION_V1, ORMAN_TAIL_V1) ve eski V1/V2 saklı; M1, M4, N2, N4 pasif
+        (ORMAN_PASIF), hiç seçilmez ve hikâye kurulamaz."""
+        self.assertEqual(hp.ORMAN_OPENING_V3, "A towering wall of flames has already swept down the {forest} slope and "
+                                              "is racing halfway down the street through {place} toward the camera, "
+                                              "igniting roofs and trees as it comes.")
+        self.assertEqual(hp.ORMAN_ACTION_V1, ACTION)
+        self.assertEqual(hp.ORMAN_MIDS_V3, {
+            "M1": "Just ahead of the flames, the {vehicle} speeds away as the wall of flames closes the road right "
+                  "behind it.",
+            "M2": "Just ahead of the flames, a huge burning pine crashes down onto the {vehicle}, crushing its roof.",
+            "M3": "Just ahead of the flames, the wall of flames swallows a parked {vehicle}, its windows bursting as it "
+                  "disappears into the fire."})
+        self.assertEqual(hp.ORMAN_FINALS_V3, {
+            "N1": "Right below the balcony, the flames reach the nearest house and its roof caves in, a fountain of "
+                  "sparks bursting up toward the camera.",
+            "N2": "Right below the balcony, the wall of flames engulfs the garden and wooden deck of the nearest house, "
+                  "burning planks collapsing in a shower of sparks.",
+            "N3": "Right below the balcony, a burning tree topples onto the nearest house, smashing through its roof as "
+                  "flames pour inside."})
+        self.assertEqual(hp.ORMAN_TAIL_V1,
+                         "Handheld footage shot from the balcony of a hillside house overlooking the street and the "
+                         "burning slope, high vantage, normal lens, a corner of the balcony railing in the foreground; "
+                         "slight hand shake, {camera}; one continuous shot, no zoom, no cuts, no face close to the "
                          "camera. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring "
                          "flames and thick smoke, never thin lines or strips of fire. Raw natural light under an orange "
                          "smoky sky. Real time, never slow motion, people run at full speed. No readable signs, text or "
                          "flags.")
-        self.assertEqual((hp.ORMAN_GEO_BLOCK, hp.ORMAN_VEHICLE_BLOCK, hp.ORMAN_MID_BLOCK, hp.ORMAN_FINAL_BLOCK),
-                         (3, 2, 1, 1))
-        self.assertEqual(set(hp.ORMAN_BANNED_PAIRS), BANNED)
-
-    def test_passive_m4_n4(self):
-        """13 Kas (2): M4 ve N4 pasif (ORMAN_PASIF'te, silinmedi); hiç seçilmez; her ortanın en az bir final adayı var."""
-        self.assertEqual(sorted(hp.ORMAN_PASIF["mids"]), ["M4"])
-        self.assertEqual(sorted(hp.ORMAN_PASIF["finals"]), ["N4"])
-        self.assertEqual(hp.ORMAN_PASIF["mids"]["M4"], "Halfway down the street, two houses on either side of the road "
-                                                       "catch fire at once, flames pouring out of their windows and "
-                                                       "roofs.")
+        self.assertEqual(set(hp.ORMAN_BANNED_PAIRS_V3), BANNED_V3)
         self.assertEqual(hp.ORMAN_OPENING_V1, "A towering wall of flames sweeps down the {forest} slope at the far end "
                                               "of the street and slams into the edge of {place}, igniting roofs and "
                                               "trees as it races toward the camera.")
         self.assertEqual(hp.ORMAN_OPENING_V2, "A towering wall of flames has already swept down the {forest} slope at "
                                               "the far end of the street and is racing through the edge of {place} "
                                               "toward the camera, igniting roofs and trees as it comes.")
-        self.assertEqual(hp.ORMAN_MIDS_V2, {
-            "M1": "Halfway down the street, the {vehicle} speeds away as the wall of flames closes the road right "
-                  "behind it.",
-            "M2": "Halfway down the street, a huge burning pine crashes down onto the {vehicle}, crushing its roof.",
-            "M3": "Halfway down the street, the wall of flames swallows a parked {vehicle}, its windows bursting as it "
-                  "disappears into the fire."})
-        self.assertEqual(set(hp.ORMAN_BANNED_PAIRS), {("M2", "N3"), ("M2", "N2"), ("M3", "N2")})
-        for m in ("M1", "M2", "M3"):
-            allowed = {f for f in OR["finals"] if (m, f) not in BANNED}
-            self.assertTrue(allowed, m)
-            for hist_f in OR["finals"]:   # son final hangisi olursa olsun aday kalır
-                h = [f"{DOMAIN}|none|{WF.lower()}|x##M1+{hist_f}|y"]
-                for s in range(20):
-                    self.assertIn(hp.orman_choose_final(h, m, random.Random(s)), allowed)
+        self.assertEqual(hp.ORMAN_MIDS_V2["M1"], "Halfway down the street, the {vehicle} speeds away as the wall of "
+                                                 "flames closes the road right behind it.")
+        self.assertEqual(sorted(hp.ORMAN_PASIF["mids"]), ["M1", "M4"])
+        self.assertEqual(sorted(hp.ORMAN_PASIF["finals"]), ["N2", "N4"])
+        self.assertEqual(hp.ORMAN_PASIF["mids"]["M1"], hp.ORMAN_MIDS_V3["M1"])
+        self.assertEqual(hp.ORMAN_PASIF["finals"]["N2"], hp.ORMAN_FINALS_V3["N2"])
+        self.assertEqual(hp.ORMAN_PASIF["mids"]["M4"], "Halfway down the street, two houses on either side of the road "
+                                                       "catch fire at once, flames pouring out of their windows and "
+                                                       "roofs.")
+        self.assertEqual(hp.ORMAN_PASIF["finals"]["N4"], "Right below the balcony, the fire jumps the street and the "
+                                                         "wooden fence and carport below burst into flames, heat and "
+                                                         "sparks rushing up toward the camera.")
         for s in range(200):
             r = random.Random(s)
-            self.assertNotEqual(hp.orman_choose_mid([], r), "M4")
-            for m in ("M1", "M2", "M3"):
-                self.assertNotEqual(hp.orman_choose_final([], m, r), "N4")
-        for m, f in (("M4", "N1"), ("M1", "N4")):
+            self.assertIn(hp.orman_choose_mid([], r), ("M2", "M3"))
+            for m in ("M2", "M3"):
+                self.assertIn(hp.orman_choose_final([], m, r), ("N1", "N3"))
+        for m, f in (("M1", "N1"), ("M4", "N1"), ("M2", "N2"), ("M3", "N4")):
             with self.assertRaises((es.StructureError, KeyError)):
                 hp.orman_story("R2", 3, m, "SUV", f)
 
     def test_vehicle_fill(self):
         for v in OR["vehicles"]:
-            self.assertEqual(hp.orman_mid("M1", v), f"Just ahead of the flames, the {v} speeds away as the wall of "
-                                                    "flames closes the road right behind it.")
-            self.assertEqual(hp.orman_mid("M2", v), f"Just ahead of the flames, a huge burning pine crashes down onto "
-                                                    f"the {v}, crushing its roof.")
-            self.assertEqual(hp.orman_mid("M3", v), f"Just ahead of the flames, the wall of flames swallows a parked "
-                                                    f"{v}, its windows bursting as it disappears into the fire.")
-            with self.assertRaises(es.StructureError):
-                hp.orman_mid("M4", v)   # 13 Kas (2): pasif
-        for m in ("M1", "M2", "M3"):
+            self.assertEqual(hp.orman_mid("M2", v), MIDS["M2"].format(vehicle=v))
+            self.assertEqual(hp.orman_mid("M3", v), MIDS["M3"].format(vehicle=v))
+            for m in ("M1", "M4"):   # pasif
+                with self.assertRaises(es.StructureError):
+                    hp.orman_mid(m, v)
+        for m in ("M2", "M3"):
             with self.assertRaises(es.StructureError):
                 hp.orman_mid(m, None)
-        self.assertEqual(OR["vehicle_mids"], ("M1", "M2", "M3"))
 
-    def test_banned_pairs_rejected(self):
-        for m, f in BANNED:
-            with self.assertRaises(es.StructureError):
-                hp.orman_story("R2", 3, m, "SUV", f)
-            for s in range(40):
-                self.assertNotEqual(hp.orman_choose_final([], m, random.Random(s)), f)
-
-    def test_street_opening_and_mid_prefix(self):
-        """13 Kas (3): yangın ilk karede caddenin ortasında; ortalar "Just ahead of the flames," ile başlar."""
-        for g in OR["geos"]:
-            self.assertIn("racing halfway down the street", hp.orman_opening(g))
-            self.assertNotIn("at the far end of the street", hp.orman_opening(g))
-        for m in OR["mids"]:
-            self.assertTrue(OR["mids"][m].startswith("Just ahead of the flames, "), m)
-            self.assertNotIn("Halfway down the street", OR["mids"][m])
-            self.assertEqual(OR["mids"][m][len("Just ahead of the flames, "):],
-                             hp.ORMAN_MIDS_V2[m][len("Halfway down the street, "):])
-        for key, p in all_combos():
-            opening = p.split(" 4-9s: ")[0]
-            self.assertIn("racing halfway down the street", opening)
-            self.assertTrue(p.split(" 4-9s: ")[1].startswith("Just ahead of the flames, "), key)
-
-    def test_every_mid_keeps_a_final(self):
-        """Yeni yasak çiftler (M2+N2, M3+N2) + mevcut M2+N3: her ortanın en az bir final adayı var; son final ne olursa
-        olsun seçilen orta için LRU'yu bozmayan final kalır; yasak çift hiç çıkmaz."""
+    def test_banned_pair_m2_n3(self):
+        """v4: yalnız M2+N3 yasak (iki kez ağaç); M2 yalnız N1'e gider."""
+        with self.assertRaises(es.StructureError):
+            hp.orman_story("R2", 3, "M2", "SUV", "N3")
+        for s in range(60):
+            self.assertEqual(hp.orman_choose_final([], "M2", random.Random(s)), "N1")
         self.assertEqual({m: sorted(f for f in OR["finals"] if (m, f) not in BANNED) for m in OR["mids"]},
-                         {"M1": ["N1", "N2", "N3"], "M2": ["N1"], "M3": ["N1", "N3"]})
-        reset()   # bellekteki önceki üretimler geçmişe karışmasın
-        for pm in OR["mids"]:
-            for pf in OR["finals"]:
-                if (pm, pf) in BANNED:
-                    continue
-                h = [f"{DOMAIN}|none|{WF.lower()}|x##{pm}+{pf}|y"]
-                for s in range(40):
-                    m = hp.orman_choose_mid(h, random.Random(s))
-                    self.assertNotEqual(m, pm)
-                    f = hp.orman_choose_final(h, m, random.Random(s))
-                    self.assertNotIn((m, f), BANNED)
-                    self.assertNotEqual(f, pf, (pm, pf, m))
+                         {"M2": ["N1"], "M3": ["N1", "N3"]})
+        for m, f in (("M2", "N1"), ("M3", "N1"), ("M3", "N3")):
+            hp.orman_story("R2", 3, m, "SUV", f)
+
+    def test_story_order_without_action(self):
+        """v4: hikâye sırası "0-4s: {opening} {people} 4-9s: {mid} 9-15s: {final}"; action cümlesi hiç yok."""
+        for (g, ppl, v, m, f, follow), p in all_combos():
+            story = hp.orman_story(g, ppl, m, v, f)
+            self.assertEqual(story, f"0-4s: {hp.orman_opening(g)} {hp.orman_people(ppl)} 4-9s: "
+                                    f"{MIDS[m].format(vehicle=v)} 9-15s: {FINALS[f]}")
+            self.assertNotIn(ACTION, p)
+            self.assertNotIn("Burning embers", p)
+
+    def test_lru_alternates_mid_and_final(self):
+        """Orta ve final son 1: iki seçenek dönüşümlü gelir. Son final N1 ise orta M3 (M2 yalnız N1'e gidebilir)."""
+        def tag(t):
+            return f"{DOMAIN}|none|{WF.lower()}|x##{t}|y"
+        reset()
+        for s in range(60):
+            r = random.Random(s)
+            self.assertEqual(hp.orman_choose_mid([tag("M2+N1")], r), "M3")
+            self.assertEqual(hp.orman_choose_final([tag("M2+N1")], "M3", r), "N3")
+            self.assertEqual(hp.orman_choose_mid([tag("M3+N3")], r), "M2")
+            self.assertEqual(hp.orman_choose_final([tag("M3+N3")], "M2", r), "N1")
+            self.assertEqual(hp.orman_choose_mid([tag("M3+N1")], r), "M3")   # M2 aday değil (N1 son final)
+            self.assertEqual(hp.orman_choose_final([tag("M3+N1")], "M3", r), "N3")
+        for seed in range(1, 21):   # ardışık üretimler: ilk çiftten sonra M2+N1 / M3+N3 dönüşümlü
+            reset()
+            random.seed(seed)
+            runs = [gen()["structure"]["orman_yaklasma"] for _ in range(8)]
+            pairs = [(r["mid"], r["final"]) for r in runs]
+            self.assertEqual(set(pairs) & BANNED, set(), pairs)
+            for i in range(2, len(pairs)):
+                self.assertNotEqual(pairs[i][0], pairs[i - 1][0], (seed, pairs))
+                self.assertNotEqual(pairs[i][1], pairs[i - 1][1], (seed, pairs))
+                self.assertIn(pairs[i], (("M2", "N1"), ("M3", "N3")), (seed, pairs))
+            for i in range(1, len(pairs)):
+                self.assertNotEqual(pairs[i][1], pairs[i - 1][1], (seed, pairs))
 
     def test_all_combos_within_limits(self):
-        """Coğrafya × kişi × araç × orta × final (yasak çiftler hariç) × kamera: hepsi ≤ 230 kelime, ≤ 1400 karakter."""
+        """6 coğrafya × 2 orta × 2 final × 3 araç × 3/4 kişi (M2+N3 hariç) = 108 kombinasyon (× 2 kamera): hepsi
+        ≤ 230 kelime, ≤ 1400 karakter; en uzun 228 / 1332 (takip kamerası)."""
         n, over, longest = 0, [], (0, 0, None)
         for key, p in all_combos():
             n += 1
@@ -226,33 +303,55 @@ class TestTexts(_Quiet):
             longest = max(longest, (w, c, key))
             if w > hp.ORMAN_MAX_WORDS or c > hp.ORMAN_MAX_CHARS:
                 over.append((key, w, c))
-            self.assertNotIn("U-turn", p)
-            self.assertNotIn("Full action", p)
-            self.assertNotIn("Until the last frame", p)
+            for bad in FORBIDDEN:
+                self.assertNotIn(bad, p, key)
+            for need in REQUIRED:
+                self.assertIn(need, p, key)
             for lab in ("0-4s: ", " 4-9s: ", " 9-15s: "):
                 self.assertIn(lab, p)
+            self.assertTrue(p.startswith("0-4s: From the very first frame "), key)
             self.assertIn("never thin lines or strips of fire", p)
             self.assertIn("a corner of the balcony railing in the foreground", p)
-            opening, rest = p.split(" 4-9s: ")
-            self.assertIn("has already swept down", opening)
-            self.assertIn("toward the camera", opening)
+            self.assertIn(f"no face close to the camera. {CALM} Civilians", p)
+            self.assertIn("No readable signs, text or flags.", p)   # yedek kısaltma gerekmedi
+            rest = p.split(" 4-9s: ")[1]
+            self.assertTrue(rest.startswith("In the middle of the street, big in frame, "), key)
+            self.assertIn(" 9-15s: Right below the balcony, big in frame, ", rest)
             self.assertTrue(any(f" {v}" in rest.split(" 9-15s: ")[0] for v in OR["vehicles"]), key)
-            self.assertNotIn(hp.ORMAN_PASIF["mids"]["M4"], p)
-            self.assertNotIn(hp.ORMAN_PASIF["finals"]["N4"], p)
-        self.assertEqual(n, 6 * 2 * 3 * 6 * 2)
+            for txt in (*hp.ORMAN_PASIF["mids"].values(), *hp.ORMAN_PASIF["finals"].values()):
+                self.assertNotIn(txt.split("{vehicle}")[-1], p)
+        self.assertEqual(n // 2, 108)
+        self.assertEqual(n, 6 * 2 * 3 * 3 * 2)
         self.assertEqual(over, [], f"en uzun: {longest}")
-        self.assertEqual((hp.ORMAN_MAX_WORDS, hp.ORMAN_MAX_CHARS), (230, 1400))
+        self.assertEqual(longest[:2], (228, 1332))
+
+    def test_issues_required_and_forbidden(self):
+        """Kie öncesi denetim: zorunlu ifade yoksa ya da yasak ifade varsa gönderilmez; seçenek listeleri güncel."""
+        d = build(3)
+        sc, st = d["scenes"][0], d["structure"]
+        info = {"prompt": sc["prompt"], "story": sc["story"], "style_suffix": sc["style_suffix"]}
+        self.assertEqual(hp.orman_issues(st, info), [])
+        for need in REQUIRED:
+            bad = {**info, "prompt": sc["prompt"].replace(need, "x")}
+            self.assertIn(f"zorunlu ifade eksik: {need}", hp.orman_issues(st, bad))
+        for word in FORBIDDEN:
+            bad = {**info, "prompt": sc["prompt"].replace("No readable signs", f"{word}. No readable signs")}
+            self.assertIn(f"bu modda olmayan ifade var: {word}", hp.orman_issues(st, bad))
+        ob = st["orman_yaklasma"]
+        self.assertEqual(hp.orman_issues({**st, "orman_yaklasma": {**ob, "mid": "M1"}}, info), ["orta M2, M3 değil (M1)"])
+        self.assertEqual(hp.orman_issues({**st, "orman_yaklasma": {**ob, "final": "N2"}}, info),
+                         ["final N1, N3 değil (N2)"])
 
     def test_sentences_only_in_this_mode(self):
-        marks = ["has already swept down the", "is racing halfway down the street through", "Just ahead of the flames,",
-                 ACTION,
+        marks = ["is burning: the house across the street", "bursts into flames from ground to roof",
+                 "windows blowing out, as a towering wall of flames races down the",
+                 "In the middle of the street, big in frame,", "Right below the balcony, big in frame,",
                  "Three people run up the street below, away from the flames.",
                  "Four people run up the street below, away from the flames.",
-                 "closes the road right behind it", "a huge burning pine crashes down onto the",
+                 "a huge burning tree crashes down onto the", "crushing its roof in a burst of sparks",
                  "its windows bursting as it disappears into the fire",
-                 "two houses on either side of the road catch fire at once",
-                 "a fountain of sparks bursting up toward the camera", "burning planks collapsing in a shower of sparks",
-                 "a burning tree topples onto the nearest house", "the fire jumps the street and the wooden fence",
+                 "a fountain of sparks bursting up toward the camera",
+                 "a burning tree topples onto the nearest house", "The fire keeps spreading the whole time",
                  FOLLOW, "never thin lines or strips of fire", "a corner of the balcony railing in the foreground",
                  "Realistic wildfire: towering, roaring flames and thick smoke"]
         # not: "under an orange smoky sky" normal yangın havasında da var (ortak ifade, bu moda özgü cümle değil)
@@ -278,6 +377,24 @@ class TestTexts(_Quiet):
         self.assertNotIn(WF, hp.HIT_ACTIVE_EVENTS)   # eski orman hit butonu gizli kalır
 
 
+class TestOwnSnapshot(_Quiet):
+    def test_orman_40_seeds_v4_lock(self):
+        """20 Kas v4: 40 tohum kilidi ORMAN_SHA256; v3 kaydı (fixture) ORMAN_V3_SHA256 ile saklı ve değişmemiş."""
+        snap = orman_snapshot()
+        for s, r in snap.items():
+            self.assertTrue(r["prompt"].startswith("0-4s: From the very first frame "), s)
+            self.assertNotIn(ACTION, r["prompt"])
+        self.assertEqual(snapshot_hash(snap), ORMAN_SHA256)
+        v3 = load_v3_runs()
+        self.assertEqual(snapshot_hash(v3), ORMAN_V3_SHA256)
+        self.assertNotEqual(snapshot_hash(snap), ORMAN_V3_SHA256)
+        self.assertEqual(sorted(v3, key=int), sorted(snap, key=int))
+        # coğrafya ve araç seçimi (havuz + LRU aynen) tohum tohum v3 ile birebir
+        for s in snap:
+            for k in ("cografya", "arac", "people"):
+                self.assertEqual(snap[s]["axes"]["axes"][k], v3[s]["axes"]["axes"][k], (s, k))
+
+
 class TestOrmanMode(_Quiet):
     def _check(self, d):
         sc, st = d["scenes"][0], d["structure"]
@@ -286,28 +403,27 @@ class TestOrmanMode(_Quiet):
         g = OR["geos"][ob["geo"]]
         self.assertIn(f"the {g['forest']} slope", prompt)
         self.assertIn(g["place"], prompt)
-        opening = prompt.split(" 4-9s: ")[0]
         self.assertTrue(prompt.startswith(f"0-4s: {hp.orman_opening(ob['geo'])} "))
-        self.assertIn("has already swept down", opening)
-        self.assertIn("toward the camera", opening)
-        self.assertIn(f" {hp.orman_people(ob['people'])} {ACTION} 4-9s: ", prompt)
+        self.assertIn(f" {hp.orman_people(ob['people'])} 4-9s: ", prompt)
+        self.assertNotIn(ACTION, prompt)
         self.assertIn(ob["vehicle"], OR["vehicles"])
-        self.assertIn(ob["mid"], OR["mids"])
-        self.assertIn(ob["final"], OR["finals"])
+        self.assertIn(ob["mid"], ("M2", "M3"))
+        self.assertIn(ob["final"], ("N1", "N3"))
         self.assertNotIn((ob["mid"], ob["final"]), BANNED)
         mid_text = hp.orman_mid(ob["mid"], ob["vehicle"])
         self.assertIn(f"4-9s: {mid_text} 9-15s: {OR['finals'][ob['final']]} ", prompt)
-        self.assertIn(ob["mid"], ("M1", "M2", "M3"))
         self.assertIn(f" {ob['vehicle']}", mid_text)   # her prompt'ta araçlı orta
         for lab in ("0-4s: ", " 4-9s: ", " 9-15s: "):
             self.assertIn(lab, prompt)
-        for bad in ("Full action", "Until the last frame", "U-turn"):
+        for bad in FORBIDDEN:
             self.assertNotIn(bad, prompt)
+        for need in REQUIRED:
+            self.assertIn(need, prompt)
         self.assertIn("never thin lines or strips of fire", prompt)
         self.assertIn("a corner of the balcony railing in the foreground", prompt)
         self.assertTrue(prompt.endswith(" " + hp.orman_tail(ob["follow"])))
         self.assertEqual(sc["style_suffix"], hp.orman_tail(ob["follow"]))
-        pos = [prompt.find(x) for x in ("0-4s: ", ACTION, " 4-9s: ", " 9-15s: ", " Handheld footage")]
+        pos = [prompt.find(x) for x in ("0-4s: ", " 4-9s: ", " 9-15s: ", " Handheld footage", CALM)]
         self.assertNotIn(-1, pos)
         self.assertEqual(pos, sorted(pos))
         self.assertLessEqual(len(prompt.split()), 230)
@@ -338,7 +454,7 @@ class TestOrmanMode(_Quiet):
         for g, s in seen.items():
             self.assertEqual(s["mid"], set(OR["mids"]), g)
             self.assertEqual(s["final"], set(OR["finals"]), g)
-        self.assertEqual(pairs & BANNED, set())
+        self.assertEqual(pairs, {("M2", "N1"), ("M3", "N1"), ("M3", "N3")})
         self.assertIsNone(es.HIT_OVERRIDE.get())
 
     def test_consecutive_lru(self):
@@ -346,10 +462,14 @@ class TestOrmanMode(_Quiet):
             reset()
             random.seed(seed)
             runs = [self._check(gen()) for _ in range(8)]
-            for key, block in (("geo", 3), ("vehicle", 2), ("mid", 1), ("final", 1)):
+            for key, block in (("geo", 3), ("vehicle", 2), ("final", 1)):
                 vals = [r[key] for r in runs]
                 for i in range(len(vals)):
                     self.assertNotIn(vals[i], vals[max(0, i - block):i], (seed, key, vals))
+            mids = [r["mid"] for r in runs]
+            for i in range(1, len(mids)):   # orta yalnız M3+N1 sonrasında tekrar eder (M2 N1'e gidemez)
+                if mids[i] == mids[i - 1]:
+                    self.assertEqual((runs[i - 1]["mid"], runs[i - 1]["final"], mids[i]), ("M3", "N1", "M3"))
             self.assertNotEqual(runs[0]["geo"], "R1")
             self.assertTrue({r["people"] for r in runs} <= {3, 4})
 
@@ -357,10 +477,15 @@ class TestOrmanMode(_Quiet):
         def combo(tag):
             return f"{DOMAIN}|none|{WF.lower()}|balcony of a hillside house##{tag}|bystander_handheld"
         reset()
-        hist = [combo("M1+N1"), combo("K5+L4"), combo("M3+N2")]
+        hist = [combo("M2+N1"), combo("K5+L4"), combo("M3+N3")]
         for s in range(30):
-            self.assertIn(hp.orman_choose_mid(hist, random.Random(s)), ("M1", "M2"))   # son 1: M3 elenir
-            self.assertEqual(hp.orman_choose_final(hist, "M2", random.Random(s)), "N1")   # N3 yasak, N2 son 1
+            self.assertEqual(hp.orman_choose_mid(hist, random.Random(s)), "M2")   # son 1: M3 elenir
+            self.assertEqual(hp.orman_choose_final(hist, "M2", random.Random(s)), "N1")   # N3 yasak
+        old = [combo("M1+N2")]   # v3 kayıtları (pasif seçenekler) geçmişte kalabilir: seçimi bozmaz
+        for s in range(30):
+            m = hp.orman_choose_mid(old, random.Random(s))
+            self.assertIn(m, ("M2", "M3"))
+            self.assertIn(hp.orman_choose_final(old, m, random.Random(s)), ("N1", "N3"))
         recs = [{"eksenler": json.dumps({"event": WF, "axes": {"mod": "orman_yaklasma", "cografya": g, "arac": v}})}
                 for g, v in (("R2", "SUV"), ("R3", "white van"), ("R4", "SUV"))] + [{"eksenler": "x"}]
         self.assertEqual(hp.orman_axes_history(recs, "cografya"), ["R2", "R3", "R4"])
@@ -400,7 +525,7 @@ class TestOrmanMode(_Quiet):
         self.assertTrue(cp.submit_issues(st, {**info, "prompt": sc["prompt"].replace(
             "No readable signs", f"{sk.FULL_MOTION} No readable signs")}))
         for bad in ({"geo": "R9"}, {"mid": "K5"}, {"final": "L4"}, {"people": 6}, {"mid": "M2", "final": "N3"},
-                    {"mid": "M4"}, {"final": "N4"}, {"mid": "M4", "final": "N1"}):
+                    {"mid": "M1"}, {"final": "N2"}, {"mid": "M4"}, {"final": "N4"}, {"mid": "M1", "final": "N1"}):
             self.assertTrue(cp.submit_issues({**st, "orman_yaklasma": {**st["orman_yaklasma"], **bad}}, info), bad)
         story = asyncio.run(cp.rewrite_structured(st, "test", AsyncMock(side_effect=AssertionError("GPT"))))
         self.assertEqual(story, sc["story"])
@@ -411,14 +536,15 @@ class TestOrmanMode(_Quiet):
         ob = st["orman_yaklasma"]
         lines = ob["lines"].split("\n")
         self.assertEqual(lines[0], "Mod: ⭐ Hit kalıbı · Yaklaşma (orman yangını)")
-        self.assertEqual(lines[1], f"Coğrafya: {ob['geo']} {OR['geos'][ob['geo']]['name']}")
-        self.assertEqual(lines[2], f"Araç: {ob['vehicle']}")
-        self.assertTrue(lines[3].startswith(f"Orta (4-9s): {ob['mid']} «Just ahead of the flames, "))
-        self.assertTrue(lines[4].startswith(f"Final (9-15s): {ob['final']} «Right below the balcony"))
-        self.assertEqual(lines[5], "Kamera: takip (alev duvarını izlemek için döner)")
-        self.assertEqual(lines[6], f"Kelime: {len(sc['prompt'].split())} (en fazla 230) · karakter: "
+        self.assertEqual(lines[1], "Sürüm: v4 (ilk 3 saniye olay)")
+        self.assertEqual(lines[2], f"Coğrafya: {ob['geo']} {OR['geos'][ob['geo']]['name']}")
+        self.assertEqual(lines[3], f"Araç: {ob['vehicle']}")
+        self.assertTrue(lines[4].startswith(f"Orta (4-9s): {ob['mid']} «In the middle of the street, big in frame, "))
+        self.assertTrue(lines[5].startswith(f"Final (9-15s): {ob['final']} «Right below the balcony, big in frame, "))
+        self.assertEqual(lines[6], "Kamera: takip (alev duvarını izlemek için döner)")
+        self.assertEqual(lines[7], f"Kelime: {len(sc['prompt'].split())} (en fazla 230) · karakter: "
                                    f"{len(sc['prompt'])} (en fazla 1400)")
-        self.assertEqual(len(lines), 7)
+        self.assertEqual(len(lines), 8)
         # Onay görüntüsü: 1. Seçim / 3. Hikâye / Eksenler gerçek parçalar
         shown = sections_to_text(format_generation(d["trace"])) + "\n" + st["axes_line"]
         sel, _, rest = shown.partition("🔍 2.")
@@ -427,6 +553,8 @@ class TestOrmanMode(_Quiet):
             self.assertIn(part, sc["prompt"])
             self.assertIn(part, sel)
             self.assertIn(part, story)
+        self.assertNotIn(ACTION, shown)
+        self.assertNotIn(ACTION, d["plain_story"] if "plain_story" in d else sc.get("plain_story", ""))
         self.assertIn(hp.orman_camera_text(True), sel)
         self.assertIn("Mod: ⭐ Hit kalıbı · Yaklaşma (orman yangını)", sel)
         self.assertIn("kamera modu=takip", st["axes_line"])
@@ -438,7 +566,7 @@ class TestOrmanMode(_Quiet):
             self.assertNotIn(absent, shown)
         _, body = format_final_prompt({"prompt": sc["prompt"], "story": sc["story"], "style_suffix": sc["style_suffix"],
                                        "hit_lines": ob["lines"], "environment": st["environment"]})
-        self.assertIn("\nMod: ⭐ Hit kalıbı · Yaklaşma (orman yangını)\n", body)
+        self.assertIn("\nMod: ⭐ Hit kalıbı · Yaklaşma (orman yangını)\nSürüm: v4 (ilk 3 saniye olay)\n", body)
         self.assertIn("\n\n" + sc["prompt"], body)
 
     def test_normal_wildfire_untouched(self):
@@ -448,7 +576,8 @@ class TestOrmanMode(_Quiet):
                                                      "recent_topics": []}))
         self.assertNotIn("orman_yaklasma", d["structure"])
         self.assertNotIn("mode_label", d["trace"])
-        for x in (ACTION, "races toward the camera", "Right below the balcony", "never thin lines or strips of fire"):
+        for x in (ACTION, "bursts into flames from ground to roof", "Right below the balcony",
+                  "never thin lines or strips of fire", CALM):
             self.assertNotIn(x, d["scenes"][0]["prompt"])
 
 
@@ -481,7 +610,8 @@ class TestOrmanPipelineAndBot(_Quiet):
         approve = [c[1] for c in rep.calls if c[0] == "approve"]
         self.assertEqual(len(approve), 1)
         info = approve[0]
-        self.assertTrue(info["hit_lines"].startswith("Mod: ⭐ Hit kalıbı · Yaklaşma (orman yangını)\nCoğrafya: R"))
+        self.assertTrue(info["hit_lines"].startswith("Mod: ⭐ Hit kalıbı · Yaklaşma (orman yangını)\n"
+                                                     "Sürüm: v4 (ilk 3 saniye olay)\nCoğrafya: R"))
         self.assertEqual(t.create.await_args.args[1], info["prompt"])   # Kie'ye giden = onaydaki
 
     def test_bot_button_and_flow(self):
