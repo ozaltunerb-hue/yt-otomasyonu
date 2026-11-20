@@ -1220,6 +1220,9 @@ def kul_issues(structure: dict, info: dict) -> list[str]:
 # 20 Kas 2026 (v5, Bahadır): v4 videosunda karşıdaki ev yamaçtaki uzak köye kondu ve alevler asfaltta sıvı gibi aktı.
 # Açılışta ev "right across from the balcony, close and big in frame", alev duvarı evin arkasındaki yamaçtan iner;
 # stil ekine "never flowing along the road like liquid". Eski metinler ORMAN_OPENING_V4 / ORMAN_TAIL_V2, pasif.
+# 20 Kas 2026 (v6, Bahadır): v5 videosunda alev yine asfaltta aktı, pikap alev topundan sonra dağıldı (ortalar ateşi
+# caddenin ortasına koyuyordu). Ortalar "Beside the street", araç garaj yolunda; stil eki "never along the asphalt",
+# "burning vehicles stay whole". Eski metinler ORMAN_MIDS_V5 / ORMAN_TAIL_V3 / ORMAN_REQUIRED_V5, pasif.
 ORMAN_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (orman yangını)"
 ORMAN_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
 ORMAN_EVENTS = (es.WILDFIRE,)
@@ -1234,14 +1237,18 @@ ORMAN_MID_BLOCK = 1      # 13 Kas (2): 3 aktif seçenek, son 1 elenir
 ORMAN_FINAL_BLOCK = 1
 ORMAN_BANNED_PAIRS = (("M2", "N3"),)   # 20 Kas v4: iki kez ağaç olmasın (N2 pasif)
 ORMAN_BANNED_PAIRS_V3 = (("M2", "N3"), ("M2", "N2"), ("M3", "N2"))   # 13 Kas (3), pasif
-ORMAN_VERSION_LABEL = "Sürüm: v5 (yakın ev, akan ateş yok)"
+ORMAN_VERSION_LABEL = "Sürüm: v6 (ateş yolda yok, araç garaj yolunda)"
+ORMAN_VERSION_LABEL_V5 = "Sürüm: v5 (yakın ev, akan ateş yok)"   # pasif
 ORMAN_VERSION_LABEL_V4 = "Sürüm: v4 (ilk 3 saniye olay)"   # pasif
 # Kie öncesi denetim: zorunlu ifadeler (yoksa gönderme) ve bu modda olmayan ifadeler (varsa gönderme)
-ORMAN_REQUIRED = ("From the very first frame", "big in frame", "never a calm moment",
-                  "right across from the balcony", "never flowing along the road like liquid")   # 20 Kas v5: +2
+ORMAN_REQUIRED = ("From the very first frame", "big in frame", "right across from the balcony", "Beside the street",
+                  "never along the asphalt", "Never a calm moment")   # 20 Kas v6
+ORMAN_REQUIRED_V5 = ("From the very first frame", "big in frame", "never a calm moment",
+                     "right across from the balcony", "never flowing along the road like liquid")   # pasif
 ORMAN_REQUIRED_V4 = ("From the very first frame", "big in frame", "never a calm moment")   # pasif
 ORMAN_FORBIDDEN = ("Full action", "Until the last frame", "U-turn", "speeds away", "wooden deck",
-                   "halfway down the street", "Burning embers")
+                   "halfway down the street", "Burning embers", "In the middle of the street",
+                   "disappears into the fire")   # 20 Kas v6: +2
 YAKLASMA_ORMAN = {
     "geos": {
         "R1": {"name": "Kaliforniya", "forest": "pine-covered",
@@ -1264,11 +1271,12 @@ YAKLASMA_ORMAN = {
     # 20 Kas v4: hikâyeye girmez (ORMAN_ACTION_V1 olarak da saklı)
     "action": "Burning embers and thick smoke blow across the street from the very first frame.",
     "vehicles": ("white van", "pickup truck", "SUV"),
+    # 20 Kas 2026 (v6): ateş caddede değil, araç garaj yolunda (eski ortalar ORMAN_MIDS_V5, pasif)
     "mids": {
-        "M2": "In the middle of the street, big in frame, a huge burning tree crashes down onto the {vehicle}, "
+        "M2": "Beside the street, big in frame, a burning tree crashes down onto a {vehicle} parked in a driveway, "
               "crushing its roof in a burst of sparks.",
-        "M3": "In the middle of the street, big in frame, the wall of flames swallows a parked {vehicle}, its windows "
-              "bursting as it disappears into the fire.",
+        "M3": "Beside the street, big in frame, flames from a burning house pour over the {vehicle} in its driveway, "
+              "its windows bursting as it catches fire.",
     },
     "finals": {
         "N1": "Right below the balcony, big in frame, the flames reach the nearest house and its roof caves in, a "
@@ -1278,16 +1286,30 @@ YAKLASMA_ORMAN = {
     },
     "vehicle_mids": ("M2", "M3"),
     "camera": {True: "the camera pans to follow the wall of flames as it approaches", False: "the camera stays fixed"},
-    # 20 Kas 2026 (v5): akan ateş yasağı (eski stil ekleri ORMAN_TAIL_V1 / ORMAN_TAIL_V2, pasif)
+    # 20 Kas 2026 (v6): ateş asfaltta yok, yanan araç bütün (eski stil ekleri ORMAN_TAIL_V1-V3, pasif)
     "tail": ("Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, "
              "high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, "
-             "{camera}; one continuous shot, no zoom, no cuts. The fire keeps spreading through trees and houses the "
-             "whole time, never flowing along the road like liquid, never a calm moment. Civilians in everyday "
+             "{camera}; one continuous shot, no zoom, no cuts. The fire spreads only through trees, yards and houses, "
+             "never along the asphalt; burning vehicles stay whole. Never a calm moment. Civilians in everyday "
              "clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or "
              "strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at "
              "full speed."),
 }
 _OR = YAKLASMA_ORMAN
+# 20 Kas 2026 (v6) öncesi ortalar ve stil eki (bbce59c, v5), pasif; kullanılmaz.
+ORMAN_MIDS_V5 = {
+    "M2": "In the middle of the street, big in frame, a huge burning tree crashes down onto the {vehicle}, "
+          "crushing its roof in a burst of sparks.",
+    "M3": "In the middle of the street, big in frame, the wall of flames swallows a parked {vehicle}, its windows "
+          "bursting as it disappears into the fire.",
+}
+ORMAN_TAIL_V3 = ("Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, "
+                 "high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, "
+                 "{camera}; one continuous shot, no zoom, no cuts. The fire keeps spreading through trees and houses the "
+                 "whole time, never flowing along the road like liquid, never a calm moment. Civilians in everyday "
+                 "clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or "
+                 "strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at "
+                 "full speed.")
 # 20 Kas 2026 (v5) öncesi açılış ve stil eki (903c6ab, v4), pasif; kullanılmaz.
 ORMAN_OPENING_V4 = ("From the very first frame {place} is burning: the house across the street, big in frame, bursts into "
                     "flames from ground to roof, windows blowing out, as a towering wall of flames races down the {forest} "
