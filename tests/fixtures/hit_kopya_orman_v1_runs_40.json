@@ -1,0 +1,1082 @@
+{
+ "1": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "10": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G6",
+    "cografya": "G6",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G6|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "11": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G5",
+    "cografya": "G5",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G5|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "12": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G5",
+    "cografya": "G5",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G5|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "13": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G3",
+    "cografya": "G3",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Greek hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Greek hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "14": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G1",
+    "cografya": "G1",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "15": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "16": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G3",
+    "cografya": "G3",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Greek hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Greek hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "17": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G6",
+    "cografya": "G6",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G6|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "18": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "19": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G1",
+    "cografya": "G1",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "2": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G1",
+    "cografya": "G1",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "20": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "21": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "22": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "23": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G3",
+    "cografya": "G3",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Greek hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Greek hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "24": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G5",
+    "cografya": "G5",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G5|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "25": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G5",
+    "cografya": "G5",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G5|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "26": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "27": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G5",
+    "cografya": "G5",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G5|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "28": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G1",
+    "cografya": "G1",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "29": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G6",
+    "cografya": "G6",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G6|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "3": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "30": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G6",
+    "cografya": "G6",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G6|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "31": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G1",
+    "cografya": "G1",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "32": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G1",
+    "cografya": "G1",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G1|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Californian hillside suburb, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "33": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G6",
+    "cografya": "G6",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G6|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "34": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G6",
+    "cografya": "G6",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G6|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "35": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G6",
+    "cografya": "G6",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G6|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "36": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G3",
+    "cografya": "G3",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Greek hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Greek hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "37": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G6",
+    "cografya": "G6",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G6|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "38": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G5",
+    "cografya": "G5",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G5|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "39": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "4": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "40": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G5",
+    "cografya": "G5",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G5|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "5": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G6",
+    "cografya": "G6",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G6|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "6": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G6",
+    "cografya": "G6",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G6|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Chilean hillside town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "7": {
+  "axes": {
+   "axes": {
+    "arac": "white van",
+    "beats": "HKO:G3",
+    "cografya": "G3",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "white van",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G3|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Greek hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Greek hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The white van accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "8": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HKO:G2",
+    "cografya": "G2",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G2|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of an Australian bush town, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The pickup truck accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ },
+ "9": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "HKO:G5",
+    "cografya": "G5",
+    "light": null,
+    "mod": "hit_kopya_orman",
+    "people": 5,
+    "spot": "balcony of a hillside house",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Wall of flames sweeps into a hillside neighborhood",
+   "excluded": {
+    "arac": [],
+    "cografya": [
+     "G4"
+    ]
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|wall of flames sweeps into a hillside neighborhood|balcony of a hillside house##HKO:G5|bystander_handheld",
+  "prompt": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of a Portuguese hillside village, igniting roofs and trees. Five people run desperately, scattering in various directions to escape the rapidly encroaching inferno. 4-9s: The SUV accelerates, executing a sharp U-turn and leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line of trees, their tops exploding into fiery embers, rising into the swirling sky.",
+  "suffix": "Handheld footage shot by a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."
+ }
+}

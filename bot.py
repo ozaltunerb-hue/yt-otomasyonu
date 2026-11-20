@@ -560,8 +560,8 @@ def orman_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
             "mesajında. Hikâye için GPT çağrılmaz.")
 
 
-# ── ⭐ Hit kopyası (orman yangını) (20 Kas 2026, Bahadır): 9 Eki 21:52 üretiminin (19 Eki paylaşımı, 3M) Kie prompt'u
-# kelimesi kelimesine, sadece coğrafya ve araç değişir (core/hit_prompts.py HIT_KOPYA_ORMAN). GPT yok. Adımlar: hko
+# ── ⭐ Hit kopyası (orman yangını) (20 Kas 2026, Bahadır): v2 = 9 Eki hit'inin iskeleti ve dili, 6-8 kişi, düşen adam
+# + ağaç/direk, çatı çöker; coğrafya ve araç değişir (hit_prompts.py HIT_KOPYA_ORMAN, v1 _V1 pasif). GPT yok. Adımlar: hko
 # (onay metni) → hkook (üretim). Kie yine ✋ Onay'a bağlı. Ateş hortumu Hit kopyası (hk/hkok) değişmez
 def hit_kopya_orman_produce_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([[

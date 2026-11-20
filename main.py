@@ -138,7 +138,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     kasirga: 15 Kas (4), 🌀 Kasırga kategorisi (tek olay, hikâye koddan, GPT yok).
     hit_kopya_ates: 16 Kas, ⭐ Hit kopyası (ateş hortumu): 4 Kas 21:13 hit prompt'u birebir, coğrafya + araç (GPT yok).
     yer_yarilmasi: 17 Kas, 🌍 Yer yarılması kategorisi (tek olay, hikâye koddan, GPT yok).
-    hit_kopya_orman: 20 Kas, ⭐ Hit kopyası (orman yangını): 9 Eki 21:52 hit prompt'u birebir, coğrafya + araç (GPT yok).
+    hit_kopya_orman: 20 Kas, ⭐ Hit kopyası (orman yangını) v2: 9 Eki hit iskeleti, coğrafya + araç + engel (GPT yok).
     """
     if dry_run:
         settings.IS_DRY_RUN = True

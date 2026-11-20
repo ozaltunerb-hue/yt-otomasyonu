@@ -1355,7 +1355,7 @@ async def generate_creative_prompts(config: dict) -> dict:
                 records, source = None, "bellek"
         scene = hp.hit_kopya_build_scene(config.get("domain") or None, config.get("event") or hp.FIRE_TORNADO,
                                          history, records, history_source=source)
-    elif config.get("hit_kopya_orman"):   # 20 Kas: ⭐ Hit kopyası (orman yangını). Hit prompt'u birebir, GPT yok
+    elif config.get("hit_kopya_orman"):   # 20 Kas: ⭐ Hit kopyası (orman yangını) v2. Hit iskeleti, GPT yok
         import core.hit_prompts as hp
         records, source, raw_loader = None, "yok", config.get("axes_loader")
         if raw_loader:   # Notion "Eksenler" geçmişi (iptaller dahil); okunamazsa süreç hafızası, üretim durmaz
