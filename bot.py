@@ -528,7 +528,11 @@ ORMAN_BUTTON = "⭐ Hit kalıbı · Yaklaşma"
 def orman_confirm_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
     """Normal onay (✅ Üret / ❌ İptal) + altta ⭐ Hit kalıbı · Yaklaşma."""
     rows = [list(r) for r in confirm_keyboard(di, eid).inline_keyboard]
-    rows.append([InlineKeyboardButton(ORMAN_BUTTON, callback_data=f"{CALLBACK_PREFIX}oy:{di}:{eid}")])
+    row = [InlineKeyboardButton(ORMAN_BUTTON, callback_data=f"{CALLBACK_PREFIX}oy:{di}:{eid}")]
+    sel = parse_selection(di, eid)
+    if sel is not None and _hp().hit_kopya_orman_is_active(sel[1]):   # 20 Kas: ⭐ Hit kopyası (orman yangını)
+        row.append(InlineKeyboardButton(HIT_KOPYA_BUTTON, callback_data=f"{CALLBACK_PREFIX}hko:{di}:{eid}"))
+    rows.append(row)
     return InlineKeyboardMarkup(rows)
 
 
@@ -554,6 +558,31 @@ def orman_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
             + "\nYamaçtaki bir evin balkonu, korkuluk görünür; alev duvarı ormanlık yamaçtan iner, mahalleye çarpar, "
             "kameraya doğru gelir. Coğrafya (R1-R6), araç, orta (M1-M3), final (N1-N3), kelime sayısı ✋ Onay "
             "mesajında. Hikâye için GPT çağrılmaz.")
+
+
+# ── ⭐ Hit kopyası (orman yangını) (20 Kas 2026, Bahadır): 9 Eki 21:52 üretiminin (19 Eki paylaşımı, 3M) Kie prompt'u
+# kelimesi kelimesine, sadece coğrafya ve araç değişir (core/hit_prompts.py HIT_KOPYA_ORMAN). GPT yok. Adımlar: hko
+# (onay metni) → hkook (üretim). Kie yine ✋ Onay'a bağlı. Ateş hortumu Hit kopyası (hk/hkok) değişmez
+def hit_kopya_orman_produce_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}hkook:{di}:{eid}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def parse_hit_kopya_orman(di_raw: str, eid: str) -> tuple[str, str] | None:
+    sel = parse_selection(di_raw, eid)
+    if sel is None or sel[1] is None or not _hp().hit_kopya_orman_is_active(sel[1]):
+        return None
+    return sel
+
+
+def hit_kopya_orman_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
+    hp = _hp()
+    return (confirm_text(domain, event, cfg)
+            + f"\n\nMod: {hp.HIT_KOPYA_ORMAN_MODE_LABEL}\n"
+            + hp.HIT_KOPYA_ORMAN_SOURCE
+            + "\n" + hp.HIT_KOPYA_ORMAN_CONFIRM_DESC)
 
 
 # ── ⭐ Hit kalıbı · Yaklaşma (helikopter) (13 Kas 2026, Bahadır): ortam sorulmaz (coğrafya LRU). Adımlar: hy (onay
@@ -1046,6 +1075,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("hk", "hkok"):   # 16 Kas: ⭐ Hit kopyası (ateş hortumu)
         await _on_hit_kopya(query, context, action, args, cfg)
         return
+    if action in ("hko", "hkook"):   # 20 Kas: ⭐ Hit kopyası (orman yangını)
+        await _on_hit_kopya_orman(query, context, action, args, cfg)
+        return
     if action in ("dz", "dzok"):   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül (dev dalga)
         await _on_dalga24(query, context, action, args, cfg)
         return
@@ -1204,6 +1236,31 @@ async def _on_hit_kopya(query, context, action: str, args: list[str], cfg: dict)
             log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
         await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
                       hit_kopya_ates=True)
+
+
+async def _on_hit_kopya_orman(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """⭐ Hit kopyası (orman yangını) adımları: hko (onay metni) → hkook (üretim). Kie yine ✋ Onay'a bağlı."""
+    parsed = parse_hit_kopya_orman(*args) if len(args) == 2 else None
+    if parsed is None:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    domain, event = parsed
+    if action == "hko":
+        await query.edit_message_text(hit_kopya_orman_confirm_text(domain, event, cfg),
+                                      reply_markup=hit_kopya_orman_produce_keyboard(*args))
+        return
+    run_cfg = dict(cfg)
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)} / {HIT_KOPYA_BUTTON}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
+                      hit_kopya_orman=True)
 
 
 async def _on_dalga24(query, context, action: str, args: list[str], cfg: dict) -> None:
@@ -1539,7 +1596,7 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                   orman_yaklasma: bool = False, heli_yaklasma: bool = False,
                   hortum_yaklasma: bool = False, cadde_yaklasma: bool = False,
                   donma_firtina: bool = False, kasirga: bool = False, hit_kopya_ates: bool = False,
-                  yer_yarilmasi: bool = False) -> None:
+                  yer_yarilmasi: bool = False, hit_kopya_orman: bool = False) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1575,6 +1632,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["hit_kopya_ates"] = True
     if yer_yarilmasi:   # 17 Kas: 🌍 Yer yarılması
         kwargs["yer_yarilmasi"] = True
+    if hit_kopya_orman:   # 20 Kas: ⭐ Hit kopyası (orman yangını)
+        kwargs["hit_kopya_orman"] = True
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:

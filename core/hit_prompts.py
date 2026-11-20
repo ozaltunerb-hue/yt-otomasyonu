@@ -3755,6 +3755,268 @@ def hit_kopya_issues(structure: dict, info: dict) -> list[str]:
     return out
 
 
+# ── ⭐ Hit kopyası (orman yangını) (20 Kas 2026, Bahadır) ───────────────────────────────────────────────────────────
+# Sebep: orman Yaklaşma v4-v7 testlerinin hiçbiri paylaşılabilir çıkmadı. Kaynak: 9 Eki 2026 21:52 üretimi (19 Eki
+# paylaşımı, 3,02M), Kie prompt'u HIT_PROMPTS[es.WILDFIRE]["prompt"] (Notion 3f4d048d-625e-81f9-a10f-eaf888802f52).
+# Ateş hortumu Hit kopyasıyla (HIT_KOPYA_ATES) birebir aynı düzen, ayrı sabitler ve fonksiyonlar. Hit'in Kie prompt'u
+# kelimesi kelimesine; sadece "the edge of the neighborhood" → "the edge of {place}" ve "The white van" → "The
+# {vehicle}". GPT çağrılmaz. Orman Yaklaşma v7 kodda ve menüde aynen kalır. Kayıt combo "##HKO:G*" (olay çifti değil:
+# normal orman K*/L* ve Yaklaşma M*/N* LRU'su etkilenmez) + Eksenler mod=hit_kopya_orman, cografya, arac.
+HIT_KOPYA_ORMAN_MODE_LABEL = "⭐ Hit kopyası (orman yangını)"
+HIT_KOPYA_ORMAN_EVENTS = (es.WILDFIRE,)
+HIT_KOPYA_ORMAN_DOMAIN = "fire_disasters"
+HIT_KOPYA_ORMAN_MOD = "hit_kopya_orman"             # config bayrağı, structure anahtarı, Notion axes.mod
+HIT_KOPYA_ORMAN_SOURCE = "Kaynak: 9 Eki 21:52 üretimi (19 Eki paylaşımı, 3M), birebir"
+HIT_KOPYA_ORMAN_MAX_WORDS = 230
+HIT_KOPYA_ORMAN_MAX_CHARS = 1400
+HIT_KOPYA_ORMAN_GEO_BLOCK = 3
+HIT_KOPYA_ORMAN_GEO_SEED = ("G4",)   # 20 Kas Kanada paylaşımıyla benzemesin: geçmişin en başına G4 "kullanıldı"
+HIT_KOPYA_ORMAN_VEHICLE_BLOCK = 2
+HIT_KOPYA_ORMAN_SPOT = "balcony of a hillside house"   # hit kaydının (K5+L4) yeri
+HIT_KOPYA_ORMAN = {
+    "geos": {
+        "G1": {"name": "Kaliforniya", "place": "a Californian hillside suburb"},
+        "G2": {"name": "Avustralya", "place": "an Australian bush town"},
+        "G3": {"name": "Yunanistan", "place": "a Greek hillside village"},
+        "G4": {"name": "Kanada", "place": "a Canadian mountain town"},
+        "G5": {"name": "Portekiz", "place": "a Portuguese hillside village"},
+        "G6": {"name": "Şili", "place": "a Chilean hillside town"},
+    },
+    "vehicles": ("white van", "pickup truck", "SUV"),
+    # Kelimesi kelimesine hit prompt'u (HIT_PROMPTS[es.WILDFIRE]); "the neighborhood" → {place}, "white van" →
+    # {vehicle}
+    "template": (
+        "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of {place}, "
+        "igniting roofs and trees. Five people run desperately, scattering in various directions to "
+        "escape the rapidly encroaching inferno. 4-9s: The {vehicle} accelerates, executing a sharp U-turn and "
+        "leaves the scene, just as the flames close in behind. 9-15s: The advancing fire consumes an entire line "
+        "of trees, their tops exploding into fiery embers, rising into the swirling sky. Handheld footage shot by "
+        "a person standing on a balcony of a hillside house overlooking the street and the burning slope, eye "
+        "level, normal lens; slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts. "
+        "Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service "
+        "uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No "
+        "readable signs, text or flags."),
+    "tail_start": "Handheld footage shot by a person standing on a balcony",
+}
+HIT_KOPYA_ORMAN_REQUIRED = ("sweeps down the forested slope and slams into the edge of", "rapidly encroaching inferno",
+                            "sharp U-turn", "the camera pans to follow the wall of flames", "never glossy or CGI")
+HIT_KOPYA_ORMAN_FORBIDDEN = ("Full action", "Until the last frame", "big in frame", "From the very first frame",
+                             "never along the asphalt")
+HIT_KOPYA_ORMAN_WARNING = ("⚠️ Hit karşılaştırması: alev duvarı ilk saniyelerde yamaçtan inip mahalleye çarpıyor mu, "
+                           "video 19 Eki hit'iyle boy ölçüşür mü?")
+HIT_KOPYA_ORMAN_CONFIRM_DESC = ("9 Eki 21:52 üretiminin (19 Eki paylaşımı, 3M) Kie prompt'u kelimesi kelimesine; sadece "
+                                "coğrafya (G1-G6) ve araç değişir. Alev duvarı ormanlık yamaçtan inip mahalleye çarpar, "
+                                "insanlar kaçar, araç U dönüşü yapıp kaçar, ağaç sırası tepeden kıvılcım saçarak yanar. "
+                                "Yamaç evinin balkonu, kamera alevleri takip eder. Hikâye için GPT çağrılmaz.")
+_HKO = HIT_KOPYA_ORMAN
+_HIT_KOPYA_ORMAN_GEO_MEMORY: list[str] = []
+_HIT_KOPYA_ORMAN_VEHICLE_MEMORY: list[str] = []
+
+
+def hit_kopya_orman_is_active(event: str | None) -> bool:
+    return event in HIT_KOPYA_ORMAN_EVENTS
+
+
+def _hit_kopya_orman_split() -> tuple[str, str]:
+    t = _HKO["template"]
+    i = t.index(" " + _HKO["tail_start"])
+    return t[:i], t[i + 1:]
+
+
+def hit_kopya_orman_tail() -> str:
+    return _hit_kopya_orman_split()[1]
+
+
+def _hit_kopya_orman_check(geo: str, vehicle: str) -> None:
+    if geo not in _HKO["geos"]:
+        raise es.StructureError(f"{HIT_KOPYA_ORMAN_MODE_LABEL}: {geo} bu modda yok (coğrafya G1-G6)")
+    if vehicle not in _HKO["vehicles"]:
+        raise es.StructureError(f"{HIT_KOPYA_ORMAN_MODE_LABEL}: araç bu modda yok ({vehicle})")
+
+
+def hit_kopya_orman_story(geo: str, vehicle: str) -> str:
+    """Zaman etiketli hikâye (hit prompt'unun stil ekinden önceki kısmı), sadece {place} ve {vehicle} dolar."""
+    _hit_kopya_orman_check(geo, vehicle)
+    return _hit_kopya_orman_split()[0].format(place=_HKO["geos"][geo]["place"], vehicle=vehicle)
+
+
+def hit_kopya_orman_prompt(geo: str, vehicle: str) -> str:
+    """Prompt = şablon (kelimesi kelimesine), sadece {place} ve {vehicle} dolar. join_story_and_style ile aynı metin."""
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(hit_kopya_orman_story(geo, vehicle), hit_kopya_orman_tail())
+
+
+def hit_kopya_orman_axes_history(records: list | None, key: str) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") in HIT_KOPYA_ORMAN_EVENTS
+                and axes.get("mod") == HIT_KOPYA_ORMAN_MOD and axes.get(key)):
+            out.append(axes[key])
+    return out
+
+
+def hit_kopya_orman_choose_geo(used: list[str] | None = None, rng=None) -> str:
+    """Son 3 coğrafya elenir; geçmişin en başında G4 tohumu (20 Kas Kanada paylaşımı)."""
+    seen = list(HIT_KOPYA_ORMAN_GEO_SEED) + list(_HIT_KOPYA_ORMAN_GEO_MEMORY if used is None else used)
+    return _block_pick(list(_HKO["geos"]), seen, HIT_KOPYA_ORMAN_GEO_BLOCK, rng)
+
+
+def hit_kopya_orman_choose_vehicle(used: list[str] | None = None, rng=None) -> str:
+    return _block_pick(list(_HKO["vehicles"]), list(_HIT_KOPYA_ORMAN_VEHICLE_MEMORY if used is None else used),
+                       HIT_KOPYA_ORMAN_VEHICLE_BLOCK, rng)
+
+
+def hit_kopya_orman_lines(tb: dict) -> str:
+    """✋ Onay satırları: mod, coğrafya, araç, kaynak, kelime/karakter, eksenler + tekrar önleme, hit karşılaştırması."""
+    text = tb["prompt"]
+    g = _HKO["geos"][tb["geo"]]
+    lines = [
+        f"Mod: {HIT_KOPYA_ORMAN_MODE_LABEL}",
+        f"Coğrafya: {tb['geo']} {g['name']} «{g['place']}»",
+        f"Araç: {tb['vehicle']}",
+        HIT_KOPYA_ORMAN_SOURCE,
+        f"Kelime: {len(text.split())} (en fazla {HIT_KOPYA_ORMAN_MAX_WORDS}) · karakter: {len(text)} "
+        f"(en fazla {HIT_KOPYA_ORMAN_MAX_CHARS})",
+    ]
+    if tb.get("axes_line"):
+        lines.append(tb["axes_line"])
+    lines.append(HIT_KOPYA_ORMAN_WARNING)
+    return "\n".join(lines)
+
+
+def hit_kopya_orman_axes_json(geo: str, vehicle: str, excluded: dict | None = None) -> str:
+    import core.axes_history as ah
+    axes = {"spot": HIT_KOPYA_ORMAN_SPOT, "view": None, "light": None, "vehicle": vehicle, "people": 5,
+            "beats": f"HKO:{geo}", "mod": HIT_KOPYA_ORMAN_MOD, "cografya": geo, "arac": vehicle}
+    return ah.axes_json(es.WILDFIRE, axes, excluded)
+
+
+def hit_kopya_orman_build_scene(domain: str | None, event: str | None, history: list[str] | None = None,
+                                records: list | None = None, rng=None, history_source: str = "bellek") -> dict:
+    """⭐ Hit kopyası (orman yangını) sahnesi: GPT yok, normal hat yok. records = Notion "Eksenler" ham kayıtları (None =
+    okunamadı / yükleyici yok: süreç hafızası). Coğrafya son 3 (G4 tohum), araç son 2. structure["hit_kopya_orman"]
+    Kie öncesi son denetimin (submit_issues) kaynağıdır."""
+    import random
+    from core.skeleton_pipeline import SKELETON_CAMERA
+    if domain not in (None, HIT_KOPYA_ORMAN_DOMAIN) or not hit_kopya_orman_is_active(event):
+        raise es.StructureError(f"{HIT_KOPYA_ORMAN_MODE_LABEL} kurulamadı: {domain} / {event}")
+    r = rng or random
+    geo_used = hit_kopya_orman_axes_history(records, "cografya")
+    vehicle_used = hit_kopya_orman_axes_history(records, "arac")
+    geo = hit_kopya_orman_choose_geo(geo_used, r)
+    vehicle = hit_kopya_orman_choose_vehicle(vehicle_used, r)
+    for m, v in ((_HIT_KOPYA_ORMAN_GEO_MEMORY, geo), (_HIT_KOPYA_ORMAN_VEHICLE_MEMORY, vehicle)):
+        m.append(v)
+        del m[:-12]
+    story = hit_kopya_orman_story(geo, vehicle)
+    tail = hit_kopya_orman_tail()
+    prompt = hit_kopya_orman_prompt(geo, vehicle)
+    g = _HKO["geos"][geo]
+    a, b, c = es.SLICE_LABELS
+    opening = story.split(f"{b}: ")[0][len(f"{a}: "):].strip()
+    mid_text = story.split(f"{b}: ")[1].split(f" {c}: ")[0]
+    final_text = story.split(f"{c}: ")[1]
+    plain = " ".join([opening, mid_text, final_text])
+    seen_geo = list(HIT_KOPYA_ORMAN_GEO_SEED) + list(geo_used if geo_used is not None
+                                                     else _HIT_KOPYA_ORMAN_GEO_MEMORY[:-1])
+    seen_veh = list(vehicle_used if vehicle_used is not None else _HIT_KOPYA_ORMAN_VEHICLE_MEMORY[:-1])
+    repeat = (f"coğrafya son {HIT_KOPYA_ORMAN_GEO_BLOCK} elendi (G4 tohum) · araç son {HIT_KOPYA_ORMAN_VEHICLE_BLOCK} "
+              "· olaylar sabit (hit'in kendisi)")
+    base_trace = {"pipeline": "creative", "structured": True, "domain": HIT_KOPYA_ORMAN_DOMAIN, "event": es.WILDFIRE,
+                  "ship": "None", "camera": SKELETON_CAMERA, "view": None, "view_source": None,
+                  "place": g["place"], "count_range": [5, 5], "people_running": 5, "outcome": "-",
+                  "recent_count": 0}
+    trace, axes_line = mode_display(
+        {"trace": base_trace}, {}, mode=HIT_KOPYA_ORMAN_MODE_LABEL,
+        camera="hit kamerası (the camera pans to follow the wall of flames); balcony of a hillside house, eye level, "
+               "normal lens",
+        opening=opening, mid=("K5", mid_text), final=("L4", final_text), plain=plain, vehicle=vehicle,
+        spot="Balcony of a hillside house (hit kopyası, birebir)",
+        axes={"coğrafya": f"{geo} {g['name']}", "araç": vehicle, "olaylar": "K5+L4 (hit, sabit)",
+              "kamera modu": "elde, alevleri takip (hit)"},
+        repeat=repeat)
+    trace = {**trace, "mode": HIT_KOPYA_ORMAN_MOD, "cografya": geo, "axes_source": history_source}
+    tb = {"event": es.WILDFIRE, "geo": geo, "vehicle": vehicle, "story": story, "suffix": tail, "prompt": prompt,
+          "axes_line": axes_line}
+    tb["lines"] = hit_kopya_orman_lines(tb)
+    excluded = {"cografya": [x for x in _HKO["geos"] if x in seen_geo[-HIT_KOPYA_ORMAN_GEO_BLOCK:]],
+                "arac": [x for x in _HKO["vehicles"] if x in seen_veh[-HIT_KOPYA_ORMAN_VEHICLE_BLOCK:]]}
+    axes_json = hit_kopya_orman_axes_json(geo, vehicle, excluded)
+    structure = {HIT_KOPYA_ORMAN_MOD: tb, "axes_json": axes_json, "axes_line": None, "environment": None,
+                 "story_source": f"Hikâye: kod (birebir) · {HIT_KOPYA_ORMAN_MODE_LABEL}", "story_source_kind": "code",
+                 "caption_info": {"opening": opening, "people": 5, "kadraj": "balkon",
+                                  "beat_2": donma_caption_beat(mid_text), "beat_3": donma_caption_beat(final_text)},
+                 "caption_candidates": None}
+    problems = hit_kopya_orman_issues(structure, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{HIT_KOPYA_ORMAN_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = (f"{HIT_KOPYA_ORMAN_DOMAIN}|none|{es.WILDFIRE.lower()}|{HIT_KOPYA_ORMAN_SPOT}##HKO:{geo}|"
+             f"{SKELETON_CAMERA}")
+    return {"domain": HIT_KOPYA_ORMAN_DOMAIN, "event": es.WILDFIRE, "ship": None, "spot": HIT_KOPYA_ORMAN_SPOT,
+            "story": story, "plain_story": plain, "style_suffix": tail, "prompt": prompt, "combo_key": combo,
+            "trace": trace, "structure": structure, "axes_json": axes_json}
+
+
+def hit_kopya_orman_camera_issues(text: str, geo: str | None = None) -> list[str]:
+    """Kie öncesi son kontrol: HIT_KOPYA_ORMAN_REQUIRED ("sweeps down the forested slope and slams into the edge of",
+    "rapidly encroaching inferno", "sharp U-turn", "the camera pans to follow the wall of flames", "never glossy or
+    CGI") ve seçilen G'nin place metni var; HIT_KOPYA_ORMAN_FORBIDDEN'dan ("Full action", "Until the last frame", "big
+    in frame", "From the very first frame", "never along the asphalt") hiçbiri yok (büyük/küçük harf fark etmez).
+    İhlal = gönderilmez."""
+    out = []
+    text = text or ""
+    low = text.lower()
+    for need in HIT_KOPYA_ORMAN_REQUIRED:
+        if need.lower() not in low:
+            out.append(f'"{need}" eksik')
+    places = [g for g, v in _HKO["geos"].items() if v["place"] in text]
+    if not places:
+        out.append("G1-G6 yer metni yok")
+    elif geo is not None and places != [geo]:
+        out.append(f"yer metni seçilen coğrafya değil ({geo}: {places})")
+    for bad in HIT_KOPYA_ORMAN_FORBIDDEN:
+        if bad.lower() in low:
+            out.append(f"bu modda olmayan ifade var: {bad}")
+    return out
+
+
+def hit_kopya_orman_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin şablondan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    tb = structure[HIT_KOPYA_ORMAN_MOD]
+    if tb.get("geo") not in _HKO["geos"]:
+        return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
+    if tb.get("vehicle") not in _HKO["vehicles"]:
+        return [f"araç bu modda yok ({tb.get('vehicle')})"]
+    story = hit_kopya_orman_story(tb["geo"], tb["vehicle"])
+    prompt = hit_kopya_orman_prompt(tb["geo"], tb["vehicle"])
+    out = []
+    if info.get("style_suffix") != hit_kopya_orman_tail():
+        out.append("stil eki hit kopyası değil")
+    if info.get("story") != story:
+        out.append("hikâye şablonla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt şablonla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    out += hit_kopya_orman_camera_issues(text, tb["geo"])
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > HIT_KOPYA_ORMAN_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {HIT_KOPYA_ORMAN_MAX_WORDS})")
+    if len(text) > HIT_KOPYA_ORMAN_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {HIT_KOPYA_ORMAN_MAX_CHARS})")
+    return out
+
+
 # ── 🌍 Yer yarılması (17 Kas 2026, Bahadır) ──────────────────────────────────────────────────────────────────────────
 # Yeni kategori (2012 filmi esinli), tek olay: "🌍 Cadde yarılır". Deprem yarığı caddenin ortasından açılır, asfalt
 # yarılıp derin bir uçuruma çöker, yarık kameraya doğru koşar. KASIRGA ile aynı kod-hikâye yolu (GPT yok, hikâye

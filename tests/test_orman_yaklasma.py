@@ -862,8 +862,9 @@ class TestOrmanPipelineAndBot(_Quiet):
         asyncio.run(bot.on_callback(upd, ctx))
         kb = upd.callback_query.edit_message_text.await_args.kwargs["reply_markup"]
         labels = [b.text for r in kb.inline_keyboard for b in r]
-        self.assertEqual(labels, ["✅ Üret", "❌ İptal", "⭐ Hit kalıbı · Yaklaşma"])
-        self.assertEqual([len(r) for r in kb.inline_keyboard], [2, 1])   # buton Üret/İptal'in altında
+        # 20 Kas: yanına ⭐ Hit kopyası (orman yangını) eklendi (tests/test_hit_kopya_orman.py)
+        self.assertEqual(labels, ["✅ Üret", "❌ İptal", "⭐ Hit kalıbı · Yaklaşma", "⭐ Hit kopyası"])
+        self.assertEqual([len(r) for r in kb.inline_keyboard], [2, 2])   # butonlar Üret/İptal'in altında
         self.assertNotIn("⭐ Hit kalıbı", labels)   # eski orman hit butonu gizli
         upd = _update(data=f"uret:oy:{di}:{ei}")
         asyncio.run(bot.on_callback(upd, ctx))
