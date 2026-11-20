@@ -1217,6 +1217,9 @@ def kul_issues(structure: dict, info: dict) -> list[str]:
 # 20 Kas 2026 (v4, "ilk 3 saniye olay kuralı", Bahadır): ilk karede karşıdaki ev yerden çatıya alev alır + alev duvarı
 # yamaçtan iner; "action" cümlesi hikâyeye girmez; ortalar M2/M3, finaller N1/N3 ("big in frame"); M1 ve N2 pasif
 # (ORMAN_PASIF); yasak çift yalnız M2+N3; stil ekine "never a calm moment". Eski metinler ORMAN_*_V3 / ORMAN_*_V1, pasif.
+# 20 Kas 2026 (v5, Bahadır): v4 videosunda karşıdaki ev yamaçtaki uzak köye kondu ve alevler asfaltta sıvı gibi aktı.
+# Açılışta ev "right across from the balcony, close and big in frame", alev duvarı evin arkasındaki yamaçtan iner;
+# stil ekine "never flowing along the road like liquid". Eski metinler ORMAN_OPENING_V4 / ORMAN_TAIL_V2, pasif.
 ORMAN_MODE_LABEL = "⭐ Hit kalıbı · Yaklaşma (orman yangını)"
 ORMAN_BUTTON_LABEL = "⭐ Hit kalıbı · Yaklaşma"
 ORMAN_EVENTS = (es.WILDFIRE,)
@@ -1231,9 +1234,12 @@ ORMAN_MID_BLOCK = 1      # 13 Kas (2): 3 aktif seçenek, son 1 elenir
 ORMAN_FINAL_BLOCK = 1
 ORMAN_BANNED_PAIRS = (("M2", "N3"),)   # 20 Kas v4: iki kez ağaç olmasın (N2 pasif)
 ORMAN_BANNED_PAIRS_V3 = (("M2", "N3"), ("M2", "N2"), ("M3", "N2"))   # 13 Kas (3), pasif
-ORMAN_VERSION_LABEL = "Sürüm: v4 (ilk 3 saniye olay)"
+ORMAN_VERSION_LABEL = "Sürüm: v5 (yakın ev, akan ateş yok)"
+ORMAN_VERSION_LABEL_V4 = "Sürüm: v4 (ilk 3 saniye olay)"   # pasif
 # Kie öncesi denetim: zorunlu ifadeler (yoksa gönderme) ve bu modda olmayan ifadeler (varsa gönderme)
-ORMAN_REQUIRED = ("From the very first frame", "big in frame", "never a calm moment")
+ORMAN_REQUIRED = ("From the very first frame", "big in frame", "never a calm moment",
+                  "right across from the balcony", "never flowing along the road like liquid")   # 20 Kas v5: +2
+ORMAN_REQUIRED_V4 = ("From the very first frame", "big in frame", "never a calm moment")   # pasif
 ORMAN_FORBIDDEN = ("Full action", "Until the last frame", "U-turn", "speeds away", "wooden deck",
                    "halfway down the street", "Burning embers")
 YAKLASMA_ORMAN = {
@@ -1249,10 +1255,10 @@ YAKLASMA_ORMAN = {
                "place": "a hillside village of tile-roofed stone houses"},
         "R6": {"name": "Şili", "forest": "pine-covered", "place": "a hillside town of colorful wooden houses"},
     },
-    # 20 Kas 2026 (v4): ilk karede karşıdaki ev yanar (eski metinler ORMAN_OPENING_V1/V2/V3, pasif)
-    "opening": "From the very first frame {place} is burning: the house across the street, big in frame, bursts into "
-               "flames from ground to roof, windows blowing out, as a towering wall of flames races down the {forest} "
-               "slope toward the camera.",
+    # 20 Kas 2026 (v5): karşıdaki ev balkonun tam karşısında, yakın (eski metinler ORMAN_OPENING_V1-V4, pasif)
+    "opening": "From the very first frame {place} is burning: the house right across from the balcony, close and big in "
+               "frame, bursts into flames from ground to roof, windows blowing out, as a towering wall of flames races "
+               "down the {forest} slope behind it.",
     "people": {3: "Three people run up the street below, away from the flames.",
                4: "Four people run up the street below, away from the flames."},
     # 20 Kas v4: hikâyeye girmez (ORMAN_ACTION_V1 olarak da saklı)
@@ -1272,14 +1278,26 @@ YAKLASMA_ORMAN = {
     },
     "vehicle_mids": ("M2", "M3"),
     "camera": {True: "the camera pans to follow the wall of flames as it approaches", False: "the camera stays fixed"},
+    # 20 Kas 2026 (v5): akan ateş yasağı (eski stil ekleri ORMAN_TAIL_V1 / ORMAN_TAIL_V2, pasif)
     "tail": ("Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, "
              "high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, "
-             "{camera}; one continuous shot, no zoom, no cuts, no face close to the camera. The fire keeps spreading "
-             "the whole time, never a calm moment. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or "
+             "{camera}; one continuous shot, no zoom, no cuts. The fire keeps spreading through trees and houses the "
+             "whole time, never flowing along the road like liquid, never a calm moment. Civilians in everyday "
+             "clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or "
              "strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at "
-             "full speed. No readable signs, text or flags."),
+             "full speed."),
 }
 _OR = YAKLASMA_ORMAN
+# 20 Kas 2026 (v5) öncesi açılış ve stil eki (903c6ab, v4), pasif; kullanılmaz.
+ORMAN_OPENING_V4 = ("From the very first frame {place} is burning: the house across the street, big in frame, bursts into "
+                    "flames from ground to roof, windows blowing out, as a towering wall of flames races down the {forest} "
+                    "slope toward the camera.")
+ORMAN_TAIL_V2 = ("Handheld footage shot from the balcony of a hillside house overlooking the street and the burning slope, "
+                 "high vantage, normal lens, a corner of the balcony railing in the foreground; slight hand shake, "
+                 "{camera}; one continuous shot, no zoom, no cuts, no face close to the camera. The fire keeps spreading "
+                 "the whole time, never a calm moment. Civilians in everyday clothes, never CGI. Realistic wildfire: towering, roaring flames and thick smoke, never thin lines or "
+                 "strips of fire. Raw natural light under an orange smoky sky. Real time, never slow motion, people run at "
+                 "full speed. No readable signs, text or flags.")
 # 20 Kas 2026 (v4) öncesi metinler (5556588), pasif; kullanılmaz.
 ORMAN_OPENING_V3 = ("A towering wall of flames has already swept down the {forest} slope and is racing halfway down the "
                     "street through {place} toward the camera, igniting roofs and trees as it comes.")
