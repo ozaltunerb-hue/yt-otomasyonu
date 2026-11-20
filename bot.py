@@ -561,7 +561,8 @@ def orman_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
 
 
 # ── ⭐ Hit kopyası (orman yangını) (20 Kas 2026, Bahadır): v2 = 9 Eki hit'inin iskeleti ve dili, 6-8 kişi, düşen adam
-# + ağaç/direk, çatı çöker; coğrafya ve araç değişir (hit_prompts.py HIT_KOPYA_ORMAN, v1 _V1 pasif). GPT yok. Adımlar: hko
+# + ağaç/direk, çatı çöker; v3 (21 Kas) sabit kamera + sabit korkuluk; coğrafya ve araç değişir (hit_prompts.py
+# HIT_KOPYA_ORMAN, v1 _V1 ve v2 _V2 pasif). GPT yok. Adımlar: hko
 # (onay metni) → hkook (üretim). Kie yine ✋ Onay'a bağlı. Ateş hortumu Hit kopyası (hk/hkok) değişmez
 def hit_kopya_orman_produce_keyboard(di: str, eid: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([[

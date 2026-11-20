@@ -7,6 +7,10 @@
 # kişi; düşen adam + önüne devrilen yanan ağaç / direk (O1/O2 dönüşümlü); final balkonun dibindeki çatı çöker.
 # Coğrafya son 3 (G4 tohum), araç son 2, engel son 1 (yalnız v2 kayıtları), kişi rastgele. GPT yok. Orman Yaklaşma v7,
 # ateş hortumu Hit kopyası ve diğer 19 olay / tüm modlar birebir aynı (40 tohum). Ağ yok.
+# v3 (21 Kas): v2 testinde kamera sürekli döndü, korkuluk önce yoktu sonra şekil değiştirdi. Tek değişiklik: "the
+# camera pans to follow the wall of flames" yerine kamera sokağa sabit + koyu metal korkuluk kadrajın altında sabit.
+# v2 pasif (HIT_KOPYA_ORMAN_V2, 40 tohum kaydı fixtures/hit_kopya_orman_v2_runs_40.json, HIT_KOPYA_ORMAN_V2_SHA256).
+# Engel LRU'su v2 + v3 kayıtlarını sayar.
 import asyncio
 import hashlib
 import json
@@ -45,8 +49,8 @@ HIT_PROMPT = (
     "uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat suits. No "
     "readable signs, text or flags.")
 
-# ── v2 (Bahadır'ın metni, birebir) ──
-TEMPLATE = (
+# ── v2 (pasif, 892fdf9; Bahadır'ın metni, birebir) ──
+TEMPLATE_V2 = (
     "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of the neighborhood, "
     "igniting roofs and trees. {people} people run desperately up the street toward the camera, scattering to escape "
     "the rapidly encroaching inferno, as {vehicle} speeds past them. 4-9s: One man trips and falls on the road; right "
@@ -57,6 +61,22 @@ TEMPLATE = (
     "of flames; no zoom, no cuts. Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency "
     "responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no white hazmat "
     "suits. No readable signs, text or flags.")
+# ── v3 (21 Kas, Bahadır): yalnız kamera parçası değişir ──
+CAMERA_OLD = "slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts."
+CAMERA_NEW = ("slight hand shake, the camera stays fixed on the street; a dark metal balcony railing stays fixed at the "
+              "bottom of the frame the whole time; no zoom, no cuts.")
+TEMPLATE = (
+    "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of the neighborhood, "
+    "igniting roofs and trees. {people} people run desperately up the street toward the camera, scattering to escape "
+    "the rapidly encroaching inferno, as {vehicle} speeds past them. 4-9s: One man trips and falls on the road; right "
+    "in front of him a {obstacle} crashes down in a burst of sparks, and he scrambles up and keeps running. 9-15s: The "
+    "flames reach the house right below the balcony and its roof caves in, a fountain of sparks bursting up toward "
+    "the camera. Handheld footage shot by a person standing on a balcony of a hillside house in {place} overlooking "
+    "the street and the burning slope, eye level, normal lens; slight hand shake, the camera stays fixed on the "
+    "street; a dark metal balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. "
+    "Bystanders wear civilian clothes, never hi-vis PPE on civilians; emergency responders wear service uniforms. Raw "
+    "natural light matching the weather, never glossy or CGI; no white hazmat suits. No readable signs, text or "
+    "flags.")
 TAIL_START = "Handheld footage shot by a person standing on a balcony"
 PLACES = {"G1": ("Kaliforniya", "a Californian suburb"), "G2": ("Avustralya", "an Australian bush town"),
           "G3": ("Yunanistan", "a Greek village"), "G4": ("Kanada", "a Canadian mountain town"),
@@ -66,16 +86,24 @@ VEHICLE_PHRASES = {"white van": "a white van", "pickup truck": "a pickup truck",
 OBSTACLES = {"O1": "burning tree", "O2": "burning power pole"}
 OBSTACLE_NAMES = {"O1": "yanan ağaç", "O2": "yanan direk"}
 PEOPLE = {6: "Six", 7: "Seven", 8: "Eight"}
+REQUIRED_V2 = ("sweeps down the forested slope and slams into the edge of the neighborhood",
+               "run desperately up the street toward the camera", "trips and falls", "right in front of him",
+               "scrambles up and keeps running", "its roof caves in", "the camera pans to follow the wall of flames",
+               "never glossy or CGI")
+FORBIDDEN_V2 = ("U-turn", "their tops exploding", "Full action", "Until the last frame", "big in frame",
+                "From the very first frame", "the edge of a", "the edge of an", "onto him", "on top of him")
 REQUIRED = ("sweeps down the forested slope and slams into the edge of the neighborhood",
             "run desperately up the street toward the camera", "trips and falls", "right in front of him",
-            "scrambles up and keeps running", "its roof caves in", "the camera pans to follow the wall of flames",
-            "never glossy or CGI")
-FORBIDDEN = ("U-turn", "their tops exploding", "Full action", "Until the last frame", "big in frame",
-             "From the very first frame", "the edge of a", "the edge of an", "onto him", "on top of him")
+            "scrambles up and keeps running", "its roof caves in", "the camera stays fixed on the street",
+            "railing stays fixed at the bottom of the frame", "never glossy or CGI")
+FORBIDDEN = FORBIDDEN_V2 + ("pans to follow",)
 SOURCE = "Kaynak: 9 Eki 21:52 üretimi (19 Eki paylaşımı, 5,4M), iskelet ve dil"
-VERSION_LINE = "Sürüm: v2 (6-8 kişi, düşen adam + ağaç/direk, çatı çöker)"
-WARNING = ("⚠️ Hit karşılaştırması: alev duvarı ilk saniyelerde mahalleye çarpıyor mu, düşen adam ve önüne devrilen "
-           "ağaç/direk yakın ve net mi, çatı çöküyor mu?")
+VERSION_LINE_V2 = "Sürüm: v2 (6-8 kişi, düşen adam + ağaç/direk, çatı çöker)"
+VERSION_LINE = "Sürüm: v3 (sabit kamera, sabit korkuluk)"
+CAMERA_LINE = "Kamera: sabit kamera (sokağa sabit), korkuluk kadrajın altında"
+WARNING_V2 = ("⚠️ Hit karşılaştırması: alev duvarı ilk saniyelerde mahalleye çarpıyor mu, düşen adam ve önüne devrilen "
+              "ağaç/direk yakın ve net mi, çatı çöküyor mu?")
+WARNING = WARNING_V2[:-1] + ", korkuluk baştan sona aynı yerde ve aynı şekilde mi?"
 CONFIRM_DESC = ("9 Eki orman hit'inin (19 Eki paylaşımı, 5,4M) iskeleti ve dili; zayıf betler çıkarıldı. Alev duvarı "
                 "yamaçtan inip mahalleye çarpar, 6-8 kişi kameraya doğru kaçar, yanlarından bir araç hızla geçer; kaçan "
                 "bir adam düşer, hemen önüne yanan ağaç ya da yanan elektrik direği (dönüşümlü) devrilir, adam kalkıp "
@@ -100,6 +128,7 @@ CONFIRM_DESC_V1 = ("9 Eki 21:52 üretiminin (19 Eki paylaşımı, 3M) Kie prompt
                    "U dönüşü yapıp kaçar, ağaç sırası tepeden kıvılcım saçarak yanar. Yamaç evinin balkonu, kamera "
                    "alevleri takip eder. Hikâye için GPT çağrılmaz.")
 V1_FIXTURE = os.path.join(ROOT, "tests", "fixtures", "hit_kopya_orman_v1_runs_40.json")
+V2_FIXTURE = os.path.join(ROOT, "tests", "fixtures", "hit_kopya_orman_v2_runs_40.json")
 
 # Değişiklikten önceki kod (14063ac): test_yer_yarilmasi kaydı (19 olay + modlar, orman v3 fixture'ı) + 🌍 Yer
 # yarılması, 40 tohum. Canlı orman Yaklaşma v7 ayrıca ORMAN_SHA256 ile.
@@ -107,7 +136,8 @@ OTHERS_SHA256 = "d719e05d8370ca2d526710ba8814f6860a6d320ffdd3076908fcd36ad76c49f
 ORMAN_SHA256 = "b3ecda2ac3cb673b68ffb22c1024d978057d64419e993b720e825684c0541fc5"   # orman Yaklaşma v7 (değişmez)
 # ⭐ Hit kopyası (orman yangını) 40 tohum kilidi (prompt / hikâye / stil eki / combo / eksenler; caption hariç)
 HIT_KOPYA_ORMAN_V1_SHA256 = "f0e9e1576c0142bf102813c3f8e1bccfe0104c71defb61242a3170397d5e4d35"   # v1 (fixture)
-HIT_KOPYA_ORMAN_SHA256 = "0ec2bad2481274d595bef3a570ac64df3e2f26cac46d7c1a924d7f545df20959"   # v2
+HIT_KOPYA_ORMAN_V2_SHA256 = "0ec2bad2481274d595bef3a570ac64df3e2f26cac46d7c1a924d7f545df20959"   # v2 (fixture)
+HIT_KOPYA_ORMAN_SHA256 = "d8064175fddf17d86b8114e049659e88bc0d6c175cb6a059486262c7afd9f0fe"   # v3
 
 
 class _Quiet(unittest.TestCase):
@@ -141,9 +171,9 @@ def build(seed: int) -> dict:
     return gen()
 
 
-def expected(g: str, v: str, o: str, n: int) -> str:
-    """Bahadır'ın v2 metninden (TEMPLATE) bağımsız kurulum."""
-    return TEMPLATE.format(people=PEOPLE[n], vehicle=VEHICLE_PHRASES[v], obstacle=OBSTACLES[o], place=PLACES[g][1])
+def expected(g: str, v: str, o: str, n: int, template: str = TEMPLATE) -> str:
+    """Bahadır'ın metninden (v3 TEMPLATE; v2 için TEMPLATE_V2) bağımsız kurulum."""
+    return template.format(people=PEOPLE[n], vehicle=VEHICLE_PHRASES[v], obstacle=OBSTACLES[o], place=PLACES[g][1])
 
 
 def expected_v1(g: str, v: str) -> str:
@@ -230,9 +260,72 @@ class TestV1Passive(_Quiet):
             self.assertEqual(ax["mod"], "hit_kopya_orman")
 
 
+class TestV2Passive(_Quiet):
+    """v2 (892fdf9) pasif: şablon, listeler, metinler _V2 sabitlerinde aynen; 40 tohum kaydı fixture + V2 SHA."""
+
+    def test_v2_constants_verbatim(self):
+        v2 = hp.HIT_KOPYA_ORMAN_V2
+        self.assertIsNot(v2, HKO)
+        self.assertEqual(v2["template"], TEMPLATE_V2)
+        self.assertEqual(v2["tail_start"], TAIL_START)
+        self.assertEqual({g: (x["name"], x["place"]) for g, x in v2["geos"].items()}, PLACES)
+        self.assertEqual(v2["vehicles"], ("a white van", "a pickup truck", "an SUV"))
+        self.assertEqual(v2["obstacles"], OBSTACLES)
+        self.assertEqual(v2["people"], ("Six", "Seven", "Eight"))
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_REQUIRED_V2, REQUIRED_V2)
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_FORBIDDEN_V2, FORBIDDEN_V2)
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_WARNING_V2, WARNING_V2)
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_VERSION_LINE_V2, VERSION_LINE_V2)
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_SURUM_V2, "v2")
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_CAMERA_V2, "hit kamerası (the camera pans to follow the wall of flames); "
+                                                       "balcony of a hillside house, eye level, normal lens")
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_CAMERA_AXIS_V2, "elde, alevleri takip (hit)")
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_SPOT_LABEL_V2, "Balcony of a hillside house (hit kopyası v2)")
+
+    def test_v2_all_108_combos(self):
+        t = hp.HIT_KOPYA_ORMAN_V2["template"]
+        words, chars = [], []
+        for g, v, o, n in combos():
+            p = t.format(people=PEOPLE[n], vehicle=VEHICLE_PHRASES[v], obstacle=OBSTACLES[o], place=PLACES[g][1])
+            self.assertEqual(p, expected(g, v, o, n, TEMPLATE_V2))
+            words.append(len(p.split()))
+            chars.append(len(p))
+        self.assertEqual(len(words), 108)
+        self.assertEqual((min(words), max(words)), (180, 183))
+        self.assertEqual((min(chars), max(chars)), (1036, 1062))
+
+    def test_v2_fixture_lock(self):
+        with open(V2_FIXTURE, encoding="utf-8") as f:
+            runs = json.load(f)
+        self.assertEqual(len(runs), 40)
+        self.assertEqual(snapshot_hash(runs), HIT_KOPYA_ORMAN_V2_SHA256)
+        for s, r in runs.items():
+            ax = r["axes"]["axes"]
+            self.assertEqual(r["prompt"], expected(ax["cografya"], ax["arac"], ax["engel"], ax["kisi"], TEMPLATE_V2), s)
+            self.assertIn("the camera pans to follow the wall of flames", r["suffix"])
+            self.assertEqual((ax["mod"], ax["surum"]), ("hit_kopya_orman", "v2"))
+            self.assertTrue(r["combo"].endswith(f"##HKO:{ax['cografya']}|bystander_handheld"), s)
+
+
 class TestTemplate(_Quiet):
+    def test_single_change_from_v2(self):
+        """v3 = v2 şablonu, yalnız kamera parçası değişmiş (tek yer, birebir)."""
+        self.assertEqual(TEMPLATE_V2.count(CAMERA_OLD), 1)
+        self.assertEqual(TEMPLATE, TEMPLATE_V2.replace(CAMERA_OLD, CAMERA_NEW))
+        self.assertEqual(HKO["template"], hp.HIT_KOPYA_ORMAN_V2["template"].replace(CAMERA_OLD, CAMERA_NEW))
+        self.assertEqual((hp.HIT_KOPYA_ORMAN_CAMERA_OLD_V2, hp.HIT_KOPYA_ORMAN_CAMERA_NEW), (CAMERA_OLD, CAMERA_NEW))
+        self.assertEqual(HKO["template"].count(CAMERA_NEW), 1)
+        self.assertNotIn("pans", HKO["template"])
+        story_v2, story_v3 = (t[:t.index(" " + TAIL_START)] for t in (TEMPLATE_V2, HKO["template"]))
+        self.assertEqual(story_v3, story_v2)   # hikâye aynen
+        for key in ("geos", "vehicles", "obstacles", "people", "tail_start"):
+            self.assertEqual(HKO[key], hp.HIT_KOPYA_ORMAN_V2[key], key)
+        for g, v, o, n in (("G1", "SUV", "O1", 8), ("G5", "white van", "O2", 7)):
+            self.assertEqual(hp.hit_kopya_orman_story(g, v, o, n), expected(g, v, o, n, TEMPLATE_V2).split(
+                " " + TAIL_START)[0])
+
     def test_template_verbatim(self):
-        """Şablon = Bahadır'ın v2 metni, tek karakter farksız."""
+        """Şablon = Bahadır'ın v3 metni (v2 + sabit kamera + sabit korkuluk), tek karakter farksız."""
         self.assertEqual(HKO["template"], TEMPLATE)
         self.assertEqual(HKO["tail_start"], TAIL_START)
         for ph in ("{people}", "{vehicle}", "{obstacle}", "{place}"):
@@ -248,7 +341,11 @@ class TestTemplate(_Quiet):
         self.assertEqual(hp.HIT_KOPYA_ORMAN_EVENTS, (WF,))
         self.assertEqual(hp.HIT_KOPYA_ORMAN_DOMAIN, DOMAIN)
         self.assertEqual(hp.HIT_KOPYA_ORMAN_MOD, "hit_kopya_orman")
-        self.assertEqual(hp.HIT_KOPYA_ORMAN_SURUM, "v2")
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_SURUM, "v3")
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_OBSTACLE_SURUMS, ("v2", "v3"))
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_CAMERA, CAMERA_LINE[len("Kamera: "):])
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_CAMERA_AXIS, "sabit (sokağa sabit), korkuluk altta")
+        self.assertEqual(hp.HIT_KOPYA_ORMAN_SPOT_LABEL, "Balcony of a hillside house (hit kopyası v3)")
         self.assertEqual(hp.HIT_KOPYA_ORMAN_SOURCE, SOURCE)
         self.assertEqual(hp.HIT_KOPYA_ORMAN_VERSION_LINE, VERSION_LINE)
         self.assertEqual((hp.HIT_KOPYA_ORMAN_MAX_WORDS, hp.HIT_KOPYA_ORMAN_MAX_CHARS), (230, 1400))
@@ -264,7 +361,11 @@ class TestTemplate(_Quiet):
         self.assertEqual(hp.HIT_KOPYA_ORMAN_FORBIDDEN, FORBIDDEN)
         self.assertEqual(hp.HIT_KOPYA_ORMAN_WARNING, WARNING)
         self.assertEqual(hp.HIT_KOPYA_ORMAN_CONFIRM_DESC, CONFIRM_DESC)
-        self.assertNotIn("—", CONFIRM_DESC + WARNING + SOURCE + VERSION_LINE)
+        self.assertNotIn("—", CONFIRM_DESC + WARNING + SOURCE + VERSION_LINE + CAMERA_LINE)
+        self.assertIn("the camera pans to follow the wall of flames", REQUIRED_V2)
+        self.assertNotIn("the camera pans to follow the wall of flames", REQUIRED)
+        self.assertEqual(tuple(x for x in REQUIRED_V2 if "pans" not in x),
+                         tuple(x for x in REQUIRED if "stays fixed" not in x))   # diğer zorunlular aynen
 
     def test_all_108_combos_within_limits(self):
         words, chars = [], []
@@ -279,8 +380,12 @@ class TestTemplate(_Quiet):
             for bad in FORBIDDEN:
                 self.assertNotIn(bad.lower(), p.lower())
         self.assertEqual(len(words), 108)
-        self.assertEqual((min(words), max(words)), (180, 183))
-        self.assertEqual((min(chars), max(chars)), (1036, 1062))
+        self.assertEqual((min(words), max(words)), (194, 197))
+        self.assertEqual((min(chars), max(chars)), (1112, 1138))
+        longest = max(combos(), key=lambda c: (len(hp.hit_kopya_orman_prompt(*c).split()),
+                                               len(hp.hit_kopya_orman_prompt(*c))))
+        self.assertEqual(len(hp.hit_kopya_orman_prompt(*longest).split()), 197)
+        self.assertEqual(len(hp.hit_kopya_orman_prompt("G4", "pickup truck", "O2", 8)), 1138)
 
     def test_articles(self):
         self.assertIn("as an SUV speeds past them", hp.hit_kopya_orman_story("G1", "SUV", "O1", 6))
@@ -342,7 +447,7 @@ class TestScene(_Quiet):
         self.assertEqual((d["selection"]["domain_id"], d["selection"]["event"]), (DOMAIN, WF))
         ax = json.loads(d["axes_json"])["axes"]
         self.assertEqual((ax["mod"], ax["surum"], ax["cografya"], ax["arac"], ax["engel"], ax["kisi"], ax["people"]),
-                         ("hit_kopya_orman", "v2", tb["geo"], tb["vehicle"], tb["obstacle"], tb["people"],
+                         ("hit_kopya_orman", "v3", tb["geo"], tb["vehicle"], tb["obstacle"], tb["people"],
                           tb["people"]))
         for other in ("hit_kopya_ates", "orman_yaklasma", "kasirga", "donma_firtina", "approach", "hit", "spec"):
             self.assertNotIn(other, st)
@@ -406,7 +511,7 @@ class TestScene(_Quiet):
     def test_history_sources(self):
         def rec(g, v, event=WF, mod="hit_kopya_orman", **extra):
             return {"eksenler": json.dumps({"event": event, "axes": {"mod": mod, "cografya": g, "arac": v, **extra}})}
-        # v1 kayıtları (surum yok) coğrafya/araç LRU'suna sayılır; engel yalnız v2 kayıtlarından
+        # v1 kayıtları (surum yok) coğrafya/araç LRU'suna sayılır; engel yalnız v2 + v3 kayıtlarından
         recs = [rec("G1", "SUV"), {"eksenler": "x"}, rec("G2", "pickup truck", engel="O2"),
                 rec("G5", "SUV", mod="orman_yaklasma", engel="O1", surum="v2"),
                 rec("G6", "white van", event=FT, mod="hit_kopya_ates")]
@@ -443,6 +548,21 @@ class TestScene(_Quiet):
             self.assertIn(tb["geo"], ("G4", "G5", "G6"))   # son 3 (G1, G2, G3) elenir
             self.assertEqual(json.loads(d["axes_json"])["excluded"]["engel"], ["O1"])
         self.assertEqual(obs_first, {"O1", "O2"})   # v2 geçmişi yokken engel serbest
+        # v3: engel geçmişi v2 + v3 kayıtlarından (son kayıt hangisiyse); v1/sürümsüz sayılmaz
+        v3 = v2 + [rec("G1", "pickup truck", engel="O2", surum="v3", kisi=6)]
+        self.assertEqual(hp.hit_kopya_orman_axes_history(v3, "engel", ("v2", "v3")), ["O1", "O2"])
+        self.assertEqual(hp.hit_kopya_orman_axes_history(v3, "engel", "v3"), ["O2"])
+        for seed in range(1, 6):
+            reset()
+            random.seed(seed)
+            d = gen(axes_loader=lambda dom: v3)
+            tb = d["structure"]["hit_kopya_orman"]
+            self.assertEqual(tb["obstacle"], "O1")   # son engel (v3) O2 → O1
+            self.assertEqual(json.loads(d["axes_json"])["axes"]["surum"], "v3")
+        reset()
+        random.seed(1)
+        d = gen(axes_loader=lambda dom: recs + [rec("G3", "SUV", engel="O2", surum="v2", kisi=7)])
+        self.assertEqual(d["structure"]["hit_kopya_orman"]["obstacle"], "O1")   # v2 son engeli O2 → O1
         self.assertEqual(set(calls), {DOMAIN})
 
         def broken(dom):
@@ -500,12 +620,22 @@ class TestScene(_Quiet):
         self.assertEqual(lines[5], f"Kişi: {tb['people']}")
         self.assertEqual(lines[6], f"Engel: {tb['obstacle']} {OBSTACLE_NAMES[tb['obstacle']]}")
         p = tb["prompt"]
-        self.assertEqual(lines[7], f"Kelime: {len(p.split())} (en fazla 230) · karakter: {len(p)} (en fazla 1400)")
-        self.assertTrue(lines[8].startswith("Eksenler (⭐ Hit kopyası (orman yangını)): sürüm=v2 · coğrafya="))
-        self.assertEqual(lines[9], REPEAT)
-        self.assertEqual(lines[10], WARNING)
-        self.assertEqual(len(lines), 11)
+        self.assertEqual(lines[7], CAMERA_LINE)
+        self.assertEqual(lines[8], f"Kelime: {len(p.split())} (en fazla 230) · karakter: {len(p)} (en fazla 1400)")
+        self.assertTrue(lines[9].startswith("Eksenler (⭐ Hit kopyası (orman yangını)): sürüm=v3 · coğrafya="))
+        self.assertIn("kamera modu=sabit (sokağa sabit), korkuluk altta", lines[9])
+        self.assertNotIn("alevleri takip", tb["lines"])
+        self.assertEqual(lines[10], REPEAT)
+        self.assertEqual(lines[11], WARNING)
+        self.assertTrue(WARNING.endswith("çatı çöküyor mu, korkuluk baştan sona aynı yerde ve aynı şekilde mi?"))
+        self.assertEqual(len(lines), 12)
         self.assertNotIn("—", tb["lines"])
+        tr = d["trace"]
+        self.assertEqual(tr["mode_camera"], "sabit kamera (sokağa sabit), korkuluk kadrajın altında")
+        self.assertEqual(tr["spot"], "Balcony of a hillside house (hit kopyası v3)")
+        from core.trace_format import format_generation
+        text = "\n".join(b for _, b in format_generation(tr))
+        self.assertIn(CAMERA_LINE + "\n", text)
 
 
 class TestPipelineAndBot(_Quiet):
@@ -550,7 +680,8 @@ class TestPipelineAndBot(_Quiet):
         self.assertEqual(t.create.await_args.args[1], info["prompt"])
         axes = [c.args[0] for c in t.tracker.record_axes.call_args_list]
         ax = json.loads(axes[0])["axes"]
-        self.assertEqual((ax["mod"], ax["surum"]), ("hit_kopya_orman", "v2"))
+        self.assertEqual((ax["mod"], ax["surum"]), ("hit_kopya_orman", "v3"))
+        self.assertIn(CAMERA_LINE, info["hit_lines"])
         self.assertTrue(info["prompt"].endswith(hp.hit_kopya_orman_tail(ax["cografya"])))
         self.assertEqual(info["prompt"], expected(ax["cografya"], ax["arac"], ax["engel"], ax["kisi"]))
 
@@ -665,7 +796,7 @@ class TestPipelineAndBot(_Quiet):
 
 class TestLocks(_Quiet):
     """Diğer 19 olay ve tüm modlar (önceki kod 14063ac) 40 tohum birebir; orman Yaklaşma v7 ORMAN_SHA256 aynen;
-    bu modun kendi kilidi HIT_KOPYA_ORMAN_SHA256 (v2); v1 kaydı fixture + HIT_KOPYA_ORMAN_V1_SHA256."""
+    bu modun kendi kilidi HIT_KOPYA_ORMAN_SHA256 (v3); v1 / v2 kayıtları fixture + HIT_KOPYA_ORMAN_V1/V2_SHA256."""
 
     def test_others_verbatim_40_seeds(self):
         snap = others_snapshot()
@@ -686,9 +817,26 @@ class TestLocks(_Quiet):
         self.assertEqual(len(runs), 40)
         for s, r in runs.items():
             self.assertTrue(r["combo"].endswith(f"##HKO:{r['axes']['axes']['cografya']}|bystander_handheld"), s)
-            self.assertEqual((r["axes"]["axes"]["mod"], r["axes"]["axes"]["surum"]), ("hit_kopya_orman", "v2"))
+            self.assertEqual((r["axes"]["axes"]["mod"], r["axes"]["axes"]["surum"]), ("hit_kopya_orman", "v3"))
+            self.assertIn(CAMERA_NEW, r["prompt"])
         self.assertEqual(snapshot_hash(runs), HIT_KOPYA_ORMAN_SHA256)
-        self.assertNotEqual(HIT_KOPYA_ORMAN_SHA256, HIT_KOPYA_ORMAN_V1_SHA256)
+        self.assertNotIn(HIT_KOPYA_ORMAN_SHA256, (HIT_KOPYA_ORMAN_V1_SHA256, HIT_KOPYA_ORMAN_V2_SHA256))
+
+    def test_v3_differs_from_v2_only_in_camera(self):
+        """40 tohum: v3 seçimleri (coğrafya/araç/engel/kişi, combo, dışlananlar) v2 fixture'ıyla aynı; prompt ve stil
+        eki yalnız kamera parçasında, eksenler yalnız sürümde farklı."""
+        with open(V2_FIXTURE, encoding="utf-8") as f:
+            old = json.load(f)
+        now = hko_snapshot()
+        self.assertEqual(set(old), set(now))
+        for s in now:
+            o, n = old[s], now[s]
+            self.assertEqual(n["prompt"], o["prompt"].replace(CAMERA_OLD, CAMERA_NEW), s)
+            self.assertEqual(n["suffix"], o["suffix"].replace(CAMERA_OLD, CAMERA_NEW), s)
+            self.assertEqual((n["story"], n["combo"]), (o["story"], o["combo"]), s)
+            self.assertEqual(n["axes"]["axes"], {**o["axes"]["axes"], "surum": "v3"}, s)
+            self.assertEqual({k: v for k, v in n["axes"].items() if k != "axes"},
+                             {k: v for k, v in o["axes"].items() if k != "axes"}, s)
 
     def test_locked_events_hash_file(self):
         import locked_prompts as lp

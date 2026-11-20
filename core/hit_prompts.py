@@ -3766,12 +3766,27 @@ def hit_kopya_issues(structure: dict, info: dict) -> list[str]:
 # follow); zayıf betler (U dönüşü, ağaç tepeleri) çıktı; 6-8 kişi; ortada düşen adam + önüne devrilen yanan ağaç /
 # direk (O1/O2 dönüşümlü, 13 Eki kül bulutu hit'indeki devrilen direklerden esinli); final balkonun dibindeki evin
 # çatısı çöker. Yer artık stil ekinde ("a hillside house in {place}"). v1 şablon/listeler/metinler _V1 pasif kopya.
+# 21 Kas (v3, Bahadır): v2 testinde (G5 Portekiz, O2 direk, 7 kişi) direk sahnesi ve gerçekçilik iyiydi ama kamera
+# sürekli döndüğü için olaylar takip edilemedi ve balkon korkuluğu ilk 3 sn yoktu, sonra şekil değiştirdi. Tek
+# değişiklik stil ekinde: "the camera pans to follow the wall of flames" → kamera sokağa sabit + koyu metal korkuluk
+# baştan sona kadrajın altında sabit. Hikâye, coğrafya, araç, engel, kişi, LRU aynen. v2 _V2 pasif kopya; engel
+# LRU'su v2 + v3 kayıtlarını sayar (engel ekseni aynı, dönüşüm v2'nin son engelinden devam eder).
 HIT_KOPYA_ORMAN_MODE_LABEL = "⭐ Hit kopyası (orman yangını)"
 HIT_KOPYA_ORMAN_EVENTS = (es.WILDFIRE,)
 HIT_KOPYA_ORMAN_DOMAIN = "fire_disasters"
 HIT_KOPYA_ORMAN_MOD = "hit_kopya_orman"             # config bayrağı, structure anahtarı, Notion axes.mod
-HIT_KOPYA_ORMAN_SURUM = "v2"                         # Notion axes.surum (engel LRU'su yalnız v2 kayıtlarından)
-HIT_KOPYA_ORMAN_VERSION_LINE = "Sürüm: v2 (6-8 kişi, düşen adam + ağaç/direk, çatı çöker)"
+HIT_KOPYA_ORMAN_SURUM = "v3"                         # Notion axes.surum
+HIT_KOPYA_ORMAN_SURUM_V2 = "v2"                      # pasif (v2)
+HIT_KOPYA_ORMAN_OBSTACLE_SURUMS = ("v2", "v3")       # engel LRU'su bu sürümlerin kayıtlarından (v1'de engel yok)
+HIT_KOPYA_ORMAN_VERSION_LINE = "Sürüm: v3 (sabit kamera, sabit korkuluk)"
+HIT_KOPYA_ORMAN_VERSION_LINE_V2 = "Sürüm: v2 (6-8 kişi, düşen adam + ağaç/direk, çatı çöker)"   # pasif (v2)
+HIT_KOPYA_ORMAN_CAMERA = "sabit kamera (sokağa sabit), korkuluk kadrajın altında"   # ✋ Onay "Kamera:" satırı
+HIT_KOPYA_ORMAN_CAMERA_V2 = ("hit kamerası (the camera pans to follow the wall of flames); balcony of a hillside "
+                             "house, eye level, normal lens")   # pasif (v2)
+HIT_KOPYA_ORMAN_CAMERA_AXIS = "sabit (sokağa sabit), korkuluk altta"   # Eksenler "kamera modu"
+HIT_KOPYA_ORMAN_CAMERA_AXIS_V2 = "elde, alevleri takip (hit)"         # pasif (v2)
+HIT_KOPYA_ORMAN_SPOT_LABEL = "Balcony of a hillside house (hit kopyası v3)"
+HIT_KOPYA_ORMAN_SPOT_LABEL_V2 = "Balcony of a hillside house (hit kopyası v2)"   # pasif (v2)
 HIT_KOPYA_ORMAN_SOURCE = "Kaynak: 9 Eki 21:52 üretimi (19 Eki paylaşımı, 5,4M), iskelet ve dil"
 HIT_KOPYA_ORMAN_SOURCE_V1 = "Kaynak: 9 Eki 21:52 üretimi (19 Eki paylaşımı, 3M), birebir"   # pasif (v1)
 HIT_KOPYA_ORMAN_MAX_WORDS = 230
@@ -3795,7 +3810,48 @@ HIT_KOPYA_ORMAN = {
     "vehicles": ("a white van", "a pickup truck", "an SUV"),   # artikeliyle; Onay ve Eksenler'de artikelsiz ad
     "obstacles": {"O1": "burning tree", "O2": "burning power pole"},
     "people": ("Six", "Seven", "Eight"),   # rastgele (LRU yok); Eksenler'de 6/7/8
-    # Bahadır'ın v2 metni, birebir
+    # Bahadır'ın v2 metni, birebir; v3 (21 Kas): yalnız kamera parçası değişti (sabit kamera + sabit korkuluk)
+    "template": (
+        "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of the neighborhood, "
+        "igniting roofs and trees. {people} people run desperately up the street toward the camera, scattering to "
+        "escape the rapidly encroaching inferno, as {vehicle} speeds past them. 4-9s: One man trips and falls on the "
+        "road; right in front of him a {obstacle} crashes down in a burst of sparks, and he scrambles up and keeps "
+        "running. 9-15s: The flames reach the house right below the balcony and its roof caves in, a fountain of "
+        "sparks bursting up toward the camera. Handheld footage shot by a person standing on a balcony of a hillside "
+        "house in {place} overlooking the street and the burning slope, eye level, normal lens; slight hand shake, "
+        "the camera stays fixed on the street; a dark metal balcony railing stays fixed at the bottom of the frame "
+        "the whole time; no zoom, no cuts. Bystanders wear civilian clothes, never "
+        "hi-vis PPE on civilians; emergency responders wear service uniforms. Raw natural light matching the "
+        "weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."),
+    "tail_start": "Handheld footage shot by a person standing on a balcony",
+}
+HIT_KOPYA_ORMAN_CAMERA_OLD_V2 = "slight hand shake, the camera pans to follow the wall of flames; no zoom, no cuts."
+HIT_KOPYA_ORMAN_CAMERA_NEW = ("slight hand shake, the camera stays fixed on the street; a dark metal balcony railing "
+                              "stays fixed at the bottom of the frame the whole time; no zoom, no cuts.")
+HIT_KOPYA_ORMAN_REQUIRED = ("sweeps down the forested slope and slams into the edge of the neighborhood",
+                            "run desperately up the street toward the camera", "trips and falls",
+                            "right in front of him", "scrambles up and keeps running", "its roof caves in",
+                            "the camera stays fixed on the street", "railing stays fixed at the bottom of the frame",
+                            "never glossy or CGI")
+HIT_KOPYA_ORMAN_FORBIDDEN = ("U-turn", "their tops exploding", "Full action", "Until the last frame", "big in frame",
+                             "From the very first frame", "the edge of a", "the edge of an", "onto him",
+                             "on top of him", "pans to follow")
+HIT_KOPYA_ORMAN_WARNING = ("⚠️ Hit karşılaştırması: alev duvarı ilk saniyelerde mahalleye çarpıyor mu, düşen adam ve "
+                           "önüne devrilen ağaç/direk yakın ve net mi, çatı çöküyor mu, korkuluk baştan sona aynı yerde "
+                           "ve aynı şekilde mi?")
+# ── pasif (v2, 21 Kas 892fdf9): Bahadır'ın v2 metni, kamera alev duvarını takip eder ──
+HIT_KOPYA_ORMAN_V2 = {
+    "geos": {
+        "G1": {"name": "Kaliforniya", "place": "a Californian suburb"},
+        "G2": {"name": "Avustralya", "place": "an Australian bush town"},
+        "G3": {"name": "Yunanistan", "place": "a Greek village"},
+        "G4": {"name": "Kanada", "place": "a Canadian mountain town"},
+        "G5": {"name": "Portekiz", "place": "a Portuguese village"},
+        "G6": {"name": "Şili", "place": "a Chilean town"},
+    },
+    "vehicles": ("a white van", "a pickup truck", "an SUV"),
+    "obstacles": {"O1": "burning tree", "O2": "burning power pole"},
+    "people": ("Six", "Seven", "Eight"),
     "template": (
         "0-4s: A towering wall of flames sweeps down the forested slope and slams into the edge of the neighborhood, "
         "igniting roofs and trees. {people} people run desperately up the street toward the camera, scattering to "
@@ -3809,15 +3865,15 @@ HIT_KOPYA_ORMAN = {
         "weather, never glossy or CGI; no white hazmat suits. No readable signs, text or flags."),
     "tail_start": "Handheld footage shot by a person standing on a balcony",
 }
-HIT_KOPYA_ORMAN_REQUIRED = ("sweeps down the forested slope and slams into the edge of the neighborhood",
-                            "run desperately up the street toward the camera", "trips and falls",
-                            "right in front of him", "scrambles up and keeps running", "its roof caves in",
-                            "the camera pans to follow the wall of flames", "never glossy or CGI")
-HIT_KOPYA_ORMAN_FORBIDDEN = ("U-turn", "their tops exploding", "Full action", "Until the last frame", "big in frame",
-                             "From the very first frame", "the edge of a", "the edge of an", "onto him",
-                             "on top of him")
-HIT_KOPYA_ORMAN_WARNING = ("⚠️ Hit karşılaştırması: alev duvarı ilk saniyelerde mahalleye çarpıyor mu, düşen adam ve "
-                           "önüne devrilen ağaç/direk yakın ve net mi, çatı çöküyor mu?")
+HIT_KOPYA_ORMAN_REQUIRED_V2 = ("sweeps down the forested slope and slams into the edge of the neighborhood",
+                               "run desperately up the street toward the camera", "trips and falls",
+                               "right in front of him", "scrambles up and keeps running", "its roof caves in",
+                               "the camera pans to follow the wall of flames", "never glossy or CGI")
+HIT_KOPYA_ORMAN_FORBIDDEN_V2 = ("U-turn", "their tops exploding", "Full action", "Until the last frame",
+                                "big in frame", "From the very first frame", "the edge of a", "the edge of an",
+                                "onto him", "on top of him")
+HIT_KOPYA_ORMAN_WARNING_V2 = ("⚠️ Hit karşılaştırması: alev duvarı ilk saniyelerde mahalleye çarpıyor mu, düşen adam "
+                              "ve önüne devrilen ağaç/direk yakın ve net mi, çatı çöküyor mu?")
 HIT_KOPYA_ORMAN_CONFIRM_DESC = ("9 Eki orman hit'inin (19 Eki paylaşımı, 5,4M) iskeleti ve dili; zayıf betler "
                                 "çıkarıldı. Alev duvarı yamaçtan inip mahalleye çarpar, 6-8 kişi kameraya doğru kaçar, "
                                 "yanlarından bir araç hızla geçer; kaçan bir adam düşer, hemen önüne yanan ağaç ya da "
@@ -3920,9 +3976,11 @@ def hit_kopya_orman_prompt(geo: str, vehicle: str, obstacle: str, people: int) -
     return join_story_and_style(hit_kopya_orman_story(geo, vehicle, obstacle, people), hit_kopya_orman_tail(geo))
 
 
-def hit_kopya_orman_axes_history(records: list | None, key: str, surum: str | None = None) -> list[str] | None:
+def hit_kopya_orman_axes_history(records: list | None, key: str,
+                                 surum: str | tuple[str, ...] | None = None) -> list[str] | None:
     """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun `key` değerleri; okunamadıysa None. surum
-    verilirse yalnız o sürümün kayıtları (engel: yalnız v2)."""
+    verilirse yalnız o sürüm(ler)in kayıtları (engel: v2 + v3, HIT_KOPYA_ORMAN_OBSTACLE_SURUMS)."""
+    surums = (surum,) if isinstance(surum, str) else surum
     import json
     if records is None:
         return None
@@ -3935,7 +3993,7 @@ def hit_kopya_orman_axes_history(records: list | None, key: str, surum: str | No
         axes = data.get("axes") if isinstance(data, dict) else None
         if (isinstance(axes, dict) and data.get("event") in HIT_KOPYA_ORMAN_EVENTS
                 and axes.get("mod") == HIT_KOPYA_ORMAN_MOD and axes.get(key)
-                and (surum is None or axes.get("surum") == surum)):
+                and (surums is None or axes.get("surum") in surums)):
             out.append(axes[key])
     return out
 
@@ -3959,8 +4017,8 @@ def hit_kopya_orman_choose_obstacle(used: list[str] | None = None, rng=None) -> 
 
 
 def hit_kopya_orman_lines(tb: dict) -> str:
-    """✋ Onay satırları: mod, sürüm, kaynak, coğrafya, araç, kişi, engel, kelime/karakter, eksenler + tekrar önleme,
-    hit karşılaştırması."""
+    """✋ Onay satırları: mod, sürüm, kaynak, coğrafya, araç, kişi, engel, kamera, kelime/karakter, eksenler + tekrar
+    önleme, hit karşılaştırması."""
     text = tb["prompt"]
     g = _HKO["geos"][tb["geo"]]
     lines = [
@@ -3971,6 +4029,7 @@ def hit_kopya_orman_lines(tb: dict) -> str:
         f"Araç: {tb['vehicle']}",
         f"Kişi: {tb['people']}",
         f"Engel: {tb['obstacle']} {HIT_KOPYA_ORMAN_OBSTACLE_NAMES[tb['obstacle']]}",
+        f"Kamera: {HIT_KOPYA_ORMAN_CAMERA}",   # v3 (21 Kas): sabit kamera + sabit korkuluk
         f"Kelime: {len(text.split())} (en fazla {HIT_KOPYA_ORMAN_MAX_WORDS}) · karakter: {len(text)} "
         f"(en fazla {HIT_KOPYA_ORMAN_MAX_CHARS})",
     ]
@@ -3990,9 +4049,9 @@ def hit_kopya_orman_axes_json(geo: str, vehicle: str, obstacle: str, people: int
 
 def hit_kopya_orman_build_scene(domain: str | None, event: str | None, history: list[str] | None = None,
                                 records: list | None = None, rng=None, history_source: str = "bellek") -> dict:
-    """⭐ Hit kopyası (orman yangını) v2 sahnesi: GPT yok, normal hat yok. records = Notion "Eksenler" ham kayıtları
+    """⭐ Hit kopyası (orman yangını) v3 sahnesi: GPT yok, normal hat yok. records = Notion "Eksenler" ham kayıtları
     (None = okunamadı / yükleyici yok: süreç hafızası). Coğrafya son 3 (G4 tohum), araç son 2 (v1 kayıtları da
-    sayılır), engel son 1 (yalnız v2 kayıtları), kişi rastgele 6-8. structure["hit_kopya_orman"] Kie öncesi son
+    sayılır), engel son 1 (v2 + v3 kayıtları), kişi rastgele 6-8. structure["hit_kopya_orman"] Kie öncesi son
     denetimin (submit_issues) kaynağıdır."""
     import random
     from core.skeleton_pipeline import SKELETON_CAMERA
@@ -4001,7 +4060,7 @@ def hit_kopya_orman_build_scene(domain: str | None, event: str | None, history: 
     r = rng or random
     geo_used = hit_kopya_orman_axes_history(records, "cografya")
     vehicle_used = hit_kopya_orman_axes_history(records, "arac")
-    obstacle_used = hit_kopya_orman_axes_history(records, "engel", HIT_KOPYA_ORMAN_SURUM)
+    obstacle_used = hit_kopya_orman_axes_history(records, "engel", HIT_KOPYA_ORMAN_OBSTACLE_SURUMS)
     geo = hit_kopya_orman_choose_geo(geo_used, r)
     vehicle = hit_kopya_orman_choose_vehicle(vehicle_used, r)
     obstacle = hit_kopya_orman_choose_obstacle(obstacle_used, r)
@@ -4032,12 +4091,11 @@ def hit_kopya_orman_build_scene(domain: str | None, event: str | None, history: 
     obs_label = f"{obstacle} {HIT_KOPYA_ORMAN_OBSTACLE_NAMES[obstacle]}"
     trace, axes_line = mode_display(
         {"trace": base_trace}, {}, mode=HIT_KOPYA_ORMAN_MODE_LABEL,
-        camera="hit kamerası (the camera pans to follow the wall of flames); balcony of a hillside house, eye level, "
-               "normal lens",
+        camera=HIT_KOPYA_ORMAN_CAMERA,
         opening=opening, mid=(obstacle, mid_text), final=("F", final_text), plain=plain, vehicle=vehicle,
-        spot="Balcony of a hillside house (hit kopyası v2)",
+        spot=HIT_KOPYA_ORMAN_SPOT_LABEL,
         axes={"sürüm": HIT_KOPYA_ORMAN_SURUM, "coğrafya": f"{geo} {g['name']}", "araç": vehicle, "kişi": people,
-              "engel": obs_label, "final": "çatı çöker", "kamera modu": "elde, alevleri takip (hit)"},
+              "engel": obs_label, "final": "çatı çöker", "kamera modu": HIT_KOPYA_ORMAN_CAMERA_AXIS},
         repeat=repeat)
     trace = {**trace, "mode": HIT_KOPYA_ORMAN_MOD, "cografya": geo, "engel": obstacle,
              "surum": HIT_KOPYA_ORMAN_SURUM, "axes_source": history_source}
@@ -4066,7 +4124,8 @@ def hit_kopya_orman_build_scene(domain: str | None, event: str | None, history: 
 def hit_kopya_orman_camera_issues(text: str, geo: str | None = None) -> list[str]:
     """Kie öncesi son kontrol: HIT_KOPYA_ORMAN_REQUIRED ifadelerinin hepsi ve seçilen G'nin place metni var;
     HIT_KOPYA_ORMAN_FORBIDDEN'dan ("U-turn", "their tops exploding", "Full action", "Until the last frame", "big in
-    frame", "From the very first frame", "the edge of a", "the edge of an", "onto him", "on top of him") hiçbiri yok
+    frame", "From the very first frame", "the edge of a", "the edge of an", "onto him", "on top of him", "pans to
+    follow") hiçbiri yok
     (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
     out = []
     text = text or ""
