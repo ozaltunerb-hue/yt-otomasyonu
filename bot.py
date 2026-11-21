@@ -853,9 +853,10 @@ def kasirga_confirm_text(cfg: dict | None = None, geo: str | None = None) -> str
             "Üretim sadece ✅ Üret'e basınca başlar."
             + ("\n✋ Onay açık: Kie'ye göndermeden önce son prompt'u gösterip onay isteyeceğim." if cfg["approval"] else "")
             + f"\n\nMod: {hp.KASIRGA_MODE_LABEL}\n"
+            + hp.KASIRGA_VERSION_LINE + "\n"
             + hp.KASIRGA_CAMERA_LINE
             + "\n" + hp.KASIRGA_CONFIRM_DESC
-            + " Coğrafya (G1-G6), araç, orta (O1-O2), final (F1-F3), kişi sayısı, kelime sayısı ✋ Onay mesajında.")
+            + " Coğrafya (G1-G6), araç, orta (O1-O3), final (F1-F3), kişi sayısı, kelime sayısı ✋ Onay mesajında.")
 
 
 # ── 🌍 Yer yarılması (17 Kas 2026, Bahadır): kod hikâyeli yeni kategori, tek olay. Normal kategori havuzunda

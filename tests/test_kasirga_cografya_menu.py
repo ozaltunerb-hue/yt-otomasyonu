@@ -32,7 +32,9 @@ BUTTONS = {"G1": "🇺🇸 ABD Florida", "G2": "🇵🇭 Filipinler", "G3": "�
            "G5": "🇨🇺 Küba", "G6": "🇯🇵 Japonya"}
 # Değişiklikten ÖNCEKİ kodla (d73e8e5) alınan kayıtlar: 🌀 Kasırga 40 tohum (🎲 Rastgele yolu) ve bütün olaylar +
 # bütün modlar (test_hit_kopya_sel zinciri + ⭐ Hit kopyası (ani sel)) 40 tohum
-KASIRGA_RANDOM_SHA256 = "c96655d503dbad8716b754039b55ca1cf9f760c4dde22663edbc3c9fd16b21e6"
+KASIRGA_RANDOM_SHA256 = "c96655d503dbad8716b754039b55ca1cf9f760c4dde22663edbc3c9fd16b21e6"   # = tk.KASIRGA_V1_SHA256
+# 21 Kas (2): kasırga v2 (açılış + F2) bilerek değişti; canlı 🎲 Rastgele kaydı artık tk.KASIRGA_SHA256 (v2 fixture).
+# Zincirdeki kasırga kaydı v1 fixture'ından gelir, FULL_SHA256 değişmez.
 FULL_SHA256 = "4db630349122185e7437b1dd501802a43cbeedaabcffc56367bced930ef4fbeb"
 
 
@@ -69,7 +71,8 @@ class TestMenuScene(tk._Quiet):
                 self.assertEqual(d["trace"]["cografya_secim"], "menu")
                 self.assertEqual(hp._KASIRGA_GEO_MEMORY[-1], g)   # menü seçimi de sonraki 🎲 için sayılır
                 lines = tb["lines"].split("\n")
-                self.assertEqual(lines[1], f"Coğrafya: {g} {tk.PLACES[g][0]} (menü)")
+                self.assertEqual(lines[1], tk.VERSION_LINE)   # 21 Kas (2)
+                self.assertEqual(lines[2], f"Coğrafya: {g} {tk.PLACES[g][0]} (menü)")
                 self.assertIn(f"Tekrar önleme: coğrafya menüden ({g}) · araç son 2 · orta son 1 · final son 1",
                               tb["lines"])
 
@@ -120,12 +123,12 @@ class TestMenuScene(tk._Quiet):
                 self.assertNotIn("cografya_secim", axes["axes"])
                 self.assertNotIn("cografya_secim", d["trace"])
                 tb = d["structure"]["kasirga"]
-                self.assertEqual(tb["lines"].split("\n")[1], f"Coğrafya: {tb['geo']} {tk.PLACES[tb['geo']][0]} "
+                self.assertEqual(tb["lines"].split("\n")[2], f"Coğrafya: {tb['geo']} {tk.PLACES[tb['geo']][0]} "
                                                              "(rastgele)")
                 target[str(s)] = {"prompt": sc["prompt"], "story": sc["story"], "suffix": sc["style_suffix"],
                                   "combo": d["combo_key"], "axes": axes}
         self.assertEqual(runs, runs_none)
-        self.assertEqual(_hash(runs), KASIRGA_RANDOM_SHA256)
+        self.assertEqual(_hash(runs), tk.KASIRGA_SHA256)   # 21 Kas (2): v2 (v1 = KASIRGA_RANDOM_SHA256, fixture)
 
     def test_bad_geo(self):
         for bad in ("G7", "g1", "", "r"):

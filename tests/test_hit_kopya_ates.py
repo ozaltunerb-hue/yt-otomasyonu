@@ -113,17 +113,10 @@ def others_snapshot() -> dict:
         d.pop("caption", None)
         return d
     snap = tk.others_snapshot()
-    runs = {}
-    for s in range(1, 41):
-        reset()
-        random.seed(s)
-        with patch.object(pg, "_call_gpt", AsyncMock(side_effect=AssertionError("GPT"))):
-            d = asyncio.run(pg.generate_creative_prompts({"domain": hp.KASIRGA_DOMAIN, "event": hp.KASIRGA_EVENT,
-                                                         "kasirga": True, "used_combos": [], "recent_topics": []}))
-        sc = d["scenes"][0]
-        runs[str(s)] = {"prompt": sc["prompt"], "story": sc["story"], "suffix": sc["style_suffix"],
-                        "combo": d["combo_key"], "axes": strip(d.get("axes_json", ""))}
-    snap["modes"]["kasirga"] = runs
+    # 21 Kas (2): 🌀 Kasırga v2 bilerek değişti (açılış + F2). Bu kilit diğer olay/modlar içindir; kasırga kaydı v1
+    # (35411fc) fixture'ından gelir (tk.KASIRGA_V1_SHA256), canlı v2 test_kasirga KASIRGA_SHA256 ile kilitli.
+    with open(tk.FIXTURE_V1, encoding="utf-8") as fh:
+        snap["modes"]["kasirga"] = json.load(fh)
     return snap
 
 

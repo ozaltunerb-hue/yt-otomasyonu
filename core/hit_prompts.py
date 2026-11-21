@@ -3149,7 +3149,8 @@ KASIRGA = {
         "G6": {"name": "Japonya", "place": "a Japanese coastal town of low tiled houses"},
     },
     "opening": ("Category 5 hurricane winds and torrential sideways rain hammer a street in {place}, palm trees bent "
-                "almost flat, branches, roof sheets and debris flying everywhere in total chaos."),
+                "almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and "
+                "debris flying everywhere in total chaos."),   # 21 Kas (2) v2; eski OPENING_V2 pasif
     "people": {4: "Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging "
                   "to railings, one knocked off his feet by a gust.",
                5: "Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging "
@@ -3165,8 +3166,8 @@ KASIRGA = {
     "finals": {
         "F1": "Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past "
               "the camera.",
-        "F2": "Right across the street, the wind rips the entire front wall off a shop, glass and debris blasting past "
-              "the camera.",
+        "F2": ("Right across the street, a wooden power pole snaps at its base and crashes down across the road, live "
+               "wires whipping and sparking."),   # 21 Kas (2) v2; eski F2_V2 pasif
         "F3": "Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
     },
     "vehicle_mids": ("O1", "O2", "O3"),
@@ -3222,7 +3223,13 @@ KASIRGA_PASIF = {
     "REQUIRED_V1": ("Hurricane", "sideways rain", "normal lens", "No tornado funnel"),
     "SPOT_DISPLAY_V1": "High balcony across the street (hit kamerası, yüksek balkon, normal lens, rüzgârla sarsılan el)",
     "CAMERA_MODE_V1": "elde, rüzgârla sarsılan",
+    # 21 Kas (2), kasırga v2: açılışa kökünden sökülen palmiye, F2 dükkân cephesi yerine elektrik direği
+    "OPENING_V2": ("Category 5 hurricane winds and torrential sideways rain hammer a street in {place}, palm trees "
+                   "bent almost flat, branches, roof sheets and debris flying everywhere in total chaos."),
+    "F2_V2": ("Right across the street, the wind rips the entire front wall off a shop, glass and debris blasting past "
+              "the camera."),
 }
+KASIRGA_VERSION_LINE = "Sürüm: kasırga v2 (palmiye kökünden, F2 direk)"   # 21 Kas (2): ✋ Onay + bot onay metni
 # 21 Kas: Telegram coğrafya menüsü düğmeleri (okunur ad). Havuz metinleri değişmez; Onay satırı geos[..]["name"].
 KASIRGA_GEO_BUTTONS = {"G1": "🇺🇸 ABD Florida", "G2": "🇵🇭 Filipinler", "G3": "🌴 Meksika Karayipleri",
                        "G4": "🇮🇳 Hindistan", "G5": "🇨🇺 Küba", "G6": "🇯🇵 Japonya"}
@@ -3329,6 +3336,7 @@ def kasirga_lines(tb: dict) -> str:
     text = tb["prompt"]
     lines = [
         f"Mod: {KASIRGA_MODE_LABEL}",
+        KASIRGA_VERSION_LINE,
         f"Coğrafya: {tb['geo']} {_KS['geos'][tb['geo']]['name']} "
         f"({'menü' if tb.get('geo_source') == 'menu' else 'rastgele'})",
         f"Araç: {tb['vehicle']}",
