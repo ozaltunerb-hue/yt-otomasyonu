@@ -532,7 +532,7 @@ class TestKasirgaScene(_Quiet):
             lines = tb["lines"].split("\n")
             self.assertEqual(lines[:8], [
                 "Mod: 🌀 Kasırga",
-                f"Coğrafya: {tb['geo']} {PLACES[tb['geo']][0]}",
+                f"Coğrafya: {tb['geo']} {PLACES[tb['geo']][0]} (rastgele)",   # 21 Kas: + seçim kaynağı
                 f"Araç: {tb['vehicle']}",
                 f"Orta (4-9s): {tb['mid']} «{MIDS[tb['mid']].format(vehicle=tb['vehicle'])[6:]}»",
                 f"Final (9-15s): {tb['final']} «{FINALS[tb['final']][7:]}»",
@@ -695,28 +695,43 @@ class TestKasirgaPipelineAndBot(_Quiet):
         self.assertEqual(labels, [EVENT_LABEL, "🔙 Geri"])
         cbs = [b.callback_data for r in call.kwargs["reply_markup"].inline_keyboard for b in r]
         self.assertEqual(cbs, ["uret:kse", "uret:back"])
+        # 21 Kas: olay → coğrafya ekranı (G1-G6 + 🎲 Rastgele + 🔙 Geri)
         upd = _update(data="uret:kse")
         asyncio.run(bot.on_callback(upd, ctx))
         call = upd.callback_query.edit_message_text.await_args
+        self.assertEqual(call.args[0], f"{EVENT_LABEL}\nHangi coğrafya?")
+        rows = call.kwargs["reply_markup"].inline_keyboard
+        self.assertEqual([[b.text for b in r] for r in rows], [
+            ["🇺🇸 ABD Florida", "🇵🇭 Filipinler"], ["🌴 Meksika Karayipleri", "🇮🇳 Hindistan"],
+            ["🇨🇺 Küba", "🇯🇵 Japonya"], ["🎲 Rastgele"], ["🔙 Geri"]])
+        self.assertEqual([b.callback_data for r in rows for b in r],
+                         [f"uret:ksg:G{i}" for i in range(1, 7)] + ["uret:ksg:r", "uret:ks"])
+        upd = _update(data="uret:ksg:r")
+        asyncio.run(bot.on_callback(upd, ctx))
+        call = upd.callback_query.edit_message_text.await_args
         text = call.args[0]
+        self.assertIn("Coğrafya: 🎲 Rastgele (son 3 coğrafya elenir)", text)
         for part in ("Kategori: 🌀 Kasırga", f"Olay: {EVENT_LABEL}", "Mod: 🌀 Kasırga", CAMERA_LINE, "✋ Onay",
                      hp.KASIRGA_CONFIRM_DESC):
             self.assertIn(part, text)
         self.assertNotIn("—", text)   # Türkçe içerik kuralı: em-dash yok
         self.assertEqual([b.text for r in call.kwargs["reply_markup"].inline_keyboard for b in r], ["✅ Üret", "❌ İptal"])
-        upd = _update(data="uret:ksok")
+        self.assertEqual(call.kwargs["reply_markup"].inline_keyboard[0][0].callback_data, "uret:ksok:r")
+        upd = _update(data="uret:ksok:r")
         runner = AsyncMock(return_value={"success": False, "reason": "cancelled"})
         with patch.object(bot.pipeline, "run_pipeline", runner), patch.object(bot, "_production_lock", asyncio.Lock()):
             asyncio.run(bot.on_callback(upd, ctx))
         kw = runner.await_args.kwargs
         self.assertEqual((kw["domain"], kw["event"], kw["kasirga"]), (DOMAIN, EVENT, True))
+        self.assertNotIn("kasirga_geo", kw)   # 🎲 Rastgele: bugünkü LRU yolu
         for other in ("donma_firtina", "cadde_yaklasma", "hortum_yaklasma", "heli_yaklasma", "kul_yaklasma",
                       "orman_yaklasma", "dalga24", "approach_env", "hit_env"):
             self.assertNotIn(other, kw)
         self.assertTrue(kw["reporter"].needs_approval)
         started = upd.callback_query.edit_message_text.await_args_list[0].args[0]
         self.assertIn(f"🚀 Üretim başladı: 🌀 Kasırga / {EVENT_LABEL}", started)
-        for bad in ("uret:ks:1", "uret:kse:0", "uret:ksok:x"):
+        for bad in ("uret:ks:1", "uret:kse:0", "uret:ksok:x", "uret:ksg", "uret:ksg:G7", "uret:ksg:g1",
+                    "uret:ksok:G1:r"):
             upd = _update(data=bad)
             asyncio.run(bot.on_callback(upd, ctx))
             self.assertIn("Geçersiz", upd.callback_query.edit_message_text.await_args.args[0])
@@ -726,7 +741,8 @@ class TestKasirgaPipelineAndBot(_Quiet):
             upd = _update(data="uret:ksok")
             asyncio.run(bot.on_callback(upd, ctx))
             self.assertEqual(upd.callback_query.edit_message_text.await_args.args[0], bot.BUSY_TEXT)
-        for b in (b for m in (kb, bot.kasirga_event_keyboard(), bot.kasirga_produce_keyboard())
+        for b in (b for m in (kb, bot.kasirga_event_keyboard(), bot.kasirga_produce_keyboard(),
+                              bot.kasirga_geo_keyboard(), bot.kasirga_produce_keyboard("G6"))
                   for r in m.inline_keyboard for b in r):
             self.assertLessEqual(len(b.callback_data.encode()), 64)
 

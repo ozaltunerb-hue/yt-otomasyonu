@@ -805,18 +805,48 @@ def kasirga_event_keyboard() -> InlineKeyboardMarkup:
     ])
 
 
-def kasirga_produce_keyboard() -> InlineKeyboardMarkup:
+# 21 Kas: olay → coğrafya ekranı (G1-G6 + 🎲 Rastgele + 🔙 Geri; Şehir Afeti sel görünüm menüsü gibi). Adımlar:
+# kse (coğrafya ekranı) → ksg:<Gx|r> (onay metni) → ksok:<Gx|r> (üretim). Menüden seçilen G o üretim için sabit,
+# diğer eksenler LRU; 🎲 Rastgele bugünkü LRU seçimi (son 3 elenir). Argümansız eski ksok = 🎲 Rastgele.
+def parse_kasirga_geo(gid: str) -> tuple[bool, str | None]:
+    """Kısa kod → (geçerli mi, G). 'r' = 🎲 Rastgele (None)."""
+    if gid == RANDOM_ID:
+        return True, None
+    if gid in _hp().KASIRGA["geos"]:
+        return True, gid
+    return False, None
+
+
+def kasirga_geo_keyboard() -> InlineKeyboardMarkup:
+    """G1-G6 (okunur ad) + 🎲 Rastgele (son 3 coğrafya elenir) + 🔙 Geri (Kasırga olay menüsüne)."""
+    hp = _hp()
+    buttons = [InlineKeyboardButton(hp.KASIRGA_GEO_BUTTONS[g], callback_data=f"{CALLBACK_PREFIX}ksg:{g}")
+               for g in hp.KASIRGA["geos"]]
+    rows = [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
+    rows.append([InlineKeyboardButton(RANDOM_LABEL, callback_data=f"{CALLBACK_PREFIX}ksg:{RANDOM_ID}")])
+    rows.append([InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}ks")])
+    return InlineKeyboardMarkup(rows)
+
+
+def kasirga_geo_text(geo: str | None) -> str:
+    hp = _hp()
+    return (f"{geo} {hp.KASIRGA_GEO_BUTTONS[geo]}" if geo
+            else f"🎲 Rastgele (son {hp.KASIRGA_GEO_BLOCK} coğrafya elenir)")
+
+
+def kasirga_produce_keyboard(gid: str = RANDOM_ID) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([[
-        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}ksok"),
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}ksok:{gid}"),
         InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
     ]])
 
 
-def kasirga_confirm_text(cfg: dict | None = None) -> str:
+def kasirga_confirm_text(cfg: dict | None = None, geo: str | None = None) -> str:
     hp = _hp()
     cfg = cfg or default_cfg()
     return (f"Kategori: {KASIRGA_CATEGORY_BUTTON}\n"
             f"Olay: {hp.KASIRGA_EVENT_LABEL}\n"
+            f"Coğrafya: {kasirga_geo_text(geo)}\n"
             f"Mod: {mode_label(cfg['mode'])}\n"
             f"🔍 Ayrıntı: {_onoff(cfg['detail'])} · ✋ Onay: {_onoff(cfg['approval'])}\n"
             "Tahmini maliyet: ~175 Kie kredisi + 1 danışman preflight GPT çağrısı (hikâye için GPT yok)\n\n"
@@ -1157,7 +1187,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("df", "dfe", "dfok"):   # 15 Kas: ❄️ Donduran fırtına
         await _on_donma(query, context, action, args, cfg)
         return
-    if action in ("ks", "kse", "ksok"):   # 15 Kas (4): 🌀 Kasırga
+    if action in ("ks", "kse", "ksg", "ksok"):   # 15 Kas (4): 🌀 Kasırga
         await _on_kasirga(query, context, action, args, cfg)
         return
     if action in ("yy", "yye", "yyok"):   # 17 Kas: 🌍 Yer yarılması
@@ -1532,20 +1562,31 @@ async def _on_donma(query, context, action: str, args: list[str], cfg: dict) -> 
 
 
 async def _on_kasirga(query, context, action: str, args: list[str], cfg: dict) -> None:
-    """🌀 Kasırga adımları: ks (olay menüsü) → kse (onay metni) → ksok (üretim). Kie yine ✋ Onay'a bağlı."""
-    if args:
+    """🌀 Kasırga adımları: ks (olay menüsü) → kse (coğrafya ekranı) → ksg:<Gx|r> (onay metni) → ksok:<Gx|r>
+    (üretim). Kie yine ✋ Onay'a bağlı."""
+    hp = _hp()
+    if action in ("ks", "kse") and args:
         await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
         return
-    hp = _hp()
     if action == "ks":
         await query.edit_message_text(f"{KASIRGA_CATEGORY_BUTTON}: hangi olay?", reply_markup=kasirga_event_keyboard())
         return
     if action == "kse":
-        await query.edit_message_text(kasirga_confirm_text(cfg), reply_markup=kasirga_produce_keyboard())
+        await query.edit_message_text(f"{hp.KASIRGA_EVENT_LABEL}\nHangi coğrafya?", reply_markup=kasirga_geo_keyboard())
+        return
+    if action == "ksok" and not args:   # eski mesajdaki argümansız düğme: 🎲 Rastgele (eski davranış)
+        args = [RANDOM_ID]
+    ok, geo = parse_kasirga_geo(args[0]) if len(args) == 1 else (False, None)
+    if not ok:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    if action == "ksg":
+        await query.edit_message_text(kasirga_confirm_text(cfg, geo), reply_markup=kasirga_produce_keyboard(args[0]))
         return
     run_cfg = dict(cfg)
     async with _production_lock:
-        started = (f"🚀 Üretim başladı: {KASIRGA_CATEGORY_BUTTON} / {hp.KASIRGA_EVENT_LABEL}\n"
+        started = (f"🚀 Üretim başladı: {KASIRGA_CATEGORY_BUTTON} / {hp.KASIRGA_EVENT_LABEL} / "
+                   f"{kasirga_geo_text(geo)}\n"
                    f"Mod: {mode_label(run_cfg['mode'])}\n"
                    + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
                       else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
@@ -1554,7 +1595,7 @@ async def _on_kasirga(query, context, action: str, args: list[str], cfg: dict) -
         except Exception as e:
             log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
         await produce(context.bot, _allowed_chat(context), hp.KASIRGA_DOMAIN, hp.KASIRGA_EVENT, cfg=run_cfg,
-                      bot_data=context.bot_data, kasirga=True)
+                      bot_data=context.bot_data, kasirga=True, kasirga_geo=geo)
 
 
 async def _on_yer_yarilmasi(query, context, action: str, args: list[str], cfg: dict) -> None:
@@ -1689,7 +1730,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                   orman_yaklasma: bool = False, heli_yaklasma: bool = False,
                   hortum_yaklasma: bool = False, cadde_yaklasma: bool = False,
                   donma_firtina: bool = False, kasirga: bool = False, hit_kopya_ates: bool = False,
-                  yer_yarilmasi: bool = False, hit_kopya_orman: bool = False, hit_kopya_sel: bool = False) -> None:
+                  yer_yarilmasi: bool = False, hit_kopya_orman: bool = False, hit_kopya_sel: bool = False,
+                  kasirga_geo: str | None = None) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1721,6 +1763,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["donma_firtina"] = True
     if kasirga:   # 15 Kas (4): 🌀 Kasırga
         kwargs["kasirga"] = True
+        if kasirga_geo:   # 21 Kas: coğrafya menüsü (None = Rastgele)
+            kwargs["kasirga_geo"] = kasirga_geo
     if hit_kopya_ates:   # 16 Kas: ⭐ Hit kopyası (ateş hortumu)
         kwargs["hit_kopya_ates"] = True
     if yer_yarilmasi:   # 17 Kas: 🌍 Yer yarılması

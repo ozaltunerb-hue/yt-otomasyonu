@@ -3223,6 +3223,9 @@ KASIRGA_PASIF = {
     "SPOT_DISPLAY_V1": "High balcony across the street (hit kamerası, yüksek balkon, normal lens, rüzgârla sarsılan el)",
     "CAMERA_MODE_V1": "elde, rüzgârla sarsılan",
 }
+# 21 Kas: Telegram coğrafya menüsü düğmeleri (okunur ad). Havuz metinleri değişmez; Onay satırı geos[..]["name"].
+KASIRGA_GEO_BUTTONS = {"G1": "🇺🇸 ABD Florida", "G2": "🇵🇭 Filipinler", "G3": "🌴 Meksika Karayipleri",
+                       "G4": "🇮🇳 Hindistan", "G5": "🇨🇺 Küba", "G6": "🇯🇵 Japonya"}
 _KS = KASIRGA
 _KASIRGA_GEO_MEMORY: list[str] = []
 _KASIRGA_VEHICLE_MEMORY: list[str] = []
@@ -3326,7 +3329,8 @@ def kasirga_lines(tb: dict) -> str:
     text = tb["prompt"]
     lines = [
         f"Mod: {KASIRGA_MODE_LABEL}",
-        f"Coğrafya: {tb['geo']} {_KS['geos'][tb['geo']]['name']}",
+        f"Coğrafya: {tb['geo']} {_KS['geos'][tb['geo']]['name']} "
+        f"({'menü' if tb.get('geo_source') == 'menu' else 'rastgele'})",
         f"Araç: {tb['vehicle']}",
         f"Orta (4-9s): {tb['mid']} «{kasirga_mid(tb['mid'], tb['vehicle'])}»",
         f"Final (9-15s): {tb['final']} «{kasirga_final(tb['final'])}»",
@@ -3341,27 +3345,37 @@ def kasirga_lines(tb: dict) -> str:
     return "\n".join(lines)
 
 
-def kasirga_axes_json(tag: str, geo: str, vehicle: str, people: int, excluded: dict | None = None) -> str:
+def kasirga_axes_json(tag: str, geo: str, vehicle: str, people: int, excluded: dict | None = None,
+                      geo_menu: bool = False) -> str:
     import core.axes_history as ah
     axes = {"spot": KASIRGA_SPOT, "view": None, "light": None, "vehicle": vehicle, "people": people, "beats": tag,
             "mod": "kasirga", "kategori": KASIRGA_NOTION_CATEGORY, "cografya": geo, "arac": vehicle}
+    if geo_menu:   # 21 Kas: coğrafya Telegram menüsünden (🎲 Rastgele yolunda anahtar yok: kayıt eskisiyle aynı)
+        axes["cografya_secim"] = "menu"
     return ah.axes_json(KASIRGA_EVENT, axes, excluded)
 
 
 def kasirga_build_scene(domain: str | None, event: str | None, history: list[str] | None = None,
-                        records: list | None = None, rng=None, history_source: str = "bellek") -> dict:
+                        records: list | None = None, rng=None, history_source: str = "bellek",
+                        geo: str | None = None) -> dict:
     """🌀 Kasırga sahnesi: GPT yok, normal hat yok. records = Notion "Eksenler" ham kayıtları (None = okunamadı /
     yükleyici yok: süreç hafızası). Coğrafya son 3, araç son 2, orta/final son 1, kişi 4/5. structure["kasirga"] Kie
-    öncesi son denetimin (submit_issues) kaynağıdır."""
+    öncesi son denetimin (submit_issues) kaynağıdır.
+    geo: 21 Kas, Telegram coğrafya menüsünden seçilen G (o üretim için sabit, LRU seçimi atlanır; diğer eksenler
+    LRU). None = 🎲 Rastgele (bugünkü seçim, birebir)."""
     import random
     from core.skeleton_pipeline import SKELETON_CAMERA
     if domain not in (None, KASIRGA_DOMAIN) or not kasirga_is_active(event):
         raise es.StructureError(f"{KASIRGA_MODE_LABEL} kurulamadı: {domain} / {event}")
+    if geo is not None and geo not in _KS["geos"]:
+        raise es.StructureError(f"{KASIRGA_MODE_LABEL}: {geo} bu kategoride yok (coğrafya G1-G6)")
+    geo_menu = geo is not None
     r = rng or random
     geo_used = kasirga_axes_history(records, "cografya")
     vehicle_used = kasirga_axes_history(records, "arac")
     tags = kasirga_axes_history(records, "beats") if records is not None else kasirga_tags(history or [])
-    geo = kasirga_choose_geo(geo_used, r)
+    if not geo_menu:
+        geo = kasirga_choose_geo(geo_used, r)
     vehicle = kasirga_choose_vehicle(vehicle_used, r)
     people = r.choice((4, 5))
     mid = kasirga_choose_mid(tags, r)
@@ -3380,6 +3394,8 @@ def kasirga_build_scene(domain: str | None, event: str | None, history: list[str
     plain = " ".join([opening, kasirga_people(people), mid_text, final_text])
     repeat = (f"coğrafya son {KASIRGA_GEO_BLOCK} elendi · araç son {KASIRGA_VEHICLE_BLOCK} · orta son "
               f"{KASIRGA_MID_BLOCK} · final son {KASIRGA_FINAL_BLOCK} (yasak çift yok)")
+    if geo_menu:
+        repeat = repeat.replace(f"coğrafya son {KASIRGA_GEO_BLOCK} elendi", f"coğrafya menüden ({geo})")
     base_trace = {"pipeline": "creative", "structured": True, "domain": KASIRGA_DOMAIN, "event": KASIRGA_EVENT,
                   "ship": "None", "camera": SKELETON_CAMERA, "view": None, "view_source": None,
                   "place": _KS["geos"][geo]["place"], "count_range": [4, 5], "people_running": people,
@@ -3393,13 +3409,16 @@ def kasirga_build_scene(domain: str | None, event: str | None, history: list[str
         axes={"coğrafya": f"{geo} {name}", "araç": vehicle, "kişi": people, "orta": mid, "final": final,
               "kamera modu": "elde, sabit, rüzgârla sarsılır"},
         repeat=repeat)
-    trace = {**trace, "mode": "kasirga", "cografya": geo, "axes_source": history_source}
+    trace = {**trace, "mode": "kasirga", "cografya": geo, "axes_source": history_source,
+             **({"cografya_secim": "menu"} if geo_menu else {})}
     tb = {"event": KASIRGA_EVENT, "geo": geo, "people": people, "vehicle": vehicle, "mid": mid, "final": final,
-          "story": story, "suffix": tail, "prompt": prompt, "axes_line": axes_line}
+          "story": story, "suffix": tail, "prompt": prompt, "axes_line": axes_line,
+          "geo_source": "menu" if geo_menu else "rastgele"}
     tb["lines"] = kasirga_lines(tb)
-    excluded = {"cografya": [g for g in _KS["geos"] if g in (geo_used if geo_used is not None
-                                                             else _KASIRGA_GEO_MEMORY[:-1])[-KASIRGA_GEO_BLOCK:]]}
-    axes_json = kasirga_axes_json(tag, geo, vehicle, people, excluded)
+    excluded = {"cografya": [] if geo_menu else
+                [g for g in _KS["geos"] if g in (geo_used if geo_used is not None
+                                                 else _KASIRGA_GEO_MEMORY[:-1])[-KASIRGA_GEO_BLOCK:]]}
+    axes_json = kasirga_axes_json(tag, geo, vehicle, people, excluded, geo_menu)
     structure = {"kasirga": tb, "axes_json": axes_json, "axes_line": None, "environment": None,
                  "story_source": f"Hikâye: kod (birebir) · {KASIRGA_MODE_LABEL}", "story_source_kind": "code",
                  "caption_info": {"opening": opening, "people": people, "kadraj": "balkon",

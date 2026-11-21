@@ -1325,7 +1325,8 @@ async def generate_creative_prompts(config: dict) -> dict:
                 log.warning(f"⚠️ Kasırga eksen geçmişi okunamadı, süreç hafızasıyla devam: {e}")
                 records, source = None, "bellek"
         scene = hp.kasirga_build_scene(config.get("domain") or None, config.get("event") or hp.KASIRGA_EVENT,
-                                       history, records, history_source=source)
+                                       history, records, history_source=source,
+                                       geo=config.get("kasirga_geo"))   # 21 Kas: coğrafya menüsü (None = 🎲)
     elif config.get("yer_yarilmasi"):   # 17 Kas: 🌍 Yer yarılması (yeni kategori, tek olay). GPT yok, normal hat yok
         import core.hit_prompts as hp
         records, source, raw_loader = None, "yok", config.get("axes_loader")
