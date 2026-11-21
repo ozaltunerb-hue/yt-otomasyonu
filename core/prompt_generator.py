@@ -1370,6 +1370,21 @@ async def generate_creative_prompts(config: dict) -> dict:
         scene = hp.hit_kopya_orman_build_scene(config.get("domain") or None,
                                                config.get("event") or hp.HIT_KOPYA_ORMAN_EVENTS[0], history,
                                                records, history_source=source)
+    elif config.get("hit_kopya_sel"):   # 21 Kas: ⭐ Hit kopyası (ani sel). 5 Kas hit iskeleti, GPT yok
+        import core.hit_prompts as hp
+        records, source, raw_loader = None, "yok", config.get("axes_loader")
+        if raw_loader:   # Notion "Eksenler" geçmişi (iptaller dahil); okunamazsa süreç hafızası, üretim durmaz
+            try:
+                records = await asyncio.to_thread(raw_loader, hp.HIT_KOPYA_SEL_DOMAIN)
+                if records is not None and not isinstance(records, list):
+                    raise TypeError(f"eksen geçmişi liste değil: {type(records).__name__}")
+                source = "notion" if records is not None else "bellek"
+            except Exception as e:   # noqa: BLE001 - okuma hatası üretimi durdurmaz
+                log.warning(f"⚠️ Hit kopyası (ani sel) eksen geçmişi okunamadı, süreç hafızasıyla devam: {e}")
+                records, source = None, "bellek"
+        scene = hp.hit_kopya_sel_build_scene(config.get("domain") or None,
+                                             config.get("event") or hp.HIT_KOPYA_SEL_EVENTS[0], history,
+                                             records, history_source=source, view=config.get("view") or None)
     else:
         scene = await build_creative_scene(config.get("domain") or None, config.get("event") or None, history,
                                            topics, _call_gpt, view=config.get("view") or None,

@@ -261,6 +261,10 @@ class TestKeyboard(unittest.TestCase):
             with self.subTest(domain=d):
                 rows = bot.event_keyboard(di).inline_keyboard
                 events = bot.domain_events(d)   # iskelet hattında sadece iskeleti olan olaylar (TUR 30)
+                if d == "urban_city_disasters":   # 21 Kas: Rastgele ile Geri arasında ⭐ Hit kopyası (ani sel)
+                    self.assertEqual(rows[-2][0].text, "⭐ Hit kopyası (ani sel)")
+                    self.assertEqual(rows[-2][0].callback_data, "uret:hks")
+                    rows = rows[:-2] + rows[-1:]
                 self.assertEqual([r[0].text for r in rows[:-2]], [bot.EVENT_LABELS[e] for e in events])
                 self.assertEqual(rows[-2][0].text, "🎲 Rastgele")
                 self.assertEqual(rows[-1][0].text, "🔙 Geri")

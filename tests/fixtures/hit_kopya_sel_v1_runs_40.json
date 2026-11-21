@@ -1,0 +1,1402 @@
+{
+ "1": {
+  "axes": {
+   "axes": {
+    "arac": "white SUV",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "north_african_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 6,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_african_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in heavy rain, no readable signs, text or flags."
+ },
+ "10": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "riviera",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 5,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:riviera|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags."
+ },
+ "11": {
+  "axes": {
+   "axes": {
+    "arac": "white SUV",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "north_european_seaside",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 7,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_european_seaside|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in a dark storm light, no readable signs, text or flags."
+ },
+ "12": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "north_european_seaside",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 6,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_european_seaside|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in a dark storm light, no readable signs, text or flags."
+ },
+ "13": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "us_coastal_town",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 7,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:us_coastal_town|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with wide asphalt roads, low wooden and brick houses, power lines, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with wide asphalt roads, low wooden and brick houses, power lines, in heavy rain, no readable signs, text or flags."
+ },
+ "14": {
+  "axes": {
+   "axes": {
+    "arac": "white SUV",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "gulf_metropolis",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 5,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:gulf_metropolis|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with glass towers behind palm-lined boulevards, sand-colored low buildings, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with glass towers behind palm-lined boulevards, sand-colored low buildings, in a dark storm light, no readable signs, text or flags."
+ },
+ "15": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "north_african_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 5,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_african_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in heavy rain, no readable signs, text or flags."
+ },
+ "16": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "us_coastal_town",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 5,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:us_coastal_town|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with wide asphalt roads, low wooden and brick houses, power lines, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with wide asphalt roads, low wooden and brick houses, power lines, in driving rain and wind, no readable signs, text or flags."
+ },
+ "17": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "riviera",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 5,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:riviera|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in driving rain and wind, no readable signs, text or flags."
+ },
+ "18": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "north_african_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 5,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_african_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags."
+ },
+ "19": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F1",
+    "gorunum": "east_asian_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 5,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:east_asian_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in a dark storm light, no readable signs, text or flags."
+ },
+ "2": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "gulf_metropolis",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 7,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:gulf_metropolis|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with glass towers behind palm-lined boulevards, sand-colored low buildings, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with glass towers behind palm-lined boulevards, sand-colored low buildings, in heavy rain, no readable signs, text or flags."
+ },
+ "20": {
+  "axes": {
+   "axes": {
+    "arac": "white SUV",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "east_asian_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 7,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:east_asian_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in a dark storm light, no readable signs, text or flags."
+ },
+ "21": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "north_african_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 6,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_african_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in a dark storm light, no readable signs, text or flags."
+ },
+ "22": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "north_african_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 5,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_african_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags."
+ },
+ "23": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "us_coastal_town",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 6,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:us_coastal_town|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with wide asphalt roads, low wooden and brick houses, power lines, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with wide asphalt roads, low wooden and brick houses, power lines, in driving rain and wind, no readable signs, text or flags."
+ },
+ "24": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F1",
+    "gorunum": "east_asian_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 5,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:east_asian_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in heavy rain, no readable signs, text or flags."
+ },
+ "25": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "north_european_seaside",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 6,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_european_seaside|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in a dark storm light, no readable signs, text or flags."
+ },
+ "26": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F1",
+    "gorunum": "east_asian_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 7,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:east_asian_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in driving rain and wind, no readable signs, text or flags."
+ },
+ "27": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "east_asian_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 5,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:east_asian_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in driving rain and wind, no readable signs, text or flags."
+ },
+ "28": {
+  "axes": {
+   "axes": {
+    "arac": "white SUV",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "gulf_metropolis",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 7,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:gulf_metropolis|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with glass towers behind palm-lined boulevards, sand-colored low buildings, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with glass towers behind palm-lined boulevards, sand-colored low buildings, in a dark storm light, no readable signs, text or flags."
+ },
+ "29": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "riviera",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 6,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:riviera|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags."
+ },
+ "3": {
+  "axes": {
+   "axes": {
+    "arac": "white SUV",
+    "beats": null,
+    "f": "F1",
+    "gorunum": "north_african_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 7,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_african_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags."
+ },
+ "30": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F1",
+    "gorunum": "riviera",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 7,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:riviera|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags."
+ },
+ "31": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "gulf_metropolis",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 7,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:gulf_metropolis|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with glass towers behind palm-lined boulevards, sand-colored low buildings, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with glass towers behind palm-lined boulevards, sand-colored low buildings, in heavy rain, no readable signs, text or flags."
+ },
+ "32": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "gulf_metropolis",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 5,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:gulf_metropolis|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with glass towers behind palm-lined boulevards, sand-colored low buildings, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with glass towers behind palm-lined boulevards, sand-colored low buildings, in a dark storm light, no readable signs, text or flags."
+ },
+ "33": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F1",
+    "gorunum": "riviera",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 6,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:riviera|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in driving rain and wind, no readable signs, text or flags."
+ },
+ "34": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F1",
+    "gorunum": "riviera",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 5,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:riviera|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in heavy rain, no readable signs, text or flags."
+ },
+ "35": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "riviera",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 5,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:riviera|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in driving rain and wind, no readable signs, text or flags."
+ },
+ "36": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "us_coastal_town",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 5,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:us_coastal_town|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with wide asphalt roads, low wooden and brick houses, power lines, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with wide asphalt roads, low wooden and brick houses, power lines, in heavy rain, no readable signs, text or flags."
+ },
+ "37": {
+  "axes": {
+   "axes": {
+    "arac": "white SUV",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "east_asian_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 7,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:east_asian_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in a dark storm light, no readable signs, text or flags."
+ },
+ "38": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "east_asian_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 5,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:east_asian_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with dense mid-rise apartment blocks with air-conditioners and tangled wires, narrow lanes, in heavy rain, no readable signs, text or flags."
+ },
+ "39": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F1",
+    "gorunum": "north_african_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 5,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_african_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in heavy rain, no readable signs, text or flags."
+ },
+ "4": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "north_african_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "driving rain and wind",
+    "kisi": 6,
+    "light": null,
+    "m": "M1",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_african_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van floats free and is carried fast down the middle of the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in driving rain and wind, no readable signs, text or flags."
+ },
+ "40": {
+  "axes": {
+   "axes": {
+    "arac": "white SUV",
+    "beats": null,
+    "f": "F1",
+    "gorunum": "north_european_seaside",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 6,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_european_seaside|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Six people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in heavy rain, no readable signs, text or flags."
+ },
+ "5": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "riviera",
+    "gorunum_kaynak": "rastgele",
+    "isik": "a dark storm light",
+    "kisi": 7,
+    "light": null,
+    "m": "M3",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:riviera|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is lifted, spins around and slams into the parked cars along the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in a dark storm light, no readable signs, text or flags."
+ },
+ "6": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "riviera",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 5,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:riviera|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with cream stone buildings with shuttered windows, cobbled streets, plane trees, in heavy rain, no readable signs, text or flags."
+ },
+ "7": {
+  "axes": {
+   "axes": {
+    "arac": "orange delivery truck",
+    "beats": null,
+    "f": "F3",
+    "gorunum": "us_coastal_town",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 5,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:us_coastal_town|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with wide asphalt roads, low wooden and brick houses, power lines, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The orange delivery truck is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge tips a large box truck onto its side and pushes it along the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with wide asphalt roads, low wooden and brick houses, power lines, in heavy rain, no readable signs, text or flags."
+ },
+ "8": {
+  "axes": {
+   "axes": {
+    "arac": "green delivery van",
+    "beats": null,
+    "f": "F1",
+    "gorunum": "north_african_coast",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 7,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_african_coast|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Seven people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The green delivery van is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge lifts the parked cars and carries them down the street, crashing into each other.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with sand-colored flat-roofed buildings, narrow streets, cloth awnings, arched doorways, in heavy rain, no readable signs, text or flags."
+ },
+ "9": {
+  "axes": {
+   "axes": {
+    "arac": "white SUV",
+    "beats": null,
+    "f": "F2",
+    "gorunum": "north_european_seaside",
+    "gorunum_kaynak": "rastgele",
+    "isik": "heavy rain",
+    "kisi": 5,
+    "light": null,
+    "m": "M2",
+    "mod": "hit_kopya_sel",
+    "people": null,
+    "spot": null,
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Flash flooding in city streets",
+   "excluded": {
+    "arac": [],
+    "f": [],
+    "gorunum": [],
+    "isik": [],
+    "kisi": [],
+    "m": []
+   },
+   "v": 1
+  },
+  "combo": "urban_city_disasters|none|flash flooding in city streets|flat rooftop above a dense downtown street##HKS:north_european_seaside|bystander_handheld",
+  "prompt": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street. Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in heavy rain, no readable signs, text or flags.",
+  "story": "0-4s: A waist-high wall of brown muddy floodwater surges into the street. Five people immediately flee from the overpowering surge. 4-9s: Water rises past the car windows. The white SUV is caught by the current, turns sideways and is dragged down the street. 9-15s: A second surge, first-floor high, slams in. The surge flips a parked car onto its roof and carries it down the street.",
+  "suffix": "Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves in real time, never in slow motion, people run at full speed. Setting: a city district with brick terraced houses, narrow streets, bay windows, wet slate roofs, in heavy rain, no readable signs, text or flags."
+ }
+}

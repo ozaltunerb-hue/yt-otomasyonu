@@ -272,6 +272,8 @@ def event_keyboard(di: int) -> InlineKeyboardMarkup:
     rows = [[InlineKeyboardButton(EVENT_LABELS[e], callback_data=f"{CALLBACK_PREFIX}e:{di}:{ei}")]
             for ei, e in enumerate(domain_events(DOMAIN_KEYS[di]))]
     rows.append([InlineKeyboardButton(RANDOM_LABEL, callback_data=f"{CALLBACK_PREFIX}e:{di}:{RANDOM_ID}")])
+    if hit_kopya_sel_available(DOMAIN_KEYS[di]):   # 21 Kas: ⭐ Hit kopyası (ani sel), yalnız Şehir Afeti
+        rows.append([InlineKeyboardButton(HIT_KOPYA_SEL_BUTTON, callback_data=f"{CALLBACK_PREFIX}hks")])
     rows.append([InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}back")])
     return InlineKeyboardMarkup(rows)
 
@@ -584,6 +586,58 @@ def hit_kopya_orman_confirm_text(domain: str, event: str, cfg: dict | None = Non
             + f"\n\nMod: {hp.HIT_KOPYA_ORMAN_MODE_LABEL}\n"
             + hp.HIT_KOPYA_ORMAN_SOURCE
             + "\n" + hp.HIT_KOPYA_ORMAN_CONFIRM_DESC)
+
+
+# ── ⭐ Hit kopyası (ani sel) (21 Kas 2026, Bahadır): 5 Kas sel hit'inin (355K) iskeleti ve dili (hit_prompts.py
+# HIT_KOPYA_SEL). GPT yok. Şehir Afeti olay menüsünde ayrı satır. Adımlar: hks (6 görünüm + 🎲 Rastgele + Geri) →
+# hks:<vi|r> (onay metni) → hksok:<vi|r> (üretim). Kie yine ✋ Onay'a bağlı. Normal sel akışı (e/v/ok) değişmez
+HIT_KOPYA_SEL_BUTTON = "⭐ Hit kopyası (ani sel)"
+
+
+def hit_kopya_sel_available(domain: str) -> bool:
+    hp = _hp()
+    return domain == hp.HIT_KOPYA_SEL_DOMAIN and domain_active(domain) and \
+        any(hp.hit_kopya_sel_is_active(e) for e in domain_events(domain))
+
+
+def hit_kopya_sel_view_keyboard() -> InlineKeyboardMarkup:
+    """6 görünüm + 🎲 Rastgele (son 2 görünüm elenir) + ⬅️ Geri (Şehir Afeti olay menüsüne)."""
+    di = DOMAIN_KEYS.index(_hp().HIT_KOPYA_SEL_DOMAIN)
+    buttons = [InlineKeyboardButton(VIEW_LABELS[v], callback_data=f"{CALLBACK_PREFIX}hks:{vi}")
+               for vi, v in enumerate(VIEW_KEYS)]
+    rows = [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
+    rows.append([InlineKeyboardButton(RANDOM_LABEL, callback_data=f"{CALLBACK_PREFIX}hks:{RANDOM_ID}")])
+    rows.append([InlineKeyboardButton("⬅️ Geri", callback_data=f"{CALLBACK_PREFIX}d:{di}")])
+    return InlineKeyboardMarkup(rows)
+
+
+def hit_kopya_sel_produce_keyboard(vid: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}hksok:{vid}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def hit_kopya_sel_view_text(view: str | None) -> str:
+    return VIEW_LABELS[view] if view else "🎲 Rastgele (son 2 görünüm elenir)"
+
+
+def hit_kopya_sel_confirm_text(view: str | None, cfg: dict | None = None) -> str:
+    hp = _hp()
+    cfg = cfg or default_cfg()
+    return (f"Kategori: {DOMAIN_LABELS[hp.HIT_KOPYA_SEL_DOMAIN]}\n"
+            f"Olay: {selection_label(hp.HIT_KOPYA_SEL_EVENTS[0])}\n"
+            f"Bölge: {hit_kopya_sel_view_text(view)}\n"
+            f"Mod: {mode_label(cfg['mode'])}\n"
+            f"🔍 Ayrıntı: {_onoff(cfg['detail'])} · ✋ Onay: {_onoff(cfg['approval'])}\n"
+            "Tahmini maliyet: ~175 Kie kredisi (hikâye için GPT yok)\n\n"
+            "Üretim sadece ✅ Üret'e basınca başlar."
+            + ("\n✋ Onay açık: Kie'ye göndermeden önce son prompt'u gösterip onay isteyeceğim." if cfg["approval"] else "")
+            + f"\n\nMod: {hp.HIT_KOPYA_SEL_MODE_LABEL}\n"
+            + hp.HIT_KOPYA_SEL_VERSION_LINE + "\n"
+            + hp.HIT_KOPYA_SEL_SOURCE + "\n"
+            + f"Kamera: {hp.HIT_KOPYA_SEL_CAMERA}\n"
+            + hp.HIT_KOPYA_SEL_CONFIRM_DESC)
 
 
 # ── ⭐ Hit kalıbı · Yaklaşma (helikopter) (13 Kas 2026, Bahadır): ortam sorulmaz (coğrafya LRU). Adımlar: hy (onay
@@ -1079,6 +1133,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("hko", "hkook"):   # 20 Kas: ⭐ Hit kopyası (orman yangını)
         await _on_hit_kopya_orman(query, context, action, args, cfg)
         return
+    if action in ("hks", "hksok"):   # 21 Kas: ⭐ Hit kopyası (ani sel)
+        await _on_hit_kopya_sel(query, context, action, args, cfg)
+        return
     if action in ("dz", "dzok"):   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül (dev dalga)
         await _on_dalga24(query, context, action, args, cfg)
         return
@@ -1262,6 +1319,41 @@ async def _on_hit_kopya_orman(query, context, action: str, args: list[str], cfg:
             log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
         await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
                       hit_kopya_orman=True)
+
+
+async def _on_hit_kopya_sel(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """⭐ Hit kopyası (ani sel) adımları: hks (görünüm menüsü) → hks:<vi|r> (onay metni) → hksok:<vi|r> (üretim).
+    Kie yine ✋ Onay'a bağlı."""
+    hp = _hp()
+    if not hit_kopya_sel_available(hp.HIT_KOPYA_SEL_DOMAIN):
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    if action == "hks" and not args:
+        await query.edit_message_text(f"{hp.HIT_KOPYA_SEL_MODE_LABEL}\nHangi bölge?",
+                                      reply_markup=hit_kopya_sel_view_keyboard())
+        return
+    ok, view = parse_view(args[0]) if len(args) == 1 else (False, None)
+    if not ok:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    if action == "hks":
+        await query.edit_message_text(hit_kopya_sel_confirm_text(view, cfg),
+                                      reply_markup=hit_kopya_sel_produce_keyboard(args[0]))
+        return
+    run_cfg = dict(cfg)
+    domain, event = hp.HIT_KOPYA_SEL_DOMAIN, hp.HIT_KOPYA_SEL_EVENTS[0]
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)} / {HIT_KOPYA_SEL_BUTTON} / "
+                   f"{hit_kopya_sel_view_text(view)}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
+                      view=view, hit_kopya_sel=True)
 
 
 async def _on_dalga24(query, context, action: str, args: list[str], cfg: dict) -> None:
@@ -1597,7 +1689,7 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                   orman_yaklasma: bool = False, heli_yaklasma: bool = False,
                   hortum_yaklasma: bool = False, cadde_yaklasma: bool = False,
                   donma_firtina: bool = False, kasirga: bool = False, hit_kopya_ates: bool = False,
-                  yer_yarilmasi: bool = False, hit_kopya_orman: bool = False) -> None:
+                  yer_yarilmasi: bool = False, hit_kopya_orman: bool = False, hit_kopya_sel: bool = False) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1635,6 +1727,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["yer_yarilmasi"] = True
     if hit_kopya_orman:   # 20 Kas: ⭐ Hit kopyası (orman yangını)
         kwargs["hit_kopya_orman"] = True
+    if hit_kopya_sel:   # 21 Kas: ⭐ Hit kopyası (ani sel)
+        kwargs["hit_kopya_sel"] = True
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:

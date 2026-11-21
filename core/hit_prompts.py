@@ -4177,6 +4177,333 @@ def hit_kopya_orman_issues(structure: dict, info: dict) -> list[str]:
     return out
 
 
+# ── ⭐ Hit kopyası (ani sel) (21 Kas 2026, Bahadır) ──────────────────────────────────────────────────────────────────
+# Kaynak: 4 Kas 2026 01:57 üretimi (5 Kas paylaşımı, 355K izlenme), V12+D17, north_european_seaside. Orman Hit
+# kopyasıyla (HIT_KOPYA_ORMAN) aynı düzen, ayrı sabitler ve fonksiyonlar. GPT çağrılmaz, metni tamamen kod üretir.
+# Şablon Bahadır'ın metni, süslü parantez dışı birebir: {People} (Five/Six/Seven), {M} (4-9s, {vehicle} ile M1-M3),
+# {F} (9-15s, F1-F3; otobüs ve bina/cephe yıkımı yok), {SETTING} (sel olayının 6 görünüm metni, view_district ile
+# aynen), {LIGHT} (sel olayının ışık havuzu, aynen). Menü: Şehir Afeti → ⭐ Hit kopyası (ani sel) → 6 görünüm + 🎲
+# Rastgele. LRU: görünüm (rastgele) son 2, M son 1, F son 2, araç son 1, ışık son 1, kişi son 1. Kadraj ve ön plan
+# sabit (çatı, boş ön plan); LRU onlara dokunmaz. Kayıt combo "##HKS:<görünüm>" (olay çifti / görünüm değil: normal
+# sel LRU'su etkilenmez) + Eksenler mod=hit_kopya_sel; normal eksen anahtarları (spot/view/light/vehicle/people/
+# beats) boş yazılır ki normal sel hattının LRU'su bu kayıtları saymasın.
+HIT_KOPYA_SEL_MODE_LABEL = "⭐ Hit kopyası (ani sel)"
+HIT_KOPYA_SEL_EVENTS = (es.FLOOD,)
+HIT_KOPYA_SEL_DOMAIN = "urban_city_disasters"
+HIT_KOPYA_SEL_MOD = "hit_kopya_sel"                  # config bayrağı, structure anahtarı, Notion axes.mod
+HIT_KOPYA_SEL_SURUM = "v1"                           # Notion axes.surum
+HIT_KOPYA_SEL_VERSION_LINE = "Sürüm: hit_sel v1"
+HIT_KOPYA_SEL_CAMERA = "sabit çatı, boş ön plan (hit ile aynı)"   # ✋ Onay "Kamera:" satırı
+HIT_KOPYA_SEL_CAMERA_AXIS = "sabit çatı, boş ön plan"             # Eksenler "kamera modu"
+HIT_KOPYA_SEL_SPOT = "flat rooftop above a dense downtown street"   # hit kaydının kamera yeri (combo)
+HIT_KOPYA_SEL_SPOT_LABEL = "Flat rooftop above a dense downtown street (hit kopyası)"
+HIT_KOPYA_SEL_SOURCE = ("Kaynak: 4 Kas 01:57 üretimi (5 Kas paylaşımı, 355K), V12+D17, north_european_seaside, "
+                        "iskelet ve dil")
+HIT_KOPYA_SEL_MAX_WORDS = 230
+HIT_KOPYA_SEL_MAX_CHARS = 1400
+HIT_KOPYA_SEL_VIEW_BLOCK = 2      # yalnız 🎲 Rastgele'de; menüden seçilen görünüm aynen
+HIT_KOPYA_SEL_MID_BLOCK = 1
+HIT_KOPYA_SEL_FINAL_BLOCK = 2
+HIT_KOPYA_SEL_VEHICLE_BLOCK = 1
+HIT_KOPYA_SEL_LIGHT_BLOCK = 1
+HIT_KOPYA_SEL_PEOPLE_BLOCK = 1
+HIT_KOPYA_SEL_PEOPLE_COUNT = {"Five": 5, "Six": 6, "Seven": 7}
+HIT_KOPYA_SEL = {
+    "people": ("Five", "Six", "Seven"),
+    "vehicles": ("orange delivery truck", "green delivery van", "white SUV"),
+    "mids": {
+        "M1": "The {vehicle} floats free and is carried fast down the middle of the street.",
+        "M2": "The {vehicle} is caught by the current, turns sideways and is dragged down the street.",
+        "M3": "The {vehicle} is lifted, spins around and slams into the parked cars along the street.",
+    },
+    "finals": {
+        "F1": "The surge lifts the parked cars and carries them down the street, crashing into each other.",
+        "F2": "The surge flips a parked car onto its roof and carries it down the street.",
+        "F3": "The surge tips a large box truck onto its side and pushes it along the street.",
+    },
+    # Bahadır'ın metni, süslü parantez dışı birebir
+    "template": (
+        "0-4s: A waist-high wall of brown muddy floodwater surges into the street. {People} people immediately flee "
+        "from the overpowering surge. 4-9s: Water rises past the car windows. {M} 9-15s: A second surge, first-floor "
+        "high, slams in. {F} Handheld footage filmed on a flat rooftop above a dense downtown street, high vantage; "
+        "slight hand shake, the camera stays fixed, tilting only slightly, never descending, the floodwater always in "
+        "frame, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. All "
+        "people are ordinary civilians in everyday clothes, no hazmat suits, natural light, never CGI. Everything moves "
+        "in real time, never in slow motion, people run at full speed. Setting: {SETTING}, in {LIGHT}, no readable "
+        "signs, text or flags."),
+    "tail_start": "Handheld footage filmed on a flat rooftop",
+}
+HIT_KOPYA_SEL_WATER = ("A waist-high wall of brown muddy floodwater surges into the street.",
+                       "Water rises past the car windows.", "A second surge, first-floor high, slams in.")
+HIT_KOPYA_SEL_REQUIRED = HIT_KOPYA_SEL_WATER + ("the camera stays fixed", "an empty foreground", "never CGI")
+HIT_KOPYA_SEL_FORBIDDEN = ("bus", "GPT")                         # tüm çıktıda, alt dize
+HIT_KOPYA_SEL_BEAT_FORBIDDEN = ("building", "facade", "collapse")  # yalnız M ve F cümlelerinde (görünüm metni aynen)
+HIT_KOPYA_SEL_NAMES = {"M1": "araç akıntıda sürüklenir", "M2": "araç yan döner, sürüklenir",
+                       "M3": "araç döner, park hâlindeki arabalara çarpar",
+                       "F1": "park hâlindeki arabalar birbirine çarparak sürüklenir", "F2": "araba ters döner",
+                       "F3": "kamyon yan yatar"}
+HIT_KOPYA_SEL_WARNING = ("⚠️ Hit karşılaştırması: su duvarı ilk saniyelerde caddeye giriyor mu, insanlar kaçıyor mu, araç "
+                         "akıntıyla gidiyor mu, ikinci dalga birinci kat yüksekliğinde mi, kamera çatıda sabit mi?")
+HIT_KOPYA_SEL_CONFIRM_DESC = ("5 Kas ani sel hit'inin (355K) iskeleti ve dili. Bel hizasında kahverengi çamurlu su "
+                              "duvarı caddeye girer, 5-7 kişi kaçar; su araba camlarını geçer, araç akıntıya kapılır "
+                              "(M1-M3); ikinci dalga birinci kat yüksekliğinde çarpar (F1-F3, otobüs ve bina yıkımı "
+                              "yok). Çatıdan sabit kamera, boş ön plan. Araç, orta, final, kişi, ışık ✋ Onay "
+                              "mesajında. Hikâye için GPT çağrılmaz.")
+_HKS = HIT_KOPYA_SEL
+_HIT_KOPYA_SEL_MEMORY_KEYS = ("gorunum", "m", "f", "arac", "isik", "kisi")
+_HIT_KOPYA_SEL_VIEW_MEMORY: list[str] = []
+_HIT_KOPYA_SEL_MID_MEMORY: list[str] = []
+_HIT_KOPYA_SEL_FINAL_MEMORY: list[str] = []
+_HIT_KOPYA_SEL_VEHICLE_MEMORY: list[str] = []
+_HIT_KOPYA_SEL_LIGHT_MEMORY: list[str] = []
+_HIT_KOPYA_SEL_PEOPLE_MEMORY: list[str] = []
+
+
+def hit_kopya_sel_is_active(event: str | None) -> bool:
+    return event in HIT_KOPYA_SEL_EVENTS
+
+
+def hit_kopya_sel_views() -> list[str]:
+    """Sel olayının 6 görünümü (skeleton_pipeline.REGION_VIEWS sırası)."""
+    from core.skeleton_pipeline import REGION_VIEWS
+    return list(REGION_VIEWS)
+
+
+def hit_kopya_sel_setting(view: str) -> str:
+    """{SETTING}: normal sel hattının görünüm cümlesi, aynen (view_district)."""
+    from core.skeleton_pipeline import view_district
+    return view_district(es.FLOOD, view)
+
+
+def hit_kopya_sel_lights() -> list[str]:
+    """{LIGHT}: sel olayının ışık havuzu, aynen (EVENT_SKELETONS[FLOOD]["weather"])."""
+    from core.skeleton_pipeline import EVENT_SKELETONS
+    return list(EVENT_SKELETONS[es.FLOOD]["weather"])
+
+
+def _hit_kopya_sel_check(view: str, vehicle: str, mid: str, final: str, people: int, light: str) -> None:
+    if view not in hit_kopya_sel_views():
+        raise es.StructureError(f"{HIT_KOPYA_SEL_MODE_LABEL}: görünüm bu modda yok ({view})")
+    if vehicle not in _HKS["vehicles"]:
+        raise es.StructureError(f"{HIT_KOPYA_SEL_MODE_LABEL}: araç bu modda yok ({vehicle})")
+    if mid not in _HKS["mids"]:
+        raise es.StructureError(f"{HIT_KOPYA_SEL_MODE_LABEL}: orta M1-M3 değil ({mid})")
+    if final not in _HKS["finals"]:
+        raise es.StructureError(f"{HIT_KOPYA_SEL_MODE_LABEL}: final F1-F3 değil ({final})")
+    if people not in HIT_KOPYA_SEL_PEOPLE_COUNT.values():
+        raise es.StructureError(f"{HIT_KOPYA_SEL_MODE_LABEL}: kişi sayısı 5-7 değil ({people})")
+    if light not in hit_kopya_sel_lights():
+        raise es.StructureError(f"{HIT_KOPYA_SEL_MODE_LABEL}: ışık bu modda yok ({light})")
+
+
+def hit_kopya_sel_mid(mid: str, vehicle: str) -> str:
+    return _HKS["mids"][mid].format(vehicle=vehicle)
+
+
+def hit_kopya_sel_prompt(view: str, vehicle: str, mid: str, final: str, people: int, light: str) -> str:
+    """Prompt = şablon (birebir), yalnız yer tutucular dolar."""
+    _hit_kopya_sel_check(view, vehicle, mid, final, people, light)
+    word = next(w for w, k in HIT_KOPYA_SEL_PEOPLE_COUNT.items() if k == people)
+    return _HKS["template"].format(People=word, M=hit_kopya_sel_mid(mid, vehicle), F=_HKS["finals"][final],
+                                   SETTING=hit_kopya_sel_setting(view), LIGHT=light)
+
+
+def hit_kopya_sel_story(*args) -> str:
+    """Zaman etiketli hikâye (stil ekinden önceki kısım)."""
+    p = hit_kopya_sel_prompt(*args)
+    return p[:p.index(" " + _HKS["tail_start"])]
+
+
+def hit_kopya_sel_tail(*args) -> str:
+    """Stil eki (çatı kamerası + Setting satırı)."""
+    p = hit_kopya_sel_prompt(*args)
+    return p[p.index(" " + _HKS["tail_start"]) + 1:]
+
+
+def hit_kopya_sel_axes_history(records: list | None, key: str) -> list | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu modun `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") in HIT_KOPYA_SEL_EVENTS
+                and axes.get("mod") == HIT_KOPYA_SEL_MOD and axes.get(key) not in (None, "")):
+            out.append(axes[key])
+    return out
+
+
+def hit_kopya_sel_lines(tb: dict) -> str:
+    """✋ Onay satırları: mod, sürüm, kaynak, görünüm, araç, M, F, kişi, ışık, kamera, kelime/karakter, eksenler +
+    tekrar önleme, hit karşılaştırması."""
+    text = tb["prompt"]
+    lines = [
+        f"Mod: {HIT_KOPYA_SEL_MODE_LABEL}",
+        HIT_KOPYA_SEL_VERSION_LINE,
+        HIT_KOPYA_SEL_SOURCE,
+        f"Görünüm: {tb['view']} «{hit_kopya_sel_setting(tb['view'])}» ({tb['view_source']})",
+        f"Araç: {tb['vehicle']}",
+        f"M (4-9s): {tb['mid']} {HIT_KOPYA_SEL_NAMES[tb['mid']]}",
+        f"F (9-15s): {tb['final']} {HIT_KOPYA_SEL_NAMES[tb['final']]}",
+        f"Kişi: {tb['people']}",
+        f"Işık: {tb['light']}",
+        f"Kamera: {HIT_KOPYA_SEL_CAMERA}",
+        f"Kelime: {len(text.split())} (en fazla {HIT_KOPYA_SEL_MAX_WORDS}) · karakter: {len(text)} "
+        f"(en fazla {HIT_KOPYA_SEL_MAX_CHARS})",
+    ]
+    if tb.get("axes_line"):
+        lines.append(tb["axes_line"])
+    lines.append(HIT_KOPYA_SEL_WARNING)
+    return "\n".join(lines)
+
+
+def hit_kopya_sel_axes_json(tb: dict, excluded: dict | None = None) -> str:
+    import core.axes_history as ah
+    axes = {"spot": None, "view": None, "light": None, "vehicle": None, "people": None, "beats": None,
+            "mod": HIT_KOPYA_SEL_MOD, "gorunum": tb["view"], "gorunum_kaynak": tb["view_source"],
+            "arac": tb["vehicle"], "m": tb["mid"], "f": tb["final"], "isik": tb["light"], "kisi": tb["people"],
+            "surum": HIT_KOPYA_SEL_SURUM}
+    return ah.axes_json(es.FLOOD, axes, excluded)
+
+
+def hit_kopya_sel_build_scene(domain: str | None, event: str | None, history: list[str] | None = None,
+                              records: list | None = None, rng=None, history_source: str = "bellek",
+                              view: str | None = None) -> dict:
+    """⭐ Hit kopyası (ani sel) sahnesi: GPT yok, normal hat yok. view = menüden seçilen görünüm (None = 🎲 Rastgele,
+    son 2 elenir). records = Notion "Eksenler" ham kayıtları (None = süreç hafızası). structure["hit_kopya_sel"] Kie
+    öncesi son denetimin (submit_issues) kaynağıdır."""
+    import random
+    from core.skeleton_pipeline import SKELETON_CAMERA
+    if domain not in (None, HIT_KOPYA_SEL_DOMAIN) or not hit_kopya_sel_is_active(event):
+        raise es.StructureError(f"{HIT_KOPYA_SEL_MODE_LABEL} kurulamadı: {domain} / {event}")
+    if view is not None and view not in hit_kopya_sel_views():
+        raise es.StructureError(f"{HIT_KOPYA_SEL_MODE_LABEL}: görünüm bu modda yok ({view})")
+    r = rng or random
+    memories = {"gorunum": _HIT_KOPYA_SEL_VIEW_MEMORY, "m": _HIT_KOPYA_SEL_MID_MEMORY,
+                "f": _HIT_KOPYA_SEL_FINAL_MEMORY, "arac": _HIT_KOPYA_SEL_VEHICLE_MEMORY,
+                "isik": _HIT_KOPYA_SEL_LIGHT_MEMORY, "kisi": _HIT_KOPYA_SEL_PEOPLE_MEMORY}
+    seen = {}
+    for key, mem in memories.items():
+        h = hit_kopya_sel_axes_history(records, key)
+        seen[key] = list(mem if h is None else h)
+    seen["kisi"] = [next((w for w, k in HIT_KOPYA_SEL_PEOPLE_COUNT.items() if k == n), n) for n in seen["kisi"]]
+    axes_spec = (("gorunum", hit_kopya_sel_views(), HIT_KOPYA_SEL_VIEW_BLOCK),
+                 ("arac", list(_HKS["vehicles"]), HIT_KOPYA_SEL_VEHICLE_BLOCK),
+                 ("m", list(_HKS["mids"]), HIT_KOPYA_SEL_MID_BLOCK),
+                 ("f", list(_HKS["finals"]), HIT_KOPYA_SEL_FINAL_BLOCK),
+                 ("isik", hit_kopya_sel_lights(), HIT_KOPYA_SEL_LIGHT_BLOCK),
+                 ("kisi", list(_HKS["people"]), HIT_KOPYA_SEL_PEOPLE_BLOCK))
+    picked, excluded = {}, {}
+    for key, ids, block in axes_spec:
+        if key == "gorunum" and view is not None:
+            picked[key], excluded[key] = view, []
+            continue
+        picked[key] = _block_pick(ids, seen[key], block, r)
+        excluded[key] = [x for x in ids if x in seen[key][-block:]]
+    people = HIT_KOPYA_SEL_PEOPLE_COUNT[picked["kisi"]]
+    excluded["kisi"] = [HIT_KOPYA_SEL_PEOPLE_COUNT[w] for w in excluded["kisi"]]
+    for key, mem in memories.items():
+        mem.append(people if key == "kisi" else picked[key])
+        del mem[:-12]
+    args = (picked["gorunum"], picked["arac"], picked["m"], picked["f"], people, picked["isik"])
+    prompt = hit_kopya_sel_prompt(*args)
+    story = hit_kopya_sel_story(*args)
+    tail = hit_kopya_sel_tail(*args)
+    a, b, c = es.SLICE_LABELS
+    opening = story.split(f" {b}: ")[0][len(f"{a}: "):].strip()
+    mid_text = story.split(f"{b}: ")[1].split(f" {c}: ")[0]
+    final_text = story.split(f"{c}: ")[1]
+    plain = " ".join([opening, mid_text, final_text])
+    view_source = "menü" if view is not None else "rastgele"
+    repeat = (f"görünüm son {HIT_KOPYA_SEL_VIEW_BLOCK} (yalnız rastgele) · araç son {HIT_KOPYA_SEL_VEHICLE_BLOCK} · "
+              f"M son {HIT_KOPYA_SEL_MID_BLOCK} · F son {HIT_KOPYA_SEL_FINAL_BLOCK} · ışık son "
+              f"{HIT_KOPYA_SEL_LIGHT_BLOCK} · kişi son {HIT_KOPYA_SEL_PEOPLE_BLOCK} · kadraj ve ön plan sabit")
+    base_trace = {"pipeline": "creative", "structured": True, "domain": HIT_KOPYA_SEL_DOMAIN, "event": es.FLOOD,
+                  "ship": "None", "camera": SKELETON_CAMERA, "view": picked["gorunum"], "view_source": view_source,
+                  "place": hit_kopya_sel_setting(picked["gorunum"]), "count_range": [5, 7], "people_running": people,
+                  "outcome": "-", "recent_count": 0}
+    trace, axes_line = mode_display(
+        {"trace": base_trace}, {}, mode=HIT_KOPYA_SEL_MODE_LABEL, camera=HIT_KOPYA_SEL_CAMERA,
+        opening=opening, mid=(picked["m"], mid_text), final=(picked["f"], final_text), plain=plain,
+        vehicle=picked["arac"], spot=HIT_KOPYA_SEL_SPOT_LABEL, weather=picked["isik"],
+        axes={"sürüm": HIT_KOPYA_SEL_SURUM, "görünüm": f"{picked['gorunum']} ({view_source})", "araç": picked["arac"],
+              "M": picked["m"], "F": picked["f"], "kişi": people, "ışık": picked["isik"],
+              "kamera modu": HIT_KOPYA_SEL_CAMERA_AXIS},
+        repeat=repeat)
+    trace = {**trace, "mode": HIT_KOPYA_SEL_MOD, "surum": HIT_KOPYA_SEL_SURUM, "axes_source": history_source}
+    tb = {"event": es.FLOOD, "view": picked["gorunum"], "view_source": view_source, "vehicle": picked["arac"],
+          "mid": picked["m"], "final": picked["f"], "people": people, "light": picked["isik"], "story": story,
+          "suffix": tail, "prompt": prompt, "axes_line": axes_line}
+    tb["lines"] = hit_kopya_sel_lines(tb)
+    axes_json = hit_kopya_sel_axes_json(tb, excluded)
+    structure = {HIT_KOPYA_SEL_MOD: tb, "axes_json": axes_json, "axes_line": None, "environment": None,
+                 "story_source": f"Hikâye: kod (birebir) · {HIT_KOPYA_SEL_MODE_LABEL}", "story_source_kind": "code",
+                 "caption_info": {"opening": opening, "people": people, "kadraj": "çatı",
+                                  "beat_2": donma_caption_beat(mid_text), "beat_3": donma_caption_beat(final_text)},
+                 "caption_candidates": None}
+    problems = hit_kopya_sel_issues(structure, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{HIT_KOPYA_SEL_MODE_LABEL} son denetimden geçmedi: " + "; ".join(problems))
+    combo = (f"{HIT_KOPYA_SEL_DOMAIN}|none|{es.FLOOD.lower()}|{HIT_KOPYA_SEL_SPOT}##HKS:{picked['gorunum']}|"
+             f"{SKELETON_CAMERA}")
+    return {"domain": HIT_KOPYA_SEL_DOMAIN, "event": es.FLOOD, "ship": None, "spot": HIT_KOPYA_SEL_SPOT,
+            "story": story, "plain_story": plain, "style_suffix": tail, "prompt": prompt, "combo_key": combo,
+            "trace": trace, "structure": structure, "axes_json": axes_json}
+
+
+def hit_kopya_sel_text_issues(text: str, mid_text: str | None = None, final_text: str | None = None) -> list[str]:
+    """Kie öncesi son kontrol: üç su cümlesi ve kamera ifadeleri birebir var; "bus" ve "GPT" tüm metinde yok; M ve F
+    cümlelerinde "building", "facade", "collapse" yok (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
+    out = []
+    text = text or ""
+    for need in HIT_KOPYA_SEL_REQUIRED:
+        if need not in text:
+            out.append(f'"{need}" eksik')
+    for bad in HIT_KOPYA_SEL_FORBIDDEN:
+        if bad.lower() in text.lower():
+            out.append(f"bu modda olmayan ifade var: {bad}")
+    for label, beat in (("M", mid_text), ("F", final_text)):
+        for bad in HIT_KOPYA_SEL_BEAT_FORBIDDEN:
+            if beat is not None and bad in beat.lower():
+                out.append(f"{label} cümlesinde yasak kelime: {bad}")
+    return out
+
+
+def hit_kopya_sel_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin şablondan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    tb = structure[HIT_KOPYA_SEL_MOD]
+    args = (tb.get("view"), tb.get("vehicle"), tb.get("mid"), tb.get("final"), tb.get("people"), tb.get("light"))
+    try:
+        _hit_kopya_sel_check(*args)
+    except es.StructureError as e:
+        return [str(e)]
+    prompt, story, tail = hit_kopya_sel_prompt(*args), hit_kopya_sel_story(*args), hit_kopya_sel_tail(*args)
+    out = []
+    if info.get("style_suffix") != tail:
+        out.append("stil eki hit kopyası değil")
+    if info.get("story") != story:
+        out.append("hikâye şablonla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != prompt:
+        out.append("prompt şablonla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    out += hit_kopya_sel_text_issues(text, hit_kopya_sel_mid(tb["mid"], tb["vehicle"]), _HKS["finals"][tb["final"]])
+    if f"Setting: {hit_kopya_sel_setting(tb['view'])}, in {tb['light']}," not in text:
+        out.append("Setting satırı seçilen görünüm + ışık değil")
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > HIT_KOPYA_SEL_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {HIT_KOPYA_SEL_MAX_WORDS})")
+    if len(text) > HIT_KOPYA_SEL_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {HIT_KOPYA_SEL_MAX_CHARS})")
+    return out
+
+
 # ── 🌍 Yer yarılması (17 Kas 2026, Bahadır) ──────────────────────────────────────────────────────────────────────────
 # Yeni kategori (2012 filmi esinli), tek olay: "🌍 Cadde yarılır". Deprem yarığı caddenin ortasından açılır, asfalt
 # yarılıp derin bir uçuruma çöker, yarık kameraya doğru koşar. KASIRGA ile aynı kod-hikâye yolu (GPT yok, hikâye
