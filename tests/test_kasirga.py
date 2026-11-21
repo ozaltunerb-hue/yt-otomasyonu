@@ -9,7 +9,10 @@
 # sökülen ağaç), yeni F2 (dükkân cephesi), kamera sabit; G5 "street" tekrarı düzeldi. Eski metinler hp.KASIRGA_PASIF.
 # 21 Kas (2), kasırga v2: açılışa "one palm torn out by its roots and hurled across the road", F2 dükkânın ön duvarı
 # yerine elektrik direği (eskiler OPENING_V2 / F2_V2 pasif). Seçim sırası (G, araç, O, F, kişi) aynı tohumlarda aynı;
-# 40 tohum kaydı v1 fixture (kasirga_v1_runs_40.json, KASIRGA_V1_SHA256) ve v2 fixture (KASIRGA_SHA256).
+# 40 tohum kaydı v1 fixture (kasirga_v1_runs_40.json, KASIRGA_V1_SHA256) ve v2 fixture (KASIRGA_V2_SHA256).
+# 21 Kas (3), kasırga v3: stil ekine "never pans" + sabit balkon korkuluğu, O2 yalnız tente (metal sac çıktı) ve
+# ön camı kırar (eskiler TAIL_V3 / CAMERA_V3 / CAMERA_LINE_V3 / O2_V3 / VERSION_LINE_V3 pasif). Seçim sırası aynı
+# tohumlarda aynı; canlı 40 tohum kaydı v3 fixture (kasirga_v3_runs_40.json, KASIRGA_SHA256).
 import asyncio
 import hashlib
 import json
@@ -54,8 +57,7 @@ PEOPLE = {4: "Four people struggle along the sidewalk toward the camera, bent do
 VEHICLES = ("pickup truck", "SUV", "small car")
 MIDS = {
     "O1": "4-9s: A violent gust flips a parked {vehicle} onto its roof and sends it skidding across the wet road.",
-    "O2": ("4-9s: A shop awning and a sheet of metal roofing rip loose and slam down onto a parked {vehicle}, smashing "
-           "its windows."),
+    "O2": "4-9s: A shop awning rips loose and slams down onto a parked {vehicle}, smashing its windshield.",
     "O3": ("4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked {vehicle}, crushing "
            "its roof."),
 }
@@ -67,17 +69,18 @@ FINALS = {
     "F3": "9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
 }
 TAIL = ("Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the "
-        "camera stays fixed on the street, shaking in the wind, rain streaking across the lens; no zoom, no cuts. No "
-        "tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in "
-        "pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow "
-        "motion.")
+        "camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a "
+        "balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no "
+        "flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never "
+        "glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.")
 REQUIRED = ("Category 5", "torrential sideways rain", "normal lens", "stays fixed on the street", "pouring rain",
             "No tornado funnel")
 FORBIDDEN = ("tornado", "funnel", "twister", "waterspout", "surge", "tsunami", "tidal", "flood wave", "pans to follow",
              "Full action", "Until the last frame", "heavy hand shake")
 NEGATION = "No tornado funnel, no flood waves."
 EVENT_LABEL = "🌀 Kasırga kıyı kasabasını döver"
-CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, sabit, rüzgârla sarsılır, lenste yağmur)"
+CAMERA_LINE = ("Kamera: hit kamerası (yüksek balkon, normal lens, sabit, dönmez, korkuluk altta sabit, rüzgârla sarsılır, "
+               "lenste yağmur)")
 WARNING = ("⚠️ Gerçekçilik: gökte huni yok mu, sel dalgası yok mu, insanlar rüzgârla gerçekten boğuşuyor mu, video "
            "yapay görünüyor mu? Sağanak yağmur, karanlık gökyüzü ve kaos var mı?")
 # 15 Kas (5): değişen eski metinler pasif kayıtta (hp.KASIRGA_PASIF) birebir
@@ -113,21 +116,39 @@ PASIF = {
                    "bent almost flat, branches, roof sheets and debris flying everywhere in total chaos."),
     "F2_V2": ("Right across the street, the wind rips the entire front wall off a shop, glass and debris blasting past "
               "the camera."),
+    # 21 Kas (3), kasırga v3
+    "TAIL_V3": ("Handheld footage shot by a person standing on a high balcony across the street, eye level, normal "
+                "lens; the camera stays fixed on the street, shaking in the wind, rain streaking across the lens; no "
+                "zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light "
+                "under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything "
+                "moves in real time, never in slow motion."),
+    "CAMERA_V3": "the camera stays fixed on the street, shaking in the wind, rain streaking across the lens; no zoom, no cuts",
+    "CAMERA_LINE_V3": "Kamera: hit kamerası (yüksek balkon, normal lens, sabit, rüzgârla sarsılır, lenste yağmur)",
+    "O2_V3": ("A shop awning and a sheet of metal roofing rip loose and slam down onto a parked {vehicle}, smashing its "
+              "windows."),
+    "VERSION_LINE_V3": "Sürüm: kasırga v2 (palmiye kökünden, F2 direk)",
 }
-VERSION_LINE = "Sürüm: kasırga v2 (palmiye kökünden, F2 direk)"
+VERSION_LINE = "Sürüm: kasırga v3 (sabit korkuluk, O2 tente)"
 # Aktif prompt'ta asla çıkmaması gereken eski parçalar
-OLD_PROMPT_BITS = [PASIF["G5_V1"], *PASIF["OPENING_V1"].split("{place}"), *PASIF["PEOPLE_V1"].values(),
+OLD_PROMPT_BITS_V2 = [PASIF["G5_V1"], *PASIF["OPENING_V1"].split("{place}"), *PASIF["PEOPLE_V1"].values(),
                    PASIF["F2_V1"], PASIF["CAMERA_V1"], PASIF["TAIL_V1"], "Raw natural light under a dark storm sky",
                    "a tall palm tree snaps in half", "a Cuban seaside street",
                    *[PASIF["OPENING_V2"].format(place=p) for _, p in PLACES.values()], PASIF["F2_V2"],
                    "palm trees bent almost flat, branches", "rips the entire front wall off a shop"]
-# v2'de kasırga çıktılarında hiç geçmeyecek kelimeler (büyük/küçük harf fark etmez)
-NO_WALL_WORDS = ("front wall", "facade")
+# 21 Kas (3) v3: + eski stil eki / kamera / O2
+OLD_PROMPT_BITS = OLD_PROMPT_BITS_V2 + [PASIF["TAIL_V3"], PASIF["CAMERA_V3"],
+                                        *[PASIF["O2_V3"].format(vehicle=v) for v in VEHICLES],
+                                        "a sheet of metal roofing", "smashing its windows", "lens; no zoom, no cuts"]
+# v2'de kasırga çıktılarında hiç geçmeyecek kelimeler (büyük/küçük harf fark etmez); v3: + "metal roofing"
+NO_WALL_WORDS_V2 = ("front wall", "facade")
+NO_WALL_WORDS = NO_WALL_WORDS_V2 + ("metal roofing",)
 FIXTURE_V1 = os.path.join(ROOT, "tests", "fixtures", "kasirga_v1_runs_40.json")
 FIXTURE_V2 = os.path.join(ROOT, "tests", "fixtures", "kasirga_v2_runs_40.json")
+FIXTURE_V3 = os.path.join(ROOT, "tests", "fixtures", "kasirga_v3_runs_40.json")
 # 🌀 Kasırga 40 tohum kaydı (🎲 Rastgele; prompt / hikâye / stil eki / combo / eksenler, caption hariç)
 KASIRGA_V1_SHA256 = "c96655d503dbad8716b754039b55ca1cf9f760c4dde22663edbc3c9fd16b21e6"   # 35411fc (v1, fixture)
-KASIRGA_SHA256 = "c3ebc747253c64e6ad1e505016a154fc961796ffdaa2e7104f5135377a8a7840"      # 21 Kas (2) v2
+KASIRGA_V2_SHA256 = "c3ebc747253c64e6ad1e505016a154fc961796ffdaa2e7104f5135377a8a7840"   # 21 Kas (2) v2 (fixture)
+KASIRGA_SHA256 = "9e9b0103832b81e2b8afa1d0bc3c855c89981acd03800d156bad49c9665439db"      # 21 Kas (3) v3
 # Diğer 19 olay (normal yol) + 12 mod + ❄️ Donduran fırtına, 40 tohum: değişiklikten ÖNCEKİ kodla (ed5a9ab) üretilen
 # kaydın SHA-256'sı
 OTHERS_SHA256 = "0f17e5f5bec700860e7bdff73111d8518d651936a1dd62e276dcbaa75f96f860"
@@ -296,10 +317,13 @@ class TestTexts(_Quiet):
             for bit in OLD_PROMPT_BITS:
                 for text in (sc["prompt"], sc["story"], sc["style_suffix"]):
                     self.assertNotIn(bit, text, (seed, bit))
-            for old in ("CAMERA_LINE_V1", "WARNING_V1", "SPOT_DISPLAY_V1", "CAMERA_MODE_V1"):
+            for old in ("CAMERA_LINE_V1", "WARNING_V1", "SPOT_DISPLAY_V1", "CAMERA_MODE_V1", "CAMERA_LINE_V3",
+                        "VERSION_LINE_V3"):
                 self.assertNotIn(PASIF[old] + "\n", tb["lines"] + "\n", (seed, old))
             self.assertNotIn("rüzgârla sarsılan el", json.dumps(d["trace"], ensure_ascii=False), seed)
-        for old, new in (("OPENING_V2", KS["opening"]), ("F2_V2", KS["finals"]["F2"])):
+        for old, new in (("OPENING_V2", KS["opening"]), ("F2_V2", KS["finals"]["F2"]), ("TAIL_V3", KS["tail"]),
+                         ("CAMERA_V3", KS["camera"]), ("CAMERA_LINE_V3", hp.KASIRGA_CAMERA_LINE),
+                         ("O2_V3", KS["mids"]["O2"]), ("VERSION_LINE_V3", hp.KASIRGA_VERSION_LINE)):
             self.assertNotEqual(PASIF[old], new, old)
         for old, new in (("CAMERA_LINE_V1", hp.KASIRGA_CAMERA_LINE), ("WARNING_V1", hp.KASIRGA_WARNING),
                          ("WEATHER_V1", hp.KASIRGA_WEATHER), ("CONFIRM_DESC_V1", hp.KASIRGA_CONFIRM_DESC),
@@ -332,10 +356,10 @@ class TestTexts(_Quiet):
             hp.kasirga_opening("G7")
 
     def test_all_combos_within_limits(self):
-        """324 kombinasyon (6 × 2 × 3 × 3 × 3): hepsi ≤ 230 kelime, ≤ 1400 karakter. 21 Kas (2) v2: en kısa 186
-        kelime (G2 + SUV + O1 + F3), en uzun 197 kelime (G1 + pickup truck + O2 + F2 dahil 40 kombinasyon); en kısa
-        karakter 1071 (G1 + SUV + O1 + F3), en uzun 1137 (G3 + pickup truck + O2 + F2). (v1: 174-183 kelime, en uzun
-        1063.) Zorunlu/yasak ifade kontrolü ve ana hattın zorunlu olay denetimi her kombinasyonda geçer; "front wall"
+        """324 kombinasyon (6 × 2 × 3 × 3 × 3): hepsi ≤ 230 kelime, ≤ 1400 karakter. 21 Kas (3) v3: en kısa 200
+        kelime (G2 + SUV + O2 + F3), en uzun 214 kelime (G1 + pickup truck + O3 + F2 dahil 20 kombinasyon); en kısa
+        karakter 1152 (G1 + SUV + O2 + F3), en uzun 1221 (G3 + pickup truck + O3 + F2). (v2: 186-197 kelime,
+        1071-1137 karakter; v1: 174-183 kelime, en uzun 1063.) Zorunlu/yasak ifade kontrolü ve ana hattın zorunlu olay denetimi her kombinasyonda geçer; "front wall"
         ve "facade" hiçbirinde yok."""
         n, over, words, chars = 0, [], [], []
         for key, p in all_combos():
@@ -364,16 +388,17 @@ class TestTexts(_Quiet):
         self.assertEqual(n, 6 * 2 * 3 * 3 * 3)
         self.assertEqual(n, 324)
         self.assertEqual(over, [])
-        self.assertEqual(min(words)[0], 186)
-        self.assertEqual(max(words)[0], 197)
-        self.assertEqual(len(hp.kasirga_prompt("G1", 4, "O2", "pickup truck", "F2").split()), 197)
-        self.assertEqual(len(hp.kasirga_prompt("G2", 4, "O1", "SUV", "F3").split()), 186)
-        self.assertEqual(max(chars)[0], 1137)
+        self.assertEqual(min(words)[0], 200)
+        self.assertEqual(max(words)[0], 214)
+        self.assertEqual(sum(w == 214 for w, _ in words), 20)
+        self.assertEqual(len(hp.kasirga_prompt("G1", 4, "O3", "pickup truck", "F2").split()), 214)
+        self.assertEqual(len(hp.kasirga_prompt("G2", 4, "O2", "SUV", "F3").split()), 200)
+        self.assertEqual(max(chars)[0], 1221)
         self.assertEqual(max(chars)[1][0::2], ("G3", "pickup truck", "F2"))
-        self.assertEqual(max(chars)[1][3], "O2")
-        self.assertEqual(min(chars)[0], 1071)
-        self.assertEqual(len(hp.kasirga_prompt("G3", 5, "O2", "pickup truck", "F2")), 1137)
-        self.assertEqual(len(hp.kasirga_prompt("G1", 4, "O1", "SUV", "F3")), 1071)
+        self.assertEqual(max(chars)[1][3], "O3")
+        self.assertEqual(min(chars)[0], 1152)
+        self.assertEqual(len(hp.kasirga_prompt("G3", 5, "O3", "pickup truck", "F2")), 1221)
+        self.assertEqual(len(hp.kasirga_prompt("G1", 4, "O2", "SUV", "F3")), 1152)
 
     def test_event_gate_without_synonym(self):
         """Olay kapısı bu olayda da açık ve geçiyor: iç anahtarın kökleri (hurr, wind, batt, coas, town) içinden
@@ -852,11 +877,11 @@ class TestKasirgaV2Lock(_Quiet):
             text = text.replace(KS["opening"].format(place=place), PASIF["OPENING_V2"].format(place=place))
         return text.replace(KS["finals"]["F2"], PASIF["F2_V2"])
 
-    def test_live_equals_v2_fixture(self):
+    def test_v2_fixture_hash(self):
+        # 21 Kas (3): canlı kayıt artık v3 (TestKasirgaV3Lock); v2 kaydı fixture'da kilitli
         with open(FIXTURE_V2, encoding="utf-8") as fh:
             v2 = json.load(fh)
-        self.assertEqual(snapshot_hash(v2), KASIRGA_SHA256)
-        self.assertEqual(snapshot_hash(self.live_runs()), KASIRGA_SHA256)
+        self.assertEqual(snapshot_hash(v2), KASIRGA_V2_SHA256)
 
     def test_v1_fixture_hash(self):
         with open(FIXTURE_V1, encoding="utf-8") as fh:
@@ -879,8 +904,65 @@ class TestKasirgaV2Lock(_Quiet):
             self.assertEqual(a["suffix"], b["suffix"], s)
             self.assertNotEqual(a["prompt"], b["prompt"], s)   # açılış her tohumda değişti
             f2 += b["axes"]["axes"]["beats"].endswith("+F2")
-            for w in NO_WALL_WORDS:
+            for w in NO_WALL_WORDS_V2:   # v2 dönemi kuralı (v2 fixture'ında O2 hâlâ metal sac içerir)
                 self.assertNotIn(w, b["prompt"].lower(), (s, w))
-            for bit in OLD_PROMPT_BITS:
+            for bit in OLD_PROMPT_BITS_V2:
                 self.assertNotIn(bit, b["prompt"], (s, bit))
         self.assertGreater(f2, 0)   # F2 40 tohumda en az bir kez seçiliyor
+
+
+class TestKasirgaV3Lock(_Quiet):
+    """21 Kas (3), kasırga v3: canlı 40 tohum kaydı v3 fixture ile birebir; v2 fixture'ından farkı yalnız stil eki ve
+    O2 cümlesi; seçim sırası (G, araç, O, F, kişi), combo ve eksenler aynı tohumlarda aynı. Onay'da fark yalnız Sürüm,
+    Kamera, O2'li Orta ve Kelime satırları."""
+
+    @staticmethod
+    def to_v2(text: str) -> str:
+        text = text.replace(KS["tail"], PASIF["TAIL_V3"])
+        for v in VEHICLES:
+            text = text.replace(KS["mids"]["O2"].format(vehicle=v), PASIF["O2_V3"].format(vehicle=v))
+        return text
+
+    def test_live_equals_v3_fixture(self):
+        with open(FIXTURE_V3, encoding="utf-8") as fh:
+            v3 = json.load(fh)
+        self.assertEqual(snapshot_hash(v3), KASIRGA_SHA256)
+        self.assertEqual(snapshot_hash(TestKasirgaV2Lock.live_runs()), KASIRGA_SHA256)
+
+    def test_diff_only_tail_and_o2_same_selection(self):
+        with open(FIXTURE_V2, encoding="utf-8") as fh:
+            v2 = json.load(fh)
+        with open(FIXTURE_V3, encoding="utf-8") as fh:
+            v3 = json.load(fh)
+        self.assertEqual(set(v2), set(v3))
+        self.assertEqual(len(v3), 40)
+        o2 = 0
+        for s in v2:
+            a, b = v2[s], v3[s]
+            self.assertEqual(a["combo"], b["combo"], s)     # O + F aynı
+            self.assertEqual(a["axes"], b["axes"], s)       # G, araç, kişi, O+F, dışlananlar aynı
+            for k in ("prompt", "story", "suffix"):
+                self.assertEqual(self.to_v2(b[k]), a[k], (s, k))
+            self.assertEqual(b["suffix"], TAIL, s)
+            self.assertNotEqual(a["prompt"], b["prompt"], s)   # stil eki her tohumda değişti
+            is_o2 = b["axes"]["axes"]["beats"].startswith("O2+")
+            o2 += is_o2
+            self.assertEqual(a["story"] != b["story"], is_o2, s)   # hikâye yalnız O2'de değişir
+            for w in NO_WALL_WORDS:
+                for k in ("prompt", "story", "suffix"):
+                    self.assertNotIn(w, b[k].lower(), (s, k, w))
+            for bit in OLD_PROMPT_BITS:
+                self.assertNotIn(bit, b["prompt"], (s, bit))
+        self.assertGreater(o2, 0)   # O2 40 tohumda en az bir kez seçiliyor
+
+    def test_approval_diff_only_version_camera_o2_words(self):
+        for s in range(1, 41):
+            d = build(s)
+            tb = d["structure"]["kasirga"]
+            lines = tb["lines"].split("\n")
+            self.assertEqual(lines[1], VERSION_LINE)
+            self.assertIn(CAMERA_LINE, lines)
+            self.assertNotIn(PASIF["CAMERA_LINE_V3"], lines)
+            self.assertNotIn(PASIF["VERSION_LINE_V3"], lines)
+            for w in NO_WALL_WORDS:
+                self.assertNotIn(w, tb["lines"].lower(), (s, w))

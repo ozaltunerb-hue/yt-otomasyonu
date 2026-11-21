@@ -3158,8 +3158,7 @@ KASIRGA = {
     "vehicles": ("pickup truck", "SUV", "small car"),
     "mids": {
         "O1": "A violent gust flips a parked {vehicle} onto its roof and sends it skidding across the wet road.",
-        "O2": "A shop awning and a sheet of metal roofing rip loose and slam down onto a parked {vehicle}, smashing "
-              "its windows.",
+        "O2": "A shop awning rips loose and slams down onto a parked {vehicle}, smashing its windshield.",   # 21 Kas (3) v3; eski O2_V3 pasif
         "O3": "A big tree is ripped out by its roots and crashes across the road onto a parked {vehicle}, crushing its "
               "roof.",
     },
@@ -3171,15 +3170,17 @@ KASIRGA = {
         "F3": "Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
     },
     "vehicle_mids": ("O1", "O2", "O3"),
-    "camera": "the camera stays fixed on the street, shaking in the wind, rain streaking across the lens; no zoom, no "
-              "cuts",
+    "camera": ("the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the "
+               "lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts"),
     "tail": ("Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; "
-             "the camera stays fixed on the street, shaking in the wind, rain streaking across the lens; no zoom, no "
-             "cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark "
-             "grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, "
-             "never in slow motion."),
+             "the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; "
+             "a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado "
+             "funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in "
+             "pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in "
+             "slow motion."),   # 21 Kas (3) v3; eski TAIL_V3 pasif
 }
-KASIRGA_CAMERA_LINE = "Kamera: hit kamerası (yüksek balkon, normal lens, sabit, rüzgârla sarsılır, lenste yağmur)"
+KASIRGA_CAMERA_LINE = ("Kamera: hit kamerası (yüksek balkon, normal lens, sabit, dönmez, korkuluk altta sabit, "
+                       "rüzgârla sarsılır, lenste yağmur)")   # 21 Kas (3) v3; eski CAMERA_LINE_V3 pasif
 KASIRGA_WARNING = ("⚠️ Gerçekçilik: gökte huni yok mu, sel dalgası yok mu, insanlar rüzgârla gerçekten boğuşuyor mu, "
                    "video yapay görünüyor mu? Sağanak yağmur, karanlık gökyüzü ve kaos var mı?")
 KASIRGA_WEATHER = "kategori 5 kasırga rüzgârı ve sağanak yatay yağmur (stil ekinde dark grey sky in pouring rain)"
@@ -3228,8 +3229,20 @@ KASIRGA_PASIF = {
                    "bent almost flat, branches, roof sheets and debris flying everywhere in total chaos."),
     "F2_V2": ("Right across the street, the wind rips the entire front wall off a shop, glass and debris blasting past "
               "the camera."),
+    # 21 Kas (3), kasırga v3: stil ekine "never pans" + sabit korkuluk, O2'den metal sac çıktı (yalnız tente)
+    "TAIL_V3": ("Handheld footage shot by a person standing on a high balcony across the street, eye level, normal "
+                "lens; the camera stays fixed on the street, shaking in the wind, rain streaking across the lens; no "
+                "zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light "
+                "under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything "
+                "moves in real time, never in slow motion."),
+    "CAMERA_V3": ("the camera stays fixed on the street, shaking in the wind, rain streaking across the lens; no zoom, "
+                  "no cuts"),
+    "CAMERA_LINE_V3": "Kamera: hit kamerası (yüksek balkon, normal lens, sabit, rüzgârla sarsılır, lenste yağmur)",
+    "O2_V3": ("A shop awning and a sheet of metal roofing rip loose and slam down onto a parked {vehicle}, smashing its "
+              "windows."),
+    "VERSION_LINE_V3": "Sürüm: kasırga v2 (palmiye kökünden, F2 direk)",
 }
-KASIRGA_VERSION_LINE = "Sürüm: kasırga v2 (palmiye kökünden, F2 direk)"   # 21 Kas (2): ✋ Onay + bot onay metni
+KASIRGA_VERSION_LINE = "Sürüm: kasırga v3 (sabit korkuluk, O2 tente)"   # 21 Kas (3): ✋ Onay + bot onay metni
 # 21 Kas: Telegram coğrafya menüsü düğmeleri (okunur ad). Havuz metinleri değişmez; Onay satırı geos[..]["name"].
 KASIRGA_GEO_BUTTONS = {"G1": "🇺🇸 ABD Florida", "G2": "🇵🇭 Filipinler", "G3": "🌴 Meksika Karayipleri",
                        "G4": "🇮🇳 Hindistan", "G5": "🇨🇺 Küba", "G6": "🇯🇵 Japonya"}

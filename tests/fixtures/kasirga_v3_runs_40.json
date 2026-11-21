@@ -1,0 +1,1002 @@
+{
+ "1": {
+  "axes": {
+   "axes": {
+    "arac": "small car",
+    "beats": "O2+F1",
+    "cografya": "G2",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "small car",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "10": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O2+F3",
+    "cografya": "G5",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "11": {
+  "axes": {
+   "axes": {
+    "arac": "small car",
+    "beats": "O2+F3",
+    "cografya": "G4",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "small car",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in an Indian coastal town of old concrete buildings, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in an Indian coastal town of old concrete buildings, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "12": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O1+F2",
+    "cografya": "G4",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O1+F2|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in an Indian coastal town of old concrete buildings, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked SUV onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in an Indian coastal town of old concrete buildings, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked SUV onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "13": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O3+F1",
+    "cografya": "G3",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Mexican Caribbean town of colorful concrete houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Mexican Caribbean town of colorful concrete houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "14": {
+  "axes": {
+   "axes": {
+    "arac": "small car",
+    "beats": "O2+F3",
+    "cografya": "G1",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "small car",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida beach town of low pastel houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida beach town of low pastel houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "15": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O1+F1",
+    "cografya": "G2",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O1+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked pickup truck onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked pickup truck onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "16": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O2+F2",
+    "cografya": "G3",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F2|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Mexican Caribbean town of colorful concrete houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked SUV, smashing its windshield. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Mexican Caribbean town of colorful concrete houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked SUV, smashing its windshield. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "17": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O2+F2",
+    "cografya": "G5",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F2|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked SUV, smashing its windshield. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked SUV, smashing its windshield. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "18": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O2+F1",
+    "cografya": "G2",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "19": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O3+F1",
+    "cografya": "G6",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked pickup truck, crushing its roof. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked pickup truck, crushing its roof. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "2": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O2+F1",
+    "cografya": "G1",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida beach town of low pastel houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida beach town of low pastel houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "20": {
+  "axes": {
+   "axes": {
+    "arac": "small car",
+    "beats": "O2+F3",
+    "cografya": "G6",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "small car",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "21": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O3+F2",
+    "cografya": "G2",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F2|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "22": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O3+F2",
+    "cografya": "G2",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F2|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked pickup truck, crushing its roof. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked pickup truck, crushing its roof. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "23": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O3+F2",
+    "cografya": "G3",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F2|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Mexican Caribbean town of colorful concrete houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked pickup truck, crushing its roof. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Mexican Caribbean town of colorful concrete houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked pickup truck, crushing its roof. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "24": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O1+F1",
+    "cografya": "G6",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O1+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked SUV onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked SUV onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "25": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O2+F3",
+    "cografya": "G4",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in an Indian coastal town of old concrete buildings, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in an Indian coastal town of old concrete buildings, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "26": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O2+F3",
+    "cografya": "G6",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "27": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O2+F1",
+    "cografya": "G6",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked SUV, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked SUV, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "28": {
+  "axes": {
+   "axes": {
+    "arac": "small car",
+    "beats": "O3+F3",
+    "cografya": "G1",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "small car",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida beach town of low pastel houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked small car, crushing its roof. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida beach town of low pastel houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked small car, crushing its roof. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "29": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O3+F3",
+    "cografya": "G5",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked pickup truck, crushing its roof. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked pickup truck, crushing its roof. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "3": {
+  "axes": {
+   "axes": {
+    "arac": "small car",
+    "beats": "O2+F3",
+    "cografya": "G2",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "small car",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "30": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O3+F3",
+    "cografya": "G5",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "31": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O2+F1",
+    "cografya": "G1",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida beach town of low pastel houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked SUV, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida beach town of low pastel houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked SUV, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "32": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O2+F3",
+    "cografya": "G1",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida beach town of low pastel houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Florida beach town of low pastel houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "33": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O2+F2",
+    "cografya": "G5",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F2|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "34": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O1+F1",
+    "cografya": "G5",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O1+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked SUV onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked SUV onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "35": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O3+F2",
+    "cografya": "G5",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F2|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "36": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O2+F1",
+    "cografya": "G3",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Mexican Caribbean town of colorful concrete houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Mexican Caribbean town of colorful concrete houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "37": {
+  "axes": {
+   "axes": {
+    "arac": "small car",
+    "beats": "O3+F3",
+    "cografya": "G6",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "small car",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked small car, crushing its roof. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked small car, crushing its roof. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "38": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O3+F1",
+    "cografya": "G6",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Japanese coastal town of low tiled houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "39": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O1+F1",
+    "cografya": "G2",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O1+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked SUV onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked SUV onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "4": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O3+F2",
+    "cografya": "G2",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F2|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "40": {
+  "axes": {
+   "axes": {
+    "arac": "small car",
+    "beats": "O1+F2",
+    "cografya": "G4",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 4,
+    "spot": "high balcony across the street",
+    "vehicle": "small car",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O1+F2|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in an Indian coastal town of old concrete buildings, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked small car onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in an Indian coastal town of old concrete buildings, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Four people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked small car onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, a wooden power pole snaps at its base and crashes down across the road, live wires whipping and sparking.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "5": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O3+F3",
+    "cografya": "G5",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F3|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked SUV, crushing its roof. 9-15s: Across the street, a large blank billboard rips loose and cartwheels down the road toward the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "6": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O2+F1",
+    "cografya": "G5",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Cuban seaside town of faded colonial houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked pickup truck, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "7": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "O3+F1",
+    "cografya": "G3",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O3+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Mexican Caribbean town of colorful concrete houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked pickup truck, crushing its roof. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Mexican Caribbean town of colorful concrete houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A big tree is ripped out by its roots and crashes across the road onto a parked pickup truck, crushing its roof. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "8": {
+  "axes": {
+   "axes": {
+    "arac": "SUV",
+    "beats": "O1+F1",
+    "cografya": "G2",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "SUV",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O1+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked SUV onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in a Philippine coastal town of tin-roofed houses, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A violent gust flips a parked SUV onto its roof and sends it skidding across the wet road. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ },
+ "9": {
+  "axes": {
+   "axes": {
+    "arac": "small car",
+    "beats": "O2+F1",
+    "cografya": "G4",
+    "kategori": "Kasırga",
+    "light": null,
+    "mod": "kasirga",
+    "people": 5,
+    "spot": "high balcony across the street",
+    "vehicle": "small car",
+    "view": null
+   },
+   "event": "Hurricane winds batter a coastal town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "hurricane_disasters|none|hurricane winds batter a coastal town|high balcony across the street##O2+F1|bystander_handheld",
+  "prompt": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in an Indian coastal town of old concrete buildings, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera. Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion.",
+  "story": "0-4s: Category 5 hurricane winds and torrential sideways rain hammer a street in an Indian coastal town of old concrete buildings, palm trees bent almost flat, one palm torn out by its roots and hurled across the road, branches, roof sheets and debris flying everywhere in total chaos. Five people struggle along the sidewalk toward the camera, bent double against the wind, clinging to railings, one knocked off his feet by a gust. 4-9s: A shop awning rips loose and slams down onto a parked small car, smashing its windshield. 9-15s: Right across the street, the wind peels the whole roof off a house, metal sheets and tiles flying past the camera.",
+  "suffix": "Handheld footage shot by a person standing on a high balcony across the street, eye level, normal lens; the camera stays fixed on the street and never pans, shaking in the wind, rain streaking across the lens; a balcony railing stays fixed at the bottom of the frame the whole time; no zoom, no cuts. No tornado funnel, no flood waves. Bystanders wear everyday clothes. Raw natural light under a dark grey sky in pouring rain, never glossy or CGI. No readable signs or text. Everything moves in real time, never in slow motion."
+ }
+}
