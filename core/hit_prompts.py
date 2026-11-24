@@ -4558,15 +4558,25 @@ def hit_kopya_sel_issues(structure: dict, info: dict) -> list[str]:
 # yakın): yeni şablon (bulut ilk karede, lav arka planda, kamera yamaçta köyün çok üstünde), bu moda özel V1-V6 yer
 # metinleri (HIT_KOPYA_KUL_PLACES; Yaklaşma metinleri değişmez), yeni M1-M2 ve F1-F2 (karanlık yok, kalın kahverengi
 # kül). v1 şablonu, M, F, yer metinleri ve ilgili satırlar _V1 olarak pasif. Kişi, LRU, menü, callback'ler aynen.
+# 24 Kas (v3, Bahadır; Japonya testi: volkan çok yakın ve devasa, "upper third" + "tilting down no more than slightly"
+# kamerayı yukarı baktırıp çatı hizasına indirdi, bulut dar sütun gibi aktı, ağaç devrilmesi görünmedi; direk
+# Endonezya'da çalıştı): yeni şablon (volkan uzakta ufukta, kamera köye dik aşağı bakar, geniş bulut duvarı), M1-M2
+# ikisi de direk (ağaç yok). F1-F2, yer metinleri, kişi, LRU, menü, callback'ler aynen. v2 şablonu, M1-M2 ve ilgili
+# satırlar _V2 olarak pasif.
 HIT_KOPYA_KUL_MODE_LABEL = "⭐ Hit kopyası (kül bulutu)"
 HIT_KOPYA_KUL_EVENTS = (es.PYROCLASTIC,)
 HIT_KOPYA_KUL_DOMAIN = "volcano_disasters"
 HIT_KOPYA_KUL_MOD = "hit_kopya_kul"                  # config bayrağı, structure anahtarı, Notion axes.mod
 HIT_KOPYA_KUL_GEO_KEY = "hit_kopya_kul_geo"          # config anahtarı: menüden seçilen V (yoksa 🎲 Rastgele)
-HIT_KOPYA_KUL_SURUM = "v2"                           # Notion axes.surum (24 Kas v2)
-HIT_KOPYA_KUL_VERSION_LINE = "Sürüm: hit_kul v2 (yüksek yamaç kamerası, bulut ilk karede, lav arka planda)"
-HIT_KOPYA_KUL_CAMERA = "sabit yüksek yamaç terası, köy aşağıda serili, volkan üst üçte birde"   # ✋ Onay "Kamera:"
-HIT_KOPYA_KUL_CAMERA_AXIS = "sabit yüksek yamaç terası, köy aşağıda serili, volkan üst üçte birde"   # Eksenler
+HIT_KOPYA_KUL_SURUM = "v3"                           # Notion axes.surum (24 Kas v3)
+HIT_KOPYA_KUL_VERSION_LINE = ("Sürüm: hit_kul v3 (volkan ufukta, kamera dik aşağı bakar, geniş bulut duvarı, hep "
+                              "direk)")
+HIT_KOPYA_KUL_CAMERA = "sabit yüksek yamaç terası, köye dik aşağı bakar, volkan uzakta ufukta"   # ✋ Onay "Kamera:"
+HIT_KOPYA_KUL_CAMERA_AXIS = "sabit yüksek yamaç terası, köye dik aşağı bakar, volkan uzakta ufukta"   # Eksenler
+HIT_KOPYA_KUL_SURUM_V2 = "v2"                                                                  # pasif (v2)
+HIT_KOPYA_KUL_VERSION_LINE_V2 = "Sürüm: hit_kul v2 (yüksek yamaç kamerası, bulut ilk karede, lav arka planda)"   # pasif
+HIT_KOPYA_KUL_CAMERA_V2 = "sabit yüksek yamaç terası, köy aşağıda serili, volkan üst üçte birde"   # pasif (v2)
+HIT_KOPYA_KUL_CAMERA_AXIS_V2 = "sabit yüksek yamaç terası, köy aşağıda serili, volkan üst üçte birde"   # pasif (v2)
 HIT_KOPYA_KUL_SURUM_V1 = "v1"                                                                  # pasif (v1)
 HIT_KOPYA_KUL_VERSION_LINE_V1 = "Sürüm: hit_kul v1"                                            # pasif (v1)
 HIT_KOPYA_KUL_CAMERA_V1 = "sabit tepe terası, volkan üst üçte birde (hit ile aynı)"            # pasif (v1)
@@ -4607,6 +4617,36 @@ HIT_KOPYA_KUL = {
     "mids": {
         "M1": "One man trips and falls; right in front of him the cloud snaps a power pole and it crashes across the "
               "road in a burst of sparks, and he scrambles up and runs on.",
+        "M2": "Far down the street a whole row of power poles snaps one after another in bursts of sparks and crashes "
+              "across the road just in front of the running people; one man falls, scrambles up and runs on.",
+    },
+    "finals": {
+        "F1": "The cloud rolls up the village toward the terrace, swallows the houses just below and engulfs the "
+              "terrace in thick brown ash.",
+        "F2": "The cloud tears the roof tiles off the houses just below the terrace and hurls them toward the camera, "
+              "then engulfs the terrace in thick brown ash.",
+    },
+    # Bahadır'ın v3 metni, süslü parantez dışı birebir (24 Kas)
+    "template": (
+        "0-4s: From the very first frame a wide wall of pyroclastic cloud, as wide as the whole mountainside, rolls "
+        "down a distant volcano on the horizon, glowing lava streaking down its slopes behind it, and slams into the "
+        "far end of {place} far below. {People} people, small in the distance, run up the village street toward the "
+        "camera. 4-9s: {M} 9-15s: {F} Handheld footage shot from a terrace high on a steep hillside, far above the "
+        "rooftops, looking steeply down at the whole village spread out small far below, with the distant erupting "
+        "volcano on the horizon; slight hand shake, the camera stays fixed on the terrace and never descends, a "
+        "corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear "
+        "civilian clothes, no hazmat suits. Raw natural light under an ash-grey sky, never glossy or CGI. No readable "
+        "signs, text or flags."),
+    "tail_start": "Handheld footage shot from a terrace high on a steep hillside",
+}
+# v3 stil eki (şablonun "Handheld footage..." ile başlayan bölümü, birebir); Kie öncesi denetim bununla karşılaştırır
+HIT_KOPYA_KUL_TAIL = HIT_KOPYA_KUL["template"][HIT_KOPYA_KUL["template"].index(HIT_KOPYA_KUL["tail_start"]):]
+# v2 (24 Kas) şablon ve M1-M2: pasif (v3 ile değişti; F1-F2 v3'te aynen)
+HIT_KOPYA_KUL_V2 = {
+    "people": ("Six", "Seven", "Eight"),
+    "mids": {
+        "M1": "One man trips and falls; right in front of him the cloud snaps a power pole and it crashes across the "
+              "road in a burst of sparks, and he scrambles up and runs on.",
         "M2": "One man trips and falls; right in front of him the cloud snaps a large tree and it crashes across the "
               "road, and he scrambles up and runs on.",
     },
@@ -4616,7 +4656,7 @@ HIT_KOPYA_KUL = {
         "F2": "The cloud tears the roof tiles off the houses just below the terrace and hurls them toward the camera, "
               "then engulfs the terrace in thick brown ash.",
     },
-    # Bahadır'ın v2 metni, süslü parantez dışı birebir (24 Kas)
+    # Bahadır'ın v2 metni (pasif), süslü parantez dışı birebir (24 Kas)
     "template": (
         "0-4s: From the very first frame a single huge pyroclastic cloud races down the flank of the volcano, glowing "
         "lava pouring down the slope behind it, and slams into the far end of {place} far below. {People} people, "
@@ -4629,8 +4669,8 @@ HIT_KOPYA_KUL = {
         "never glossy or CGI. No readable signs, text or flags."),
     "tail_start": "Handheld footage shot from a terrace high on a steep hillside",
 }
-# v2 stil eki (şablonun "Handheld footage..." ile başlayan bölümü, birebir); Kie öncesi denetim bununla karşılaştırır
-HIT_KOPYA_KUL_TAIL = HIT_KOPYA_KUL["template"][HIT_KOPYA_KUL["template"].index(HIT_KOPYA_KUL["tail_start"]):]
+HIT_KOPYA_KUL_TAIL_V2 = HIT_KOPYA_KUL_V2["template"][HIT_KOPYA_KUL_V2["template"].index(
+    HIT_KOPYA_KUL_V2["tail_start"]):]   # pasif (v2)
 # v1 (24 Kas) şablon, M, F: pasif (v2 ile değişti)
 HIT_KOPYA_KUL_V1 = {
     "people": ("Six", "Seven", "Eight"),
@@ -4668,37 +4708,61 @@ HIT_KOPYA_KUL_HIT_TAIL = (
     "the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.")
 HIT_KOPYA_KUL_HIT_LIGHT = "Raw natural light matching the weather,"
 HIT_KOPYA_KUL_LIGHT = "Raw natural light under an ash-grey sky,"
-HIT_KOPYA_KUL_REQUIRED = ("single huge pyroclastic cloud", "glowing lava pouring down the slope",
-                          "high on a steep hillside, far above the rooftops",
-                          "the camera stays fixed on the terrace",
-                          "the erupting volcano always visible in the upper third of the frame")
+HIT_KOPYA_KUL_REQUIRED = ("wide wall of pyroclastic cloud", "distant volcano on the horizon", "looking steeply down",
+                          "power pole", "high on a steep hillside, far above the rooftops",
+                          "the camera stays fixed on the terrace")   # v3
 HIT_KOPYA_KUL_FORBIDDEN = ("bus", "explosion", "blast", "collapse", "sunset", "GPT", "colonial", "darkness",
-                           "erupts")   # tüm çıktıda, alt dize (v2)
+                           "erupts", "upper third", "tilting down no more than slightly", "tree",
+                           "single huge")   # tüm çıktıda, alt dize (v3)
+# Yasak denetiminden önce çıkarılan sabit ifadeler (24 Kas v3 kararı: V2 yer metni "among palm trees" aynen kalır;
+# "tree" yasağı devrilen ağaç içindir)
+HIT_KOPYA_KUL_FORBIDDEN_EXCEPTIONS = ("palm trees",)
+HIT_KOPYA_KUL_REQUIRED_V2 = ("single huge pyroclastic cloud", "glowing lava pouring down the slope",
+                             "high on a steep hillside, far above the rooftops",
+                             "the camera stays fixed on the terrace",
+                             "the erupting volcano always visible in the upper third of the frame")   # pasif (v2)
+HIT_KOPYA_KUL_FORBIDDEN_V2 = ("bus", "explosion", "blast", "collapse", "sunset", "GPT", "colonial", "darkness",
+                              "erupts")   # pasif (v2)
 HIT_KOPYA_KUL_REQUIRED_V1 = ("fountains of glowing lava", "single huge pyroclastic cloud",
                              "the camera stays fixed on the terrace",
                              "the erupting volcano always visible in the upper third of the frame")   # pasif (v1)
 HIT_KOPYA_KUL_FORBIDDEN_V1 = ("bus", "explosion", "blast", "collapse", "sunset", "GPT")   # pasif (v1)
-HIT_KOPYA_KUL_NAMES = {"M1": "adam düşer, elektrik direği kıvılcımlarla yola devrilir",
-                       "M2": "adam düşer, büyük ağaç yola devrilir",
+HIT_KOPYA_KUL_NAMES = {"M1": "adam düşer, önüne elektrik direği kıvılcımlarla yola devrilir",
+                       "M2": "caddede bir sıra direk peş peşe kıvılcımlarla yola devrilir, bir adam düşer",
                        "F1": "bulut köyü terasa doğru tırmanır, terası kalın kahverengi küle gömer",
                        "F2": "terasın altındaki evlerin kiremitleri kameraya savrulur, teras kalın kahverengi külde"}
+HIT_KOPYA_KUL_NAMES_V2 = {"M1": "adam düşer, elektrik direği kıvılcımlarla yola devrilir",
+                          "M2": "adam düşer, büyük ağaç yola devrilir",
+                          "F1": "bulut köyü terasa doğru tırmanır, terası kalın kahverengi küle gömer",
+                          "F2": "terasın altındaki evlerin kiremitleri kameraya savrulur, teras kalın kahverengi külde"}
 HIT_KOPYA_KUL_NAMES_V1 = {"M1": "adam düşer, elektrik direği kıvılcımlarla devrilir",
                        "M2": "adam düşer, büyük ağaç devrilir",
                        "F1": "bulut caddeyi ve evleri yutar, kamera karanlıkta",
                        "F2": "en yakın evin kiremitleri kameraya savrulur, kamera karanlıkta"}
-HIT_KOPYA_KUL_WARNING = ("⚠️ Hit karşılaştırması: bulut ilk karede yamaçtan iniyor mu, lav arkasında akıyor mu, kamera "
-                         "köyün çok üstünde yüksek yamaç terasında sabit mi, insanlar uzakta küçük mü, volkan üst "
-                         "üçte birde mi, final kahverengi kül mü (simsiyah değil)?")
+HIT_KOPYA_KUL_WARNING = ("⚠️ Hit karşılaştırması: volkan uzakta ufukta mı (yakın ve devasa değil), kamera köye dik aşağı "
+                         "bakıyor ve yamaç terasında sabit mi (çatı hizasına inmiyor), bulut tüm yamaç genişliğinde "
+                         "duvar gibi mi (dar sütun değil), direk kıvılcımlarla yola devriliyor mu, insanlar uzakta "
+                         "küçük mü, final kahverengi kül mü (simsiyah değil)?")
+HIT_KOPYA_KUL_WARNING_V2 = ("⚠️ Hit karşılaştırması: bulut ilk karede yamaçtan iniyor mu, lav arkasında akıyor mu, kamera "
+                            "köyün çok üstünde yüksek yamaç terasında sabit mi, insanlar uzakta küçük mü, volkan üst "
+                            "üçte birde mi, final kahverengi kül mü (simsiyah değil)?")   # pasif (v2)
 HIT_KOPYA_KUL_WARNING_V1 = ("⚠️ Hit karşılaştırması: ilk karede volkan patlıyor ve lav fışkırıyor mu, tek büyük bulut "
                          "köy caddesinin ucuna çarpıyor mu, insanlar kameraya doğru koşuyor mu, kamera terasta sabit "
                          "ve volkan üst üçte birde mi?")
-HIT_KOPYA_KUL_CONFIRM_DESC = ("13 Eki kül bulutu hit'inin (2,1M) iskeleti, v2. İlk karede tek büyük kül bulutu volkanın "
+HIT_KOPYA_KUL_CONFIRM_DESC = ("13 Eki kül bulutu hit'inin (2,1M) iskeleti, v3. İlk karede uzakta ufuktaki volkandan tüm "
+                              "yamaç genişliğinde bir kül bulutu duvarı iner, arkasında lav akar, aşağıdaki köyün "
+                              "ucuna çarpar; 6-8 kişi uzakta, küçük, köy caddesinde kameraya doğru koşar; önlerine "
+                              "elektrik direği ya da bir sıra direk kıvılcımlarla devrilir, bir adam düşüp kalkar "
+                              "(M1-M2); bulut terasa tırmanır ve terası kalın kahverengi küle gömer (F1-F2). Köyün çok "
+                              "üstündeki yüksek yamaç terasından sabit kamera, köye dik aşağı bakar, korkuluk köşesi ön "
+                              "planda. Coğrafya, M, F, kişi ✋ Onay mesajında. Hikâye için GPT çağrılmaz.")
+HIT_KOPYA_KUL_CONFIRM_DESC_V2 = ("13 Eki kül bulutu hit'inin (2,1M) iskeleti, v2. İlk karede tek büyük kül bulutu volkanın "
                               "yamacından iner, arkasında lav akar, aşağıdaki köyün ucuna çarpar; 6-8 kişi uzakta, "
                               "küçük, köy caddesinde kameraya doğru koşar; bir adam düşer, önüne direk ya da ağaç "
                               "devrilir (M1-M2); bulut terasa tırmanır ve terası kalın kahverengi küle gömer (F1-F2). "
                               "Köyün çok üstündeki yüksek yamaç terasından sabit kamera, köy aşağıda serili, volkan "
                               "üst üçte birde, korkuluk köşesi ön planda. Coğrafya, M, F, kişi ✋ Onay mesajında. "
-                              "Hikâye için GPT çağrılmaz.")
+                              "Hikâye için GPT çağrılmaz.")   # pasif (v2)
 HIT_KOPYA_KUL_CONFIRM_DESC_V1 = ("13 Eki kül bulutu hit'inin (2,1M) iskeleti ve dili. İlk karede volkan patlar, kraterden "
                               "lav fışkırır, tek büyük kül bulutu yamaçtan inip köy caddesinin ucuna çarpar, 6-8 kişi "
                               "kameraya doğru koşar; bir adam düşer, önüne direk ya da ağaç devrilir (M1-M2); bulut "
@@ -4894,15 +4958,21 @@ def hit_kopya_kul_build_scene(domain: str | None, event: str | None, history: li
 
 
 def hit_kopya_kul_text_issues(text: str) -> list[str]:
-    """Kie öncesi son kontrol: tek bulut, lav, yüksek yamaç ve kamera ifadeleri birebir var; yasaklı kelimeler (bus,
-    explosion, blast, collapse, sunset, GPT, colonial, darkness, erupts) tüm metinde alt dize olarak yok (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
+    """Kie öncesi son kontrol: bulut duvarı, ufuktaki volkan, dik aşağı bakış, direk, yüksek yamaç ve kamera ifadeleri
+    birebir var; yasaklı ifadeler (HIT_KOPYA_KUL_FORBIDDEN) tüm metinde alt dize olarak yok (büyük/küçük harf fark
+    etmez, kelime başından; HIT_KOPYA_KUL_FORBIDDEN_EXCEPTIONS önce çıkarılır). İhlal = gönderilmez."""
     out = []
     text = text or ""
     for need in HIT_KOPYA_KUL_REQUIRED:
         if need not in text:
             out.append(f'"{need}" eksik')
+    low = text.lower()
+    for ok in HIT_KOPYA_KUL_FORBIDDEN_EXCEPTIONS:
+        low = low.replace(ok.lower(), " ")
+    import re
     for bad in HIT_KOPYA_KUL_FORBIDDEN:
-        if bad.lower() in text.lower():
+        # v3: kelime başından eşleşir ("tree"/"trees" yakalanır, şablondaki "street" yakalanmaz)
+        if re.search(r"\b" + re.escape(bad.lower()), low):
             out.append(f"bu modda olmayan ifade var: {bad}")
     return out
 
@@ -4926,7 +4996,7 @@ def hit_kopya_kul_issues(structure: dict, info: dict) -> list[str]:
     text = info.get("prompt", "")
     out += hit_kopya_kul_text_issues(text)
     if tail != HIT_KOPYA_KUL_TAIL:
-        out.append("stil eki v2 şablonunun stil ekinden farklı")
+        out.append("stil eki v3 şablonunun stil ekinden farklı")
     for lab in es.SLICE_LABELS:
         if f"{lab}: " not in text:
             out.append(f"zaman etiketi eksik: {lab}")
