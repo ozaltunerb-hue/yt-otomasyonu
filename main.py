@@ -138,7 +138,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     donma_firtina: 15 Kas, ❄️ Donduran fırtına kategorisi (tek olay, hikâye koddan, GPT yok).
     kasirga: 15 Kas (4), 🌀 Kasırga kategorisi (tek olay, hikâye koddan, GPT yok).
     kasirga_geo: 21 Kas, 🌀 Kasırga coğrafya menüsünden seçilen G1-G6 (None = 🎲 Rastgele, LRU).
-    hit_kopya_kul: 24 Kas, ⭐ Hit kopyası (kül bulutu) v1: 13 Eki hit iskeleti, coğrafya + M + F + kişi (GPT yok).
+    hit_kopya_kul: 24 Kas, ⭐ Hit kopyası (kül bulutu) v4: 13 Eki hit prompt'u birebir, yalnız coğrafya (GPT yok).
     hit_kopya_kul_geo: menüden seçilen V1-V6 (None = 🎲 Rastgele, son 2 elenir).
     hit_kopya_ates: 16 Kas, ⭐ Hit kopyası (ateş hortumu): 4 Kas 21:13 hit prompt'u birebir, coğrafya + araç (GPT yok).
     yer_yarilmasi: 17 Kas, 🌍 Yer yarılması kategorisi (tek olay, hikâye koddan, GPT yok).

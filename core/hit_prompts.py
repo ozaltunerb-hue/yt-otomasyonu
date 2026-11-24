@@ -4563,16 +4563,27 @@ def hit_kopya_sel_issues(structure: dict, info: dict) -> list[str]:
 # Endonezya'da çalıştı): yeni şablon (volkan uzakta ufukta, kamera köye dik aşağı bakar, geniş bulut duvarı), M1-M2
 # ikisi de direk (ağaç yok). F1-F2, yer metinleri, kişi, LRU, menü, callback'ler aynen. v2 şablonu, M1-M2 ve ilgili
 # satırlar _V2 olarak pasif.
+# 24 Kas (v4, Bahadır; v1-v3'te hit prompt'u fazla değiştirildi, sonuçlar kötüleşti): 13 Eki 11:23 hit prompt'u
+# KELİMESİ KELİMESİNE (HIT_KOPYA_KUL_HIT_PROMPT); tek fark ilk cümlede "slams into a village street" yerine "slams into
+# the street of {place}". {place} = v2 yer metinleri (HIT_KOPYA_KUL_PLACES) aynen. M, F ve kişi ekseni yok (hitteki
+# gibi sabit: dört köylü, ağaçlar + direkler, eve çarpma). Menü, coğrafya LRU (yalnız rastgele, son 2), callback'ler
+# ve ayrı geçmiş alanları aynen. v3 şablonu, M, F, kişi ekseni, zorunlu/yasak listeleri ve satırlar _V3 olarak pasif.
 HIT_KOPYA_KUL_MODE_LABEL = "⭐ Hit kopyası (kül bulutu)"
 HIT_KOPYA_KUL_EVENTS = (es.PYROCLASTIC,)
 HIT_KOPYA_KUL_DOMAIN = "volcano_disasters"
 HIT_KOPYA_KUL_MOD = "hit_kopya_kul"                  # config bayrağı, structure anahtarı, Notion axes.mod
 HIT_KOPYA_KUL_GEO_KEY = "hit_kopya_kul_geo"          # config anahtarı: menüden seçilen V (yoksa 🎲 Rastgele)
-HIT_KOPYA_KUL_SURUM = "v3"                           # Notion axes.surum (24 Kas v3)
-HIT_KOPYA_KUL_VERSION_LINE = ("Sürüm: hit_kul v3 (volkan ufukta, kamera dik aşağı bakar, geniş bulut duvarı, hep "
-                              "direk)")
-HIT_KOPYA_KUL_CAMERA = "sabit yüksek yamaç terası, köye dik aşağı bakar, volkan uzakta ufukta"   # ✋ Onay "Kamera:"
-HIT_KOPYA_KUL_CAMERA_AXIS = "sabit yüksek yamaç terası, köye dik aşağı bakar, volkan uzakta ufukta"   # Eksenler
+HIT_KOPYA_KUL_SURUM = "v4"                           # Notion axes.surum (24 Kas v4)
+HIT_KOPYA_KUL_VERSION_LINE = "Sürüm: hit_kul v4 (hit prompt'u birebir, yalnız coğrafya değişir)"
+HIT_KOPYA_KUL_CAMERA = "hit kamerası (tepe terası, volkan üst üçte birde), birebir"   # ✋ Onay "Kamera:"
+HIT_KOPYA_KUL_CAMERA_AXIS = "hit kamerası (tepe terası, volkan üst üçte birde), birebir"   # Eksenler
+HIT_KOPYA_KUL_EVENTS_LINE = "Olaylar: hit ile birebir (ağaçlar ve direkler devrilir, bulut eve çarpar)"   # ✋ Onay
+HIT_KOPYA_KUL_PEOPLE = 4                             # hit: "Four villagers" (sabit)
+HIT_KOPYA_KUL_SURUM_V3 = "v3"                                                                  # pasif (v3)
+HIT_KOPYA_KUL_VERSION_LINE_V3 = ("Sürüm: hit_kul v3 (volkan ufukta, kamera dik aşağı bakar, geniş bulut duvarı, hep "
+                                 "direk)")                                                     # pasif (v3)
+HIT_KOPYA_KUL_CAMERA_V3 = "sabit yüksek yamaç terası, köye dik aşağı bakar, volkan uzakta ufukta"   # pasif (v3)
+HIT_KOPYA_KUL_CAMERA_AXIS_V3 = "sabit yüksek yamaç terası, köye dik aşağı bakar, volkan uzakta ufukta"   # pasif (v3)
 HIT_KOPYA_KUL_SURUM_V2 = "v2"                                                                  # pasif (v2)
 HIT_KOPYA_KUL_VERSION_LINE_V2 = "Sürüm: hit_kul v2 (yüksek yamaç kamerası, bulut ilk karede, lav arka planda)"   # pasif
 HIT_KOPYA_KUL_CAMERA_V2 = "sabit yüksek yamaç terası, köy aşağıda serili, volkan üst üçte birde"   # pasif (v2)
@@ -4588,10 +4599,10 @@ HIT_KOPYA_KUL_SOURCE = ('Kaynak: 13 Eki 11:23 üretimi "Pyroclastic Cloud Engulf
 HIT_KOPYA_KUL_MAX_WORDS = 230
 HIT_KOPYA_KUL_MAX_CHARS = 1400
 HIT_KOPYA_KUL_GEO_BLOCK = 2      # yalnız 🎲 Rastgele'de; menüden seçilen coğrafya aynen
-HIT_KOPYA_KUL_MID_BLOCK = 1
-HIT_KOPYA_KUL_FINAL_BLOCK = 1
-HIT_KOPYA_KUL_PEOPLE_BLOCK = 1
-HIT_KOPYA_KUL_PEOPLE_COUNT = {"Six": 6, "Seven": 7, "Eight": 8}
+HIT_KOPYA_KUL_MID_BLOCK_V3 = 1      # pasif (v3; v4'te M ekseni yok)
+HIT_KOPYA_KUL_FINAL_BLOCK_V3 = 1    # pasif (v3; v4'te F ekseni yok)
+HIT_KOPYA_KUL_PEOPLE_BLOCK_V3 = 1   # pasif (v3; v4'te kişi ekseni yok)
+HIT_KOPYA_KUL_PEOPLE_COUNT_V3 = {"Six": 6, "Seven": 7, "Eight": 8}   # pasif (v3 kişi ekseni)
 HIT_KOPYA_KUL_GEO_BUTTONS = {"V1": "🇮🇹 İtalya", "V2": "🇮🇩 Endonezya", "V3": "🇯🇵 Japonya", "V4": "🇨🇱 Şili",
                              "V5": "🇬🇹 Guatemala", "V6": "🇵🇭 Filipinler"}
 # v2 (24 Kas): bu moda özel yer metinleri (Bahadır'ın talimatından birebir); Yaklaşma V1-V6 metinleri değişmez
@@ -4612,7 +4623,28 @@ HIT_KOPYA_KUL_PLACES_V1 = {
     "V5": "a town of pastel colonial houses",
     "V6": "a town of concrete houses with tin roofs",
 }
+# 13 Eki 11:23 hit prompt'u, kelimesi kelimesine (Bahadır'ın talimatından; "volcano’s" içindeki kesme işareti ’)
+HIT_KOPYA_KUL_HIT_PROMPT = (
+    "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into a village street. Four villagers, caught "
+    "in the chaos, immediately dart away, their figures barely visible against the ashen background. 4-9s: The deadly "
+    "cloud crashes through, snapping street trees like twigs and toppling power poles, striking the ground with "
+    "force. 9-15s: The cloud's fury intensifies, slamming into a house, its walls crumbling under pressure, debris "
+    "swirling amid the advancing ash. Handheld footage shot by a person standing on a hillside terrace above the "
+    "village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the "
+    "camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano "
+    "always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one "
+    "continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service "
+    "uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text "
+    "or flags.")
+HIT_KOPYA_KUL_HIT_PHRASE = "slams into a village street"          # hit'te değişen tek ifade
+HIT_KOPYA_KUL_PLACE_PHRASE = "slams into the street of {place}"   # v4'teki karşılığı
+# v4 (24 Kas): hit prompt'u, tek değişiklik HIT_KOPYA_KUL_HIT_PHRASE → HIT_KOPYA_KUL_PLACE_PHRASE
 HIT_KOPYA_KUL = {
+    "template": HIT_KOPYA_KUL_HIT_PROMPT.replace(HIT_KOPYA_KUL_HIT_PHRASE, HIT_KOPYA_KUL_PLACE_PHRASE),
+    "tail_start": "Handheld footage shot by a person standing on a hillside terrace",
+}
+# v3 (24 Kas) şablon, M1-M2, F1-F2, kişi: pasif (v4 ile hit prompt'una dönüldü)
+HIT_KOPYA_KUL_V3 = {
     "people": ("Six", "Seven", "Eight"),
     "mids": {
         "M1": "One man trips and falls; right in front of him the cloud snaps a power pole and it crashes across the "
@@ -4639,8 +4671,10 @@ HIT_KOPYA_KUL = {
         "signs, text or flags."),
     "tail_start": "Handheld footage shot from a terrace high on a steep hillside",
 }
-# v3 stil eki (şablonun "Handheld footage..." ile başlayan bölümü, birebir); Kie öncesi denetim bununla karşılaştırır
+# v4 stil eki (şablonun "Handheld footage..." ile başlayan bölümü = 13 Eki hit stil eki, birebir); Kie öncesi denetim
 HIT_KOPYA_KUL_TAIL = HIT_KOPYA_KUL["template"][HIT_KOPYA_KUL["template"].index(HIT_KOPYA_KUL["tail_start"]):]
+HIT_KOPYA_KUL_TAIL_V3 = HIT_KOPYA_KUL_V3["template"][HIT_KOPYA_KUL_V3["template"].index(
+    HIT_KOPYA_KUL_V3["tail_start"]):]   # pasif (v3)
 # v2 (24 Kas) şablon ve M1-M2: pasif (v3 ile değişti; F1-F2 v3'te aynen)
 HIT_KOPYA_KUL_V2 = {
     "people": ("Six", "Seven", "Eight"),
@@ -4708,15 +4742,14 @@ HIT_KOPYA_KUL_HIT_TAIL = (
     "the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.")
 HIT_KOPYA_KUL_HIT_LIGHT = "Raw natural light matching the weather,"
 HIT_KOPYA_KUL_LIGHT = "Raw natural light under an ash-grey sky,"
-HIT_KOPYA_KUL_REQUIRED = ("wide wall of pyroclastic cloud", "distant volcano on the horizon", "looking steeply down",
-                          "power pole", "high on a steep hillside, far above the rooftops",
-                          "the camera stays fixed on the terrace")   # v3
-HIT_KOPYA_KUL_FORBIDDEN = ("bus", "explosion", "blast", "collapse", "sunset", "GPT", "colonial", "darkness",
-                           "erupts", "upper third", "tilting down no more than slightly", "tree",
-                           "single huge")   # tüm çıktıda, alt dize (v3)
-# Yasak denetiminden önce çıkarılan sabit ifadeler (24 Kas v3 kararı: V2 yer metni "among palm trees" aynen kalır;
-# "tree" yasağı devrilen ağaç içindir)
-HIT_KOPYA_KUL_FORBIDDEN_EXCEPTIONS = ("palm trees",)
+HIT_KOPYA_KUL_REQUIRED_V3 = ("wide wall of pyroclastic cloud", "distant volcano on the horizon", "looking steeply down",
+                             "power pole", "high on a steep hillside, far above the rooftops",
+                             "the camera stays fixed on the terrace")   # pasif (v3)
+HIT_KOPYA_KUL_FORBIDDEN_V3 = ("bus", "explosion", "blast", "collapse", "sunset", "GPT", "colonial", "darkness",
+                              "erupts", "upper third", "tilting down no more than slightly", "tree",
+                              "single huge")   # pasif (v3; v4'te kelime yasağı yok, hit karşılaştırması var)
+# v3 yasak denetiminden önce çıkarılan sabit ifadeler (24 Kas v3 kararı: V2 "among palm trees"), pasif
+HIT_KOPYA_KUL_FORBIDDEN_EXCEPTIONS_V3 = ("palm trees",)
 HIT_KOPYA_KUL_REQUIRED_V2 = ("single huge pyroclastic cloud", "glowing lava pouring down the slope",
                              "high on a steep hillside, far above the rooftops",
                              "the camera stays fixed on the terrace",
@@ -4727,10 +4760,11 @@ HIT_KOPYA_KUL_REQUIRED_V1 = ("fountains of glowing lava", "single huge pyroclast
                              "the camera stays fixed on the terrace",
                              "the erupting volcano always visible in the upper third of the frame")   # pasif (v1)
 HIT_KOPYA_KUL_FORBIDDEN_V1 = ("bus", "explosion", "blast", "collapse", "sunset", "GPT")   # pasif (v1)
-HIT_KOPYA_KUL_NAMES = {"M1": "adam düşer, önüne elektrik direği kıvılcımlarla yola devrilir",
-                       "M2": "caddede bir sıra direk peş peşe kıvılcımlarla yola devrilir, bir adam düşer",
-                       "F1": "bulut köyü terasa doğru tırmanır, terası kalın kahverengi küle gömer",
-                       "F2": "terasın altındaki evlerin kiremitleri kameraya savrulur, teras kalın kahverengi külde"}
+HIT_KOPYA_KUL_NAMES_V3 = {"M1": "adam düşer, önüne elektrik direği kıvılcımlarla yola devrilir",
+                          "M2": "caddede bir sıra direk peş peşe kıvılcımlarla yola devrilir, bir adam düşer",
+                          "F1": "bulut köyü terasa doğru tırmanır, terası kalın kahverengi küle gömer",
+                          "F2": "terasın altındaki evlerin kiremitleri kameraya savrulur, teras kalın kahverengi "
+                                "külde"}   # pasif (v3)
 HIT_KOPYA_KUL_NAMES_V2 = {"M1": "adam düşer, elektrik direği kıvılcımlarla yola devrilir",
                           "M2": "adam düşer, büyük ağaç yola devrilir",
                           "F1": "bulut köyü terasa doğru tırmanır, terası kalın kahverengi küle gömer",
@@ -4739,17 +4773,27 @@ HIT_KOPYA_KUL_NAMES_V1 = {"M1": "adam düşer, elektrik direği kıvılcımlarla
                        "M2": "adam düşer, büyük ağaç devrilir",
                        "F1": "bulut caddeyi ve evleri yutar, kamera karanlıkta",
                        "F2": "en yakın evin kiremitleri kameraya savrulur, kamera karanlıkta"}
-HIT_KOPYA_KUL_WARNING = ("⚠️ Hit karşılaştırması: volkan uzakta ufukta mı (yakın ve devasa değil), kamera köye dik aşağı "
-                         "bakıyor ve yamaç terasında sabit mi (çatı hizasına inmiyor), bulut tüm yamaç genişliğinde "
-                         "duvar gibi mi (dar sütun değil), direk kıvılcımlarla yola devriliyor mu, insanlar uzakta "
-                         "küçük mü, final kahverengi kül mü (simsiyah değil)?")
+HIT_KOPYA_KUL_WARNING = ("⚠️ Hit karşılaştırması: prompt 13 Eki hit'iyle birebir (yalnız coğrafya farklı). Video "
+                         "hit'e benziyor mu: bulut yamaçtan inip köy caddesine çarpıyor mu, dört köylü kaçıyor mu, "
+                         "ağaçlar ve direkler devriliyor mu, bulut bir eve çarpıyor mu, kamera tepe terasında sabit "
+                         "ve volkan üst üçte birde mi?")
+HIT_KOPYA_KUL_WARNING_V3 = ("⚠️ Hit karşılaştırması: volkan uzakta ufukta mı (yakın ve devasa değil), kamera köye dik "
+                            "aşağı bakıyor ve yamaç terasında sabit mi (çatı hizasına inmiyor), bulut tüm yamaç "
+                            "genişliğinde duvar gibi mi (dar sütun değil), direk kıvılcımlarla yola devriliyor mu, "
+                            "insanlar uzakta küçük mü, final kahverengi kül mü (simsiyah değil)?")   # pasif (v3)
 HIT_KOPYA_KUL_WARNING_V2 = ("⚠️ Hit karşılaştırması: bulut ilk karede yamaçtan iniyor mu, lav arkasında akıyor mu, kamera "
                             "köyün çok üstünde yüksek yamaç terasında sabit mi, insanlar uzakta küçük mü, volkan üst "
                             "üçte birde mi, final kahverengi kül mü (simsiyah değil)?")   # pasif (v2)
 HIT_KOPYA_KUL_WARNING_V1 = ("⚠️ Hit karşılaştırması: ilk karede volkan patlıyor ve lav fışkırıyor mu, tek büyük bulut "
                          "köy caddesinin ucuna çarpıyor mu, insanlar kameraya doğru koşuyor mu, kamera terasta sabit "
                          "ve volkan üst üçte birde mi?")
-HIT_KOPYA_KUL_CONFIRM_DESC = ("13 Eki kül bulutu hit'inin (2,1M) iskeleti, v3. İlk karede uzakta ufuktaki volkandan tüm "
+HIT_KOPYA_KUL_CONFIRM_DESC = ("13 Eki kül bulutu hit'inin (2,1M) prompt'u, v4: kelimesi kelimesine aynı, tek fark ilk "
+                              "cümlede köy caddesi yerine seçilen coğrafyanın caddesi. Kül bulutu volkanın yamacından "
+                              "iner ve caddeye çarpar, dört köylü kaçar; ağaçlar ve elektrik direkleri devrilir; bulut "
+                              "bir eve çarpar, duvarları çöker. Hit kamerası birebir: tepe terası, volkan üst üçte "
+                              "birde, korkuluk köşesi ön planda. Coğrafya ✋ Onay mesajında. Hikâye için GPT "
+                              "çağrılmaz.")
+HIT_KOPYA_KUL_CONFIRM_DESC_V3 = ("13 Eki kül bulutu hit'inin (2,1M) iskeleti, v3. İlk karede uzakta ufuktaki volkandan tüm "
                               "yamaç genişliğinde bir kül bulutu duvarı iner, arkasında lav akar, aşağıdaki köyün "
                               "ucuna çarpar; 6-8 kişi uzakta, küçük, köy caddesinde kameraya doğru koşar; önlerine "
                               "elektrik direği ya da bir sıra direk kıvılcımlarla devrilir, bir adam düşüp kalkar "
@@ -4770,7 +4814,9 @@ HIT_KOPYA_KUL_CONFIRM_DESC_V1 = ("13 Eki kül bulutu hit'inin (2,1M) iskeleti ve
                               "kamera, volkan üst üçte birde, korkuluk köşesi ön planda. Coğrafya, M, F, kişi ✋ Onay "
                               "mesajında. Hikâye için GPT çağrılmaz.")
 _HKK = HIT_KOPYA_KUL
+_HKK_V3 = HIT_KOPYA_KUL_V3
 _HIT_KOPYA_KUL_GEO_MEMORY: list[str] = []
+# v3 eksen hafızaları (M, F, kişi): pasif, v4'te kullanılmaz
 _HIT_KOPYA_KUL_MID_MEMORY: list[str] = []
 _HIT_KOPYA_KUL_FINAL_MEMORY: list[str] = []
 _HIT_KOPYA_KUL_PEOPLE_MEMORY: list[str] = []
@@ -4794,35 +4840,55 @@ def hit_kopya_kul_geo_text(geo: str) -> str:
     return f"{geo} {HIT_KOPYA_KUL_GEO_BUTTONS[geo]}"
 
 
-def _hit_kopya_kul_check(geo: str, mid: str, final: str, people: int) -> None:
+def _hit_kopya_kul_check(geo: str) -> None:
     if geo not in hit_kopya_kul_geos():
         raise es.StructureError(f"{HIT_KOPYA_KUL_MODE_LABEL}: coğrafya bu modda yok ({geo})")
-    if mid not in _HKK["mids"]:
-        raise es.StructureError(f"{HIT_KOPYA_KUL_MODE_LABEL}: orta M1-M2 değil ({mid})")
-    if final not in _HKK["finals"]:
-        raise es.StructureError(f"{HIT_KOPYA_KUL_MODE_LABEL}: final F1-F2 değil ({final})")
-    if people not in HIT_KOPYA_KUL_PEOPLE_COUNT.values():
-        raise es.StructureError(f"{HIT_KOPYA_KUL_MODE_LABEL}: kişi sayısı 6-8 değil ({people})")
 
 
-def hit_kopya_kul_prompt(geo: str, mid: str, final: str, people: int) -> str:
-    """Prompt = şablon (birebir), yalnız yer tutucular dolar."""
-    _hit_kopya_kul_check(geo, mid, final, people)
-    word = next(w for w, k in HIT_KOPYA_KUL_PEOPLE_COUNT.items() if k == people)
-    return _HKK["template"].format(place=hit_kopya_kul_place(geo), People=word, M=_HKK["mids"][mid],
-                                   F=_HKK["finals"][final])
+def hit_kopya_kul_prompt(geo: str) -> str:
+    """v4 prompt = 13 Eki hit prompt'u birebir, yalnız {place} dolar."""
+    _hit_kopya_kul_check(geo)
+    return _HKK["template"].format(place=hit_kopya_kul_place(geo))
 
 
-def hit_kopya_kul_story(*args) -> str:
+def hit_kopya_kul_hit_expected(geo: str) -> str:
+    """Hit prompt'unun kendisinden bağımsız kurulum: tek değişiklik "slams into a village street" →
+    "slams into the street of <yer>"."""
+    _hit_kopya_kul_check(geo)
+    return HIT_KOPYA_KUL_HIT_PROMPT.replace(HIT_KOPYA_KUL_HIT_PHRASE,
+                                            HIT_KOPYA_KUL_PLACE_PHRASE.format(place=hit_kopya_kul_place(geo)))
+
+
+def hit_kopya_kul_story(geo: str) -> str:
     """Zaman etiketli hikâye (stil ekinden önceki kısım)."""
-    p = hit_kopya_kul_prompt(*args)
+    p = hit_kopya_kul_prompt(geo)
     return p[:p.index(" " + _HKK["tail_start"])]
 
 
-def hit_kopya_kul_tail(*args) -> str:
-    """Stil eki (yüksek yamaç terası kamerası, sabit; coğrafyadan bağımsız)."""
-    p = hit_kopya_kul_prompt(*args)
+def hit_kopya_kul_tail(geo: str) -> str:
+    """Stil eki (13 Eki hit stil eki birebir; coğrafyadan bağımsız)."""
+    p = hit_kopya_kul_prompt(geo)
     return p[p.index(" " + _HKK["tail_start"]) + 1:]
+
+
+def _hit_kopya_kul_check_v3(geo: str, mid: str, final: str, people: int) -> None:
+    """Pasif (v3): coğrafya + M + F + kişi denetimi."""
+    if geo not in hit_kopya_kul_geos():
+        raise es.StructureError(f"{HIT_KOPYA_KUL_MODE_LABEL}: coğrafya bu modda yok ({geo})")
+    if mid not in _HKK_V3["mids"]:
+        raise es.StructureError(f"{HIT_KOPYA_KUL_MODE_LABEL}: orta M1-M2 değil ({mid})")
+    if final not in _HKK_V3["finals"]:
+        raise es.StructureError(f"{HIT_KOPYA_KUL_MODE_LABEL}: final F1-F2 değil ({final})")
+    if people not in HIT_KOPYA_KUL_PEOPLE_COUNT_V3.values():
+        raise es.StructureError(f"{HIT_KOPYA_KUL_MODE_LABEL}: kişi sayısı 6-8 değil ({people})")
+
+
+def hit_kopya_kul_prompt_v3(geo: str, mid: str, final: str, people: int) -> str:
+    """Pasif (v3): v3 şablonu, yer tutucular dolar."""
+    _hit_kopya_kul_check_v3(geo, mid, final, people)
+    word = next(w for w, k in HIT_KOPYA_KUL_PEOPLE_COUNT_V3.items() if k == people)
+    return _HKK_V3["template"].format(place=hit_kopya_kul_place(geo), People=word, M=_HKK_V3["mids"][mid],
+                                      F=_HKK_V3["finals"][final])
 
 
 def hit_kopya_kul_axes_history(records: list | None, key: str) -> list | None:
@@ -4845,17 +4911,15 @@ def hit_kopya_kul_axes_history(records: list | None, key: str) -> list | None:
 
 
 def hit_kopya_kul_lines(tb: dict) -> str:
-    """✋ Onay satırları: mod, sürüm, kaynak, coğrafya, M, F, kişi, kamera, kelime/karakter, eksenler + tekrar
-    önleme, hit karşılaştırması."""
+    """✋ Onay satırları: mod, sürüm, kaynak, coğrafya, olaylar, kamera, kelime/karakter, eksenler + tekrar önleme,
+    hit karşılaştırması."""
     text = tb["prompt"]
     lines = [
         f"Mod: {HIT_KOPYA_KUL_MODE_LABEL}",
         HIT_KOPYA_KUL_VERSION_LINE,
         HIT_KOPYA_KUL_SOURCE,
         f"Coğrafya: {hit_kopya_kul_geo_text(tb['geo'])} «{hit_kopya_kul_place(tb['geo'])}» ({tb['geo_source']})",
-        f"M (4-9s): {tb['mid']} {HIT_KOPYA_KUL_NAMES[tb['mid']]}",
-        f"F (9-15s): {tb['final']} {HIT_KOPYA_KUL_NAMES[tb['final']]}",
-        f"Kişi: {tb['people']}",
+        HIT_KOPYA_KUL_EVENTS_LINE,
         f"Kamera: {HIT_KOPYA_KUL_CAMERA}",
         f"Kelime: {len(text.split())} (en fazla {HIT_KOPYA_KUL_MAX_WORDS}) · karakter: {len(text)} "
         f"(en fazla {HIT_KOPYA_KUL_MAX_CHARS})",
@@ -4867,19 +4931,20 @@ def hit_kopya_kul_lines(tb: dict) -> str:
 
 
 def hit_kopya_kul_axes_json(tb: dict, excluded: dict | None = None) -> str:
+    """v4: M, F, kişi ekseni yok (None yazılır; v3 kayıtlarındaki değerler geçmişte kalır)."""
     import core.axes_history as ah
     axes = {"spot": None, "view": None, "light": None, "vehicle": None, "people": None, "beats": None,
-            "mod": HIT_KOPYA_KUL_MOD, "cografya": tb["geo"], "cografya_kaynak": tb["geo_source"], "m": tb["mid"],
-            "f": tb["final"], "kisi": tb["people"], "surum": HIT_KOPYA_KUL_SURUM}
+            "mod": HIT_KOPYA_KUL_MOD, "cografya": tb["geo"], "cografya_kaynak": tb["geo_source"], "m": None,
+            "f": None, "kisi": None, "surum": HIT_KOPYA_KUL_SURUM}
     return ah.axes_json(es.PYROCLASTIC, axes, excluded)
 
 
 def hit_kopya_kul_build_scene(domain: str | None, event: str | None, history: list[str] | None = None,
                               records: list | None = None, rng=None, history_source: str = "bellek",
                               geo: str | None = None) -> dict:
-    """⭐ Hit kopyası (kül bulutu) sahnesi: GPT yok, normal hat yok. geo = menüden seçilen V (None = 🎲 Rastgele, son 2
-    elenir). records = Notion "Eksenler" ham kayıtları (None = süreç hafızası). structure["hit_kopya_kul"] Kie öncesi
-    son denetimin (submit_issues) kaynağıdır."""
+    """⭐ Hit kopyası (kül bulutu) v4 sahnesi: GPT yok, normal hat yok. geo = menüden seçilen V (None = 🎲 Rastgele,
+    son 2 elenir). records = Notion "Eksenler" ham kayıtları (None = süreç hafızası). structure["hit_kopya_kul"] Kie
+    öncesi son denetimin (submit_issues) kaynağıdır."""
     import random
     from core.skeleton_pipeline import SKELETON_CAMERA
     if domain not in (None, HIT_KOPYA_KUL_DOMAIN) or not hit_kopya_kul_is_active(event):
@@ -4887,62 +4952,48 @@ def hit_kopya_kul_build_scene(domain: str | None, event: str | None, history: li
     if geo is not None and geo not in hit_kopya_kul_geos():
         raise es.StructureError(f"{HIT_KOPYA_KUL_MODE_LABEL}: coğrafya bu modda yok ({geo})")
     r = rng or random
-    memories = {"cografya": _HIT_KOPYA_KUL_GEO_MEMORY, "m": _HIT_KOPYA_KUL_MID_MEMORY,
-                "f": _HIT_KOPYA_KUL_FINAL_MEMORY, "kisi": _HIT_KOPYA_KUL_PEOPLE_MEMORY}
-    seen = {}
-    for key, mem in memories.items():
-        h = hit_kopya_kul_axes_history(records, key)
-        seen[key] = list(mem if h is None else h)
-    seen["kisi"] = [next((w for w, k in HIT_KOPYA_KUL_PEOPLE_COUNT.items() if k == n), n) for n in seen["kisi"]]
-    axes_spec = (("cografya", hit_kopya_kul_geos(), HIT_KOPYA_KUL_GEO_BLOCK),
-                 ("m", list(_HKK["mids"]), HIT_KOPYA_KUL_MID_BLOCK),
-                 ("f", list(_HKK["finals"]), HIT_KOPYA_KUL_FINAL_BLOCK),
-                 ("kisi", list(_HKK["people"]), HIT_KOPYA_KUL_PEOPLE_BLOCK))
-    picked, excluded = {}, {}
-    for key, ids, block in axes_spec:
-        if key == "cografya" and geo is not None:
-            picked[key], excluded[key] = geo, []
-            continue
-        picked[key] = _block_pick(ids, seen[key], block, r)
-        excluded[key] = [x for x in ids if x in seen[key][-block:]]
-    people = HIT_KOPYA_KUL_PEOPLE_COUNT[picked["kisi"]]
-    excluded["kisi"] = [HIT_KOPYA_KUL_PEOPLE_COUNT[w] for w in excluded["kisi"]]
-    for key, mem in memories.items():
-        mem.append(people if key == "kisi" else picked[key])
-        del mem[:-12]
-    args = (picked["cografya"], picked["m"], picked["f"], people)
-    prompt = hit_kopya_kul_prompt(*args)
-    story = hit_kopya_kul_story(*args)
-    tail = hit_kopya_kul_tail(*args)
+    h = hit_kopya_kul_axes_history(records, "cografya")
+    seen = list(_HIT_KOPYA_KUL_GEO_MEMORY if h is None else h)
+    ids = hit_kopya_kul_geos()
+    if geo is not None:
+        g, excluded = geo, {"cografya": []}
+    else:
+        g = _block_pick(ids, seen, HIT_KOPYA_KUL_GEO_BLOCK, r)
+        excluded = {"cografya": [x for x in ids if x in seen[-HIT_KOPYA_KUL_GEO_BLOCK:]]}
+    _HIT_KOPYA_KUL_GEO_MEMORY.append(g)
+    del _HIT_KOPYA_KUL_GEO_MEMORY[:-12]
+    people = HIT_KOPYA_KUL_PEOPLE
+    prompt = hit_kopya_kul_prompt(g)
+    story = hit_kopya_kul_story(g)
+    tail = hit_kopya_kul_tail(g)
     a, b, c = es.SLICE_LABELS
     opening = story.split(f" {b}: ")[0][len(f"{a}: "):].strip()
     mid_text = story.split(f"{b}: ")[1].split(f" {c}: ")[0]
     final_text = story.split(f"{c}: ")[1]
     plain = " ".join([opening, mid_text, final_text])
     geo_source = "menü" if geo is not None else "rastgele"
-    g = picked["cografya"]
-    repeat = (f"coğrafya son {HIT_KOPYA_KUL_GEO_BLOCK} (yalnız rastgele) · M son {HIT_KOPYA_KUL_MID_BLOCK} · F son "
-              f"{HIT_KOPYA_KUL_FINAL_BLOCK} · kişi son {HIT_KOPYA_KUL_PEOPLE_BLOCK} · kamera ve ışık sabit")
+    repeat = (f"coğrafya son {HIT_KOPYA_KUL_GEO_BLOCK} (yalnız rastgele) · olaylar, kişi, kamera ve ışık sabit "
+              "(hit birebir)")
     base_trace = {"pipeline": "creative", "structured": True, "domain": HIT_KOPYA_KUL_DOMAIN,
                   "event": es.PYROCLASTIC, "ship": "None", "camera": SKELETON_CAMERA, "view": None,
-                  "view_source": None, "place": hit_kopya_kul_place(g), "count_range": [6, 8],
+                  "view_source": None, "place": hit_kopya_kul_place(g), "count_range": [people, people],
                   "people_running": people, "outcome": "-", "recent_count": 0}
     trace, axes_line = mode_display(
         {"trace": base_trace}, {}, mode=HIT_KOPYA_KUL_MODE_LABEL, camera=HIT_KOPYA_KUL_CAMERA,
-        opening=opening, mid=(picked["m"], mid_text), final=(picked["f"], final_text), plain=plain,
-        spot=HIT_KOPYA_KUL_SPOT_LABEL, weather="ash-grey sky (stil eki, sabit)",
+        opening=opening, mid=("hit", mid_text), final=("hit", final_text), plain=plain,
+        spot=HIT_KOPYA_KUL_SPOT_LABEL, weather="matching the weather (hit stil eki, sabit)",
         axes={"sürüm": HIT_KOPYA_KUL_SURUM, "coğrafya": f"{hit_kopya_kul_geo_text(g)} ({geo_source})",
-              "M": picked["m"], "F": picked["f"], "kişi": people, "kamera modu": HIT_KOPYA_KUL_CAMERA_AXIS},
+              "olaylar": "hit birebir", "kamera modu": HIT_KOPYA_KUL_CAMERA_AXIS},
         repeat=repeat)
     trace = {**trace, "mode": HIT_KOPYA_KUL_MOD, "surum": HIT_KOPYA_KUL_SURUM, "cografya": g,
              "axes_source": history_source}
-    tb = {"event": es.PYROCLASTIC, "geo": g, "geo_source": geo_source, "mid": picked["m"], "final": picked["f"],
-          "people": people, "story": story, "suffix": tail, "prompt": prompt, "axes_line": axes_line}
+    tb = {"event": es.PYROCLASTIC, "geo": g, "geo_source": geo_source, "people": people, "story": story,
+          "suffix": tail, "prompt": prompt, "axes_line": axes_line}
     tb["lines"] = hit_kopya_kul_lines(tb)
     axes_json = hit_kopya_kul_axes_json(tb, excluded)
     structure = {HIT_KOPYA_KUL_MOD: tb, "axes_json": axes_json, "axes_line": None,
                  "environment": f"Coğrafya: {hit_kopya_kul_geo_text(g)} · kamera = {HIT_KOPYA_KUL_MODE_LABEL} "
-                                "(terrace high on a steep hillside, sabit)",
+                                "(hit kamerası: hillside terrace above the village, sabit)",
                  "story_source": f"Hikâye: kod (birebir) · {HIT_KOPYA_KUL_MODE_LABEL}", "story_source_kind": "code",
                  "caption_info": {"opening": opening, "people": people, "kadraj": "teras",
                                   "beat_2": donma_caption_beat(mid_text), "beat_3": donma_caption_beat(final_text)},
@@ -4958,19 +5009,28 @@ def hit_kopya_kul_build_scene(domain: str | None, event: str | None, history: li
 
 
 def hit_kopya_kul_text_issues(text: str) -> list[str]:
-    """Kie öncesi son kontrol: bulut duvarı, ufuktaki volkan, dik aşağı bakış, direk, yüksek yamaç ve kamera ifadeleri
-    birebir var; yasaklı ifadeler (HIT_KOPYA_KUL_FORBIDDEN) tüm metinde alt dize olarak yok (büyük/küçük harf fark
-    etmez, kelime başından; HIT_KOPYA_KUL_FORBIDDEN_EXCEPTIONS önce çıkarılır). İhlal = gönderilmez."""
+    """Kie öncesi son kontrol (v4): metin, 13 Eki hit prompt'unun V1-V6'dan birinin yer metniyle kurulan hâliyle
+    bayt bayt aynı olmalı ("slams into a village street" → "slams into the street of <yer>" dışında fark yok). Kelime
+    yasağı yok. İhlal = gönderilmez."""
+    text = text or ""
+    if any(text == hit_kopya_kul_hit_expected(g) for g in hit_kopya_kul_geos()):
+        return []
+    return ["prompt 13 Eki hit prompt'uyla birebir değil (yalnız coğrafya ifadesi farklı olabilir)"]
+
+
+def hit_kopya_kul_text_issues_v3(text: str) -> list[str]:
+    """Pasif (v3): zorunlu ifadeler birebir var; yasaklı ifadeler (HIT_KOPYA_KUL_FORBIDDEN_V3) tüm metinde yok
+    (büyük/küçük harf fark etmez, kelime başından; HIT_KOPYA_KUL_FORBIDDEN_EXCEPTIONS_V3 önce çıkarılır)."""
     out = []
     text = text or ""
-    for need in HIT_KOPYA_KUL_REQUIRED:
+    for need in HIT_KOPYA_KUL_REQUIRED_V3:
         if need not in text:
             out.append(f'"{need}" eksik')
     low = text.lower()
-    for ok in HIT_KOPYA_KUL_FORBIDDEN_EXCEPTIONS:
+    for ok in HIT_KOPYA_KUL_FORBIDDEN_EXCEPTIONS_V3:
         low = low.replace(ok.lower(), " ")
     import re
-    for bad in HIT_KOPYA_KUL_FORBIDDEN:
+    for bad in HIT_KOPYA_KUL_FORBIDDEN_V3:
         # v3: kelime başından eşleşir ("tree"/"trees" yakalanır, şablondaki "street" yakalanmaz)
         if re.search(r"\b" + re.escape(bad.lower()), low):
             out.append(f"bu modda olmayan ifade var: {bad}")
@@ -4978,15 +5038,18 @@ def hit_kopya_kul_text_issues(text: str) -> list[str]:
 
 
 def hit_kopya_kul_issues(structure: dict, info: dict) -> list[str]:
-    """Kie'den hemen önce: gönderilecek metin şablondan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    """Kie'den hemen önce: gönderilecek metin şablondan yeniden kurulanla ve hit prompt'unun kendisinden kurulanla
+    birebir aynı mı. Boş = gönder."""
     tb = structure[HIT_KOPYA_KUL_MOD]
-    args = (tb.get("geo"), tb.get("mid"), tb.get("final"), tb.get("people"))
+    geo = tb.get("geo")
     try:
-        _hit_kopya_kul_check(*args)
+        _hit_kopya_kul_check(geo)
     except es.StructureError as e:
         return [str(e)]
-    prompt, story, tail = hit_kopya_kul_prompt(*args), hit_kopya_kul_story(*args), hit_kopya_kul_tail(*args)
+    prompt, story, tail = hit_kopya_kul_prompt(geo), hit_kopya_kul_story(geo), hit_kopya_kul_tail(geo)
     out = []
+    if tb.get("people") != HIT_KOPYA_KUL_PEOPLE:
+        out.append(f"kişi sayısı hit'teki gibi {HIT_KOPYA_KUL_PEOPLE} değil ({tb.get('people')})")
     if info.get("style_suffix") != tail:
         out.append("stil eki hit kopyası değil")
     if info.get("story") != story:
@@ -4994,9 +5057,10 @@ def hit_kopya_kul_issues(structure: dict, info: dict) -> list[str]:
     if info.get("prompt") != prompt:
         out.append("prompt şablonla yeniden kurulanla birebir aynı değil")
     text = info.get("prompt", "")
-    out += hit_kopya_kul_text_issues(text)
-    if tail != HIT_KOPYA_KUL_TAIL:
-        out.append("stil eki v3 şablonunun stil ekinden farklı")
+    if text != hit_kopya_kul_hit_expected(geo):
+        out.append("prompt 13 Eki hit prompt'uyla birebir değil (yalnız coğrafya ifadesi farklı olabilir)")
+    if tail != HIT_KOPYA_KUL_TAIL or tail != HIT_KOPYA_KUL_HIT_TAIL:
+        out.append("stil eki 13 Eki hit stil ekinden farklı")
     for lab in es.SLICE_LABELS:
         if f"{lab}: " not in text:
             out.append(f"zaman etiketi eksik: {lab}")
