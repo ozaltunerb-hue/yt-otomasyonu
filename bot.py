@@ -274,6 +274,8 @@ def event_keyboard(di: int) -> InlineKeyboardMarkup:
     rows.append([InlineKeyboardButton(RANDOM_LABEL, callback_data=f"{CALLBACK_PREFIX}e:{di}:{RANDOM_ID}")])
     if hit_kopya_sel_available(DOMAIN_KEYS[di]):   # 21 Kas: ⭐ Hit kopyası (ani sel), yalnız Şehir Afeti
         rows.append([InlineKeyboardButton(HIT_KOPYA_SEL_BUTTON, callback_data=f"{CALLBACK_PREFIX}hks")])
+    if hit_kopya_kul_available(DOMAIN_KEYS[di]):   # 24 Kas: ⭐ Hit kopyası (kül bulutu), yalnız Volkan
+        rows.append([InlineKeyboardButton(HIT_KOPYA_KUL_BUTTON, callback_data=f"{CALLBACK_PREFIX}hkk")])
     rows.append([InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}back")])
     return InlineKeyboardMarkup(rows)
 
@@ -638,6 +640,70 @@ def hit_kopya_sel_confirm_text(view: str | None, cfg: dict | None = None) -> str
             + hp.HIT_KOPYA_SEL_SOURCE + "\n"
             + f"Kamera: {hp.HIT_KOPYA_SEL_CAMERA}\n"
             + hp.HIT_KOPYA_SEL_CONFIRM_DESC)
+
+
+# ── ⭐ Hit kopyası (kül bulutu) (24 Kas 2026, Bahadır): 13 Eki kül bulutu hit'inin (2,1M) iskeleti ve dili
+# (hit_prompts.py HIT_KOPYA_KUL). GPT yok. Volkan olay menüsünde ayrı satır. Adımlar: hkk (V1-V6 + 🎲 Rastgele + 🔙 Geri)
+# → hkk:<Vx|r> (onay metni) → hkkok:<Vx|r> (üretim). Kie yine ✋ Onay'a bağlı. Kül bulutunun diğer akışları değişmez
+HIT_KOPYA_KUL_BUTTON = "⭐ Hit kopyası (kül bulutu)"
+
+
+def hit_kopya_kul_available(domain: str) -> bool:
+    hp = _hp()
+    return domain == hp.HIT_KOPYA_KUL_DOMAIN and domain_active(domain) and \
+        any(hp.hit_kopya_kul_is_active(e) for e in domain_events(domain))
+
+
+def parse_hit_kopya_kul_geo(gid: str) -> tuple[bool, str | None]:
+    """Kısa kod → (geçerli mi, V). 'r' = 🎲 Rastgele (None)."""
+    if gid == RANDOM_ID:
+        return True, None
+    if gid in _hp().HIT_KOPYA_KUL_GEO_BUTTONS:
+        return True, gid
+    return False, None
+
+
+def hit_kopya_kul_geo_keyboard() -> InlineKeyboardMarkup:
+    """V1-V6 (okunur ad) + 🎲 Rastgele (son 2 coğrafya elenir) + 🔙 Geri (Volkan olay menüsüne)."""
+    hp = _hp()
+    di = DOMAIN_KEYS.index(hp.HIT_KOPYA_KUL_DOMAIN)
+    buttons = [InlineKeyboardButton(hp.HIT_KOPYA_KUL_GEO_BUTTONS[g], callback_data=f"{CALLBACK_PREFIX}hkk:{g}")
+               for g in hp.hit_kopya_kul_geos()]
+    rows = [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
+    rows.append([InlineKeyboardButton(RANDOM_LABEL, callback_data=f"{CALLBACK_PREFIX}hkk:{RANDOM_ID}")])
+    rows.append([InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}d:{di}")])
+    return InlineKeyboardMarkup(rows)
+
+
+def hit_kopya_kul_produce_keyboard(gid: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}hkkok:{gid}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def hit_kopya_kul_geo_label(geo: str | None) -> str:
+    hp = _hp()
+    return (hp.hit_kopya_kul_geo_text(geo) if geo
+            else f"🎲 Rastgele (son {hp.HIT_KOPYA_KUL_GEO_BLOCK} coğrafya elenir)")
+
+
+def hit_kopya_kul_confirm_text(geo: str | None, cfg: dict | None = None) -> str:
+    hp = _hp()
+    cfg = cfg or default_cfg()
+    return (f"Kategori: {DOMAIN_LABELS[hp.HIT_KOPYA_KUL_DOMAIN]}\n"
+            f"Olay: {selection_label(hp.HIT_KOPYA_KUL_EVENTS[0])}\n"
+            f"Coğrafya: {hit_kopya_kul_geo_label(geo)}\n"
+            f"Mod: {mode_label(cfg['mode'])}\n"
+            f"🔍 Ayrıntı: {_onoff(cfg['detail'])} · ✋ Onay: {_onoff(cfg['approval'])}\n"
+            "Tahmini maliyet: ~175 Kie kredisi (hikâye için GPT yok)\n\n"
+            "Üretim sadece ✅ Üret'e basınca başlar."
+            + ("\n✋ Onay açık: Kie'ye göndermeden önce son prompt'u gösterip onay isteyeceğim." if cfg["approval"] else "")
+            + f"\n\nMod: {hp.HIT_KOPYA_KUL_MODE_LABEL}\n"
+            + hp.HIT_KOPYA_KUL_VERSION_LINE + "\n"
+            + hp.HIT_KOPYA_KUL_SOURCE + "\n"
+            + f"Kamera: {hp.HIT_KOPYA_KUL_CAMERA}\n"
+            + hp.HIT_KOPYA_KUL_CONFIRM_DESC)
 
 
 # ── ⭐ Hit kalıbı · Yaklaşma (helikopter) (13 Kas 2026, Bahadır): ortam sorulmaz (coğrafya LRU). Adımlar: hy (onay
@@ -1167,6 +1233,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("hks", "hksok"):   # 21 Kas: ⭐ Hit kopyası (ani sel)
         await _on_hit_kopya_sel(query, context, action, args, cfg)
         return
+    if action in ("hkk", "hkkok"):   # 24 Kas: ⭐ Hit kopyası (kül bulutu)
+        await _on_hit_kopya_kul(query, context, action, args, cfg)
+        return
     if action in ("dz", "dzok"):   # 12 Kas (5): ⭐ Hit kalıbı · 24 Eylül (dev dalga)
         await _on_dalga24(query, context, action, args, cfg)
         return
@@ -1385,6 +1454,41 @@ async def _on_hit_kopya_sel(query, context, action: str, args: list[str], cfg: d
             log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
         await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
                       view=view, hit_kopya_sel=True)
+
+
+async def _on_hit_kopya_kul(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """⭐ Hit kopyası (kül bulutu) adımları: hkk (coğrafya menüsü) → hkk:<Vx|r> (onay metni) → hkkok:<Vx|r>
+    (üretim). Kie yine ✋ Onay'a bağlı."""
+    hp = _hp()
+    if not hit_kopya_kul_available(hp.HIT_KOPYA_KUL_DOMAIN):
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    if action == "hkk" and not args:
+        await query.edit_message_text(f"{hp.HIT_KOPYA_KUL_MODE_LABEL}\nHangi coğrafya?",
+                                      reply_markup=hit_kopya_kul_geo_keyboard())
+        return
+    ok, geo = parse_hit_kopya_kul_geo(args[0]) if len(args) == 1 else (False, None)
+    if not ok:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    if action == "hkk":
+        await query.edit_message_text(hit_kopya_kul_confirm_text(geo, cfg),
+                                      reply_markup=hit_kopya_kul_produce_keyboard(args[0]))
+        return
+    run_cfg = dict(cfg)
+    domain, event = hp.HIT_KOPYA_KUL_DOMAIN, hp.HIT_KOPYA_KUL_EVENTS[0]
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {DOMAIN_LABELS[domain]} / {selection_label(event)} / {HIT_KOPYA_KUL_BUTTON} / "
+                   f"{hit_kopya_kul_geo_label(geo)}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), domain, event, cfg=run_cfg, bot_data=context.bot_data,
+                      hit_kopya_kul=True, hit_kopya_kul_geo=geo)
 
 
 async def _on_dalga24(query, context, action: str, args: list[str], cfg: dict) -> None:
@@ -1732,7 +1836,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                   hortum_yaklasma: bool = False, cadde_yaklasma: bool = False,
                   donma_firtina: bool = False, kasirga: bool = False, hit_kopya_ates: bool = False,
                   yer_yarilmasi: bool = False, hit_kopya_orman: bool = False, hit_kopya_sel: bool = False,
-                  kasirga_geo: str | None = None) -> None:
+                  kasirga_geo: str | None = None, hit_kopya_kul: bool = False,
+                  hit_kopya_kul_geo: str | None = None) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1774,6 +1879,10 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["hit_kopya_orman"] = True
     if hit_kopya_sel:   # 21 Kas: ⭐ Hit kopyası (ani sel)
         kwargs["hit_kopya_sel"] = True
+    if hit_kopya_kul:   # 24 Kas: ⭐ Hit kopyası (kül bulutu)
+        kwargs["hit_kopya_kul"] = True
+        if hit_kopya_kul_geo:   # coğrafya menüsü (None = Rastgele)
+            kwargs["hit_kopya_kul_geo"] = hit_kopya_kul_geo
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:

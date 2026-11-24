@@ -265,6 +265,10 @@ class TestKeyboard(unittest.TestCase):
                     self.assertEqual(rows[-2][0].text, "⭐ Hit kopyası (ani sel)")
                     self.assertEqual(rows[-2][0].callback_data, "uret:hks")
                     rows = rows[:-2] + rows[-1:]
+                if d == "volcano_disasters":   # 24 Kas: Rastgele ile Geri arasında ⭐ Hit kopyası (kül bulutu)
+                    self.assertEqual(rows[-2][0].text, "⭐ Hit kopyası (kül bulutu)")
+                    self.assertEqual(rows[-2][0].callback_data, "uret:hkk")
+                    rows = rows[:-2] + rows[-1:]
                 self.assertEqual([r[0].text for r in rows[:-2]], [bot.EVENT_LABELS[e] for e in events])
                 self.assertEqual(rows[-2][0].text, "🎲 Rastgele")
                 self.assertEqual(rows[-1][0].text, "🔙 Geri")
