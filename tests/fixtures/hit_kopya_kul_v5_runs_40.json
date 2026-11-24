@@ -1,0 +1,1122 @@
+{
+ "1": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "10": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "11": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low colorful wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low colorful wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "12": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low colorful wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low colorful wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "13": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V3",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V3|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tiled-roof wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tiled-roof wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "14": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V1",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V1|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low stone houses with terracotta roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low stone houses with terracotta roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "15": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "16": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V3",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V3|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tiled-roof wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tiled-roof wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "17": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "18": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "19": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "2": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V1",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V1|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low stone houses with terracotta roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low stone houses with terracotta roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "20": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "21": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "22": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "23": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V3",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V3|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tiled-roof wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tiled-roof wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "24": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "25": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low colorful wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low colorful wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "26": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "27": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "28": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V1",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V1|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low stone houses with terracotta roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low stone houses with terracotta roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "29": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "3": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "30": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "31": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V1",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V1|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low stone houses with terracotta roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low stone houses with terracotta roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "32": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V1",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V1|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low stone houses with terracotta roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low stone houses with terracotta roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "33": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "34": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "35": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "36": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V3",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V3|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tiled-roof wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tiled-roof wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "37": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "38": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low concrete houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "39": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "4": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "40": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low colorful wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low colorful wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "5": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "6": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low pastel houses with tin roofs spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "7": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V3",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V3|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tiled-roof wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tiled-roof wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "8": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low tin-roofed houses among palm trees spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ },
+ "9": {
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v5",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "prompt": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low colorful wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash. Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end of the village street, a village of low colorful wooden houses spread out on flat ground in the valley far below the camera. Four villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly cloud crashes through, snapping street trees like twigs; a power pole right in front of the running villagers, between them and the camera, snaps and falls across the road in a burst of sparks, and they jump over it and keep running. 9-15s: The cloud's fury intensifies, slamming into the houses below and rolling on toward the camera, debris swirling amid the advancing ash.",
+  "suffix": "Handheld footage shot from the top-floor balcony of a tall house high up on a steep hillside, far above the village; wide-angle view looking steeply down over the whole village and its street toward the erupting volcano; the rooftops look small far below; slight hand shake, the camera stays fixed, never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."
+ }
+}
