@@ -20,6 +20,10 @@
 # geriye baktı, kamera döndü): hitin işe yarayan cümleleri korunur; kamera yüksekliği, direğin konumu, koşuş yönü ve
 # final açıkça yazılır. {houses} = yalnız ev tipi (HOUSES). Zorunlu/yasak ifade testleri (REQUIRED / FORBIDDEN). v4
 # şablonu, v4 yer metinleri ve v4 hit karşılaştırma testi _V4 olarak pasif; v4 fixture pasif kilit, v5 fixture eklendi.
+# 24 Kas (v6, Bahadır; v5'te volkan kenarda kaldı, bulut iki katman oldu, direk uzakta devrildi, kimse düşmedi, ışık
+# güneşli çıktı): hit videosunun asıl geometrisi (yamaçtaki ev terası, cadde kameradan dümdüz volkana uzanır, volkan
+# karenin ortasında). {houses} = v5 ev metinleri aynen. Yeni zorunlu/yasak listeleri. v5 şablonu, listeleri ve satırlar
+# _V5 olarak pasif; v5 fixture pasif kilit, v6 fixture eklendi.
 import asyncio
 import hashlib
 import itertools
@@ -59,8 +63,29 @@ HIT_PROMPT = (
     "Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the "
     "weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.")
 HIT_PHRASE = "slams into a village street"
-# Bahadır'ın v5 şablonu (24 Kas v5), süslü parantez dışı birebir
+# Bahadır'ın v6 şablonu (24 Kas v6), süslü parantez dışı birebir
 TEMPLATE = (
+    "0-4s: A single huge wall of pyroclastic cloud, as wide as the whole valley, races down the flank of the volcano "
+    "and slams into the far end of the village street, a village of {houses}. Four villagers sprint up the street "
+    "toward the camera at full speed. 4-9s: One man trips and falls on the road; right in front of him a power pole "
+    "snaps and crashes across the street in a burst of sparks, and he scrambles up and keeps running. 9-15s: The cloud "
+    "rolls up the street toward the camera, swallowing the houses one by one, debris swirling amid the advancing ash, "
+    "until it engulfs the terrace in thick brown ash. Handheld footage filmed from the terrace of a house on the "
+    "hillside just above the village; the village street runs straight downhill away from the camera toward the "
+    "erupting volcano, which stands in the center of the frame directly behind the far end of the street; high "
+    "vantage looking down over the rooftops; slight hand shake, the camera stays fixed and never pans, turns or "
+    "descends; a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders "
+    "wear civilian clothes, no hi-vis PPE. Raw natural light under an ash-grey sky, never glossy or CGI; no hazmat "
+    "suits. No readable signs, text or flags.")
+TAIL = TEMPLATE[TEMPLATE.index("Handheld footage"):]
+REQUIRED = ("runs straight downhill away from the camera toward the erupting volcano",
+            "stands in the center of the frame directly behind the far end of the street",
+            "single huge wall of pyroclastic cloud", "One man trips and falls", "right in front of him a power pole",
+            "never pans, turns or descends", "ash-grey sky")
+FORBIDDEN = ("matching the weather", "top-floor balcony", "jump over it", "flat ground in the valley",
+             "hillside village", "dart away")
+# Bahadır'ın v5 şablonu (24 Kas v5), pasif
+TEMPLATE_V5 = (
     "0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the village and slams into the far end "
     "of the village street, a village of {houses} spread out on flat ground in the valley far below the camera. Four "
     "villagers sprint up the street toward the camera at full speed, never stopping or looking back. 4-9s: The deadly "
@@ -73,8 +98,8 @@ TEMPLATE = (
     "never pans, turns or descends; a corner of the balcony railing in the foreground; one continuous shot, no zoom, no "
     "cuts. Bystanders wear civilian clothes, no hi-vis PPE. Raw natural light matching the weather, never glossy or "
     "CGI; no hazmat suits. No readable signs, text or flags.")
-TAIL = TEMPLATE[TEMPLATE.index("Handheld footage"):]
-# v5: {houses}, yalnız ev tipi (bu moda özel, "hillside" yok)
+TAIL_V5 = TEMPLATE_V5[TEMPLATE_V5.index("Handheld footage"):]
+# v5-v6: {houses}, yalnız ev tipi (bu moda özel, "hillside" yok)
 HOUSES = {
     "V1": "low stone houses with terracotta roofs",
     "V2": "low tin-roofed houses among palm trees",
@@ -83,11 +108,11 @@ HOUSES = {
     "V5": "low pastel houses with tin roofs",
     "V6": "low concrete houses with tin roofs",
 }
-REQUIRED = ("top-floor balcony of a tall house high up on a steep hillside", "wide-angle view looking steeply down",
-            "the rooftops look small far below", "between them and the camera", "never stopping or looking back",
-            "never pans, turns or descends", "spread out on flat ground in the valley")
-FORBIDDEN = ("hillside village", "dart away", "upper third", "tilting down no more than slightly",
-             "village street toward the erupting volcano; slight")
+REQUIRED_V5 = ("top-floor balcony of a tall house high up on a steep hillside", "wide-angle view looking steeply down",
+               "the rooftops look small far below", "between them and the camera", "never stopping or looking back",
+               "never pans, turns or descends", "spread out on flat ground in the valley")
+FORBIDDEN_V5 = ("hillside village", "dart away", "upper third", "tilting down no more than slightly",
+                "village street toward the erupting volcano; slight")
 # Bahadır'ın v4 şablonu (24 Kas v4), pasif
 TEMPLATE_V4 = (
     "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the street of {place}. Four villagers, "
@@ -203,11 +228,15 @@ BUTTONS = {"V1": "🇮🇹 İtalya", "V2": "🇮🇩 Endonezya", "V3": "🇯🇵
 REQUIRED_V3 = ("wide wall of pyroclastic cloud", "distant volcano on the horizon", "looking steeply down", "power pole")
 FORBIDDEN_V3 = ("bus", "explosion", "blast", "collapse", "sunset", "GPT", "colonial", "darkness", "erupts",
                 "upper third", "tilting down no more than slightly", "tree", "single huge")
-VERSION_LINE = "Sürüm: hit_kul v5 (yüksek balkon + geniş açı, direk koşanların önünde, köy vadide düzde)"
-CAMERA_LINE = "Kamera: yamaçtaki uzun evin üst kat balkonu, geniş açı, köye dik aşağı bakar, dönmez"
-CAMERA_AXIS = "yamaçtaki uzun evin üst kat balkonu, geniş açı, köye dik aşağı bakar, dönmez"
-EVENTS_LINE = ("Olaylar: bulut köye çarpar · direk koşanların önüne kıvılcımla devrilir, üstünden atlarlar · bulut "
-               "evlere çarpıp kameraya ilerler")
+VERSION_LINE = "Sürüm: hit_kul v6 (hit geometrisi: yamaçtaki ev terası, cadde dümdüz volkana uzanır, volkan ortada)"
+CAMERA_LINE = "Kamera: yamaçtaki evin terası, cadde kameradan volkana dümdüz uzanır, volkan karenin ortasında, dönmez"
+CAMERA_AXIS = "yamaçtaki evin terası, cadde kameradan volkana dümdüz uzanır, volkan karenin ortasında, dönmez"
+EVENTS_LINE = ("Olaylar: tek geniş bulut duvarı caddenin ucuna çarpar · adam düşer, önüne direk kıvılcımla devrilir · "
+               "bulut caddeden kameraya tırmanıp terası kahverengi küle gömer")
+VERSION_LINE_V5 = "Sürüm: hit_kul v5 (yüksek balkon + geniş açı, direk koşanların önünde, köy vadide düzde)"
+CAMERA_AXIS_V5 = "yamaçtaki uzun evin üst kat balkonu, geniş açı, köye dik aşağı bakar, dönmez"
+EVENTS_LINE_V5 = ("Olaylar: bulut köye çarpar · direk koşanların önüne kıvılcımla devrilir, üstünden atlarlar · bulut "
+                  "evlere çarpıp kameraya ilerler")
 VERSION_LINE_V4 = "Sürüm: hit_kul v4 (hit prompt'u birebir, yalnız coğrafya değişir)"
 CAMERA_AXIS_V4 = "hit kamerası (tepe terası, volkan üst üçte birde), birebir"
 EVENTS_LINE_V4 = "Olaylar: hit ile birebir (ağaçlar ve direkler devrilir, bulut eve çarpar)"
@@ -215,8 +244,11 @@ VERSION_LINE_V3 = "Sürüm: hit_kul v3 (volkan ufukta, kamera dik aşağı bakar
 CAMERA_AXIS_V3 = "sabit yüksek yamaç terası, köye dik aşağı bakar, volkan uzakta ufukta"
 VERSION_LINE_V2 = "Sürüm: hit_kul v2 (yüksek yamaç kamerası, bulut ilk karede, lav arka planda)"
 CAMERA_AXIS_V2 = "sabit yüksek yamaç terası, köy aşağıda serili, volkan üst üçte birde"
-# 6 çıktının kelime / karakter sayıları (V1-V6), v5
-COUNTS = {"V1": (227, 1324), "V2": (227, 1324), "V3": (225, 1314), "V4": (225, 1312), "V5": (227, 1318),
+# 6 çıktının kelime / karakter sayıları (V1-V6), v6
+COUNTS = {"V1": (227, 1278), "V2": (227, 1278), "V3": (225, 1268), "V4": (225, 1266), "V5": (227, 1272),
+          "V6": (227, 1274)}
+# v5 (pasif)
+COUNTS_V5 = {"V1": (227, 1324), "V2": (227, 1324), "V3": (225, 1314), "V4": (225, 1312), "V5": (227, 1318),
           "V6": (227, 1320)}
 # v4 (pasif)
 COUNTS_V4 = {"V1": (185, 1165), "V2": (185, 1165), "V3": (183, 1155), "V4": (183, 1153), "V5": (185, 1159),
@@ -237,17 +269,19 @@ def passive_clauses(template: str) -> list[str]:
     return [p.strip() for p in parts if len(p.strip()) > 12 and p.strip() not in HIT_PROMPT]
 
 
-def passive_clauses_v5(template: str) -> list[str]:
-    """Pasif şablonun (v1-v4) v5 şablonunda bulunmayan cümlecikleri (yer tutucular dışı, 12 karakterden uzun)."""
+def passive_clauses_v6(template: str) -> list[str]:
+    """Pasif şablonun (v1-v5) v6 şablonunda bulunmayan cümlecikleri (yer tutucular dışı, 12 karakterden uzun)."""
     import re
     parts = re.split(r"\{[A-Za-z]+\}|[;,.:]\s", template)
     return [p.strip() for p in parts if len(p.strip()) > 12 and p.strip() not in TEMPLATE]
-SOURCE = "Kaynak: 13 Eki hit'inin cümleleri + v5 kamera/konum düzeltmeleri"
+SOURCE = "Kaynak: 13 Eki hit'inin geometrisi + cümleleri (v6)"
+SOURCE_V5 = "Kaynak: 13 Eki hit'inin cümleleri + v5 kamera/konum düzeltmeleri"
 SOURCE_V4 = ('Kaynak: 13 Eki 11:23 üretimi "Pyroclastic Cloud Engulfs Village Street" (13 Eki paylaşımı, 2,1M), '
              'iskelet ve dil')
-REPEAT = ("Tekrar önleme: coğrafya son 2 (yalnız rastgele) · olaylar, kişi, kamera ve ışık sabit (v5 şablonu "
+REPEAT = ("Tekrar önleme: coğrafya son 2 (yalnız rastgele) · olaylar, kişi, kamera ve ışık sabit (v6 şablonu "
           "birebir)")
-FIXTURE = os.path.join(ROOT, "tests", "fixtures", "hit_kopya_kul_v5_runs_40.json")
+FIXTURE = os.path.join(ROOT, "tests", "fixtures", "hit_kopya_kul_v6_runs_40.json")
+FIXTURE_V5 = os.path.join(ROOT, "tests", "fixtures", "hit_kopya_kul_v5_runs_40.json")   # pasif v5 kilidi
 FIXTURE_V4 = os.path.join(ROOT, "tests", "fixtures", "hit_kopya_kul_v4_runs_40.json")   # pasif v4 kilidi
 FIXTURE_V3 = os.path.join(ROOT, "tests", "fixtures", "hit_kopya_kul_v3_runs_40.json")   # pasif v3 kilidi
 FIXTURE_V2 = os.path.join(ROOT, "tests", "fixtures", "hit_kopya_kul_v2_runs_40.json")   # pasif v2 kilidi
@@ -255,10 +289,13 @@ FIXTURE_V1 = os.path.join(ROOT, "tests", "fixtures", "hit_kopya_kul_v1_runs_40.j
 
 # Değişiklikten önceki kod (8b4c19f): test_kasirga_cografya_menu tam zinciri (19 olay + bütün modlar + ⭐ Hit kopyası
 # (ani sel), FULL_SHA256 4db63034) + canlı 🌀 Kasırga v3 🎲 Rastgele (KASIRGA_SHA256 9e9b0103); 40 tohum. 24 Kas v4
-# öncesi (ec6beed) yeniden alındı: aynı. 24 Kas v5 öncesi (1b1d43d) yeniden alındı: aynı.
+# öncesi (ec6beed) yeniden alındı: aynı. 24 Kas v5 öncesi (1b1d43d) yeniden alındı: aynı. 24 Kas v6 öncesi (75b841e)
+# yeniden alındı: aynı.
 OTHERS_SHA256 = "f35ab4dfb22a337016f7ea2cf36f8162470415eb385adb0bfc648e9f9806d854"
-# ⭐ Hit kopyası (kül bulutu) v5, 40 tohum kilidi (prompt / hikâye / stil eki / combo / eksenler; caption hariç)
-HIT_KOPYA_KUL_SHA256 = "61db0b2e7451d34d6fed9ff02db7a356e3f0ec6d8c428545fb33ae070e5335fc"
+# ⭐ Hit kopyası (kül bulutu) v6, 40 tohum kilidi (prompt / hikâye / stil eki / combo / eksenler; caption hariç)
+HIT_KOPYA_KUL_SHA256 = "158e5155fdaa5edcc372bccb46e386590b1db618ce8e947f07bd1db982578a23"
+# v5 kilidi (pasif fixture)
+HIT_KOPYA_KUL_SHA256_V5 = "61db0b2e7451d34d6fed9ff02db7a356e3f0ec6d8c428545fb33ae070e5335fc"
 # v4 kilidi (pasif fixture)
 HIT_KOPYA_KUL_SHA256_V4 = "22bb0af6484e381ea7f5373d1ed1b0a71d31ca78c4d0bbfa0503378d9d791128"
 # v3 kilidi (pasif fixture)
@@ -292,8 +329,13 @@ def gen(**extra) -> dict:
 
 
 def expected(geo: str) -> str:
-    """v5 şablonundan bağımsız kurulum: yalnız {houses} dolar."""
+    """v6 şablonundan bağımsız kurulum: yalnız {houses} dolar."""
     return TEMPLATE.format(houses=HOUSES[geo])
+
+
+def expected_v5(geo: str) -> str:
+    """Pasif v5 şablonundan bağımsız kurulum."""
+    return TEMPLATE_V5.format(houses=HOUSES[geo])
 
 
 def expected_v4(geo: str) -> str:
@@ -342,18 +384,17 @@ class TestTemplate(_Quiet):
         self.assertEqual(TEMPLATE.count("{houses}"), 1)
         for ph in ("{place}", "{People}", "{M}", "{F}"):
             self.assertNotIn(ph, TEMPLATE)
-        self.assertEqual(HKK["tail_start"], "Handheld footage shot from the top-floor balcony")
+        self.assertEqual(HKK["tail_start"], "Handheld footage filmed from the terrace")
         self.assertEqual(hp.HIT_KOPYA_KUL_TAIL, TAIL)
         self.assertEqual(set(HKK), {"template", "tail_start"})   # M, F, kişi ekseni yok
         self.assertEqual(hp.HIT_KOPYA_KUL_HOUSES, HOUSES)
         self.assertEqual(hp.HIT_KOPYA_KUL_REQUIRED, REQUIRED)
         self.assertEqual(hp.HIT_KOPYA_KUL_FORBIDDEN, FORBIDDEN)
         self.assertEqual(TEMPLATE.count("’"), 0)
-        self.assertIn("The cloud's fury intensifies", TEMPLATE)
         # hitin korunan cümleleri
-        for keep in ("The deadly cloud crashes through, snapping street trees like twigs", "debris swirling amid the "
-                     "advancing ash", "one continuous shot, no zoom, no cuts", "Raw natural light matching the "
-                     "weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags."):
+        for keep in ("debris swirling amid the advancing ash", "one continuous shot, no zoom, no cuts",
+                     "never glossy or CGI; no hazmat suits. No readable signs, text or flags.", "high vantage looking "
+                     "down over the", "Four villagers", "slams into", "toward the erupting volcano"):
             self.assertIn(keep, HIT_PROMPT)
             self.assertIn(keep, TEMPLATE)
 
@@ -388,6 +429,32 @@ class TestTemplate(_Quiet):
             self.assertTrue(any(need in x for x in hp.hit_kopya_kul_text_issues(good.replace(need, "x"))), need)
         for bad in FORBIDDEN:
             self.assertTrue(any(bad in x for x in hp.hit_kopya_kul_text_issues(good + " " + bad)), bad)
+
+    def test_v5_passive_kept(self):
+        """v5 şablonu, zorunlu/yasak listeleri, denetim ve satırlar _V5 olarak duruyor (silinmedi)."""
+        v5 = hp.HIT_KOPYA_KUL_V5
+        self.assertEqual(v5["template"], TEMPLATE_V5)
+        self.assertEqual(v5["tail_start"], "Handheld footage shot from the top-floor balcony")
+        self.assertEqual(hp.HIT_KOPYA_KUL_TAIL_V5, TAIL_V5)
+        self.assertEqual(hp.HIT_KOPYA_KUL_REQUIRED_V5, REQUIRED_V5)
+        self.assertEqual(hp.HIT_KOPYA_KUL_FORBIDDEN_V5, FORBIDDEN_V5)
+        self.assertEqual(hp.HIT_KOPYA_KUL_SURUM_V5, "v5")
+        self.assertEqual(hp.HIT_KOPYA_KUL_VERSION_LINE_V5, VERSION_LINE_V5)
+        self.assertEqual(hp.HIT_KOPYA_KUL_CAMERA_V5, CAMERA_AXIS_V5)
+        self.assertEqual(hp.HIT_KOPYA_KUL_CAMERA_AXIS_V5, CAMERA_AXIS_V5)
+        self.assertEqual(hp.HIT_KOPYA_KUL_EVENTS_LINE_V5, EVENTS_LINE_V5)
+        self.assertEqual(hp.HIT_KOPYA_KUL_SOURCE_V5, SOURCE_V5)
+        for name in ("WARNING_V5", "CONFIRM_DESC_V5", "SPOT_LABEL_V5"):
+            self.assertTrue(hasattr(hp, "HIT_KOPYA_KUL_" + name), name)
+        counts = {}
+        for g in HOUSES:
+            p = hp.hit_kopya_kul_prompt_v5(g)
+            self.assertEqual(p, expected_v5(g), g)
+            self.assertEqual(hp.hit_kopya_kul_text_issues_v5(p), [], g)
+            self.assertTrue(hp.hit_kopya_kul_text_issues(p), g)   # v5 metni v6 denetiminden geçmez
+            self.assertTrue(hp.hit_kopya_kul_text_issues_v5(hp.hit_kopya_kul_prompt(g)), g)
+            counts[g] = (len(p.split()), len(p))
+        self.assertEqual(counts, COUNTS_V5)
 
     def test_v4_passive_kept(self):
         """v4 şablonu, v4 yer metinleri, v4 hit karşılaştırması ve satırlar _V4 olarak duruyor (silinmedi)."""
@@ -427,7 +494,7 @@ class TestTemplate(_Quiet):
             self.assertEqual(b[:i], hit_b[:i], g)
             self.assertEqual(b[i + len(new):], hit_b[i + len(HIT_PHRASE.encode("utf-8")):], g)
             self.assertEqual(hp.hit_kopya_kul_text_issues_v4(p), [], g)
-            # v4 metni v5 denetiminden geçmez
+            # v4 metni v6 denetiminden geçmez
             self.assertTrue(hp.hit_kopya_kul_text_issues(p), g)
             counts[g] = (len(p.split()), len(p))
         self.assertEqual(counts, COUNTS_V4)
@@ -487,14 +554,16 @@ class TestTemplate(_Quiet):
         self.assertEqual(hp.HIT_KOPYA_KUL_FORBIDDEN_V2, FORBIDDEN_V3[:9])
 
     def test_passive_texts_never_in_active_output(self):
-        """v1-v4'e özgü hiçbir metin (M, F, yer v1/v4, stil ekleri, v5'te olmayan şablon cümlecikleri) aktif çıktıda
+        """v1-v5'e özgü hiçbir metin (M, F, yer v1/v4, stil ekleri, v6'da olmayan şablon cümlecikleri) aktif çıktıda
         yok."""
         passive = [*MIDS_V1.values(), *FINALS_V1.values(), *MIDS_V2.values(), *MIDS_V3.values(), *FINALS.values(),
-                   TAIL_V2, TAIL_V3, TAIL_V4, *passive_clauses_v5(TEMPLATE_V1), *passive_clauses_v5(TEMPLATE_V2),
-                   *passive_clauses_v5(TEMPLATE_V3), *passive_clauses_v5(TEMPLATE_V4), *PLACES_V4.values(),
-                   *PLACES_V1.values()]
-        for t in ("wide wall of pyroclastic cloud", "ash-grey sky", "immediately dart away",
-                  "responders wear service uniforms", "slamming into a house", "a hillside village of"):
+                   TAIL_V2, TAIL_V3, TAIL_V4, TAIL_V5, *passive_clauses_v6(TEMPLATE_V1),
+                   *passive_clauses_v6(TEMPLATE_V2), *passive_clauses_v6(TEMPLATE_V3), *passive_clauses_v6(TEMPLATE_V4),
+                   *passive_clauses_v6(TEMPLATE_V5), *PLACES_V4.values(), *PLACES_V1.values()]
+        for t in ("wide wall of pyroclastic cloud", "immediately dart away", "responders wear service uniforms",
+                  "slamming into a house", "a hillside village of", "top-floor balcony", "they jump over it",
+                  "spread out on flat ground in the valley", "never stopping or looking back",
+                  "the rooftops look small far below", "Raw natural light matching the weather"):
             self.assertTrue(any(t in x for x in passive), t)
         for g in HOUSES:
             p = hp.hit_kopya_kul_prompt(g)
@@ -502,7 +571,8 @@ class TestTemplate(_Quiet):
                 self.assertNotIn(t, p, (g, t))
         for t in (hp.HIT_KOPYA_KUL_CONFIRM_DESC_V1, hp.HIT_KOPYA_KUL_WARNING_V1, hp.HIT_KOPYA_KUL_CONFIRM_DESC_V2,
                   hp.HIT_KOPYA_KUL_WARNING_V2, hp.HIT_KOPYA_KUL_CONFIRM_DESC_V3, hp.HIT_KOPYA_KUL_WARNING_V3,
-                  hp.HIT_KOPYA_KUL_CONFIRM_DESC_V4, hp.HIT_KOPYA_KUL_WARNING_V4):
+                  hp.HIT_KOPYA_KUL_CONFIRM_DESC_V4, hp.HIT_KOPYA_KUL_WARNING_V4, hp.HIT_KOPYA_KUL_CONFIRM_DESC_V5,
+                  hp.HIT_KOPYA_KUL_WARNING_V5):
             self.assertNotEqual(t, hp.HIT_KOPYA_KUL_CONFIRM_DESC)
             self.assertNotEqual(t, hp.HIT_KOPYA_KUL_WARNING)
 
@@ -511,7 +581,7 @@ class TestTemplate(_Quiet):
         self.assertEqual(hp.HIT_KOPYA_KUL_EVENTS, (PY,))
         self.assertEqual(hp.HIT_KOPYA_KUL_DOMAIN, DOMAIN)
         self.assertEqual(hp.HIT_KOPYA_KUL_MOD, "hit_kopya_kul")
-        self.assertEqual(hp.HIT_KOPYA_KUL_SURUM, "v5")
+        self.assertEqual(hp.HIT_KOPYA_KUL_SURUM, "v6")
         self.assertEqual(hp.HIT_KOPYA_KUL_PEOPLE, 4)
         self.assertEqual(hp.HIT_KOPYA_KUL_CAMERA_AXIS, CAMERA_AXIS)
         self.assertEqual(hp.HIT_KOPYA_KUL_VERSION_LINE, VERSION_LINE)
@@ -523,10 +593,11 @@ class TestTemplate(_Quiet):
         self.assertEqual(hp.HIT_KOPYA_KUL_GEO_BUTTONS, BUTTONS)
         self.assertFalse(hasattr(hp, "HIT_KOPYA_KUL_PLACES"))   # v4 yer metinleri _V4 (pasif)
         for name in ("HIT_KOPYA_KUL_NAMES", "HIT_KOPYA_KUL_PEOPLE_COUNT", "HIT_KOPYA_KUL_MID_BLOCK"):
-            self.assertFalse(hasattr(hp, name), name)   # v5'te M, F, kişi ekseni yok (_V3 pasif)
-        self.assertIn("v5", hp.HIT_KOPYA_KUL_CONFIRM_DESC)
+            self.assertFalse(hasattr(hp, name), name)   # v6'da M, F, kişi ekseni yok (_V3 pasif)
+        self.assertIn("v6", hp.HIT_KOPYA_KUL_CONFIRM_DESC)
         w = hp.HIT_KOPYA_KUL_WARNING
-        for part in ("v5", "geniş açı", "çatılar", "direk koşanların önünde", "durmadan", "dönmüyor"):
+        for part in ("v6", "volkan karenin ortasında", "cadde kameradan volkana dümdüz", "tek geniş duvar",
+                     "adam düşüyor", "direk tam önüne", "kamera dönmüyor", "kül grisi"):
             self.assertIn(part, w)
         for t in (hp.HIT_KOPYA_KUL_CONFIRM_DESC, hp.HIT_KOPYA_KUL_WARNING, SOURCE, VERSION_LINE, CAMERA_LINE,
                   EVENTS_LINE, *BUTTONS.values()):
@@ -539,13 +610,13 @@ class TestTemplate(_Quiet):
         for g in HOUSES:
             self.assertEqual(BUTTONS[g].split(" ", 1)[1], hp.YAKLASMA_KUL_BULUTU["geos"][g]["name"], g)
 
-    def test_camera_style_is_v5_tail(self):
+    def test_camera_style_is_v6_tail(self):
         for g in HOUSES:
             tail = hp.hit_kopya_kul_tail(g)
             self.assertEqual(tail, TAIL, g)
             self.assertEqual(hp.hit_kopya_kul_story(g) + " " + tail, hp.hit_kopya_kul_prompt(g))
-            self.assertNotIn(OUR_LIGHT, hp.hit_kopya_kul_prompt(g))
-            self.assertIn(HIT_LIGHT, tail)
+            self.assertNotIn(HIT_LIGHT, hp.hit_kopya_kul_prompt(g))
+            self.assertIn(OUR_LIGHT, tail)
 
     def test_all_outputs_within_limits(self):
         counts = {}
@@ -556,13 +627,13 @@ class TestTemplate(_Quiet):
             self.assertLessEqual(counts[g][1], 1400, g)
         self.assertEqual(len(counts), 6)
         self.assertEqual(counts, COUNTS)
-        self.assertEqual(max(counts.values()), (227, 1324))
+        self.assertEqual(max(counts.values()), (227, 1278))
 
     def test_text_issues_detect_any_deviation(self):
         good = hp.hit_kopya_kul_prompt("V1")
         self.assertEqual(hp.hit_kopya_kul_text_issues(good), [])
-        for bad in (HIT_PROMPT, hp.hit_kopya_kul_prompt_v4("V1"), good + " ", good.replace("Four villagers",
-                    "Six villagers"), good.replace("twigs", "twig"), good.replace(HOUSES["V1"], "houses"), ""):
+        for bad in (HIT_PROMPT, hp.hit_kopya_kul_prompt_v4("V1"), hp.hit_kopya_kul_prompt_v5("V1"), good + " ", good.replace("Four villagers",
+                    "Six villagers"), good.replace("one by one", "one"), good.replace(HOUSES["V1"], "houses"), ""):
             self.assertTrue(hp.hit_kopya_kul_text_issues(bad), bad[:60])
 
     def test_bad_ids(self):
@@ -577,10 +648,9 @@ class TestTemplate(_Quiet):
 
     def test_example_v1_italy(self):
         p = hp.hit_kopya_kul_prompt("V1")
-        self.assertTrue(p.startswith("0-4s: A huge pyroclastic cloud races down the flank of the volcano behind the "
-                                     "village and slams into the far end of the village street, a village of low "
-                                     "stone houses with terracotta roofs spread out on flat ground in the valley far "
-                                     "below the camera."))
+        self.assertTrue(p.startswith("0-4s: A single huge wall of pyroclastic cloud, as wide as the whole valley, "
+                                     "races down the flank of the volcano and slams into the far end of the village "
+                                     "street, a village of low stone houses with terracotta roofs. Four villagers"))
         self.assertTrue(p.endswith(" " + TAIL))
         self.assertEqual(p, expected("V1"))
 
@@ -623,7 +693,7 @@ class TestScene(_Quiet):
         a = ax["axes"]
         for k in ("spot", "view", "light", "vehicle", "people", "beats", "m", "f", "kisi"):
             self.assertIsNone(a[k], k)
-        self.assertEqual((a["mod"], a["surum"], a["cografya"]), ("hit_kopya_kul", "v5", tb["geo"]))
+        self.assertEqual((a["mod"], a["surum"], a["cografya"]), ("hit_kopya_kul", "v6", tb["geo"]))
         self.assertEqual(set(ax["excluded"]), {"cografya"})
         return tb["geo"]
 
@@ -712,8 +782,10 @@ class TestScene(_Quiet):
         tb = st["hit_kopya_kul"]
         good = {"prompt": sc["prompt"], "story": sc["story"], "style_suffix": sc["style_suffix"]}
         self.assertEqual(cp.submit_issues(st, good), [])
-        for bad in (sc["prompt"] + " A blast.", sc["prompt"].replace("twigs", "twig"), HIT_PROMPT,
-                    sc["prompt"].replace("cloud's", "cloud’s"), sc["prompt"].replace("top-floor balcony", "terrace")):
+        for bad in (sc["prompt"] + " A blast.", sc["prompt"].replace("one by one", "one"), HIT_PROMPT,
+                    sc["prompt"].replace("in the center of the frame", "on the left"),
+                    sc["prompt"].replace("ash-grey sky", "sunny sky"),
+                    sc["prompt"].replace("terrace of a house", "top-floor balcony of a house")):
             self.assertTrue(cp.submit_issues(st, {**good, "prompt": bad}), bad[-40:])
         self.assertTrue(cp.submit_issues(st, {**good, "style_suffix": "x"}))
         self.assertTrue(cp.submit_issues(st, {**good, "story": sc["story"] + " x"}))
@@ -740,7 +812,7 @@ class TestScene(_Quiet):
         self.assertEqual(lines[5], CAMERA_LINE)
         p = tb["prompt"]
         self.assertEqual(lines[6], f"Kelime: {len(p.split())} (en fazla 230) · karakter: {len(p)} (en fazla 1400)")
-        self.assertTrue(lines[7].startswith("Eksenler (⭐ Hit kopyası (kül bulutu)): sürüm=v5 · coğrafya="))
+        self.assertTrue(lines[7].startswith("Eksenler (⭐ Hit kopyası (kül bulutu)): sürüm=v6 · coğrafya="))
         self.assertIn("kamera modu=" + CAMERA_AXIS, lines[7])
         self.assertNotIn("M=", lines[7])
         self.assertNotIn("kişi=", lines[7])
@@ -797,7 +869,7 @@ class TestPipelineAndBot(_Quiet):
         self.assertEqual(t.create.await_count, 1)
         self.assertEqual(t.create.await_args.args[1], info["prompt"])
         ax = json.loads(t.tracker.record_axes.call_args_list[0].args[0])["axes"]
-        self.assertEqual((ax["mod"], ax["surum"], ax["cografya"]), ("hit_kopya_kul", "v5", "V6"))
+        self.assertEqual((ax["mod"], ax["surum"], ax["cografya"]), ("hit_kopya_kul", "v6", "V6"))
         self.assertEqual(info["prompt"], expected("V6"))
 
     def test_random_geo_not_passed(self):
@@ -891,9 +963,9 @@ class TestPipelineAndBot(_Quiet):
 
 
 class TestLocks(_Quiet):
-    """Bu mod dışındaki bütün olaylar ve modlar (önceki kod 8b4c19f; v4 öncesi ec6beed'de, v5 öncesi 1b1d43d'de yeniden
-    alındı) 40 tohum birebir; bu modun kilidi HIT_KOPYA_KUL_SHA256 + fixture hit_kopya_kul_v5_runs_40.json (v1-v4
-    fixture pasif kilit olarak duruyor)."""
+    """Bu mod dışındaki bütün olaylar ve modlar (önceki kod 8b4c19f; v4 öncesi ec6beed'de, v5 öncesi 1b1d43d'de, v6
+    öncesi 75b841e'de yeniden alındı) 40 tohum birebir; bu modun kilidi HIT_KOPYA_KUL_SHA256 + fixture
+    hit_kopya_kul_v6_runs_40.json (v1-v5 fixture pasif kilit olarak duruyor)."""
 
     def test_others_verbatim_40_seeds(self):
         snap = others_snapshot()
@@ -913,10 +985,22 @@ class TestLocks(_Quiet):
         self.assertEqual(snapshot_hash(fixture), HIT_KOPYA_KUL_SHA256)
         for s, r in runs.items():
             ax = r["axes"]["axes"]
-            self.assertEqual((ax["mod"], ax["surum"], ax["cografya_kaynak"]), ("hit_kopya_kul", "v5", "rastgele"))
+            self.assertEqual((ax["mod"], ax["surum"], ax["cografya_kaynak"]), ("hit_kopya_kul", "v6", "rastgele"))
             self.assertEqual(r["prompt"], expected(ax["cografya"]))
             self.assertEqual(r["suffix"], TAIL)
             self.assertTrue(r["combo"].endswith(f"##HKK:{ax['cografya']}|bystander_handheld"), s)
+
+    def test_v5_fixture_kept(self):
+        with open(FIXTURE_V5, encoding="utf-8") as f:
+            v5 = json.load(f)
+        self.assertEqual(len(v5), 40)
+        self.assertEqual(snapshot_hash(v5), HIT_KOPYA_KUL_SHA256_V5)
+        for s, r in v5.items():
+            ax = r["axes"]["axes"]
+            self.assertEqual(ax["surum"], "v5")
+            self.assertEqual(r["prompt"], expected_v5(ax["cografya"]), s)
+            self.assertEqual(r["prompt"], hp.hit_kopya_kul_prompt_v5(ax["cografya"]), s)
+            self.assertEqual(r["suffix"], TAIL_V5)
 
     def test_v4_fixture_kept(self):
         with open(FIXTURE_V4, encoding="utf-8") as f:
