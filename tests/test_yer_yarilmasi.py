@@ -6,6 +6,8 @@
 # v2 açılış/stil/orta/final _V2 pasif kopya. Coğrafya havuzu ve LRU (son 3) aynen.
 # 18 Kas v4: yatay yarık (soldan sağa, kameranın önünden), köşe binası çatı terası (çapraz), tek orta O3 (otobüs),
 # tek final F3 (köşe binası kadrajda büyük); v3 açılış/orta/final/stil/listeler/etiket _V3 pasif kopya.
+# 25 Kas v5 (AKTİF sürüm: tests/test_yer_yarilmasi_v5.py): v4 silinmedi, config "yer_yarilmasi_surum": "v4" ile aynen
+# çalışır; bu dosya v4 kalıbını ve 40 tohum kilidini korur (menü testi v5 dosyasında).
 # Ağ yok, Kie yok, GPT yok.
 import asyncio
 import hashlib
@@ -158,6 +160,7 @@ def reset():
 
 def gen(**extra) -> dict:
     return asyncio.run(pg.generate_creative_prompts({"domain": DOMAIN, "event": EVENT, "yer_yarilmasi": True,
+                                                     "yer_yarilmasi_surum": "v4",   # 25 Kas: aktif sürüm v5
                                                      "used_combos": [], "recent_topics": [], **extra}))
 
 
@@ -549,7 +552,7 @@ class TestPipelineAndBot(_Quiet):
             reset()
             random.seed(21)
             cfg = {k: v for k, v in config.items() if k not in ("axes_loader", "caption_loader")}
-            return await pg.generate_creative_prompts(cfg)
+            return await pg.generate_creative_prompts({**cfg, "yer_yarilmasi_surum": "v4"})
         t = TestPipelineTur29("test_test_mode_never_uploads_and_archives_full_meta")
         t.setUp()
         try:
@@ -616,50 +619,6 @@ class TestPipelineAndBot(_Quiet):
         self.assertEqual(kw["reporter"].labels, {"domain": CATEGORY, "event": EVENT_LABEL})
         self.assertEqual(bot.CODE_DOMAIN_LABELS[DOMAIN], CATEGORY)
         self.assertEqual(bot.CODE_EVENT_LABELS[EVENT], EVENT_LABEL)
-
-    def test_menu_button_bound_to_mode(self):
-        import bot
-        from test_tur29_infra import _context, _update
-        kb = bot.domain_keyboard(bot.default_cfg())
-        texts = [b.text for r in kb.inline_keyboard for b in r]
-        self.assertEqual(texts.count(CATEGORY), 1)
-        row = next(r for r in kb.inline_keyboard if r[0].text == CATEGORY)
-        self.assertEqual((len(row), row[0].callback_data), (1, "uret:yy"))
-        self.assertEqual(texts.index(CATEGORY), texts.index("🌀 Kasırga") + 1)
-        self.assertNotIn(DOMAIN, bot.DOMAIN_KEYS)   # normal kategori sıra numaraları değişmez
-        self.assertNotIn(EVENT, bot.EVENT_LABELS)
-        ctx = _context()
-        upd = _update(data="uret:yy")
-        asyncio.run(bot.on_callback(upd, ctx))
-        call = upd.callback_query.edit_message_text.await_args
-        self.assertEqual([b.text for r in call.kwargs["reply_markup"].inline_keyboard for b in r],
-                         [EVENT_LABEL, "🔙 Geri"])
-        self.assertEqual([b.callback_data for r in call.kwargs["reply_markup"].inline_keyboard for b in r],
-                         ["uret:yye", "uret:back"])
-        upd = _update(data="uret:yye")
-        asyncio.run(bot.on_callback(upd, ctx))
-        text = upd.callback_query.edit_message_text.await_args.args[0]
-        for part in (f"Kategori: {CATEGORY}", f"Olay: {EVENT_LABEL}", f"Mod: {MODE_LABEL}", "✋ Onay",
-                     hp.YER_YARILMASI_CONFIRM_DESC, CAMERA_LINE, "orta (O3), final (F3)"):
-            self.assertIn(part, text)
-        self.assertNotIn("O1-O2", text)
-        self.assertNotIn("—", text)   # Türkçe içerik kuralı: em-dash yok
-        upd = _update(data="uret:yyok")
-        runner = AsyncMock(return_value={"success": False, "reason": "cancelled"})
-        with patch.object(bot.pipeline, "run_pipeline", runner), patch.object(bot, "_production_lock", asyncio.Lock()):
-            asyncio.run(bot.on_callback(upd, ctx))
-        kw = runner.await_args.kwargs
-        self.assertEqual((kw["domain"], kw["event"], kw["yer_yarilmasi"]), (DOMAIN, EVENT, True))
-        for other in ("kasirga", "donma_firtina", "hit_kopya_ates", "cadde_yaklasma", "hit_env", "approach_env"):
-            self.assertNotIn(other, kw)
-        self.assertTrue(kw["reporter"].needs_approval)
-        for bad in ("uret:yy:1", "uret:yye:0", "uret:yyok:x"):
-            upd = _update(data=bad)
-            asyncio.run(bot.on_callback(upd, ctx))
-            self.assertIn("Geçersiz", upd.callback_query.edit_message_text.await_args.args[0])
-        for b in (b for m in (kb, bot.yer_yarilmasi_event_keyboard(), bot.yer_yarilmasi_produce_keyboard())
-                  for r in m.inline_keyboard for b in r):
-            self.assertLessEqual(len(b.callback_data.encode()), 64)
 
 
 class TestOwnSnapshot(_Quiet):

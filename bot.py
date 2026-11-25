@@ -927,7 +927,8 @@ def kasirga_confirm_text(cfg: dict | None = None, geo: str | None = None) -> str
 
 # ── 🌍 Yer yarılması (17 Kas 2026, Bahadır): kod hikâyeli yeni kategori, tek olay. Normal kategori havuzunda
 # (DOMAIN_LABELS / DOMAIN_ATTRIBUTES) YOK: düğmesi kategori menüsünün sonunda ayrı satır, sıra numaraları değişmez.
-# Adımlar: yy (olay menüsü) → yye (onay metni) → yyok (üretim) → Kie'den önce ✋ Onay. Hikâye için GPT çağrılmaz.
+# Adımlar: yy (olay menüsü) → yye (25 Kas v5: coğrafya ekranı) → yyg:<Gx|r> (onay metni) → yyok:<Gx|r> (üretim) → Kie'den
+# önce ✋ Onay. Hikâye için GPT çağrılmaz. Argümansız eski yyok düğmesi = 🎲 Rastgele.
 def yer_yarilmasi_event_keyboard() -> InlineKeyboardMarkup:
     """Tek olay + 🔙 Geri (🎲 Rastgele yok: kategoride tek olay var)."""
     return InlineKeyboardMarkup([
@@ -936,27 +937,55 @@ def yer_yarilmasi_event_keyboard() -> InlineKeyboardMarkup:
     ])
 
 
-def yer_yarilmasi_produce_keyboard() -> InlineKeyboardMarkup:
+def parse_yer_yarilmasi_geo(gid: str) -> tuple[bool, str | None]:
+    """Kısa kod → (geçerli mi, G). 'r' = 🎲 Rastgele (None)."""
+    if gid == RANDOM_ID:
+        return True, None
+    if gid in _hp().YER_YARILMASI["geos"]:
+        return True, gid
+    return False, None
+
+
+def yer_yarilmasi_geo_keyboard() -> InlineKeyboardMarkup:
+    """G1-G6 (okunur ad) + 🎲 Rastgele (son 3 coğrafya elenir) + 🔙 Geri (Yer yarılması olay menüsüne)."""
+    hp = _hp()
+    buttons = [InlineKeyboardButton(hp.YER_YARILMASI_GEO_BUTTONS[g], callback_data=f"{CALLBACK_PREFIX}yyg:{g}")
+               for g in hp.YER_YARILMASI["geos"]]
+    rows = [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
+    rows.append([InlineKeyboardButton(RANDOM_LABEL, callback_data=f"{CALLBACK_PREFIX}yyg:{RANDOM_ID}")])
+    rows.append([InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}yy")])
+    return InlineKeyboardMarkup(rows)
+
+
+def yer_yarilmasi_geo_text(geo: str | None) -> str:
+    hp = _hp()
+    return (f"{geo} {hp.YER_YARILMASI_GEO_BUTTONS[geo]}" if geo
+            else f"🎲 Rastgele (son {hp.YER_YARILMASI_GEO_BLOCK} coğrafya elenir)")
+
+
+def yer_yarilmasi_produce_keyboard(gid: str = RANDOM_ID) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([[
-        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}yyok"),
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}yyok:{gid}"),
         InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
     ]])
 
 
-def yer_yarilmasi_confirm_text(cfg: dict | None = None) -> str:
+def yer_yarilmasi_confirm_text(cfg: dict | None = None, geo: str | None = None) -> str:
     hp = _hp()
     cfg = cfg or default_cfg()
     return (f"Kategori: {YER_YARILMASI_CATEGORY_BUTTON}\n"
             f"Olay: {hp.YER_YARILMASI_EVENT_LABEL}\n"
+            f"Coğrafya: {yer_yarilmasi_geo_text(geo)}\n"
             f"Mod: {mode_label(cfg['mode'])}\n"
             f"🔍 Ayrıntı: {_onoff(cfg['detail'])} · ✋ Onay: {_onoff(cfg['approval'])}\n"
             "Tahmini maliyet: ~175 Kie kredisi + 1 danışman preflight GPT çağrısı (hikâye için GPT yok)\n\n"
             "Üretim sadece ✅ Üret'e basınca başlar."
             + ("\n✋ Onay açık: Kie'ye göndermeden önce son prompt'u gösterip onay isteyeceğim." if cfg["approval"] else "")
-            + f"\n\nMod: {hp.YER_YARILMASI_MODE_LABEL}\n"
+            + f"\n\nMod: {hp.YER_YARILMASI_V5_MODE_LABEL}\n"
+            + hp.YER_YARILMASI_V5_VERSION_LINE + "\n"
             + hp.YER_YARILMASI_CAMERA_LINE
-            + "\n" + hp.YER_YARILMASI_CONFIRM_DESC
-            + " Coğrafya (G1-G6), orta (O3), final (F3), kelime sayısı ve tam prompt ✋ Onay mesajında.")
+            + "\n" + hp.YER_YARILMASI_V5_CONFIRM_DESC
+            + " Orta (M1-M2), final (F1-F2), kelime sayısı ve tam prompt ✋ Onay mesajında.")
 
 
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
@@ -1260,7 +1289,7 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     if action in ("ks", "kse", "ksg", "ksok"):   # 15 Kas (4): 🌀 Kasırga
         await _on_kasirga(query, context, action, args, cfg)
         return
-    if action in ("yy", "yye", "yyok"):   # 17 Kas: 🌍 Yer yarılması
+    if action in ("yy", "yye", "yyg", "yyok"):   # 17 Kas: 🌍 Yer yarılması
         await _on_yer_yarilmasi(query, context, action, args, cfg)
         return
 
@@ -1704,21 +1733,34 @@ async def _on_kasirga(query, context, action: str, args: list[str], cfg: dict) -
 
 
 async def _on_yer_yarilmasi(query, context, action: str, args: list[str], cfg: dict) -> None:
-    """🌍 Yer yarılması adımları: yy (olay menüsü) → yye (onay metni) → yyok (üretim). Kie yine ✋ Onay'a bağlı."""
-    if args:
+    """🌍 Yer yarılması adımları: yy (olay menüsü) → yye (coğrafya ekranı) → yyg:<Gx|r> (onay metni) → yyok:<Gx|r>
+    (üretim). Kie yine ✋ Onay'a bağlı."""
+    hp = _hp()
+    if action in ("yy", "yye") and args:
         await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
         return
-    hp = _hp()
     if action == "yy":
         await query.edit_message_text(f"{YER_YARILMASI_CATEGORY_BUTTON}: hangi olay?",
                                       reply_markup=yer_yarilmasi_event_keyboard())
         return
     if action == "yye":
-        await query.edit_message_text(yer_yarilmasi_confirm_text(cfg), reply_markup=yer_yarilmasi_produce_keyboard())
+        await query.edit_message_text(f"{hp.YER_YARILMASI_EVENT_LABEL}\nHangi coğrafya?",
+                                      reply_markup=yer_yarilmasi_geo_keyboard())
+        return
+    if action == "yyok" and not args:   # eski mesajdaki argümansız düğme: 🎲 Rastgele
+        args = [RANDOM_ID]
+    ok, geo = parse_yer_yarilmasi_geo(args[0]) if len(args) == 1 else (False, None)
+    if not ok:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    if action == "yyg":
+        await query.edit_message_text(yer_yarilmasi_confirm_text(cfg, geo),
+                                      reply_markup=yer_yarilmasi_produce_keyboard(args[0]))
         return
     run_cfg = dict(cfg)
     async with _production_lock:
-        started = (f"🚀 Üretim başladı: {YER_YARILMASI_CATEGORY_BUTTON} / {hp.YER_YARILMASI_EVENT_LABEL}\n"
+        started = (f"🚀 Üretim başladı: {YER_YARILMASI_CATEGORY_BUTTON} / {hp.YER_YARILMASI_EVENT_LABEL} / "
+                   f"{yer_yarilmasi_geo_text(geo)}\n"
                    f"Mod: {mode_label(run_cfg['mode'])}\n"
                    + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
                       else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
@@ -1727,7 +1769,7 @@ async def _on_yer_yarilmasi(query, context, action: str, args: list[str], cfg: d
         except Exception as e:
             log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
         await produce(context.bot, _allowed_chat(context), hp.YER_YARILMASI_DOMAIN, hp.YER_YARILMASI_EVENT,
-                      cfg=run_cfg, bot_data=context.bot_data, yer_yarilmasi=True)
+                      cfg=run_cfg, bot_data=context.bot_data, yer_yarilmasi=True, yer_yarilmasi_geo=geo)
 
 
 async def _on_caption_share(query, context, page: str) -> None:
@@ -1837,7 +1879,7 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                   donma_firtina: bool = False, kasirga: bool = False, hit_kopya_ates: bool = False,
                   yer_yarilmasi: bool = False, hit_kopya_orman: bool = False, hit_kopya_sel: bool = False,
                   kasirga_geo: str | None = None, hit_kopya_kul: bool = False,
-                  hit_kopya_kul_geo: str | None = None) -> None:
+                  hit_kopya_kul_geo: str | None = None, yer_yarilmasi_geo: str | None = None) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1875,6 +1917,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["hit_kopya_ates"] = True
     if yer_yarilmasi:   # 17 Kas: 🌍 Yer yarılması
         kwargs["yer_yarilmasi"] = True
+        if yer_yarilmasi_geo:   # 25 Kas: coğrafya menüsü (None = Rastgele)
+            kwargs["yer_yarilmasi_geo"] = yer_yarilmasi_geo
     if hit_kopya_orman:   # 20 Kas: ⭐ Hit kopyası (orman yangını)
         kwargs["hit_kopya_orman"] = True
     if hit_kopya_sel:   # 21 Kas: ⭐ Hit kopyası (ani sel)

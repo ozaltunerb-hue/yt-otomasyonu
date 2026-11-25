@@ -5778,6 +5778,8 @@ def yer_yarilmasi_camera_issues(text: str, geo: str | None = None) -> list[str]:
 def yer_yarilmasi_issues(structure: dict, info: dict) -> list[str]:
     """Kie'den hemen önce: gönderilecek metin bu kalıpla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
     tb = structure[YER_YARILMASI_MOD]
+    if tb.get("surum") == YER_YARILMASI_V5_SURUM:   # 25 Kas: v5 kaydı kendi kalıbıyla denetlenir
+        return yer_yarilmasi_v5_issues(structure, info)
     if tb.get("geo") not in _YY["geos"]:
         return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
     if tb.get("mid") not in _YY["mids"]:
@@ -5795,6 +5797,239 @@ def yer_yarilmasi_issues(structure: dict, info: dict) -> list[str]:
         out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
     text = info.get("prompt", "")
     out += yer_yarilmasi_camera_issues(text, tb["geo"])
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > YER_YARILMASI_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {YER_YARILMASI_MAX_WORDS})")
+    if len(text) > YER_YARILMASI_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {YER_YARILMASI_MAX_CHARS})")
+    return out
+
+
+# ── 🌍 Yer yarılması v5 (25 Kas 2026, Bahadır): AKTİF sürüm ──────────────────────────────────────────────────────────
+# Kamera, açılış, stil eki ve G1-G6 metinleri v4 ile bayt bayt aynı (aynı nesneler okunur, kopya yok). Yeni: orta
+# havuzu M1 (park halindeki arabalar) / M2 (teslimat kamyonu) / M3 (tramvay, yalnız coğrafya metninde tramvay geçen
+# G'lerde; şu an hiçbirinde geçmiyor, M3 pasif), final havuzu F1 (v4 F3 cümlesi aynen) / F2 (yaya üst geçidi),
+# coğrafya menüsü (menüden seçilen G tekrar önlemeye takılmaz). Kayıt M*+F*; v1-v4'ün O*+F* kayıtları orta/final LRU'ya
+# girmez (F1/F2 adları eski sürümlerde başka cümleydi). v4 silinmedi ve çalışır: config "yer_yarilmasi_surum": "v4"
+# (yukarıdaki fonksiyonlar aynen). v4 orta O3 ve v4 final F3 kimliği v5'te seçilemez.
+YER_YARILMASI_V5_SURUM = "v5"
+YER_YARILMASI_SURUM_KEY = "yer_yarilmasi_surum"               # config: "v4" = v4 kalıbı, yoksa v5
+YER_YARILMASI_GEO_KEY = "yer_yarilmasi_geo"                   # config: menüden seçilen G1-G6 (None = 🎲 Rastgele)
+YER_YARILMASI_V5_MODE_LABEL = "Yer yarılması · kod hikâye (v5: yeni orta havuzu + coğrafya menüsü)"   # ✋ Onay
+YER_YARILMASI_V5_VERSION_LINE = ("Sürüm: yer_yar v5 (v4 kamera/açılış birebir + yeni orta havuzu + bina/üst geçit "
+                                 "finali + coğrafya menüsü)")
+YER_YARILMASI_GEO_BUTTONS = {"G1": "🇺🇸 ABD Kaliforniya", "G2": "🇺🇸 ABD şehir merkezi", "G3": "🇲🇽 Meksika",
+                             "G4": "🇧🇷 Brezilya", "G5": "🇨🇱 Şili", "G6": "🇯🇵 Japonya"}
+YER_YARILMASI_V5_MIDS = {
+    "M1": "Cars parked along the curb slide sideways into the widening fissure one after another.",
+    "M2": "A delivery truck brakes too late and plunges nose-first into the fissure, its rear wheels lifting into the "
+          "air.",
+}
+YER_YARILMASI_V5_TRAM_MIDS = {   # yalnız yer metninde tramvay geçen coğrafyalarda (yer_yarilmasi_v5_tram_geos)
+    "M3": "A tram derails at the edge of the fissure, tips over and slides in.",
+}
+YER_YARILMASI_V5_FINALS = {
+    "F1": YER_YARILMASI["finals"]["F3"],   # v4 köşe binası finali, aynen
+    "F2": "A pedestrian overpass spanning the street cracks at both ends and collapses into the fissure.",
+}
+YER_YARILMASI_V5_CONFIRM_DESC = ("İlk kareden cadde parçalanıyor: geniş, düzensiz bir deprem yarığı kameranın önünden "
+                                 "caddeyi soldan sağa keser, asfalt parçaları içine düşer, yarık genişlemeye devam "
+                                 "eder. İnsanlar kenarlardan kaçar. Ortada park halindeki arabalar art arda yarığa "
+                                 "kayar ya da geç fren yapan bir teslimat kamyonu burun üstü yarığa düşer. Finalde "
+                                 "kadrajda büyük köşe binası yan yatıp yarığa çöker ya da yaya üst geçidi iki ucundan "
+                                 "çatlayıp yarığa çöker. Zemin hiç durmadan sarsılır. Lav yok, ateş yok, patlama yok.")
+# Kie öncesi: v4 listeleri; "big in frame" yalnız F1 cümlesinde olduğu için finale bağlı. Otobüs v5'te yasak.
+YER_YARILMASI_V5_REQUIRED = tuple(x for x in YER_YARILMASI_REQUIRED if x != "big in frame")
+YER_YARILMASI_V5_FINAL_REQUIRED = {"F1": "big in frame", "F2": "pedestrian overpass"}
+YER_YARILMASI_V5_FORBIDDEN = YER_YARILMASI_FORBIDDEN + ("city bus",)
+
+
+def yer_yarilmasi_v5_tram_geos() -> list[str]:
+    """Yer metninde tramvay geçen coğrafyalar (metinden okunur, elle liste yok)."""
+    return [g for g, v in _YY["geos"].items() if re.search(r"\b(?:tram(?:s|way|ways|lines?)?|streetcars?)\b", v["place"], re.I)]
+
+
+def yer_yarilmasi_v5_mids(geo: str) -> dict[str, str]:
+    """Bu coğrafyada seçilebilen ortalar (M3 yalnız tramvaylı coğrafyada)."""
+    return {**YER_YARILMASI_V5_MIDS, **(YER_YARILMASI_V5_TRAM_MIDS if geo in yer_yarilmasi_v5_tram_geos() else {})}
+
+
+def yer_yarilmasi_v5_mid(geo: str, mid: str) -> str:
+    mids = yer_yarilmasi_v5_mids(geo)
+    if mid not in mids:
+        raise es.StructureError(f"{YER_YARILMASI_V5_MODE_LABEL}: {mid} {geo} için yok (orta {'/'.join(mids)})")
+    return mids[mid]
+
+
+def yer_yarilmasi_v5_final(final: str) -> str:
+    if final not in YER_YARILMASI_V5_FINALS:
+        raise es.StructureError(f"{YER_YARILMASI_V5_MODE_LABEL}: {final} yok (final "
+                                f"{'/'.join(YER_YARILMASI_V5_FINALS)})")
+    return YER_YARILMASI_V5_FINALS[final]
+
+
+def yer_yarilmasi_v5_story(geo: str, mid: str, final: str) -> str:
+    """Sıra: açılış (v4) + orta + final (zaman etiketleriyle)."""
+    a, b, c = es.SLICE_LABELS
+    return (f"{a}: {yer_yarilmasi_opening(geo)} {b}: {yer_yarilmasi_v5_mid(geo, mid)} "
+            f"{c}: {yer_yarilmasi_v5_final(final)}")
+
+
+def yer_yarilmasi_v5_prompt(geo: str, mid: str, final: str) -> str:
+    """Prompt = AÇILIŞ (v4) + " " + ORTA + " " + FİNAL + " " + STİL (v4)."""
+    from core.creative_engine import join_story_and_style
+    return join_story_and_style(yer_yarilmasi_v5_story(geo, mid, final), yer_yarilmasi_tail())
+
+
+def yer_yarilmasi_v5_tags(tags: list[str]) -> list[str]:
+    """Yalnız v5 çiftleri (M*+F*)."""
+    return [t for t in tags or [] if re.fullmatch(r"M\d+\+F\d+", t)]
+
+
+def yer_yarilmasi_v5_lines(tb: dict) -> str:
+    """✋ Onay satırları: mod, sürüm, coğrafya (menü / rastgele), orta, final, kamera, kelime/karakter, eksenler +
+    tekrar önleme, uyarı. Boş alan satırı yok (araç ekseni yok)."""
+    text = tb["prompt"]
+    g = _YY["geos"][tb["geo"]]
+    lines = [
+        f"Mod: {YER_YARILMASI_V5_MODE_LABEL}",
+        YER_YARILMASI_V5_VERSION_LINE,
+        f"Coğrafya: {tb['geo']} {g['name']} «{g['place']}» ({tb['geo_source']})",
+        f"Orta (4-9s): {tb['mid']} «{yer_yarilmasi_v5_mid(tb['geo'], tb['mid'])}»",
+        f"Final (9-15s): {tb['final']} «{yer_yarilmasi_v5_final(tb['final'])}»",
+        YER_YARILMASI_CAMERA_LINE,
+        f"Kelime: {len(text.split())} (en fazla {YER_YARILMASI_MAX_WORDS}) · karakter: {len(text)} "
+        f"(en fazla {YER_YARILMASI_MAX_CHARS})",
+    ]
+    if tb.get("axes_line"):
+        lines.append(tb["axes_line"])
+    lines.append(YER_YARILMASI_WARNING)
+    return "\n".join(lines)
+
+
+def yer_yarilmasi_v5_axes_json(tb: dict, tag: str, excluded: dict | None = None) -> str:
+    import core.axes_history as ah
+    axes = {"spot": YER_YARILMASI_SPOT, "view": None, "light": None, "vehicle": None, "people": 5, "beats": tag,
+            "mod": YER_YARILMASI_MOD, "kategori": YER_YARILMASI_NOTION_CATEGORY, "cografya": tb["geo"],
+            "cografya_kaynak": tb["geo_source"], "surum": YER_YARILMASI_V5_SURUM}
+    return ah.axes_json(YER_YARILMASI_EVENT, axes, excluded)
+
+
+def yer_yarilmasi_v5_build_scene(domain: str | None, event: str | None, history: list[str] | None = None,
+                                 records: list | None = None, rng=None, history_source: str = "bellek",
+                                 geo: str | None = None) -> dict:
+    """🌍 Yer yarılması v5 sahnesi: GPT yok, normal hat yok. geo = menüden seçilen G (tekrar önlemeye takılmaz; None =
+    🎲 Rastgele, son 3 elenir). Orta/final son 1. records = Notion "Eksenler" ham kayıtları (None = süreç hafızası).
+    structure["yer_yarilmasi"] Kie öncesi son denetimin (submit_issues) kaynağıdır."""
+    import random
+    from core.skeleton_pipeline import SKELETON_CAMERA
+    label = YER_YARILMASI_V5_MODE_LABEL
+    if domain not in (None, YER_YARILMASI_DOMAIN) or not yer_yarilmasi_is_active(event):
+        raise es.StructureError(f"{label} kurulamadı: {domain} / {event}")
+    if geo is not None and geo not in _YY["geos"]:
+        raise es.StructureError(f"{label}: {geo} bu kategoride yok (coğrafya G1-G6)")
+    r = rng or random
+    geo_used = yer_yarilmasi_axes_history(records, "cografya")
+    tags = yer_yarilmasi_v5_tags(yer_yarilmasi_axes_history(records, "beats") if records is not None
+                                 else es.beat_history(YER_YARILMASI_EVENT, history or []))
+    seen_geo = list(_YER_YARILMASI_GEO_MEMORY if geo_used is None else geo_used)
+    geo_source = "menü" if geo is not None else "rastgele"
+    if geo is None:
+        geo = yer_yarilmasi_choose_geo(seen_geo, r)
+        excluded = {"cografya": [x for x in _YY["geos"] if x in seen_geo[-YER_YARILMASI_GEO_BLOCK:]]}
+    else:
+        excluded = {"cografya": []}
+    mid = _yy_pick(list(yer_yarilmasi_v5_mids(geo)), [t.split("+")[0] for t in tags], YER_YARILMASI_MID_BLOCK, r)
+    final = _yy_pick(list(YER_YARILMASI_V5_FINALS), [t.split("+")[1] for t in tags], YER_YARILMASI_FINAL_BLOCK, r)
+    tag = es.beat_tag(mid, final)
+    es.remember_beats(YER_YARILMASI_EVENT, tag)   # seçim anı hafızası (TEST/iptal da sayılır)
+    _YER_YARILMASI_GEO_MEMORY.append(geo)         # menü seçimi de sonraki 🎲 Rastgele için sayılır
+    del _YER_YARILMASI_GEO_MEMORY[:-12]
+    story = yer_yarilmasi_v5_story(geo, mid, final)
+    tail = yer_yarilmasi_tail()
+    prompt = yer_yarilmasi_v5_prompt(geo, mid, final)
+    g = _YY["geos"][geo]
+    opening = yer_yarilmasi_opening(geo)
+    mid_text, final_text = yer_yarilmasi_v5_mid(geo, mid), yer_yarilmasi_v5_final(final)
+    plain = " ".join([opening, mid_text, final_text])
+    geo_repeat = (f"coğrafya menüden ({geo})" if geo_source == "menü"
+                  else f"coğrafya son {YER_YARILMASI_GEO_BLOCK} elendi")
+    repeat = f"{geo_repeat} · orta son {YER_YARILMASI_MID_BLOCK} · final son {YER_YARILMASI_FINAL_BLOCK}"
+    base_trace = {"pipeline": "creative", "structured": True, "domain": YER_YARILMASI_DOMAIN,
+                  "event": YER_YARILMASI_EVENT, "ship": "None", "camera": SKELETON_CAMERA, "view": None,
+                  "view_source": None, "place": g["place"], "count_range": [5, 6], "people_running": 5,
+                  "outcome": "-", "recent_count": 0}
+    trace, axes_line = mode_display(
+        {"trace": base_trace}, {}, mode=label,
+        camera="hit kamerası (the camera stays fixed on the fissure, shaking with the quake); rooftop terrace of a "
+               "corner building diagonally across the street, normal lens",
+        opening=opening, mid=(mid, mid_text), final=(final, final_text), plain=plain, vehicle=None,
+        spot="Rooftop terrace of a corner building (köşe binanın çatı terası, çapraz açı, normal lens, sabit, "
+             "korkuluk kadrajın altında)",
+        weather=YER_YARILMASI_WEATHER,
+        axes={"sürüm": YER_YARILMASI_V5_SURUM, "coğrafya": f"{geo} {g['name']} ({geo_source})", "orta": mid,
+              "final": final, "kamera modu": "elde, sabit, depremle sarsılır"},
+        repeat=repeat)
+    trace = {**trace, "mode": YER_YARILMASI_MOD, "surum": YER_YARILMASI_V5_SURUM, "cografya": geo,
+             "axes_source": history_source, "no_vehicle_axis": True}   # 🔍 Ayrıntı'da "Araç: None" basılmaz
+    tb = {"event": YER_YARILMASI_EVENT, "surum": YER_YARILMASI_V5_SURUM, "geo": geo, "geo_source": geo_source,
+          "mid": mid, "final": final, "story": story, "suffix": tail, "prompt": prompt, "axes_line": axes_line}
+    tb["lines"] = yer_yarilmasi_v5_lines(tb)
+    axes_json = yer_yarilmasi_v5_axes_json(tb, tag, excluded)
+    structure = {YER_YARILMASI_MOD: tb, "axes_json": axes_json, "axes_line": None, "environment": None,
+                 "story_source": f"Hikâye: kod (birebir) · {label}", "story_source_kind": "code",
+                 "caption_info": {"opening": opening, "people": 5, "kadraj": "teras",
+                                  "beat_2": donma_caption_beat(mid_text), "beat_3": donma_caption_beat(final_text)},
+                 "caption_candidates": None}
+    problems = yer_yarilmasi_issues(structure, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{label} son denetimden geçmedi: " + "; ".join(problems))
+    combo = (f"{YER_YARILMASI_DOMAIN}|none|{YER_YARILMASI_EVENT.lower()}|{YER_YARILMASI_SPOT}##{tag}|"
+             f"{SKELETON_CAMERA}")
+    return {"domain": YER_YARILMASI_DOMAIN, "event": YER_YARILMASI_EVENT, "ship": None, "spot": YER_YARILMASI_SPOT,
+            "story": story, "plain_story": plain, "style_suffix": tail, "prompt": prompt, "combo_key": combo,
+            "trace": trace, "structure": structure, "axes_json": axes_json}
+
+
+def yer_yarilmasi_v5_text_issues(text: str, geo: str, final: str) -> list[str]:
+    """Kie öncesi son kontrol (v5): zorunlu ifadeler + finale bağlı zorunlu ifade + yalnız seçilen G'nin yer metni var,
+    yasakların hiçbiri yok (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
+    out = []
+    text = text or ""
+    low = text.lower()
+    for need in YER_YARILMASI_V5_REQUIRED + (YER_YARILMASI_V5_FINAL_REQUIRED[final],):
+        if need.lower() not in low:
+            out.append(f'"{need}" eksik')
+    places = [k for k, v in _YY["geos"].items() if v["place"] in text]
+    if places != [geo]:
+        out.append(f"yer metni seçilen coğrafya değil ({geo}: {places})")
+    for bad in YER_YARILMASI_V5_FORBIDDEN:
+        if bad.lower() in low:
+            out.append(f"bu kategoride olmayan ifade var: {bad}")
+    return out
+
+
+def yer_yarilmasi_v5_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin v5 kalıbıyla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    tb = structure[YER_YARILMASI_MOD]
+    if tb.get("geo") not in _YY["geos"]:
+        return [f"coğrafya G1-G6 değil ({tb.get('geo')})"]
+    if tb.get("mid") not in yer_yarilmasi_v5_mids(tb["geo"]):
+        return [f"orta aktif seçenek değil ({tb.get('mid')})"]
+    if tb.get("final") not in YER_YARILMASI_V5_FINALS:
+        return [f"final aktif seçenek değil ({tb.get('final')})"]
+    key = (tb["geo"], tb["mid"], tb["final"])
+    out = []
+    if info.get("style_suffix") != yer_yarilmasi_tail():
+        out.append("stil eki Yer yarılması kalıbı değil")
+    if info.get("story") != yer_yarilmasi_v5_story(*key):
+        out.append("hikâye kalıpla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != yer_yarilmasi_v5_prompt(*key):
+        out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    out += yer_yarilmasi_v5_text_issues(text, tb["geo"], tb["final"])
     for lab in es.SLICE_LABELS:
         if f"{lab}: " not in text:
             out.append(f"zaman etiketi eksik: {lab}")

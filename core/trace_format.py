@@ -184,8 +184,9 @@ def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
             + "\n" if trace.get("view") else "") +
          f"{kv_l}: {trace.get('key_visual')}\n"
          + (f"Kamera: {trace['mode_camera']}\n" if trace.get("mode_camera") else "")
-         + f"Araç: {trace.get('vehicle')}\n"
-         f"{b2_l} ({b2 or '-'}): {trace.get('beat_2_text', '-')}\n"
+         # 25 Kas: araç ekseni olmayan sürümde (Yer yarılması v5) boş "Araç: None" satırı basılmaz
+         + ("" if trace.get("no_vehicle_axis") else f"Araç: {trace.get('vehicle')}\n")
+         + f"{b2_l} ({b2 or '-'}): {trace.get('beat_2_text', '-')}\n"
          f"{b3_l} ({b3 or '-'}): {trace.get('beat_3_text', '-')}\n"
          + repeat
          # 11 Kas (5): GPT çağrılmayan olaylarda (kod hikâyesi) "hikâye GPT'ye verildi" yazılmaz (sadece metin)

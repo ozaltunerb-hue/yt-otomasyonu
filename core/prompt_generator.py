@@ -1339,9 +1339,15 @@ async def generate_creative_prompts(config: dict) -> dict:
             except Exception as e:   # noqa: BLE001 - okuma hatası üretimi durdurmaz
                 log.warning(f"⚠️ Yer yarılması eksen geçmişi okunamadı, süreç hafızasıyla devam: {e}")
                 records, source = None, "bellek"
-        scene = hp.yer_yarilmasi_build_scene(config.get("domain") or None,
-                                             config.get("event") or hp.YER_YARILMASI_EVENT, history, records,
-                                             history_source=source)
+        if config.get(hp.YER_YARILMASI_SURUM_KEY) == "v4":   # v4 kalıbı duruyor (menüde yok)
+            scene = hp.yer_yarilmasi_build_scene(config.get("domain") or None,
+                                                 config.get("event") or hp.YER_YARILMASI_EVENT, history, records,
+                                                 history_source=source)
+        else:   # 25 Kas: v5 (aktif); coğrafya menüsü (None = 🎲)
+            scene = hp.yer_yarilmasi_v5_build_scene(config.get("domain") or None,
+                                                    config.get("event") or hp.YER_YARILMASI_EVENT, history, records,
+                                                    history_source=source,
+                                                    geo=config.get(hp.YER_YARILMASI_GEO_KEY) or None)
     elif config.get("hit_kopya_ates"):   # 16 Kas: ⭐ Hit kopyası (ateş hortumu). Hit prompt'u birebir, GPT yok
         import core.hit_prompts as hp
         records, source, raw_loader = None, "yok", config.get("axes_loader")

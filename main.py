@@ -112,7 +112,8 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                        hortum_yaklasma: bool = False, cadde_yaklasma: bool = False, donma_firtina: bool = False,
                        kasirga: bool = False, hit_kopya_ates: bool = False, yer_yarilmasi: bool = False,
                        hit_kopya_orman: bool = False, hit_kopya_sel: bool = False, kasirga_geo: str | None = None,
-                       hit_kopya_kul: bool = False, hit_kopya_kul_geo: str | None = None):
+                       hit_kopya_kul: bool = False, hit_kopya_kul_geo: str | None = None,
+                       yer_yarilmasi_geo: str | None = None):
     """
     Tam otonom video üretim pipeline'ı.
 
@@ -141,7 +142,8 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     hit_kopya_kul: 24 Kas, ⭐ Hit kopyası (kül bulutu) v8: v7 kamerası/kasabası birebir + yönlü aksiyon (GPT yok).
     hit_kopya_kul_geo: menüden seçilen V2/V4/V5/V6 (None = 🎲 Rastgele, son 2 elenir).
     hit_kopya_ates: 16 Kas, ⭐ Hit kopyası (ateş hortumu): 4 Kas 21:13 hit prompt'u birebir, coğrafya + araç (GPT yok).
-    yer_yarilmasi: 17 Kas, 🌍 Yer yarılması kategorisi (tek olay, hikâye koddan, GPT yok).
+    yer_yarilmasi: 17 Kas, 🌍 Yer yarılması kategorisi (tek olay, hikâye koddan, GPT yok); 25 Kas: v5.
+    yer_yarilmasi_geo: 25 Kas, coğrafya menüsünden seçilen G1-G6 (None = 🎲 Rastgele, son 3 elenir).
     hit_kopya_orman: 20 Kas, ⭐ Hit kopyası (orman yangını) v2: 9 Eki hit iskeleti, coğrafya + araç + engel (GPT yok).
     hit_kopya_sel: 21 Kas, ⭐ Hit kopyası (ani sel) v1: 5 Kas hit iskeleti, görünüm + araç + M + F + kişi + ışık (GPT yok).
     """
@@ -204,6 +206,7 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 **({"kasirga_geo": kasirga_geo} if kasirga and kasirga_geo else {}),
                 **({"hit_kopya_ates": True} if hit_kopya_ates else {}),
                 **({"yer_yarilmasi": True} if yer_yarilmasi else {}),
+                **({"yer_yarilmasi_geo": yer_yarilmasi_geo} if yer_yarilmasi and yer_yarilmasi_geo else {}),
                 **({"hit_kopya_orman": True} if hit_kopya_orman else {}),
                 **({"hit_kopya_sel": True} if hit_kopya_sel else {}),
                 **({"hit_kopya_kul": True} if hit_kopya_kul else {}),
@@ -262,6 +265,7 @@ async def _execute_pipeline(
     kasirga_geo: str | None = None,
     hit_kopya_kul: bool = False,
     hit_kopya_kul_geo: str | None = None,
+    yer_yarilmasi_geo: str | None = None,
 ) -> dict:
     """
     Pipeline'ın asıl implementasyonu.
@@ -300,6 +304,7 @@ async def _execute_pipeline(
         **({"kasirga_geo": kasirga_geo} if kasirga and kasirga_geo else {}),   # 21 Kas: coğrafya menüsü
         **({"hit_kopya_ates": True} if hit_kopya_ates else {}),   # 16 Kas: ⭐ Hit kopyası (ateş hortumu)
         **({"yer_yarilmasi": True} if yer_yarilmasi else {}),   # 17 Kas: 🌍 Yer yarılması
+        **({"yer_yarilmasi_geo": yer_yarilmasi_geo} if yer_yarilmasi and yer_yarilmasi_geo else {}),   # 25 Kas: menü G
         **({"hit_kopya_orman": True} if hit_kopya_orman else {}),   # 20 Kas: ⭐ Hit kopyası (orman yangını)
         **({"hit_kopya_sel": True} if hit_kopya_sel else {}),   # 21 Kas: ⭐ Hit kopyası (ani sel)
         **({"hit_kopya_kul": True} if hit_kopya_kul else {}),   # 24 Kas: ⭐ Hit kopyası (kül bulutu)

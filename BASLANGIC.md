@@ -253,6 +253,13 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   terrace of a corner building", caption kadraj "teras". 6 kombinasyon 222-227 kelime / 1256-1280 kr. `YY_SHA256`
   14a7c607…, `YY_V3_SHA256` 99c49edd…, `OTHERS_SHA256` 608f98ca… aynen. Testler `.venv` Python'u ile (sistem
   Python'unda telegram yok). Açık: gerçek Telegram üretim testi.
+  **25 Kas v5 (AKTİF):** kamera, açılış, stil eki, G1-G6 ve F1 (v4 F3 cümlesi) v4 ile bayt bayt aynı (v4 sabitleri okunur).
+  Orta M1 (park halindeki arabalar) / M2 (teslimat kamyonu); M3 (tramvay) yalnız yer metninde tramvay geçen coğrafyada,
+  G1-G6'da yok, pasif. Final F1 (köşe binası) / F2 (yaya üst geçidi). Coğrafya menüsü: `yye` (G1-G6 + 🎲) → `yyg:<Gx|r>` →
+  `yyok:<Gx|r>`; menü seçimi LRU'ya takılmaz, 🎲 son 3. Orta/final LRU yalnız M*+F* kayıtlarından. v4 silinmedi: config
+  `yer_yarilmasi_surum` = "v4" (menüde yok), `YY_SHA256` aynen. 🔍 Ayrıntı'da "Araç: None" yalnız v5'te kalkar (trace
+  `no_vehicle_axis`). 24 kombinasyon 206-222 kelime / 1211-1273 kr. Testler `tests/test_yer_yarilmasi_v5.py`, kayıt
+  `tests/fixtures/yer_yarilmasi_v5_runs_40.json`. Açık: gerçek Telegram üretim testi.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir

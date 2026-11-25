@@ -515,9 +515,9 @@ def _infos(e, n=6):
                 for (x, y), p, k in zip(pairs, (None, 3, 4, None, 5, 2), list(cap.WITNESS)[:n])]
     if e == cap.YER_YARILMASI:   # 17 Kas: 🌍 Yer yarılması: kendi ortaları/finalleri (normal havuzda yok, araç yok)
         import core.hit_prompts as hp
-        pairs = [(x, y) for x in hp.YER_YARILMASI["mids"] for y in hp.YER_YARILMASI["finals"]][:n]
-        return [{"opening": "", "people": p, "kadraj": k, "beat_2": hp.donma_caption_beat(hp.yer_yarilmasi_mid(x)),
-                 "beat_3": hp.donma_caption_beat(hp.yer_yarilmasi_final(y))}
+        pairs = [(x, y) for x in hp.YER_YARILMASI_V5_MIDS for y in hp.YER_YARILMASI_V5_FINALS][:n]   # 25 Kas: v5
+        return [{"opening": "", "people": p, "kadraj": k, "beat_2": hp.donma_caption_beat(hp.YER_YARILMASI_V5_MIDS[x]),
+                 "beat_3": hp.donma_caption_beat(hp.YER_YARILMASI_V5_FINALS[y])}
                 for (x, y), p, k in zip(pairs, (None, 3, 4, None, 5, 2), list(cap.WITNESS)[:n])]
     b = es.EVENT_BEATS[e]
     pairs = [(x, y) for x in b["slice_2"] for y in b["slice_3"]][:n]
