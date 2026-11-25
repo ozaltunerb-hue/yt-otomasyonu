@@ -658,13 +658,13 @@ def parse_hit_kopya_kul_geo(gid: str) -> tuple[bool, str | None]:
     """Kısa kod → (geçerli mi, V). 'r' = 🎲 Rastgele (None)."""
     if gid == RANDOM_ID:
         return True, None
-    if gid in _hp().hit_kopya_kul_geos():   # v7: yalnız aktif coğrafyalar (V1 İtalya, V3 Japonya pasif)
+    if gid in _hp().hit_kopya_kul_geos():   # v7-v8: yalnız aktif coğrafyalar (V1 İtalya, V3 Japonya pasif)
         return True, gid
     return False, None
 
 
 def hit_kopya_kul_geo_keyboard() -> InlineKeyboardMarkup:
-    """v7: V2, V4, V5, V6 (okunur ad) + 🎲 Rastgele (son 2 coğrafya elenir) + 🔙 Geri (Volkan olay menüsüne)."""
+    """v7-v8: V2, V4, V5, V6 (okunur ad) + 🎲 Rastgele (son 2 coğrafya elenir) + 🔙 Geri (Volkan olay menüsüne)."""
     hp = _hp()
     di = DOMAIN_KEYS.index(hp.HIT_KOPYA_KUL_DOMAIN)
     buttons = [InlineKeyboardButton(hp.HIT_KOPYA_KUL_GEO_BUTTONS[g], callback_data=f"{CALLBACK_PREFIX}hkk:{g}")

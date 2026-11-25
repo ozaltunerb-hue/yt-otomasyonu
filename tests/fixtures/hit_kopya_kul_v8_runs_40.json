@@ -1,0 +1,1122 @@
+{
+ "1": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "2": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "3": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "4": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "5": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "6": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "7": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "8": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "9": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "10": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "11": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "12": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "13": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "14": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "15": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "16": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "17": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "18": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "19": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "20": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "21": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "22": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "23": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "24": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "25": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "26": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "27": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "28": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "29": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "30": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "31": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "32": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "33": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "34": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "35": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "36": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low pastel houses with tin roofs, spread out with yards and trees between them, old pickups and a painted school bus parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V5|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V5",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "37": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low tin-roofed houses among palm trees, spread out with yards and trees between them, motorbikes and small pickups parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V2|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V2",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "38": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "39": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low colorful wooden houses, spread out with yards and trees between them, old pickups and small hatchbacks parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V4|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V4",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "40": {
+  "prompt": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house. Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "story": "0-4s: A pyroclastic cloud races down the volcano’s flank and slams into the far end of the wide main road of a small town of low concrete houses with tin roofs, spread out with yards and trees between them, jeepneys and motorcycle tricycles parked along the roadside, with an open stretch of road between the camera and the first houses. Glowing lava streaks down the volcano's visible cone. People watch from the rooftops while four villagers sprint up the road toward the camera. 4-9s: One falls; right in front of him a power pole crashes across the road in sparks, and he scrambles up and runs on. 9-15s: The cloud sweeps the parked vehicles along and slams into a house.",
+  "suffix": "Handheld footage shot by a person standing on a hillside terrace above the village, high vantage looking down over the village street toward the erupting volcano; slight hand shake, the camera stays fixed on the terrace, tilting down no more than slightly and never descending, the erupting volcano always visible in the upper third of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Bystanders wear civilian clothes, no hi-vis PPE; responders wear service uniforms. Raw natural light matching the weather, never glossy or CGI; no hazmat suits. No readable signs, text or flags.",
+  "combo": "volcano_disasters|none|pyroclastic cloud races down into a village street|hillside terrace above the village##HKK:V6|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": null,
+    "cografya": "V6",
+    "cografya_kaynak": "rastgele",
+    "f": null,
+    "kisi": null,
+    "light": null,
+    "m": null,
+    "mod": "hit_kopya_kul",
+    "people": null,
+    "spot": null,
+    "surum": "v8",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Pyroclastic cloud races down into a village street",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ }
+}
