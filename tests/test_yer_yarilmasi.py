@@ -185,20 +185,10 @@ def others_snapshot() -> dict:
     """test_hit_kopya_ates kaydı (19 olay + 13 mod + 🌀 Kasırga) + ⭐ Hit kopyası (ateş hortumu); 40 tohum."""
     import test_hit_kopya_ates as th
     snap = th.others_snapshot()
-    runs = {}
-    for s in range(1, 41):
-        reset()
-        random.seed(s)
-        with patch.object(pg, "_call_gpt", AsyncMock(side_effect=AssertionError("GPT"))):
-            d = asyncio.run(pg.generate_creative_prompts({"domain": hp.HIT_KOPYA_DOMAIN, "event": hp.FIRE_TORNADO,
-                                                         "hit_kopya_ates": True, "used_combos": [],
-                                                         "recent_topics": []}))
-        sc = d["scenes"][0]
-        axes = json.loads(d.get("axes_json", ""))
-        axes.pop("caption", None)
-        runs[str(s)] = {"prompt": sc["prompt"], "story": sc["story"], "suffix": sc["style_suffix"],
-                        "combo": d["combo_key"], "axes": axes}
-    snap["modes"]["hit_kopya_ates"] = runs
+    # 26 Kas 2026: ⭐ Hit kopyası (ateş hortumu) v3 bilerek değişti. Bu kilit diğer olay/modlar içindir; ateş hortumu
+    # kaydı v2 (17 Kas a4d9673) fixture'ından gelir (th.FIXTURE_V2), canlı v3 test_hit_kopya_ates ile kilitli.
+    with open(th.FIXTURE_V2, encoding="utf-8") as fh:
+        snap["modes"]["hit_kopya_ates"] = json.load(fh)
     return snap
 
 

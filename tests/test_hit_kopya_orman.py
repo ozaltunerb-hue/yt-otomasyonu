@@ -419,7 +419,8 @@ class TestTemplate(_Quiet):
         self.assertIsNot(hp.HIT_KOPYA_ATES, HKO)
         self.assertEqual(hp.HIT_KOPYA_MODE_LABEL, "⭐ Hit kopyası (ateş hortumu)")
         self.assertEqual(hp.HIT_KOPYA_MOD, "hit_kopya_ates")
-        self.assertEqual(hp.HIT_KOPYA_GEO_SEED, ("G3",))
+        # 26 Kas: ateş hortumu hit kopyası v3 (H1-H5); v2'nin G3 tohumu pasif kayıtta
+        self.assertEqual(hp.HIT_KOPYA_ATES_V2["geo_seed"], ("G3",))
         self.assertEqual(hp.HIT_KOPYA_EVENTS, (FT,))
 
 
@@ -763,7 +764,8 @@ class TestPipelineAndBot(_Quiet):
         cbs = [b.callback_data for r in kb.inline_keyboard for b in r]
         self.assertIn(f"uret:hk:{di}:{ft}", cbs)
         self.assertFalse(any(c.startswith("uret:hko") for c in cbs))
-        upd = _update(data=f"uret:hk:{di}:{ft}")
+        # 26 Kas v3: hk önce coğrafya menüsünü açar, onay metni hk:<H> adımında
+        upd = _update(data=f"uret:hk:{di}:{ft}:H1")
         asyncio.run(bot.on_callback(upd, ctx))
         text = upd.callback_query.edit_message_text.await_args.args[0]
         self.assertIn("Mod: ⭐ Hit kopyası (ateş hortumu)", text)

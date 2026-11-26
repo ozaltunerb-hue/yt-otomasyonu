@@ -1,0 +1,1002 @@
+{
+ "1": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "10": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H5",
+    "cografya": "H5",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H5|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "11": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H4",
+    "cografya": "H4",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H4|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "12": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H4",
+    "cografya": "H4",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H4|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "13": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H3",
+    "cografya": "H3",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H3|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of central Portugal, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of central Portugal, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "14": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H1",
+    "cografya": "H1",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H1|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "15": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "16": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H3",
+    "cografya": "H3",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H3|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of central Portugal, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of central Portugal, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "17": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H5",
+    "cografya": "H5",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H5|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "18": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "19": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H1",
+    "cografya": "H1",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H1|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "2": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H1",
+    "cografya": "H1",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H1|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "20": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "21": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "22": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "23": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H3",
+    "cografya": "H3",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H3|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of central Portugal, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of central Portugal, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "24": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H4",
+    "cografya": "H4",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H4|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "25": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H4",
+    "cografya": "H4",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H4|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "26": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "27": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H4",
+    "cografya": "H4",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H4|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "28": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H1",
+    "cografya": "H1",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H1|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "29": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H5",
+    "cografya": "H5",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H5|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "3": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "30": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H5",
+    "cografya": "H5",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H5|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "31": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H1",
+    "cografya": "H1",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H1|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "32": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H1",
+    "cografya": "H1",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H1|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of British Columbia, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "33": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H5",
+    "cografya": "H5",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H5|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "34": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H5",
+    "cografya": "H5",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H5|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "35": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H5",
+    "cografya": "H5",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H5|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "36": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H3",
+    "cografya": "H3",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H3|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of central Portugal, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of central Portugal, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "37": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H5",
+    "cografya": "H5",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H5|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "38": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H4",
+    "cografya": "H4",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H4|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "39": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "4": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "40": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H4",
+    "cografya": "H4",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H4|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "5": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H5",
+    "cografya": "H5",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H5|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "6": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H5",
+    "cografya": "H5",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H5|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of southern Chile, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "7": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H3",
+    "cografya": "H3",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H3|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of central Portugal, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of central Portugal, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "8": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H2",
+    "cografya": "H2",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H2|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of the Australian bush, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ },
+ "9": {
+  "axes": {
+   "axes": {
+    "arac": "pickup truck",
+    "beats": "HK:H4",
+    "cografya": "H4",
+    "light": null,
+    "mod": "hit_kopya_ates",
+    "people": null,
+    "spot": "rooftop terrace above a wooded residential area",
+    "surum": "v3",
+    "vehicle": "pickup truck",
+    "view": null
+   },
+   "event": "Fire tornado tears across a burning roadside",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "fire_disasters|none|fire tornado tears across a burning roadside|rooftop terrace above a wooded residential area##HK:H4|bystander_handheld",
+  "prompt": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up. Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags.",
+  "story": "0-4s: A colossal spinning fire tornado, a twisting funnel several times taller than the houses and trees, tears out of a burning forest into a residential area of Greece, its wide base engulfing the houses. Neighbors flee down the street below as cars speed away past them. 4-9s: The pickup truck is shoved sideways as the huge base of the fire tornado sweeps past right behind it. 9-15s: A wooden garage beside a house across the street bursts apart, burning boards spiraling up.",
+  "suffix": "Handheld footage filmed on a rooftop terrace above a wooded residential area, high vantage, the tornado filling half the frame, top never cut off, people and cars fleeing below; slight hand shake, the camera stays fixed, an empty foreground; one continuous shot, no zoom, no cuts, no person or face close to the camera. Civilians in everyday clothes, no hazmat suits, never CGI. A rotating funnel of flame with orbiting debris, never a straight plume or explosion. Everything moves in real time, never in slow motion, people run at full speed. No readable signs, text or flags."
+ }
+}

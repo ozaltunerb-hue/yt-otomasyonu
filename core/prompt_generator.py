@@ -1366,7 +1366,8 @@ async def generate_creative_prompts(config: dict) -> dict:
                 log.warning(f"⚠️ Hit kopyası eksen geçmişi okunamadı, süreç hafızasıyla devam: {e}")
                 records, source = None, "bellek"
         scene = hp.hit_kopya_build_scene(config.get("domain") or None, config.get("event") or hp.FIRE_TORNADO,
-                                         history, records, history_source=source)
+                                         history, records, history_source=source,
+                                         geo=config.get(hp.HIT_KOPYA_GEO_KEY) or None)   # 26 Kas v3: menü H
     elif config.get("hit_kopya_orman"):   # 20 Kas: ⭐ Hit kopyası (orman yangını) v2. Hit iskeleti, GPT yok
         import core.hit_prompts as hp
         records, source, raw_loader = None, "yok", config.get("axes_loader")
