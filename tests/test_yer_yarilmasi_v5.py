@@ -1,4 +1,6 @@
-# 25 Kas 2026, Bahadır: 🌍 Yer yarılması v5 (AKTİF). Kamera, açılış, stil eki, G1-G6 ve F1 cümlesi v4 ile bayt bayt aynı;
+# 26 Kas 2026: v5 PASİF (aktif sürüm v6 hit kopyası: tests/test_yer_yarilmasi_v6.py). v5 kalıbı config
+# "yer_yarilmasi_surum": "v5" ile aynen çalışır; bu dosya o yolu kilitler. Bot menüsü/pipeline testleri v6'ya taşındı.
+# 25 Kas 2026, Bahadır: 🌍 Yer yarılması v5. Kamera, açılış, stil eki, G1-G6 ve F1 cümlesi v4 ile bayt bayt aynı;
 # yeni orta havuzu M1/M2 (M3 tramvay: yer metninde tramvay geçen coğrafya yok, pasif), final F1/F2, coğrafya menüsü.
 # v4 kalıbı ve 40 tohum kilidi tests/test_yer_yarilmasi.py'de. Ağ yok, Kie yok, GPT yok.
 import asyncio
@@ -48,6 +50,7 @@ FIXTURE = os.path.join(ROOT, "tests", "fixtures", "yer_yarilmasi_v5_runs_40.json
 def gen(**extra) -> dict:
     with patch.object(pg, "_call_gpt", AsyncMock(side_effect=AssertionError("GPT"))):
         return asyncio.run(pg.generate_creative_prompts({"domain": DOMAIN, "event": EVENT, "yer_yarilmasi": True,
+                                                         "yer_yarilmasi_surum": "v5",   # 26 Kas: aktif sürüm v6
                                                          "used_combos": [], "recent_topics": [], **extra}))
 
 
@@ -335,104 +338,7 @@ class TestScene(ty._Quiet):
             self.assertTrue(d["youtube_title"].endswith(" #Shorts"))
 
 
-class TestPipelineAndBot(ty._Quiet):
-    def test_pipeline_passes_geo_and_sends_prompt(self):
-        import main
-        from test_tur29_infra import TestPipelineTur29, _Reporter
-        for geo in (None, "G5"):
-            seen = {}
-
-            async def fake_gen(config):
-                seen["config"] = dict(config)
-                ty.reset()
-                random.seed(21)
-                return await pg.generate_creative_prompts({k: v for k, v in config.items()
-                                                           if k not in ("axes_loader", "caption_loader")})
-            t = TestPipelineTur29("test_test_mode_never_uploads_and_archives_full_meta")
-            t.setUp()
-            try:
-                rep = _Reporter(approve=True, needs_approval=True)
-                orig = main.run_pipeline
-
-                async def run_with(**kw):
-                    return await orig(**{**kw, "domain": DOMAIN}, yer_yarilmasi=True, yer_yarilmasi_geo=geo)
-                with patch.object(main, "run_pipeline", run_with):
-                    r = t.run_pipe(gen=AsyncMock(side_effect=fake_gen), reporter=rep, event=EVENT)
-            finally:
-                t.doCleanups()
-            self.assertTrue(r["success"], r)
-            self.assertEqual(seen["config"].get("yer_yarilmasi_geo"), geo)
-            info = [c[1] for c in rep.calls if c[0] == "approve"][0]
-            self.assertTrue(info["hit_lines"].startswith(f"Mod: {MODE_LABEL}\n{VERSION_LINE}\nCoğrafya: {geo or 'G'}"))
-            sent = t.create.await_args.args[1]
-            self.assertEqual(sent, info["prompt"])
-            self.assertTrue(sent.endswith(STYLE))
-            if geo:
-                self.assertIn(PLACES[geo], sent)
-
-    def _cb(self, data, runner=None):
-        import bot
-        from test_tur29_infra import _context, _update
-        upd = _update(data=data)
-        with patch.object(bot.pipeline, "run_pipeline", runner or AsyncMock(side_effect=AssertionError("üretim"))), \
-             patch.object(bot, "_production_lock", asyncio.Lock()):
-            asyncio.run(bot.on_callback(upd, _context()))
-        return upd.callback_query.edit_message_text.await_args
-
-    @staticmethod
-    def _buttons(call):
-        return [(b.text, b.callback_data) for r in call.kwargs["reply_markup"].inline_keyboard for b in r]
-
-    def test_menu_flow(self):
-        import bot
-        kb = bot.domain_keyboard(bot.default_cfg())
-        texts = [b.text for r in kb.inline_keyboard for b in r]
-        self.assertEqual(texts.count(ty.CATEGORY), 1)
-        row = next(r for r in kb.inline_keyboard if r[0].text == ty.CATEGORY)
-        self.assertEqual((len(row), row[0].callback_data), (1, "uret:yy"))
-        self.assertEqual(texts.index(ty.CATEGORY), texts.index("🌀 Kasırga") + 1)
-        self.assertNotIn(DOMAIN, bot.DOMAIN_KEYS)
-        self.assertNotIn(EVENT, bot.EVENT_LABELS)
-        self.assertEqual(self._buttons(self._cb("uret:yy")), [(ty.EVENT_LABEL, "uret:yye"), ("🔙 Geri", "uret:back")])
-        self.assertEqual(self._buttons(self._cb("uret:yye")),
-                         [(BUTTONS[g], f"uret:yyg:{g}") for g in GEOS]
-                         + [(bot.RANDOM_LABEL, f"uret:yyg:{bot.RANDOM_ID}"), ("🔙 Geri", "uret:yy")])
-        for gid in GEOS + (bot.RANDOM_ID,):
-            call = self._cb(f"uret:yyg:{gid}")
-            self.assertEqual(self._buttons(call), [("✅ Üret", f"uret:yyok:{gid}"), ("❌ İptal", "uret:x")])
-            text = call.args[0]
-            for part in (f"Kategori: {ty.CATEGORY}", f"Olay: {ty.EVENT_LABEL}", f"Mod: {MODE_LABEL}", VERSION_LINE,
-                         CAMERA_LINE, hp.YER_YARILMASI_V5_CONFIRM_DESC, "Coğrafya: " +
-                         (f"{gid} {BUTTONS[gid]}" if gid in BUTTONS else "🎲 Rastgele (son 3 coğrafya elenir)")):
-                self.assertIn(part, text)
-            self.assertNotIn("—", text)
-            self.assertNotIn("otobüs", text.lower())
-            runner = AsyncMock(return_value={"success": False, "reason": "cancelled"})
-            self._cb(f"uret:yyok:{gid}", runner)
-            kw = runner.await_args.kwargs
-            self.assertEqual((kw["domain"], kw["event"], kw["yer_yarilmasi"]), (DOMAIN, EVENT, True))
-            self.assertEqual(kw.get("yer_yarilmasi_geo"), gid if gid in BUTTONS else None)
-            self.assertTrue(kw["reporter"].needs_approval)
-            for other in ("kasirga", "kasirga_geo", "hit_kopya_kul", "hit_kopya_kul_geo", "donma_firtina"):
-                self.assertNotIn(other, kw)
-        runner = AsyncMock(return_value={"success": False, "reason": "cancelled"})
-        self._cb("uret:yyok", runner)   # eski mesajdaki argümansız düğme: 🎲 Rastgele
-        self.assertNotIn("yer_yarilmasi_geo", runner.await_args.kwargs)
-        for bad in ("uret:yy:1", "uret:yye:0", "uret:yyok:x", "uret:yyg", "uret:yyg:G7", "uret:yyg:G1:G2"):
-            self.assertIn("Geçersiz", self._cb(bad).args[0], bad)
-        for b in (b for m in (kb, bot.yer_yarilmasi_geo_keyboard(), bot.yer_yarilmasi_produce_keyboard())
-                  for r in m.inline_keyboard for b in r):
-            self.assertLessEqual(len(b.callback_data.encode()), 64)
-
-    def test_callback_actions_unique(self):
-        """yy / yye / yyg / yyok başka bir akışın eylemi değil (on_callback'te tek eşleşme)."""
-        import inspect
-        import bot
-        body = inspect.getsource(bot.on_callback)
-        for a in ("yy", "yye", "yyg", "yyok"):
-            hits = [ln for ln in body.split("\n") if ln.startswith("    if action in (") and f'"{a}"' in ln]
-            self.assertEqual(len(hits), 1, (a, hits))
-            self.assertIn("Yer yarılması", hits[0])
+# 26 Kas: TestPipelineAndBot (menü + pipeline, aktif sürüm) tests/test_yer_yarilmasi_v6.py'ye taşındı.
 
 
 class TestSnapshot(ty._Quiet):

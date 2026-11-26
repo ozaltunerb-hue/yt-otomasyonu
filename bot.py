@@ -941,16 +941,16 @@ def parse_yer_yarilmasi_geo(gid: str) -> tuple[bool, str | None]:
     """Kısa kod → (geçerli mi, G). 'r' = 🎲 Rastgele (None)."""
     if gid == RANDOM_ID:
         return True, None
-    if gid in _hp().YER_YARILMASI["geos"]:
+    if gid in _hp().YER_YARILMASI_V6_GEOS:   # 26 Kas v6: Y1-Y6 (eski mesajlardaki G1-G6 düğmeleri geçersiz)
         return True, gid
     return False, None
 
 
 def yer_yarilmasi_geo_keyboard() -> InlineKeyboardMarkup:
-    """G1-G6 (okunur ad) + 🎲 Rastgele (son 3 coğrafya elenir) + 🔙 Geri (Yer yarılması olay menüsüne)."""
+    """Y1-Y6 (26 Kas v6, okunur ad) + 🎲 Rastgele (son 3 coğrafya elenir) + 🔙 Geri (Yer yarılması olay menüsüne)."""
     hp = _hp()
-    buttons = [InlineKeyboardButton(hp.YER_YARILMASI_GEO_BUTTONS[g], callback_data=f"{CALLBACK_PREFIX}yyg:{g}")
-               for g in hp.YER_YARILMASI["geos"]]
+    buttons = [InlineKeyboardButton(hp.YER_YARILMASI_V6_GEO_BUTTONS[g], callback_data=f"{CALLBACK_PREFIX}yyg:{g}")
+               for g in hp.YER_YARILMASI_V6_GEOS]
     rows = [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
     rows.append([InlineKeyboardButton(RANDOM_LABEL, callback_data=f"{CALLBACK_PREFIX}yyg:{RANDOM_ID}")])
     rows.append([InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}yy")])
@@ -959,7 +959,7 @@ def yer_yarilmasi_geo_keyboard() -> InlineKeyboardMarkup:
 
 def yer_yarilmasi_geo_text(geo: str | None) -> str:
     hp = _hp()
-    return (f"{geo} {hp.YER_YARILMASI_GEO_BUTTONS[geo]}" if geo
+    return (f"{geo} {hp.YER_YARILMASI_V6_GEO_BUTTONS[geo]}" if geo
             else f"🎲 Rastgele (son {hp.YER_YARILMASI_GEO_BLOCK} coğrafya elenir)")
 
 
@@ -981,11 +981,11 @@ def yer_yarilmasi_confirm_text(cfg: dict | None = None, geo: str | None = None) 
             "Tahmini maliyet: ~175 Kie kredisi + 1 danışman preflight GPT çağrısı (hikâye için GPT yok)\n\n"
             "Üretim sadece ✅ Üret'e basınca başlar."
             + ("\n✋ Onay açık: Kie'ye göndermeden önce son prompt'u gösterip onay isteyeceğim." if cfg["approval"] else "")
-            + f"\n\nMod: {hp.YER_YARILMASI_V5_MODE_LABEL}\n"
-            + hp.YER_YARILMASI_V5_VERSION_LINE + "\n"
+            + f"\n\nMod: {hp.YER_YARILMASI_V6_MODE_LABEL}\n"
+            + hp.YER_YARILMASI_V6_VERSION_LINE + "\n"
             + hp.YER_YARILMASI_CAMERA_LINE
-            + "\n" + hp.YER_YARILMASI_V5_CONFIRM_DESC
-            + " Orta (M1-M2), final (F1-F2), kelime sayısı ve tam prompt ✋ Onay mesajında.")
+            + "\n" + hp.YER_YARILMASI_V6_CONFIRM_DESC
+            + " Orta (O_BUS / O_TRAM), final (F_BINA / F_GECIT), kelime sayısı ve tam prompt ✋ Onay mesajında.")
 
 
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:

@@ -1343,8 +1343,13 @@ async def generate_creative_prompts(config: dict) -> dict:
             scene = hp.yer_yarilmasi_build_scene(config.get("domain") or None,
                                                  config.get("event") or hp.YER_YARILMASI_EVENT, history, records,
                                                  history_source=source)
-        else:   # 25 Kas: v5 (aktif); coğrafya menüsü (None = 🎲)
+        elif config.get(hp.YER_YARILMASI_SURUM_KEY) == "v5":   # 25 Kas v5 kalıbı duruyor (pasif, menüde yok)
             scene = hp.yer_yarilmasi_v5_build_scene(config.get("domain") or None,
+                                                    config.get("event") or hp.YER_YARILMASI_EVENT, history, records,
+                                                    history_source=source,
+                                                    geo=config.get(hp.YER_YARILMASI_GEO_KEY) or None)
+        else:   # 26 Kas: v6 hit kopyası (aktif); coğrafya menüsü Y1-Y6 (None = 🎲)
+            scene = hp.yer_yarilmasi_v6_build_scene(config.get("domain") or None,
                                                     config.get("event") or hp.YER_YARILMASI_EVENT, history, records,
                                                     history_source=source,
                                                     geo=config.get(hp.YER_YARILMASI_GEO_KEY) or None)

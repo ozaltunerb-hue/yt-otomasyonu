@@ -1,0 +1,1042 @@
+{
+ "1": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y2",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "2": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Mexico City with the Popocatépetl volcano rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Mexico City with the Popocatépetl volcano rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y1",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "3": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y2",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "4": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_TRAM+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_TRAM+F_BINA",
+    "cografya": "Y2",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "5": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y5",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "6": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y5",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "7": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Naples with Mount Vesuvius rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Naples with Mount Vesuvius rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y3",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "8": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_TRAM+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_TRAM+F_GECIT",
+    "cografya": "Y2",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "9": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Zurich with tram tracks and the Alps rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Zurich with tram tracks and the Alps rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_TRAM+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_TRAM+F_GECIT",
+    "cografya": "Y4",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "10": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y5",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "11": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Zurich with tram tracks and the Alps rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Zurich with tram tracks and the Alps rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_TRAM+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_TRAM+F_GECIT",
+    "cografya": "Y4",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "12": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Zurich with tram tracks and the Alps rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Zurich with tram tracks and the Alps rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_TRAM+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_TRAM+F_GECIT",
+    "cografya": "Y4",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "13": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Naples with Mount Vesuvius rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Naples with Mount Vesuvius rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y3",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "14": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Mexico City with the Popocatépetl volcano rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Mexico City with the Popocatépetl volcano rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y1",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "15": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y2",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "16": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Naples with Mount Vesuvius rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Naples with Mount Vesuvius rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y3",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "17": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y5",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "18": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y2",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "19": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y6",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "20": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y6",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "21": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_TRAM+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_TRAM+F_GECIT",
+    "cografya": "Y2",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "22": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y2",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "23": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Naples with Mount Vesuvius rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Naples with Mount Vesuvius rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y3",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "24": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y6",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "25": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Zurich with tram tracks and the Alps rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Zurich with tram tracks and the Alps rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y4",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "26": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y6",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "27": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y6",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "28": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Mexico City with the Popocatépetl volcano rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Mexico City with the Popocatépetl volcano rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y1",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "29": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y5",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "30": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y5",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "31": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Mexico City with the Popocatépetl volcano rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Mexico City with the Popocatépetl volcano rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y1",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "32": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Mexico City with the Popocatépetl volcano rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Mexico City with the Popocatépetl volcano rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y1",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "33": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y5",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "34": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y5",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "35": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Vancouver with snow-capped mountains rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y5",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "36": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Naples with Mount Vesuvius rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Naples with Mount Vesuvius rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y3",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "37": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y6",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "38": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Cape Town with Table Mountain rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_GECIT",
+    "cografya": "Y6",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "39": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Lisbon with tram tracks and red-roofed hills rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A tram brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The pedestrian overpass on the far edge, big in frame, snaps and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_TRAM+F_GECIT|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_TRAM+F_GECIT",
+    "cografya": "Y2",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ },
+ "40": {
+  "prompt": "0-4s: From the very first frame a busy avenue of Zurich with tram tracks and the Alps rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust. Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "story": "0-4s: From the very first frame a busy avenue of Zurich with tram tracks and the Alps rising behind it is breaking apart: a wide, jagged earthquake fissure cuts across the street from left to right in front of the camera, asphalt slabs dropping into it as it keeps widening. People sprint away from its edges. 4-9s: A city bus brakes at the edge, tilts sideways and topples into the fissure in a burst of dust as more road breaks off. 9-15s: The corner building on the far edge, big in frame, tilts and collapses into the fissure in a roar of dust.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a corner building diagonally across the street, normal lens; slight hand shake, the camera stays fixed on the fissure, shaking with the quake; no zoom, no cuts. The terrace railing stays at the bottom of the frame the whole time; the camera never moves forward or tilts down into the fissure. The ground keeps shaking and the fissure keeps widening the whole time, never a calm moment. Real earthquake footage: irregular broken asphalt, soil and rock, never thin drawn cracks, never glossy or CGI; no lava, no fire, no glowing light, no explosions. No readable signs or text. Everything moves in real time, never in slow motion, people run at full speed.",
+  "combo": "fissure_disasters|none|earthquake fissure splits a city avenue|rooftop terrace of a corner building##O_BUS+F_BINA|bystander_handheld",
+  "axes": {
+   "axes": {
+    "beats": "O_BUS+F_BINA",
+    "cografya": "Y4",
+    "cografya_kaynak": "rastgele",
+    "kategori": "Yer yarılması",
+    "light": null,
+    "mod": "yer_yarilmasi",
+    "people": 5,
+    "spot": "rooftop terrace of a corner building",
+    "surum": "v6",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Earthquake fissure splits a city avenue",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  }
+ }
+}
