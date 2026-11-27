@@ -6340,3 +6340,293 @@ def yer_yarilmasi_v6_issues(structure: dict, info: dict) -> list[str]:
     if len(text) > YER_YARILMASI_MAX_CHARS:
         out.append(f"prompt {len(text)} karakter (en fazla {YER_YARILMASI_MAX_CHARS})")
     return out
+
+
+# ── 💧 Baraj (27 Kas 2026, Bahadır): yeni kategori, tek olay "Baraj yıkılır", kod hikâye v1 ─────────────────────────
+# Hikâyeyi GPT değil kod yazar (birebir). Olay normal havuzda (DOMAIN_ATTRIBUTES) yok, sahne burada kurulur (KASIRGA /
+# Yer yarılması düzeni): rastgele domain rotasyonu ve diğer olayların snapshot'ları değişmez. Prompt = AÇILIŞ + ORTA +
+# FİNAL + STİL EKİ, metinler Bahadır'ın talimatından birebir (zaman etiketleri ve aradaki boşluklar metnin içinde).
+# Coğrafya B1-B6 (menü; 🎲 Rastgele'de son 2 elenir, menüden seçilen tekrar önlemeye takılmaz), orta M1/M2 (son 1),
+# final F1-F3 (son 1). Araç ve kişi sayısı ekseni yok. Kayıt M*+F* (combo + Eksenler). Yeni GPT kuralı yok.
+BARAJ_SURUM = "v1"
+BARAJ_MODE_LABEL = "Baraj · kod hikâye (v1)"                     # ✋ Onay
+BARAJ_VERSION_LINE = "Sürüm: baraj v1 (kod hikâye: çatı terası, baraj üst yarıda + coğrafya menüsü)"
+BARAJ_DOMAIN = "dam_disasters"                                   # Combo Key'in ilk parçası (Notion eksen sorgusu bununla)
+BARAJ_EVENT = "Dam wall bursts above a town"                     # iç anahtar (olay denetimi kökleri: wall, burs, town)
+BARAJ_CATEGORY_LABEL = "💧 Baraj"                                 # Telegram kategori düğmesi
+BARAJ_EVENT_LABEL = "💧 Baraj yıkılır"                            # Telegram olay düğmesi
+BARAJ_NOTION_CATEGORY = "Baraj"                                  # Notion: Eksenler "kategori" + Paylaşımlar
+BARAJ_NOTION_EVENT = "Baraj yıkılır"                             # Notion üretim kaydı "Olay"
+BARAJ_MOD = "baraj"                                              # config bayrağı, structure anahtarı, Notion axes.mod
+BARAJ_GEO_KEY = "baraj_geo"                                      # config: menüden seçilen B (yoksa 🎲 Rastgele)
+BARAJ_MAX_WORDS = 230
+BARAJ_MAX_CHARS = 1400
+BARAJ_GEO_BLOCK = 2
+BARAJ_MID_BLOCK = 1
+BARAJ_FINAL_BLOCK = 1
+BARAJ_SPOT = "rooftop terrace of a house in the town"            # combo + Eksenler spot
+BARAJ_GEOS = {
+    "B1": {"name": "İsviçre", "place": "a small mountain town in the Swiss Alps"},
+    "B2": {"name": "Norveç", "place": "a small town in a Norwegian valley"},
+    "B3": {"name": "Japonya", "place": "a small mountain town in Japan"},
+    "B4": {"name": "Kolombiya", "place": "a small Andean town in Colombia"},
+    "B5": {"name": "Avusturya", "place": "a small mountain town in Austria"},
+    "B6": {"name": "Şili", "place": "a small valley town in Chile"},
+}
+BARAJ_GEO_BUTTONS = {"B1": "🇨🇭 İsviçre", "B2": "🇳🇴 Norveç", "B3": "🇯🇵 Japonya", "B4": "🇨🇴 Kolombiya",
+                     "B5": "🇦🇹 Avusturya", "B6": "🇨🇱 Şili"}
+BARAJ_OPENING = ("0-4s: Behind {place}, a towering concrete dam fills the upper half of the frame; jets of water burst "
+                 "from long cracks across its wall while people run down the street below. ")
+BARAJ_MIDS = {
+    "M1": "4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the "
+          "houses. ",
+    "M2": "4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out "
+          "toward the houses. ",
+}
+BARAJ_FINALS = {
+    "F1": "9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+    "F2": "9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+    "F3": "9-15s: The water tears a house from its foundation and carries it down the street.",
+}
+BARAJ_STYLE = (" Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage "
+               "looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the "
+               "dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; "
+               "one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never "
+               "glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or "
+               "flags. Everything moves in real time, people run at full speed.")
+BARAJ_NAMES = {"M1": "baraj duvarının büyük bir parçası kopar, su duvarı evlere iner",
+               "M2": "beton bloklar düşer, baraj ortadan çöker, su duvarı evlere fırlar",
+               "F1": "su ilk evlere çarpar, park halindeki arabaları sürükler",
+               "F2": "su caddeye vurur, otobüsü sürükleyip yan yatırır",
+               "F3": "su bir evi temelinden koparıp caddeden aşağı taşır"}
+BARAJ_CAMERA_LINE = ("Kamera: kasabadaki bir evin çatı terası, yüksekten baraja bakar, sabit, hiç inmez, baraj hep "
+                     "kadrajın üst yarısında, teras korkuluğunun köşesi ön planda")
+BARAJ_CHECK = ("⚠️ Kontrol: baraj ilk kareden kadrajın üst yarısında mı, sokakta koşan insanlar var mı, kamera terasta "
+               "sabit mi, su çamurlu kahverengi ve gerçekçi mi?")
+BARAJ_WEATHER = "gündüz, doğal ışık (stil ekinde ışık satırı yok)"
+BARAJ_CONFIRM_DESC = ("Kasabanın arkasında dev bir beton baraj ilk kareden kadrajın üst yarısını kaplar, duvarındaki "
+                      "uzun çatlaklardan su fışkırır, aşağıdaki sokakta insanlar koşar. Ortada barajın büyük bir parçası "
+                      "kopar ya da beton bloklar düşüp baraj ortadan çöker, su duvarı evlere doğru iner. Finalde su ilk "
+                      "evlere çarpıp arabaları sürükler, ya da bir otobüsü yan yatırır, ya da bir evi temelinden koparıp "
+                      "götürür. Kamera kasabadaki bir evin çatı terasında sabit. Patlama yok, ateş yok.")
+# Kie öncesi son kontrol (büyük/küçük harf fark etmez). Yasak kelimeler stil eki HARİÇ her yerde aranır (stil ekinde
+# "no explosions, no fire" olumsuzlama olarak geçer).
+BARAJ_REQUIRED = ("towering concrete dam", "upper half of the frame", "people run down the street below",
+                  "rooftop terrace of a house in the town", "the camera stays fixed on the terrace", "never descending",
+                  "corner of the terrace railing", "muddy brown water", "no zoom, no cuts")
+BARAJ_FORBIDDEN = ("explosion", "explode", "fire", "flames", "slowly", "calm")
+_BARAJ_TAG = re.compile(r"M\d+\+F\d+")
+_BARAJ_GEO_MEMORY: list[str] = []
+
+
+def baraj_is_active(event: str | None) -> bool:
+    return event == BARAJ_EVENT
+
+
+def baraj_tail() -> str:
+    """Stil eki (Kie'ye ayrı gider; baştaki boşluk join_story_and_style'dan gelir)."""
+    return BARAJ_STYLE[1:]
+
+
+def baraj_opening(geo: str) -> str:
+    if geo not in BARAJ_GEOS:
+        raise es.StructureError(f"{BARAJ_MODE_LABEL}: {geo} bu kategoride yok (coğrafya B1-B6)")
+    return BARAJ_OPENING.format(place=BARAJ_GEOS[geo]["place"])
+
+
+def baraj_mid(mid: str) -> str:
+    if mid not in BARAJ_MIDS:
+        raise es.StructureError(f"{BARAJ_MODE_LABEL}: {mid} bu kategoride yok (orta {'/'.join(BARAJ_MIDS)})")
+    return BARAJ_MIDS[mid]
+
+
+def baraj_final(final: str) -> str:
+    if final not in BARAJ_FINALS:
+        raise es.StructureError(f"{BARAJ_MODE_LABEL}: {final} bu kategoride yok (final {'/'.join(BARAJ_FINALS)})")
+    return BARAJ_FINALS[final]
+
+
+def _baraj_sentence(piece: str) -> str:
+    """Zaman etiketsiz cümle ("4-9s: ... " → "...")."""
+    return piece.split(": ", 1)[1].strip()
+
+
+def baraj_story(geo: str, mid: str, final: str) -> str:
+    """AÇILIŞ + ORTA + FİNAL, talimat metinleri birebir (etiketler ve boşluklar metinde)."""
+    return baraj_opening(geo) + baraj_mid(mid) + baraj_final(final)
+
+
+def baraj_prompt(geo: str, mid: str, final: str) -> str:
+    """Prompt = AÇILIŞ + ORTA + FİNAL + STİL EKİ (düz birleştirme; join_story_and_style ile aynı sonuç)."""
+    return baraj_story(geo, mid, final) + BARAJ_STYLE
+
+
+def baraj_tags(tags: list[str]) -> list[str]:
+    """Yalnız baraj çiftleri (M*+F*)."""
+    return [t for t in tags or [] if _BARAJ_TAG.fullmatch(t)]
+
+
+def baraj_axes_history(records: list | None, key: str) -> list[str] | None:
+    """Notion "Eksenler" ham kayıtlarından (eskiden yeniye) bu kategorinin `key` değerleri; okunamadıysa None."""
+    import json
+    if records is None:
+        return None
+    out = []
+    for rec in records:
+        try:
+            data = json.loads((rec or {}).get("eksenler") or "")
+        except (TypeError, ValueError, AttributeError):
+            continue
+        axes = data.get("axes") if isinstance(data, dict) else None
+        if (isinstance(axes, dict) and data.get("event") == BARAJ_EVENT and axes.get("mod") == BARAJ_MOD
+                and axes.get(key)):
+            out.append(axes[key])
+    return out
+
+
+def baraj_lines(tb: dict) -> str:
+    """✋ Onay satırları: mod, sürüm, coğrafya, orta, final, kamera, kelime/karakter, eksenler, kontrol sorusu.
+    Araç / kişi ekseni yok: boş satır basılmaz."""
+    text = tb["prompt"]
+    g = BARAJ_GEOS[tb["geo"]]
+    lines = [
+        f"Mod: {BARAJ_MODE_LABEL}",
+        BARAJ_VERSION_LINE,
+        f"Coğrafya: {tb['geo']} {g['name']} «{g['place']}» ({tb['geo_source']})",
+        f"Orta (4-9s): {tb['mid']} «{_baraj_sentence(baraj_mid(tb['mid']))}»",
+        f"Final (9-15s): {tb['final']} «{_baraj_sentence(baraj_final(tb['final']))}»",
+        BARAJ_CAMERA_LINE,
+        f"Kelime: {len(text.split())} (en fazla {BARAJ_MAX_WORDS}) · karakter: {len(text)} (en fazla {BARAJ_MAX_CHARS})",
+    ]
+    if tb.get("axes_line"):
+        lines.append(tb["axes_line"])
+    lines.append(BARAJ_CHECK)
+    return "\n".join(lines)
+
+
+def baraj_axes_json(tb: dict, tag: str, excluded: dict | None = None) -> str:
+    import core.axes_history as ah
+    axes = {"spot": BARAJ_SPOT, "view": None, "light": None, "vehicle": None, "people": None, "beats": tag,
+            "mod": BARAJ_MOD, "surum": BARAJ_SURUM, "kategori": BARAJ_NOTION_CATEGORY, "olay": BARAJ_NOTION_EVENT,
+            "cografya": tb["geo"], "cografya_kaynak": tb["geo_source"], "orta": tb["mid"], "final": tb["final"]}
+    return ah.axes_json(BARAJ_EVENT, axes, excluded)
+
+
+def baraj_build_scene(domain: str | None, event: str | None, history: list[str] | None = None,
+                      records: list | None = None, rng=None, history_source: str = "bellek",
+                      geo: str | None = None) -> dict:
+    """💧 Baraj sahnesi: GPT yok, normal hat yok. records = Notion "Eksenler" ham kayıtları (None = okunamadı /
+    yükleyici yok: süreç hafızası). geo = menüden seçilen B (tekrar önlemeye takılmaz; None = 🎲 Rastgele, son 2 B
+    elenir). Orta ve final son 1. structure["baraj"] Kie öncesi son denetimin (submit_issues) kaynağıdır."""
+    import random
+    from core.skeleton_pipeline import SKELETON_CAMERA
+    label = BARAJ_MODE_LABEL
+    if domain not in (None, BARAJ_DOMAIN) or not baraj_is_active(event):
+        raise es.StructureError(f"{label} kurulamadı: {domain} / {event}")
+    if geo is not None and geo not in BARAJ_GEOS:
+        raise es.StructureError(f"{label}: {geo} bu kategoride yok (coğrafya B1-B6)")
+    r = rng or random
+    geo_used = baraj_axes_history(records, "cografya")
+    tags = baraj_tags(baraj_axes_history(records, "beats") if records is not None
+                      else es.beat_history(BARAJ_EVENT, history or []))
+    seen_geo = [x for x in (_BARAJ_GEO_MEMORY if geo_used is None else geo_used) if x in BARAJ_GEOS]
+    geo_source = "menü" if geo is not None else "rastgele"
+    if geo is None:
+        geo = _block_pick(list(BARAJ_GEOS), seen_geo, BARAJ_GEO_BLOCK, r)
+        excluded = {"cografya": [x for x in BARAJ_GEOS if x in seen_geo[-BARAJ_GEO_BLOCK:]]}
+    else:
+        excluded = {"cografya": []}
+    mid = _block_pick(list(BARAJ_MIDS), [t.split("+")[0] for t in tags], BARAJ_MID_BLOCK, r)
+    final = _block_pick(list(BARAJ_FINALS), [t.split("+")[1] for t in tags], BARAJ_FINAL_BLOCK, r)
+    tag = es.beat_tag(mid, final)
+    es.remember_beats(BARAJ_EVENT, tag)   # seçim anı hafızası (TEST/iptal da sayılır)
+    _BARAJ_GEO_MEMORY.append(geo)         # menü seçimi de sonraki 🎲 Rastgele için sayılır
+    del _BARAJ_GEO_MEMORY[:-12]
+    story = baraj_story(geo, mid, final)
+    tail = baraj_tail()
+    prompt = baraj_prompt(geo, mid, final)
+    g = BARAJ_GEOS[geo]
+    opening = _baraj_sentence(baraj_opening(geo))
+    mid_text, final_text = _baraj_sentence(baraj_mid(mid)), _baraj_sentence(baraj_final(final))
+    plain = " ".join([opening, mid_text, final_text])
+    geo_repeat = f"coğrafya menüden ({geo})" if geo_source == "menü" else f"coğrafya son {BARAJ_GEO_BLOCK} elendi"
+    repeat = f"{geo_repeat} · orta son {BARAJ_MID_BLOCK} · final son {BARAJ_FINAL_BLOCK}"
+    base_trace = {"pipeline": "creative", "structured": True, "domain": BARAJ_DOMAIN, "event": BARAJ_EVENT,
+                  "ship": "None", "camera": SKELETON_CAMERA, "view": None, "view_source": None, "place": g["place"],
+                  "outcome": "-", "recent_count": 0}
+    trace, axes_line = mode_display(
+        {"trace": base_trace}, {}, mode=label,
+        camera="sabit (the camera stays fixed on the terrace, never descending); rooftop terrace of a house in the "
+               "town, high vantage looking toward the dam",
+        opening=opening, mid=(mid, mid_text), final=(final, final_text), plain=plain, vehicle=None,
+        spot="Rooftop terrace of a house in the town (kasabadaki bir evin çatı terası, baraj kadrajın üst yarısında)",
+        weather=BARAJ_WEATHER,
+        axes={"sürüm": BARAJ_SURUM, "coğrafya": f"{geo} {g['name']} ({geo_source})", "orta": mid, "final": final,
+              "kamera modu": "elde, terasta sabit"},
+        repeat=repeat)
+    trace = {**trace, "mode": BARAJ_MOD, "surum": BARAJ_SURUM, "cografya": geo, "axes_source": history_source,
+             "no_vehicle_axis": True, "no_people_axis": True}   # 🔍 Ayrıntı'da boş "Araç" / "kişi aralığı" basılmaz
+    tb = {"event": BARAJ_EVENT, "surum": BARAJ_SURUM, "geo": geo, "geo_source": geo_source, "mid": mid,
+          "final": final, "story": story, "suffix": tail, "prompt": prompt, "axes_line": axes_line}
+    tb["lines"] = baraj_lines(tb)
+    axes_json = baraj_axes_json(tb, tag, excluded)
+    structure = {BARAJ_MOD: tb, "axes_json": axes_json, "axes_line": None, "environment": None,
+                 "story_source": f"Hikâye: kod (birebir) · {label}", "story_source_kind": "code",
+                 "caption_info": {"opening": opening, "people": None, "kadraj": "teras",
+                                  "beat_2": donma_caption_beat(mid_text), "beat_3": donma_caption_beat(final_text)},
+                 "caption_candidates": None}
+    problems = baraj_issues(structure, {"prompt": prompt, "story": story, "style_suffix": tail})
+    if problems:
+        raise es.StructureError(f"{label} son denetimden geçmedi: " + "; ".join(problems))
+    combo = f"{BARAJ_DOMAIN}|none|{BARAJ_EVENT.lower()}|{BARAJ_SPOT}##{tag}|{SKELETON_CAMERA}"
+    return {"domain": BARAJ_DOMAIN, "event": BARAJ_EVENT, "ship": None, "spot": BARAJ_SPOT, "story": story,
+            "plain_story": plain, "style_suffix": tail, "prompt": prompt, "combo_key": combo, "trace": trace,
+            "structure": structure, "axes_json": axes_json, "notion_event": BARAJ_NOTION_EVENT}
+
+
+def baraj_text_issues(text: str, geo: str) -> list[str]:
+    """Kie öncesi son kontrol: BARAJ_REQUIRED var, yalnız seçilen B'nin yer metni var; BARAJ_FORBIDDEN (explosion,
+    explode, fire, flames, slowly, calm) stil eki HARİÇ metinde yok (büyük/küçük harf fark etmez). İhlal = gönderilmez."""
+    out = []
+    text = text or ""
+    low = text.lower()
+    for need in BARAJ_REQUIRED:
+        if need.lower() not in low:
+            out.append(f'"{need}" eksik')
+    places = [k for k, v in BARAJ_GEOS.items() if v["place"] in text]
+    if places != [geo]:
+        out.append(f"yer metni seçilen coğrafya değil ({geo}: {places})")
+    body = low.replace(BARAJ_STYLE.lower(), " ")
+    for bad in BARAJ_FORBIDDEN:
+        if bad in body:
+            out.append(f"bu kategoride olmayan ifade var: {bad}")
+    return out
+
+
+def baraj_issues(structure: dict, info: dict) -> list[str]:
+    """Kie'den hemen önce: gönderilecek metin kalıpla koddan yeniden kurulanla birebir aynı mı. Boş = gönder."""
+    tb = structure[BARAJ_MOD]
+    if tb.get("geo") not in BARAJ_GEOS:
+        return [f"coğrafya B1-B6 değil ({tb.get('geo')})"]
+    if tb.get("mid") not in BARAJ_MIDS:
+        return [f"orta aktif seçenek değil ({tb.get('mid')})"]
+    if tb.get("final") not in BARAJ_FINALS:
+        return [f"final aktif seçenek değil ({tb.get('final')})"]
+    key = (tb["geo"], tb["mid"], tb["final"])
+    out = []
+    if info.get("style_suffix") != baraj_tail():
+        out.append("stil eki Baraj kalıbı değil")
+    if info.get("story") != baraj_story(*key):
+        out.append("hikâye kalıpla yeniden kurulanla birebir aynı değil")
+    if info.get("prompt") != baraj_prompt(*key):
+        out.append("prompt kalıpla yeniden kurulanla birebir aynı değil")
+    text = info.get("prompt", "")
+    out += baraj_text_issues(text, tb["geo"])
+    for lab in es.SLICE_LABELS:
+        if f"{lab}: " not in text:
+            out.append(f"zaman etiketi eksik: {lab}")
+    if len(text.split()) > BARAJ_MAX_WORDS:
+        out.append(f"prompt {len(text.split())} kelime (en fazla {BARAJ_MAX_WORDS})")
+    if len(text) > BARAJ_MAX_CHARS:
+        out.append(f"prompt {len(text)} karakter (en fazla {BARAJ_MAX_CHARS})")
+    return out

@@ -348,7 +348,8 @@ POOL_OF = {cap.FLOOD: "sel", cap.TIDAL: "dalga", cap.MUDSLIDE: "heyelan", cap.SL
            cap.EQ_O: "deprem", cap.METEOR: "meteor", cap.LIBERTY: "hortum",   # 29 Eki: meteor; 4 Kas: Özgürlük Anıtı
            cap.DONMA: "donma",   # 15 Kas: ❄️ Donduran fırtına
            cap.KASIRGA: "kasirga",   # 15 Kas (4): 🌀 Kasırga
-           cap.YER_YARILMASI: "yer_yarilmasi"}   # 17 Kas: 🌍 Yer yarılması
+           cap.YER_YARILMASI: "yer_yarilmasi",   # 17 Kas: 🌍 Yer yarılması
+           cap.BARAJ: "baraj"}   # 27 Kas: 💧 Baraj
 SHARE_OF = {cap.FLOOD: "Sel", cap.TIDAL: "Dev dalga", cap.MUDSLIDE: "Heyelan", cap.SLOPE: "Heyelan",
             cap.VILLAGE: "Heyelan", cap.AVENUE: "Hortum", cap.MARINA: "Su hortumu", cap.LANDFALL: "Su hortumu",
             cap.WILDFIRE: "Yangın", cap.FACADE: "Yangın", cap.FIRE_TORNADO: "Yangın", cap.HELICOPTER: "Yangın",
@@ -357,7 +358,8 @@ SHARE_OF = {cap.FLOOD: "Sel", cap.TIDAL: "Dev dalga", cap.MUDSLIDE: "Heyelan", c
             cap.LIBERTY: "Hortum",   # 29 Eki: meteor; 4 Kas: Özgürlük Anıtı
             cap.DONMA: "Donduran fırtına",   # 15 Kas: ❄️ Donduran fırtına
             cap.KASIRGA: "Kasırga",   # 15 Kas (4): 🌀 Kasırga
-            cap.YER_YARILMASI: "Yer yarılması"}   # 17 Kas: 🌍 Yer yarılması
+            cap.YER_YARILMASI: "Yer yarılması",   # 17 Kas: 🌍 Yer yarılması
+            cap.BARAJ: "Baraj"}   # 27 Kas: 💧 Baraj
 EVENT_ONLY = {"#firetornado": {cap.FIRE_TORNADO}, "#waterspout": {cap.MARINA, cap.LANDFALL},
               "#skiresort": {cap.AVA_S}, "#aerialfirefighting": {cap.HELICOPTER}, "#pyroclasticflow": {cap.PYRO},
               "#lavabombs": {cap.BOMBS}, "#mountainroad": {cap.SLOPE}, "#rockfall": {cap.SLOPE},
@@ -376,7 +378,7 @@ def _sim(gpt: bool, runs: int = 10, seed: int = 11):
 
 class TestCategoryMapping(unittest.TestCase):
     def test_mapping_tables(self):
-        self.assertEqual(len(cap.SHARE_CATEGORY), 24)   # 29 Eki: + meteor; 4 Kas: + Özgürlük Anıtı; 15 Kas: + donma; 15 Kas (4): + kasırga; 17 Kas: + yer yarılması
+        self.assertEqual(len(cap.SHARE_CATEGORY), 25)   # 27 Kas: + baraj; 29 Eki: + meteor; 4 Kas: + Özgürlük Anıtı; 15 Kas: + donma; 15 Kas (4): + kasırga; 17 Kas: + yer yarılması
         self.assertEqual(cap.SHARE_CATEGORY, SHARE_OF)
         self.assertEqual(cap.TAG_POOL, POOL_OF)
         # Paylaşımlar "Kategori" seçenekleri: hepsi gerçek tabloda var (fixture = salt okuma kopyası)
@@ -384,7 +386,9 @@ class TestCategoryMapping(unittest.TestCase):
         # 15 Kas: "Donduran fırtına" da aynı yoldan (ilk paylaşımda oluşur)
         # 15 Kas (4): "Kasırga" da aynı yoldan (ilk paylaşımda oluşur)
         # 17 Kas: "Yer yarılması" da aynı yoldan (ilk paylaşımda oluşur)
-        self.assertLessEqual(set(SHARE_OF.values()) - {"Meteor", "Donduran fırtına", "Kasırga", "Yer yarılması"},
+        # 27 Kas: "Baraj" da aynı yoldan (ilk paylaşımda oluşur)
+        self.assertLessEqual(set(SHARE_OF.values()) - {"Meteor", "Donduran fırtına", "Kasırga", "Yer yarılması",
+                                                       "Baraj"},
                              {r["Kategori"] for r in ROWS if r.get("Kategori")})
         for t, evs in EVENT_ONLY.items():
             self.assertEqual(cap.TAG_ONLY.get(t), evs, t)
@@ -420,7 +424,7 @@ class TestTemplateLanguage(unittest.TestCase):
     GENERIC = ("with every second", "the last frame", "nobody expected", "this part", "this moment")
 
     def _infos(self, e):
-        if e in (cap.DONMA, cap.KASIRGA, cap.YER_YARILMASI):   # 15 Kas: ❄️, 15 Kas (4): 🌀, 17 Kas: 🌍 (normal havuzda yok)
+        if e in (cap.DONMA, cap.KASIRGA, cap.YER_YARILMASI, cap.BARAJ):   # 15 Kas: ❄️, 15 Kas (4): 🌀, 17 Kas: 🌍, 27 Kas: 💧 (normal havuzda yok)
             return _infos(e)
         b = es.EVENT_BEATS[e]
         return [{"opening": "", "people": p, "kadraj": k, "beat_2": es.beat_text(e, "slice_2", x, "SUV"),
@@ -485,7 +489,7 @@ class TestTemplateLanguage(unittest.TestCase):
             # 15 Kas: ❄️ Donduran fırtına muaf: 2 orta x 3 final (iki orta aynı uzun cümleyle başlar), 10 şablon
             # açıklamada benzerlik kaçınılmaz; üretimde caption.choose en az benzeri seçer (zorunlu yol). Başlık
             # tekrarı denetimi bu olayda da aynen geçerli.
-            if e in (cap.DONMA, cap.KASIRGA, cap.YER_YARILMASI):   # 15 Kas (4): 🌀 aynı yapı; 17 Kas: 🌍 (2 orta x 2 final)
+            if e in (cap.DONMA, cap.KASIRGA, cap.YER_YARILMASI, cap.BARAJ):   # 15 Kas (4): 🌀 aynı yapı; 17 Kas: 🌍 (2 orta x 2 final); 27 Kas: 💧 (2 x 3)
                 ds = []
             for i in range(len(ds)):
                 for j in range(i + 1, len(ds)):
@@ -518,6 +522,13 @@ def _infos(e, n=6):
         pairs = [(x, y) for x in hp.YER_YARILMASI_V5_MIDS for y in hp.YER_YARILMASI_V5_FINALS][:n]   # 25 Kas: v5
         return [{"opening": "", "people": p, "kadraj": k, "beat_2": hp.donma_caption_beat(hp.YER_YARILMASI_V5_MIDS[x]),
                  "beat_3": hp.donma_caption_beat(hp.YER_YARILMASI_V5_FINALS[y])}
+                for (x, y), p, k in zip(pairs, (None, 3, 4, None, 5, 2), list(cap.WITNESS)[:n])]
+    if e == cap.BARAJ:   # 27 Kas: 💧 Baraj: kendi ortaları/finalleri (normal havuzda yok, araç yok)
+        import core.hit_prompts as hp
+        pairs = [(x, y) for x in hp.BARAJ_MIDS for y in hp.BARAJ_FINALS][:n]
+        return [{"opening": "", "people": p, "kadraj": k,
+                 "beat_2": hp.donma_caption_beat(hp._baraj_sentence(hp.BARAJ_MIDS[x])),
+                 "beat_3": hp.donma_caption_beat(hp._baraj_sentence(hp.BARAJ_FINALS[y]))}
                 for (x, y), p, k in zip(pairs, (None, 3, 4, None, 5, 2), list(cap.WITNESS)[:n])]
     b = es.EVENT_BEATS[e]
     pairs = [(x, y) for x in b["slice_2"] for y in b["slice_3"]][:n]

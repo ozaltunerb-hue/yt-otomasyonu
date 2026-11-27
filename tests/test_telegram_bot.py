@@ -242,10 +242,12 @@ class TestKeyboard(unittest.TestCase):
         # 15 Kas: + ❄️ Donduran fırtına (kod hikâyeli ayrı kategori, en altta tek düğme; DOMAIN_LABELS'ta yok)
         # 15 Kas (4): + 🌀 Kasırga (kod hikâyeli ayrı kategori, en altta tek düğme; DOMAIN_LABELS'ta yok)
         # 17 Kas: + 🌍 Yer yarılması (kod hikâyeli ayrı kategori, Kasırga'nın altında tek düğme; DOMAIN_LABELS'ta yok)
-        self.assertEqual(len(buttons), 11)
+        # 27 Kas: + 💧 Baraj (kod hikâyeli ayrı kategori, Yer yarılması'nın altında tek düğme; DOMAIN_LABELS'ta yok)
+        self.assertEqual(len(buttons), 12)
         self.assertEqual([b.callback_data for b in buttons], [f"{bot.CALLBACK_PREFIX}d:{i}"
                                                               for i in (4, 5, 7, 8, 9, 10, 11, 12)]
-                         + [f"{bot.CALLBACK_PREFIX}df", f"{bot.CALLBACK_PREFIX}ks", f"{bot.CALLBACK_PREFIX}yy"])
+                         + [f"{bot.CALLBACK_PREFIX}df", f"{bot.CALLBACK_PREFIX}ks", f"{bot.CALLBACK_PREFIX}yy",
+                            f"{bot.CALLBACK_PREFIX}bj"])
 
     def test_event_labels_match_pool(self):
         pool = [e for a in DOMAIN_ATTRIBUTES.values() for e in a["events"]]
@@ -365,7 +367,7 @@ class TestHandlers(unittest.TestCase):
         upd, runner = self._click("back")
         runner.assert_not_awaited()
         markup = upd.callback_query.edit_message_text.await_args.kwargs["reply_markup"]
-        self.assertEqual(len(_buttons(markup)), 18)   # 17 Kas: + 🌍 Yer yarılması; 15 Kas (4): + 🌀 Kasırga; 15 Kas: + ❄️ Donduran fırtına; 13 kategori + 🔍 Ayrıntı / ✋ Onay (TUR 29; 2 Eki heyelan; 8 Eki yangın; 10 Eki volkan; 13 Eki çığ; 14 Eki deprem; 29 Eki meteor)
+        self.assertEqual(len(_buttons(markup)), 19)   # 27 Kas: + 💧 Baraj; 17 Kas: + 🌍 Yer yarılması; 15 Kas (4): + 🌀 Kasırga; 15 Kas: + ❄️ Donduran fırtına; 13 kategori + 🔍 Ayrıntı / ✋ Onay (TUR 29; 2 Eki heyelan; 8 Eki yangın; 10 Eki volkan; 13 Eki çığ; 14 Eki deprem; 29 Eki meteor)
 
     def test_cancel_does_not_run(self):
         upd, runner = self._click("x")
@@ -414,7 +416,7 @@ class TestHandlers(unittest.TestCase):
         ctx, upd = _context(), _update()
         asyncio.run(bot.cmd_uret(upd, ctx))
         kwargs = upd.effective_message.reply_text.await_args.kwargs
-        self.assertEqual(len([b for r in kwargs["reply_markup"].inline_keyboard for b in r]), 18)   # 17 Kas: + 🌍 Yer yarılması; 15 Kas (4): + 🌀 Kasırga; 15 Kas: + ❄️ Donduran fırtına; 2 Eki: 8 kategori; 8 Eki: 9 kategori; 10 Eki: 10 kategori; 13 Eki: 11 (çığ); 14 Eki: 12 (deprem); 29 Eki: 13 (meteor; deniz bu sınıfta açık)
+        self.assertEqual(len([b for r in kwargs["reply_markup"].inline_keyboard for b in r]), 19)   # 27 Kas: + 💧 Baraj; 17 Kas: + 🌍 Yer yarılması; 15 Kas (4): + 🌀 Kasırga; 15 Kas: + ❄️ Donduran fırtına; 2 Eki: 8 kategori; 8 Eki: 9 kategori; 10 Eki: 10 kategori; 13 Eki: 11 (çığ); 14 Eki: 12 (deprem); 29 Eki: 13 (meteor; deniz bu sınıfta açık)
         self.assertIn("🧪 TEST", upd.effective_message.reply_text.await_args.args[0])
 
     def test_uret_busy(self):

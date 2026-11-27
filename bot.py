@@ -262,6 +262,8 @@ def domain_keyboard(cfg: dict | None = None) -> InlineKeyboardMarkup:
     rows.append([InlineKeyboardButton(KASIRGA_CATEGORY_BUTTON, callback_data=f"{CALLBACK_PREFIX}ks")])
     # 17 Kas: 🌍 Yer yarılması, kod hikâyeli ayrı kategori (normal havuzda yok; sıra numaraları değişmez)
     rows.append([InlineKeyboardButton(YER_YARILMASI_CATEGORY_BUTTON, callback_data=f"{CALLBACK_PREFIX}yy")])
+    # 27 Kas: 💧 Baraj, kod hikâyeli ayrı kategori (normal havuzda yok; sıra numaraları değişmez)
+    rows.append([InlineKeyboardButton(BARAJ_CATEGORY_BUTTON, callback_data=f"{CALLBACK_PREFIX}bj")])
     if cfg is not None:
         rows.append([InlineKeyboardButton(f"🔍 Ayrıntı: {_onoff(cfg['detail'])}", callback_data=f"{CALLBACK_PREFIX}t:d"),
                      InlineKeyboardButton(f"✋ Onay: {_onoff(cfg['approval'])}", callback_data=f"{CALLBACK_PREFIX}t:o")])
@@ -848,12 +850,15 @@ def cadde_confirm_text(domain: str, event: str, cfg: dict | None = None) -> str:
 DONMA_CATEGORY_BUTTON = "❄️ Donduran fırtına"
 KASIRGA_CATEGORY_BUTTON = "🌀 Kasırga"   # 15 Kas (4)
 YER_YARILMASI_CATEGORY_BUTTON = "🌍 Yer yarılması"   # 17 Kas
+BARAJ_CATEGORY_BUTTON = "💧 Baraj"   # 27 Kas
 CODE_DOMAIN_LABELS = {"frozen_storm_disasters": DONMA_CATEGORY_BUTTON,
                       "hurricane_disasters": KASIRGA_CATEGORY_BUTTON,   # 15 Kas (4): + 🌀 Kasırga
-                      "fissure_disasters": YER_YARILMASI_CATEGORY_BUTTON}   # 17 Kas: + 🌍 Yer yarılması
+                      "fissure_disasters": YER_YARILMASI_CATEGORY_BUTTON,   # 17 Kas: + 🌍 Yer yarılması
+                      "dam_disasters": BARAJ_CATEGORY_BUTTON}   # 27 Kas: + 💧 Baraj
 CODE_EVENT_LABELS = {"Storm's eye freezes the city": "❄️ Buz fırtınası şehri dondurur",   # 15 Kas (3): sadece etiket
                      "Hurricane winds batter a coastal town": "🌀 Kasırga kıyı kasabasını döver",   # 15 Kas (4)
-                     "Earthquake fissure splits a city avenue": "🌍 Cadde yarılır"}   # 17 Kas
+                     "Earthquake fissure splits a city avenue": "🌍 Cadde yarılır",   # 17 Kas
+                     "Dam wall bursts above a town": "💧 Baraj yıkılır"}   # 27 Kas
 
 
 def donma_event_keyboard() -> InlineKeyboardMarkup:
@@ -1013,6 +1018,69 @@ def yer_yarilmasi_confirm_text(cfg: dict | None = None, geo: str | None = None) 
             + hp.YER_YARILMASI_CAMERA_LINE
             + "\n" + hp.YER_YARILMASI_V6_CONFIRM_DESC
             + " Orta (O_BUS / O_TRAM), final (F_BINA / F_GECIT), kelime sayısı ve tam prompt ✋ Onay mesajında.")
+
+
+# ── 💧 Baraj (27 Kas 2026, Bahadır): kod hikâyeli yeni kategori, tek olay "Baraj yıkılır". Normal kategori havuzunda
+# (DOMAIN_LABELS / DOMAIN_ATTRIBUTES) YOK: düğmesi kategori menüsünün sonunda ayrı satır, sıra numaraları değişmez.
+# Adımlar: bj (olay menüsü) → bje (coğrafya ekranı) → bjg:<Bx|r> (onay metni) → bjok:<Bx|r> (üretim) → Kie'den önce
+# ✋ Onay. Hikâye için GPT çağrılmaz.
+def baraj_event_keyboard() -> InlineKeyboardMarkup:
+    """Tek olay + 🔙 Geri (🎲 Rastgele yok: kategoride tek olay var)."""
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(_hp().BARAJ_EVENT_LABEL, callback_data=f"{CALLBACK_PREFIX}bje")],
+        [InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}back")],
+    ])
+
+
+def parse_baraj_geo(gid: str) -> tuple[bool, str | None]:
+    """Kısa kod → (geçerli mi, B). 'r' = 🎲 Rastgele (None)."""
+    if gid == RANDOM_ID:
+        return True, None
+    if gid in _hp().BARAJ_GEOS:
+        return True, gid
+    return False, None
+
+
+def baraj_geo_keyboard() -> InlineKeyboardMarkup:
+    """B1-B6 (okunur ad) + 🎲 Rastgele (son 2 coğrafya elenir) + 🔙 Geri (Baraj olay menüsüne)."""
+    hp = _hp()
+    buttons = [InlineKeyboardButton(hp.BARAJ_GEO_BUTTONS[g], callback_data=f"{CALLBACK_PREFIX}bjg:{g}")
+               for g in hp.BARAJ_GEOS]
+    rows = [buttons[i:i + 2] for i in range(0, len(buttons), 2)]
+    rows.append([InlineKeyboardButton(RANDOM_LABEL, callback_data=f"{CALLBACK_PREFIX}bjg:{RANDOM_ID}")])
+    rows.append([InlineKeyboardButton("🔙 Geri", callback_data=f"{CALLBACK_PREFIX}bj")])
+    return InlineKeyboardMarkup(rows)
+
+
+def baraj_geo_text(geo: str | None) -> str:
+    hp = _hp()
+    return (f"{geo} {hp.BARAJ_GEO_BUTTONS[geo]}" if geo
+            else f"🎲 Rastgele (son {hp.BARAJ_GEO_BLOCK} coğrafya elenir)")
+
+
+def baraj_produce_keyboard(gid: str = RANDOM_ID) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[
+        InlineKeyboardButton("✅ Üret", callback_data=f"{CALLBACK_PREFIX}bjok:{gid}"),
+        InlineKeyboardButton("❌ İptal", callback_data=f"{CALLBACK_PREFIX}x"),
+    ]])
+
+
+def baraj_confirm_text(cfg: dict | None = None, geo: str | None = None) -> str:
+    hp = _hp()
+    cfg = cfg or default_cfg()
+    return (f"Kategori: {BARAJ_CATEGORY_BUTTON}\n"
+            f"Olay: {hp.BARAJ_EVENT_LABEL}\n"
+            f"Coğrafya: {baraj_geo_text(geo)}\n"
+            f"Mod: {mode_label(cfg['mode'])}\n"
+            f"🔍 Ayrıntı: {_onoff(cfg['detail'])} · ✋ Onay: {_onoff(cfg['approval'])}\n"
+            "Tahmini maliyet: ~175 Kie kredisi + 1 danışman preflight GPT çağrısı (hikâye için GPT yok)\n\n"
+            "Üretim sadece ✅ Üret'e basınca başlar."
+            + ("\n✋ Onay açık: Kie'ye göndermeden önce son prompt'u gösterip onay isteyeceğim." if cfg["approval"] else "")
+            + f"\n\nMod: {hp.BARAJ_MODE_LABEL}\n"
+            + hp.BARAJ_VERSION_LINE + "\n"
+            + hp.BARAJ_CAMERA_LINE
+            + "\n" + hp.BARAJ_CONFIRM_DESC
+            + " Orta (M1 / M2), final (F1 / F2 / F3), kelime sayısı ve tam prompt ✋ Onay mesajında.")
 
 
 def approval_keyboard(token: str) -> InlineKeyboardMarkup:
@@ -1318,6 +1386,9 @@ async def on_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         return
     if action in ("yy", "yye", "yyg", "yyok"):   # 17 Kas: 🌍 Yer yarılması
         await _on_yer_yarilmasi(query, context, action, args, cfg)
+        return
+    if action in ("bj", "bje", "bjg", "bjok"):   # 27 Kas: 💧 Baraj
+        await _on_baraj(query, context, action, args, cfg)
         return
 
     sel, view = None, None
@@ -1809,6 +1880,40 @@ async def _on_yer_yarilmasi(query, context, action: str, args: list[str], cfg: d
                       cfg=run_cfg, bot_data=context.bot_data, yer_yarilmasi=True, yer_yarilmasi_geo=geo)
 
 
+async def _on_baraj(query, context, action: str, args: list[str], cfg: dict) -> None:
+    """💧 Baraj adımları: bj (olay menüsü) → bje (coğrafya ekranı) → bjg:<Bx|r> (onay metni) → bjok:<Bx|r> (üretim).
+    Kie yine ✋ Onay'a bağlı."""
+    hp = _hp()
+    if action in ("bj", "bje") and args:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    if action == "bj":
+        await query.edit_message_text(f"{BARAJ_CATEGORY_BUTTON}: hangi olay?", reply_markup=baraj_event_keyboard())
+        return
+    if action == "bje":
+        await query.edit_message_text(f"{hp.BARAJ_EVENT_LABEL}\nHangi coğrafya?", reply_markup=baraj_geo_keyboard())
+        return
+    ok, geo = parse_baraj_geo(args[0]) if len(args) == 1 else (False, None)
+    if not ok:
+        await query.edit_message_text("Geçersiz seçim. /uret ile tekrar dene.")
+        return
+    if action == "bjg":
+        await query.edit_message_text(baraj_confirm_text(cfg, geo), reply_markup=baraj_produce_keyboard(args[0]))
+        return
+    run_cfg = dict(cfg)
+    async with _production_lock:
+        started = (f"🚀 Üretim başladı: {BARAJ_CATEGORY_BUTTON} / {hp.BARAJ_EVENT_LABEL} / {baraj_geo_text(geo)}\n"
+                   f"Mod: {mode_label(run_cfg['mode'])}\n"
+                   + ("Senaryo → video. YouTube'a yüklenmez." if run_cfg["mode"] == MODE_TEST
+                      else "Senaryo → video → YouTube.") + " Birkaç dakika sürer.")
+        try:
+            await tg_retry(lambda: query.edit_message_text(started))
+        except Exception as e:
+            log.warning(f"⚠️ 'Üretim başladı' mesajı güncellenemedi: {e}")
+        await produce(context.bot, _allowed_chat(context), hp.BARAJ_DOMAIN, hp.BARAJ_EVENT, cfg=run_cfg,
+                      bot_data=context.bot_data, baraj=True, baraj_geo=geo)
+
+
 async def _on_caption_share(query, context, page: str) -> None:
     """📤 Paylaştım: Paylaşımlar'a tek satır (aynı üretim için ikinci kez basılırsa yeni satır açmaz)."""
     import core.caption as cap
@@ -1917,7 +2022,8 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
                   yer_yarilmasi: bool = False, hit_kopya_orman: bool = False, hit_kopya_sel: bool = False,
                   kasirga_geo: str | None = None, hit_kopya_kul: bool = False,
                   hit_kopya_kul_geo: str | None = None, yer_yarilmasi_geo: str | None = None,
-                  hit_kopya_ates_geo: str | None = None) -> None:
+                  hit_kopya_ates_geo: str | None = None, baraj: bool = False,
+                  baraj_geo: str | None = None) -> None:
     """Pipeline'ı çalıştırır, sonucu ve videoyu sohbete gönderir. Hiçbir hata dışarı sızmaz.
     TEST modunda skip_upload: YouTube adımı hiç çağrılmaz; hattın geri kalanı yayınla birebir aynı.
     14 Eki: her Telegram gönderimi ayrı korunur (safe_send / deliver_video); sonuç mesajı düşse de video gönderilir."""
@@ -1967,6 +2073,10 @@ async def produce(bot, chat_id: int, domain: str, event: str | None = None, cfg:
         kwargs["hit_kopya_kul"] = True
         if hit_kopya_kul_geo:   # coğrafya menüsü (None = Rastgele)
             kwargs["hit_kopya_kul_geo"] = hit_kopya_kul_geo
+    if baraj:   # 27 Kas: 💧 Baraj
+        kwargs["baraj"] = True
+        if baraj_geo:   # coğrafya menüsü (None = Rastgele)
+            kwargs["baraj_geo"] = baraj_geo
     try:
         result = await asyncio.to_thread(_run_pipeline_blocking, kwargs)
     except Exception as e:

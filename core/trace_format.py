@@ -179,7 +179,9 @@ def _format_structured(trace: dict, labels: dict) -> list[tuple[str, str]]:
          + f"Yer: {trace.get('spot')}"
          # 16 Eki: ateş hortumunda ortam Yer satırının yanında
          + (f" · ortam: {trace['fire_env_label_short']}" if trace.get("fire_env_label_short") else "")
-         + f" · hava: {trace.get('weather')} · kişi aralığı: {lo}-{hi}\n"
+         + f" · hava: {trace.get('weather')}"
+         # 27 Kas: kişi ekseni olmayan kategoride (💧 Baraj) boş "kişi aralığı: ?-?" basılmaz
+         + ("" if trace.get("no_people_axis") else f" · kişi aralığı: {lo}-{hi}") + "\n"
          + (f"Görünüm: {trace['view']}" + (f" ({trace['view_source']})" if trace.get("view_source") else "")
             + "\n" if trace.get("view") else "") +
          f"{kv_l}: {trace.get('key_visual')}\n"

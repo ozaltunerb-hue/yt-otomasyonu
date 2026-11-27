@@ -64,6 +64,15 @@ def beat_rotation(event: str, runs: int, rng: random.Random) -> list[dict]:
             out.append({"beat_2": hp.donma_caption_beat(hp.YER_YARILMASI_V5_MIDS[x]),
                         "beat_3": hp.donma_caption_beat(hp.YER_YARILMASI_V5_FINALS[y])})
         return out
+    if event == hp.BARAJ_EVENT:   # 27 Kas: 💧 Baraj (normal havuzda yok; M1-M2 / F1-F3, araç yok)
+        pairs = [(x, y) for x in hp.BARAJ_MIDS for y in hp.BARAJ_FINALS]
+        rng.shuffle(pairs)
+        out = []
+        for i in range(runs):
+            x, y = pairs[i % len(pairs)]
+            out.append({"beat_2": hp.donma_caption_beat(hp._baraj_sentence(hp.BARAJ_MIDS[x])),
+                        "beat_3": hp.donma_caption_beat(hp._baraj_sentence(hp.BARAJ_FINALS[y]))})
+        return out
     b = es.EVENT_BEATS[event]
     bad = b.get("excluded_pairs", set())
     pairs = [(x, y) for x in b["slice_2"] for y in b["slice_3"] if (x, y) not in bad]

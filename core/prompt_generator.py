@@ -1353,6 +1353,21 @@ async def generate_creative_prompts(config: dict) -> dict:
                                                     config.get("event") or hp.YER_YARILMASI_EVENT, history, records,
                                                     history_source=source,
                                                     geo=config.get(hp.YER_YARILMASI_GEO_KEY) or None)
+    elif config.get("baraj"):   # 27 Kas: 💧 Baraj (yeni kategori, tek olay). Hikâye koddan birebir, GPT yok, normal hat yok
+        import core.hit_prompts as hp
+        records, source, raw_loader = None, "yok", config.get("axes_loader")
+        if raw_loader:   # Notion "Eksenler" geçmişi (iptaller dahil); okunamazsa süreç hafızası, üretim durmaz
+            try:
+                records = await asyncio.to_thread(raw_loader, hp.BARAJ_DOMAIN)
+                if records is not None and not isinstance(records, list):
+                    raise TypeError(f"eksen geçmişi liste değil: {type(records).__name__}")
+                source = "notion" if records is not None else "bellek"
+            except Exception as e:   # noqa: BLE001 - okuma hatası üretimi durdurmaz
+                log.warning(f"⚠️ Baraj eksen geçmişi okunamadı, süreç hafızasıyla devam: {e}")
+                records, source = None, "bellek"
+        scene = hp.baraj_build_scene(config.get("domain") or None, config.get("event") or hp.BARAJ_EVENT, history,
+                                     records, history_source=source,
+                                     geo=config.get(hp.BARAJ_GEO_KEY) or None)   # menü B (None = 🎲)
     elif config.get("hit_kopya_ates"):   # 16 Kas: ⭐ Hit kopyası (ateş hortumu). Hit prompt'u birebir, GPT yok
         import core.hit_prompts as hp
         records, source, raw_loader = None, "yok", config.get("axes_loader")
@@ -1463,7 +1478,9 @@ async def generate_creative_prompts(config: dict) -> dict:
         "gate_context": None,
         "scenario_text": story,
         "selection": {"domain_id": domain, "event": event, "environment": scene["spot"],
-                      "ship": ship or "None", "camera": scene["trace"]["camera"]},
+                      "ship": ship or "None", "camera": scene["trace"]["camera"],
+                      # 27 Kas: 💧 Baraj, Notion üretim kaydı "Olay" Türkçe ad (iç anahtar aynı)
+                      **({"notion_event": scene["notion_event"]} if scene.get("notion_event") else {})},
         "trace": scene["trace"],
     }
 

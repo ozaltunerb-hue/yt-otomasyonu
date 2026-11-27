@@ -114,6 +114,7 @@ LIBERTY = "Tornado tears past the Statue of Liberty into Battery Park"   # 4 Kas
 DONMA = "Storm's eye freezes the city"   # 15 Kas: ❄️ Donduran fırtına (core.hit_prompts.DONMA_EVENT)
 KASIRGA = "Hurricane winds batter a coastal town"   # 15 Kas (4): 🌀 Kasırga (core.hit_prompts.KASIRGA_EVENT)
 YER_YARILMASI = "Earthquake fissure splits a city avenue"   # 17 Kas: 🌍 Yer yarılması (core.hit_prompts)
+BARAJ = "Dam wall bursts above a town"   # 27 Kas: 💧 Baraj (core.hit_prompts.BARAJ_EVENT)
 
 # Paylaşımlar "Kategori" select (21 Eki eşlemesi)
 SHARE_CATEGORY = {FLOOD: "Sel", TIDAL: "Dev dalga", MUDSLIDE: "Heyelan", SLOPE: "Heyelan", VILLAGE: "Heyelan",
@@ -124,7 +125,8 @@ SHARE_CATEGORY = {FLOOD: "Sel", TIDAL: "Dev dalga", MUDSLIDE: "Heyelan", SLOPE: 
                   LIBERTY: "Hortum",   # 4 Kas: Özgürlük Anıtı hortumu (cadde hortumu gibi)
                   DONMA: "Donduran fırtına",   # 15 Kas: Notion select seçeneği ilk yazımda oluşur
                   KASIRGA: "Kasırga",   # 15 Kas (4): Notion select seçeneği ilk yazımda oluşur
-                  YER_YARILMASI: "Yer yarılması"}   # 17 Kas: Notion select seçeneği ilk yazımda oluşur
+                  YER_YARILMASI: "Yer yarılması",   # 17 Kas: Notion select seçeneği ilk yazımda oluşur
+                  BARAJ: "Baraj"}   # 27 Kas: Notion select seçeneği ilk yazımda oluşur
 _POOL = {
     "sel": (("#extremeweather", "#naturepower", "#disaster", "#severeweather"),
             ("#flashflood", "#flood", "#floodwater", "#flooding", "#rainstorm", "#stormdamage", "#weatherwatch")),
@@ -154,12 +156,16 @@ _POOL = {
     "yer_yarilmasi": (("#disaster", "#extremeevents", "#catastrophe", "#naturepower"),
                       ("#fissure", "#groundcollapse", "#chasm", "#seismic", "#urbandisaster", "#collapse",
                        "#dustcloud")),
+    # 27 Kas: 💧 Baraj
+    "baraj": (("#disaster", "#naturepower", "#extremeevents", "#catastrophe"),
+              ("#dambreak", "#damfailure", "#dam", "#flood", "#floodwater", "#flashflood", "#waterpower")),
 }
 TAG_POOL = {FLOOD: "sel", TIDAL: "dalga", MUDSLIDE: "heyelan", SLOPE: "heyelan", VILLAGE: "heyelan", LANDFALL: "hortum",
             MARINA: "hortum", AVENUE: "hortum", WILDFIRE: "yangın", FACADE: "yangın", FIRE_TORNADO: "yangın",
             HELICOPTER: "yangın", PYRO: "volkan", BOMBS: "volkan", AVA_V: "çığ", AVA_S: "çığ", AVA_F: "çığ",
             EQ_A: "deprem", EQ_O: "deprem", METEOR: "meteor", LIBERTY: "hortum", DONMA: "donma",
-            KASIRGA: "kasirga", YER_YARILMASI: "yer_yarilmasi"}   # 17 Kas: + 🌍 Yer yarılması
+            KASIRGA: "kasirga", YER_YARILMASI: "yer_yarilmasi",   # 17 Kas: + 🌍 Yer yarılması
+            BARAJ: "baraj"}   # 27 Kas: + 💧 Baraj
 # Olaya özgü etiketler sadece kendi olayında (ör. #firetornado sadece ateş hortumu)
 TAG_ONLY = {"#firetornado": {FIRE_TORNADO}, "#aerialfirefighting": {HELICOPTER}, "#waterspout": {MARINA, LANDFALL},
             "#skiresort": {AVA_S}, "#mountainroad": {SLOPE}, "#pyroclasticflow": {PYRO}, "#lavabombs": {BOMBS},
@@ -212,6 +218,7 @@ VARS = {
     DONMA: ("Flash Freeze", "the City", "❄️", "City Streets", "in the City"),   # 15 Kas: ❄️ Donduran fırtına
     KASIRGA: ("Hurricane", "a Coastal Town", "🌀", "Rooftops", "in a Coastal Town"),   # 15 Kas (4): 🌀 Kasırga
     YER_YARILMASI: ("Earthquake Fissure", "a City Avenue", "🌍", "Parked Cars", "on a City Avenue"),   # 17 Kas
+    BARAJ: ("Dam Burst", "a Small Town", "💧", "Town Houses", "Below the Dam"),   # 27 Kas: 💧 Baraj
 }
 PLURAL_THREATS = {BOMBS}   # fiil uyumu: "Volcanic Bombs Tear", "Flash Flood Tears"
 WITNESS = {"balkon": "the Balcony", "çatı": "the Rooftop", "pencere": "an Upper Window", "tepe": "the Hillside",

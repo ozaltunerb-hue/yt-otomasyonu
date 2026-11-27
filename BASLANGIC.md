@@ -260,6 +260,15 @@ tohum snapshot ile bayt bayt aynı doğrulandı.
   `yer_yarilmasi_surum` = "v4" (menüde yok), `YY_SHA256` aynen. 🔍 Ayrıntı'da "Araç: None" yalnız v5'te kalkar (trace
   `no_vehicle_axis`). 24 kombinasyon 206-222 kelime / 1211-1273 kr. Testler `tests/test_yer_yarilmasi_v5.py`, kayıt
   `tests/fixtures/yer_yarilmasi_v5_runs_40.json`. Açık: gerçek Telegram üretim testi.
+- **27 Kas**: 💧 Baraj (YENİ KATEGORİ, `BARAJ_*`, kod hikâye v1). Tek olay "💧 Baraj yıkılır" (iç anahtar `BARAJ_EVENT`
+  "Dam wall bursts above a town", domain `dam_disasters`). Hikâye koddan birebir, GPT yok, normal havuzda yok (Yer
+  yarılması düzeni). Prompt = AÇILIŞ + ORTA + FİNAL + STİL EKİ, metinler Bahadır'ın talimatından birebir (çatı terası,
+  baraj kadrajın üst yarısında). Coğrafya menüsü B1-B6 (İsviçre, Norveç, Japonya, Kolombiya, Avusturya, Şili) + 🎲 (son 2
+  elenir; menü seçimi LRU'ya takılmaz), orta M1/M2 son 1, final F1-F3 son 1. Bot: `bj` → `bje` → `bjg:<Bx|r>` (onay) →
+  `bjok:<Bx|r>`. Yasak (stil eki hariç): explosion, explode, fire, flames, slowly, calm. Notion: üretim kaydı "Olay" =
+  "Baraj yıkılır" (`selection["notion_event"]`), Eksenler `kategori` "Baraj" + `cografya`/`orta`/`final`. 🔍 Ayrıntı'da boş
+  "Araç" ve "kişi aralığı" basılmaz (`no_vehicle_axis`, `no_people_axis`). 36 kombinasyon, en uzun 175 kelime / 994 kr
+  (B1 + M2 + F1). Testler `tests/test_baraj.py`, kayıt `tests/fixtures/baraj_v1_runs_40.json`. Açık: Telegram üretim testi.
 - Coğrafya/araç geçmişi: seçimin zaten okuduğu Notion "Eksenler" kaydından (`axes.mod` + `cografya`/`arac`), yedek süreç
   hafızası. Beat kaydı modun çifti (O*+Y*, A*+F*, K*+L*).
 - Onay görüntüsü: `hp.mode_display` → trace + `axes_line`; 1. Seçim / 3. Hikâye / Eksenler gerçek prompt parçalarını gösterir

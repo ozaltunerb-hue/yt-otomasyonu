@@ -717,7 +717,8 @@ class TestDonmaPipelineAndBot(_Quiet):
         self.assertIn(f"🚀 Üretim başladı: ❄️ Donduran fırtına / {EVENT_LABEL}", started)
         self.assertEqual(bot.CODE_EVENT_LABELS[EVENT], EVENT_LABEL)   # sadece etiket; iç anahtar aynı
         self.assertEqual(set(bot.CODE_EVENT_LABELS), {EVENT, hp.KASIRGA_EVENT,   # 15 Kas (4): + 🌀 Kasırga
-                                                      hp.YER_YARILMASI_EVENT})   # 17 Kas: + 🌍 Yer yarılması
+                                                      hp.YER_YARILMASI_EVENT,   # 17 Kas: + 🌍 Yer yarılması
+                                                      hp.BARAJ_EVENT})   # 27 Kas: + 💧 Baraj
         for bad in ("uret:df:1", "uret:dfe:0", "uret:dfok:x"):
             upd = _update(data=bad)
             asyncio.run(bot.on_callback(upd, ctx))

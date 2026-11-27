@@ -113,7 +113,8 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                        kasirga: bool = False, hit_kopya_ates: bool = False, yer_yarilmasi: bool = False,
                        hit_kopya_orman: bool = False, hit_kopya_sel: bool = False, kasirga_geo: str | None = None,
                        hit_kopya_kul: bool = False, hit_kopya_kul_geo: str | None = None,
-                       yer_yarilmasi_geo: str | None = None, hit_kopya_ates_geo: str | None = None):
+                       yer_yarilmasi_geo: str | None = None, hit_kopya_ates_geo: str | None = None,
+                       baraj: bool = False, baraj_geo: str | None = None):
     """
     Tam otonom video üretim pipeline'ı.
 
@@ -145,6 +146,8 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
     hit_kopya_ates_geo: 26 Kas v3, menüden seçilen H1-H5 (None = 🎲 Rastgele, son 2 elenir).
     yer_yarilmasi: 17 Kas, 🌍 Yer yarılması kategorisi (tek olay, hikâye koddan, GPT yok); 25 Kas: v5.
     yer_yarilmasi_geo: 25 Kas, coğrafya menüsünden seçilen G1-G6 (None = 🎲 Rastgele, son 3 elenir).
+    baraj: 27 Kas, 💧 Baraj kategorisi (tek olay "Baraj yıkılır", hikâye koddan, GPT yok).
+    baraj_geo: 27 Kas, 💧 Baraj coğrafya menüsünden seçilen B1-B6 (None = 🎲 Rastgele, son 2 elenir).
     hit_kopya_orman: 20 Kas, ⭐ Hit kopyası (orman yangını) v2: 9 Eki hit iskeleti, coğrafya + araç + engel (GPT yok).
     hit_kopya_sel: 21 Kas, ⭐ Hit kopyası (ani sel) v1: 5 Kas hit iskeleti, görünüm + araç + M + F + kişi + ışık (GPT yok).
     """
@@ -213,6 +216,8 @@ async def run_pipeline(dry_run: bool = False, skip_upload: bool = False, output_
                 **({"hit_kopya_sel": True} if hit_kopya_sel else {}),
                 **({"hit_kopya_kul": True} if hit_kopya_kul else {}),
                 **({"hit_kopya_kul_geo": hit_kopya_kul_geo} if hit_kopya_kul and hit_kopya_kul_geo else {}),
+                **({"baraj": True} if baraj else {}),
+                **({"baraj_geo": baraj_geo} if baraj and baraj_geo else {}),
             )
             return result
         except (ContentFilterError, PreflightError) as err:
@@ -269,6 +274,8 @@ async def _execute_pipeline(
     hit_kopya_kul_geo: str | None = None,
     yer_yarilmasi_geo: str | None = None,
     hit_kopya_ates_geo: str | None = None,
+    baraj: bool = False,
+    baraj_geo: str | None = None,
 ) -> dict:
     """
     Pipeline'ın asıl implementasyonu.
@@ -313,6 +320,8 @@ async def _execute_pipeline(
         **({"hit_kopya_sel": True} if hit_kopya_sel else {}),   # 21 Kas: ⭐ Hit kopyası (ani sel)
         **({"hit_kopya_kul": True} if hit_kopya_kul else {}),   # 24 Kas: ⭐ Hit kopyası (kül bulutu)
         **({"hit_kopya_kul_geo": hit_kopya_kul_geo} if hit_kopya_kul and hit_kopya_kul_geo else {}),   # menü V
+        **({"baraj": True} if baraj else {}),   # 27 Kas: 💧 Baraj
+        **({"baraj_geo": baraj_geo} if baraj and baraj_geo else {}),   # 27 Kas: menü B
         # 21 Eki (Gece 1 / Aşama 3): seçimden önce kategorinin eksen geçmişi Notion'dan (iptaller dahil)
         "axes_loader": tracker.get_axes_records,
         # 21 Eki (Aşama 7): caption geçmişi (Paylaşımlar + son 20 üretilmiş caption)
@@ -450,6 +459,8 @@ async def _execute_pipeline(
                 info["hit_lines"] = structure["hit_kopya_sel"]["lines"]
             if structure and structure.get("hit_kopya_kul"):   # 24 Kas: ⭐ Hit kopyası (kül bulutu) onay satırları
                 info["hit_lines"] = structure["hit_kopya_kul"]["lines"]
+            if structure and structure.get("baraj"):   # 27 Kas: 💧 Baraj onay satırları
+                info["hit_lines"] = structure["baraj"]["lines"]
             meta.update({"final_prompt": info["prompt"], "story": info.get("story", ""),
                          "style_suffix": info.get("style_suffix", ""), "preflight": info.get("preflight") or {}})
             await asyncio.to_thread(tracker.record_final_prompt, info["prompt"], selection, commit)

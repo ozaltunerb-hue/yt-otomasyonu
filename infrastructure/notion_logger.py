@@ -235,7 +235,8 @@ class NotionTracker:
         """Kie'ye GİDEN son prompt (preflight sonrası) + kamera/olay/commit (TUR 29). 'Prompt' alanı eskiden
         preflight öncesi metni tutuyordu; rewrite olunca Kie'ye gidenle aynı değildi."""
         self._patch({"Prompt": _rt(prompt), "Kamera": _rt(selection.get("camera", "")),
-                     "Olay": _rt(selection.get("event", "")), "Commit": _rt(commit)})
+                     "Olay": _rt(selection.get("notion_event") or selection.get("event", "")),   # 27 Kas: 💧 Baraj
+                     "Commit": _rt(commit)})
 
     def record_story_source(self, label: str) -> None:
         """17 Eki: hikâye kaynağı ayrı istekle (Prompt/Kamera/Olay yazımından bağımsız). Şema biliniyorsa ve alan

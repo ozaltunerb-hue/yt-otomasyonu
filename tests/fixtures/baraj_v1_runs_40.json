@@ -1,0 +1,1162 @@
+{
+ "1": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F2",
+    "cografya": "B2",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "10": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F2",
+    "cografya": "B5",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "11": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F2",
+    "cografya": "B4",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small Andean town in Colombia, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small Andean town in Colombia, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "12": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F3",
+    "cografya": "B4",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small Andean town in Colombia, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small Andean town in Colombia, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "13": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F3",
+    "cografya": "B3",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Japan, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Japan, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "14": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F2",
+    "cografya": "B1",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in the Swiss Alps, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in the Swiss Alps, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "15": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F3",
+    "cografya": "B2",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "16": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F2",
+    "cografya": "B3",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Japan, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Japan, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "17": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F2",
+    "cografya": "B5",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "18": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F3",
+    "cografya": "B2",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "19": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F3",
+    "cografya": "B6",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "2": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F1",
+    "cografya": "B1",
+    "cografya_kaynak": "rastgele",
+    "final": "F1",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F1|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in the Swiss Alps, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in the Swiss Alps, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "20": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F2",
+    "cografya": "B6",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "21": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F3",
+    "cografya": "B2",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "22": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F1",
+    "cografya": "B2",
+    "cografya_kaynak": "rastgele",
+    "final": "F1",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F1|bystander_handheld",
+  "prompt": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "23": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F1",
+    "cografya": "B3",
+    "cografya_kaynak": "rastgele",
+    "final": "F1",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F1|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Japan, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Japan, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "24": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F3",
+    "cografya": "B6",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "25": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F1",
+    "cografya": "B4",
+    "cografya_kaynak": "rastgele",
+    "final": "F1",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F1|bystander_handheld",
+  "prompt": "0-4s: Behind a small Andean town in Colombia, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small Andean town in Colombia, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "26": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F3",
+    "cografya": "B6",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "27": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F3",
+    "cografya": "B6",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "28": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F3",
+    "cografya": "B1",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in the Swiss Alps, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in the Swiss Alps, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "29": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F2",
+    "cografya": "B5",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "3": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F2",
+    "cografya": "B2",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "30": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F3",
+    "cografya": "B5",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "31": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F1",
+    "cografya": "B1",
+    "cografya_kaynak": "rastgele",
+    "final": "F1",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F1|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in the Swiss Alps, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in the Swiss Alps, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "32": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F1",
+    "cografya": "B1",
+    "cografya_kaynak": "rastgele",
+    "final": "F1",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F1|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in the Swiss Alps, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in the Swiss Alps, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "33": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F3",
+    "cografya": "B5",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "34": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F3",
+    "cografya": "B5",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "35": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F1",
+    "cografya": "B5",
+    "cografya_kaynak": "rastgele",
+    "final": "F1",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F1|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "36": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F1",
+    "cografya": "B3",
+    "cografya_kaynak": "rastgele",
+    "final": "F1",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F1|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Japan, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Japan, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "37": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F3",
+    "cografya": "B6",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "38": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F2",
+    "cografya": "B6",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small valley town in Chile, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "39": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F2",
+    "cografya": "B2",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "4": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F1",
+    "cografya": "B2",
+    "cografya_kaynak": "rastgele",
+    "final": "F1",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F1|bystander_handheld",
+  "prompt": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "40": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F1",
+    "cografya": "B4",
+    "cografya_kaynak": "rastgele",
+    "final": "F1",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F1|bystander_handheld",
+  "prompt": "0-4s: Behind a small Andean town in Colombia, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small Andean town in Colombia, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water slams into the first houses and sweeps the parked cars down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "5": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F3",
+    "cografya": "B5",
+    "cografya_kaynak": "rastgele",
+    "final": "F3",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F3|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water tears a house from its foundation and carries it down the street.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "6": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F2",
+    "cografya": "B5",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Austria, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "7": {
+  "axes": {
+   "axes": {
+    "beats": "M1+F2",
+    "cografya": "B3",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M1",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M1+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small mountain town in Japan, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small mountain town in Japan, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: A huge section of the dam wall breaks away and a wall of water bursts out and rushes down toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "8": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F2",
+    "cografya": "B2",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small town in a Norwegian valley, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ },
+ "9": {
+  "axes": {
+   "axes": {
+    "beats": "M2+F2",
+    "cografya": "B4",
+    "cografya_kaynak": "rastgele",
+    "final": "F2",
+    "kategori": "Baraj",
+    "light": null,
+    "mod": "baraj",
+    "olay": "Baraj yıkılır",
+    "orta": "M2",
+    "people": null,
+    "spot": "rooftop terrace of a house in the town",
+    "surum": "v1",
+    "vehicle": null,
+    "view": null
+   },
+   "event": "Dam wall bursts above a town",
+   "excluded": {
+    "cografya": []
+   },
+   "v": 1
+  },
+  "combo": "dam_disasters|none|dam wall bursts above a town|rooftop terrace of a house in the town##M2+F2|bystander_handheld",
+  "prompt": "0-4s: Behind a small Andean town in Colombia, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side. Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed.",
+  "story": "0-4s: Behind a small Andean town in Colombia, a towering concrete dam fills the upper half of the frame; jets of water burst from long cracks across its wall while people run down the street below. 4-9s: Giant concrete blocks tumble from the dam as its center gives way and a wall of water bursts out toward the houses. 9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
+  "suffix": "Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything moves in real time, people run at full speed."
+ }
+}
