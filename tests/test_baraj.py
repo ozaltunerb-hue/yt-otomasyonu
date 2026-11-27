@@ -2,6 +2,8 @@
 # Hikâyeyi GPT değil kod yazar (birebir). Prompt = AÇILIŞ + ORTA + FİNAL + STİL EKİ; metinler talimattan birebir
 # (aşağıda bağımsız kopya, bayt bayt karşılaştırılır). Coğrafya B1-B6 (menü; 🎲 Rastgele'de son 2 elenir), orta M1/M2
 # (son 1), final F1-F3 (son 1). Preflight danışman (senaryo yeniden yazılmaz). Ağ yok, Kie yok, GPT yok.
+# 27 Kas 2026 (2), v2: stil ekinde TEK değişiklik (su gerçek su gibi: köpüklü koyu taşkın suyu, toz/duman değil).
+# v1 pasif (hp.BARAJ_PASIF), fixtures/baraj_v1_runs_40.json kalır; canlı v2 baraj_v2_runs_40.json ile kilitli.
 import asyncio
 import hashlib
 import json
@@ -29,9 +31,13 @@ DOMAIN = "dam_disasters"
 CATEGORY = "💧 Baraj"
 EVENT_LABEL = "💧 Baraj yıkılır"
 SPOT = "rooftop terrace of a house in the town"
-VERSION_LINE = "Sürüm: baraj v1 (kod hikâye: çatı terası, baraj üst yarıda + coğrafya menüsü)"
+VERSION_LINE = "Sürüm: baraj v2 (v1 + gerçek su: köpüklü koyu taşkın suyu, toz/duman değil)"
 CHECK_QUESTION = ("baraj ilk kareden kadrajın üst yarısında mı, sokakta koşan insanlar var mı, kamera terasta sabit "
-                  "mi, su çamurlu kahverengi ve gerçekçi mi?")
+                  "mi, su gerçek su gibi akıyor mu (köpük, sıçrama), toz ya da duman gibi kabarmıyor mu?")
+MODE_LABEL = "Baraj · kod hikâye (v2)"
+VERSION_LINE_V1 = "Sürüm: baraj v1 (kod hikâye: çatı terası, baraj üst yarıda + coğrafya menüsü)"
+CHECK_QUESTION_V1 = ("baraj ilk kareden kadrajın üst yarısında mı, sokakta koşan insanlar var mı, kamera terasta "
+                     "sabit mi, su çamurlu kahverengi ve gerçekçi mi?")
 
 # ── Talimat metinleri, birebir (KİLİT) ──
 OPENING = ("0-4s: Behind {coğrafya}, a towering concrete dam fills the upper half of the frame; jets of water burst "
@@ -47,12 +53,19 @@ FINALS = {
     "F2": "9-15s: The water hits the street and sweeps a bus along, tipping it onto its side.",
     "F3": "9-15s: The water tears a house from its foundation and carries it down the street.",
 }
-STYLE = (" Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage "
+STYLE_V1 = (" Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage "
          "looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the dam "
          "always visible in the upper half of the frame, a corner of the terrace railing in the foreground; one "
          "continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never glossy "
          "or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. "
          "Everything moves in real time, people run at full speed.")
+# v2: TEK değişiklik (talimattan birebir)
+OLD_PART = "Real dam-break footage: muddy brown water, broken concrete,"
+NEW_PART = ("Real dam-break footage: churning dark floodwater with white foam and spray, flowing like real water, never "
+            "dust or smoke, broken concrete,")
+STYLE = STYLE_V1.replace(OLD_PART, NEW_PART)
+REQUIRED_NEW = ("churning dark floodwater with white foam and spray", "flowing like real water", "never dust or smoke")
+FORBIDDEN_NEW = ("muddy brown water",)
 PLACES = {
     "B1": "a small mountain town in the Swiss Alps",
     "B2": "a small town in a Norwegian valley",
@@ -64,8 +77,10 @@ PLACES = {
 NAMES = {"B1": "İsviçre", "B2": "Norveç", "B3": "Japonya", "B4": "Kolombiya", "B5": "Avusturya", "B6": "Şili"}
 GEOS = tuple(PLACES)
 FORBIDDEN = ("explosion", "explode", "fire", "flames", "slowly", "calm")
-FIXTURE = os.path.join(ROOT, "tests", "fixtures", "baraj_v1_runs_40.json")
-BARAJ_SHA256 = "2546cb5ebd89229f3087070eb09e7b591b5511f73459423062f21be7bce28643"   # 40 tohum (🎲 Rastgele)
+FIXTURE = os.path.join(ROOT, "tests", "fixtures", "baraj_v2_runs_40.json")
+BARAJ_SHA256 = "dffd8a2a96cabe69eae4ddcd019f04b0599e3f22c062dd86ea6d7f016717f43d"   # 40 tohum (🎲 Rastgele), v2
+FIXTURE_V1 = os.path.join(ROOT, "tests", "fixtures", "baraj_v1_runs_40.json")
+BARAJ_V1_SHA256 = "2546cb5ebd89229f3087070eb09e7b591b5511f73459423062f21be7bce28643"   # 40 tohum, v1 (7a64403)
 
 
 class _Quiet(unittest.TestCase):
@@ -184,10 +199,32 @@ class TestLockedTexts(_Quiet):
             self.assertEqual(pg.event_fidelity_issues(EVENT, hp.baraj_story(g, m, f)), [])
             self.assertEqual(pg.event_fidelity_issues(EVENT, p), [])
         self.assertEqual(len(words), 36)
-        self.assertEqual(max(zip(words, chars)), (175, 994))
-        self.assertEqual(len(hp.baraj_prompt("B1", "M2", "F1").split()), 175)
-        self.assertEqual(len(hp.baraj_prompt("B1", "M2", "F1")), 994)
-        self.assertEqual(max(chars), 994)
+        self.assertEqual(max(zip(words, chars)), (188, 1073))
+        self.assertEqual(len(hp.baraj_prompt("B1", "M2", "F1").split()), 188)
+        self.assertEqual(len(hp.baraj_prompt("B1", "M2", "F1")), 1073)
+        self.assertEqual(max(chars), 1073)
+        self.assertEqual(max(words), 188)
+
+    def test_v2_single_change(self):
+        """v2: zorunlu yeni ifadeler var, "muddy brown water" yok; yeni ifade dışında prompt v1 ile bayt bayt aynı."""
+        self.assertEqual(STYLE_V1.count(OLD_PART), 1)
+        self.assertEqual(hp.BARAJ_STYLE.count(NEW_PART), 1)
+        for g, m, f in combos():
+            p = hp.baraj_prompt(g, m, f)
+            v1 = OPENING.replace("{coğrafya}", PLACES[g]) + MIDS[m] + FINALS[f] + STYLE_V1
+            self.assertEqual(p.replace(NEW_PART, OLD_PART).encode("utf-8"), v1.encode("utf-8"), (g, m, f))
+            self.assertEqual(p.encode("utf-8"), v1.replace(OLD_PART, NEW_PART).encode("utf-8"), (g, m, f))
+            for need in REQUIRED_NEW:
+                self.assertEqual(p.count(need), 1, (need, g, m, f))
+            for bad in FORBIDDEN_NEW:
+                self.assertNotIn(bad, p.lower(), (bad, g, m, f))
+        for need in REQUIRED_NEW:
+            self.assertIn(need, hp.BARAJ_REQUIRED)
+        self.assertNotIn("muddy brown water", hp.BARAJ_REQUIRED)
+        self.assertEqual(hp.BARAJ_SURUM, "v2")
+        self.assertEqual(hp.BARAJ_MODE_LABEL, MODE_LABEL)
+        self.assertEqual(hp.BARAJ_VERSION_LINE, VERSION_LINE)
+        self.assertEqual(hp.BARAJ_CHECK, "⚠️ Kontrol: " + CHECK_QUESTION)
 
     def test_unknown_ids_raise(self):
         for bad in ("B0", "B7", "b1", "G1", "Y1"):
@@ -216,7 +253,7 @@ class TestScene(_Quiet):
     def _check(self, d, source="rastgele"):
         sc, st = d["scenes"][0], d["structure"]
         tb = st["baraj"]
-        self.assertEqual(tb["surum"], "v1")
+        self.assertEqual(tb["surum"], "v2")
         self.assertEqual(tb["geo_source"], source)
         self.assertEqual(sc["prompt"], expected(tb["geo"], tb["mid"], tb["final"]))
         self.assertEqual(sc["style_suffix"], STYLE[1:])
@@ -226,7 +263,7 @@ class TestScene(_Quiet):
                                                "style_suffix": sc["style_suffix"]}), [])
         axes = json.loads(d["axes_json"])
         self.assertEqual(axes["event"], EVENT)
-        for k, v in {"mod": "baraj", "surum": "v1", "kategori": "Baraj", "olay": "Baraj yıkılır",
+        for k, v in {"mod": "baraj", "surum": "v2", "kategori": "Baraj", "olay": "Baraj yıkılır",
                      "cografya": tb["geo"], "cografya_kaynak": source, "orta": tb["mid"], "final": tb["final"],
                      "beats": f"{tb['mid']}+{tb['final']}", "spot": SPOT}.items():
             self.assertEqual(axes["axes"][k], v, k)
@@ -328,7 +365,7 @@ class TestScene(_Quiet):
             sc, st = d["scenes"][0], d["structure"]
             tb = st["baraj"]
             lines = tb["lines"].split("\n")
-            self.assertEqual(lines[0], "Mod: Baraj · kod hikâye (v1)")
+            self.assertEqual(lines[0], f"Mod: {MODE_LABEL}")
             self.assertEqual(lines[1], VERSION_LINE)
             self.assertEqual(lines[2], f"Coğrafya: {tb['geo']} {NAMES[tb['geo']]} «{PLACES[tb['geo']]}» "
                                        f"({'menü' if geo else 'rastgele'})")
@@ -386,7 +423,7 @@ class TestPipelineAndBot(_Quiet):
             self.assertTrue(seen["config"]["baraj"])
             self.assertEqual(seen["config"].get("baraj_geo"), geo)
             info = [c[1] for c in rep.calls if c[0] == "approve"][0]
-            self.assertTrue(info["hit_lines"].startswith(f"Mod: Baraj · kod hikâye (v1)\n{VERSION_LINE}\nCoğrafya: "
+            self.assertTrue(info["hit_lines"].startswith(f"Mod: {MODE_LABEL}\n{VERSION_LINE}\nCoğrafya: "
                                                          f"{geo or 'B'}"))
             sent = t.create.await_args.args[1]
             self.assertEqual(sent, info["prompt"])
@@ -472,6 +509,39 @@ class TestPipelineAndBot(_Quiet):
             hits = [ln for ln in body.split("\n") if ln.startswith("    if action") and f'"{a}"' in ln]
             self.assertEqual(len(hits), 1, (a, hits))
             self.assertIn("Baraj", hits[0])
+
+
+class TestPassiveV1(_Quiet):
+    def test_v1_passive_texts(self):
+        """v1 (7a64403) pasif: stil eki, zorunlu liste, sürüm ve kontrol satırı bayt bayt saklı."""
+        v1 = hp.BARAJ_PASIF
+        self.assertEqual(v1["STYLE_V1"].encode("utf-8"), STYLE_V1.encode("utf-8"))
+        self.assertEqual(v1["STYLE_V1"].replace(OLD_PART, NEW_PART), hp.BARAJ_STYLE)
+        self.assertEqual((v1["SURUM_V1"], v1["MODE_LABEL_V1"], v1["VERSION_LINE_V1"]),
+                         ("v1", "Baraj · kod hikâye (v1)", VERSION_LINE_V1))
+        self.assertEqual(v1["CHECK_V1"], "⚠️ Kontrol: " + CHECK_QUESTION_V1)
+        self.assertIn("muddy brown water", v1["REQUIRED_V1"])
+        self.assertEqual(tuple(x for x in v1["REQUIRED_V1"] if x != "muddy brown water"),
+                         tuple(x for x in hp.BARAJ_REQUIRED if x not in REQUIRED_NEW))
+
+    def test_v1_fixture_matches_v2_except_water(self):
+        """v1 kaydı (40 tohum) değişmedi; aynı tohumda v2 seçimi aynı, prompt yalnız yeni ifadede farklı."""
+        with open(FIXTURE_V1, encoding="utf-8") as fh:
+            v1 = json.load(fh)
+        self.assertEqual(snapshot_hash(v1), BARAJ_V1_SHA256)
+        v2 = baraj_snapshot()
+        self.assertEqual(set(v1), set(v2))
+        for s in v1:
+            a, b = v1[s], v2[s]
+            self.assertTrue(a["prompt"].endswith(STYLE_V1), s)
+            self.assertEqual(b["prompt"], a["prompt"].replace(OLD_PART, NEW_PART), s)
+            self.assertEqual((b["story"], b["combo"]), (a["story"], a["combo"]), s)
+            self.assertEqual(b["suffix"], a["suffix"].replace(OLD_PART, NEW_PART), s)
+            ax1, ax2 = dict(a["axes"]["axes"]), dict(b["axes"]["axes"])
+            self.assertEqual((ax1.pop("surum"), ax2.pop("surum")), ("v1", "v2"))
+            self.assertEqual(ax1, ax2, s)
+            self.assertEqual({k: v for k, v in a["axes"].items() if k != "axes"},
+                             {k: v for k, v in b["axes"].items() if k != "axes"}, s)
 
 
 class TestSnapshot(_Quiet):

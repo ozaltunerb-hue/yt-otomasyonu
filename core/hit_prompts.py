@@ -6348,9 +6348,11 @@ def yer_yarilmasi_v6_issues(structure: dict, info: dict) -> list[str]:
 # FİNAL + STİL EKİ, metinler Bahadır'ın talimatından birebir (zaman etiketleri ve aradaki boşluklar metnin içinde).
 # Coğrafya B1-B6 (menü; 🎲 Rastgele'de son 2 elenir, menüden seçilen tekrar önlemeye takılmaz), orta M1/M2 (son 1),
 # final F1-F3 (son 1). Araç ve kişi sayısı ekseni yok. Kayıt M*+F* (combo + Eksenler). Yeni GPT kuralı yok.
-BARAJ_SURUM = "v1"
-BARAJ_MODE_LABEL = "Baraj · kod hikâye (v1)"                     # ✋ Onay
-BARAJ_VERSION_LINE = "Sürüm: baraj v1 (kod hikâye: çatı terası, baraj üst yarıda + coğrafya menüsü)"
+# 27 Kas 2026 (2), v2: stil ekinde TEK değişiklik, su gerçek su gibi (köpüklü koyu taşkın suyu, toz/duman değil).
+# v1 stil eki, zorunlu liste, sürüm ve kontrol satırı BARAJ_PASIF içinde (silinmez). Geri kalan her şey v1 ile aynı.
+BARAJ_SURUM = "v2"
+BARAJ_MODE_LABEL = "Baraj · kod hikâye (v2)"                     # ✋ Onay
+BARAJ_VERSION_LINE = "Sürüm: baraj v2 (v1 + gerçek su: köpüklü koyu taşkın suyu, toz/duman değil)"
 BARAJ_DOMAIN = "dam_disasters"                                   # Combo Key'in ilk parçası (Notion eksen sorgusu bununla)
 BARAJ_EVENT = "Dam wall bursts above a town"                     # iç anahtar (olay denetimi kökleri: wall, burs, town)
 BARAJ_CATEGORY_LABEL = "💧 Baraj"                                 # Telegram kategori düğmesi
@@ -6391,9 +6393,10 @@ BARAJ_FINALS = {
 BARAJ_STYLE = (" Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high vantage "
                "looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never descending, the "
                "dam always visible in the upper half of the frame, a corner of the terrace railing in the foreground; "
-               "one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown water, broken concrete, never "
-               "glossy or CGI; no explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or "
-               "flags. Everything moves in real time, people run at full speed.")
+               "one continuous shot, no zoom, no cuts. Real dam-break footage: churning dark floodwater with white foam "
+               "and spray, flowing like real water, never dust or smoke, broken concrete, never glossy or CGI; no "
+               "explosions, no fire. Bystanders wear civilian clothes. No readable signs, text or flags. Everything "
+               "moves in real time, people run at full speed.")
 BARAJ_NAMES = {"M1": "baraj duvarının büyük bir parçası kopar, su duvarı evlere iner",
                "M2": "beton bloklar düşer, baraj ortadan çöker, su duvarı evlere fırlar",
                "F1": "su ilk evlere çarpar, park halindeki arabaları sürükler",
@@ -6402,7 +6405,7 @@ BARAJ_NAMES = {"M1": "baraj duvarının büyük bir parçası kopar, su duvarı 
 BARAJ_CAMERA_LINE = ("Kamera: kasabadaki bir evin çatı terası, yüksekten baraja bakar, sabit, hiç inmez, baraj hep "
                      "kadrajın üst yarısında, teras korkuluğunun köşesi ön planda")
 BARAJ_CHECK = ("⚠️ Kontrol: baraj ilk kareden kadrajın üst yarısında mı, sokakta koşan insanlar var mı, kamera terasta "
-               "sabit mi, su çamurlu kahverengi ve gerçekçi mi?")
+               "sabit mi, su gerçek su gibi akıyor mu (köpük, sıçrama), toz ya da duman gibi kabarmıyor mu?")
 BARAJ_WEATHER = "gündüz, doğal ışık (stil ekinde ışık satırı yok)"
 BARAJ_CONFIRM_DESC = ("Kasabanın arkasında dev bir beton baraj ilk kareden kadrajın üst yarısını kaplar, duvarındaki "
                       "uzun çatlaklardan su fışkırır, aşağıdaki sokakta insanlar koşar. Ortada barajın büyük bir parçası "
@@ -6413,8 +6416,27 @@ BARAJ_CONFIRM_DESC = ("Kasabanın arkasında dev bir beton baraj ilk kareden kad
 # "no explosions, no fire" olumsuzlama olarak geçer).
 BARAJ_REQUIRED = ("towering concrete dam", "upper half of the frame", "people run down the street below",
                   "rooftop terrace of a house in the town", "the camera stays fixed on the terrace", "never descending",
-                  "corner of the terrace railing", "muddy brown water", "no zoom, no cuts")
+                  "corner of the terrace railing", "churning dark floodwater with white foam and spray",
+                  "flowing like real water", "never dust or smoke", "no zoom, no cuts")
 BARAJ_FORBIDDEN = ("explosion", "explode", "fire", "flames", "slowly", "calm")
+# Pasif sürümler (27 Kas v1, 7a64403): üretimde kullanılmaz, kayıt ve test için.
+BARAJ_PASIF = {
+    "SURUM_V1": "v1",
+    "MODE_LABEL_V1": "Baraj · kod hikâye (v1)",
+    "VERSION_LINE_V1": "Sürüm: baraj v1 (kod hikâye: çatı terası, baraj üst yarıda + coğrafya menüsü)",
+    "STYLE_V1": (" Handheld footage shot by a person standing on the rooftop terrace of a house in the town, high "
+                 "vantage looking toward the dam; slight hand shake, the camera stays fixed on the terrace, never "
+                 "descending, the dam always visible in the upper half of the frame, a corner of the terrace railing "
+                 "in the foreground; one continuous shot, no zoom, no cuts. Real dam-break footage: muddy brown "
+                 "water, broken concrete, never glossy or CGI; no explosions, no fire. Bystanders wear civilian "
+                 "clothes. No readable signs, text or flags. Everything moves in real time, people run at full "
+                 "speed."),
+    "REQUIRED_V1": ("towering concrete dam", "upper half of the frame", "people run down the street below",
+                    "rooftop terrace of a house in the town", "the camera stays fixed on the terrace",
+                    "never descending", "corner of the terrace railing", "muddy brown water", "no zoom, no cuts"),
+    "CHECK_V1": ("⚠️ Kontrol: baraj ilk kareden kadrajın üst yarısında mı, sokakta koşan insanlar var mı, kamera "
+                 "terasta sabit mi, su çamurlu kahverengi ve gerçekçi mi?"),
+}
 _BARAJ_TAG = re.compile(r"M\d+\+F\d+")
 _BARAJ_GEO_MEMORY: list[str] = []
 
